@@ -265,6 +265,7 @@ async function insertAttempt(
 		failureCode?: string;
 		failureMessage?: string;
 		createdAt?: number;
+		translationLanguages?: ("en" | "ru")[];
 	} = {},
 ) {
 	const createdAt = overrides.createdAt ?? 1;
@@ -1254,6 +1255,70 @@ test("a final publication skips what its run already published behind many earli
 		{ knowledgeChangeKey: "attempt-1:1:2:0", change: transcription },
 	]);
 	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+});
+
+test("a top-up that partly fails keeps a Full Reading Full for the next top-up", async () => {
+	const t = createTestConvex();
+	const knowledge = {
+		definition: "Ein Geldinstitut.",
+		translations: { en: ["bank"] },
+	};
+	const occurrence = await seedDictionaryReading(t, { knowledge });
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge,
+		status: "Full",
+		coveredTranslationLanguages: ["en"],
+	});
+	await insertAttempt(t, occurrence, "russian-top-up", {
+		translationLanguages: ["ru"],
+	});
+
+	expect(
+		await publish(
+			t,
+			publishArgs({
+				attemptKey: "russian-top-up",
+				productionEvidence: {
+					request: { translations: { ru: null } },
+					failures: [
+						{
+							aspect: "translations",
+							leaf: "ru",
+							code: "ProviderFailure",
+							message: "offline",
+						},
+					],
+					operationTraces: [],
+				},
+			}),
+		),
+	).toEqual({ status: "Committed" });
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
+		knowledge,
+		status: "Full",
+	});
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "partialKnowledge",
+	});
+
+	await schedule(t, {
+		attemptKey: "next-demand",
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	});
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "next-demand",
+		}),
+	).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			topUpOnly: true,
+			translationLanguages: ["ru"],
+		}),
+	);
 });
 
 test("a rejected dictionary plan fails the final publication without recording changes", async () => {

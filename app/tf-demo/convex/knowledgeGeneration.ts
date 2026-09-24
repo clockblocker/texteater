@@ -488,9 +488,10 @@ export const publish = internalMutation({
 			attempt.ownerReadingKey,
 			knowledge,
 			{
-				status: !args.final
-					? (accumulated?.status ?? "Partial")
-					: complete
+				// A top-up that partly fails never downgrades a Full Reading; its
+				// content still shows the translations and government it lacks.
+				status:
+					(args.final && complete) || accumulated?.status === "Full"
 						? "Full"
 						: "Partial",
 			},
