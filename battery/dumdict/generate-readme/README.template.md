@@ -35,8 +35,6 @@ The runtime service exposes Effect workflows:
 Each mutation also has a `prepare` variant that returns a detached plan
 without writing. The host can commit that plan together with related writes
 in one transaction; standalone methods prepare and commit through storage.
-`createDumdictLayer(language)` exposes language-bound service and storage tags
-for Layer construction.
 
 The surrounding application owns the workflow around those calls. In the normal
 flow, the user clicks a text segment, the UI resolves its Surface and Lemma

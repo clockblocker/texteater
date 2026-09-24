@@ -4,6 +4,7 @@ import { type Infer, v } from "convex/values";
 import { createDumdictService } from "dumdict/runtime";
 import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
+import * as Either from "effect/Either";
 import type { InspectionCapture } from "../server/inspectionCapture";
 import {
 	createTfDemoOrchestrator,
@@ -538,43 +539,35 @@ export const cleanupPendingRelation = action({
 						},
 					],
 				})
-				.pipe(
-					Effect.match({
-						onFailure: (error) => error,
-						onSuccess: (value) => value,
-					}),
-				),
+				.pipe(Effect.either),
 		);
-		if ("status" in result && result.status === "applied") {
+		if (Either.isRight(result)) {
 			return {
 				status: "applied",
-				baseRevision: result.baseRevision,
-				nextRevision: result.nextRevision,
-				message: result.summary.message,
+				baseRevision: result.right.baseRevision,
+				nextRevision: result.right.nextRevision,
+				message: result.right.summary.message,
 			};
 		}
-		if (
-			"_tag" in result &&
-			(result._tag === "DumdictRevisionConflict" ||
-				result._tag === "DumdictSemanticPreconditionFailure")
-		) {
-			return {
-				status: "conflict",
-				code:
-					result._tag === "DumdictRevisionConflict"
+		const failure = result.left;
+		switch (failure._tag) {
+			case "DumdictRevisionConflict":
+			case "DumdictSemanticPreconditionFailure":
+				return shadowCleanupConflict(
+					failure._tag === "DumdictRevisionConflict"
 						? "revisionConflict"
 						: "semanticPreconditionFailed",
-				baseRevision: result.baseRevision,
-				latestRevision: result.latestRevision ?? selection.revision,
-				message: result.message ?? "Shadow cleanup conflicted.",
-			};
+					failure.baseRevision,
+					failure.latestRevision ?? selection.revision,
+					failure.message ?? "Shadow cleanup conflicted.",
+				);
+			case "DumdictRejection":
+				return {
+					status: "rejected",
+					code: failure.code,
+					message: failure.message ?? "Shadow cleanup was rejected.",
+				};
 		}
-		if ("_tag" in result && result._tag === "DumdictRejection")
-			return {
-				status: "rejected",
-				code: result.code,
-				message: result.message ?? "Shadow cleanup was rejected.",
-			};
 		throw new Error("Shadow cleanup storage failed.");
 	},
 });
