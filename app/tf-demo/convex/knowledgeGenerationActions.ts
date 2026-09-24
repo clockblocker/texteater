@@ -21,6 +21,7 @@ import {
 	type RelationPublicationFingerprints,
 	requestedRelationKinds,
 } from "./model/generatedKnowledgeContainment";
+import { publishInRelationChunks } from "./model/relationPublicationChunks";
 
 const OWNER = "app/tf-demo · knowledgeGenerationActions";
 
@@ -144,13 +145,19 @@ export const runKnowledgeGeneration = internalAction({
 					artifactPath: authorization.artifactPath,
 					fingerprints: authorization.fingerprints,
 				};
+				type Publishable = {
+					changes: KnowledgeProduction["changes"];
+					pendingRelations: KnowledgeProduction<"de">["pendingRelations"];
+				};
 				const publish = async (
 					final: boolean,
-					publishable: {
-						changes: KnowledgeProduction["changes"];
-						pendingRelations: KnowledgeProduction<"de">["pendingRelations"];
-					},
+					publishable: Publishable,
 					failures: KnowledgeProduction<"de">["failures"],
+					/** What the gate checks and the final publication records. */
+					relationRun: {
+						requestedKinds: typeof requestedKinds;
+						proposed: Publishable["pendingRelations"];
+					} = { requestedKinds: [], proposed: [] },
 				) => {
 					const args = {
 						attemptKey,
@@ -165,15 +172,13 @@ export const runKnowledgeGeneration = internalAction({
 						},
 						relationPublication: {
 							runNumber: input.runNumber,
-							requestedKinds: final ? requestedKinds : [],
+							requestedKinds: relationRun.requestedKinds,
 							artifactPath: authorization.artifactPath,
 							fingerprints: authorization.fingerprints,
-							proposals: publishable.pendingRelations.map(
-								(pending) => ({
-									relation: pending.relation,
-									targetShadow: pending.target,
-								}),
-							),
+							proposals: relationRun.proposed.map((pending) => ({
+								relation: pending.relation,
+								targetShadow: pending.target,
+							})),
 						},
 					};
 					const result = await hop(
@@ -189,9 +194,11 @@ export const runKnowledgeGeneration = internalAction({
 					);
 					if (result.status === "Rejected")
 						throw new Error(result.message);
+					return result.status;
 				};
-				publishContribution = (changes) =>
-					publish(false, { changes, pendingRelations: [] }, []);
+				publishContribution = async (changes) => {
+					await publish(false, { changes, pendingRelations: [] }, []);
+				};
 				const generated = await spans.run(
 					knowledgeDumgen
 						.produceKnowledge({
@@ -246,13 +253,18 @@ export const runKnowledgeGeneration = internalAction({
 					return null;
 				}
 				generationCompleted = true;
-				await publish(
-					true,
+				// Relations too many for one plan commit in chunks first; the
+				// last chunk settles the run.
+				await publishInRelationChunks(
 					generatedKnowledgeAllowedForPublication(
 						generated,
 						qualifiedKinds,
 					),
-					generated.failures,
+					({ final, proposed, ...chunk }) =>
+						publish(final, chunk, final ? generated.failures : [], {
+							requestedKinds,
+							proposed: [...proposed],
+						}),
 				);
 				return null;
 			} catch (error) {

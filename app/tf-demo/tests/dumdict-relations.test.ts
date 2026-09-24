@@ -1575,3 +1575,105 @@ describe("tf-demo Dumdict relation storage", () => {
 		]);
 	});
 });
+
+describe("Reading Note relation neighbourhood caps", () => {
+	const verb = (canonicalForm: string) =>
+		({ ...gehenLemma, canonicalForm }) as const;
+	const readingOf = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
+		({ unitKind: "Reading", lemma, emojiDescription }) as const;
+
+	test("a target Lemma with more Readings than the cap truncates the note instead of throwing", async () => {
+		const t = createTestConvex();
+		const sourceId = await insertReading(
+			t,
+			await insertDictionaryLemma(t, gehenLemma),
+			gehenReading,
+		);
+		const targetLemmaId = await insertDictionaryLemma(t, laufenLemma);
+		for (let index = 0; index < 60; index++)
+			await insertReading(
+				t,
+				targetLemmaId,
+				// Sixty distinct animal emoji, 🐀 onwards.
+				readingOf(laufenLemma, String.fromCodePoint(0x1f400 + index)),
+			);
+		await t.run((ctx) =>
+			ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId: sourceId,
+				targetLemmaId,
+				relation: "synonym",
+			}),
+		);
+
+		expect(
+			await t.query(api.readingNotes.get, {
+				readingId: sourceId,
+				visitorId: "visitor-1",
+			}),
+		).toMatchObject({
+			relationsTruncated: true,
+			relations: expect.arrayContaining([
+				expect.objectContaining({
+					relation: "synonym",
+					target: { kind: "Lemma", lemmaId: targetLemmaId },
+				}),
+			]),
+		});
+	}, 30_000); // Projecting a neighbourhood of fifty Readings takes seconds.
+
+	test("a neighbourhood with more edges than the cap truncates the note instead of throwing", async () => {
+		const t = createTestConvex();
+		const sourceId = await insertReading(
+			t,
+			await insertDictionaryLemma(t, gehenLemma),
+			gehenReading,
+		);
+		// The source's ten hypernyms and five synonyms, each synonym with 49
+		// hypernyms of its own, stay under every per-Reading cap, while the
+		// synonym component holds 10 + 5 + 5 × 49 = 260 edges.
+		const hypernyms = async (
+			sourceReadingId: Id<"readings">,
+			prefix: string,
+			count: number,
+		) => {
+			for (let index = 0; index < count; index++) {
+				const targetLemmaId = await insertDictionaryLemma(
+					t,
+					verb(`${prefix}${index}`),
+				);
+				await t.run((ctx) =>
+					ctx.db.insert("semanticRelationEdges", {
+						sourceReadingId,
+						targetLemmaId,
+						relation: "hypernym",
+					}),
+				);
+			}
+		};
+		await hypernyms(sourceId, "quelle", 10);
+		for (let synonym = 0; synonym < 5; synonym++) {
+			const lemma = verb(`synonym${synonym}`);
+			const targetLemmaId = await insertDictionaryLemma(t, lemma);
+			const readingId = await insertReading(
+				t,
+				targetLemmaId,
+				readingOf(lemma, "🔁"),
+			);
+			await t.run((ctx) =>
+				ctx.db.insert("semanticRelationEdges", {
+					sourceReadingId: sourceId,
+					targetLemmaId,
+					relation: "synonym",
+				}),
+			);
+			await hypernyms(readingId, `ober${synonym}-`, 49);
+		}
+
+		const loaded = await t.run((ctx) =>
+			loadRelationProjections(ctx, sourceId),
+		);
+		expect(loaded.truncated).toBe(true);
+		expect(loaded.resolved.length).toBeGreaterThan(0);
+		expect(loaded.resolved.length).toBeLessThanOrEqual(50);
+	});
+});

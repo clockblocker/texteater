@@ -40,6 +40,7 @@ import type * as model_nounArticleMigration from "../model/nounArticleMigration.
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
+import type * as model_relationPublicationChunks from "../model/relationPublicationChunks.js";
 import type * as model_resolutionLookup from "../model/resolutionLookup.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_shadows from "../model/shadows.js";
@@ -115,6 +116,7 @@ declare const fullApi: ApiFromModules<{
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;
+  "model/relationPublicationChunks": typeof model_relationPublicationChunks;
   "model/resolutionLookup": typeof model_resolutionLookup;
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/shadows": typeof model_shadows;

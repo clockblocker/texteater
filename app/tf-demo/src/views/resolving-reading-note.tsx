@@ -61,6 +61,7 @@ export function resolvingReadingNoteData(
 		personalAnnotation: "",
 		knowledgeUpdatedAt: null,
 		relations: [],
+		relationsTruncated: false,
 		grammaticalAlternatives: [],
 		pendingRelations: [],
 		structuralReferences: [],

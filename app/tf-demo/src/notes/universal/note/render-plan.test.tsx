@@ -110,6 +110,7 @@ function readingFixture(): NoteData {
 		},
 		knowledge: {},
 		relations: [],
+		relationsTruncated: false,
 		pendingRelations: [],
 		sourceContexts: { page: [], isDone: true },
 	} as NoteData;

@@ -100,6 +100,36 @@ test("the public renderer applies capability visibility without reshaping NoteDa
 	expect(markup).not.toContain("To experience happiness.");
 });
 
+test("the Relations block says quietly when more relations exist than it shows", () => {
+	const render = (relationsTruncated: boolean) => {
+		const note = { ...readingNote(), relationsTruncated };
+		return renderToStaticMarkup(
+			renderNote({
+				noteData: note,
+				capabilities: {
+					knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
+					sourceContexts: {
+						items: note.sourceContexts.page,
+						hasMore: false,
+						isLoading: false,
+						error: null,
+						loadMore: null,
+					},
+					personalAnnotation: {
+						isSaving: false,
+						error: null,
+						save: null,
+					},
+					follow: () => {},
+				},
+			}),
+		);
+	};
+
+	expect(render(true)).toContain("More relations not shown");
+	expect(render(false)).not.toContain("More relations not shown");
+});
+
 function readingNote(): ReadingNote {
 	return {
 		kind: "Reading",
@@ -134,6 +164,7 @@ function readingNote(): ReadingNote {
 		knowledgeUpdatedAt: null,
 		definitionText: { state: "Plain" },
 		relations: [],
+		relationsTruncated: false,
 		pendingRelations: [
 			{
 				locatorKey: "pending-1",

@@ -216,10 +216,16 @@ function parseStoredGermanLemma(lemma: Doc<"lemmas">): Dumling.Lemma<"de"> {
 	});
 }
 
+/**
+ * Loads the Reading's relation neighbourhood up to its caps. Past a cap it
+ * stops adding and marks the result truncated, so an oversized neighbourhood
+ * still yields the relations it loaded, in index order.
+ */
 async function loadTargetedRelationProjections(
 	ctx: QueryCtx,
 	source: Doc<"readings">,
-): Promise<TargetedRelationProjection[]> {
+): Promise<{ projections: TargetedRelationProjection[]; truncated: boolean }> {
+	let truncated = false;
 	const neighborhood: RelationNeighborhood = {
 		readings: new Map([[source._id, source]]),
 		lemmas: new Map(),
@@ -239,26 +245,28 @@ async function loadTargetedRelationProjections(
 	>();
 	const readingsByLemma = new Map<Id<"lemmas">, Doc<"readings">[]>();
 
-	function rememberEdge(edge: Doc<"semanticRelationEdges">): void {
-		neighborhood.edges.set(edge._id, edge);
-		if (neighborhood.edges.size > MAX_RELATION_NEIGHBORHOOD_EDGES) {
-			throw new Error(
-				`A Reading Note relation neighborhood supports at most ${MAX_RELATION_NEIGHBORHOOD_EDGES} direct edges.`,
-			);
+	/** Whether the edge is in the neighbourhood; none is added past the cap. */
+	function rememberEdge(edge: Doc<"semanticRelationEdges">): boolean {
+		if (neighborhood.edges.has(edge._id)) return true;
+		if (neighborhood.edges.size >= MAX_RELATION_NEIGHBORHOOD_EDGES) {
+			truncated = true;
+			return false;
 		}
+		neighborhood.edges.set(edge._id, edge);
+		return true;
 	}
 
+	/** The loaded Reading, or null when it is missing or past the cap. */
 	async function rememberReading(readingId: Id<"readings">) {
 		const known = neighborhood.readings.get(readingId);
 		if (known) return known;
+		if (neighborhood.readings.size >= MAX_RELATION_NEIGHBORHOOD_READINGS) {
+			truncated = true;
+			return null;
+		}
 		const reading = await ctx.db.get(readingId);
 		if (!reading) return null;
 		neighborhood.readings.set(readingId, reading);
-		if (neighborhood.readings.size > MAX_RELATION_NEIGHBORHOOD_READINGS) {
-			throw new Error(
-				`A Reading Note relation neighborhood supports at most ${MAX_RELATION_NEIGHBORHOOD_READINGS} Readings.`,
-			);
-		}
 		return reading;
 	}
 
@@ -278,21 +286,33 @@ async function loadTargetedRelationProjections(
 			.query("readings")
 			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
 			.take(MAX_RELATION_NEIGHBORHOOD_READINGS + 1);
-		if (rows.length > MAX_RELATION_NEIGHBORHOOD_READINGS) {
-			throw new Error(
-				`A relation target Lemma supports at most ${MAX_RELATION_NEIGHBORHOOD_READINGS} Readings in one note projection.`,
-			);
+		if (rows.length > MAX_RELATION_NEIGHBORHOOD_READINGS) truncated = true;
+		const kept: Doc<"readings">[] = [];
+		for (const reading of rows.slice(
+			0,
+			MAX_RELATION_NEIGHBORHOOD_READINGS,
+		)) {
+			if (!neighborhood.readings.has(reading._id)) {
+				if (
+					neighborhood.readings.size >=
+					MAX_RELATION_NEIGHBORHOOD_READINGS
+				) {
+					truncated = true;
+					continue;
+				}
+				neighborhood.readings.set(reading._id, reading);
+			}
+			kept.push(reading);
 		}
-		for (const reading of rows) {
-			neighborhood.readings.set(reading._id, reading);
-		}
-		if (neighborhood.readings.size > MAX_RELATION_NEIGHBORHOOD_READINGS) {
-			throw new Error(
-				`A Reading Note relation neighborhood supports at most ${MAX_RELATION_NEIGHBORHOOD_READINGS} Readings.`,
-			);
-		}
-		readingsByLemma.set(lemmaId, rows);
-		return rows;
+		readingsByLemma.set(lemmaId, kept);
+		return kept;
+	}
+
+	/** At most one note's worth of a Reading's or Lemma's edges. */
+	function capIncident(rows: Doc<"semanticRelationEdges">[]) {
+		if (rows.length <= MAX_RELATIONS_PER_NOTE) return rows;
+		truncated = true;
+		return rows.slice(0, MAX_RELATIONS_PER_NOTE);
 	}
 
 	async function loadOutgoing(readingId: Id<"readings">) {
@@ -303,12 +323,8 @@ async function loadTargetedRelationProjections(
 			.withIndex("by_source_reading_id", (q) =>
 				q.eq("sourceReadingId", readingId),
 			)
-			.take(MAX_RELATIONS_PER_NOTE + 1);
-		if (rows.length > MAX_RELATIONS_PER_NOTE) {
-			throw new Error(
-				`A Reading supports at most ${MAX_RELATIONS_PER_NOTE} outgoing relations in one note projection.`,
-			);
-		}
+			.take(MAX_RELATIONS_PER_NOTE + 1)
+			.then(capIncident);
 		outgoingByReading.set(readingId, rows);
 		return rows;
 	}
@@ -321,12 +337,8 @@ async function loadTargetedRelationProjections(
 			.withIndex("by_target_reading_id", (q) =>
 				q.eq("targetReadingId", readingId),
 			)
-			.take(MAX_RELATIONS_PER_NOTE + 1);
-		if (rows.length > MAX_RELATIONS_PER_NOTE) {
-			throw new Error(
-				`A Reading supports at most ${MAX_RELATIONS_PER_NOTE} incoming relations in one note projection.`,
-			);
-		}
+			.take(MAX_RELATIONS_PER_NOTE + 1)
+			.then(capIncident);
 		incomingByReading.set(readingId, rows);
 		return rows;
 	}
@@ -339,12 +351,8 @@ async function loadTargetedRelationProjections(
 			.withIndex("by_target_lemma_id", (q) =>
 				q.eq("targetLemmaId", lemmaId),
 			)
-			.take(MAX_RELATIONS_PER_NOTE + 1);
-		if (rows.length > MAX_RELATIONS_PER_NOTE) {
-			throw new Error(
-				`A Lemma supports at most ${MAX_RELATIONS_PER_NOTE} incoming relations in one note projection.`,
-			);
-		}
+			.take(MAX_RELATIONS_PER_NOTE + 1)
+			.then(capIncident);
 		incomingByLemma.set(lemmaId, rows);
 		return rows;
 	}
@@ -379,7 +387,7 @@ async function loadTargetedRelationProjections(
 				...(await loadIncomingLemma(reading.lemmaId)),
 			].filter((edge) => edge.relation === "synonym");
 			for (const edge of incident) {
-				rememberEdge(edge);
+				if (!rememberEdge(edge)) continue;
 				if (!component.has(edge.sourceReadingId)) {
 					pending.push(edge.sourceReadingId);
 				}
@@ -402,7 +410,7 @@ async function loadTargetedRelationProjections(
 			...(await loadIncomingLemma(reading.lemmaId)),
 		];
 		for (const edge of incident) {
-			rememberEdge(edge);
+			if (!rememberEdge(edge)) continue;
 			await rememberReading(edge.sourceReadingId);
 			targetSeeds.add(edge.sourceReadingId);
 			for (const target of await targetReadings(edge)) {
@@ -462,10 +470,13 @@ async function loadTargetedRelationProjections(
 					: edge.targetLemmaId
 						? neighborhood.lemmas.get(edge.targetLemmaId)
 						: undefined;
-				if (!target)
+				if (!target) {
+					// A truncated neighbourhood may hold an edge without its target.
+					if (truncated) continue;
 					throw new Error(
 						"Relation neighborhood has a missing target.",
 					);
+				}
 				const value =
 					"emojiDescription" in target
 						? target
@@ -484,7 +495,7 @@ async function loadTargetedRelationProjections(
 	);
 	const projected = projectSemanticRelations(entries);
 	if (!projected.success) throw projected.error;
-	return projected.value
+	const projections = projected.value
 		.filter((item) => readingFingerprint(item.source) === source.readingKey)
 		.map(
 			(item): TargetedRelationProjection =>
@@ -502,6 +513,7 @@ async function loadTargetedRelationProjections(
 							provenance: item.provenance,
 						},
 		);
+	return { projections, truncated };
 }
 
 export async function loadRelationProjections(
@@ -509,13 +521,17 @@ export async function loadRelationProjections(
 	readingId: Id<"readings">,
 ) {
 	const source = await ctx.db.get(readingId);
-	if (!source) return { fingerprints: [], knowledge: {}, resolved: [] };
-	const projections = await loadTargetedRelationProjections(ctx, source);
-	if (projections.length > MAX_RELATIONS_PER_NOTE) {
-		throw new Error(
-			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Semantic Relations.`,
-		);
-	}
+	if (!source)
+		return {
+			fingerprints: [],
+			knowledge: {},
+			resolved: [],
+			truncated: false,
+		};
+	const loaded = await loadTargetedRelationProjections(ctx, source);
+	const truncated =
+		loaded.truncated || loaded.projections.length > MAX_RELATIONS_PER_NOTE;
+	const projections = loaded.projections.slice(0, MAX_RELATIONS_PER_NOTE);
 	const targetDocs = await Promise.all(
 		projections.map((projection) =>
 			projection.targetKind === "reading"
@@ -615,7 +631,7 @@ export async function loadRelationProjections(
 		if (bucket) bucket.push(target);
 		else knowledge[projection.relation] = [target];
 	}
-	return { fingerprints, knowledge, resolved };
+	return { fingerprints, knowledge, resolved, truncated };
 }
 
 export async function loadGrammaticalAlternatives(

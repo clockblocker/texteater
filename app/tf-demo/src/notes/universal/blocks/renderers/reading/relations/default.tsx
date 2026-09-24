@@ -79,9 +79,14 @@ export const renderDefaultReadingRelations = (({
 					))}
 				</ul>
 			) : null}
+			{noteData.relationsTruncated ? (
+				<p className="mt-2 text-sm text-ink-muted compact:text-xs">
+					More relations not shown
+				</p>
+			) : null}
 			{grammaticalAlternatives.length > 0 ? (
 				<ul
-					className="grid gap-2 [ul+&]:mt-2"
+					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
 					aria-label="Grammatical alternatives"
 				>
 					{grammaticalAlternatives.map((alternative) => (

@@ -80,6 +80,7 @@ function render(
 		knowledgeUpdatedAt: null,
 		definitionText,
 		relations: [],
+		relationsTruncated: false,
 		grammaticalAlternatives: [],
 		pendingRelations: [],
 		structuralReferences: [],

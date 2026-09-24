@@ -318,7 +318,8 @@ const MAX_PUBLISHED_CHANGES_PER_RUN = 500;
  * already published, rechecks the relation-publication gate in the
  * transaction that would create edges, plans the dictionary change against
  * the state it commits into, and records evidence and attempt state. The
- * action that produced the Knowledge only decides when a batch is final.
+ * action that produced the Knowledge only decides when a batch is final, and
+ * sends a final publication too large for one plan as relation chunks first.
  */
 export const publish = internalMutation({
 	args: {
@@ -343,17 +344,22 @@ export const publish = internalMutation({
 		const runNumber = args.relationPublication.runNumber;
 		if (!ownsKnowledgeRun(attempt, runNumber))
 			return { status: "Ignored" as const };
+		// An incremental batch is base text or one chunk of a final
+		// publication's relations; the gate below filters relations either way.
 		if (
 			!args.final &&
-			(args.relationPublication.requestedKinds.length ||
-				args.relationPublication.proposals.length ||
-				args.pendingRelations.length ||
-				args.changes.some(
-					(change) =>
-						!change || !BASE_TEXT_ASPECTS.has(change.aspect),
-				))
+			args.changes.some(
+				(change) =>
+					!change ||
+					!(
+						BASE_TEXT_ASPECTS.has(change.aspect) ||
+						change.aspect === "semanticRelations"
+					),
+			)
 		)
-			throw new Error("Incremental publication accepts only base text.");
+			throw new Error(
+				"Incremental publication accepts only base text and relations.",
+			);
 		const sequence = (attempt.publicationSequence ?? 0) + 1;
 		const accumulated = await findAccumulatedKnowledge(
 			ctx,

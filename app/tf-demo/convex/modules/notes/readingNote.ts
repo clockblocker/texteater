@@ -184,6 +184,8 @@ export const readingNoteValidator = v.object({
 	personalAnnotation: v.string(),
 	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 	relations: v.array(relationProjectionValidator),
+	/** The relation neighbourhood passed a cap; more relations exist. */
+	relationsTruncated: v.boolean(),
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
@@ -327,6 +329,7 @@ export async function loadUnitReadingNote(
 		),
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
+		relationsTruncated: relationProjections.truncated,
 		grammaticalAlternatives,
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
