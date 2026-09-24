@@ -23,6 +23,12 @@ import {
 } from "./model/textAnalysisStripping";
 
 const BATCH_SIZE = 400;
+/**
+ * Bytes one table-clearing page may read before it stops. The page may run
+ * one document, at most 1 MiB, past it, and deleting a row reads it again,
+ * so a batch reads at most 10 MiB of Convex's 16 MiB per-transaction limit.
+ */
+const TABLE_BATCH_MAX_BYTES = 4 * 1024 * 1024;
 /** Segments one strip step deletes, each with its Encounters and emptied Attestation. */
 export const STRIP_SEGMENT_BATCH = 128;
 /** Encounters and Segments one strip step may delete, far below the write limit. */
@@ -108,15 +114,57 @@ async function clearTableBatch(
 	}
 	const tableName = resetDemoTableNames[tableIndex];
 	if (!tableName) throw new Error("Reset table index is invalid.");
-	const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
-	await Promise.all(documents.map((document) => ctx.db.delete(document._id)));
-	const nextTableIndex =
-		documents.length === BATCH_SIZE ? tableIndex : tableIndex + 1;
+	const { deleted, cleared } = await deleteTableBatch(ctx, tableName);
+	const nextTableIndex = cleared ? tableIndex + 1 : tableIndex;
 	return {
-		deleted: documents.length,
+		deleted,
 		hasMore: nextTableIndex < resetDemoTableNames.length,
 		nextTableIndex,
 	};
+}
+
+/**
+ * Deletes up to `BATCH_SIZE` rows of one table, stopping early once the
+ * batch has read `TABLE_BATCH_MAX_BYTES`, so tables of large rows such as
+ * `inspectionPayloads` stay inside the transaction limits.
+ */
+async function deleteTableBatch(ctx: MutationCtx, tableName: TableNames) {
+	const { page, isDone } = await ctx.db.query(tableName).paginate({
+		cursor: null,
+		numItems: BATCH_SIZE,
+		maximumBytesRead: TABLE_BATCH_MAX_BYTES,
+	});
+	await Promise.all(page.map((document) => ctx.db.delete(document._id)));
+	return { deleted: page.length, cleared: isDone };
+}
+
+/**
+ * Runs table-clearing batches until they report no more work. Every batch
+ * deletes rows or moves to the next table, so the run ends after about as
+ * many batches as the rows need, with no fixed cap on the rows cleared.
+ */
+async function clearTablesInBatches(
+	runBatch: (tableIndex: number) => Promise<{
+		deleted: number;
+		hasMore: boolean;
+		nextTableIndex: number;
+	}>,
+): Promise<number> {
+	let deleted = 0;
+	let tableIndex = 0;
+	for (;;) {
+		const result = await runBatch(tableIndex);
+		if (
+			result.hasMore &&
+			result.deleted === 0 &&
+			result.nextTableIndex === tableIndex
+		) {
+			throw new Error("A table-clearing batch made no progress.");
+		}
+		deleted += result.deleted;
+		tableIndex = result.nextTableIndex;
+		if (!result.hasMore) return deleted;
+	}
 }
 
 export const clearSharedDataBatch = internalMutation({
@@ -323,12 +371,10 @@ export const clearResolutionInspectionBatch = internalMutation({
 				"Resolution inspection reset table index is invalid.",
 			);
 		}
-		const rows = await ctx.db.query(tableName).take(BATCH_SIZE);
-		await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-		const nextTableIndex =
-			rows.length === BATCH_SIZE ? tableIndex : tableIndex + 1;
+		const { deleted, cleared } = await deleteTableBatch(ctx, tableName);
+		const nextTableIndex = cleared ? tableIndex + 1 : tableIndex;
 		return {
-			deleted: rows.length,
+			deleted,
 			hasMore: nextTableIndex < resolutionInspectionTableNames.length,
 			nextTableIndex,
 		};
@@ -1011,18 +1057,13 @@ export const clearLemmaDataBatch = internalMutation({
 
 /** Clears every tf-demo table, processed in bounded mutation batches. */
 async function clearAllTables(ctx: ActionCtx): Promise<{ deleted: number }> {
-	let deleted = 0;
-	let tableIndex = 0;
-	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-		const result = await ctx.runMutation(
-			internal.demoReset.clearSharedDataBatch,
-			{ tableIndex },
-		);
-		deleted += result.deleted;
-		tableIndex = result.nextTableIndex;
-		if (!result.hasMore) return { deleted };
-	}
-	throw new Error("Demo reset exceeded its batch limit.");
+	return {
+		deleted: await clearTablesInBatches((tableIndex) =>
+			ctx.runMutation(internal.demoReset.clearSharedDataBatch, {
+				tableIndex,
+			}),
+		),
+	};
 }
 
 /** Full reset for `bun run reset`. */
@@ -1073,26 +1114,18 @@ export async function stripAllAnalyses(
 		}
 	}
 
-	let removedInspectionRecords = 0;
-	let tableIndex = 0;
-	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-		const result = await ctx.runMutation(
-			internal.demoReset.clearResolutionInspectionBatch,
-			{ tableIndex },
-		);
-		removedInspectionRecords += result.deleted;
-		tableIndex = result.nextTableIndex;
-		if (!result.hasMore) {
-			return {
-				strippedTexts,
-				removed,
-				deletedReadings,
-				deletedLemmas,
-				removedInspectionRecords,
-			};
-		}
-	}
-	throw new Error("Resolution inspection reset exceeded its batch limit.");
+	const removedInspectionRecords = await clearTablesInBatches((tableIndex) =>
+		ctx.runMutation(internal.demoReset.clearResolutionInspectionBatch, {
+			tableIndex,
+		}),
+	);
+	return {
+		strippedTexts,
+		removed,
+		deletedReadings,
+		deletedLemmas,
+		removedInspectionRecords,
+	};
 }
 
 /** Strips every Text and clears the Resolution Inspector's retained records. */

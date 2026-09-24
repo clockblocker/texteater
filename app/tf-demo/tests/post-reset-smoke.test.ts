@@ -8,6 +8,7 @@ import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
 import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
+import { inspectionPayloadChunks } from "../convex/model/inspection";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
@@ -581,6 +582,44 @@ describe("tf-demo post-reset contract", () => {
 		expect(await tableRows(t, "sentences")).toHaveLength(5);
 	});
 
+	test("a full reset clears more than a batch of maximum-size inspection payloads inside the transaction limits", async () => {
+		for (const reset of [
+			internal.demoReset.resetDemoData,
+			api.demoReset.clearSharedData,
+		]) {
+			const t = createTestConvex({ transactionLimits: true });
+			// A maximum chunk of 3-byte characters is about 94 KiB of UTF-8.
+			const [chunk] = inspectionPayloadChunks("€".repeat(32_000));
+			if (!chunk) throw new Error("Expected a payload chunk.");
+			const stepId = await t.run((ctx) =>
+				ctx.db.insert("inspectionSteps", {
+					requestId: "request-1",
+					id: "step-1",
+					name: "Resolution session",
+					kind: "Code",
+					owner: "app/tf-demo",
+					startedAt: 1,
+					durationMs: 1,
+					status: "Success",
+				}),
+			);
+			for (let part = 0; part < 420; part += 100) {
+				await t.run(async (ctx) => {
+					for (let index = part; index < part + 100; index += 1) {
+						await ctx.db.insert("inspectionPayloads", {
+							stepId,
+							part: index,
+							text: chunk,
+						});
+					}
+				});
+			}
+
+			expect(await t.action(reset, {})).toEqual({ deleted: 501 });
+			expect(await tableRows(t, "inspectionPayloads")).toEqual([]);
+		}
+	});
+
 	test("the bounded reset inventory stays complete as the schema changes", async () => {
 		const schemaTableNames = Object.keys(tfDemoSchema.tables).sort();
 		expect([...resetDemoTableNames].sort()).toEqual(schemaTableNames);
@@ -841,7 +880,8 @@ describe("tf-demo post-reset contract", () => {
 		const t = createTestConvex();
 		const { readingId } = await insertReading(t, "reading-key-1");
 		await t.run(async (ctx) => {
-			for (let index = 0; index < 400; index += 1) {
+			// One row more than a batch, so the table is left unfinished.
+			for (let index = 0; index < 401; index += 1) {
 				await ctx.db.insert("personalAnnotations", {
 					visitorId: "visitor-1",
 					readingId,
