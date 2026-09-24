@@ -6,6 +6,7 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { enableDeploymentFlags } from "./support/deploymentFlags";
 import {
 	bankOccurrenceCommit,
 	type Selection,
@@ -19,6 +20,8 @@ import { fakeProviders, unavailableProviders } from "./support/providers";
  * the providers faked at HTTP. Every step hangs directly under its action's
  * root step, and a Dumgen call under its operation.
  */
+
+enableDeploymentFlags();
 
 beforeEach(() => {
 	// Sessions and Knowledge attempts schedule their runs; each test drives them.

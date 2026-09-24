@@ -6,6 +6,7 @@ import {
 	mutation,
 	query,
 } from "./_generated/server";
+import { inspectionEnabled } from "./deploymentFlags";
 import { inspectionJson } from "./model/inspection";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { requireClickableSegment } from "./model/resolutionLookup";
@@ -98,6 +99,7 @@ export const selectSegment = mutation({
 	),
 	handler: async (ctx, args) => {
 		const startedAt = Date.now();
+		const inspect = args.inspect === true && inspectionEnabled();
 		const select = async () => {
 			assertIdentifier(args.requestId, "requestId");
 			assertIdentifier(args.visitorId, "visitorId");
@@ -215,7 +217,7 @@ export const selectSegment = mutation({
 				sentence,
 				segment,
 				routeNoteRequested: args.routeNoteRequested,
-				inspect: args.inspect === true,
+				inspect,
 			});
 			return {
 				kind: "Resolving" as const,
@@ -226,7 +228,7 @@ export const selectSegment = mutation({
 			};
 		};
 		const result = await select();
-		if (args.inspect) {
+		if (inspect) {
 			const existing = await ctx.db
 				.query("inspectionClicks")
 				.withIndex("by_request_id", (q) =>

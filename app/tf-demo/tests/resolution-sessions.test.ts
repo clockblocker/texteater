@@ -17,6 +17,7 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { enableDeploymentFlags } from "./support/deploymentFlags";
 import {
 	bankOccurrenceCommit,
 	bankReading,
@@ -26,6 +27,8 @@ import {
 	type SessionGuard,
 	startSession,
 } from "./support/occurrences";
+
+enableDeploymentFlags();
 
 beforeEach(() => {
 	// Sessions schedule their runs; each test drives the run itself.

@@ -14,6 +14,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { requireAdmin } from "./deploymentFlags";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import { loadStoredSegments } from "./model/storedSegments";
@@ -1076,7 +1077,10 @@ export const resetDemoData = internalAction({
 export const clearSharedData = action({
 	args: {},
 	returns: v.object({ deleted: v.number() }),
-	handler: clearAllTables,
+	handler: (ctx) => {
+		requireAdmin();
+		return clearAllTables(ctx);
+	},
 });
 
 export type StripAnalysesResult = StripTextAnalysisResult & {
@@ -1138,7 +1142,10 @@ export const stripAnalyses = action({
 		deletedLemmas: v.number(),
 		removedInspectionRecords: v.number(),
 	}),
-	handler: (ctx): Promise<StripAnalysesResult> => stripAllAnalyses(ctx),
+	handler: (ctx): Promise<StripAnalysesResult> => {
+		requireAdmin();
+		return stripAllAnalyses(ctx);
+	},
 });
 
 export const clearVisitorData = action({

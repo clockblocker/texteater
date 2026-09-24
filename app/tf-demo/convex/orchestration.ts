@@ -44,6 +44,7 @@ import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
+import { inspectionEnabled } from "./deploymentFlags";
 import { createConvexDumdictStorage } from "./dumdictStorage/adapter";
 import { inspectionFor } from "./inspectionAction";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
@@ -109,18 +110,21 @@ export const submitText = action({
 		);
 		if (analyzed) return { status: "Accepted", textId: analyzed };
 		const sentenceCount = sentences.length;
+		const inspectionVisitorId = inspectionEnabled()
+			? args.inspectionVisitorId
+			: undefined;
 		const requestId = crypto.randomUUID();
-		if (args.inspectionVisitorId) {
+		if (inspectionVisitorId) {
 			await ctx.runMutation(internal.resolutionInspection.beginAnalysis, {
 				requestId,
-				visitorId: args.inspectionVisitorId,
+				visitorId: inspectionVisitorId,
 				sourceText: args.sourceText,
 			});
 		}
 		const inspection = inspectionFor(
 			ctx,
 			requestId,
-			Boolean(args.inspectionVisitorId),
+			Boolean(inspectionVisitorId),
 		);
 		const intake = createIntakeRunRecorder(sentenceCount);
 		const createdAt = Date.now();
@@ -155,7 +159,7 @@ export const submitText = action({
 			throw visitorErrorIn(error) ?? error;
 		} finally {
 			await inspection?.flush();
-			if (args.inspectionVisitorId) {
+			if (inspectionVisitorId) {
 				await ctx.runMutation(
 					internal.resolutionInspection.finishAnalysis,
 					{ requestId, state },

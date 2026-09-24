@@ -13,6 +13,7 @@ import type * as crons from "../crons.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
 import type * as definitionTexts from "../definitionTexts.js";
 import type * as demoReset from "../demoReset.js";
+import type * as deploymentFlags from "../deploymentFlags.js";
 import type * as dumdictStorage_adapter from "../dumdictStorage/adapter.js";
 import type * as dumdictStorage_contextRequest from "../dumdictStorage/contextRequest.js";
 import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionaryPlan.js";
@@ -91,6 +92,7 @@ declare const fullApi: ApiFromModules<{
   definitionTextActions: typeof definitionTextActions;
   definitionTexts: typeof definitionTexts;
   demoReset: typeof demoReset;
+  deploymentFlags: typeof deploymentFlags;
   "dumdictStorage/adapter": typeof dumdictStorage_adapter;
   "dumdictStorage/contextRequest": typeof dumdictStorage_contextRequest;
   "dumdictStorage/dictionaryPlan": typeof dumdictStorage_dictionaryPlan;

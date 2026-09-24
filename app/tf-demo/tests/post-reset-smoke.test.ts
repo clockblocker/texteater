@@ -19,6 +19,9 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { enableDeploymentFlags } from "./support/deploymentFlags";
+
+enableDeploymentFlags();
 
 const verbFeatures = {
 	verbType: null,

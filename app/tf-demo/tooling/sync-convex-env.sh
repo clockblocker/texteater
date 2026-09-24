@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-# Push the provider API keys from the shell (or .env.local) into the Convex deployment.
+# Push the provider API keys from the shell (or .env.local) into the Convex deployment,
+# and open the global wipes and inspection capture on the local one.
 # Usage: bun run env:sync            # local dev deployment
 #        bun run env:sync -- --prod  # production deployment
 set -eu
@@ -25,4 +26,16 @@ for name in OPENAI_API_KEY TYPESAFE_API_KEY; do
 	echo "setting $name"
 	CONVEX_AGENT_MODE=anonymous npx convex env set "$name" "$value" "$@"
 done
+
+# A hosted deployment leaves these unset, so anonymous callers cannot wipe
+# shared data or capture inspection there.
+case " $* " in
+*" --prod "*) ;;
+*)
+	for name in TF_DEMO_ADMIN TF_INSPECTION; do
+		echo "setting $name"
+		CONVEX_AGENT_MODE=anonymous npx convex env set "$name" 1 "$@"
+	done
+	;;
+esac
 exit $status

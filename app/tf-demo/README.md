@@ -30,6 +30,14 @@ the repository's `.env.local` are not automatically available there. TypeSafe
 is required during text intake; OpenAI is also required for generated
 resolution. Configure both again when switching to a new deployment.
 
+Two deployment flags open anonymous entry points that a hosted deployment
+must keep closed. `bun run dev` sets both to `1` on the local deployment
+through `bun run env:sync`:
+
+- `TF_DEMO_ADMIN=1` allows the global wipes, clearing shared data and
+  stripping every analysis, and shows their buttons.
+- `TF_INSPECTION=1` honours requests to capture Resolution Inspector records.
+
 The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
 demand; grammatical navigation adds only the selected Reading.
 
@@ -43,8 +51,9 @@ machinery, and presentation components come from the `lego` battery.
 
 The UI can clear Visitor Encounter history, clear the shared linguistic graph,
 or strip derived analysis from one Text while preserving its source Sentences.
-These operations require confirmation. `bun run reset` performs the bounded
-full demo reset while keeping the local deployment selected.
+These operations require confirmation, and the two shared ones need
+`TF_DEMO_ADMIN=1`. `bun run reset` performs the bounded full demo reset while
+keeping the local deployment selected.
 
 From `app/tf-demo`:
 

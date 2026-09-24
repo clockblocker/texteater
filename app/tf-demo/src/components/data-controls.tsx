@@ -1,3 +1,5 @@
+import { convexQuery } from "@convex-dev/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
 	Button,
 	Card,
@@ -43,6 +45,7 @@ export function DataControls({
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
 	const demoData = useDemoDataControls(text);
+	const flags = useQuery(convexQuery(api.deploymentFlags.get, {}));
 	return (
 		<div className="flex flex-col gap-6">
 			<ReadingBehaviorCard
@@ -53,7 +56,11 @@ export function DataControls({
 				canCloseAllSheets={canCloseAllSheets}
 				onCloseAllSheets={closeAllSheets}
 			/>
-			<DemoDataCard text={text} {...demoData} />
+			<DemoDataCard
+				text={text}
+				admin={flags.data?.admin === true}
+				{...demoData}
+			/>
 		</div>
 	);
 }
@@ -235,6 +242,7 @@ function ReadingBehaviorCard({
 
 function DemoDataCard({
 	text,
+	admin,
 	notice,
 	error,
 	isBusy,
@@ -253,6 +261,8 @@ function DemoDataCard({
 		sourceText: string;
 		isAnalyzed: boolean;
 	};
+	/** Whether this deployment allows the global wipes (TF_DEMO_ADMIN). */
+	admin: boolean;
 	notice: string | null;
 	error: string | null;
 	isBusy: boolean;
@@ -297,24 +307,26 @@ function DemoDataCard({
 						? "Clearing your data…"
 						: "Clear my data"}
 				</ConfirmDialog>
-				<ConfirmDialog
-					trigger={
-						<Button
-							type="button"
-							variant="destructive"
-							disabled={isBusy}
-						/>
-					}
-					title="Strip all analyses?"
-					description="All Texts and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
-					confirmLabel="Strip analyses"
-					onConfirm={() => void handleStripTextAnalysis()}
-				>
-					<EraserIcon data-icon="inline-start" />
-					{isStrippingTextAnalysis
-						? "Stripping analyses…"
-						: "Strip analyses"}
-				</ConfirmDialog>
+				{admin ? (
+					<ConfirmDialog
+						trigger={
+							<Button
+								type="button"
+								variant="destructive"
+								disabled={isBusy}
+							/>
+						}
+						title="Strip all analyses?"
+						description="All Texts and Sentences remain. Segments, resolutions, Encounters, orphaned Readings, and Resolution Inspector history are removed."
+						confirmLabel="Strip analyses"
+						onConfirm={() => void handleStripTextAnalysis()}
+					>
+						<EraserIcon data-icon="inline-start" />
+						{isStrippingTextAnalysis
+							? "Stripping analyses…"
+							: "Strip analyses"}
+					</ConfirmDialog>
+				) : null}
 				{text && !text.isAnalyzed ? (
 					<Button
 						type="button"
@@ -327,24 +339,26 @@ function DemoDataCard({
 							: "Split into segments"}
 					</Button>
 				) : null}
-				<ConfirmDialog
-					trigger={
-						<Button
-							type="button"
-							variant="destructive"
-							disabled={isBusy}
-						/>
-					}
-					title="Clear shared data for every visitor?"
-					description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
-					confirmLabel="Clear shared data"
-					onConfirm={() => void handleClearSharedData()}
-				>
-					<DatabaseZapIcon data-icon="inline-start" />
-					{isClearingSharedData
-						? "Clearing shared data…"
-						: "Clear shared data"}
-				</ConfirmDialog>
+				{admin ? (
+					<ConfirmDialog
+						trigger={
+							<Button
+								type="button"
+								variant="destructive"
+								disabled={isBusy}
+							/>
+						}
+						title="Clear shared data for every visitor?"
+						description="This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge."
+						confirmLabel="Clear shared data"
+						onConfirm={() => void handleClearSharedData()}
+					>
+						<DatabaseZapIcon data-icon="inline-start" />
+						{isClearingSharedData
+							? "Clearing shared data…"
+							: "Clear shared data"}
+					</ConfirmDialog>
+				) : null}
 			</CardContent>
 			{notice ? (
 				<CardContent>
