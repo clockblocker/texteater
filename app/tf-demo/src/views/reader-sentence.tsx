@@ -75,78 +75,108 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 			{sentence.segments.length === 0 ? (
 				<span>{sentence.stitchedText}</span>
 			) : null}
-			{sentence.segments.map((segment) => {
-				const isSourceContextMember = focusMemberIndices.includes(
-					segment.index,
-				);
-				const key = segmentKey(sentence.sentenceId, segment.index);
-				if (segment.kind !== "ResolvableText") {
-					return (
-						<ReaderPlainSegment key={segment.index}>
-							{segment.text}
-						</ReaderPlainSegment>
-					);
-				}
-				const isPreviewed = previewTarget?.attestationId
-					? segment.attestationId === previewTarget.attestationId
-					: previewTarget?.segmentKey === key;
-				/* A word the reader picked, or one the focused Note points
-				   at: both wear the selected rule. */
-				const isSelected =
-					isSourceContextMember ||
-					(selectedSegment?.attestationId
-						? segment.attestationId ===
-							selectedSegment.attestationId
-						: selectedSegmentKey === key);
-				const displayState = displayStateForSegment(
-					segment,
-					isPreviewed,
-					isSelected,
-				);
-				const interactionTarget: InteractionTarget = {
-					segmentKey: key,
-					...(segment.attestationId
-						? { attestationId: segment.attestationId }
-						: {}),
-				};
-
-				return (
-					<ReaderSegment
-						key={segment.index}
-						data-state={displayState}
-						tone={segmentTone(displayState)}
-						gender={
-							segment.encountered ? segment.gender : undefined
-						}
-						interaction={segmentInteraction(displayState)}
-						disabled={
-							sentence.language !== "de" ||
-							segment.resolutionState === "Active" ||
-							segment.resolutionState === "PermanentFailure"
-						}
-						aria-pressed={isSelected}
-						aria-label={segmentAccessibleLabel(segment)}
-						onBlur={() => setFocusedTarget(null)}
-						onFocus={() => setFocusedTarget(interactionTarget)}
-						onMouseEnter={() => setHoveredTarget(interactionTarget)}
-						onMouseLeave={() => setHoveredTarget(null)}
-						onClick={(event) => {
-							// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
-							if (event.detail > 0) event.currentTarget.blur();
-							void onSegmentClick(
-								sentence,
-								segment.index,
-								event.altKey,
-								event.currentTarget,
-							);
-						}}
+			{fusedRuns(sentence.segments).map((run) =>
+				run.length === 1 ? (
+					renderSegment(run[0] as SentenceSegmentView)
+				) : (
+					// A fused word's components wrap as the one word they spell.
+					<span
+						key={`fused-${run[0]?.index}`}
+						className="whitespace-nowrap"
 					>
-						{segment.text}
-					</ReaderSegment>
-				);
-			})}
+						{run.map(renderSegment)}
+					</span>
+				),
+			)}
 		</p>
 	);
+
+	function renderSegment(segment: SentenceSegmentView) {
+		const isSourceContextMember = focusMemberIndices.includes(
+			segment.index,
+		);
+		const key = segmentKey(sentence.sentenceId, segment.index);
+		if (segment.kind !== "ResolvableText") {
+			return (
+				<ReaderPlainSegment key={segment.index}>
+					{segment.text}
+				</ReaderPlainSegment>
+			);
+		}
+		const isPreviewed = previewTarget?.attestationId
+			? segment.attestationId === previewTarget.attestationId
+			: previewTarget?.segmentKey === key;
+		/* A word the reader picked, or one the focused Note points
+				   at: both wear the selected rule. */
+		const isSelected =
+			isSourceContextMember ||
+			(selectedSegment?.attestationId
+				? segment.attestationId === selectedSegment.attestationId
+				: selectedSegmentKey === key);
+		const displayState = displayStateForSegment(
+			segment,
+			isPreviewed,
+			isSelected,
+		);
+		const interactionTarget: InteractionTarget = {
+			segmentKey: key,
+			...(segment.attestationId
+				? { attestationId: segment.attestationId }
+				: {}),
+		};
+
+		return (
+			<ReaderSegment
+				key={segment.index}
+				data-state={displayState}
+				tone={segmentTone(displayState)}
+				gender={segment.encountered ? segment.gender : undefined}
+				interaction={segmentInteraction(displayState)}
+				disabled={
+					sentence.language !== "de" ||
+					segment.resolutionState === "Active" ||
+					segment.resolutionState === "PermanentFailure"
+				}
+				aria-pressed={isSelected}
+				aria-label={segmentAccessibleLabel(segment)}
+				onBlur={() => setFocusedTarget(null)}
+				onFocus={() => setFocusedTarget(interactionTarget)}
+				onMouseEnter={() => setHoveredTarget(interactionTarget)}
+				onMouseLeave={() => setHoveredTarget(null)}
+				onClick={(event) => {
+					// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
+					if (event.detail > 0) event.currentTarget.blur();
+					void onSegmentClick(
+						sentence,
+						segment.index,
+						event.altKey,
+						event.currentTarget,
+					);
+				}}
+			>
+				{segment.text}
+			</ReaderSegment>
+		);
+	}
+}
+
+/** Segments in reading order, a fused word's components grouped into one run. */
+function fusedRuns(
+	segments: readonly SentenceSegmentView[],
+): SentenceSegmentView[][] {
+	const runs: SentenceSegmentView[][] = [];
+	for (const segment of segments) {
+		const last = runs.at(-1);
+		const previous = last?.at(-1);
+		if (
+			last &&
+			previous?.surface !== undefined &&
+			segment.surface !== undefined
+		)
+			last.push(segment);
+		else runs.push([segment]);
+	}
+	return runs;
 }
 
 function displayStateForSegment(

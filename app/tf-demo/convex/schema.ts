@@ -123,6 +123,8 @@ export default defineSchema({
 		index: v.number(),
 		kind: segmentKindValidator,
 		text: v.string(),
+		/** The word a fusion component stands for: `in` for the `i` of `im`. */
+		surface: v.optional(v.string()),
 		resolutionState: v.optional(segmentResolutionStateValidator),
 		attestationMembership: v.optional(
 			v.object({

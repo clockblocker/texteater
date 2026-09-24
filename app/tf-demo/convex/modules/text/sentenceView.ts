@@ -27,6 +27,7 @@ export const sentenceSegmentViewValidator = v.object({
 	index: v.number(),
 	kind: segmentKindValidator,
 	text: v.string(),
+	surface: v.optional(v.string()),
 	attestationId: v.optional(v.id("attestations")),
 	encountered: v.boolean(),
 	gender: v.optional(grammaticalGenderValidator),
@@ -113,6 +114,9 @@ export async function projectSentenceView(
 				index: segment.index,
 				kind: segment.kind,
 				text: segment.text,
+				...(segment.surface === undefined
+					? {}
+					: { surface: segment.surface }),
 				...(attestationId ? { attestationId } : {}),
 				encountered,
 				...(attestationId && genders.get(attestationId)

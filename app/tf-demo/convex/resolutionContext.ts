@@ -33,6 +33,7 @@ export const resolutionContextValidator = v.object({
 					index: v.number(),
 					kind: segmentKindValidator,
 					text: v.string(),
+					surface: v.optional(v.string()),
 				}),
 			),
 			/** Whether the Sentence belongs to a hidden Definition Text. */
@@ -73,16 +74,9 @@ export async function loadResolutionContext(
 			lemmaCandidates: [],
 			analysis: null,
 		};
-	if (!loadGrammar)
-		return {
-			recorded: null,
-			reusable: null,
-			sentence: null,
-			lemmaCandidates: [],
-			analysis: null,
-		};
+	// A resumed Grammar still needs the Sentence to commit stored membership.
 	const sentence = await loadSentenceForResolution(ctx, input);
-	if (sentence?.language !== "de")
+	if (!loadGrammar || sentence?.language !== "de")
 		return {
 			recorded: null,
 			reusable: null,
@@ -97,6 +91,9 @@ export async function loadResolutionContext(
 	const clicked = words.findIndex(
 		(segment) => segment.index === input.clickedSegmentIndex,
 	);
+	// A fusion component is looked up by the word it stands for.
+	const spellingOf = (word: (typeof words)[number]) =>
+		word.surface ?? word.text;
 	// Include nearby phrases as well as individual words: articles, separated verbs,
 	// and inflected forms can lead to stored Surfaces with a different headword.
 	const phrases: string[] = [];
@@ -106,20 +103,15 @@ export async function loadResolutionContext(
 			end <= Math.min(words.length, start + 4);
 			end++
 		) {
-			phrases.push(
-				words
-					.slice(start, end)
-					.map((word) => word.text)
-					.join(" "),
-			);
+			phrases.push(words.slice(start, end).map(spellingOf).join(" "));
 		}
 	}
 	const spellings = [
 		...new Set(
 			[
-				words[clicked]?.text ?? "",
+				words[clicked] ? spellingOf(words[clicked]) : "",
 				...phrases,
-				...words.map((word) => word.text),
+				...words.map(spellingOf),
 			].flatMap((text) => [
 				text,
 				text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),

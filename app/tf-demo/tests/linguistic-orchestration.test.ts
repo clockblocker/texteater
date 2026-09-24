@@ -22,6 +22,7 @@ import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.
 import type { Id } from "../convex/_generated/dataModel";
 import type { ActionCtx } from "../convex/_generated/server";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
+import type { StoredSegment } from "../server/fusedWords";
 import { createInspectionCapture } from "../server/inspectionCapture";
 import {
 	applyValidatedReadingKnowledgeChange,
@@ -1145,6 +1146,8 @@ function setupWithAnalysis(
 		readonly analyzeSentence?: Dumgen["analyzeSentence"];
 		readonly analysis?: SentenceAnalysis | null;
 		readonly inspection?: ReturnType<typeof createInspectionCapture>;
+		/** Stored Segments; the unsplit words by default. */
+		readonly segments?: readonly StoredSegment[];
 	},
 ) {
 	const encounters: Encounter<"de">[] = [];
@@ -1163,7 +1166,7 @@ function setupWithAnalysis(
 						segmentedSentenceId: "sentence-1",
 						language: "de",
 						stitchedText: verfuegungText,
-						segments: verfuegungSegments,
+						segments: hooks.segments ?? verfuegungSegments,
 					},
 				};
 			},
@@ -1381,6 +1384,64 @@ test("a click on the fused `zur` itself cannot be expressed by a sub-word unit a
 	expect(JSON.parse(step?.payloadJson ?? "null")).toMatchObject({
 		input: { reason: "clickedNotMember" },
 	});
+});
+
+/** `zur` stored as intake splits it: `zu` standing for `zu`, `r` standing for `der`. */
+const splitVerfuegungSegments: StoredSegment[] = [
+	...verfuegungSegments.slice(0, 8),
+	{ index: 8, kind: "ResolvableText", text: "zu", surface: "zu" },
+	{ index: 9, kind: "ResolvableText", text: "r", surface: "der" },
+	...verfuegungSegments
+		.slice(9)
+		.map((segment) => ({ ...segment, index: segment.index + 1 })),
+];
+
+test("a click on the `zu` of a split `zur` reads its ADP from the analysis and resolves `zu der`", async () => {
+	const run = setupWithAnalysis([], {
+		analysis: verfuegungAnalysis({ collocation: false }),
+		segments: splitVerfuegungSegments,
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment({
+			...selection,
+			clickedSegmentIndex: 8,
+		}),
+	);
+	expect(run.requests).toHaveLength(0);
+	const encounter = run.encounters[0];
+	expect(encounter?.sentence.segments.map(({ text }) => text).join("")).toBe(
+		"Er stellt das Auto zu der Verfügung.",
+	);
+	expect(encounter?.target).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		memberSegmentIndices: [8],
+	});
+});
+
+test("a click on the `r` of a split `zur` selects the NOUN it articles, in Encounter indices", async () => {
+	const run = setupWithAnalysis([], {
+		analysis: verfuegungAnalysis({ collocation: false }),
+		segments: splitVerfuegungSegments,
+	});
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment({
+			...selection,
+			clickedSegmentIndex: 9,
+		}),
+	);
+	expect(run.requests).toHaveLength(0);
+	const encounter = run.encounters[0];
+	expect(encounter?.target).toEqual({
+		family: "Lexeme",
+		kind: "NOUN",
+		memberSegmentIndices: [10, 12],
+	});
+	expect(
+		encounter?.target.memberSegmentIndices.map(
+			(index) => encounter.sentence.segments[index]?.text,
+		),
+	).toEqual(["der", "Verfügung"]);
 });
 
 test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored analysis, falls back to click-time classification and names why", async () => {

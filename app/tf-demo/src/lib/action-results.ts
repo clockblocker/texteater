@@ -10,6 +10,8 @@ export type SentenceSegmentView = {
 	readonly index: number;
 	readonly kind: SegmentKind;
 	readonly text: string;
+	/** Present on a fusion component: the word it stands for. */
+	readonly surface?: string;
 	readonly attestationId?: Id<"attestations">;
 	readonly encountered: boolean;
 	readonly gender?: "Fem" | "Masc" | "Neut";

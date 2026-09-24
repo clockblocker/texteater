@@ -498,7 +498,11 @@ export const persistResolvedClick = internalMutation({
 					"Attestation members must refer to ResolvableText Segments.",
 				);
 			}
-			if (member.text !== attestedMembers[memberPosition]?.attested) {
+			// A fusion component is attested as the word it stands for.
+			if (
+				(member.surface ?? member.text) !==
+				attestedMembers[memberPosition]?.attested
+			) {
 				throw new Error(
 					"Attestation member text must equal its Segment text.",
 				);

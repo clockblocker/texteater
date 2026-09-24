@@ -1,3 +1,4 @@
+import { encounterSentenceOf } from "../../server/fusedWords";
 import {
 	parseGermanAttestation,
 	parseGermanReading,
@@ -181,11 +182,14 @@ export async function loadOccurrenceAttestation(
 		(left, right) => left.index - right.index,
 	);
 	const memberSegmentIndices = orderedMembers.map(({ index }) => index);
+	const view = encounterSentenceOf({
+		segmentedSentenceId: sentence.segmentedSentenceId,
+		segments: orderedSentenceSegments,
+	});
 	const encounter = {
 		sentence: {
-			id: sentence.segmentedSentenceId,
-			language: sentence.language,
-			segments: orderedSentenceSegments.map(({ kind, text }) => ({
+			...view.sentence,
+			segments: view.sentence.segments.map(({ kind, text }) => ({
 				kind,
 				text,
 			})),
@@ -193,13 +197,13 @@ export async function loadOccurrenceAttestation(
 		target: {
 			family: lemma.family,
 			kind: lemma.kind,
-			memberSegmentIndices,
+			memberSegmentIndices: memberSegmentIndices.map(view.encounterIndex),
 		},
 	};
 	const publicAttestation = {
 		unitKind: "Attestation" as const,
 		members: orderedMembers.map((member) => ({
-			attested: member.text,
+			attested: member.surface ?? member.text,
 			orthography: member.attestationMembership?.orthography as
 				| "Standard"
 				| "Typo",

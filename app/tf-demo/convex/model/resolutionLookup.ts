@@ -109,10 +109,11 @@ export async function loadSentenceForResolution(
 		segmentedSentenceId: sentence.segmentedSentenceId,
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
-		segments: segments.map(({ index, kind, text }) => ({
+		segments: segments.map(({ index, kind, text, surface }) => ({
 			index,
 			kind,
 			text,
+			...(surface === undefined ? {} : { surface }),
 		})),
 		definitionText: text?.origin?.kind === "Definition",
 	};

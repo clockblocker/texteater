@@ -40,19 +40,21 @@ export type AnalysisSelection =
 /**
  * Reads the stored Sentence Analysis for one click instead of classifying.
  *
- * Stored Segments are index-keyed and hold the unsplit word; analysed
- * Segments are offset-keyed and a fused word is one Segment per component.
- * The bridge is the Stitched Text: stored Segments concatenate to it, so each
- * stored Segment owns the offset range `[start, start + text.length)`. The
- * click lands on the first analysed ResolvableText Segment in the clicked
- * range (the first component of a fused word), and the largest resolved unit
+ * Stored Segments are index-keyed; analysed Segments are offset-keyed and a
+ * fused word is one Segment per component. Sentences stored since intake
+ * split fused words match the analysed Segments one to one; older ones hold
+ * the unsplit word. The bridge is the Stitched Text: stored Segments
+ * concatenate to it, so each stored Segment owns the offset range
+ * `[start, start + text.length)`. The click lands on the first analysed
+ * ResolvableText Segment in the clicked range, and the largest resolved unit
  * there is the target.
  *
  * A stored Segment is a member iff every analysed Segment inside its range is
- * in the unit. The `r` of `zur` may serve a NOUN as Article while `zu` stays
- * a separate ADP; that NOUN does not cover the stored `zur`, but a Collocation
- * over both does. When the clicked Segment itself is not a member the unit
- * cannot be expressed at stored granularity and the caller classifies.
+ * in the unit. In an older Sentence the `r` of `zur` may serve a NOUN as
+ * Article while `zu` stays a separate ADP; that NOUN does not cover the
+ * stored `zur`, but a Collocation over both does. When the clicked Segment
+ * itself is not a member the unit cannot be expressed at stored granularity
+ * and the caller classifies.
  *
  * A lone word whose selected identity is AUX is classified as well: ADR 0026
  * forbids AUX as a target, and texteater#523 decides what the selector should

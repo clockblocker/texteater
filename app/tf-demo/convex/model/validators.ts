@@ -67,6 +67,13 @@ export const segmentInputValidator = v.object({
 	text: v.string(),
 });
 
+/** A Segment to store; `surface` marks a fusion component. */
+export const storedSegmentInputValidator = v.object({
+	kind: segmentKindValidator,
+	text: v.string(),
+	surface: v.optional(v.string()),
+});
+
 export const orthographyValidator = literalUnion(memberOrthographyValues);
 
 export const realizationCoverageValidator = literalUnion(
@@ -228,7 +235,7 @@ export const sentenceInputValidator = v.object({
 	paragraph: v.number(),
 	language: languageValidator,
 	stitchedText: v.string(),
-	segments: v.array(segmentInputValidator),
+	segments: v.array(storedSegmentInputValidator),
 	/** Present for an accepted German sentence whose intake analysis succeeded. */
 	analysis: v.optional(storedSentenceAnalysisValidator),
 });

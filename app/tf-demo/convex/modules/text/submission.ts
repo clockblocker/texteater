@@ -152,7 +152,9 @@ export async function persistSubmittedText(
 								segment.kind ===
 									submitted.segments[segmentIndex]?.kind &&
 								segment.text ===
-									submitted.segments[segmentIndex]?.text,
+									submitted.segments[segmentIndex]?.text &&
+								segment.surface ===
+									submitted.segments[segmentIndex]?.surface,
 						)
 					);
 				});

@@ -6,8 +6,8 @@ import type {
 	Dumgen,
 	Encounter,
 	KnowledgeDraft,
-	Segment,
 	SegmentedSentence,
+	SegmentKind,
 	SentenceAnalysis,
 	Task,
 } from "dumgen/types";
@@ -20,6 +20,13 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
+import {
+	type EncounterSentence,
+	encounterSentenceOf,
+	type StoredSegment,
+	type StoredSegmentValue,
+	storedSegmentsOf,
+} from "./fusedWords";
 import type { InspectionCapture } from "./inspectionCapture";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
@@ -44,11 +51,7 @@ export type PersistedSentence = {
 	readonly segmentedSentenceId: string;
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
-	readonly segments: readonly {
-		readonly index: number;
-		readonly kind: string;
-		readonly text: string;
-	}[];
+	readonly segments: readonly StoredSegment[];
 	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
 	readonly definitionText?: boolean;
 };
@@ -60,7 +63,8 @@ export type SubmittedSentence = {
 	readonly paragraph: number;
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
-	readonly segments: readonly Segment[];
+	/** A fused word arrives split when the Sentence has an analysis. */
+	readonly segments: readonly StoredSegmentValue[];
 	/** Intake's Sentence Analysis; absent for other languages or when it failed. */
 	readonly analysis?: SentenceAnalysis;
 };
@@ -72,6 +76,7 @@ export type ResolvedClickPersistence = {
 	readonly sentenceId: string;
 	readonly clickedSegmentIndex: number;
 	readonly occurrence: {
+		/** Stored Segment indices, not the Encounter's. */
 		readonly memberSegmentIndices: readonly number[];
 		readonly attestation: ResolvedGrammar["attestation"];
 		readonly surfaceKey: string;
@@ -386,17 +391,23 @@ export function createTfDemoOrchestrator(options: {
 				({ sentence, position }) =>
 					Effect.map(
 						analyzeAcceptedSentence(sentence),
-						(analysis): SubmittedSentence => ({
-							segmentedSentenceId: sentence.id,
-							position,
-							paragraph: paragraphOf[position] ?? position,
-							language: sentence.language,
-							stitchedText: sentence.segments
+						(analysis): SubmittedSentence => {
+							const stitchedText = sentence.segments
 								.map(({ text }) => text)
-								.join(""),
-							segments: sentence.segments,
-							...(analysis ? { analysis } : {}),
-						}),
+								.join("");
+							return {
+								segmentedSentenceId: sentence.id,
+								position,
+								paragraph: paragraphOf[position] ?? position,
+								language: sentence.language,
+								stitchedText,
+								segments:
+									analysis?.stitchedText === stitchedText
+										? storedSegmentsOf(analysis)
+										: sentence.segments,
+								...(analysis ? { analysis } : {}),
+							};
+						},
 					),
 				{ concurrency: 4 },
 			);
@@ -633,8 +644,10 @@ export function createTfDemoOrchestrator(options: {
 						? { knowledgeDraftJson: JSON.stringify(draft) }
 						: {}),
 					occurrence: {
-						memberSegmentIndices:
-							grammatical.encounter.target.memberSegmentIndices,
+						memberSegmentIndices: storedMemberIndices(
+							context.sentence,
+							grammatical.encounter,
+						),
 						attestation: grammatical.attestation,
 						surfaceKey,
 						lemmaKey,
@@ -672,11 +685,12 @@ export function createTfDemoOrchestrator(options: {
 							"The requested sentence does not exist.",
 						);
 					}
-					const sentence = parseGermanSentence(stored);
+					const view = parseGermanSentence(stored);
+					const sentence = view.sentence;
 					return yield* Effect.gen(function* () {
 						const target = yield* selectTarget(
 							stored,
-							sentence,
+							view,
 							request.clickedSegmentIndex,
 						);
 						const encounter: Encounter<"de"> = {
@@ -717,16 +731,17 @@ export function createTfDemoOrchestrator(options: {
 			 * The stored Sentence Analysis answers the click when its largest
 			 * unit is resolved at the clicked Segment; otherwise, or without an
 			 * analysis, click-time classification runs as before. The inspection
-			 * step names the path taken.
+			 * step names the path taken. The click arrives in stored indices;
+			 * the target leaves in the Encounter's.
 			 */
 			function selectTarget(
 				stored: PersistedSentence,
-				sentence: SegmentedSentence<"de">,
+				view: EncounterSentence,
 				clickedSegmentIndex: number,
 			) {
 				const selection = analysedTarget(
 					stored,
-					sentence,
+					view,
 					clickedSegmentIndex,
 				);
 				const fromAnalysis = selection.target;
@@ -747,8 +762,9 @@ export function createTfDemoOrchestrator(options: {
 						})
 					: Effect.map(
 							options.dumgen.classifyTarget({
-								sentence,
-								clickedSegmentIndex,
+								sentence: view.sentence,
+								clickedSegmentIndex:
+									view.encounterIndex(clickedSegmentIndex),
 							}),
 							(target) => ({
 								path: "classified" as const,
@@ -774,7 +790,7 @@ export function createTfDemoOrchestrator(options: {
 			/** The analysis target, or why the click is classified instead. */
 			function analysedTarget(
 				stored: PersistedSentence,
-				sentence: SegmentedSentence<"de">,
+				view: EncounterSentence,
 				clickedSegmentIndex: number,
 			):
 				| { readonly target: Encounter<"de">["target"] }
@@ -788,14 +804,25 @@ export function createTfDemoOrchestrator(options: {
 					clickedSegmentIndex,
 				);
 				if (!selection.target) return selection;
-				const target = selection.target;
+				const target = {
+					...selection.target,
+					memberSegmentIndices:
+						selection.target.memberSegmentIndices.map(
+							view.encounterIndex,
+						),
+				};
 				try {
-					validateEncounter({ sentence, target });
+					const encounter = validateEncounter({
+						sentence: view.sentence,
+						target,
+					});
+					// The Encounter's sentence is German, so its target is too.
+					return {
+						target: encounter.target as Encounter<"de">["target"],
+					};
 				} catch {
 					return { target: null, reason: "invalidEncounter" };
 				}
-				// validateEncounter has checked family, kind and membership.
-				return { target: target as Encounter<"de">["target"] };
 			}
 
 			function resolveReading(
@@ -883,16 +910,14 @@ export function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 
 export { readingIdentityKey } from "./linguisticIdentity";
 
-function parseGermanSentence(
-	stored: PersistedSentence,
-): SegmentedSentence<"de"> {
+function parseGermanSentence(stored: PersistedSentence): EncounterSentence {
 	if (stored.language !== "de") {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}
 	const ordered = [...stored.segments].sort(
 		(left, right) => left.index - right.index,
 	);
-	const segments = ordered.map(({ index, kind, text }, expectedIndex) => {
+	for (const [expectedIndex, { index, kind, text }] of ordered.entries()) {
 		if (index !== expectedIndex) {
 			throw new Error(
 				"Persisted Segment indices must be contiguous and zero-based.",
@@ -905,27 +930,38 @@ function parseGermanSentence(
 		) {
 			throw new Error("Persisted Segment data is invalid.");
 		}
-		return Object.freeze({ kind, text });
-	});
-	if (segments.map(({ text }) => text).join("") !== stored.stitchedText) {
+	}
+	if (ordered.map(({ text }) => text).join("") !== stored.stitchedText) {
 		throw new Error(
 			"Persisted Segments do not reconstruct the Stitched Text.",
 		);
 	}
-	return Object.freeze({
-		id: stored.segmentedSentenceId,
-		language: "de",
-		segments: Object.freeze(segments),
-	});
+	return encounterSentenceOf(stored);
 }
 
-function isSegmentKind(value: string): value is Segment["kind"] {
+function isSegmentKind(value: string): value is SegmentKind {
 	return (
 		value === "ResolvableText" ||
 		value === "OpaqueText" ||
 		value === "Whitespace" ||
 		value === "Punctuation"
 	);
+}
+
+/** The stored Segments an Encounter's target names, for committing membership. */
+function storedMemberIndices(
+	stored: PersistedSentence | null,
+	encounter: Encounter<"de">,
+): readonly number[] {
+	if (!stored)
+		throw new Error("The stored Sentence is needed to commit membership.");
+	const view = parseGermanSentence(stored);
+	return encounter.target.memberSegmentIndices.map((index) => {
+		const storedIndex = view.storedIndex(index);
+		if (storedIndex === undefined)
+			throw new Error("An Encounter member is not a stored Segment.");
+		return storedIndex;
+	});
 }
 
 function assertNonEmpty(value: string, field: string): void {
