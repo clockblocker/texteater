@@ -1,0 +1,12 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": [
+		"src/index.ts",
+		"src/codegen.ts",
+		"src/evaluation.ts",
+		"src/storage.ts",
+		"src/openai.ts",
+		"src/typesafe.ts",
+		"src/schemas.ts"
+	]
+}

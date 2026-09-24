@@ -1,5 +1,5 @@
 {
-	"entry": ["src/notes/index.ts"],
+	"entry": ["src/notes/index.ts", "tests/**/*.{ts,tsx}"],
 	"ignoreDependencies": [],
 	"tags": ["-layoutdormant"]
 }

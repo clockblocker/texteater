@@ -6,8 +6,11 @@ const localConfigPath = join(packageDir, "knip.json");
 const localConfig = existsSync(localConfigPath)
 	? JSON.parse(readFileSync(localConfigPath, "utf8"))
 	: {};
-const { ignoreDependencies: localIgnoreDependencies, ...knipConfig } =
-	localConfig;
+const {
+	ignoreBinaries: localIgnoreBinaries,
+	ignoreDependencies: localIgnoreDependencies,
+	...knipConfig
+} = localConfig;
 const manifest = JSON.parse(
 	readFileSync(join(packageDir, "package.json"), "utf8"),
 );
@@ -25,6 +28,8 @@ const workspaceDependencies = dependencyFields.flatMap((field) =>
 
 export default {
 	...knipConfig,
+	// Package build scripts delegate to the repository's root Turbo install.
+	ignoreBinaries: [...(localIgnoreBinaries ?? []), "turbo"],
 	ignoreDependencies: localIgnoreDependencies ?? [
 		...workspaceDependencies,
 		"@biomejs/biome",
