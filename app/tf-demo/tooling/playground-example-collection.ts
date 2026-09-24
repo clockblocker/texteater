@@ -67,7 +67,7 @@ async function contextualize(
 		removable.map((segment) =>
 			ctx.db
 				.query("visitorClicks")
-				.withIndex("by_segment_id", (q) =>
+				.withIndex("by_segment_id_and_attestation_id", (q) =>
 					q.eq("segmentId", segment._id),
 				)
 				.take(1),
@@ -213,7 +213,7 @@ export async function consolidateExampleTexts(ctx: MutationCtx) {
 				segments.map((segment) =>
 					ctx.db
 						.query("visitorClicks")
-						.withIndex("by_segment_id", (q) =>
+						.withIndex("by_segment_id_and_attestation_id", (q) =>
 							q.eq("segmentId", segment._id),
 						)
 						.take(LIMIT + 1),

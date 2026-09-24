@@ -99,6 +99,8 @@ export default defineSchema({
 		state: definitionTextStateValidator,
 		/** The last materialization run claimed; a late run cannot settle a newer one. */
 		runNumber: v.optional(v.number()),
+		/** Runs in a row the watchdog found dead; cleared when a run settles. */
+		interruptedRuns: v.optional(v.number()),
 		textId: v.optional(v.id("texts")),
 		sentenceId: v.optional(v.id("sentences")),
 		failureMessage: v.optional(v.string()),
@@ -321,7 +323,11 @@ export default defineSchema({
 			"ownerReadingKey",
 			"updatedAt",
 		])
-		.index("by_owner_reading_key_and_state", ["ownerReadingKey", "state"]),
+		.index("by_owner_reading_key_and_state_and_updated_at", [
+			"ownerReadingKey",
+			"state",
+			"updatedAt",
+		]),
 
 	relationPublicationControls: defineTable({
 		key: v.literal("global"),
@@ -433,7 +439,10 @@ export default defineSchema({
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
-		.index("by_segment_id", ["segmentId"])
+		.index("by_segment_id_and_attestation_id", [
+			"segmentId",
+			"attestationId",
+		])
 		.index("by_visitor_id_and_attestation_id", [
 			"visitorId",
 			"attestationId",

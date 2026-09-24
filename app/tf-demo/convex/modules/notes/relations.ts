@@ -499,26 +499,29 @@ async function loadTargetedRelationProjections(
 			return { reading, knowledge: knowledge.value };
 		}),
 	);
-	const projected = projectSemanticRelations(entries);
+	const sourceReading = units.get(source._id);
+	if (!sourceReading)
+		throw new Error("Relation neighborhood is missing its source Reading.");
+	const projected = projectSemanticRelations(entries, {
+		source: sourceReading,
+	});
 	if (!projected.success) throw projected.error;
-	const projections = projected.value
-		.filter((item) => readingFingerprint(item.source) === source.readingKey)
-		.map(
-			(item): TargetedRelationProjection =>
-				item.target.unitKind === "Reading"
-					? {
-							relation: item.relation,
-							targetKind: "reading",
-							targetReading: parseGermanReading(item.target),
-							provenance: item.provenance,
-						}
-					: {
-							relation: item.relation,
-							targetKind: "lemma",
-							targetLemma: parseGermanLemma(item.target),
-							provenance: item.provenance,
-						},
-		);
+	const projections = projected.value.map(
+		(item): TargetedRelationProjection =>
+			item.target.unitKind === "Reading"
+				? {
+						relation: item.relation,
+						targetKind: "reading",
+						targetReading: parseGermanReading(item.target),
+						provenance: item.provenance,
+					}
+				: {
+						relation: item.relation,
+						targetKind: "lemma",
+						targetLemma: parseGermanLemma(item.target),
+						provenance: item.provenance,
+					},
+	);
 	return { projections, truncated };
 }
 

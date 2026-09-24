@@ -1,5 +1,9 @@
+import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+
+/** Encounters one transaction advances before it hands the rest on. */
+const ENCOUNTER_ADVANCE_BATCH = 256;
 
 type VisitorEncounterContext = MutationCtx | QueryCtx;
 
@@ -100,4 +104,45 @@ async function encounteredOccurrence(
 		throw new Error("Visitor Encounter refers to a missing Attestation.");
 	}
 	return { attestationId, readingId: attestation.readingId };
+}
+
+/**
+ * Advances every Visitor's Encounter of an occurrence's member Segments to
+ * that occurrence. An occurrence is encountered through any of its members,
+ * whoever committed it, so each such Visitor finds it among their Source
+ * Contexts. A commit with more Encounters than one batch hands the rest to a
+ * scheduled continuation.
+ */
+export async function advanceMemberEncounters(
+	ctx: MutationCtx,
+	input: {
+		readonly segmentIds: readonly Id<"segments">[];
+		readonly attestationId: Id<"attestations">;
+	},
+): Promise<void> {
+	const occurrence = await encounteredOccurrence(ctx, input.attestationId);
+	let budget = ENCOUNTER_ADVANCE_BATCH;
+	for (const segmentId of input.segmentIds) {
+		const unadvanced = await ctx.db
+			.query("visitorClicks")
+			.withIndex("by_segment_id_and_attestation_id", (q) =>
+				q.eq("segmentId", segmentId).eq("attestationId", undefined),
+			)
+			.take(budget);
+		await Promise.all(
+			unadvanced.map((click) => ctx.db.patch(click._id, occurrence)),
+		);
+		budget -= unadvanced.length;
+		if (budget === 0) {
+			await ctx.scheduler.runAfter(
+				0,
+				internal.visitorEncounters.advanceMemberEncounters,
+				{
+					segmentIds: [...input.segmentIds],
+					attestationId: input.attestationId,
+				},
+			);
+			return;
+		}
+	}
 }

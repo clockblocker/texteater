@@ -22,9 +22,11 @@ export type KnowledgeAttempt = Doc<"knowledgeGenerationAttempts">;
 export const STALE_KNOWLEDGE_RUN_AFTER_MS = 11 * 60 * 1_000;
 
 /**
- * How long a Failed attempt waits before a repeated demand reruns it. Failure
- * codes cannot tell a passing failure from a lasting one, and opening a note
- * demands again, so only an interrupted run retries at once.
+ * How long a Reading whose Knowledge run failed starts no other run. Failure
+ * codes cannot tell a passing failure from a lasting one, and every click and
+ * opened note demands again under its own attemptKey, so the cooldown holds
+ * for the Reading, not the attempt. Only an interrupted run is exempt: its
+ * action died, and the model never answered.
  */
 export const KNOWLEDGE_RETRY_COOLDOWN_MS = 5 * 60 * 1_000;
 
@@ -78,13 +80,42 @@ async function hasActiveAttempt(
 		(["Scheduled", "Running"] as const).map((state) =>
 			ctx.db
 				.query("knowledgeGenerationAttempts")
-				.withIndex("by_owner_reading_key_and_state", (q) =>
-					q.eq("ownerReadingKey", ownerReadingKey).eq("state", state),
+				.withIndex(
+					"by_owner_reading_key_and_state_and_updated_at",
+					(q) =>
+						q
+							.eq("ownerReadingKey", ownerReadingKey)
+							.eq("state", state),
 				)
 				.take(1),
 		),
 	);
 	return scheduled.length > 0 || running.length > 0;
+}
+
+/**
+ * How much longer the Reading's latest failure holds back its next run, or 0.
+ * The index range holds only failures inside the cooldown.
+ */
+async function knowledgeCooldownRemaining(
+	ctx: MutationCtx,
+	ownerReadingKey: string,
+): Promise<number> {
+	const now = Date.now();
+	const recentFailures = ctx.db
+		.query("knowledgeGenerationAttempts")
+		.withIndex("by_owner_reading_key_and_state_and_updated_at", (q) =>
+			q
+				.eq("ownerReadingKey", ownerReadingKey)
+				.eq("state", "Failed")
+				.gt("updatedAt", now - KNOWLEDGE_RETRY_COOLDOWN_MS),
+		)
+		.order("desc");
+	for await (const failed of recentFailures) {
+		if (failed.failureCode !== "interrupted")
+			return failed.updatedAt + KNOWLEDGE_RETRY_COOLDOWN_MS - now;
+	}
+	return 0;
 }
 
 /** The one scheduling path: the run's action and the watchdog that guards it. */
@@ -123,17 +154,30 @@ async function retryFailedAttempt(
 	if (!waiting) await startRun(ctx, attempt);
 }
 
-async function promoteNextWaiting(
+/**
+ * Starts the Reading's longest-waiting demand once no attempt is active.
+ * During a cooldown it schedules itself for the cooldown's end instead.
+ */
+export async function promoteNextWaiting(
 	ctx: MutationCtx,
 	ownerReadingKey: string,
 ): Promise<void> {
 	const [waiting] = await ctx.db
 		.query("knowledgeGenerationAttempts")
-		.withIndex("by_owner_reading_key_and_state", (q) =>
+		.withIndex("by_owner_reading_key_and_state_and_updated_at", (q) =>
 			q.eq("ownerReadingKey", ownerReadingKey).eq("state", "Waiting"),
 		)
 		.take(1);
-	if (!waiting) return;
+	if (!waiting || (await hasActiveAttempt(ctx, ownerReadingKey))) return;
+	const cooldown = await knowledgeCooldownRemaining(ctx, ownerReadingKey);
+	if (cooldown > 0) {
+		await ctx.scheduler.runAfter(
+			cooldown,
+			internal.knowledgeGeneration.promoteWaiting,
+			{ ownerReadingKey },
+		);
+		return;
+	}
 	await ctx.db.patch(waiting._id, {
 		state: "Scheduled",
 		updatedAt: Date.now(),
@@ -143,9 +187,10 @@ async function promoteNextWaiting(
 
 /**
  * Records one occurrence's demand for Knowledge. A repeated demand is
- * idempotent; one for a Failed attempt retries it, at once when the run was
- * interrupted and otherwise once the retry cooldown has passed. Only one
- * attempt per Reading is active, and later demands wait behind it.
+ * idempotent, and one for a Failed attempt retries it. Only one attempt per
+ * Reading is active, and later demands wait behind it. While the Reading
+ * cools down after a failure, a demand starts nothing and records nothing;
+ * the next one after the cooldown does.
  */
 export async function demandKnowledgeAttempt(
 	ctx: MutationCtx,
@@ -171,12 +216,14 @@ export async function demandKnowledgeAttempt(
 		}
 		if (
 			existing.state === "Failed" &&
-			(existing.failureCode === "interrupted" ||
-				Date.now() - existing.updatedAt >= KNOWLEDGE_RETRY_COOLDOWN_MS)
+			(await knowledgeCooldownRemaining(ctx, demand.ownerReadingKey)) ===
+				0
 		)
 			await retryFailedAttempt(ctx, existing);
 		return;
 	}
+	if ((await knowledgeCooldownRemaining(ctx, demand.ownerReadingKey)) > 0)
+		return;
 	const waiting = await hasActiveAttempt(ctx, demand.ownerReadingKey);
 	const now = Date.now();
 	await ctx.db.insert("knowledgeGenerationAttempts", {
