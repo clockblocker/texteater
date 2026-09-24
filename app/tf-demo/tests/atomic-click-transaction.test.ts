@@ -263,6 +263,84 @@ test("a New Reading adopts canonical-only Lemma, Reading, and Surface rows", asy
 	});
 });
 
+/** Stores `Banken` twice, one Sentence each, and selects both Segments. */
+async function selectTwoBanken(t: TestConvexDb) {
+	const { sentenceIds } = await submitText(t, [["Banken"], ["Banken"]]);
+	const selections = sentenceIds.map(
+		(sentenceId, position): Selection => ({
+			requestId: `request-${position + 1}`,
+			visitorId: `visitor-${position + 1}`,
+			sentenceId,
+			clickedSegmentIndex: 0,
+		}),
+	);
+	const [first, second] = selections;
+	if (!first || !second) throw new Error("Expected two stored Sentences.");
+	return {
+		first: { selection: first, guard: await startSession(t, first) },
+		second: { selection: second, guard: await startSession(t, second) },
+	};
+}
+
+test("a New homonym Reading of a stored Lemma commits against the Surface its Lemma already owns", async () => {
+	const t = createTestConvex();
+	const { first, second } = await selectTwoBanken(t);
+	const bench = { ...reading, emojiDescription: "🪑" } as const;
+	const bank = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(first.selection, first.guard, "New"),
+	);
+
+	const result = await t.mutation(internal.persistence.persistResolvedClick, {
+		...bankOccurrenceCommit(second.selection, second.guard, "New"),
+		reading: bench,
+		readingKey: readingFingerprint(bench),
+	});
+
+	if (bank.status !== "Committed" || result.status !== "Committed")
+		throw new Error("Expected both occurrences to commit.");
+	expect(result.readingId).not.toBe(bank.readingId);
+	expect(await rows(t, "lemmas")).toHaveLength(1);
+	expect(await rows(t, "readings")).toHaveLength(2);
+	expect(await rows(t, "readingEntries")).toHaveLength(2);
+	const [ownedSurface] = await rows(t, "ownedSurfaces");
+	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
+	expect(
+		(await rows(t, "attestations")).map(({ readingId, surfaceId }) => ({
+			readingId,
+			surfaceId,
+		})),
+	).toEqual([
+		{ readingId: bank.readingId, surfaceId: ownedSurface?.surfaceId },
+		{ readingId: result.readingId, surfaceId: ownedSurface?.surfaceId },
+	]);
+	await expectCompleted(t, "request-2", result.attestationId);
+});
+
+test("a New decision for a Reading another commit stored first commits as a reuse", async () => {
+	const t = createTestConvex();
+	// Both sessions decided New before either committed.
+	const { first, second } = await selectTwoBanken(t);
+	const winner = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(first.selection, first.guard, "New"),
+	);
+
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(second.selection, second.guard, "New"),
+	);
+
+	if (winner.status !== "Committed" || result.status !== "Committed")
+		throw new Error("Expected both occurrences to commit.");
+	expect(result.readingId).toBe(winner.readingId);
+	expect(result.attestationId).not.toBe(winner.attestationId);
+	expect(await rows(t, "readings")).toHaveLength(1);
+	expect(await rows(t, "readingEntries")).toHaveLength(1);
+	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
+	await expectCompleted(t, "request-2", result.attestationId);
+});
+
 test("a reused Reading gains a previously unseen Surface in the occurrence transaction", async () => {
 	const t = createTestConvex();
 	const readingId = await t.run(async (ctx) => {
