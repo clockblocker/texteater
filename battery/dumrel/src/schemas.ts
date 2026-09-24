@@ -31,7 +31,7 @@ export const directSemanticRelationSchema = z.enum(
 );
 export const translationLanguageSchema = z.enum(translationLanguageValues);
 
-export { unitShadowSchema };
+export { lexemeUnitShadowSchema, unitShadowSchema };
 
 export const governedCaseSchema = z.enum(governedCaseValues);
 /**
@@ -59,21 +59,22 @@ type MorphologicalNode =
 	  }
 	| { nodeKind: "structure"; children: MorphologicalNode[] };
 
-const morphologicalTreeNodeSchema: z.ZodType<MorphologicalNode> = z.lazy(() =>
-	z.union([
-		z.strictObject({
-			nodeKind: z.literal("morphemeReading"),
-			reading: morphemeReadingSchema,
-		}),
-		z.strictObject({
-			nodeKind: z.literal("unitShadow"),
-			unitShadow: lexicalUnitShadowSchema,
-		}),
-		z.strictObject({
-			nodeKind: z.literal("structure"),
-			children: z.array(morphologicalTreeNodeSchema).min(1),
-		}),
-	]),
+export const morphologicalTreeNodeSchema: z.ZodType<MorphologicalNode> = z.lazy(
+	() =>
+		z.union([
+			z.strictObject({
+				nodeKind: z.literal("morphemeReading"),
+				reading: morphemeReadingSchema,
+			}),
+			z.strictObject({
+				nodeKind: z.literal("unitShadow"),
+				unitShadow: lexicalUnitShadowSchema,
+			}),
+			z.strictObject({
+				nodeKind: z.literal("structure"),
+				children: z.array(morphologicalTreeNodeSchema).min(1),
+			}),
+		]),
 );
 
 export const morphologicalTreeSchema = z.strictObject({

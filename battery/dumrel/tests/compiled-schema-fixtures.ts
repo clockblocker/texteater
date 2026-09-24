@@ -84,7 +84,9 @@ export const samples: Record<string, unknown[]> = {
 	],
 	pendingSemanticRelation: [{ relation: "nearSynonym", target: shadow }],
 	unitShadow: [shadow],
+	lexemeUnitShadow: [shadow],
 	lexicalBreakdown: [[shadow, shadow]],
+	morphologicalTreeNode: [{ nodeKind: "unitShadow", unitShadow: shadow }],
 	morphologicalTree: [
 		{
 			root: {

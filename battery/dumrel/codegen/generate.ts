@@ -5,6 +5,7 @@ import {
 	emitValidationOutputTypes,
 } from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import {
 	directSemanticRelationSchema,
@@ -13,7 +14,9 @@ import {
 	governmentProjectionSchema,
 	governmentRelationSchema,
 	knowledgeChangeSchema,
+	lexemeUnitShadowSchema,
 	lexicalBreakdownSchema,
+	morphologicalTreeNodeSchema,
 	morphologicalTreeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
@@ -31,6 +34,10 @@ import {
 } from "../src/selection-schemas.js";
 import { normalizeText } from "../src/semantics.js";
 import { formatTypeScript } from "./format-typescript.js";
+import {
+	dumrelOutputTypeExports,
+	dumrelTypePreservingOperations,
+} from "./output-types.js";
 
 const operations = [
 	...dumlingOperations,
@@ -51,10 +58,12 @@ const compiled = compileZodValidationArtifacts({
 		directSemanticRelation: directSemanticRelationSchema,
 		lexicalBreakdown: lexicalBreakdownSchema,
 		morphologicalTree: morphologicalTreeSchema,
+		morphologicalTreeNode: morphologicalTreeNodeSchema,
 		pendingSemanticRelation: pendingSemanticRelationSchema,
 		semanticRelations: semanticRelationsSchema,
 		translationLanguage: translationLanguageSchema,
 		unitShadow: unitShadowSchema,
+		lexemeUnitShadow: lexemeUnitShadowSchema,
 		semanticProjectionInput: semanticProjectionInputSchema,
 		semanticRelation: semanticRelationSchema,
 		semanticRelationProjection: semanticRelationProjectionSchema,
@@ -73,33 +82,9 @@ const outputs = {
 	"types.ts": `// Generated from canonical Dumrel Zod schemas. Run bun run generate.\n${emitValidationOutputTypes(
 		{
 			artifact: compiled,
-			exports: {
-				KnowledgeSettings: "knowledgeSettings",
-				KnowledgeRequestMask: "knowledgeRequestMask",
-				KnowledgeSelectionInput: "knowledgeSelectionInput",
-				DirectSemanticRelation: "directSemanticRelation",
-				TranslationLanguage: "translationLanguage",
-				UnitShadow: "unitShadow",
-				LexicalBreakdown: "lexicalBreakdown",
-				MorphologicalTree: "morphologicalTree",
-				PendingSemanticRelation: "pendingSemanticRelation",
-				SemanticRelations: "semanticRelations",
-				ReadingKnowledge: "readingKnowledge",
-				KnowledgeChange: "knowledgeChange",
-				SemanticRelation: "semanticRelation",
-				SemanticRelationProjection: "semanticRelationProjection",
-				GovernedCase: "governedCase",
-				GovernedPreposition: "governedPreposition",
-				GovernmentRelation: "governmentRelation",
-				GovernmentProjection: "governmentProjection",
-			},
-			typePreservingOperations: [
-				"dumling.feature-bag.marked",
-				"dumling.de-pronoun.core",
-				"dumling.emoji-description",
-				"dumling.normalize-form",
-				"dumrel.normalize-text",
-			],
+			exports: dumrelOutputTypeExports,
+			typePreservingOperations: dumrelTypePreservingOperations,
+			external: [dumlingOutputTypes()],
 		},
 	)}\n`,
 	"validation.ts": `// Generated from canonical Dumrel Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,

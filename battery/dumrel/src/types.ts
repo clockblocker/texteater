@@ -13,8 +13,10 @@ export type {
 	GovernedPreposition,
 	GovernmentProjection,
 	GovernmentRelation,
+	LexemeUnitShadow,
 	LexicalBreakdown,
 	MorphologicalTree,
+	MorphologicalTreeNode,
 	PendingSemanticRelation,
 	SemanticRelation,
 	SemanticRelationProjection,
@@ -23,8 +25,6 @@ export type {
 } from "./generated/types.js";
 
 export type MorphologicalTreeStructure = MorphologicalTree["root"];
-export type MorphologicalTreeNode =
-	MorphologicalTreeStructure["children"][number];
 export type NonEmptyStrings = [string, ...string[]];
 export type RelatedLemma<R extends Dumling.Reading> = Extract<
 	Dumling.Lemma,

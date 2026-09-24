@@ -108,3 +108,98 @@ test("output emission refuses an operation without an explicit type contract", (
 		}),
 	).toThrow("No output-type contract for example.length");
 });
+
+test("emitted types reference exported and externally owned shapes by name and inline the rest", () => {
+	const point = z.strictObject({ x: z.number(), y: z.number() });
+	const label = z.strictObject({ text: z.string() });
+	const segment = z.strictObject({ from: point, to: point, label });
+	const source = emitValidationOutputTypes({
+		artifact: compileZodValidationArtifacts({
+			schemas: { segment, label },
+			operations: [],
+		}),
+		exports: { Segment: "segment", Label: "label" },
+		typePreservingOperations: [],
+		external: [
+			{
+				import: 'import type * as Geometry from "geometry";',
+				artifact: compileZodValidationArtifacts({
+					schemas: { point },
+					operations: [],
+				}),
+				types: { point: "Geometry.Point" },
+				typePreservingOperations: [],
+			},
+			{
+				import: 'import type * as Unused from "unused";',
+				artifact: compileZodValidationArtifacts({
+					schemas: { point, flag: z.boolean() },
+					operations: [],
+				}),
+				types: { point: "Unused.Point", flag: "Unused.Flag" },
+				typePreservingOperations: [],
+			},
+		],
+	});
+	expect(source).toBe(
+		[
+			'import type * as Geometry from "geometry";',
+			'export type Segment = {"from": Geometry.Point; "to": Geometry.Point; "label": Label;};',
+			'export type Label = {"text": string;};',
+		].join("\n"),
+	);
+});
+
+test("output emission refuses a recursive shape without an export name", () => {
+	const node = z.strictObject({
+		get children() {
+			return z.array(node);
+		},
+	});
+	const tree = z.strictObject({ root: node });
+	expect(() =>
+		emitValidationOutputTypes({
+			artifact: compileZodValidationArtifacts({
+				schemas: { tree },
+				operations: [],
+			}),
+			exports: { Tree: "tree" },
+			typePreservingOperations: [],
+		}),
+	).toThrow(/Recursive output type .* needs an export name/);
+});
+
+test("a recursive shape another artifact owns is referenced by its name", () => {
+	const node = z.strictObject({
+		label: z.string(),
+		get children() {
+			return z.array(node);
+		},
+	});
+	const tree = z.strictObject({ root: node });
+	const source = emitValidationOutputTypes({
+		artifact: compileZodValidationArtifacts({
+			schemas: { tree },
+			operations: [],
+		}),
+		exports: { Tree: "tree" },
+		typePreservingOperations: [],
+		external: [
+			{
+				import: 'import type * as Trees from "trees";',
+				artifact: compileZodValidationArtifacts({
+					schemas: { unrelated: z.string(), node },
+					operations: [],
+				}),
+				types: { node: "Trees.Node" },
+				typePreservingOperations: [],
+			},
+		],
+	});
+	expect(source).toBe(
+		[
+			'import type * as Trees from "trees";',
+			'export type Tree = {"root": Trees.Node;};',
+		].join("\n"),
+	);
+});
