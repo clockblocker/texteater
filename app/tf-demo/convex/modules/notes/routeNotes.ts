@@ -404,7 +404,7 @@ async function loadLemmaRouteNote(
 	} else {
 		const page = await ctx.db
 			.query("lemmas")
-			.withIndex("by_language_and_canonical_form", (q) =>
+			.withIndex("by_shadow_descriptor", (q) =>
 				q
 					.eq("language", lemma.language)
 					.eq("canonicalForm", lemma.canonicalForm),

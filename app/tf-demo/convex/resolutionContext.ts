@@ -127,7 +127,7 @@ export async function loadResolutionContext(
 			const [lemmas, surfaces] = await Promise.all([
 				ctx.db
 					.query("lemmas")
-					.withIndex("by_language_and_canonical_form", (q) =>
+					.withIndex("by_shadow_descriptor", (q) =>
 						q.eq("language", "de").eq("canonicalForm", spelling),
 					)
 					.take(9),

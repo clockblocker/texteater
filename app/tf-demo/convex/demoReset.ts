@@ -673,8 +673,9 @@ function takeReadingOwnedRows(
 		case "OutgoingSemanticEdges":
 			return ctx.db
 				.query("semanticRelationEdges")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", readingId),
+				.withIndex(
+					"by_source_reading_id_and_relation_and_target_lemma_id",
+					(q) => q.eq("sourceReadingId", readingId),
 				)
 				.take(limit);
 		case "IncomingSemanticEdges":

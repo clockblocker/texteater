@@ -101,9 +101,7 @@ export default defineSchema({
 		sentenceId: v.optional(v.id("sentences")),
 		failureMessage: v.optional(v.string()),
 		updatedAt: v.number(),
-	})
-		.index("by_owner_reading_key", ["ownerReadingKey"])
-		.index("by_text_id", ["textId"]),
+	}).index("by_owner_reading_key", ["ownerReadingKey"]),
 
 	sentences: defineTable({
 		heading: v.optional(v.string()),
@@ -119,7 +117,6 @@ export default defineSchema({
 		stitchedText: v.string(),
 	})
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
-		.index("by_stitched_text", ["stitchedText"])
 		.index("by_text_id_and_position", ["textId", "position"]),
 
 	/** One Sentence Analysis per Sentence, read at click time before classification. */
@@ -151,7 +148,6 @@ export default defineSchema({
 		coreFeatures: v.any(),
 	})
 		.index("by_lemma_key", ["lemmaKey"])
-		.index("by_language_and_canonical_form", ["language", "canonicalForm"])
 		.index("by_shadow_descriptor", [
 			"language",
 			"canonicalForm",
@@ -204,13 +200,8 @@ export default defineSchema({
 		targetReadingId: v.optional(v.id("readings")),
 		relation: directSemanticRelationValidator,
 	})
-		.index("by_source_reading_id", ["sourceReadingId"])
 		.index("by_target_lemma_id", ["targetLemmaId"])
 		.index("by_target_reading_id", ["targetReadingId"])
-		.index("by_source_reading_id_and_relation", [
-			"sourceReadingId",
-			"relation",
-		])
 		.index("by_source_reading_id_and_relation_and_target_lemma_id", [
 			"sourceReadingId",
 			"relation",
@@ -269,13 +260,7 @@ export default defineSchema({
 		locatorKey: v.string(),
 	})
 		.index("by_shadow_id", ["shadowId"])
-		.index("by_owner_reading_key", ["ownerReadingKey"])
-		.index("by_locator_key", ["locatorKey"])
-		.index("by_owner_reading_key_and_aspect_and_path", [
-			"ownerReadingKey",
-			"aspect",
-			"path",
-		]),
+		.index("by_owner_reading_key", ["ownerReadingKey"]),
 
 	knowledgeChanges: defineTable({
 		knowledgeChangeKey: v.string(),
@@ -328,11 +313,6 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
-		.index("by_reading_id", { fields: ["readingId"], staged: true })
-		.index("by_attestation_id", {
-			fields: ["attestationId"],
-			staged: true,
-		})
 		.index("by_attempt_key", ["attemptKey"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
 		.index("by_owner_reading_key_and_updated_at", [
@@ -368,12 +348,7 @@ export default defineSchema({
 		updatedAt: v.number(),
 	})
 		.index("by_source_reading_id", ["sourceReadingId"])
-		.index("by_context_attestation_id", {
-			fields: ["contextAttestationId"],
-			staged: true,
-		})
 		.index("by_run_key", ["runKey"])
-		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
 		.index("by_relation_and_created_at", ["relation", "createdAt"]),
 
 	generatedRelationProposals: defineTable({
@@ -396,13 +371,8 @@ export default defineSchema({
 		updatedAt: v.number(),
 	})
 		.index("by_source_reading_id", ["sourceReadingId"])
-		.index("by_context_attestation_id", {
-			fields: ["contextAttestationId"],
-			staged: true,
-		})
 		.index("by_proposal_key", ["proposalKey"])
 		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
-		.index("by_relation_and_created_at", ["relation", "createdAt"])
 		.index("by_review_status_and_updated_at", [
 			"reviewStatus",
 			"updatedAt",
@@ -462,7 +432,6 @@ export default defineSchema({
 	})
 		.index("by_request_id", ["requestId"])
 		.index("by_segment_id", ["segmentId"])
-		.index("by_attestation_id", ["attestationId"])
 		.index("by_visitor_id_and_attestation_id", [
 			"visitorId",
 			"attestationId",
@@ -504,11 +473,6 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
-		.index("by_reading_id", { fields: ["readingId"], staged: true })
-		.index("by_attestation_id", {
-			fields: ["attestationId"],
-			staged: true,
-		})
 		.index("by_request_id", ["requestId"])
 		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
@@ -549,11 +513,5 @@ export default defineSchema({
 		firstSeenAt: v.number(),
 		lastSeenAt: v.number(),
 		lastRequestId: v.string(),
-	})
-		.index("by_signal_key", ["signalKey"])
-		.index("by_route_stage_and_last_seen_at", [
-			"route",
-			"stage",
-			"lastSeenAt",
-		]),
+	}).index("by_signal_key", ["signalKey"]),
 });

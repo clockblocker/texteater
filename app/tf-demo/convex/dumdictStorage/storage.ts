@@ -256,8 +256,9 @@ export async function loadCanonicalReadingKnowledge(
 ): Promise<AnyRecord | undefined> {
 	const edges = await ctx.db
 		.query("semanticRelationEdges")
-		.withIndex("by_source_reading_id", (q) =>
-			q.eq("sourceReadingId", readingId),
+		.withIndex(
+			"by_source_reading_id_and_relation_and_target_lemma_id",
+			(q) => q.eq("sourceReadingId", readingId),
 		)
 		.take(MAX_RELATIONS_PER_READING + 1);
 	if (edges.length > MAX_RELATIONS_PER_READING) {
@@ -265,6 +266,8 @@ export async function loadCanonicalReadingKnowledge(
 			`A Reading supports at most ${MAX_RELATIONS_PER_READING} Semantic Relation edges.`,
 		);
 	}
+	// The index orders edges by relation and target; targets keep insertion order.
+	edges.sort((a, b) => a._creationTime - b._creationTime);
 	const targetKinds = new Set(
 		edges.map((edge) =>
 			edge.targetKind === "reading" || edge.targetReadingId !== undefined
@@ -335,7 +338,7 @@ export async function dictionaryLemmasWithCanonicalForm(
 ) {
 	const lemmas = await ctx.db
 		.query("lemmas")
-		.withIndex("by_language_and_canonical_form", (q) =>
+		.withIndex("by_shadow_descriptor", (q) =>
 			q.eq("language", "de").eq("canonicalForm", canonicalForm),
 		)
 		.take(MAX_CLEANUP_CANDIDATE_LEMMAS + 1);

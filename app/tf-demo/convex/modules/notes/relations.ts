@@ -320,11 +320,17 @@ async function loadTargetedRelationProjections(
 		if (known) return known;
 		const rows = await ctx.db
 			.query("semanticRelationEdges")
-			.withIndex("by_source_reading_id", (q) =>
-				q.eq("sourceReadingId", readingId),
+			.withIndex(
+				"by_source_reading_id_and_relation_and_target_lemma_id",
+				(q) => q.eq("sourceReadingId", readingId),
 			)
 			.take(MAX_RELATIONS_PER_NOTE + 1)
-			.then(capIncident);
+			// The index orders edges by relation and target; keep insertion order.
+			.then((edges) =>
+				capIncident(
+					edges.sort((a, b) => a._creationTime - b._creationTime),
+				),
+			);
 		outgoingByReading.set(readingId, rows);
 		return rows;
 	}

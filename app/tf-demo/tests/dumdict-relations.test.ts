@@ -281,8 +281,9 @@ async function readingKnowledge(
 		const semanticRelations: Record<string, unknown[]> = {};
 		for (const edge of await ctx.db
 			.query("semanticRelationEdges")
-			.withIndex("by_source_reading_id", (q) =>
-				q.eq("sourceReadingId", row._id),
+			.withIndex(
+				"by_source_reading_id_and_relation_and_target_lemma_id",
+				(q) => q.eq("sourceReadingId", row._id),
 			)
 			.collect()) {
 			const lemma = edge.targetLemmaId

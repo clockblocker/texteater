@@ -280,8 +280,12 @@ async function syncSemanticRelationChange(
 		);
 	const existing = await ctx.db
 		.query("semanticRelationEdges")
-		.withIndex("by_source_reading_id_and_relation", (q) =>
-			q.eq("sourceReadingId", sourceReadingId).eq("relation", relation),
+		.withIndex(
+			"by_source_reading_id_and_relation_and_target_lemma_id",
+			(q) =>
+				q
+					.eq("sourceReadingId", sourceReadingId)
+					.eq("relation", relation),
 		)
 		.take(MAX_RELATIONS_PER_READING + 1);
 	if (existing.length > MAX_RELATIONS_PER_READING) {
