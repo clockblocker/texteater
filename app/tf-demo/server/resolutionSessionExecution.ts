@@ -14,10 +14,6 @@ import {
 	type ResolutionGenerationEvent,
 	type ResolutionRunPhase,
 } from "./resolutionFailure";
-import {
-	projectResolutionGrammar,
-	projectResolutionReading,
-} from "./resolutionSessionProjection";
 
 type ResolutionCatalogMiss = Extract<
 	ResolveSegmentResult,
@@ -56,13 +52,7 @@ export type ResolutionSessionAdvance =
 
 export type ResolutionSessionSettlement =
 	| { readonly kind: "CatalogMiss"; readonly miss: ResolutionCatalogMiss }
-	| {
-			readonly kind: "Complete";
-			readonly readingId: string;
-			readonly attestationId: string;
-			readonly grammar: ReturnType<typeof projectResolutionGrammar>;
-			readonly reading: ReturnType<typeof projectResolutionReading>;
-	  }
+	| { readonly kind: "Complete"; readonly attestationId: string }
 	| { readonly kind: "Unresolved" };
 
 export type ResolutionSessionRunRecord =
@@ -203,14 +193,7 @@ export function executeResolutionSession({
 				yield* Effect.tryPromise(() =>
 					lifecycle.settle({
 						kind: "Complete",
-						readingId: persisted.readingId,
 						attestationId: persisted.occurrence.attestationId,
-						grammar: projectResolutionGrammar(
-							persisted.occurrence.grammatical,
-						),
-						reading: projectResolutionReading(
-							persisted.occurrence.reading,
-						),
 					}),
 				);
 			} else {

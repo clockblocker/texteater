@@ -395,11 +395,9 @@ export const recordRunFailure = internalMutation({
 			}),
 		),
 	},
-	returns: v.null(),
-	handler: async (ctx, { guard, failure }) => {
-		await failResolutionRun(ctx, guard, failure);
-		return null;
-	},
+	returns: v.boolean(),
+	handler: (ctx, { guard, failure }) =>
+		failResolutionRun(ctx, guard, failure),
 });
 
 export const settleAfterRun = internalMutation({
@@ -408,34 +406,19 @@ export const settleAfterRun = internalMutation({
 		result: v.union(
 			v.object({
 				kind: v.literal("Complete"),
-				readingId: v.id("readings"),
 				attestationId: v.id("attestations"),
-				grammar: resolutionGrammarProjectionValidator,
-				reading: resolutionReadingProjectionValidator,
 			}),
 			v.object({ kind: v.literal("Unresolved") }),
-			v.object({
-				kind: v.literal("Failed"),
-				message: v.string(),
-			}),
 		),
 	},
-	returns: v.boolean(),
+	returns: v.null(),
 	handler: async (ctx, { guard, result }) => {
-		const session = await settleResolutionRun(ctx, guard, result);
-		if (result.kind === "Complete") {
-			await scheduleKnowledgeGeneration(ctx, {
-				attemptKey: session.requestId,
-				visitorId: session.visitorId,
-				readingId: result.readingId,
-				attestationId: result.attestationId,
-			});
-		}
-		return true;
+		await settleResolutionRun(ctx, guard, result);
+		return null;
 	},
 });
 
-export const cleanup = mutation({
+export const cleanup = internalMutation({
 	args: {
 		staleBefore: v.number(),
 		terminalBefore: v.number(),

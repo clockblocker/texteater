@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import esbuild from "esbuild";
 import { internal } from "../convex/_generated/api";
 import { COMPILED_RELATION_VERDICT } from "../convex/model/compiledRelationVerdict";
@@ -20,6 +20,15 @@ import {
 	currentRelationFingerprints,
 } from "../tooling/compile-relation-verdict";
 import { createTestConvex } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 test("the isolate publication policy does not bundle Dumling's schema graph", async () => {
 	const entryPoint = new URL(

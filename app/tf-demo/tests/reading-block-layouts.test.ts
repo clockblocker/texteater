@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { api } from "../convex/_generated/api";
 import {
 	DEFAULT_DE_READING_LANGUAGE_LAYOUT,
@@ -6,6 +6,15 @@ import {
 	type ReadingBlockRoute,
 } from "../shared/reading-block-layout";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 const VISITOR_ID = "visitor-1";
 const VERB_ROUTE = {

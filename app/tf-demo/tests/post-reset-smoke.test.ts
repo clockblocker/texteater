@@ -2,12 +2,9 @@ import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { createDumdictService } from "dumdict";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
-import type { Id } from "../convex/_generated/dataModel";
-import {
-	readingCleanupPhaseTables,
-	resetDemoTableNames,
-	visitorResetPhaseTables,
-} from "../convex/demoReset";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
+import type { MutationCtx } from "../convex/_generated/server";
+import { resetDemoTableNames } from "../convex/demoReset";
 import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
@@ -127,7 +124,7 @@ async function insertReading(t: TestConvexDb, readingKey: string) {
 			readingId,
 			realizationCoverage: "Full",
 		});
-		return { lemmaId, readingId, attestationId };
+		return { lemmaId, readingId, readingKey, attestationId };
 	});
 }
 
@@ -137,6 +134,312 @@ const fingerprints = {
 	evaluator: "evaluator",
 	model: "model",
 	policy: "policy",
+};
+
+type SeededReading = Awaited<ReturnType<typeof insertReading>>;
+
+/** Fields that tie a row to a Reading, directly or through its attempt. */
+const readingOwnershipFields = [
+	"readingId",
+	"readingKey",
+	"ownerReadingKey",
+	"sourceReadingId",
+	"sourceReadingKey",
+	"targetReadingId",
+	"targetReadingKey",
+	"attemptKey",
+];
+
+/** Tables whose rows leave with something other than the owner sweep. */
+const readingSweepExemptions: Record<string, string> = {
+	readings: "the swept Reading itself",
+	attestations: "a Reading with an Attestation is never pruned",
+	definitionTexts: "removed with the Definition Text before pruning",
+	resolutionSessions: "removed with their Sentence",
+};
+
+const visitorSweepExemptions: Record<string, string> = {
+	inspectionClicks: "Resolution Inspector diagnostics, cleared as a set",
+};
+
+/** Knowledge production runs belong to their attempt's Reading and Visitor. */
+const ownedThroughAttempt = ["knowledgeProductionRuns"];
+
+/** Schema tables owned through `fields`, less the exempt ones. */
+function ownedTables(
+	fields: readonly string[],
+	exemptions: Record<string, string>,
+): string[] {
+	return Object.entries(tfDemoSchema.tables)
+		.filter(([tableName, table]) => {
+			if (tableName in exemptions) return false;
+			if (ownedThroughAttempt.includes(tableName)) return true;
+			const tableFields = Object.keys(
+				(table.validator as { fields?: Record<string, unknown> })
+					.fields ?? {},
+			);
+			return tableFields.some((field) => fields.includes(field));
+		})
+		.map(([tableName]) => tableName)
+		.sort();
+}
+
+async function existingIds(
+	t: TestConvexDb,
+	ids: readonly string[],
+): Promise<Set<string>> {
+	const found = await t.run(async (ctx) => {
+		const present: string[] = [];
+		for (const id of ids) {
+			if (await ctx.db.get(id as Id<TableNames>)) present.push(id);
+		}
+		return present;
+	});
+	return new Set(found);
+}
+
+function attemptKeyFor(owner: SeededReading | string): string {
+	return `attempt:${typeof owner === "string" ? owner : owner.readingKey}`;
+}
+
+/**
+ * One builder per Reading-owned table: it seeds `owner`'s rows, pointing any
+ * reference at `other`. A new Reading-owned table needs a builder here and a
+ * cleanup phase in demoReset.ts, or the sweep test fails.
+ */
+const readingOwnedRows: Record<
+	string,
+	(
+		ctx: MutationCtx,
+		owner: SeededReading,
+		other: SeededReading,
+	) => Promise<string[]>
+> = {
+	knowledgeGenerationAttempts: async (ctx, owner) => [
+		await ctx.db.insert("knowledgeGenerationAttempts", {
+			attemptKey: attemptKeyFor(owner),
+			visitorId: "visitor-1",
+			ownerReadingKey: owner.readingKey,
+			readingId: owner.readingId,
+			attestationId: owner.attestationId,
+			state: "Running",
+			createdAt: 1,
+			updatedAt: 1,
+		}),
+	],
+	knowledgeProductionRuns: async (ctx, owner) => [
+		await ctx.db.insert("knowledgeProductionRuns", {
+			attemptKey: attemptKeyFor(owner),
+			runNumber: 1,
+			evidence: { request: {}, failures: [], operationTraces: [] },
+			outcome: "Failure",
+			createdAt: 1,
+		}),
+	],
+	readingEntries: async (ctx, owner) => [
+		await ctx.db.insert("readingEntries", {
+			readingId: owner.readingId,
+			record: {},
+		}),
+	],
+	semanticRelationEdges: async (ctx, owner, other) => [
+		await ctx.db.insert("semanticRelationEdges", {
+			sourceReadingId: owner.readingId,
+			targetKind: "lemma",
+			targetLemmaId: other.lemmaId,
+			relation: "synonym",
+		}),
+		await ctx.db.insert("semanticRelationEdges", {
+			sourceReadingId: other.readingId,
+			targetKind: "reading",
+			targetReadingId: owner.readingId,
+			relation: "antonym",
+		}),
+	],
+	pendingSemanticRelations: async (ctx, owner) => [
+		await ctx.db.insert("pendingSemanticRelations", {
+			locatorKey: `locator:${owner.readingKey}`,
+			sourceReadingKey: owner.readingKey,
+			targetCanonicalForm: "laufen",
+			record: {},
+		}),
+	],
+	structuralShadowReferences: async (ctx, owner) => [
+		await ctx.db.insert("structuralShadowReferences", {
+			shadowId: await ctx.db.insert("shadows", {
+				shadowKey: `shadow:${owner.readingKey}`,
+				language: "de",
+				canonicalForm: "lauf",
+				family: "Morpheme",
+				kind: "Root",
+			}),
+			ownerReadingKey: owner.readingKey,
+			aspect: "morphologicalTree",
+			path: "0",
+			locatorKey: `structure:${owner.readingKey}`,
+		}),
+	],
+	knowledgeChanges: async (ctx, owner) => [
+		await ctx.db.insert("knowledgeChanges", {
+			knowledgeChangeKey: `change:${owner.readingKey}`,
+			ownerReadingKey: owner.readingKey,
+			change: {},
+			createdAt: 1,
+		}),
+	],
+	accumulatedKnowledge: async (ctx, owner) => [
+		await ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: owner.readingKey,
+			knowledge: {},
+			status: "Full",
+			updatedAt: 1,
+		}),
+	],
+	generatedRelationRuns: async (ctx, owner) => [
+		await ctx.db.insert("generatedRelationRuns", {
+			runKey: `run:${owner.readingKey}`,
+			attemptKey: attemptKeyFor(owner),
+			runNumber: 1,
+			relation: "synonym",
+			sourceReadingId: owner.readingId,
+			sourceReadingKey: owner.readingKey,
+			contextAttestationId: owner.attestationId,
+			verdictArtifactPath: null,
+			fingerprints,
+			generatedTargets: 0,
+			nulls: 0,
+			pendingShadows: 0,
+			directMatches: 0,
+			rejectedOutputs: 0,
+			publicationFailures: 0,
+			createdAt: 1,
+			updatedAt: 1,
+		}),
+	],
+	generatedRelationProposals: async (ctx, owner) => [
+		await ctx.db.insert("generatedRelationProposals", {
+			proposalKey: `proposal:${owner.readingKey}`,
+			attemptKey: attemptKeyFor(owner),
+			runNumber: 1,
+			relation: "synonym",
+			sourceReadingId: owner.readingId,
+			sourceReadingKey: owner.readingKey,
+			contextAttestationId: owner.attestationId,
+			targetShadow: {
+				language: "de",
+				canonicalForm: "laufen",
+				family: "Lexeme",
+				kind: "VERB",
+			},
+			verdictArtifactPath: "artifact",
+			fingerprints,
+			outcome: "PendingShadow",
+			reviewStatus: "NotSampled",
+			createdAt: 1,
+			updatedAt: 1,
+		}),
+	],
+	personalAnnotations: async (ctx, owner) => [
+		await ctx.db.insert("personalAnnotations", {
+			visitorId: "visitor-1",
+			readingId: owner.readingId,
+			text: "note",
+			updatedAt: 1,
+		}),
+	],
+};
+
+/**
+ * One builder per Visitor-owned table, seeding `visitorId`'s rows. A new
+ * Visitor-owned table needs a builder here and a phase in the Visitor clear.
+ */
+const visitorOwnedRows: Record<
+	string,
+	(
+		t: TestConvexDb,
+		visitorId: string,
+		reading: SeededReading,
+		sentenceId: Id<"sentences">,
+	) => Promise<string[]>
+> = {
+	resolutionSessions: async (t, visitorId, _reading, sentenceId) => {
+		await t.mutation(api.resolutionSessions.selectSegment, {
+			requestId: `request-${visitorId}`,
+			visitorId,
+			sentenceId,
+			clickedSegmentIndex: 0,
+			routeNoteRequested: false,
+		});
+		return (await tableRows(t, "resolutionSessions"))
+			.filter((row) => row.visitorId === visitorId)
+			.map(({ _id }) => _id);
+	},
+	visitorClicks: async (t, visitorId) =>
+		(await tableRows(t, "visitorClicks"))
+			.filter((row) => row.visitorId === visitorId)
+			.map(({ _id }) => _id),
+	knowledgeGenerationAttempts: (t, visitorId, reading) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("knowledgeGenerationAttempts", {
+				attemptKey: attemptKeyFor(visitorId),
+				visitorId,
+				ownerReadingKey: reading.readingKey,
+				readingId: reading.readingId,
+				attestationId: reading.attestationId,
+				state: "Failed",
+				createdAt: 1,
+				updatedAt: 1,
+			}),
+		]),
+	knowledgeProductionRuns: (t, visitorId) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("knowledgeProductionRuns", {
+				attemptKey: attemptKeyFor(visitorId),
+				runNumber: 1,
+				evidence: { request: {}, failures: [], operationTraces: [] },
+				outcome: "Failure",
+				createdAt: 1,
+			}),
+		]),
+	knowledgeSettings: (t, visitorId) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("knowledgeSettings", {
+				visitorId,
+				settings: defaultKnowledgeSettings(),
+				updatedAt: 1,
+			}),
+		]),
+	personalAnnotations: (t, visitorId, reading) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("personalAnnotations", {
+				visitorId,
+				readingId: reading.readingId,
+				text: "note",
+				updatedAt: 1,
+			}),
+		]),
+	readingLanguageLayouts: (t, visitorId) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("readingLanguageLayouts", {
+				visitorId,
+				targetLanguage: "de",
+				order: [],
+				hidden: [],
+				updatedAt: 1,
+			}),
+		]),
+	readingFamilyKindLayouts: (t, visitorId) =>
+		t.run(async (ctx) => [
+			await ctx.db.insert("readingFamilyKindLayouts", {
+				visitorId,
+				targetLanguage: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				order: [],
+				hidden: [],
+				updatedAt: 1,
+			}),
+		]),
 };
 
 beforeEach(() => {
@@ -221,50 +524,116 @@ describe("tf-demo post-reset contract", () => {
 		}
 	});
 
-	test("every Reading- or Visitor-owned table appears in its cleanup sweep", () => {
-		const readingOwnershipFields = new Set([
-			"readingId",
-			"readingKey",
-			"ownerReadingKey",
-			"sourceReadingId",
-			"sourceReadingKey",
-			"targetReadingId",
-		]);
-		/** Tables whose rows leave with something other than the owner sweep. */
-		const readingSweepExemptions: Record<string, string> = {
-			readings: "the swept Reading itself",
-			attestations: "a Reading with an Attestation is never pruned",
-			definitionTexts: "removed with the Definition Text before pruning",
-			resolutionSessions: "removed with their Sentence",
-		};
-		const visitorSweepExemptions: Record<string, string> = {
-			inspectionClicks:
-				"Resolution Inspector diagnostics, cleared as a set",
-		};
-		const readingSwept = new Set<string>(
-			Object.values(readingCleanupPhaseTables).flat(),
+	test("pruning a Reading deletes a row from every Reading-owned table, and nothing of another Reading", async () => {
+		const t = createTestConvex();
+		const pruned = await insertReading(t, "reading-key-1");
+		const kept = await insertReading(t, "reading-key-2");
+		const bystander = await insertReading(t, "reading-key-3");
+		expect(Object.keys(readingOwnedRows).sort()).toEqual(
+			ownedTables(readingOwnershipFields, readingSweepExemptions),
 		);
-		const visitorSwept = new Set<string>(
-			Object.values(visitorResetPhaseTables),
-		);
-		for (const [tableName, table] of Object.entries(tfDemoSchema.tables)) {
-			const fields = Object.keys(
-				(table.validator as { fields?: Record<string, unknown> })
-					.fields ?? {},
+		const seeded = await t.run(async (ctx) => {
+			const rows = { pruned: [] as string[], kept: [] as string[] };
+			for (const build of Object.values(readingOwnedRows)) {
+				rows.pruned.push(...(await build(ctx, pruned, bystander)));
+				rows.kept.push(...(await build(ctx, kept, bystander)));
+			}
+			return rows;
+		});
+
+		let cursor: { itemIndex: number; phase: string } | null | undefined;
+		for (let batch = 0; batch < 8; batch += 1) {
+			const result = await t.mutation(
+				internal.demoReset.clearReadingDataBatch,
+				{
+					readingKeys: ["reading-key-1"],
+					...(cursor ? { cursor: cursor as never } : {}),
+				},
 			);
-			if (
-				fields.some((field) => readingOwnershipFields.has(field)) &&
-				!(tableName in readingSweepExemptions)
-			) {
-				expect(readingSwept.has(tableName), tableName).toBe(true);
-			}
-			if (
-				fields.includes("visitorId") &&
-				!(tableName in visitorSweepExemptions)
-			) {
-				expect(visitorSwept.has(tableName), tableName).toBe(true);
-			}
+			cursor = result.nextCursor;
+			if (!cursor) break;
 		}
+
+		expect(cursor).toBeNull();
+		const remaining = await existingIds(t, [
+			...seeded.pruned,
+			...seeded.kept,
+		]);
+		expect(seeded.pruned.filter((id) => remaining.has(id))).toEqual([]);
+		expect(seeded.kept.filter((id) => !remaining.has(id))).toEqual([]);
+	});
+
+	test("clearing a Visitor deletes a row from every Visitor-owned table, and nothing of another Visitor", async () => {
+		const t = createTestConvex();
+		const reading = await insertReading(t, "reading-key-1");
+		const { sentenceIds } = await submitText(t, [["Banken"]]);
+		const sentenceId = sentenceIds[0];
+		if (!sentenceId) throw new Error("Expected a stored Sentence.");
+		expect(Object.keys(visitorOwnedRows).sort()).toEqual(
+			ownedTables(["visitorId"], visitorSweepExemptions),
+		);
+		const seeded = { cleared: [] as string[], kept: [] as string[] };
+		for (const build of Object.values(visitorOwnedRows)) {
+			seeded.cleared.push(
+				...(await build(t, "visitor-1", reading, sentenceId)),
+			);
+			seeded.kept.push(
+				...(await build(t, "visitor-2", reading, sentenceId)),
+			);
+		}
+
+		await t.action(api.demoReset.clearVisitorData, {
+			visitorId: "visitor-1",
+		});
+
+		const remaining = await existingIds(t, [
+			...seeded.cleared,
+			...seeded.kept,
+		]);
+		expect(seeded.cleared.filter((id) => remaining.has(id))).toEqual([]);
+		expect(seeded.kept.filter((id) => !remaining.has(id))).toEqual([]);
+	});
+
+	test("clearing a Visitor promotes another Visitor's attempt waiting behind a removed one", async () => {
+		const t = createTestConvex();
+		const reading = await insertReading(t, "reading-key-1");
+		await t.run(async (ctx) => {
+			for (const [visitorId, state] of [
+				["visitor-1", "Running"],
+				["visitor-2", "Waiting"],
+			] as const) {
+				await ctx.db.insert("knowledgeGenerationAttempts", {
+					attemptKey: `attempt-${visitorId}`,
+					visitorId,
+					ownerReadingKey: "reading-key-1",
+					readingId: reading.readingId,
+					attestationId: reading.attestationId,
+					state,
+					createdAt: 1,
+					updatedAt: 1,
+				});
+			}
+		});
+
+		await t.action(api.demoReset.clearVisitorData, {
+			visitorId: "visitor-1",
+		});
+
+		expect(await tableRows(t, "knowledgeGenerationAttempts")).toEqual([
+			expect.objectContaining({
+				attemptKey: "attempt-visitor-2",
+				state: "Scheduled",
+			}),
+		]);
+		const scheduled = await t.run((ctx) =>
+			ctx.db.system.query("_scheduled_functions").collect(),
+		);
+		expect(scheduled.map(({ name, args }) => ({ name, args }))).toEqual([
+			{
+				name: "knowledgeGenerationActions:runKnowledgeGeneration",
+				args: [{ attemptKey: "attempt-visitor-2" }],
+			},
+		]);
 	});
 
 	test("pruning a Reading clears the rows that would haunt its next incarnation", async () => {

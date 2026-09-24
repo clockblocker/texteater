@@ -6,7 +6,7 @@ import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGeneration
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import {
 	requireActiveResolutionSession,
-	settleFailed,
+	settleResolutionSession,
 } from "./model/resolutionSessions";
 import {
 	catalogMissValidator,
@@ -106,12 +106,11 @@ export const recordAndSettleCatalogMiss = internalMutation({
 	handler: async (ctx, { guard, miss }) => {
 		const session = await requireActiveResolutionSession(ctx, guard);
 		await recordCatalogGrowthSignal(ctx, miss, guard.requestId);
-		await settleFailed(
-			ctx,
-			session,
-			"No reviewed catalog member matches this encounter.",
-			"CatalogMiss",
-		);
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message: "No reviewed catalog member matches this encounter.",
+			failureCode: "CatalogMiss",
+		});
 		return null;
 	},
 });

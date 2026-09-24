@@ -1,15 +1,18 @@
 import { type Infer, v } from "convex/values";
 import { restoreStoredGrammar } from "../../server/resolutionGrammar";
-import { internal } from "../_generated/api";
-import type { Doc, Id } from "../_generated/dataModel";
-import type { MutationCtx, QueryCtx } from "../_generated/server";
-import { inspectionRequested } from "./inspection";
-
-export {
+import {
 	projectResolutionGrammar,
 	projectResolutionReading,
 } from "../../server/resolutionSessionProjection";
+import { internal } from "../_generated/api";
+import type { Doc, Id } from "../_generated/dataModel";
+import type { MutationCtx, QueryCtx } from "../_generated/server";
+import { scheduleKnowledgeGeneration } from "../knowledgeGeneration";
+import { inspectionRequested } from "./inspection";
 
+export { projectResolutionGrammar, projectResolutionReading };
+
+import { reconstructReusableAttestation } from "./resolutionLookup";
 import {
 	type readingValueValidator,
 	resolutionActivityValidator,
@@ -25,7 +28,7 @@ import {
 	type resolvedGrammaticalValidator,
 	type safeGenerationFailureValidator,
 } from "./validators";
-import { findVisitorEncounter } from "./visitorClicks";
+import { ensureVisitorEncounter } from "./visitorClicks";
 
 /**
  * The Resolution Session module. It owns every session transition: start,
@@ -37,8 +40,11 @@ import { findVisitorEncounter } from "./visitorClicks";
 
 const MAX_IDENTIFIER_LENGTH = 200;
 export const STALE_RUN_AFTER_MS = 11 * 60 * 1_000;
-/** A crashed run is recovered until this long after its session started. */
-export const DURABLE_RETRY_DEADLINE_MS = 15 * 60 * 1_000;
+/**
+ * A crashed run is recovered until this long after its session started or a
+ * learner retried it. The session stores it as `retryDeadlineAt`.
+ */
+export const RECOVERY_DEADLINE_MS = 15 * 60 * 1_000;
 export const MAX_RESOLUTION_RUNS = 3;
 const RESOLUTION_RUN_RETENTION_MS = 24 * 60 * 60 * 1_000;
 
@@ -519,7 +525,7 @@ export async function startResolutionSession(
 			activity: "Scheduled",
 		},
 		runNumber: 1,
-		retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
+		retryDeadlineAt: now + RECOVERY_DEADLINE_MS,
 		route: {
 			textId: input.sentence.textId,
 			sentenceId: input.sentence._id,
@@ -555,10 +561,17 @@ export async function retryResolutionSession(
 	) {
 		return false;
 	}
+	// Another session committed the Segment since: the retry lands on it.
+	const committed = (await ctx.db.get(session.segmentId))
+		?.attestationMembership?.attestationId;
+	if (committed) {
+		await completeResolutionSession(ctx, session, committed);
+		return true;
+	}
 	if (!(await beginSegmentResolution(ctx, session.segmentId))) return false;
 	await restartRun(ctx, session, {
 		runNumber: 1,
-		retryDeadlineAt: Date.now() + DURABLE_RETRY_DEADLINE_MS,
+		retryDeadlineAt: Date.now() + RECOVERY_DEADLINE_MS,
 	});
 	return true;
 }
@@ -724,15 +737,14 @@ export async function recoverStaleResolutionRun(
 	});
 	if (
 		runNumber >= MAX_RESOLUTION_RUNS ||
-		now >= (session.retryDeadlineAt ?? now + DURABLE_RETRY_DEADLINE_MS)
+		now >= (session.retryDeadlineAt ?? now + RECOVERY_DEADLINE_MS)
 	) {
-		await settleFailed(
-			ctx,
-			session,
-			"Resolution could not be completed.",
-			"Internal",
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message: "Resolution could not be completed.",
+			failureCode: "Internal",
 			diagnosticId,
-		);
+		});
 		return true;
 	}
 	await restartRun(ctx, session, { runNumber: runNumber + 1 });
@@ -775,13 +787,23 @@ export type ResolutionRunFailure =
 			readonly generationEvents?: readonly ResolutionGenerationEvent[];
 	  };
 
-/** A failed run ends its session: tf-demo never retries a failure itself. */
+/**
+ * A failed run ends its session: tf-demo never retries a failure itself. A
+ * run whose guard went stale records nothing.
+ */
 export async function failResolutionRun(
 	ctx: MutationCtx,
 	guard: ResolutionSessionGuard,
 	failure: ResolutionRunFailure,
-): Promise<void> {
-	const session = await requireActiveResolutionSession(ctx, guard);
+): Promise<boolean> {
+	const session = await findSession(ctx, guard.requestId);
+	if (
+		!session ||
+		!guardMatches(session, guard) ||
+		session.lifecycle.state === "Terminal"
+	) {
+		return false;
+	}
 	const generationEvents = failure.generationEvents
 		? { generationEvents: failure.generationEvents }
 		: {};
@@ -796,14 +818,16 @@ export async function failResolutionRun(
 			diagnosticId,
 			...generationEvents,
 		});
-		await settleFailed(
-			ctx,
-			session,
-			publicFailureMessage(failure.phase, failure.failure.category),
-			failure.failure.category,
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message: publicFailureMessage(
+				failure.phase,
+				failure.failure.category,
+			),
+			failureCode: failure.failure.category,
 			diagnosticId,
-		);
-		return;
+		});
+		return true;
 	}
 	assertIdentifier(failure.diagnosticId, "diagnosticId");
 	assertOperationalString(failure.errorName, "errorName");
@@ -817,100 +841,80 @@ export async function failResolutionRun(
 		errorFingerprint: failure.errorFingerprint,
 		...generationEvents,
 	});
-	await settleFailed(
-		ctx,
-		session,
-		"Resolution could not be completed.",
-		"Internal",
-		failure.diagnosticId,
-	);
+	await settleResolutionSession(ctx, session, {
+		kind: "PermanentFailure",
+		message: "Resolution could not be completed.",
+		failureCode: "Internal",
+		diagnosticId: failure.diagnosticId,
+	});
+	return true;
 }
 
-export type ResolutionRunSettlement =
-	| {
-			readonly kind: "Complete";
-			readonly readingId: Id<"readings">;
-			readonly attestationId: Id<"attestations">;
-			readonly grammar: ResolutionGrammarProjection;
-			readonly reading: ResolutionReadingProjection;
-	  }
-	| { readonly kind: "Unresolved" }
-	| { readonly kind: "Failed"; readonly message: string };
-
 /**
- * Settles a run whose Occurrence commit did not settle it, such as a
- * deduplicated retry. Returns the session it settled.
+ * Settles a run whose result was already recorded, so no Occurrence commit
+ * settled it: a replayed resolved or unresolved Visitor Encounter.
  */
 export async function settleResolutionRun(
 	ctx: MutationCtx,
 	guard: ResolutionSessionGuard,
-	result: ResolutionRunSettlement,
-): Promise<ResolutionSession> {
+	result:
+		| {
+				readonly kind: "Complete";
+				readonly attestationId: Id<"attestations">;
+		  }
+		| { readonly kind: "Unresolved" },
+): Promise<void> {
 	const session = await requireActiveResolutionSession(ctx, guard);
 	if (result.kind === "Complete") {
-		const [reading, attestation, encounter] = await Promise.all([
-			ctx.db.get(result.readingId),
-			ctx.db.get(result.attestationId),
-			findVisitorEncounter(ctx, {
-				visitorId: session.visitorId,
-				segmentId: session.segmentId,
-			}),
-		]);
-		if (
-			!reading ||
-			!attestation ||
-			attestation.readingId !== reading._id ||
-			encounter?.attestationId !== attestation._id
-		) {
-			throw new Error(
-				"The completed Resolution Session has no matching Visitor Encounter.",
-			);
-		}
-		await settleComplete(ctx, session, result);
-		await upsertResolutionRun(ctx, session, {
-			phase: "Commit",
-			state: "Succeeded",
-		});
-		return session;
+		await completeResolutionSession(ctx, session, result.attestationId);
+	} else {
+		await settleResolutionSession(ctx, session, { kind: "Unresolved" });
 	}
-	if (result.kind === "Unresolved") {
-		await settleUnresolved(ctx, session);
-		await upsertResolutionRun(ctx, session, {
-			phase: "Commit",
-			state: "Succeeded",
-		});
-		return session;
-	}
-	const diagnosticId = await settleFailed(ctx, session, result.message);
 	await upsertResolutionRun(ctx, session, {
-		phase: phaseForProgress(session.lifecycle.progress),
-		state: "Failed",
-		failureCode: "Internal",
-		diagnosticId,
+		phase: "Commit",
+		state: "Succeeded",
 	});
-	return session;
 }
 
-export async function settleComplete(
+export type CommittedOccurrence = Awaited<
+	ReturnType<typeof completeResolutionSession>
+>;
+
+/**
+ * Completes `session` with a committed occurrence: the Visitor's Encounter
+ * advances to it (ADR-0002), the session converges on its projections, and
+ * the occurrence's Reading is asked for Knowledge.
+ */
+export async function completeResolutionSession(
 	ctx: MutationCtx,
 	session: ResolutionSession,
-	result: {
-		readonly readingId: Id<"readings">;
-		readonly attestationId: Id<"attestations">;
-		readonly grammar: ResolutionGrammarProjection;
-		readonly reading: ResolutionReadingProjection;
-	},
-): Promise<void> {
+	attestationId: Id<"attestations">,
+	options: { readonly knowledgeDraftJson?: string } = {},
+) {
+	const { clickId } = await ensureVisitorEncounter(ctx, {
+		requestId: session.requestId,
+		visitorId: session.visitorId,
+		textId: session.route.textId,
+		sentenceId: session.sentenceId,
+		segmentId: session.segmentId,
+		attestationId,
+	});
+	const { readingId, value: occurrence } =
+		await reconstructReusableAttestation(
+			ctx,
+			attestationId,
+			session.clickedSegmentIndex,
+		);
 	await ctx.db.patch(session._id, {
 		lifecycle: {
 			state: "Terminal",
 			progress: "Committing",
 			outcome: "Complete",
 		},
-		grammar: result.grammar,
-		reading: result.reading,
-		readingId: result.readingId,
-		attestationId: result.attestationId,
+		grammar: projectResolutionGrammar(occurrence.grammatical),
+		reading: projectResolutionReading(occurrence.reading),
+		readingId,
+		attestationId,
 		failureMessage: undefined,
 		failureCode: undefined,
 		diagnosticId: undefined,
@@ -921,44 +925,70 @@ export async function settleComplete(
 	if (segment?.resolutionState) {
 		await ctx.db.patch(session.segmentId, { resolutionState: undefined });
 	}
+	await scheduleKnowledgeGeneration(ctx, {
+		attemptKey: session.requestId,
+		...(options.knowledgeDraftJson
+			? { knowledgeDraftJson: options.knowledgeDraftJson }
+			: {}),
+		visitorId: session.visitorId,
+		readingId,
+		attestationId,
+	});
+	return { clickId, readingId, attestationId, occurrence };
 }
 
-export async function settleUnresolved(
-	ctx: MutationCtx,
-	session: ResolutionSession,
-): Promise<void> {
-	await ctx.db.patch(session._id, {
-		lifecycle: {
-			state: "Terminal",
-			progress: session.lifecycle.progress,
-			outcome: "Unresolved",
-		},
-		failureMessage: undefined,
-		updatedAt: Date.now(),
-	});
-	await finishSegmentResolution(ctx, session.segmentId, "Unresolved");
-}
+export type ResolutionSessionEnding =
+	| { readonly kind: "Unresolved" }
+	| {
+			readonly kind: "PermanentFailure";
+			readonly message: string;
+			readonly failureCode?: ResolutionFailureCode;
+			readonly diagnosticId?: string;
+	  };
 
-export async function settleFailed(
+/**
+ * Ends `session` without an occurrence of its own. When another session has
+ * already committed the clicked Segment, that occurrence wins instead: a
+ * later terminal write never replaces it (ADR-0004).
+ */
+export async function settleResolutionSession(
 	ctx: MutationCtx,
 	session: ResolutionSession,
-	message: string,
-	failureCode: ResolutionFailureCode = "Internal",
-	diagnosticId: string = crypto.randomUUID(),
-): Promise<string> {
-	await ctx.db.patch(session._id, {
-		lifecycle: {
-			state: "Terminal",
-			progress: session.lifecycle.progress,
-			outcome: "PermanentFailure",
-		},
-		failureCode,
-		diagnosticId,
-		failureMessage: safeFailureMessage(message),
-		updatedAt: Date.now(),
-	});
-	await finishSegmentResolution(ctx, session.segmentId, "PermanentFailure");
-	return diagnosticId;
+	ending: ResolutionSessionEnding,
+): Promise<
+	| ({ readonly kind: "Complete" } & CommittedOccurrence)
+	| { readonly kind: ResolutionSessionEnding["kind"] }
+> {
+	const committed = (await ctx.db.get(session.segmentId))
+		?.attestationMembership?.attestationId;
+	if (committed) {
+		return {
+			kind: "Complete",
+			...(await completeResolutionSession(ctx, session, committed)),
+		};
+	}
+	const progress = session.lifecycle.progress;
+	if (ending.kind === "Unresolved") {
+		await ctx.db.patch(session._id, {
+			lifecycle: { state: "Terminal", progress, outcome: "Unresolved" },
+			failureMessage: undefined,
+			updatedAt: Date.now(),
+		});
+	} else {
+		await ctx.db.patch(session._id, {
+			lifecycle: {
+				state: "Terminal",
+				progress,
+				outcome: "PermanentFailure",
+			},
+			failureCode: ending.failureCode ?? "Internal",
+			diagnosticId: ending.diagnosticId ?? crypto.randomUUID(),
+			failureMessage: safeFailureMessage(ending.message),
+			updatedAt: Date.now(),
+		});
+	}
+	await finishSegmentResolution(ctx, session.segmentId, ending.kind);
+	return { kind: ending.kind };
 }
 
 /**

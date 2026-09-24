@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -19,6 +19,15 @@ import {
 	backfillStructuralShadowReferencesPage,
 } from "../convex/shadows";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 const nounShadow = {
 	language: "de",

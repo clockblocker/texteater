@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
@@ -22,6 +22,15 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 type ReadingValue = Parameters<typeof readingFingerprint>[0];
 

@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
 import type { TableNames } from "../convex/_generated/dataModel";
@@ -15,6 +15,15 @@ import {
 	playgroundFixtures,
 	type TestConvexDb,
 } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 test(
 	"the two-stage seed presents all cases in one titled Text, including cases beyond the old nine-Sentence limit",

@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { nounArticleReference } from "dumgen";
 import type * as Dumling from "dumling/types";
 import { api } from "../convex/_generated/api";
@@ -17,6 +17,15 @@ import {
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
 	unitKind: "Lemma",

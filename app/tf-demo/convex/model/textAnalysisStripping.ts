@@ -109,7 +109,7 @@ export async function stripTextAnalysisGraph(
 	let deletedReadings = 0;
 	let readingCursor: ReadingCleanupCursor = {
 		itemIndex: 0,
-		phase: "PendingRelations",
+		phase: "GenerationAttempts",
 	};
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(

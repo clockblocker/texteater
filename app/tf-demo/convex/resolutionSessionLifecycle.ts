@@ -155,10 +155,7 @@ export function createResolutionSessionLifecycle(
 						? {
 								guard,
 								result: {
-									...result,
-									readingId: convexId<"readings">(
-										result.readingId,
-									),
+									kind: "Complete",
 									attestationId: convexId<"attestations">(
 										result.attestationId,
 									),

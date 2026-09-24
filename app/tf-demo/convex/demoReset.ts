@@ -5,7 +5,7 @@ import {
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Id, TableNames } from "./_generated/dataModel";
+import type { Doc, Id, TableNames } from "./_generated/dataModel";
 import {
 	type ActionCtx,
 	action,
@@ -14,6 +14,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
 	type StripTextAnalysisResult,
@@ -150,22 +151,48 @@ type VisitorResetPhase =
 	| "VisitorClicks"
 	| "Done";
 
-/** The table each Visitor reset phase sweeps for one Visitor. */
-export const visitorResetPhaseTables = {
-	ResolutionSessions: "resolutionSessions",
-	GenerationAttempts: "knowledgeGenerationAttempts",
-	KnowledgeSettings: "knowledgeSettings",
-	PersonalAnnotations: "personalAnnotations",
-	ReadingLanguageLayouts: "readingLanguageLayouts",
-	ReadingFamilyKindLayouts: "readingFamilyKindLayouts",
-	VisitorClicks: "visitorClicks",
-} as const satisfies Record<Exclude<VisitorResetPhase, "Done">, TableNames>;
-
 const visitorResetResultValidator = v.object({
 	deleted: v.number(),
 	hasMore: v.boolean(),
 	nextPhase: visitorResetPhaseValidator,
 });
+
+/**
+ * Deletes Knowledge generation attempts with their production runs, spending
+ * at most `budget` deletions. Reports the owner Reading keys whose Scheduled
+ * or Running attempt went, since a Waiting one may have queued behind it.
+ */
+async function deleteGenerationAttempts(
+	ctx: MutationCtx,
+	attempts: readonly Doc<"knowledgeGenerationAttempts">[],
+	budget: number,
+): Promise<{
+	deleted: number;
+	complete: boolean;
+	endedActiveOwners: Set<string>;
+}> {
+	let deleted = 0;
+	const endedActiveOwners = new Set<string>();
+	for (const attempt of attempts) {
+		const runs = await ctx.db
+			.query("knowledgeProductionRuns")
+			.withIndex("by_attempt_key_and_run", (q) =>
+				q.eq("attemptKey", attempt.attemptKey),
+			)
+			.take(budget - deleted);
+		await Promise.all(runs.map((run) => ctx.db.delete(run._id)));
+		deleted += runs.length;
+		if (deleted >= budget) {
+			return { deleted, complete: false, endedActiveOwners };
+		}
+		await ctx.db.delete(attempt._id);
+		deleted += 1;
+		if (attempt.state === "Scheduled" || attempt.state === "Running") {
+			endedActiveOwners.add(attempt.ownerReadingKey);
+		}
+	}
+	return { deleted, complete: true, endedActiveOwners };
+}
 
 export const clearVisitorDataBatch = internalMutation({
 	args: {
@@ -195,18 +222,29 @@ export const clearVisitorDataBatch = internalMutation({
 				break;
 			}
 			case "GenerationAttempts": {
-				const rows = await ctx.db
+				const attempts = await ctx.db
 					.query("knowledgeGenerationAttempts")
 					.withIndex("by_visitor_id_and_updated_at", (q) =>
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-				deleted = rows.length;
+				const removed = await deleteGenerationAttempts(
+					ctx,
+					attempts,
+					BATCH_SIZE,
+				);
+				// Another Visitor's attempt may be waiting behind a removed one.
+				for (const ownerReadingKey of removed.endedActiveOwners) {
+					await scheduleNextWaitingKnowledgeAttempt(
+						ctx,
+						ownerReadingKey,
+					);
+				}
+				deleted = removed.deleted;
 				nextPhase =
-					rows.length === BATCH_SIZE
-						? "GenerationAttempts"
-						: "KnowledgeSettings";
+					removed.complete && attempts.length < BATCH_SIZE
+						? "KnowledgeSettings"
+						: "GenerationAttempts";
 				break;
 			}
 			case "KnowledgeSettings": {
@@ -534,12 +572,17 @@ export const describeReadingCleanupCandidates = internalQuery({
 	},
 });
 
+/**
+ * Reading cleanup phases, in order. Attempts go first: once an attempt is
+ * gone its in-flight publication is rejected, so it cannot write Knowledge
+ * back behind a later phase.
+ */
 const readingCleanupPhaseValidator = v.union(
+	v.literal("GenerationAttempts"),
 	v.literal("PendingRelations"),
 	v.literal("KnowledgeChanges"),
 	v.literal("StructuralReferences"),
 	v.literal("AccumulatedKnowledge"),
-	v.literal("GenerationAttempts"),
 	v.literal("GeneratedRelationRuns"),
 	v.literal("GeneratedRelationProposals"),
 	v.literal("PersonalAnnotations"),
@@ -549,32 +592,17 @@ const readingCleanupPhaseValidator = v.union(
 );
 
 type ReadingCleanupPhase =
+	| "GenerationAttempts"
 	| "PendingRelations"
 	| "KnowledgeChanges"
 	| "StructuralReferences"
 	| "AccumulatedKnowledge"
-	| "GenerationAttempts"
 	| "GeneratedRelationRuns"
 	| "GeneratedRelationProposals"
 	| "PersonalAnnotations"
 	| "OutgoingSemanticEdges"
 	| "IncomingSemanticEdges"
 	| "Reading";
-
-/** The tables each Reading cleanup phase sweeps for a pruned Reading. */
-export const readingCleanupPhaseTables = {
-	PendingRelations: ["pendingSemanticRelations"],
-	KnowledgeChanges: ["knowledgeChanges"],
-	StructuralReferences: ["structuralShadowReferences"],
-	AccumulatedKnowledge: ["accumulatedKnowledge"],
-	GenerationAttempts: ["knowledgeGenerationAttempts"],
-	GeneratedRelationRuns: ["generatedRelationRuns"],
-	GeneratedRelationProposals: ["generatedRelationProposals"],
-	PersonalAnnotations: ["personalAnnotations"],
-	OutgoingSemanticEdges: ["semanticRelationEdges"],
-	IncomingSemanticEdges: ["semanticRelationEdges"],
-	Reading: ["readingEntries", "readings"],
-} as const satisfies Record<ReadingCleanupPhase, readonly TableNames[]>;
 
 type ReadingCleanupCursor = {
 	itemIndex: number;
@@ -588,6 +616,8 @@ const readingCleanupCursorValidator = v.object({
 
 function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 	switch (phase) {
+		case "GenerationAttempts":
+			return "PendingRelations";
 		case "PendingRelations":
 			return "KnowledgeChanges";
 		case "KnowledgeChanges":
@@ -595,8 +625,6 @@ function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 		case "StructuralReferences":
 			return "AccumulatedKnowledge";
 		case "AccumulatedKnowledge":
-			return "GenerationAttempts";
-		case "GenerationAttempts":
 			return "GeneratedRelationRuns";
 		case "GeneratedRelationRuns":
 			return "GeneratedRelationProposals";
@@ -609,7 +637,7 @@ function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 		case "IncomingSemanticEdges":
 			return "Reading";
 		case "Reading":
-			return "PendingRelations";
+			return "GenerationAttempts";
 	}
 }
 
@@ -675,7 +703,7 @@ export const clearReadingDataBatch = internalMutation({
 	handler: async (ctx, { readingKeys, cursor: cursorValue }) => {
 		let cursor: ReadingCleanupCursor = cursorValue ?? {
 			itemIndex: 0,
-			phase: "PendingRelations",
+			phase: "GenerationAttempts",
 		};
 		if (
 			!Number.isSafeInteger(cursor.itemIndex) ||
@@ -756,17 +784,20 @@ export const clearReadingDataBatch = internalMutation({
 				case "GenerationAttempts": {
 					// Attempts are keyed by the Reading's identity key, so a
 					// leftover one would block the next Reading with this key.
-					const rows = await ctx.db
+					const attempts = await ctx.db
 						.query("knowledgeGenerationAttempts")
 						.withIndex("by_owner_reading_key_and_updated_at", (q) =>
 							q.eq("ownerReadingKey", readingKey),
 						)
 						.take(remaining);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
+					const removed = await deleteGenerationAttempts(
+						ctx,
+						attempts,
+						remaining,
 					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
+					deleted += removed.deleted;
+					phaseComplete =
+						removed.complete && attempts.length < remaining;
 					break;
 				}
 				case "GeneratedRelationRuns":
@@ -827,7 +858,7 @@ export const clearReadingDataBatch = internalMutation({
 			if (cursor.phase === "Reading") {
 				cursor = {
 					itemIndex: cursor.itemIndex + 1,
-					phase: "PendingRelations",
+					phase: "GenerationAttempts",
 				};
 			} else {
 				cursor = { ...cursor, phase: nextReadingPhase(cursor.phase) };

@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { makeSurfaceId } from "dumdict";
 import { nounArticleReference } from "dumgen";
@@ -10,6 +10,15 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+
+beforeEach(() => {
+	// Scheduled work, such as Definition Text materialization, never runs here.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 type RouteNoteTarget = FunctionArgs<typeof api.routeNotes.get>["target"];
 type RouteNote = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;

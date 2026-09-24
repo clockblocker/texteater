@@ -18,22 +18,18 @@ import {
 	createDumdictTransaction,
 	type DumdictTransactionOutcome,
 } from "./dumdictTransaction";
-import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import {
 	assertIndex,
 	assertMatchingRetry,
 	assertNonEmpty,
 	assertVisitorInput,
-	reconstructReusableAttestation,
 	requireClickableSegment,
 } from "./model/resolutionLookup";
 import {
-	projectResolutionGrammar,
-	projectResolutionReading,
+	type CommittedOccurrence,
+	completeResolutionSession,
 	requireCommittingSession,
-	settleComplete,
-	settleFailed,
-	settleUnresolved,
+	settleResolutionSession,
 } from "./model/resolutionSessions";
 import {
 	occurrenceAttestationInputValidator,
@@ -58,63 +54,18 @@ async function findClickByRequestId(
 		.unique();
 }
 
-async function settleResolvedSession(
-	ctx: MutationCtx,
-	session: Awaited<ReturnType<typeof requireCommittingSession>>,
-	result: {
-		readingId: Id<"readings">;
-		attestationId: Id<"attestations">;
-		occurrence: {
-			grammatical: Parameters<typeof projectResolutionGrammar>[0];
-			reading: Parameters<typeof projectResolutionReading>[0];
-		};
-	},
-): Promise<void> {
-	await settleComplete(ctx, session, {
-		readingId: result.readingId,
-		attestationId: result.attestationId,
-		grammar: projectResolutionGrammar(result.occurrence.grammatical),
-		reading: projectResolutionReading(result.occurrence.reading),
-	});
-}
-
-async function recordClickAgainstCommittedAttestation(
-	ctx: MutationCtx,
-	input: {
-		requestId: string;
-		visitorId: string;
-		textId: Id<"texts">;
-		sentenceId: Id<"sentences">;
-		segmentId: Id<"segments">;
-		clickedSegmentIndex: number;
-		attestationId: Id<"attestations">;
-	},
+/** The commit result for a Segment another occurrence already owns. */
+function reusedCommit(
+	committed: CommittedOccurrence,
+	existing: { readonly attestationId?: Id<"attestations"> } | null,
 ) {
-	const [{ value: occurrence }, attestation, { clickId }] = await Promise.all(
-		[
-			reconstructReusableAttestation(
-				ctx,
-				input.attestationId,
-				input.clickedSegmentIndex,
-			),
-			ctx.db.get(input.attestationId),
-			ensureVisitorEncounter(ctx, input),
-		],
-	);
-	if (!attestation) throw new Error("Attestation does not exist.");
-	await scheduleKnowledgeGeneration(ctx, {
-		attemptKey: input.requestId,
-		visitorId: input.visitorId,
-		readingId: attestation.readingId,
-		attestationId: input.attestationId,
-	});
 	return {
 		status: "Reused" as const,
-		clickId,
-		readingId: attestation.readingId,
-		attestationId: input.attestationId,
-		deduplicated: false,
-		occurrence,
+		clickId: committed.clickId,
+		readingId: committed.readingId,
+		attestationId: committed.attestationId,
+		deduplicated: existing?.attestationId === committed.attestationId,
+		occurrence: committed.occurrence,
 	};
 }
 
@@ -196,41 +147,29 @@ export const persistUnresolvedClick = internalMutation({
 				segmentId: segment._id,
 			});
 		}
-		// A committed occurrence outranks this session's Unresolved outcome:
-		// the Visitor Encounter advances to it and the session completes
-		// (ADR-0002, ADR-0004). Segment Selection recorded the encounter under
-		// this requestId, so finding it is not yet a retry.
-		const committedAttestationId =
-			segment.attestationMembership?.attestationId;
-		if (committedAttestationId) {
-			const result = await recordClickAgainstCommittedAttestation(ctx, {
-				...args,
-				textId: sentence.textId,
-				segmentId: segment._id,
-				attestationId: committedAttestationId,
-			});
-			await settleResolvedSession(ctx, session, result);
-			return {
-				...result,
-				deduplicated:
-					existing?.attestationId === committedAttestationId,
-			};
-		}
-		const { clickId } = existing
-			? { clickId: existing._id }
-			: await ensureVisitorEncounter(ctx, {
-					requestId: args.requestId,
-					visitorId: args.visitorId,
-					textId: sentence.textId,
-					sentenceId: sentence._id,
-					segmentId: segment._id,
-				});
-		await settleUnresolved(ctx, session);
-		return {
-			status: "Unresolved" as const,
-			clickId,
-			deduplicated: existing !== null,
-		};
+		// Segment Selection recorded the Visitor Encounter under this
+		// requestId, so finding it is not yet a retry.
+		const clickId = existing
+			? existing._id
+			: (
+					await ensureVisitorEncounter(ctx, {
+						requestId: args.requestId,
+						visitorId: args.visitorId,
+						textId: sentence.textId,
+						sentenceId: sentence._id,
+						segmentId: segment._id,
+					})
+				).clickId;
+		const settled = await settleResolutionSession(ctx, session, {
+			kind: "Unresolved",
+		});
+		return settled.kind === "Complete"
+			? reusedCommit(settled, existing)
+			: {
+					status: "Unresolved" as const,
+					clickId,
+					deduplicated: existing !== null,
+				};
 	},
 });
 
@@ -251,7 +190,7 @@ export const persistReusedResolvedClick = internalMutation({
 			args.sessionGuard,
 			args,
 		);
-		const { sentence, segment } = await requireClickableSegment(
+		const { segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
 			args.clickedSegmentIndex,
@@ -263,74 +202,33 @@ export const persistReusedResolvedClick = internalMutation({
 				"Clicked Segment is not a member of the Attestation.",
 			);
 		}
-		const attestation = await ctx.db.get(args.attestationId);
-		if (!attestation) throw new Error("Attestation does not exist.");
 		const existing = await findClickByRequestId(ctx, args.requestId);
 		if (existing) {
 			assertMatchingRetry(existing, {
 				visitorId: args.visitorId,
 				segmentId: segment._id,
 			});
-			if (existing.attestationId !== args.attestationId) {
+			if (
+				existing.attestationId &&
+				existing.attestationId !== args.attestationId
+			) {
 				throw new Error(
 					"requestId already records a different result.",
 				);
 			}
-			const result = {
-				status: "Reused" as const,
-				clickId: existing._id,
-				readingId: attestation.readingId,
-				attestationId: args.attestationId,
-				deduplicated: true,
-			};
-			const occurrence = await reconstructReusableAttestation(
-				ctx,
-				args.attestationId,
-				args.clickedSegmentIndex,
-			);
-			await settleResolvedSession(ctx, session, {
-				...result,
-				occurrence: occurrence.value,
-			});
-			await scheduleKnowledgeGeneration(ctx, {
-				attemptKey: args.requestId,
-				visitorId: args.visitorId,
-				readingId: result.readingId,
-				attestationId: result.attestationId,
-			});
-			return result;
 		}
-		const { clickId } = await ensureVisitorEncounter(ctx, {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			textId: sentence.textId,
-			sentenceId: sentence._id,
-			segmentId: segment._id,
-			attestationId: args.attestationId,
-		});
-		const result = {
-			status: "Reused" as const,
-			clickId,
-			readingId: attestation.readingId,
-			attestationId: args.attestationId,
-			deduplicated: false,
-		};
-		const occurrence = await reconstructReusableAttestation(
+		const committed = await completeResolutionSession(
 			ctx,
+			session,
 			args.attestationId,
-			args.clickedSegmentIndex,
 		);
-		await settleResolvedSession(ctx, session, {
-			...result,
-			occurrence: occurrence.value,
-		});
-		await scheduleKnowledgeGeneration(ctx, {
-			attemptKey: args.requestId,
-			visitorId: args.visitorId,
-			readingId: result.readingId,
-			attestationId: result.attestationId,
-		});
-		return result;
+		return {
+			status: "Reused" as const,
+			clickId: committed.clickId,
+			readingId: committed.readingId,
+			attestationId: committed.attestationId,
+			deduplicated: existing?.attestationId === args.attestationId,
+		};
 	},
 });
 
@@ -356,61 +254,33 @@ export const persistResolvedClick = internalMutation({
 			args,
 		);
 		assertNonEmpty(args.readingKey, "readingKey");
-		const { sentence, segment: clickedSegment } =
-			await requireClickableSegment(
-				ctx,
-				args.sentenceId,
-				args.clickedSegmentIndex,
-			);
+		const { segment: clickedSegment } = await requireClickableSegment(
+			ctx,
+			args.sentenceId,
+			args.clickedSegmentIndex,
+		);
 		const existingClick = await findClickByRequestId(ctx, args.requestId);
 		if (existingClick) {
 			assertMatchingRetry(existingClick, {
 				visitorId: args.visitorId,
 				segmentId: clickedSegment._id,
 			});
-			// Segment Selection creates the Visitor Encounter before its
-			// Resolution Session runs, so an unresolved one is this session's own.
-			if (existingClick.attestationId) {
-				const { value: occurrence } =
-					await reconstructReusableAttestation(
-						ctx,
-						existingClick.attestationId,
-						args.clickedSegmentIndex,
-					);
-				const existingAttestation = await ctx.db.get(
-					existingClick.attestationId,
-				);
-				if (!existingAttestation)
-					throw new Error("Attestation does not exist.");
-				const result = {
-					status: "Reused" as const,
-					clickId: existingClick._id,
-					readingId: existingAttestation.readingId,
-					attestationId: existingClick.attestationId,
-					deduplicated: true,
-					occurrence,
-				};
-				await settleResolvedSession(ctx, session, result);
-				await scheduleKnowledgeGeneration(ctx, {
-					attemptKey: args.requestId,
-					visitorId: args.visitorId,
-					readingId: result.readingId,
-					attestationId: result.attestationId,
-				});
-				return result;
-			}
 		}
+		// Segment Selection recorded the Visitor Encounter before the run, so
+		// an unresolved one is this session's own. A committed occurrence on
+		// the clicked Segment wins over this proposal (ADR-0004).
 		const committedAttestationId =
+			existingClick?.attestationId ??
 			clickedSegment.attestationMembership?.attestationId;
 		if (committedAttestationId) {
-			const result = await recordClickAgainstCommittedAttestation(ctx, {
-				...args,
-				textId: sentence.textId,
-				segmentId: clickedSegment._id,
-				attestationId: committedAttestationId,
-			});
-			await settleResolvedSession(ctx, session, result);
-			return result;
+			return reusedCommit(
+				await completeResolutionSession(
+					ctx,
+					session,
+					committedAttestationId,
+				),
+				existingClick,
+			);
 		}
 		if (
 			readingIdentityKey(args.reading as Dumling.Reading<"de">) !==
@@ -494,11 +364,11 @@ export const persistResolvedClick = internalMutation({
 			),
 		];
 		if (conflictingAttestationIds.length > 0) {
-			await settleFailed(
-				ctx,
-				session,
-				"This occurrence overlaps a different saved occurrence.",
-			);
+			await settleResolutionSession(ctx, session, {
+				kind: "PermanentFailure",
+				message:
+					"This occurrence overlaps a different saved occurrence.",
+			});
 			return {
 				status: "MembershipConflict" as const,
 				code: "partialOverlap" as const,
@@ -512,11 +382,11 @@ export const persistResolvedClick = internalMutation({
 		// transaction reads, so the occurrence never carries a stale plan.
 		const dictionaryCommit = await planAndCommitDictionary(ctx, args);
 		if (dictionaryCommit.status !== "committed") {
-			await settleFailed(
-				ctx,
-				session,
-				"The shared dictionary rejected this resolution before it could be saved.",
-			);
+			await settleResolutionSession(ctx, session, {
+				kind: "PermanentFailure",
+				message:
+					"The shared dictionary rejected this resolution before it could be saved.",
+			});
 			return {
 				status: "DictionaryConflict" as const,
 				code:
@@ -617,37 +487,14 @@ export const persistResolvedClick = internalMutation({
 				});
 			}),
 		);
-		const { clickId } = await ensureVisitorEncounter(ctx, {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			textId: sentence.textId,
-			sentenceId: sentence._id,
-			segmentId: clickedSegment._id,
-			attestationId,
-		});
-		const { value: occurrence } = await reconstructReusableAttestation(
-			ctx,
-			attestationId,
-			args.clickedSegmentIndex,
-		);
-		const result = {
+		return {
 			status: "Committed" as const,
-			clickId,
-			readingId: reading._id,
-			attestationId,
+			...(await completeResolutionSession(ctx, session, attestationId, {
+				...(args.knowledgeDraftJson
+					? { knowledgeDraftJson: args.knowledgeDraftJson }
+					: {}),
+			})),
 			deduplicated: false,
-			occurrence,
 		};
-		await settleResolvedSession(ctx, session, result);
-		await scheduleKnowledgeGeneration(ctx, {
-			attemptKey: args.requestId,
-			...(args.knowledgeDraftJson
-				? { knowledgeDraftJson: args.knowledgeDraftJson }
-				: {}),
-			visitorId: args.visitorId,
-			readingId: result.readingId,
-			attestationId: result.attestationId,
-		});
-		return result;
 	},
 });

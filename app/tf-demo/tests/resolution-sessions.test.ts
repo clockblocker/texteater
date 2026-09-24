@@ -545,13 +545,10 @@ describe("Resolution Session", () => {
 				guard: later,
 				result: {
 					kind: "Complete",
-					readingId: committed.readingId,
 					attestationId: committed.attestationId,
-					grammar: grammarProjection("Bank"),
-					reading: readingProjection("🏦", "Bank"),
 				},
 			}),
-		).toBe(true);
+		).toBeNull();
 		// Terminal convergence replaces the loser's provisional projections.
 		expect(await session(t, "request-later")).toMatchObject({
 			lifecycle: {
@@ -766,8 +763,9 @@ describe("Resolution Session", () => {
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "PermanentFailure",
 		});
-		await expect(
-			t.mutation(internal.resolutionSessions.recordRunFailure, {
+		// A late record from a run that no longer holds the session is a no-op.
+		expect(
+			await t.mutation(internal.resolutionSessions.recordRunFailure, {
 				guard,
 				failure: {
 					kind: "Internal",
@@ -777,7 +775,10 @@ describe("Resolution Session", () => {
 					errorFingerprint: "fnv1a-1",
 				},
 			}),
-		).rejects.toThrow("no longer active");
+		).toBe(false);
+		expect(await session(t, "request-1")).toMatchObject({
+			diagnosticId: "diagnostic-1",
+		});
 	});
 
 	test("public failure projection omits operational provider diagnostics", async () => {
@@ -912,7 +913,7 @@ describe("Resolution Session", () => {
 		for (const requestId of ["stale", "failed", "complete-missing"])
 			await patchSession(t, requestId, { updatedAt: old });
 
-		const result = await t.mutation(api.resolutionSessions.cleanup, {
+		const result = await t.mutation(internal.resolutionSessions.cleanup, {
 			staleBefore: Date.now() - 1,
 			terminalBefore: Date.now() - 1,
 		});
@@ -938,7 +939,7 @@ describe("Resolution Session", () => {
 		for (const requestId of ["stale-1", "stale-2"])
 			await patchSession(t, requestId, { updatedAt: old });
 
-		await t.mutation(api.resolutionSessions.cleanup, {
+		await t.mutation(internal.resolutionSessions.cleanup, {
 			staleBefore: Date.now() - 1,
 			terminalBefore: Date.now() - 1,
 		});
@@ -1130,6 +1131,275 @@ describe("Resolution Session", () => {
 			}),
 		]);
 		expect(await segmentState(t, segmentId)).toBeNull();
+	});
+
+	test("a loser that fails after another session committed converges on the winner", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const failing = await startSession(t, select("request-generation"));
+		const missing = await startSession(
+			t,
+			select("request-miss", "visitor-2"),
+		);
+		for (const guard of [failing, missing])
+			await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard: failing,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection("loser"),
+		});
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard: failing,
+			progress: "ReadingAvailable",
+			reading: readingProjection("🧪", "loser"),
+		});
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-3"),
+		);
+
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failing,
+			failure: {
+				kind: "Generation",
+				phase: "Commit",
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
+					retryable: false,
+				},
+			},
+		});
+		await t.mutation(
+			internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+			{
+				guard: missing,
+				miss: {
+					decision: "CatalogMiss",
+					route: "de/Lexeme/NOUN",
+					stage: "resolveGrammar",
+					message: "No reviewed member matches",
+				},
+			},
+		);
+
+		for (const [requestId, visitorId] of [
+			["request-generation", "visitor-1"],
+			["request-miss", "visitor-2"],
+		] as const) {
+			const converged = await session(t, requestId);
+			expect(converged).toMatchObject({
+				lifecycle: { state: "Terminal", outcome: "Complete" },
+				readingId: winner.readingId,
+				attestationId: winner.attestationId,
+				grammar: { canonicalForm: "Bank" },
+				reading: { emojiDescription: "🏦", canonicalForm: "Bank" },
+			});
+			expect(converged).not.toHaveProperty("failureCode");
+			const encounter = (await rows(t, "visitorClicks")).find(
+				(row) => row.visitorId === visitorId,
+			);
+			expect(encounter?.attestationId).toBe(winner.attestationId);
+		}
+		expect(await segmentState(t, segmentId)).toBeNull();
+	});
+
+	test("retrying a failure after another session committed lands on the winner", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const failed = await startSession(t, select("request-failed"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failed,
+			failure: {
+				kind: "Internal",
+				phase: "Grammar",
+				diagnosticId: "diagnostic-1",
+				errorName: "Error",
+				errorFingerprint: "fnv1a-1",
+			},
+		});
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-2"),
+		);
+		const scheduledBefore = await pendingScheduled(t);
+
+		expect(
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-failed",
+				visitorId: "visitor-1",
+			}),
+		).toEqual({ retried: true });
+
+		expect(await session(t, "request-failed")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			attestationId: winner.attestationId,
+		});
+		expect(
+			(await pendingScheduled(t)).filter(
+				({ name }) => name === "orchestration:runResolutionSession",
+			),
+		).toEqual(
+			scheduledBefore.filter(
+				({ name }) => name === "orchestration:runResolutionSession",
+			),
+		);
+	});
+
+	test("a reused-occurrence commit completes a session whose Encounter predates the winner", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const loser = await startSession(t, select("request-loser"));
+		const winner = await commitBankOccurrence(
+			t,
+			select("request-winner", "visitor-2"),
+		);
+
+		expect(
+			await t.mutation(internal.persistence.persistReusedResolvedClick, {
+				...select("request-loser"),
+				attestationId: winner.attestationId,
+				sessionGuard: loser,
+			}),
+		).toMatchObject({
+			status: "Reused",
+			readingId: winner.readingId,
+			attestationId: winner.attestationId,
+			deduplicated: false,
+		});
+		expect(await session(t, "request-loser")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			attestationId: winner.attestationId,
+		});
+	});
+
+	test("the Segment stays Active while any of several sessions is live", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const first = await startSession(t, select("request-1"));
+		await startSession(t, select("request-2"));
+		await startSession(t, select("request-3", "visitor-2"));
+		await startSession(t, select("request-4", "visitor-3"));
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 4,
+		});
+
+		await t.mutation(internal.persistence.persistUnresolvedClick, {
+			...select("request-1"),
+			sessionGuard: first,
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 3,
+		});
+
+		// visitor-1 holds one Terminal and one Active session.
+		await t.action(api.demoReset.clearVisitorData, {
+			visitorId: "visitor-1",
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
+
+		const old = Date.now() - 10_000;
+		for (const requestId of ["request-3", "request-4"])
+			await patchSession(t, requestId, { updatedAt: old });
+		await t.mutation(internal.resolutionSessions.cleanup, {
+			staleBefore: Date.now() - 1,
+			terminalBefore: Date.now() - 1,
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
+	});
+
+	test("the scheduled run records an unexpected failure and ends its session", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		// A malformed stored Lemma found under the clicked word breaks the run.
+		await t.run((ctx) =>
+			ctx.db.insert("lemmas", {
+				lemmaKey: "malformed",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Banken",
+				coreFeatures: "secret-malformed-features",
+			}),
+		);
+		const guard = await startSession(t, select("request-1"));
+		const providerRequests: string[] = [];
+		const errors: string[] = [];
+		const previousFetch = globalThis.fetch;
+		const previousError = console.error;
+		globalThis.fetch = (async (url: string | URL | Request) => {
+			providerRequests.push(String(url));
+			throw new Error("No model call is expected.");
+		}) as typeof fetch;
+		console.error = (...values: unknown[]) => {
+			errors.push(values.map(String).join(" "));
+		};
+		try {
+			await t.action(internal.orchestration.runResolutionSession, guard);
+		} finally {
+			globalThis.fetch = previousFetch;
+			console.error = previousError;
+		}
+
+		expect(providerRequests).toEqual([]);
+		const failed = await session(t, "request-1");
+		expect(failed).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			failureCode: "Internal",
+			failureMessage: "Resolution could not be completed.",
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				state: "Failed",
+				failureCode: "Internal",
+				diagnosticId: failed.diagnosticId,
+				errorName: expect.any(String),
+				errorFingerprint: expect.stringContaining("fnv1a-"),
+			}),
+		]);
+		expect(errors.join("\n")).toContain("ResolutionRunInternalFailure");
+		expect(errors.join("\n")).not.toContain("secret-malformed-features");
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
+	});
+
+	test("reset batches spend one budget on sessions and end their Segment state", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		for (let index = 0; index < 401; index += 1)
+			await t.mutation(api.resolutionSessions.selectSegment, {
+				...select(`request-${index}`),
+				routeNoteRequested: false,
+			});
+
+		expect(
+			await t.mutation(internal.demoReset.clearVisitorDataBatch, {
+				visitorId: "visitor-1",
+				phase: "ResolutionSessions",
+			}),
+		).toEqual({
+			deleted: 400,
+			hasMore: true,
+			nextPhase: "ResolutionSessions",
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
+		});
+		expect(
+			await t.mutation(internal.demoReset.resetDemoDataBatch, {
+				tableIndex: 0,
+			}),
+		).toEqual({ deleted: 1, hasMore: true, nextTableIndex: 1 });
+		expect(await rows(t, "resolutionSessions")).toEqual([]);
 	});
 });
 

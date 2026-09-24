@@ -65,11 +65,7 @@ describe("Resolution Session execution", () => {
 
 		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
 		expect(settlements).toEqual([
-			expect.objectContaining({
-				kind: "Complete",
-				readingId: "reading-1",
-				attestationId: "attestation-1",
-			}),
+			{ kind: "Complete", attestationId: "attestation-1" },
 		]);
 		expect(records).toEqual([
 			{
@@ -77,6 +73,42 @@ describe("Resolution Session execution", () => {
 				phase: "Grammar",
 				generationEvents: [],
 			},
+		]);
+	});
+
+	test("a replayed unresolved result settles Unresolved without progress", async () => {
+		const advances: ResolutionSessionAdvance[] = [];
+		const settlements: ResolutionSessionSettlement[] = [];
+		const records: ResolutionSessionRunRecord[] = [];
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity,
+				lifecycle: {
+					begin: async () => ({ selection, checkpoints: {} }),
+					advance: async (event) => {
+						advances.push(event);
+					},
+					settle: async (result) => {
+						settlements.push(result);
+					},
+					record: async (record) => {
+						records.push(record);
+					},
+				},
+				resolve: () =>
+					Effect.succeed({
+						grammatical: { decision: "Unresolved", language: "de" },
+						deduplicated: true,
+						persisted: { status: "Unresolved", clickId: "click-1" },
+					} as never),
+				diagnostics: { info: () => {}, error: () => {} },
+			}),
+		);
+
+		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
+		expect(settlements).toEqual([{ kind: "Unresolved" }]);
+		expect(records).toEqual([
+			{ kind: "Succeeded", phase: "Grammar", generationEvents: [] },
 		]);
 	});
 
