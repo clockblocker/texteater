@@ -36,7 +36,7 @@ import {
 	subjectGloss,
 	subjectLabel,
 } from "./model";
-import { HEADER_REM, type motionOf } from "./motion-spec";
+import { after, HEADER_REM, type motionOf } from "./motion-spec";
 import {
 	PortedBlocks,
 	PortedTitle,
@@ -138,7 +138,6 @@ export function PresentationView({
 	const x = useMotionValue(0);
 	const y = useMotionValue(0);
 	const rotate = useMotionValue(0);
-	const scale = useMotionValue(1);
 	/* A dealt Note is simply there: opaque on its first frame, never faded. */
 	const opacity = useMotionValue(1);
 	const handle = useRef<NoteHandle>({
@@ -149,17 +148,14 @@ export function PresentationView({
 		x,
 		y,
 		rotate,
-		scale,
 		opacity,
 	});
 	/**
 	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
 	 * is a state, not a move: which Card is in front changes at once, with
-	 * no pulse. `scale` stays the raw value the drag animates, and the two
-	 * are multiplied on the way to the DOM.
+	 * no pulse. A held Card does not swell, so nothing else scales a Note.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	const shownScale = useTransform(() => scale.get() * restScale);
 	/**
 	 * The box's origin travels as a transform, not as `left`/`top`, so two
 	 * of the four properties on MORPH leave the layout path; `width` and
@@ -374,7 +370,7 @@ export function PresentationView({
 				x: shownX,
 				y: shownY,
 				rotate,
-				scale: shownScale,
+				scale: restScale,
 				opacity,
 				zIndex: z,
 				...(preview ? { borderStyle: "dashed" } : {}),
@@ -507,7 +503,7 @@ export function PresentationView({
  * The row is one element whose height rides `MORPH` with the Note's box,
  * so the Cover's top edge is the Note's own edge in every frame. Only the
  * words change: the face leaving goes on `BAR_EXIT`, the one arriving
- * follows on `BAR_ENTER`, and the row between them never fades. A change
+ * overlaps it on `BAR_ENTER`, and the row between them never fades. A change
  * of height with no change of form, a fold, rides
  * `HEADING_RESIZE`.
  */
@@ -556,6 +552,7 @@ export function HeadingBlock({
 	const { transition, MORPH, BAR_ENTER, BAR_EXIT, HEADING_RESIZE } =
 		useDeckMotion();
 	const design = useHeadingDesign();
+	const reduce = useDeckReducedMotion();
 	const rem = remPx();
 	const face = form === "card" ? "card" : ground || !back ? null : "cover";
 	const rowRem =
@@ -563,10 +560,21 @@ export function HeadingBlock({
 	const title =
 		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
 	const gloss = subjectGloss(subject);
+	/* the two faces overlap for a beat, and a touch of blur makes the
+	   overlap read as one title turning rather than two stacked. Reduced,
+	   the box is already there, so the words do not wait for it */
 	const fade = {
-		initial: { opacity: 0 },
-		animate: { opacity: 1, transition: transition(BAR_ENTER) },
-		exit: { opacity: 0, transition: transition(BAR_EXIT) },
+		initial: { opacity: 0, filter: "blur(2px)" },
+		animate: {
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: transition(reduce ? after(BAR_ENTER, 0) : BAR_ENTER),
+		},
+		exit: {
+			opacity: 0,
+			filter: "blur(2px)",
+			transition: transition(BAR_EXIT),
+		},
 	};
 	const rowSpec = morphing ? MORPH : transition(HEADING_RESIZE);
 	return (

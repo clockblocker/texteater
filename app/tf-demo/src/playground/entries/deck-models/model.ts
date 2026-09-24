@@ -121,7 +121,6 @@ export type NoteHandle = {
 	readonly x: MotionValue<number>;
 	readonly y: MotionValue<number>;
 	readonly rotate: MotionValue<number>;
-	readonly scale: MotionValue<number>;
 	readonly opacity: MotionValue<number>;
 };
 

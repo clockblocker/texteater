@@ -42,13 +42,15 @@ export type DeckMotionOverrides = Partial<MotionParameters> & {
 			| "contexts"
 			| "barEnter"
 			| "barExit"
-			| "flyTravel"
 			| "flyRotate"
 			| "flyFade"
 			| "holdRelease",
 			spec.Tween
 		>
-	>;
+	> & {
+		/** A spring by default, so the throw keeps the hand's speed. */
+		flyTravel?: spec.Spec;
+	};
 };
 
 export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
@@ -80,7 +82,7 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		OPEN_SCALE: p.openScale,
 		ZONE_FEEDBACK_MS: p.zoneFeedbackMs * p.durationScale,
 		GROUND_PRESS_MS: p.groundPressMs,
-		GROUND_SHRINK: spec.tween(
+		GROUND_FILL: spec.tween(
 			p.groundPressMs / Math.max(0.01, p.durationScale),
 			"linear",
 		),

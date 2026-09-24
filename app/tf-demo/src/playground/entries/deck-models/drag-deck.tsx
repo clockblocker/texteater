@@ -1,6 +1,5 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "lego";
 import {
-	AnimatePresence,
 	animate,
 	MotionConfig,
 	type MotionValue,
@@ -250,7 +249,7 @@ function CompassRuntime({
 		VELOCITY_STALE_MS,
 		CLICK_SLOP,
 		GROUND_PRESS_MS,
-		GROUND_SHRINK,
+		GROUND_FILL,
 		HOLD_RELEASE,
 		ZONE_FEEDBACK_MS,
 		OPEN_SCALE,
@@ -899,7 +898,6 @@ function CompassRuntime({
 		h.x.jump(0);
 		h.y.jump(0);
 		h.rotate.jump(0);
-		h.scale.jump(1);
 		h.opacity.jump(1);
 	}
 	/**
@@ -1534,18 +1532,13 @@ function CompassRuntime({
 		});
 	}
 	/**
-	 * Put the Card's decoration back where it rests. Reduced motion takes
-	 * it there at once: the tilt and the swell say nothing the border and
-	 * the label are not already saying.
+	 * Put the Card's tilt back where it rests. Reduced motion takes it
+	 * there at once: the tilt says nothing the border and the label are
+	 * not already saying.
 	 */
 	function settleTransform(h: NoteHandle) {
-		if (reduce) {
-			h.rotate.jump(0);
-			h.scale.jump(1);
-			return;
-		}
-		animate(h.rotate, 0, SPRING);
-		animate(h.scale, 1, SPRING);
+		if (reduce) h.rotate.jump(0);
+		else animate(h.rotate, 0, SPRING);
 	}
 	/**
 	 * The Card goes back to the slot it was picked up from, and the Deck
@@ -1560,7 +1553,6 @@ function CompassRuntime({
 				[h.x, 0],
 				[h.y, 0],
 				[h.rotate, 0],
-				[h.scale, 1],
 			] as const)
 				value.jump(rest);
 			settle(
@@ -1575,7 +1567,6 @@ function CompassRuntime({
 					animate(h.x, 0, SPRING),
 					animate(h.y, 0, SPRING),
 					animate(h.rotate, 0, SPRING),
-					animate(h.scale, 1, SPRING),
 				];
 				returnRun.current = run;
 				return Promise.all(run);
@@ -1587,19 +1578,23 @@ function CompassRuntime({
 	 * A Card leaving for good. Reduced motion keeps the fade and drops the
 	 * 720 px of travel: the Card still visibly leaves, it just does not
 	 * fly across the page.
+	 *
+	 * The travel spring picks up the speed `h.x` already has, so a flicked
+	 * Card leaves at the hand's pace. The flight is over when the Card has
+	 * faded and turned; the travel's long tail is out of sight by then.
 	 */
 	function flight(h: NoteHandle): Promise<unknown> {
-		return reduce
-			? Promise.all([animate(h.opacity, 0, transition(FLY_FADE))])
-			: Promise.all([
-					animate(
-						h.x,
-						h.x.get() - FLY_DISTANCE,
-						transition(FLY_TRAVEL),
-					),
-					animate(h.rotate, FLY_ROTATE_TO, transition(FLY_ROTATE)),
-					animate(h.opacity, 0, transition(FLY_FADE)),
-				]);
+		if (reduce)
+			return Promise.all([animate(h.opacity, 0, transition(FLY_FADE))]);
+		const travel = animate(
+			h.x,
+			h.x.get() - FLY_DISTANCE,
+			transition(FLY_TRAVEL),
+		);
+		return Promise.all([
+			animate(h.rotate, FLY_ROTATE_TO, transition(FLY_ROTATE)),
+			animate(h.opacity, 0, transition(FLY_FADE)),
+		]).then(() => travel.stop());
 	}
 	/** A loose Card let go with nothing under it: it fades where it is. */
 	function vanish(d: Drag) {
@@ -1645,13 +1640,8 @@ function CompassRuntime({
 		h.top.jump(h.top.get() + h.y.get());
 		h.x.jump(0);
 		h.y.jump(0);
-		if (reduce) {
-			h.rotate.jump(0);
-			h.scale.jump(1);
-		} else {
-			animate(h.rotate, 0, MORPH);
-			animate(h.scale, 1, MORPH);
-		}
+		if (reduce) h.rotate.jump(0);
+		else animate(h.rotate, 0, MORPH);
 		gestureCheckpoint.current = null;
 		dragRef.current = null;
 		setDrag(null);
@@ -2025,7 +2015,7 @@ function CompassRuntime({
 				className={`relative h-full min-h-0 overflow-hidden bg-paper ${pane.preview ? "pointer-events-none" : ""}`}
 			>
 				{/* the Pane bar: Sheet chrome, owned by the Pane, and the
-				    Ground's handle. A hold shrinks the bar a touch. */}
+				    Ground's handle. A hold fills it; see `GROUND_PRESS_MS`. */}
 				<motion.div
 					data-pane-bar=""
 					data-handle={handle}
@@ -2036,15 +2026,11 @@ function CompassRuntime({
 					inert={covered}
 					initial={false}
 					animate={{
-						scale: holdingHere ? 0.985 : 1,
 						height: barRem * rem,
 						opacity: covered ? 0 : 1,
 					}}
 					/* the bar's height and its Ground's box move as one */
 					transition={{
-						...transition(
-							holdingHere ? GROUND_SHRINK : HOLD_RELEASE,
-						),
 						height: MORPH,
 						opacity: transition(covered ? BAR_EXIT : BAR_ENTER),
 					}}
@@ -2054,8 +2040,24 @@ function CompassRuntime({
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
 					className={`absolute inset-x-0 top-0 border-b bg-paper select-none ${covered ? "pointer-events-none z-0" : "z-20"} ${pane.preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
-					style={{ transformOrigin: "0% 50%" }}
 				>
+					{/* the hold's countdown: it fills from the inline-start
+					    edge in exactly the press time, and drains fast when
+					    let go. Reduced, it deepens in place instead of
+					    sweeping across. Under the bar's words, over its paper */}
+					<motion.div
+						aria-hidden="true"
+						data-hold-fill=""
+						initial={false}
+						animate={{
+							scaleX: reduce || holdingHere ? 1 : 0,
+							opacity: !reduce || holdingHere ? 1 : 0,
+						}}
+						transition={transition(
+							holdingHere ? GROUND_FILL : HOLD_RELEASE,
+						)}
+						className="pointer-events-none absolute inset-0 -z-10 origin-left bg-link/15 rtl:origin-right"
+					/>
 					<PaneBarFace
 						subject={
 							ground.kind === "Sheet" ? ground.card.subject : null
@@ -2088,43 +2090,29 @@ function CompassRuntime({
 							aria-label="Trail"
 							className="flex min-w-0 items-center gap-1 truncate font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase"
 						>
-							<AnimatePresence initial={false}>
-								{trail.map((crumb, index) => (
-									<motion.span
-										key={`${index.toString()}-${crumb}`}
-										/* a preview Pane is there at once, crumbs and all */
-										initial={
-											pane.preview
-												? false
-												: { opacity: 0 }
+							{/* the trail changes on every step, and changes at
+							    once: the step is the motion, the words follow */}
+							{trail.map((crumb, index) => (
+								<span
+									key={`${index.toString()}-${crumb}`}
+									className="contents"
+								>
+									{index > 0 ? (
+										<span aria-hidden="true">›</span>
+									) : null}
+									<span
+										className={
+											index === trail.length - 1
+												? holdingHere
+													? "text-link"
+													: "text-ink"
+												: undefined
 										}
-										animate={{
-											opacity: 1,
-											transition: transition(BAR_ENTER),
-										}}
-										exit={{
-											opacity: 0,
-											transition: transition(BAR_EXIT),
-										}}
-										className="contents"
 									>
-										{index > 0 ? (
-											<span aria-hidden="true">›</span>
-										) : null}
-										<span
-											className={
-												index === trail.length - 1
-													? holdingHere
-														? "text-link"
-														: "text-ink"
-													: undefined
-											}
-										>
-											{crumb}
-										</span>
-									</motion.span>
-								))}
-							</AnimatePresence>
+										{crumb}
+									</span>
+								</span>
+							))}
 							{gloss ? (
 								<span className="ms-2 shrink-0 normal-case tracking-normal text-ink-muted">
 									{gloss}

@@ -175,9 +175,11 @@ export function SheetChrome({
 /**
  * ← or ×: one icon size and one stroke, at the outer side of its gutter so
  * the title keeps some air. At rest it is chrome, in ink; under the
- * pointer it grows a touch and glows with what it does: ← the blue of a
- * link, × the red a Card turns when letting go removes it. Its box is
- * larger than the line it sits on; the negative margin keeps it from
+ * pointer it glows with what it does: ← the blue of a link, × the red a
+ * Card turns when letting go removes it. It does not grow on hover: ← is
+ * pressed many times a session, and a 15 % swell under the pointer made
+ * the press a swing from 1.15 to 0.95. Pressed, it gives a little. Its box
+ * is larger than the line it sits on; the negative margin keeps it from
  * making the line taller.
  */
 const CHROME_HOVER = {
@@ -204,7 +206,7 @@ function ChromeButton({
 			aria-label={control.label}
 			title={control.label}
 			onClick={control.onPress}
-			className={`${className} ${CHROME_HOVER[name]} row-start-1 -my-1.5 grid size-8 place-items-center rounded-md text-ink-muted transition-[color,scale,filter] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 enabled:hover:scale-115 enabled:active:scale-95 disabled:text-ink-muted/40 [&_svg]:size-4 [&_svg]:stroke-[1.75]`}
+			className={`${className} ${CHROME_HOVER[name]} row-start-1 -my-1.5 grid size-8 place-items-center rounded-md text-ink-muted transition-[color,scale,filter] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 enabled:active:scale-95 disabled:text-ink-muted/40 [&_svg]:size-4 [&_svg]:stroke-[1.75]`}
 		>
 			{children}
 		</button>

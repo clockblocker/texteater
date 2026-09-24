@@ -158,8 +158,7 @@ export const MORPH = spring(380, 38);
  * Card thrown at the Deck cannot carry itself past the slot either.
  *
  * This is the one place in the file that gives up a spring's best
- * property on purpose. Nothing else here is dragged, so nothing else
- * had velocity to hand on.
+ * property on purpose. A Card thrown away, on `FLY_TRAVEL`, keeps it.
  */
 export const DRAG_SPRING = spring(620, 50, true);
 
@@ -235,11 +234,17 @@ export function after(spec: Tween, delayMs: number): Tween {
 }
 
 /**
- * A bar's words: the Pane bar's trail, and the Heading's face as it turns
- * between a Card's title and a Cover's ← and label. They arrive after the
- * box has started and leave first; the row that holds them never fades.
+ * A bar's words: the Pane bar coming out from under a Cover, and the
+ * Heading's face as it turns between a Card's title and a Cover's ← and
+ * label. The old words start to leave first and the new ones overlap
+ * them, so the row is never empty; the row that holds them never fades.
+ *
+ * The arrival used to wait 180 ms, past the 100 ms exit: the Heading
+ * stood blank for about 100 ms in the middle of every Card→Cover morph
+ * and the title landed at 340 ms. The exit's curve empties the old face
+ * within 60 ms, so the new one starts at 30 and is in by 190 ms.
  */
-export const BAR_ENTER = tween(160, EASE_OUT, 180);
+export const BAR_ENTER = tween(160, EASE_OUT, 30);
 export const BAR_EXIT = tween(100);
 /**
  * A Cover's Heading changing height in place, with no change of form: the
@@ -257,10 +262,20 @@ export const HEADING_RESIZE = tween(200);
  * away accelerates. What it actually did was stop the Card dead at the
  * frame the finger let go — the gesture that commits a Remove is a flick,
  * so the Card is already moving fast when this starts, and a slow start
- * throws that away. See the note on `flyAway` in `drag-deck.tsx`: the
- * flick's measured velocity still is not handed on.
+ * throws that away.
+ *
+ * A strong ease-out was no better from the other side: 720 px in 220 ms
+ * starts at about 14 px/ms, and a flick is closer to 1, so the Card leapt
+ * ahead of the finger. The travel is a spring for that reason, and not
+ * `fromRest`: it takes the speed the Card already has, the hand's for the
+ * Card under it and the follow spring's for the rest of the Deck, and
+ * accelerates from there. Critically damped, so it never comes back. From
+ * rest (a click or Escape) it is 180 px out at 50 ms and 560 at 150.
+ *
+ * It is the fade that ends the flight; the travel is stopped then, with
+ * the Card out of sight, rather than waited out to its last pixel.
  */
-export const FLY_TRAVEL = tween(220);
+export const FLY_TRAVEL = spring(360, 38);
 export const FLY_ROTATE = tween(220);
 export const FLY_FADE = tween(220);
 /** How far left it goes, px, and the angle it turns to on the way out. */
@@ -290,9 +305,13 @@ export const THROW_PROJECTION_MS = 160;
  * (issue 480: about one second). Everything else lifts by a plain drag of
  * its bar; the Ground is the main thing, and moving it should not happen
  * by accident.
+ *
+ * The hold fills the bar from its inline-start edge, linearly, in exactly
+ * this time, so the fill is the countdown. It used to shrink the bar to
+ * 98.5 %, which near the origin barely moved at all.
  */
 export const GROUND_PRESS_MS = 1000;
-/** The bar lets go of its press shrink on this. */
+/** A hold let go early: the fill drains on this, far faster than it filled. */
 export const HOLD_RELEASE = tween(160);
 
 /* ------------------------------------------------- gesture → transform */
