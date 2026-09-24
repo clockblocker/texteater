@@ -6,7 +6,7 @@ export const textSystemPrompt =
 
 export const canonicalFormGuidance: Readonly<Record<string, string>> = {
 	VERB: "Canonical Form is the lexical infinitive with required reflexive/prefix material (sich handeln, aufstehen), never the whole auxiliary chain. Governed prepositions stay out of the headword: es geht um -> gehen, and a supplied `governedPreposition` member is never part of the Canonical Form (erinnert sich an -> sich erinnern). A subject expletive keeps the ordinary verb Lemma: geben for es gibt/es gab/gibt es, regnen for es regnet; never prefix a headword with es. Lowercase.",
-	NOUN: "Canonical Form is the bare singular dictionary headword with noun capitalization and without its article.",
+	NOUN: "Canonical Form is the bare nominative singular dictionary headword with noun capitalization and without its article: Bücher -> Buch, des Mannes -> Mann, dem Nachbarn -> Nachbar. A plural-only noun keeps its plural headword (Eltern, Ferien, Leute); an invariant plural is spelled like its singular (Knie).",
 	PROPN: "Canonical Form is the registered name with its capitalization, internal capitals, brand styling and name-internal punctuation, minus any contextual genitive suffix or apostrophe.",
 	ADJ: "Canonical Form is the uninflected positive base, preserving irregular paradigms (besser/beste -> gut, höher -> hoch, näher -> nah). An adjectival participle stays participial (geschlossene -> geschlossen), not a verbal infinitive.",
 	ADV: "Canonical Form is the positive base: lieber -> gern, öfter -> oft. Whole multi-member correlators keep only supplied anchors, with dictionary open-slot notation where conventional.",

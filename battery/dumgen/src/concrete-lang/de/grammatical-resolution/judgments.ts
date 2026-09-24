@@ -21,6 +21,7 @@ import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
 import { infinitiveShaped } from "./infinitive-shape.js";
+import { possiblyInflectedNoun } from "./inflected-noun.js";
 import {
 	nounArticleCandidates,
 	nounArticleQuestions,
@@ -609,17 +610,46 @@ export function resolveGrammarJudgments(
 										)
 									]
 								: undefined;
-					// A VERB Canonical Form is infinitive-shaped. A chosen supplied
-					// text that is not means no exact text is available, so Luna
-					// supplies the required missing text (#442 Canonical Form row,
-					// #445); code enforcing a domain invariant is not a review judge
-					// (ADR 0023). Generated text is never checked.
-					const rejected =
-						encounter.target.kind === "VERB" &&
-						chosen !== undefined &&
-						!infinitiveShaped(chosen);
-					if (rejected)
-						recordEvent(scope, "NonInfinitiveCanonicalForm", {
+					// A VERB Canonical Form is infinitive-shaped. A NOUN member
+					// copied under a Surface that can inflect it is no headword
+					// evidence: jev copies Bücher for Buch. Either rejected text
+					// means no exact text is available, so Luna supplies the
+					// required missing text (#442 Canonical Form row, #445); code
+					// enforcing a domain invariant is not a review judge (ADR
+					// 0023). A stored Lemma keeps its headword; generated text is
+					// never checked.
+					const copiedInflectedNoun = (text: string) =>
+						encounter.target.kind === "NOUN" &&
+						input.members.includes(text) &&
+						!storedLemmas.some(
+							(stored) => stored.canonicalForm === text,
+						) &&
+						possiblyInflectedNoun(text, {
+							gender: core.gender,
+							number: (
+								surface.inflectionalFeatures as Record<
+									string,
+									unknown
+								> | null
+							)?.number,
+							// Code derives Case from the attached article later;
+							// the speculative answer only decides generation.
+							case: speculative(
+								"surface.inflectionalFeatures.case",
+							),
+						});
+					const rejection =
+						chosen === undefined
+							? undefined
+							: encounter.target.kind === "VERB" &&
+									!infinitiveShaped(chosen)
+								? "NonInfinitiveCanonicalForm"
+								: copiedInflectedNoun(chosen)
+									? "InflectedNounCanonicalForm"
+									: undefined;
+					const rejected = rejection !== undefined;
+					if (rejection)
+						recordEvent(scope, rejection, {
 							rejected: chosen,
 							answer: canonical,
 						});

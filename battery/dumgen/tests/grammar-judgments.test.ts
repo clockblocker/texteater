@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
 import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution/infinitive-shape.js";
+import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resolution/inflected-noun.js";
+import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 import review from "../src/evaluation/redesign/review-cases.json";
 import type { OperationTrace } from "../src/types.js";
@@ -493,8 +495,12 @@ test("uncertain headword judgment stops without copying or generating", async ()
 	expect(traces[0]?.calls).toHaveLength(1);
 });
 
-/** A VERB encounter from a corpus `<TARGET>` context. */
-function markedVerbEncounter(id: string, markedContext: string) {
+/** An encounter from a corpus `<TARGET>` context. */
+function markedEncounter(
+	id: string,
+	markedContext: string,
+	kind: "VERB" | "NOUN" = "VERB",
+) {
 	const segments: { text: string; kind: string }[] = [];
 	const members: number[] = [];
 	for (const [, target, text = ""] of markedContext.matchAll(
@@ -514,7 +520,7 @@ function markedVerbEncounter(id: string, markedContext: string) {
 		sentence: { id, language: "de", segments },
 		target: {
 			family: "Lexeme",
-			kind: "VERB",
+			kind,
 			memberSegmentIndices: members,
 		},
 	});
@@ -533,9 +539,7 @@ for (const [id, rejected] of [
 					canonical: "CandidateIsCanonical",
 				}),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				markedVerbEncounter(id, example.input.markedContext),
-			),
+			}).resolveGrammar(markedEncounter(id, example.input.markedContext)),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe(
 			example.idealOutput.lemma.canonicalForm,
@@ -563,4 +567,169 @@ test("every reviewed VERB Canonical Form is infinitive-shaped", () => {
 		).toBeTrue();
 	for (const text of ["erholt sich", "Lauf", "lauf", "gehst", "sich"])
 		expect(infinitiveShaped(text)).toBeFalse();
+});
+
+/** A weak masculine noun, which is -n-final in every oblique singular Case. */
+const weakNoun = {
+	input: {
+		markedContext:
+			"Sie spricht mit <TARGET>dem</TARGET> <TARGET>Nachbarn</TARGET>.",
+	},
+	idealOutput: {
+		lemma: {
+			canonicalForm: "Nachbar",
+			coreFeatures: { gender: "Masc", hyph: null },
+		},
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				case: "Dat",
+				number: "Sing",
+				article: "Definite",
+			},
+		},
+		memberOrthographies: ["Standard", "Standard"],
+		normalizedMembers: ["dem", "Nachbarn"],
+		realizationCoverage: "Full",
+		articleEvidence: { attested: "dem", orthography: "Standard" },
+	},
+};
+
+for (const [id, example, rejected] of [
+	[
+		"grammar-de-noun-dev-acc-plur-buecher",
+		nounCases["grammar-de-noun-dev-acc-plur-buecher"],
+		"Bücher",
+	],
+	[
+		"grammar-de-noun-accept-dat-plur-haeusern",
+		nounCases["grammar-de-noun-accept-dat-plur-haeusern"],
+		"Häusern",
+	],
+	[
+		"grammar-de-noun-dev-gen-sing-mannes",
+		nounCases["grammar-de-noun-dev-gen-sing-mannes"],
+		"Mannes",
+	],
+	["weak-dat-sing-nachbarn", weakNoun, "Nachbarn"],
+] as const)
+	test(`a copied inflected noun member ${rejected} generates the Canonical Form`, async () => {
+		const traces: OperationTrace[] = [];
+		const output = await Effect.runPromise(
+			createDumgen({
+				...grammarFixture(example.idealOutput, {
+					canonical: "candidate_1",
+				}),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar(
+				markedEncounter(id, example.input.markedContext, "NOUN"),
+			),
+		);
+		expect(output.surface.lemma.canonicalForm).toBe(
+			example.idealOutput.lemma.canonicalForm,
+		);
+		const request = traces[0]?.calls[0]?.request;
+		if (!request || !("questions" in request))
+			throw Error("Expected feature judgment");
+		expect(request.questions.canonical?.criteria).toHaveProperty(
+			"candidate_1",
+			rejected,
+		);
+		const generation = traces[0]?.calls[1]?.request;
+		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
+		expect(generation).toHaveProperty("input.needed.canonicalForm");
+		expect(traces[0]?.events).toContainEqual({
+			kind: "InflectedNounCanonicalForm",
+			data: { rejected, answer: "candidate_1" },
+		});
+	});
+
+test("a copied noun member under an uninflecting Surface stays the Canonical Form", async () => {
+	const id = "grammar-de-noun-dev-dat-sing-chef";
+	const example = nounCases[id];
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...grammarFixture(example.idealOutput),
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar(
+			markedEncounter(id, example.input.markedContext, "NOUN"),
+		),
+	);
+	expect(output.surface.lemma.canonicalForm).toBe("Chef");
+	expect(traces[0]?.calls).toHaveLength(1);
+});
+
+test("a stored noun Lemma under its own plural text stays the Canonical Form", async () => {
+	const id = "grammar-de-noun-dev-acc-plur-knie";
+	const example = nounCases[id];
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...grammarFixture(example.idealOutput, {
+				canonical: "CandidateIsCanonical",
+			}),
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar(
+			markedEncounter(id, example.input.markedContext, "NOUN"),
+			[
+				{
+					lemma: {
+						unitKind: "Lemma",
+						language: "de",
+						family: "Lexeme",
+						kind: "NOUN",
+						canonicalForm: "Knie",
+						coreFeatures: { gender: "Neut", hyph: null },
+					},
+					foundUnder: ["Knie"],
+				},
+			],
+		),
+	);
+	expect(output.surface.lemma.canonicalForm).toBe("Knie");
+	expect(traces[0]?.calls).toHaveLength(1);
+});
+
+test("every reviewed noun inflected away from its headword is marked", () => {
+	for (const example of Object.values(nounCases)) {
+		const { lemma, surface, memberOrthographies } = example.idealOutput as {
+			lemma?: {
+				canonicalForm: string;
+				coreFeatures: { gender: unknown };
+			};
+			surface?: {
+				spelling: string;
+				inflectionalFeatures: Record<string, unknown> | null;
+			};
+			memberOrthographies?: string[];
+		};
+		const features = surface?.inflectionalFeatures;
+		if (!lemma || !features) continue;
+		const member = example.input.members.at(-1) ?? "";
+		// Typos, variants and suspended compounds differ by more than inflection.
+		const inflectedOnly =
+			surface?.spelling === "Canonical" &&
+			memberOrthographies?.at(-1) === "Standard" &&
+			!/[-‐‑]$/u.test(member);
+		if (inflectedOnly && member !== lemma.canonicalForm)
+			expect(
+				possiblyInflectedNoun(member, {
+					gender: lemma.coreFeatures.gender,
+					number: features.number,
+					case: features.case,
+				}),
+			).toBeTrue();
+	}
+	for (const [text, gender, number, case_] of [
+		["Chef", "Masc", "Sing", "Dat"],
+		["Stadt", "Fem", "Sing", "Acc"],
+		["Frau", "Fem", "Sing", "Gen"],
+		["Zeichen", "Neut", "Sing", "Dat"],
+		["Nachbar", "Masc", "Sing", "Nom"],
+	] as const)
+		expect(
+			possiblyInflectedNoun(text, { gender, number, case: case_ }),
+		).toBeFalse();
 });
