@@ -4,12 +4,14 @@
  * of the symmetrized membership matrix at tau; one route vote per group; a
  * NOUN keeps at most the one article opening its phrase, with only
  * prenominal words between them; one Head per word (a group glued around two
- * Heads is split at them); a fused word never joins a group whole, its
- * adposition is a singleton and its article joins the noun its phrase opens
- * onto, or stands alone; a Phraseme's members are words, projected by
- * Head, only a word whose own fixedness Score reaches the floor joins one,
- * and one pair alone never ties two expressions together. Government comes
- * last, over the finished Lexeme Targets.
+ * Heads is split at them); a fused word never joins a group whole and its
+ * adposition is a singleton; every article no noun holds, fused or
+ * standalone, joins the noun its phrase opens onto, or stands alone as DET;
+ * a Phraseme's members are words, projected by Head, only a word whose own
+ * fixedness Score reaches the floor joins one, one pair alone never ties two
+ * expressions together, and a governor with only what it governs is
+ * valency, not a Phraseme. Government is read over the finished Lexeme
+ * Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -449,10 +451,25 @@ export function assembleAnalysis(
 			provenance: word.unresolved ? `guard:${word.unresolved}` : "vote",
 		});
 	}
-	// A fused article joins the noun its phrase opens onto, when that noun has
-	// no article yet (ADR 0024); a name, a later noun past another word or an
-	// unresolved word leaves it standing alone.
-	for (const article of fusedArticles) {
+	// Every article no noun holds yet, fused or standalone, takes one path:
+	// it joins the noun its phrase opens onto when that noun has no article
+	// yet (ADR 0024); a name, a later noun past another word or an unresolved
+	// word leaves it standing alone as DET. Later articles go first, so an
+	// earlier one never reaches past a later one's noun.
+	const orphans = targets.filter(
+		(target) =>
+			target.members.length === 1 &&
+			target.members[0]?.role === "Article",
+	);
+	const articles = [
+		...fusedArticles.map((article) => ({ ...article, orphan: null })),
+		...orphans.map((orphan) => ({
+			offset: orphan.members[0]?.offset ?? 0,
+			orphan,
+		})),
+	].sort((a, b) => b.offset - a.offset);
+	for (const orphan of orphans) targets.splice(targets.indexOf(orphan), 1);
+	for (const article of articles) {
 		const next = phraseHeadAfter(targets, article.offset);
 		const noun =
 			next &&
@@ -471,9 +488,17 @@ export function assembleAnalysis(
 					{ offset: article.offset, role: "Article" },
 					...noun.members,
 				],
-				provenance: `${noun.provenance}+fusion-table`,
+				provenance: `${noun.provenance}+${article.orphan ? "article" : "fusion-table"}`,
 			};
-		} else
+			if (article.orphan) headIndexOf.delete(article.orphan.id);
+		} else if (article.orphan)
+			targets.push({
+				...article.orphan,
+				members: [{ offset: article.offset, role: "Head" }],
+				routeMass: { DET: 1 },
+				provenance: "guard:articleScope",
+			});
+		else
 			targets.push({
 				id: nextId(),
 				members: [{ offset: article.offset, role: "Head" }],
@@ -503,14 +528,16 @@ export function assembleAnalysis(
 			members: target.members.filter((member) => member !== article),
 			provenance: `${target.provenance}+guard:articleScope`,
 		};
+		const standalone = index !== undefined && !fusionOf(index);
+		const id = nextId();
+		if (standalone) headIndexOf.set(id, index);
 		targets.push({
-			id: nextId(),
+			id,
 			members: [{ offset: article.offset, role: "Head" }],
 			routeMass: { DET: 1 },
-			identity:
-				index === undefined || fusionOf(index)
-					? null
-					: identityMassOf(sentence, answers, index),
+			identity: standalone
+				? identityMassOf(sentence, answers, index)
+				: null,
 			provenance: "guard:articleScope",
 		});
 	}
@@ -570,12 +597,32 @@ export function assembleAnalysis(
 			provenance: `score@${policy.phrasemeTau}`,
 		});
 	}
+	// A governor with only the prepositions it governs is valency, which
+	// government already records (ADR 0030), not an expression.
+	const government = assembleGovernment(placement, targets, answers);
+	const valencyOnly = (phraseme: PhrasemeTarget) =>
+		phraseme.members.every((id) => {
+			const target = targets.find((candidate) => candidate.id === id);
+			return government.some(
+				(link) =>
+					phraseme.members.includes(link.governor) &&
+					(link.governor === id ||
+						target?.members.some(
+							(member) => member.offset === link.offset,
+						)),
+			);
+		});
 	return {
 		stitchedText: placement.stitchedText,
 		segments: placement.segments,
 		targets,
-		phrasemes,
+		phrasemes: phrasemes
+			.filter((phraseme) => !valencyOnly(phraseme))
+			.map((phraseme, position) => ({
+				...phraseme,
+				id: `p${position + 1}`,
+			})),
 		fusions: placement.fusions,
-		government: assembleGovernment(placement, targets, answers),
+		government,
 	};
 }

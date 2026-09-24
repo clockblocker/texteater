@@ -520,6 +520,15 @@ in b7f79c52 the reflexive verb still forms `{sich verstricken | in}`
 (`in–verstricken` 0.65 to 0.69), a Phraseme where the click gold wants a Lexeme with
 a governed preposition.
 
+Two assembly fixes followed, diffed click by click with `--dump` over the
+same answers: every article no noun holds, standalone or fused, takes one
+scoped attachment path (40 Article singletons in the census; +6 −0, `der
+Vater des Mädchens`), and a Phraseme of only a governor and what it governs
+is dropped as valency (ADR 0030; +3 −0, `sich in … verstricken`). Counting
+a `Free` member as a Head in the one-Head split fixes 17 memberships but
+trades +2 −2: correlative conjunctions (`einerseits … andererseits`) split
+into Phrasemes.
+
 `fixtures.ts` now emits both layers: `targets` are Lexeme Targets, `phrasemes`
 are Phraseme Targets whose members are target ids, and the gold has a
 `phrasemes` list per sentence naming member words by head. On the 16

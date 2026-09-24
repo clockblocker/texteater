@@ -357,6 +357,74 @@ test("a fused article before a name stands alone instead of reaching a later nou
 	]);
 });
 
+test("a standalone article the matrix left alone joins its noun like a fused one", async () => {
+	// Der0 Lehrer2 ist4 der6 Vater8 des10 Mädchens12 .13
+	const { dumgen } = dumgenWith({
+		words: [[0, 2], [4], [6], [8], [10], [12]],
+		routes: {
+			0: "Lexeme/NOUN",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/VERB",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/ADP",
+			12: "Lexeme/NOUN",
+		},
+		roles: { 0: "Article", 2: "Head", 6: "Article", 10: "Article" },
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"vater",
+				"Der Lehrer ist der Vater des Mädchens.",
+			),
+		}),
+	);
+	expect(lexemesOf(analysis)).toEqual([
+		{
+			members: "Der/Article Lehrer/Head",
+			route: "NOUN",
+			provenance: "vote",
+		},
+		{ members: "ist/Head", route: "VERB", provenance: "vote" },
+		{
+			members: "der/Article Vater/Head",
+			route: "NOUN",
+			provenance: "vote+article",
+		},
+		{
+			members: "des/Article Mädchens/Head",
+			route: "NOUN",
+			provenance: "vote+article",
+		},
+	]);
+});
+
+test("a governor with only the prepositions it governs is no Phraseme", async () => {
+	// Sie0 wartet2 auf4 den6 Bus8 .9
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6, 8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+		},
+		roles: { 4: "GovernedPreposition", 6: "Article", 8: "Head" },
+		expressions: [{ heads: [2, 4], kind: "Collocation", fixedness: 2 }],
+		government: { 4: { governor: 2, case: "Acc" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("warten", "Sie wartet auf den Bus."),
+		}),
+	);
+	expect(analysis.phrasemes).toEqual([]);
+	expect(analysis.government).toHaveLength(1);
+});
+
 test("an article grouped with a noun past another word is split off", async () => {
 	// Wir0 wohnen2 in4 dem6 Ligusterweg8 Nummer10 412 .13
 	const { dumgen } = dumgenWith({

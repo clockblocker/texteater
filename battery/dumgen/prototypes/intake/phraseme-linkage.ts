@@ -23,8 +23,9 @@
  *
  *   zsh -ic 'bun prototypes/intake/phraseme-linkage.ts'
  *   bun prototypes/intake/phraseme-linkage.ts --from /tmp/phraseme-linkage-answers.json
+ *   … --dump /tmp/probes.json   production's probe per click, for diffing assembly versions
  */
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import type { Questions } from "promptsmith/typesafe";
 import {
 	type PhrasemeTarget,
@@ -386,10 +387,7 @@ function headIndexOf(placement: Placement) {
 		for (const piece of pieces) indexAt.set(piece.offset, index);
 	return (target: SentenceAnalysis["targets"][number]) => {
 		// Production gives an article left over from a fusion no Head index.
-		if (
-			target.provenance === "fusion-table:unattached-article" ||
-			target.provenance === "guard:articleScope"
-		)
+		if (target.provenance === "fusion-table:unattached-article")
 			return undefined;
 		const head =
 			target.members.find((member) => member.role === "Head") ??
@@ -453,7 +451,21 @@ function phrasemeLayer(
 			provenance: `lab:${policy.name}`,
 		});
 	}
-	return phrasemes;
+	// Production drops a governor with only what it governs (ADR 0030).
+	return phrasemes.filter(
+		(phraseme) =>
+			!phraseme.members.every((id) => {
+				const target = analysis.targets.find((t) => t.id === id);
+				return analysis.government.some(
+					(link) =>
+						phraseme.members.includes(link.governor) &&
+						(link.governor === id ||
+							target?.members.some(
+								(m) => m.offset === link.offset,
+							)),
+				);
+			}),
+	);
 }
 
 // ----------------------------------------------------------------- probing
@@ -643,6 +655,18 @@ const table = (ids: readonly string[]) =>
 			membersOk: probes.filter((p) => p?.membersOk).length,
 		};
 	});
+
+// `--dump file` keeps production's probes, to diff two assembly versions.
+const dump = flag("dump", "");
+if (dump)
+	await writeFile(
+		dump,
+		JSON.stringify(
+			Object.fromEntries(results.get(production) ?? []),
+			null,
+			1,
+		),
+	);
 
 console.log(
 	`baseline reproduced: ${mismatchedBaseline === 0 ? "yes" : `no (${mismatchedBaseline} sentences differ)`}`,
