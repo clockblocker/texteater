@@ -1003,6 +1003,46 @@ describe("Resolution Session", () => {
 		);
 	});
 
+	test("a retry starts no run while the Visitor's later click runs the Segment", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const failed = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failed,
+			failure: {
+				kind: "Internal",
+				phase: "Route",
+				diagnosticId: "diagnostic-1",
+				errorName: "Error",
+				errorFingerprint: "fnv1a-1",
+			},
+		});
+		await startSession(t, select("request-2"));
+
+		expect(
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+			}),
+		).toEqual({ retried: false });
+
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			runToken: failed.runToken,
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
+		});
+		expect(
+			(await pendingScheduled(t))
+				.filter(
+					({ name }) => name === "orchestration:runResolutionSession",
+				)
+				.map(({ args }) => args.requestId),
+		).toEqual(["request-1", "request-2"]);
+	});
+
 	test("a retry after a commit conflict resolves again instead of replaying its checkpoints", async () => {
 		const t = createTestConvex();
 		const { sentenceIds } = await submitText(t, [

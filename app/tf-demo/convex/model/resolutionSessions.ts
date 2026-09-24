@@ -602,7 +602,8 @@ export async function startResolutionSession(
  * every failure category, since provider configuration, model policy, or
  * catalog data may have changed since. A retry after a commit conflict
  * resolves again from the start, because its saved decisions would only
- * conflict again; any other retry resumes from the saved checkpoints.
+ * conflict again; any other retry resumes from the saved checkpoints. While
+ * the Visitor's later click on the Segment still runs, a retry starts nothing.
  */
 export async function retryResolutionSession(
 	ctx: MutationCtx,
@@ -623,6 +624,16 @@ export async function retryResolutionSession(
 	if (committed) {
 		await completeResolutionSession(ctx, session, committed);
 		return true;
+	}
+	// The Visitor clicked the Segment again since, and that session runs it.
+	if (
+		await findActiveVisitorSession(
+			ctx,
+			session.visitorId,
+			session.segmentId,
+		)
+	) {
+		return false;
 	}
 	if (!(await beginSegmentResolution(ctx, session.segmentId))) return false;
 	await restartRun(ctx, session, {
