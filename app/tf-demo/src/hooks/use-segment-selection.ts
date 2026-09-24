@@ -64,6 +64,8 @@ export function useSegmentSelection(visitorId: string) {
 					console.warn("Selection timing could not be recorded."),
 				);
 			}
+			// A repeat click joins the Visitor's running session, so a
+			// Resolving deck follows the returned requestId, not this one.
 			presentCards(segmentSelectionDeckCards(requestId, result), {
 				anchor: anchorElement,
 			});

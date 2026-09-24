@@ -39,13 +39,22 @@ import { ensureVisitorEncounter } from "./visitorClicks";
  */
 
 const MAX_IDENTIFIER_LENGTH = 200;
+/**
+ * A run that has written nothing for this long is declared stale. It exceeds
+ * Convex's 10-minute action limit, so a live run is never duplicated.
+ */
 export const STALE_RUN_AFTER_MS = 11 * 60 * 1_000;
 /**
  * A crashed run is recovered until this long after its session started or a
  * learner retried it. The session stores it as `retryDeadlineAt`.
  */
 export const RECOVERY_DEADLINE_MS = 15 * 60 * 1_000;
-export const MAX_RESOLUTION_RUNS = 3;
+/**
+ * The first run is declared stale after `STALE_RUN_AFTER_MS` (11 minutes) and
+ * its replacement after twice that (22 minutes), past `RECOVERY_DEADLINE_MS`
+ * (15 minutes). So only 2 runs fit.
+ */
+export const MAX_RESOLUTION_RUNS = 2;
 const RESOLUTION_RUN_RETENTION_MS = 24 * 60 * 60 * 1_000;
 
 export type ResolutionProgress = Infer<typeof resolutionProgressValidator>;
@@ -499,6 +508,25 @@ async function restartRun(
 		},
 		await inspectionRequested(ctx, session.requestId),
 	);
+}
+
+/**
+ * The Visitor's Active session on a Segment, which a repeat Segment Selection
+ * joins instead of starting another run. Other Visitors' sessions stay
+ * independent (ADR-0004).
+ */
+export async function findActiveVisitorSession(
+	ctx: QueryCtx,
+	visitorId: string,
+	segmentId: Id<"segments">,
+): Promise<ResolutionSession | null> {
+	return ctx.db
+		.query("resolutionSessions")
+		.withIndex("by_visitor_id_and_segment_id", (q) =>
+			q.eq("visitorId", visitorId).eq("segmentId", segmentId),
+		)
+		.filter((q) => q.eq(q.field("lifecycle.state"), "Active"))
+		.first();
 }
 
 /**

@@ -8,6 +8,7 @@ import {
 	claimResolutionRun,
 	deleteResolutionSessions,
 	failResolutionRun,
+	findActiveVisitorSession,
 	loadCanonicalOccurrence,
 	loadResolutionNote,
 	occurrenceNoteTarget,
@@ -185,6 +186,20 @@ export const selectSegment = mutation({
 				sentenceId: sentence._id,
 				segmentId: segment._id,
 			});
+			const running = await findActiveVisitorSession(
+				ctx,
+				args.visitorId,
+				segment._id,
+			);
+			if (running?.lifecycle.state === "Active") {
+				return {
+					kind: "Resolving" as const,
+					requestId: running.requestId,
+					progress: running.lifecycle.progress,
+					activity: running.lifecycle.activity,
+					deduplicated: true,
+				};
+			}
 			await startResolutionSession(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,

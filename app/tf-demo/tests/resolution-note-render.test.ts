@@ -234,6 +234,14 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 		kind: "Attestation",
 		attestationId: "attestation-1",
 	});
+
+	// A repeat click joins the running session, whose requestId differs.
+	expect(
+		segmentSelectionDeckCards("request-repeat", {
+			kind: "Resolving",
+			requestId: "request-running",
+		}).map(({ target }) => target),
+	).toEqual([{ kind: "Resolution", requestId: "request-running" }]);
 });
 
 test("a terminal failure keeps Resolution foremost without discarding reached steps", () => {

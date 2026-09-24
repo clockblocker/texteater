@@ -363,14 +363,14 @@ test("a later selection by the same Visitor and Segment reuses the first Visitor
 	const { select } = await dieBanken(t);
 	const first = select("request-first", "visitor-3", 2);
 	const second = select("request-second", "visitor-3", 2);
+	// A repeat click joins a running session, so the first one ends first.
 	const firstGuard = await startSession(t, first);
-	const secondGuard = await startSession(t, second);
-	await commitDieBankenWinner(t, select("request-winner", "visitor-1", 2));
-
 	const firstResult = await t.mutation(
 		internal.persistence.persistUnresolvedClick,
 		{ ...first, sessionGuard: firstGuard },
 	);
+	const secondGuard = await startSession(t, second);
+	await commitDieBankenWinner(t, select("request-winner", "visitor-1", 2));
 	const secondResult = await t.mutation(
 		internal.persistence.persistUnresolvedClick,
 		{ ...second, sessionGuard: secondGuard },
@@ -378,20 +378,18 @@ test("a later selection by the same Visitor and Segment reuses the first Visitor
 
 	const encounters = await encountersOf(t, "visitor-3");
 	expect(encounters).toHaveLength(1);
-	expect(firstResult).toMatchObject({ clickId: encounters[0]?._id });
-	expect(secondResult).toMatchObject({ clickId: encounters[0]?._id });
 	expect(firstResult).toMatchObject({
-		status: "Reused",
-		attestationId: encounters[0]?.attestationId,
+		status: "Unresolved",
+		clickId: encounters[0]?._id,
 	});
 	expect(secondResult).toMatchObject({
 		status: "Reused",
+		clickId: encounters[0]?._id,
 		attestationId: encounters[0]?.attestationId,
 	});
 	const winnerId = encounters[0]?.attestationId;
 	if (!winnerId)
 		throw new Error("Expected the encounter to reach the winner.");
-	await expectCompleted(t, "request-first", winnerId);
 	await expectCompleted(t, "request-second", winnerId);
 });
 

@@ -504,7 +504,6 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
-		.index("by_segment_id", { fields: ["segmentId"], staged: true })
 		.index("by_reading_id", { fields: ["readingId"], staged: true })
 		.index("by_attestation_id", {
 			fields: ["attestationId"],
@@ -513,6 +512,7 @@ export default defineSchema({
 		.index("by_request_id", ["requestId"])
 		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
+		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"])
 		.index("by_lifecycle_state_and_updated_at", [
 			"lifecycle.state",
 			"updatedAt",

@@ -407,6 +407,84 @@ describe("Resolution Session", () => {
 		]);
 	});
 
+	test("a repeat click joins the Visitor's running session without another run", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		await startSession(t, select("request-1"));
+
+		expect(
+			await t.mutation(api.resolutionSessions.selectSegment, {
+				...select("request-2"),
+				routeNoteRequested: false,
+			}),
+		).toMatchObject({
+			kind: "Resolving",
+			requestId: "request-1",
+			progress: "Starting",
+			activity: "Scheduled",
+		});
+
+		expect(await rows(t, "resolutionSessions")).toHaveLength(1);
+		expect(
+			(await pendingScheduled(t)).filter(
+				({ name }) => name === "orchestration:runResolutionSession",
+			),
+		).toHaveLength(1);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
+		});
+	});
+
+	test("another Visitor's click on a resolving Segment starts its own session", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		await startSession(t, select("request-1"));
+
+		expect(
+			await t.mutation(api.resolutionSessions.selectSegment, {
+				...select("request-2", "visitor-2"),
+				routeNoteRequested: false,
+			}),
+		).toMatchObject({ kind: "Resolving", requestId: "request-2" });
+
+		expect(
+			(await rows(t, "resolutionSessions")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["request-1", "request-2"]);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
+	});
+
+	test("a session whose run keeps crashing fails permanently after its second run", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		await startSession(t, select("request-1"));
+
+		for (const runNumber of [1, 2]) {
+			const { runToken } = await session(t, "request-1");
+			expect(await session(t, "request-1")).toMatchObject({ runNumber });
+			await patchSession(t, "request-1", {
+				updatedAt: Date.now() - STALE_RUN_AFTER_MS - 1,
+			});
+			await t.mutation(internal.resolutionSessions.recoverStaleRun, {
+				requestId: "request-1",
+				runToken,
+			});
+		}
+
+		expect(await session(t, "request-1")).toMatchObject({
+			runNumber: 2,
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
+	});
+
 	test("same request with a different click is rejected", async () => {
 		const t = createTestConvex();
 		const { select } = await bankenSource(t);
@@ -530,14 +608,28 @@ describe("Resolution Session", () => {
 		const { select, segmentId } = await bankenSource(t);
 		// Both selections share one Visitor Encounter, recorded by the first (ADR-0002).
 		const earlier = await startSession(t, select("request-earlier"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: earlier,
+			failure: {
+				kind: "Internal",
+				phase: "Grammar",
+				diagnosticId: "diagnostic-earlier",
+				errorName: "Error",
+				errorFingerprint: "earlier",
+			},
+		});
 		const later = await startSession(t, select("request-later"));
+		const winner = await startSession(
+			t,
+			select("request-winner", "visitor-2"),
+		);
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "Active",
 			activeSessionCount: 2,
 		});
 		const committed = await t.mutation(
 			internal.persistence.persistResolvedClick,
-			bankOccurrenceCommit(select("request-earlier"), earlier),
+			bankOccurrenceCommit(select("request-winner", "visitor-2"), winner),
 		);
 		if (committed.status !== "Committed")
 			throw new Error("Expected a committed occurrence.");
@@ -1107,12 +1199,12 @@ describe("Resolution Session", () => {
 	test("the scheduled run completes an occurrence another session committed, without model work", async () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);
-		// One Visitor selects twice; the second session commits first.
+		// Two Visitors select; the second session commits first.
 		const running = await startSession(t, select("request-1"));
-		const winner = await startSession(t, select("request-2"));
+		const winner = await startSession(t, select("request-2", "visitor-2"));
 		const committed = await t.mutation(
 			internal.persistence.persistResolvedClick,
-			bankOccurrenceCommit(select("request-2"), winner),
+			bankOccurrenceCommit(select("request-2", "visitor-2"), winner),
 		);
 		if (committed.status !== "Committed")
 			throw new Error("Expected a committed occurrence.");
@@ -1291,18 +1383,23 @@ describe("Resolution Session", () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);
 		const first = await startSession(t, select("request-1"));
-		await startSession(t, select("request-2"));
 		await startSession(t, select("request-3", "visitor-2"));
 		await startSession(t, select("request-4", "visitor-3"));
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "Active",
-			activeSessionCount: 4,
+			activeSessionCount: 3,
 		});
 
 		await t.mutation(internal.persistence.persistUnresolvedClick, {
 			...select("request-1"),
 			sessionGuard: first,
 		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
+		// Once visitor-1's session has ended, its next click starts another.
+		await startSession(t, select("request-2"));
 		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "Active",
 			activeSessionCount: 3,
@@ -1388,11 +1485,21 @@ describe("Resolution Session", () => {
 	test("reset batches spend one budget on sessions and end their Segment state", async () => {
 		const t = createTestConvex();
 		const { select, segmentId } = await bankenSource(t);
-		for (let index = 0; index < 401; index += 1)
-			await t.mutation(api.resolutionSessions.selectSegment, {
-				...select(`request-${index}`),
-				routeNoteRequested: false,
+		await startSession(t, select("request-0"));
+		// A repeat click now joins its running session, so the other 400 are
+		// stored directly.
+		const first = await session(t, "request-0");
+		await t.run(async (ctx) => {
+			const { _id, _creationTime, ...row } = first;
+			for (let index = 1; index < 401; index += 1)
+				await ctx.db.insert("resolutionSessions", {
+					...row,
+					requestId: `request-${index}`,
+				});
+			await ctx.db.patch(segmentId, {
+				resolutionState: { kind: "Active", activeSessionCount: 401 },
 			});
+		});
 
 		expect(
 			await t.mutation(internal.demoReset.clearVisitorDataBatch, {

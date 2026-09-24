@@ -162,7 +162,11 @@ test("a New Reading plans and commits dictionary, occurrence membership, and Cli
 test("Knowledge drafts follow the committed occurrence and a late writer cannot replace them", async () => {
 	const t = createTestConvex();
 	const { selection, guard } = await selectIn(t, ["Banken"]);
-	const lateSelection = { ...selection, requestId: "late-writer" };
+	const lateSelection = {
+		...selection,
+		requestId: "late-writer",
+		visitorId: "visitor-2",
+	};
 	const lateGuard = await startSession(t, lateSelection);
 	const knowledgeDraftJson = JSON.stringify({
 		sourceFingerprint: "original",

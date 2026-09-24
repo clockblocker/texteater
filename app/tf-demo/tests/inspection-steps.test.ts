@@ -345,20 +345,21 @@ test("an inspected click reusing another session's occurrence makes no Dumgen ca
 	const t = createTestConvex();
 	const selection = await bankenSource(t);
 	const running = await select(t, selection("request-1"), true);
-	const winner = await select(t, selection("request-2"), false);
+	const other = { ...selection("request-2"), visitorId: "visitor-2" };
+	const winner = await select(t, other, false);
 	await t.mutation(
 		internal.persistence.persistResolvedClick,
-		bankOccurrenceCommit(selection("request-2"), winner),
+		bankOccurrenceCommit(other, winner),
 	);
 	await t.action(internal.orchestration.runResolutionSession, {
 		...running,
 		inspect: true,
 	});
 	expect(await inspection(t, "request-1")).toEqual([
+		"Resolution session > Commit reused occurrence [Code · app/tf-demo · persistence · Success]",
 		"Resolution session > Load checkpoints and start run [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session > Record Succeeded [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Success]",
-		"Resolution session > Settle Complete [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Success]",
 		SELECTION,
 	]);
