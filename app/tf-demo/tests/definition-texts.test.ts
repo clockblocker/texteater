@@ -6,6 +6,7 @@ import {
 	definitionOf,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
+import { listLibraryTexts } from "../convex/texts";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
@@ -229,6 +230,80 @@ test("a definition that changed mid-run is rescheduled when the run settles", as
 		}),
 	).toBe("Reschedule");
 	expect((await tableRows(t, "definitionTexts"))[0]?.state).toBe("Scheduled");
+});
+
+/** Wraps a database reader so every method called on it or its queries is named in `calls`. */
+function recordingReader<Reader extends object>(
+	reader: Reader,
+	calls: string[],
+): Reader {
+	return new Proxy(reader, {
+		get(target, property) {
+			const value: unknown = Reflect.get(target, property, target);
+			if (typeof value !== "function" || typeof property !== "string") {
+				return value;
+			}
+			return (...args: unknown[]) => {
+				calls.push(
+					typeof args[0] === "string"
+						? `${property}:${args[0]}`
+						: property,
+				);
+				const result: unknown = value.apply(target, args);
+				return typeof result === "object" &&
+					result !== null &&
+					!(result instanceof Promise)
+					? recordingReader(result, calls)
+					: result;
+			};
+		},
+	});
+}
+
+test("the library lists the newest Visitor Texts through an index range without Definition Texts", async () => {
+	const t = createTestConvex();
+	await t.run(async (ctx) => {
+		for (let index = 0; index < 200; index += 1) {
+			if (index % 70 === 0) {
+				await ctx.db.insert("texts", {
+					submissionKey: `visitor:${index}`,
+					sourceText: `Visitor ${index}`,
+				});
+			}
+			await ctx.db.insert("texts", {
+				submissionKey: `definition:${index}`,
+				sourceText: `Definition ${index}`,
+				origin: { kind: "Definition", readingKey: `reading:${index}` },
+			});
+		}
+	});
+
+	expect(
+		(await t.query(api.texts.list, {})).map(({ sourceText }) => sourceText),
+	).toEqual(["Visitor 140", "Visitor 70", "Visitor 0"]);
+
+	// The read set is one index range over Visitor Texts, never a filtered scan.
+	const calls: string[] = [];
+	await t.run((ctx) =>
+		listLibraryTexts({ ...ctx, db: recordingReader(ctx.db, calls) }),
+	);
+	expect(calls).toEqual([
+		"query:texts",
+		"withIndex:by_origin_kind",
+		"order:desc",
+		"take",
+	]);
+	const visitorRange = await t.run((ctx) =>
+		ctx.db
+			.query("texts")
+			.withIndex("by_origin_kind", (q) => q.eq("origin.kind", undefined))
+			.collect(),
+	);
+	expect(visitorRange.map(({ origin }) => origin)).toEqual([
+		undefined,
+		undefined,
+		undefined,
+	]);
 });
 
 test(

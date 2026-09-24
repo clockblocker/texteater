@@ -78,7 +78,10 @@ export default defineSchema({
 		sourceText: v.string(),
 		/** Absent for a Visitor-submitted Text; set for a hidden Definition Text. */
 		origin: v.optional(textOriginValidator),
-	}).index("by_submission_key", ["submissionKey"]),
+	})
+		.index("by_submission_key", ["submissionKey"])
+		/** Visitor Texts are the range whose `origin.kind` is absent. */
+		.index("by_origin_kind", ["origin.kind"]),
 
 	/**
 	 * One row per Reading whose Knowledge definition is being turned into a
