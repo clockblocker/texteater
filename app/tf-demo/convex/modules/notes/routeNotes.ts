@@ -17,14 +17,12 @@ import {
 	presentLemma,
 	presentSurface,
 } from "../../model/presentedDumling";
-import { projectSentenceView } from "../text/sentenceView";
 import {
-	projectSourceOrigin,
+	projectOccurrenceSource,
 	sourceOriginValidator,
 	sourceSegmentValidator,
-	sourceTargetFor,
 	sourceTargetValidator,
-} from "./sourceOrigin";
+} from "./sourceContext";
 import { isUnitReadingFamily } from "./unitReadingFamilies";
 
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
@@ -191,41 +189,24 @@ async function loadAttestationRouteNote(
 	}
 	const text = await ctx.db.get(occurrence.sentence.textId);
 	if (!text) return null;
-	const origin = await projectSourceOrigin(ctx, text);
-	if (!origin) return null;
-	const view = visitorId
-		? await projectSentenceView(ctx, occurrence.sentence, visitorId)
-		: null;
-	const genderByIndex = new Map(
-		view?.segments.map(({ index, gender }) => [index, gender]),
+	const source = await projectOccurrenceSource(
+		ctx,
+		{
+			attestationId: occurrence.attestation._id,
+			sentence: occurrence.sentence,
+			text,
+			memberSegmentIndices: occurrence.memberSegmentIndices,
+		},
+		visitorId,
 	);
+	if (!source) return null;
 	return {
 		kind: "Attestation" as const,
 		target: {
 			kind: "Attestation" as const,
 			attestationId: occurrence.attestation._id,
 		},
-		source: {
-			textId: text._id,
-			sentencePosition: occurrence.sentence.position,
-			sentenceSnippet: occurrence.sentence.stitchedText,
-			segments: occurrence.segments.map(
-				({ kind, text: segmentText, index }) => ({
-					...(genderByIndex.get(index)
-						? { gender: genderByIndex.get(index) }
-						: {}),
-					kind,
-					text: segmentText,
-				}),
-			),
-			memberSegmentIndices: occurrence.memberSegmentIndices,
-			origin,
-			target: sourceTargetFor(
-				origin,
-				text._id,
-				occurrence.attestation._id,
-			),
-		},
+		source,
 		presented: presentAttestation(occurrence.publicAttestation),
 		surfaceTarget: {
 			kind: "Surface" as const,

@@ -34,14 +34,13 @@ import {
 	relationProjectionValidator,
 } from "./relations";
 import {
-	projectSourceOrigin,
+	projectOccurrenceSource,
 	type SourceOrigin,
 	type SourceTarget,
 	sourceOriginValidator,
 	sourceSegmentValidator,
-	sourceTargetFor,
 	sourceTargetValidator,
-} from "./sourceOrigin";
+} from "./sourceContext";
 import type { UnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
@@ -586,24 +585,17 @@ async function projectSourceContext(
 	const text = await ctx.db.get(sentence.textId);
 	if (!text) return null;
 	if (text.origin?.readingKey === ownerReadingKey) return null;
-	const [origin, view] = await Promise.all([
-		projectSourceOrigin(ctx, text),
-		projectSentenceView(ctx, sentence, visitorId),
-	]);
-	if (!origin) return null;
-	return {
-		attestationId,
-		textId: text._id,
-		sentencePosition: sentence.position,
-		sentenceSnippet: sentence.stitchedText,
-		segments: view.segments.map(({ kind, text, gender }) => ({
-			kind,
+	const source = await projectOccurrenceSource(
+		ctx,
+		{
+			attestationId,
+			sentence,
 			text,
-			...(gender ? { gender } : {}),
-		})),
-		memberSegmentIndices: members.memberSegmentIndices,
-		memberTexts: members.memberTexts,
-		origin,
-		target: sourceTargetFor(origin, text._id, attestationId),
-	};
+			memberSegmentIndices: members.memberSegmentIndices,
+		},
+		visitorId,
+	);
+	return source
+		? { attestationId, ...source, memberTexts: members.memberTexts }
+		: null;
 }

@@ -52,7 +52,7 @@ import type * as modules_notes_readingNote from "../modules/notes/readingNote.js
 import type * as modules_notes_relations from "../modules/notes/relations.js";
 import type * as modules_notes_routeNotes from "../modules/notes/routeNotes.js";
 import type * as modules_notes_shadowNote from "../modules/notes/shadowNote.js";
-import type * as modules_notes_sourceOrigin from "../modules/notes/sourceOrigin.js";
+import type * as modules_notes_sourceContext from "../modules/notes/sourceContext.js";
 import type * as modules_notes_unitReadingFamilies from "../modules/notes/unitReadingFamilies.js";
 import type * as modules_text_sentenceView from "../modules/text/sentenceView.js";
 import type * as modules_text_submission from "../modules/text/submission.js";
@@ -125,7 +125,7 @@ declare const fullApi: ApiFromModules<{
   "modules/notes/relations": typeof modules_notes_relations;
   "modules/notes/routeNotes": typeof modules_notes_routeNotes;
   "modules/notes/shadowNote": typeof modules_notes_shadowNote;
-  "modules/notes/sourceOrigin": typeof modules_notes_sourceOrigin;
+  "modules/notes/sourceContext": typeof modules_notes_sourceContext;
   "modules/notes/unitReadingFamilies": typeof modules_notes_unitReadingFamilies;
   "modules/text/sentenceView": typeof modules_text_sentenceView;
   "modules/text/submission": typeof modules_text_submission;
