@@ -1607,3 +1607,485 @@ export const lexemeUnitShadowSchema = z.union([
 		kind: Route80.lemmaSchema.shape.kind,
 	}),
 ]);
+export const knowledgeRouteSchema = z.union([
+	z.strictObject({
+		language: Route0.lemmaSchema.shape.language,
+		family: Route0.lemmaSchema.shape.family,
+		kind: Route0.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route1.lemmaSchema.shape.language,
+		family: Route1.lemmaSchema.shape.family,
+		kind: Route1.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route2.lemmaSchema.shape.language,
+		family: Route2.lemmaSchema.shape.family,
+		kind: Route2.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route3.lemmaSchema.shape.language,
+		family: Route3.lemmaSchema.shape.family,
+		kind: Route3.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route4.lemmaSchema.shape.language,
+		family: Route4.lemmaSchema.shape.family,
+		kind: Route4.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route5.lemmaSchema.shape.language,
+		family: Route5.lemmaSchema.shape.family,
+		kind: Route5.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route6.lemmaSchema.shape.language,
+		family: Route6.lemmaSchema.shape.family,
+		kind: Route6.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route7.lemmaSchema.shape.language,
+		family: Route7.lemmaSchema.shape.family,
+		kind: Route7.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route8.lemmaSchema.shape.language,
+		family: Route8.lemmaSchema.shape.family,
+		kind: Route8.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route9.lemmaSchema.shape.language,
+		family: Route9.lemmaSchema.shape.family,
+		kind: Route9.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route10.lemmaSchema.shape.language,
+		family: Route10.lemmaSchema.shape.family,
+		kind: Route10.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route11.lemmaSchema.shape.language,
+		family: Route11.lemmaSchema.shape.family,
+		kind: Route11.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route12.lemmaSchema.shape.language,
+		family: Route12.lemmaSchema.shape.family,
+		kind: Route12.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route13.lemmaSchema.shape.language,
+		family: Route13.lemmaSchema.shape.family,
+		kind: Route13.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route14.lemmaSchema.shape.language,
+		family: Route14.lemmaSchema.shape.family,
+		kind: Route14.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route15.lemmaSchema.shape.language,
+		family: Route15.lemmaSchema.shape.family,
+		kind: Route15.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route16.lemmaSchema.shape.language,
+		family: Route16.lemmaSchema.shape.family,
+		kind: Route16.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route17.lemmaSchema.shape.language,
+		family: Route17.lemmaSchema.shape.family,
+		kind: Route17.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route18.lemmaSchema.shape.language,
+		family: Route18.lemmaSchema.shape.family,
+		kind: Route18.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route19.lemmaSchema.shape.language,
+		family: Route19.lemmaSchema.shape.family,
+		kind: Route19.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route20.lemmaSchema.shape.language,
+		family: Route20.lemmaSchema.shape.family,
+		kind: Route20.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route21.lemmaSchema.shape.language,
+		family: Route21.lemmaSchema.shape.family,
+		kind: Route21.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route22.lemmaSchema.shape.language,
+		family: Route22.lemmaSchema.shape.family,
+		kind: Route22.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route23.lemmaSchema.shape.language,
+		family: Route23.lemmaSchema.shape.family,
+		kind: Route23.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route24.lemmaSchema.shape.language,
+		family: Route24.lemmaSchema.shape.family,
+		kind: Route24.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route25.lemmaSchema.shape.language,
+		family: Route25.lemmaSchema.shape.family,
+		kind: Route25.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route26.lemmaSchema.shape.language,
+		family: Route26.lemmaSchema.shape.family,
+		kind: Route26.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route27.lemmaSchema.shape.language,
+		family: Route27.lemmaSchema.shape.family,
+		kind: Route27.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route28.lemmaSchema.shape.language,
+		family: Route28.lemmaSchema.shape.family,
+		kind: Route28.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route29.lemmaSchema.shape.language,
+		family: Route29.lemmaSchema.shape.family,
+		kind: Route29.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route30.lemmaSchema.shape.language,
+		family: Route30.lemmaSchema.shape.family,
+		kind: Route30.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route31.lemmaSchema.shape.language,
+		family: Route31.lemmaSchema.shape.family,
+		kind: Route31.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route32.lemmaSchema.shape.language,
+		family: Route32.lemmaSchema.shape.family,
+		kind: Route32.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route33.lemmaSchema.shape.language,
+		family: Route33.lemmaSchema.shape.family,
+		kind: Route33.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route34.lemmaSchema.shape.language,
+		family: Route34.lemmaSchema.shape.family,
+		kind: Route34.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route35.lemmaSchema.shape.language,
+		family: Route35.lemmaSchema.shape.family,
+		kind: Route35.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route36.lemmaSchema.shape.language,
+		family: Route36.lemmaSchema.shape.family,
+		kind: Route36.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route37.lemmaSchema.shape.language,
+		family: Route37.lemmaSchema.shape.family,
+		kind: Route37.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route38.lemmaSchema.shape.language,
+		family: Route38.lemmaSchema.shape.family,
+		kind: Route38.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route39.lemmaSchema.shape.language,
+		family: Route39.lemmaSchema.shape.family,
+		kind: Route39.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route40.lemmaSchema.shape.language,
+		family: Route40.lemmaSchema.shape.family,
+		kind: Route40.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route41.lemmaSchema.shape.language,
+		family: Route41.lemmaSchema.shape.family,
+		kind: Route41.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route42.lemmaSchema.shape.language,
+		family: Route42.lemmaSchema.shape.family,
+		kind: Route42.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route43.lemmaSchema.shape.language,
+		family: Route43.lemmaSchema.shape.family,
+		kind: Route43.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route44.lemmaSchema.shape.language,
+		family: Route44.lemmaSchema.shape.family,
+		kind: Route44.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route45.lemmaSchema.shape.language,
+		family: Route45.lemmaSchema.shape.family,
+		kind: Route45.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route46.lemmaSchema.shape.language,
+		family: Route46.lemmaSchema.shape.family,
+		kind: Route46.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route47.lemmaSchema.shape.language,
+		family: Route47.lemmaSchema.shape.family,
+		kind: Route47.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route48.lemmaSchema.shape.language,
+		family: Route48.lemmaSchema.shape.family,
+		kind: Route48.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route49.lemmaSchema.shape.language,
+		family: Route49.lemmaSchema.shape.family,
+		kind: Route49.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route50.lemmaSchema.shape.language,
+		family: Route50.lemmaSchema.shape.family,
+		kind: Route50.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route51.lemmaSchema.shape.language,
+		family: Route51.lemmaSchema.shape.family,
+		kind: Route51.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route52.lemmaSchema.shape.language,
+		family: Route52.lemmaSchema.shape.family,
+		kind: Route52.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route53.lemmaSchema.shape.language,
+		family: Route53.lemmaSchema.shape.family,
+		kind: Route53.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route54.lemmaSchema.shape.language,
+		family: Route54.lemmaSchema.shape.family,
+		kind: Route54.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route55.lemmaSchema.shape.language,
+		family: Route55.lemmaSchema.shape.family,
+		kind: Route55.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route56.lemmaSchema.shape.language,
+		family: Route56.lemmaSchema.shape.family,
+		kind: Route56.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route57.lemmaSchema.shape.language,
+		family: Route57.lemmaSchema.shape.family,
+		kind: Route57.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route58.lemmaSchema.shape.language,
+		family: Route58.lemmaSchema.shape.family,
+		kind: Route58.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route59.lemmaSchema.shape.language,
+		family: Route59.lemmaSchema.shape.family,
+		kind: Route59.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route60.lemmaSchema.shape.language,
+		family: Route60.lemmaSchema.shape.family,
+		kind: Route60.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route61.lemmaSchema.shape.language,
+		family: Route61.lemmaSchema.shape.family,
+		kind: Route61.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route62.lemmaSchema.shape.language,
+		family: Route62.lemmaSchema.shape.family,
+		kind: Route62.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route63.lemmaSchema.shape.language,
+		family: Route63.lemmaSchema.shape.family,
+		kind: Route63.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route64.lemmaSchema.shape.language,
+		family: Route64.lemmaSchema.shape.family,
+		kind: Route64.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route65.lemmaSchema.shape.language,
+		family: Route65.lemmaSchema.shape.family,
+		kind: Route65.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route66.lemmaSchema.shape.language,
+		family: Route66.lemmaSchema.shape.family,
+		kind: Route66.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route67.lemmaSchema.shape.language,
+		family: Route67.lemmaSchema.shape.family,
+		kind: Route67.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route68.lemmaSchema.shape.language,
+		family: Route68.lemmaSchema.shape.family,
+		kind: Route68.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route69.lemmaSchema.shape.language,
+		family: Route69.lemmaSchema.shape.family,
+		kind: Route69.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route70.lemmaSchema.shape.language,
+		family: Route70.lemmaSchema.shape.family,
+		kind: Route70.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route71.lemmaSchema.shape.language,
+		family: Route71.lemmaSchema.shape.family,
+		kind: Route71.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route72.lemmaSchema.shape.language,
+		family: Route72.lemmaSchema.shape.family,
+		kind: Route72.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route73.lemmaSchema.shape.language,
+		family: Route73.lemmaSchema.shape.family,
+		kind: Route73.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route74.lemmaSchema.shape.language,
+		family: Route74.lemmaSchema.shape.family,
+		kind: Route74.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route75.lemmaSchema.shape.language,
+		family: Route75.lemmaSchema.shape.family,
+		kind: Route75.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route76.lemmaSchema.shape.language,
+		family: Route76.lemmaSchema.shape.family,
+		kind: Route76.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route77.lemmaSchema.shape.language,
+		family: Route77.lemmaSchema.shape.family,
+		kind: Route77.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route78.lemmaSchema.shape.language,
+		family: Route78.lemmaSchema.shape.family,
+		kind: Route78.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route79.lemmaSchema.shape.language,
+		family: Route79.lemmaSchema.shape.family,
+		kind: Route79.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route80.lemmaSchema.shape.language,
+		family: Route80.lemmaSchema.shape.family,
+		kind: Route80.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route81.lemmaSchema.shape.language,
+		family: Route81.lemmaSchema.shape.family,
+		kind: Route81.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route82.lemmaSchema.shape.language,
+		family: Route82.lemmaSchema.shape.family,
+		kind: Route82.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route83.lemmaSchema.shape.language,
+		family: Route83.lemmaSchema.shape.family,
+		kind: Route83.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route84.lemmaSchema.shape.language,
+		family: Route84.lemmaSchema.shape.family,
+		kind: Route84.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route85.lemmaSchema.shape.language,
+		family: Route85.lemmaSchema.shape.family,
+		kind: Route85.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route86.lemmaSchema.shape.language,
+		family: Route86.lemmaSchema.shape.family,
+		kind: Route86.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route87.lemmaSchema.shape.language,
+		family: Route87.lemmaSchema.shape.family,
+		kind: Route87.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route88.lemmaSchema.shape.language,
+		family: Route88.lemmaSchema.shape.family,
+		kind: Route88.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route89.lemmaSchema.shape.language,
+		family: Route89.lemmaSchema.shape.family,
+		kind: Route89.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route90.lemmaSchema.shape.language,
+		family: Route90.lemmaSchema.shape.family,
+		kind: Route90.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route91.lemmaSchema.shape.language,
+		family: Route91.lemmaSchema.shape.family,
+		kind: Route91.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route92.lemmaSchema.shape.language,
+		family: Route92.lemmaSchema.shape.family,
+		kind: Route92.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route93.lemmaSchema.shape.language,
+		family: Route93.lemmaSchema.shape.family,
+		kind: Route93.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route94.lemmaSchema.shape.language,
+		family: Route94.lemmaSchema.shape.family,
+		kind: Route94.lemmaSchema.shape.kind,
+	}),
+	z.strictObject({
+		language: Route95.lemmaSchema.shape.language,
+		family: Route95.lemmaSchema.shape.family,
+		kind: Route95.lemmaSchema.shape.kind,
+	}),
+]);

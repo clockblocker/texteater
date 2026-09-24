@@ -2036,11 +2036,488 @@ export const generationInputSchema = z.union([
 		lemma: R95.lemmaSchema,
 	}),
 ]);
-export const comparisonInputSchema = z.union(
-	generationInputSchema.options.map((schema) =>
-		schema.extend({ candidates: z.array(emojiDescriptionSchema) }),
-	),
-);
+export const comparisonInputSchema = z.union([
+	z.strictObject({
+		encounter: encounterSchema.options[0],
+		lemma: R0.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[1],
+		lemma: R1.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[2],
+		lemma: R2.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[3],
+		lemma: R3.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[4],
+		lemma: R4.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[5],
+		lemma: R5.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[6],
+		lemma: R6.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[7],
+		lemma: R7.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[8],
+		lemma: R8.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[9],
+		lemma: R9.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[10],
+		lemma: R10.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[11],
+		lemma: R11.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[12],
+		lemma: R12.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[13],
+		lemma: R13.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[14],
+		lemma: R14.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[15],
+		lemma: R15.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[16],
+		lemma: R16.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[17],
+		lemma: R17.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[18],
+		lemma: R18.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[19],
+		lemma: R19.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[20],
+		lemma: R20.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[21],
+		lemma: R21.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[22],
+		lemma: R22.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[23],
+		lemma: R23.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[24],
+		lemma: R24.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[25],
+		lemma: R25.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[26],
+		lemma: R26.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[27],
+		lemma: R27.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[28],
+		lemma: R28.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[29],
+		lemma: R29.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[30],
+		lemma: R30.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[31],
+		lemma: R31.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[32],
+		lemma: R32.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[33],
+		lemma: R33.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[34],
+		lemma: R34.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[35],
+		lemma: R35.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[36],
+		lemma: R36.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[37],
+		lemma: R37.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[38],
+		lemma: R38.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[39],
+		lemma: R39.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[40],
+		lemma: R40.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[41],
+		lemma: R41.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[42],
+		lemma: R42.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[43],
+		lemma: R43.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[44],
+		lemma: R44.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[45],
+		lemma: R45.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[46],
+		lemma: R46.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[47],
+		lemma: R47.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[48],
+		lemma: R48.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[49],
+		lemma: R49.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[50],
+		lemma: R50.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[51],
+		lemma: R51.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[52],
+		lemma: R52.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[53],
+		lemma: R53.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[54],
+		lemma: R54.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[55],
+		lemma: R55.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[56],
+		lemma: R56.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[57],
+		lemma: R57.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[58],
+		lemma: R58.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[59],
+		lemma: R59.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[60],
+		lemma: R60.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[61],
+		lemma: R61.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[62],
+		lemma: R62.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[63],
+		lemma: R63.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[64],
+		lemma: R64.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[65],
+		lemma: R65.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[66],
+		lemma: R66.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[67],
+		lemma: R67.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[68],
+		lemma: R68.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[69],
+		lemma: R69.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[70],
+		lemma: R70.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[71],
+		lemma: R71.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[72],
+		lemma: R72.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[73],
+		lemma: R73.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[74],
+		lemma: R74.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[75],
+		lemma: R75.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[76],
+		lemma: R76.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[77],
+		lemma: R77.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[78],
+		lemma: R78.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[79],
+		lemma: R79.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[80],
+		lemma: R80.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[81],
+		lemma: R81.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[82],
+		lemma: R82.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[83],
+		lemma: R83.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[84],
+		lemma: R84.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[85],
+		lemma: R85.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[86],
+		lemma: R86.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[87],
+		lemma: R87.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[88],
+		lemma: R88.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[89],
+		lemma: R89.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[90],
+		lemma: R90.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[91],
+		lemma: R91.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[92],
+		lemma: R92.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[93],
+		lemma: R93.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[94],
+		lemma: R94.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+	z.strictObject({
+		encounter: encounterSchema.options[95],
+		lemma: R95.lemmaSchema,
+		candidates: z.array(emojiDescriptionSchema),
+	}),
+]);
 export const knowledgeInputSchema = z.union([
 	z.strictObject({
 		encounter: encounterSchema.options[0],

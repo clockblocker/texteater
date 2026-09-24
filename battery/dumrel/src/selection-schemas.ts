@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { unitShadowSchema } from "./generated/dumling-schemas.js";
+import { knowledgeRouteSchema } from "./generated/dumling-schemas.js";
+
+export { knowledgeRouteSchema };
 export const semanticRelationSchema = z.enum([
 	"synonym",
 	"nearSynonym",
@@ -55,11 +57,6 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 		.optional(),
 });
 
-export const knowledgeRouteSchema = z.union(
-	unitShadowSchema.options.map((schema) =>
-		schema.omit({ canonicalForm: true }),
-	),
-);
 export const knowledgeSelectionInputSchema = z.strictObject({
 	route: knowledgeRouteSchema,
 	settings: knowledgeSettingsSchema.optional(),
