@@ -48,9 +48,11 @@ export const DRAFT_GRACE_MS = 1_500;
 
 /**
  * Accepted German sentences analysed at once during intake. Their requests
- * draw from the same Dumgen request budget as segmentation.
+ * draw from the same Dumgen request budget as segmentation. Measured with
+ * tooling/measure-intake-concurrency.ts (#558): 8 is within noise of 16 on
+ * 16- and 25-sentence texts, and 4 is slower.
  */
-export const SENTENCE_ANALYSIS_CONCURRENCY = 4;
+export const SENTENCE_ANALYSIS_CONCURRENCY = 8;
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
