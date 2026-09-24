@@ -13,12 +13,17 @@ import {
 	type ReadingEntryContextLoad,
 } from "dumdict/planning";
 import type { MutationCtx } from "./_generated/server";
-import { readingEntryContextArgs } from "./dumdictStorage/contextRequest";
+import {
+	type ReadingEntryContextArgs,
+	readingEntryContextArgs,
+} from "./dumdictStorage/contextRequest";
 import { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
 import {
+	generatedKnowledgeContextChanges,
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
 } from "./dumdictStorage/queries";
+import { MAX_PLANNED_CHANGES } from "./dumdictStorage/storage";
 import { applyDumdictPlanInTransaction } from "./dumdictStorage/transaction";
 import { pendingLocatorIndexKey } from "./model/dumdictPendingIndexes";
 import type { dictionaryPlanValidator } from "./model/validators";
@@ -44,6 +49,15 @@ export type DumdictTransactionOutcome =
 			readonly message?: string;
 	  };
 
+/**
+ * A plan with more changes than one commit takes. Nothing was written, so
+ * the caller may split its request and send the parts.
+ */
+export type DumdictOverBudget = {
+	readonly status: "overBudget";
+	readonly plannedChanges: number;
+};
+
 export type DumdictTransaction = {
 	/** Plan a new Reading Note against the transaction's own state and apply it. */
 	readonly addNewNote: (
@@ -55,9 +69,10 @@ export type DumdictTransaction = {
 	readonly ensureReadingEntry: (
 		request: EnsureReadingEntryRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
+	/** The one workflow a caller can split, so it reports an over-budget plan. */
 	readonly applyGeneratedKnowledge: (
 		request: ApplyGeneratedKnowledgeRequest<"de">,
-	) => Promise<DumdictTransactionOutcome>;
+	) => Promise<DumdictTransactionOutcome | DumdictOverBudget>;
 	readonly cleanupRelations: (
 		request: CleanupRelationsRequest<"de">,
 	) => Promise<DumdictTransactionOutcome>;
@@ -76,13 +91,14 @@ export type DumdictTransaction = {
  */
 export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 	const planner = createDumdictPlanner("de");
+	function contextArgs(load: ReadingEntryContextLoad<"de">) {
+		return readingEntryContextArgs(planner.contextRequest(load));
+	}
 	async function loadContext<Load extends ReadingEntryContextLoad<"de">>(
 		load: Load,
+		args: ReadingEntryContextArgs = contextArgs(load),
 	) {
-		const slice = await loadReadingEntryContextSlice(
-			ctx,
-			readingEntryContextArgs(planner.contextRequest(load)),
-		);
+		const slice = await loadReadingEntryContextSlice(ctx, args);
 		return slice as unknown as Extract<
 			ReadingEntryContext<"de">,
 			{ intent: Load["intent"] }
@@ -126,16 +142,33 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 					request,
 				),
 			),
-		applyGeneratedKnowledge: async (request) =>
-			apply(
-				planner.applyGeneratedKnowledge(
-					await loadContext({
-						intent: "applyGeneratedKnowledge",
-						request,
-					}),
-					request,
-				),
-			),
+		applyGeneratedKnowledge: async (request) => {
+			const load = {
+				intent: "applyGeneratedKnowledge",
+				request,
+			} as const;
+			const args = contextArgs(load);
+			// The context is sized for the plan, so both bound one commit.
+			const contextChanges =
+				args.intent === "applyGeneratedKnowledge"
+					? generatedKnowledgeContextChanges(args)
+					: 0;
+			if (contextChanges > MAX_PLANNED_CHANGES)
+				return { status: "overBudget", plannedChanges: contextChanges };
+			const outcome = planner.applyGeneratedKnowledge(
+				await loadContext(load, args),
+				request,
+			);
+			if (
+				outcome.status !== "rejected" &&
+				outcome.plan.changes.length > MAX_PLANNED_CHANGES
+			)
+				return {
+					status: "overBudget",
+					plannedChanges: outcome.plan.changes.length,
+				};
+			return apply(outcome);
+		},
 		cleanupRelations: async (request) =>
 			apply(
 				planner.cleanupRelations(

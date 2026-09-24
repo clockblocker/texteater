@@ -1425,7 +1425,12 @@ test("relation chunks split a Contribute by target and keep the rest of the Know
 	]);
 });
 
-test("a final publication with more relations than one plan commits them all in chunks", async () => {
+/**
+ * Publishes a definition and 60 synonym proposals, each planning its own
+ * pending record, through `publishInRelationChunks` against the real
+ * `publish` mutation, and checks that all of it committed.
+ */
+async function publishSixtyPendingSynonyms(unitsPerChunk?: number) {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
 	await insertAttempt(t, occurrence, "attempt-1");
@@ -1497,17 +1502,19 @@ test("a final publication with more relations than one plan commits them all in 
 				statuses.push(status);
 				return status;
 			},
+			unitsPerChunk,
 		);
 	} finally {
 		policy.mockRestore();
 	}
 
-	expect(statuses.length).toBeGreaterThan(1);
-	expect(statuses.every((status) => status === "Committed")).toBe(true);
+	const committed = statuses.filter((status) => status === "Committed");
+	expect(committed.length).toBeGreaterThan(1);
+	expect(statuses.at(-1)).toBe("Committed");
 	expect(await rows(t, "pendingSemanticRelations")).toHaveLength(60);
 	expect((await attempts(t))[0]).toMatchObject({
 		state: "Committed",
-		publicationSequence: statuses.length,
+		publicationSequence: committed.length,
 	});
 	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
 		knowledge: { definition: "Ein Geldinstitut." },
@@ -1522,6 +1529,76 @@ test("a final publication with more relations than one plan commits them all in 
 			publicationFailures: 0,
 		}),
 	]);
+	return statuses;
+}
+
+test("a final publication with more relations than one plan commits them all in chunks", async () => {
+	const statuses = await publishSixtyPendingSynonyms();
+	expect(statuses.every((status) => status === "Committed")).toBe(true);
+});
+
+test("a chunk whose plan exceeds the cap writes nothing and is split until every part commits", async () => {
+	// An estimate loose enough to send all 60 proposals at once.
+	const statuses = await publishSixtyPendingSynonyms(1_000);
+	expect(statuses[0]).toBe("OverBudget");
+});
+
+test("relation chunks halve an OverBudget chunk and keep the rest of the Knowledge for the last part", async () => {
+	const definition = { kind: "Contribute", aspect: "definition", value: "x" };
+	const synonyms = {
+		kind: "Contribute",
+		aspect: "semanticRelations",
+		relation: "synonym",
+		value: ["a", "b", "c"],
+	};
+	const sent: unknown[] = [];
+	await publishInRelationChunks(
+		{ changes: [definition, synonyms], pendingRelations: ["p"] },
+		async (chunk) => {
+			const units =
+				chunk.pendingRelations.length +
+				chunk.changes.reduce(
+					(total: number, change) =>
+						total +
+						(change === definition
+							? 0
+							: (change as typeof synonyms).value.length),
+					0,
+				);
+			// This planner fits two relation units in one commit.
+			if (units > 2) return "OverBudget";
+			sent.push(chunk);
+			return "Committed";
+		},
+		10,
+	);
+	expect(sent).toEqual([
+		{
+			final: false,
+			changes: [{ ...synonyms, value: ["a", "b"] }],
+			pendingRelations: [],
+			proposed: [],
+		},
+		{
+			final: false,
+			changes: [{ ...synonyms, value: ["c"] }],
+			pendingRelations: [],
+			proposed: [],
+		},
+		{
+			final: true,
+			changes: [definition],
+			pendingRelations: ["p"],
+			proposed: ["p"],
+		},
+	]);
+
+	await expect(
+		publishInRelationChunks(
+			{ changes: [synonyms], pendingRelations: [] },
+			async () => "OverBudget",
+		),
+	).rejects.toThrow("cannot be split");
 });
 
 test("a rejected dictionary plan fails the final publication without recording changes", async () => {

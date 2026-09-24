@@ -266,6 +266,8 @@ const MAX_PUBLISHED_CHANGES_PER_RUN = 500;
  * the state it commits into, and records evidence and attempt state. The
  * action that produced the Knowledge only decides when a batch is final, and
  * sends a final publication too large for one plan as relation chunks first.
+ * A batch whose plan still exceeds one commit writes nothing and returns
+ * OverBudget, so the action splits it and sends the parts.
  */
 export const publish = internalMutation({
 	args: {
@@ -281,6 +283,7 @@ export const publish = internalMutation({
 		v.object({ status: v.literal("Committed") }),
 		v.object({ status: v.literal("AlreadyFull") }),
 		v.object({ status: v.literal("Ignored") }),
+		v.object({ status: v.literal("OverBudget") }),
 		v.object({ status: v.literal("Rejected"), message: v.string() }),
 	),
 	handler: async (ctx, args) => {
@@ -367,6 +370,9 @@ export const publish = internalMutation({
 			changes,
 			pendingRelations: publishable.pendingRelations,
 		} as ApplyGeneratedKnowledgeRequest<"de">);
+		// Nothing above wrote, so the action may split this batch and resend.
+		if (dictionary.status === "overBudget")
+			return { status: "OverBudget" as const };
 		if (dictionary.status !== "committed") {
 			const message =
 				dictionary.message ??

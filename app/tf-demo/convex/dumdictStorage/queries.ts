@@ -156,6 +156,19 @@ async function loadExactPendingRecords(
 }
 
 /**
+ * The changes a generated-Knowledge context is sized for: the Reading's own
+ * patch and one per pending proposal.
+ */
+export function generatedKnowledgeContextChanges(
+	args: Extract<
+		ReadingEntryContextArgs,
+		{ intent: "applyGeneratedKnowledge" }
+	>,
+): number {
+	return 1 + args.pendingLocatorKeys.length;
+}
+
+/**
  * Loads the operation-shaped Reading Entry context for one dictionary intent.
  *
  * The internal query below hands this slice to the action-side adapter; the
@@ -206,7 +219,7 @@ export async function loadReadingEntryContextSlice(
 		}
 		case "applyGeneratedKnowledge": {
 			assertPlanBudget(
-				1 + args.pendingLocatorKeys.length,
+				generatedKnowledgeContextChanges(args),
 				"Generated-Knowledge context",
 			);
 			const [reading, pending, inventory] = await Promise.all([
