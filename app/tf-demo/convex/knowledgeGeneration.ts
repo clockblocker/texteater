@@ -114,7 +114,7 @@ export async function scheduleKnowledgeGeneration(
 	});
 }
 
-export const retry = mutation({
+export const retry = internalMutation({
 	args: attemptInputValidator.fields,
 	returns: v.null(),
 	handler: async (ctx, input) => {

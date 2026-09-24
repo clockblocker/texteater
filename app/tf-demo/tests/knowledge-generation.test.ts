@@ -924,7 +924,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		failureCode: "generationFailed",
 		failureMessage: "Knowledge generation failed. Please retry.",
 	});
-	await retry.mutation(api.knowledgeGeneration.retry, {
+	await retry.mutation(internal.knowledgeGeneration.retry, {
 		attemptKey: "retry-request",
 		visitorId: "visitor-1",
 		readingId: retryOccurrence.readingId,
@@ -1113,7 +1113,7 @@ test("a run whose action died fails as interrupted, starts the next demand, and 
 		failureCode: "interrupted",
 	});
 
-	await t.mutation(api.knowledgeGeneration.retry, {
+	await t.mutation(internal.knowledgeGeneration.retry, {
 		...input,
 		attemptKey: "stuck",
 	});
