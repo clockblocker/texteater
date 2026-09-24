@@ -6,13 +6,12 @@ import {
 	type MotionValue,
 	motion,
 	motionValue,
-	useMotionValue,
-	useTransform,
 } from "motion/react";
 import {
 	type MouseEvent as ReactMouseEvent,
 	type ReactNode,
 	type PointerEvent as ReactPointerEvent,
+	type UIEvent,
 	useEffect,
 	useLayoutEffect,
 	useMemo,
@@ -20,34 +19,42 @@ import {
 	useState,
 } from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
+import { DropZones, fateOf, homeLabel } from "./drop-zones";
 import {
 	cleanWord,
-	type DummyNote,
 	type DummyText,
 	deckFor,
-	FIRST_TEXT,
 	type NoteLink,
-	noteById,
 	noteFor,
-	type SourceContext,
 	TEXTS,
-	type TextFocus,
 	textById,
 } from "./dummy";
 import {
-	COVER_GUTTER_REM,
+	cardHeightPx,
+	cardWidthIn,
+	coverBoxIn,
+	DEAL_GAP_PX,
+	deckLeftIn,
+	deckTopIn,
+	dropRegions,
+	edgeWidth,
+	groundBoxIn,
+	HYSTERESIS_PX,
+	inside,
+	RETURN_PAD_REM,
+	remPx,
+	sameBoxes,
+	spawnSize,
+	Z,
+} from "./geometry";
+import {
 	coverHeadingRem,
-	coverHeadingRuled,
 	DEFAULT_HEADING_DESIGN,
+	foldedAt,
 	HEADING_VARIANT_LABEL,
 	HEADING_VARIANTS,
-	type HeadingControl,
 	type HeadingDesign,
 	HeadingDesignProvider,
-	ONE_LINE_TITLE,
-	SheetChrome,
-	useFolded,
-	useHeadingDesign,
 } from "./heading-design";
 import {
 	ALL_INTERACTIONS,
@@ -56,23 +63,57 @@ import {
 	useDeckInteractions,
 } from "./interaction-policy";
 import {
-	after,
+	type Box,
+	type Checkpoint,
+	type Cover,
+	type Deck,
+	type Destination,
+	type Drag,
+	deckHolding,
+	type Edge,
+	type Fate,
+	findPane,
+	findSheet,
+	groundOf,
+	initialLayout,
+	isRooted,
+	type LayoutNode,
+	type Lift,
+	type NoteHandle,
+	openIds,
+	type PaneNode,
+	type PendingLift,
+	type Place,
+	PREVIEW_PANE,
+	PREVIEW_SHEET,
+	type Presentation,
+	panesOf,
+	ROOT_PANE,
+	type Rung,
+	replacePane,
+	rungLabel,
+	type SheetRef,
+	type Subject,
+	sheetsOf,
+	splitBeside,
+	subjectGloss,
+	subjectLabel,
+	subjectOfLink,
+	topSheetOf,
+	updateDeck,
+	updatePane,
+} from "./model";
+import {
 	BAR_REM,
-	CARD_WIDTH_REM,
-	CONTEXT_PAGE,
 	HEADER_REM,
 	LOOSE_CARD_REM,
-	type motionOf,
 	PILE_HEIGHT_REM,
 } from "./motion-spec";
-import {
-	FixtureNotesProvider,
-	PortedBlocks,
-	PortedTitle,
-	usePortedFollow,
-	usePortedReading,
-} from "./real-note";
+import { PresentationView } from "./note-view";
+import { GROUND_LIST_WIDTH, GroundList, PaneBarFace } from "./pane-chrome";
+import { FixtureNotesProvider } from "./real-note";
 import { useDeckReducedMotion } from "./reduced-motion";
+import { RULES } from "./rules";
 import {
 	type DeckMotionOverrides,
 	DeckMotionProvider,
@@ -115,209 +156,6 @@ import { ModelShell, useEventLog } from "./shared";
  * a Text only by tap, never by drag (#486).
  */
 
-/* ---------------------------------------------------------------- types */
-
-type Subject =
-	| { readonly kind: "Note"; readonly note: DummyNote }
-	| {
-			readonly kind: "Text";
-			readonly text: DummyText;
-			readonly focus: TextFocus | null;
-	  };
-/**
- * A Cover's ←: Collapse to its Card, or Close, and whether it is live. Its
- * × is the same shape: every Cover in the Pane leaves, back to the Ground.
- */
-type CoverBack = HeadingControl;
-/** One workspace instance of a Subject; a fresh one for every open (issue 483). */
-type Presentation = { readonly id: number; readonly subject: Subject };
-type Deck = {
-	readonly word: string;
-	/**
-	 * Every Note dealt, in Deck rank. A Note keeps its rank in whatever form
-	 * it takes: opening as a Cover does not move it, and collapsing brings it
-	 * back to the same slot. Only a Sweep, or a new deal, changes this list.
-	 */
-	readonly cards: readonly Presentation[];
-	readonly expandedId: number | null;
-};
-type Rung = { readonly id: number; readonly deck: Deck | null } & (
-	| { readonly kind: "Menu" }
-	| { readonly kind: "Library" }
-	| { readonly kind: "Sheet"; readonly card: Presentation }
-);
-type Cover = {
-	readonly id: number;
-	readonly card: Presentation;
-	readonly deck: Deck | null;
-	/** The Cover a Held Card would push if dropped here: a ghost, gone when it leaves. */
-	readonly preview?: true;
-};
-type PaneNode = {
-	readonly kind: "Pane";
-	readonly id: string;
-	/** The Ground line, bottom rung first. Rooted when it starts at the Menu. */
-	readonly line: readonly Rung[];
-	readonly covers: readonly Cover[];
-	/**
-	 * The Pane a Held Card would spawn if dropped here: inserted while the
-	 * Card hovers an edge so the other Panes make room, and gone when it
-	 * leaves. Its Ground is drawn as a ghost Sheet of the Card.
-	 */
-	readonly preview?: true;
-};
-type SplitNode = {
-	readonly kind: "Split";
-	readonly id: string;
-	readonly axis: "horizontal" | "vertical";
-	readonly children: readonly [LayoutNode, LayoutNode];
-	/** The child this split was made for, and the size it opened at. */
-	readonly freshId?: string;
-	readonly freshSize?: number | string;
-};
-type LayoutNode = PaneNode | SplitNode;
-type Edge = "left" | "right";
-type Destination =
-	| { readonly kind: "return" }
-	/** The Pane the Card was lifted out of: a drop here is a release in place. */
-	| { readonly kind: "home"; readonly paneId: string }
-	| { readonly kind: "sheet"; readonly paneId: string }
-	| { readonly kind: "pane"; readonly paneId: string; readonly edge: Edge };
-/**
- * Where a gesture on a Note is. `pressed`: down, not yet past the slop,
- * so letting go is a tap. `swiping`: it started leftward on a Card on a
- * Deck and moves the whole Deck until the finger lifts or pulls the Card
- * loose. `held`: the Card is in hand and goes where the pointer says.
- * Nothing changes phase on a timer.
- */
-type Phase = "pressed" | "swiping" | "held";
-/**
- * What letting go now does to the Card in hand, shown on the Card before
- * it is done: it opens somewhere, it goes back to rest, or it leaves.
- */
-type Fate = "open" | "rest" | "leave";
-type Box = {
-	readonly left: number;
-	readonly top: number;
-	readonly width: number;
-	readonly height: number;
-};
-/** A Note's own motion values: its box, and the drag transforms on top. */
-type NoteHandle = {
-	readonly left: MotionValue<number>;
-	readonly top: MotionValue<number>;
-	readonly width: MotionValue<number>;
-	readonly height: MotionValue<number>;
-	readonly x: MotionValue<number>;
-	readonly y: MotionValue<number>;
-	readonly rotate: MotionValue<number>;
-	readonly scale: MotionValue<number>;
-	readonly opacity: MotionValue<number>;
-};
-/** A Sheet a Deck can belong to: a Ground rung or a Cover, found by id. */
-type SheetRef = {
-	readonly paneId: string;
-	readonly sheetId: number;
-	readonly card: Presentation | null;
-	readonly deck: Deck | null;
-	readonly ground: boolean;
-	/** A ghost: what a drop would make, not something the reader can touch. */
-	readonly preview: boolean;
-};
-type Drag = {
-	readonly card: Presentation;
-	readonly h: NoteHandle;
-	readonly pointerId: number;
-	readonly start: { x: number; y: number; t: number };
-	/** The box the Note holds while in hand; its drag offset is on top. */
-	readonly origin: Box;
-	/** The Pane the gesture started in. */
-	readonly paneId: string;
-	/** The Deck the Note rests in, if it rests in one: its slot, and what a swipe sweeps. */
-	readonly deckSheet: number | null;
-	/**
-	 * Where a release with nothing under it sends the Note: back to its
-	 * slot on the Deck, back to the Sheet it was lifted out of, closed (a
-	 * Cover whose Card is on no live Deck), or away — a Card lifted from a
-	 * Link or a Segment came from nowhere.
-	 */
-	readonly home: "slot" | "restore" | "close" | "vanish";
-	phase: Phase;
-	/** Lifted out of a Sheet or from nowhere, rather than picked off a Deck. */
-	readonly lifted: boolean;
-	v: { vx: number; vy: number };
-	last: { x: number; y: number; t: number };
-	/**
-	 * A Card torn off a swipe sits this far from the finger, where the
-	 * rubber band held it, and the gap closes on its own spring. `stop`
-	 * ends the catch-up.
-	 */
-	gap: {
-		readonly x: MotionValue<number>;
-		readonly y: MotionValue<number>;
-		readonly stop: () => void;
-	} | null;
-};
-type NoteForm = "card" | "sheet";
-type Place = "above" | "open" | "below";
-type Lift = {
-	readonly pointerId: number;
-	readonly x: number;
-	readonly y: number;
-};
-/** A Segment or a Link under a pointer that has not moved yet. */
-type PendingLift = {
-	readonly pointerId: number;
-	readonly x: number;
-	readonly y: number;
-	readonly paneId: string;
-	readonly make: () => Subject;
-};
-type Checkpoint = {
-	readonly layout: LayoutNode;
-};
-
-/**
- * Where a drop lands, read off the Pane: inside the rectangle a Pane on
- * the left or right would take, it spawns that Pane; in the band between
- * them that reaches a little past the Deck, it goes back on the Deck; on
- * the Pane bar it lands nowhere; anywhere else in the Pane it opens as a
- * Cover there. A Card lifted out of a Sheet reads that last region in
- * its own Pane as home: a release there is a release in place, and
- * previews nothing. An edge region is the very rectangle a drop there
- * produces, so the zone drawn, the ghost and the Pane it becomes are one
- * box. `dropRegions` is the one place this geometry is written; the hit
- * test, the drawn zones and the preview all read it.
- */
-/** A destination is left only once the pointer is this far outside its region. */
-const HYSTERESIS_PX = 12;
-const ROOT_PANE = "root";
-const PREVIEW_PANE = "preview";
-/** The Sheet id every ghost wears; never a real Sheet's. */
-const PREVIEW_SHEET = -1;
-/** The stacking bands over the Panes, lowest first. */
-const Z = {
-	/** A Ground; each Cover above it is one higher. */
-	sheet: 1,
-	/** The Deck's Cards, rising toward the expanded one. */
-	deck: 10,
-	zone: 30,
-	/** The return band, over the Deck's Pane's zones. */
-	returnZone: 35,
-	/** The Held Card, over everything until it is let go. */
-	held: 40,
-} as const;
-const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
-/** A Cover's box: the Pane inset by these. A Ground fills its Pane. */
-const SHEET_INSET_X_REM = 1.5;
-const SHEET_INSET_Y_REM = 1;
-/** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
-const CARD_CONTEXTS = 2;
-/** How far the return band reaches below the Deck's cards. */
-const RETURN_PAD_REM = 3;
-/** The gap a clicked Sentence keeps above the Deck once the Text has moved. */
-const DEAL_GAP_PX = 8;
-
 /** A click on one of these is never a dismissive click. */
 const DISMISS_EXEMPT_SELECTOR = [
 	"button",
@@ -338,379 +176,6 @@ const DISMISS_EXEMPT_SELECTOR = [
 	/* a Cover's Heading is its handle and its ← */
 	"[data-heading]",
 ].join(", ");
-
-const RULES = [
-	{
-		move: "Click a word",
-		means: "Deals a Deck that belongs to the Sheet it was clicked in: the Text, or a Source Context inside a Note.",
-	},
-	{
-		move: "Click a link",
-		means: "Pushes a Cover over this Pane. Go to source pushes the Text, scrolled to the Sentence.",
-	},
-	{
-		move: "Drag a word or link",
-		means: "Lifts a Held Card. Drop on a side for a new Pane, in the band around its Deck to put it back, anywhere else in a Pane for a Cover. A lifted Sheet dropped in its own Pane goes back to its Deck, or closes if it has none.",
-	},
-	{
-		move: "Drag ↑ a Card",
-		means: "Takes it in hand. Far enough up, or flicked up, a ghost Cover shows where it opens, and letting go opens it; back down on the Deck, it rests. Any drag but a swipe is in hand at once, and a release does what the ghost and the Card's border show.",
-	},
-	{
-		move: "Drag ← a Card",
-		means: "Swipes the whole Deck, when the switch is on: it follows the finger and turns red past the line. Let go there, or flick, and it is swept; short of it, it springs back. Pull well up, down or back right and the Card tears loose: the Deck springs back and the Card is a plain drag.",
-	},
-	{
-		move: "← on a Cover",
-		means: "Collapses it to its Card if that Card is still in a live Deck, else closes it.",
-	},
-	{
-		move: "← on the Ground",
-		means: "Steps one rung down the line: Text › Library › Menu. The Text's Deck goes with it.",
-	},
-	{
-		move: "X",
-		means: "Closes a Floating Pane. Its Note collapses back to its Card if the Deck is still live.",
-	},
-	{
-		move: "× on a Cover",
-		means: "Every Cover in the Pane leaves at once, each as its ← would, and the Ground shows.",
-	},
-	{
-		move: "Drag a Cover's Heading",
-		means: "Lifts the Cover into a Held Card. A Floating Ground lifts by its Pane bar the same way, and its Pane closes behind it.",
-	},
-	{
-		move: "Hold the Pane bar",
-		means: "About a second on a Rooted Ground's bar lifts the Text; the Pane steps down to the Library.",
-	},
-	{
-		move: "Click the page, Esc",
-		means: "Sweeps the top Sheet's Deck.",
-	},
-];
-
-/* -------------------------------------------------------------- layout */
-
-function remPx(): number {
-	return Number.parseFloat(
-		getComputedStyle(document.documentElement).fontSize,
-	);
-}
-
-/** Leave room for the selected Card's resting scale and the return outline. */
-function cardWidthIn(
-	paneWidth: number,
-	rem: number,
-	openScale: number,
-): number {
-	return Math.max(
-		0,
-		Math.min(
-			CARD_WIDTH_REM * rem,
-			(paneWidth - 2 * rem) / Math.max(1, openScale),
-		),
-	);
-}
-
-/** The expanded Card's height, in px, for a Deck of `count` Cards. */
-function cardHeightPx(count: number): number {
-	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * remPx();
-}
-
-/** The Deck's left edge inside its Pane: the Deck is centred. */
-function deckLeftIn(paneWidth: number, cardWidth: number): number {
-	return (paneWidth - cardWidth) / 2;
-}
-
-function panesOf(node: LayoutNode): readonly PaneNode[] {
-	return node.kind === "Pane"
-		? [node]
-		: node.children.flatMap((child) => panesOf(child));
-}
-
-function findPane(node: LayoutNode, id: string): PaneNode | null {
-	return panesOf(node).find((pane) => pane.id === id) ?? null;
-}
-
-/** Replaces a pane by id; `null` removes it and lets its sibling take over. */
-function replacePane(
-	node: LayoutNode,
-	id: string,
-	next: LayoutNode | null,
-): LayoutNode | null {
-	if (node.kind === "Pane") return node.id === id ? next : node;
-	const [a, b] = node.children;
-	const nextA = replacePane(a, id, next);
-	const nextB = replacePane(b, id, next);
-	if (nextA === null) return nextB;
-	if (nextB === null) return nextA;
-	if (nextA === a && nextB === b) return node;
-	return { ...node, children: [nextA, nextB] };
-}
-
-/** The Text's content column in a Sheet; a Note's is `CARD_WIDTH_REM`. */
-const TEXT_COLUMN_REM = 42;
-/** A spawned Pane never takes more than this share of the Pane it splits. */
-const SPAWN_SHARE = 0.5;
-
-/**
- * How big the Pane a Card spawns opens: as wide as its content column plus
- * the Cover insets, so a Note gets the room it lays out in and no more,
- * capped at half of the Pane it splits.
- */
-function spawnSize(card: Presentation, paneWidth: number, rem: number): number {
-	const column =
-		card.subject.kind === "Text" ? TEXT_COLUMN_REM : CARD_WIDTH_REM;
-	const natural = (column + 2 * SHEET_INSET_X_REM) * rem;
-	return Math.round(Math.min(natural, paneWidth * SPAWN_SHARE));
-}
-
-type DropRegions = {
-	/** Where a drop opens a Cover in this Pane: between the sides, under the bar. */
-	readonly cover: Box;
-	/** Where a drop spawns a Pane on this side: the Pane it spawns. */
-	readonly edges: readonly { readonly edge: Edge; readonly box: Box }[];
-	/** The Pane bar: chrome, never a drop. */
-	readonly bar: Box;
-};
-
-/** A side region takes at most this share of its Pane, whatever it would spawn. */
-const EDGE_SHARE = 0.3;
-
-/** How wide a Pane's side regions are: the Pane it would spawn, capped at `EDGE_SHARE`. */
-function edgeWidth(card: Presentation, paneWidth: number, rem: number): number {
-	return Math.min(spawnSize(card, paneWidth, rem), paneWidth * EDGE_SHARE);
-}
-
-/** A Pane's drop regions, in frame coordinates. */
-function dropRegions(pane: Box, card: Presentation, rem: number): DropRegions {
-	const side = edgeWidth(card, pane.width, rem);
-	const bar = BAR_REM * rem;
-	return {
-		cover: {
-			left: pane.left + side,
-			top: pane.top + bar,
-			width: pane.width - 2 * side,
-			height: pane.height - bar,
-		},
-		edges: [
-			{
-				edge: "left",
-				box: {
-					left: pane.left,
-					top: pane.top,
-					width: side,
-					height: pane.height,
-				},
-			},
-			{
-				edge: "right",
-				box: {
-					left: pane.left + pane.width - side,
-					top: pane.top,
-					width: side,
-					height: pane.height,
-				},
-			},
-		],
-		bar: {
-			left: pane.left,
-			top: pane.top,
-			width: pane.width,
-			height: bar,
-		},
-	};
-}
-
-function inside(box: Box, x: number, y: number, grow = 0): boolean {
-	return (
-		x >= box.left - grow &&
-		x <= box.left + box.width + grow &&
-		y >= box.top - grow &&
-		y <= box.top + box.height + grow
-	);
-}
-
-/** Puts `fresh` beside the pane `id`, on the side the edge names, at `size`. */
-function splitBeside(
-	node: LayoutNode,
-	id: string,
-	edge: Edge,
-	fresh: PaneNode,
-	size: number | string,
-): LayoutNode {
-	const pane = findPane(node, id);
-	if (!pane) return node;
-	const split: SplitNode = {
-		kind: "Split",
-		id: `split-${fresh.id}`,
-		axis: "horizontal",
-		children: edge === "left" ? [fresh, pane] : [pane, fresh],
-		freshId: fresh.id,
-		freshSize: size,
-	};
-	return replacePane(node, id, split) ?? node;
-}
-
-function updatePane(
-	node: LayoutNode,
-	id: string,
-	update: (pane: PaneNode) => PaneNode,
-): LayoutNode {
-	const pane = findPane(node, id);
-	if (!pane) return node;
-	return replacePane(node, id, update(pane)) ?? node;
-}
-
-function isRooted(pane: PaneNode): boolean {
-	return pane.line[0]?.kind === "Menu";
-}
-
-function groundOf(pane: PaneNode): Rung {
-	const rung = pane.line.at(-1);
-	if (!rung) throw new Error(`Pane ${pane.id} has no Ground`);
-	return rung;
-}
-
-/** Every Sheet in a Pane, bottom first: the Ground, then its Covers. */
-function sheetsOf(pane: PaneNode): readonly SheetRef[] {
-	const ground = groundOf(pane);
-	return [
-		{
-			paneId: pane.id,
-			sheetId: ground.id,
-			card: ground.kind === "Sheet" ? ground.card : null,
-			deck: ground.deck,
-			ground: true,
-			preview: pane.preview === true,
-		},
-		...pane.covers.map((cover) => ({
-			paneId: pane.id,
-			sheetId: cover.id,
-			card: cover.card,
-			deck: cover.deck,
-			ground: false,
-			preview: cover.preview === true,
-		})),
-	];
-}
-
-function topSheetOf(pane: PaneNode): SheetRef {
-	const sheets = sheetsOf(pane);
-	return sheets[sheets.length - 1] as SheetRef;
-}
-
-function findSheet(node: LayoutNode, sheetId: number): SheetRef | null {
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.sheetId === sheetId) return sheet;
-	return null;
-}
-
-/** Rewrites one Sheet's Deck, wherever that Sheet is. */
-function updateDeck(
-	node: LayoutNode,
-	sheetId: number,
-	update: (deck: Deck | null) => Deck | null,
-): LayoutNode {
-	const sheet = findSheet(node, sheetId);
-	if (!sheet) return node;
-	return updatePane(node, sheet.paneId, (pane) => ({
-		...pane,
-		line: pane.line.map((rung) =>
-			rung.id === sheetId ? { ...rung, deck: update(rung.deck) } : rung,
-		),
-		covers: pane.covers.map((cover) =>
-			cover.id === sheetId
-				? { ...cover, deck: update(cover.deck) }
-				: cover,
-		),
-	}));
-}
-
-/** Every Presentation that is open as a Sheet somewhere, so its Card is not on a Deck. */
-function openIds(node: LayoutNode): ReadonlySet<number> {
-	const ids = new Set<number>();
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.card) ids.add(sheet.card.id);
-	return ids;
-}
-
-/**
- * The live Deck a Card still has a slot in, if any: the Sheet that dealt it
- * is still in its stack and the Deck has not been swept or replaced since.
- */
-function deckHolding(node: LayoutNode, cardId: number): SheetRef | null {
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.deck?.cards.some((card) => card.id === cardId))
-				return sheet;
-	return null;
-}
-
-function subjectLabel(subject: Subject): string {
-	return subject.kind === "Text"
-		? subject.text.title
-		: `${subject.note.kind} · ${subject.note.title}`;
-}
-
-/** A Note's gloss, shown after its label in a bar; a Text has none. */
-function subjectGloss(subject: Subject): string | null {
-	return subject.kind === "Text" ? null : subject.note.tail.gloss;
-}
-
-function rungLabel(rung: Rung): string {
-	return rung.kind === "Sheet" ? subjectLabel(rung.card.subject) : rung.kind;
-}
-
-function sameBox(a: Box | undefined, b: Box): boolean {
-	return (
-		a !== undefined &&
-		a.left === b.left &&
-		a.top === b.top &&
-		a.width === b.width &&
-		a.height === b.height
-	);
-}
-
-function sameBoxes(
-	a: Readonly<Record<string, Box>>,
-	b: Readonly<Record<string, Box>>,
-): boolean {
-	const ids = Object.keys(b);
-	return (
-		ids.length === Object.keys(a).length &&
-		ids.every((id) => sameBox(a[id], b[id] as Box))
-	);
-}
-
-/** Where a Cover sits in a Pane: under the bar, inset from the edges. */
-function coverBoxIn(pane: Box, rem: number): Box {
-	const insetX = SHEET_INSET_X_REM * rem;
-	const insetY = SHEET_INSET_Y_REM * rem;
-	const bar = BAR_REM * rem;
-	return {
-		left: pane.left + insetX,
-		top: pane.top + bar + insetY,
-		width: Math.max(0, pane.width - 2 * insetX),
-		height: Math.max(0, pane.height - bar - 2 * insetY),
-	};
-}
-
-/** Where a Ground sits: the whole Pane under its bar. */
-function groundBoxIn(pane: Box, rem: number): Box {
-	const bar = BAR_REM * rem;
-	return {
-		left: pane.left,
-		top: pane.top + bar,
-		width: pane.width,
-		height: Math.max(0, pane.height - bar),
-	};
-}
-
-/* ---------------------------------------------------------------- model */
 
 export type CompassModelProps = {
 	interactions?: readonly DeckInteraction[];
@@ -759,6 +224,23 @@ function CompassRuntime({
 	const [headingDesign, setHeadingDesign] = useState<HeadingDesign>(
 		DEFAULT_HEADING_DESIGN,
 	);
+	/** Floating Panes whose Ground has scrolled far enough to fold its bar. */
+	const [foldedGrounds, setFoldedGrounds] = useState<ReadonlySet<string>>(
+		() => new Set(),
+	);
+	/**
+	 * A Pane bar's height. A Floating Pane's bar is its Ground's Heading, so
+	 * it takes the Heading design, fold and all; a Rooted Pane's carries the
+	 * trail, and stays a bar.
+	 */
+	function barRemOf(pane: PaneNode | null): number {
+		if (!pane || isRooted(pane) || groundOf(pane).kind !== "Sheet")
+			return BAR_REM;
+		return coverHeadingRem(
+			headingDesign.variant,
+			foldedGrounds.has(pane.id),
+		);
+	}
 	const headingDesignRef = useRef(headingDesign);
 	headingDesignRef.current = headingDesign;
 	const allows = (interaction: DeckInteraction) =>
@@ -1337,7 +819,16 @@ function CompassRuntime({
 		if (
 			holder?.deck &&
 			holderBox &&
-			!inside(dropRegions(holderBox, d.card, rem).bar, x, y)
+			!inside(
+				dropRegions(
+					holderBox,
+					d.card,
+					rem,
+					barRemOf(findPane(layoutRef.current, holder.paneId)),
+				).bar,
+				x,
+				y,
+			)
 		) {
 			const band = inside(returnZone(holderBox, d.card), x, y);
 			/* a Card taken up off its Deck, far enough or fast enough, opens
@@ -1364,7 +855,12 @@ function CompassRuntime({
 		)
 			return null;
 		const regionsOf = (paneId: string) =>
-			dropRegions(restBoxes[paneId] as Box, d.card, rem);
+			dropRegions(
+				restBoxes[paneId] as Box,
+				d.card,
+				rem,
+				barRemOf(findPane(layoutRef.current, paneId)),
+			);
 		const current = destinationRef.current;
 		if (current && "paneId" in current) {
 			const regions = regionsOf(current.paneId);
@@ -2306,8 +1802,27 @@ function CompassRuntime({
 			dismissOnClick.current = false;
 		}, 0);
 	}
-	function pageScroll() {
+	function pageScroll(event: UIEvent<HTMLElement>) {
 		if (pagePointer.current) pagePointer.current.scrolled = true;
+		/* a Floating Ground's body folds its Pane bar, as a Cover's body
+		   folds its Heading */
+		const scroller = event.target;
+		if (
+			!(scroller instanceof HTMLElement) ||
+			!scroller.matches("[data-scroller]")
+		)
+			return;
+		const paneId = scroller.closest<HTMLElement>('[data-form="ground"]')
+			?.dataset.pane;
+		if (!paneId) return;
+		setFoldedGrounds((current) => {
+			const was = current.has(paneId);
+			if (foldedAt(was, scroller.scrollTop) === was) return current;
+			const next = new Set(current);
+			if (was) next.delete(paneId);
+			else next.add(paneId);
+			return next;
+		});
 	}
 	function pageClick(event: ReactMouseEvent<HTMLElement>) {
 		if (swallowClick.current) {
@@ -2397,7 +1912,12 @@ function CompassRuntime({
 						<DropZones
 							key={`zones-${pane.id}`}
 							paneId={pane.id}
-							regions={dropRegions(box, drag.card, rem)}
+							regions={dropRegions(
+								box,
+								drag.card,
+								rem,
+								barRemOf(pane),
+							)}
 							destination={destination}
 							homeLabel={homeLabel(drag)}
 							shown={zonesVisible}
@@ -2422,6 +1942,9 @@ function CompassRuntime({
 					: "drag"
 				: "none";
 		const holdingHere = barHolding === pane.id;
+		const barRem = barRemOf(pane);
+		/* a bar drawn as a Heading has no rule until it folds */
+		const barRuled = barRem === BAR_REM;
 		/* the Pane bar is the Ground's: ← steps its line (not while it is
 		   covered), X closes a Floating Pane with everything on it. Each
 		   Cover carries its own bar. */
@@ -2460,20 +1983,24 @@ function CompassRuntime({
 					data-handle={handle}
 					data-holding={holdingHere}
 					initial={false}
-					animate={{ scale: holdingHere ? 0.985 : 1 }}
-					transition={transition(
-						holdingHere ? GROUND_SHRINK : HOLD_RELEASE,
-					)}
+					animate={{
+						scale: holdingHere ? 0.985 : 1,
+						height: barRem * rem,
+					}}
+					/* the bar's height and its Ground's box move as one */
+					transition={{
+						...transition(
+							holdingHere ? GROUND_SHRINK : HOLD_RELEASE,
+						),
+						height: MORPH,
+					}}
 					onPointerDown={(event) => paneBarDown(event, pane)}
 					onPointerMove={paneBarMove}
 					onPointerUp={stopBarHold}
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
-					className={`absolute inset-x-0 top-0 z-20 border-b bg-paper select-none ${pane.preview ? "border-dashed border-link/60" : "border-line"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
-					style={{
-						height: `${BAR_REM.toString()}rem`,
-						transformOrigin: "0% 50%",
-					}}
+					className={`absolute inset-x-0 top-0 z-20 border-b bg-paper select-none ${pane.preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					style={{ transformOrigin: "0% 50%" }}
 				>
 					<PaneBarFace
 						subject={
@@ -2719,8 +2246,8 @@ function CompassRuntime({
 						place="open"
 						box={
 							sheet.ground
-								? groundBoxIn(paneBox, rem)
-								: coverBoxIn(paneBox, rem)
+								? groundBoxIn(paneBox, rem, barRemOf(pane))
+								: coverBoxIn(paneBox, rem, barRemOf(pane))
 						}
 						z={Z.sheet + index}
 						held={false}
@@ -2968,1235 +2495,5 @@ function CompassRuntime({
 		>
 			{frame}
 		</ModelShell>
-	);
-}
-
-/** The Deck's top inside its Pane, in px: one place, whatever was clicked. */
-function deckTopIn(embedded: boolean): number {
-	return (embedded ? 3 : 12) * 16;
-}
-
-function subjectOfLink(link: NoteLink): Subject {
-	return link.kind === "Text"
-		? { kind: "Text", text: textById(link.textId), focus: link.focus }
-		: { kind: "Note", note: noteById(link.noteId) };
-}
-
-/**
- * The opening scene. Every scene starts a Rooted Pane at the end of its
- * line, Menu › Library › Text, so ← has rungs to step down; a seeded scene
- * deals a Deck for "noch", and the Sheet scene opens its first Card.
- */
-function initialLayout(
-	scene: "empty" | "deck" | "sheet",
-	nextId: { current: number },
-	nextSheet: { current: number },
-): LayoutNode {
-	const text: Presentation = {
-		id: nextId.current++,
-		subject: { kind: "Text", text: FIRST_TEXT, focus: null },
-	};
-	const cards =
-		scene === "empty"
-			? []
-			: deckFor("noch").map((note) => ({
-					id: nextId.current++,
-					subject: { kind: "Note" as const, note },
-				}));
-	const deck: Deck | null = cards.length
-		? {
-				word: "noch",
-				cards,
-				expandedId: null,
-			}
-		: null;
-	const first = cards[0];
-	return {
-		kind: "Pane",
-		id: ROOT_PANE,
-		line: [
-			{ id: nextSheet.current++, kind: "Menu", deck: null },
-			{ id: nextSheet.current++, kind: "Library", deck: null },
-			{ id: nextSheet.current++, kind: "Sheet", card: text, deck },
-		],
-		covers:
-			scene === "sheet" && first
-				? [{ id: nextSheet.current++, card: first, deck: null }]
-				: [],
-	};
-}
-
-/**
- * A Note's column. As a Sheet its gutters hold ← and ×, and whichever
- * draws them, a Cover's Heading or a Ground's Pane bar, sets its title on
- * `title`, the body's column. The gutters widen as a Card becomes a Sheet
- * and the column widens with them, so the text keeps its measure and its
- * place. A Text reads at prose width; a ported Note is laid out by the
- * Notes page's own column.
- */
-function sheetColumn(subject: Subject, sheet: boolean, ported: boolean) {
-	const column = sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH;
-	/* a Text's Blocks carry a rem of their own inside the column */
-	const gutterRem = sheet
-		? COVER_GUTTER_REM - (subject.kind === "Text" ? 1 : 0)
-		: 1;
-	const body = `calc(${column} + ${(2 * (gutterRem - 1)).toString()}rem)`;
-	return {
-		column,
-		gutterRem,
-		body,
-		title: ported ? "var(--container-note)" : body,
-	};
-}
-
-/** The Menu's and the Library's column, gutters included, as a Text's. */
-const GROUND_LIST_WIDTH = "43rem";
-
-/* ----------------------------------------------------------- ground list */
-
-/** A Menu or a Library rung: a list the Ground walks by tapping. */
-function GroundList({
-	title,
-	items,
-	onPick,
-}: {
-	title: string;
-	items: readonly { readonly key: string; readonly label: string }[];
-	onPick: (key: string) => void;
-}) {
-	return (
-		<div
-			className="h-full overflow-auto"
-			style={{ paddingTop: `${BAR_REM.toString()}rem` }}
-		>
-			<div
-				className="mx-auto w-full pt-10 pb-12"
-				style={{
-					maxWidth: GROUND_LIST_WIDTH,
-					paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
-				}}
-			>
-				<h2 className="mb-5 font-sans text-[0.68rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
-					{title}
-				</h2>
-				<ul className="flex flex-col gap-1">
-					{items.map((item) => (
-						<li key={item.key}>
-							<button
-								type="button"
-								data-ground-item={item.key}
-								onClick={() => onPick(item.key)}
-								className="-mx-3 w-[calc(100%+1.5rem)] rounded-md px-3 py-2 text-left font-serif text-[1.15rem] text-ink hover:bg-raised"
-							>
-								{item.label}
-							</button>
-						</li>
-					))}
-				</ul>
-			</div>
-		</div>
-	);
-}
-
-/* ----------------------------------------------------------------- note */
-
-/**
- * One Presentation, in one of its forms. Its box is four motion values
- * that animate to whatever target the model hands it; the drag transforms
- * sit on top of the box, so a release can fold them in and grow from there.
- * The Blocks inside read `form` and `place` and adapt.
- */
-function PresentationView({
-	card,
-	form,
-	place,
-	box,
-	z,
-	held,
-	fate,
-	swiping = false,
-	pastCommit,
-	paneId,
-	sheetId,
-	ground,
-	covered = false,
-	preview = false,
-	epoch,
-	showText,
-	litWord,
-	register,
-	back = null,
-	clear = null,
-	onDown,
-	onFollow,
-	onSegment,
-	onSegmentDown,
-}: {
-	card: Presentation;
-	form: NoteForm;
-	place: Place;
-	box: Box;
-	z: number;
-	held: boolean;
-	/** In hand: what letting go now does to it. */
-	fate: Fate | null;
-	/** On a Deck being swiped: it moves with the Deck, whichever Card leads. */
-	swiping?: boolean;
-	/** On a swiped Deck that a release now would sweep. */
-	pastCommit: boolean;
-	paneId: string;
-	/** The Sheet this is, when it is one; a Deck can belong to it. */
-	sheetId: number | null;
-	/** A Ground fills its Pane and wears no Card chrome. */
-	ground: boolean;
-	/** A Sheet under another Sheet in the same Pane. */
-	covered?: boolean;
-	/** A ghost: the Sheet a drop would make, where it would sit; seen, never touched. */
-	preview?: boolean;
-	/** The Panes' measurement pass; see `layoutEpoch`. */
-	epoch: number;
-	/** A Text Ground with the reader hidden: the workbench's quiet scenes. */
-	showText: boolean;
-	/** The word this Sheet's Deck was dealt for, lit in its Segments. */
-	litWord: string | null;
-	register: (id: number, handle: NoteHandle | null) => void;
-	/** A Cover's ←, drawn in its Heading; a Ground's is on the Pane bar. */
-	back?: CoverBack | null;
-	/** A Cover's ×, drawn in its Heading's right margin. */
-	clear?: CoverBack | null;
-	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
-	onFollow: (link: NoteLink) => void;
-	onSegment: (word: string, element: HTMLElement) => void;
-	onSegmentDown: (
-		event: ReactPointerEvent<HTMLElement>,
-		make: () => Subject,
-	) => void;
-}) {
-	const {
-		transition,
-		MORPH,
-		OPEN_SCALE,
-		HEADING_EDGE,
-		NOTE_BORDER,
-		CLIP_FADE,
-	} = useDeckMotion();
-	const allows = useDeckInteractions();
-	const reduce = useDeckReducedMotion();
-	const design = useHeadingDesign();
-	const left = useMotionValue(box.left);
-	const top = useMotionValue(box.top);
-	const width = useMotionValue(box.width);
-	const height = useMotionValue(box.height);
-	const x = useMotionValue(0);
-	const y = useMotionValue(0);
-	const rotate = useMotionValue(0);
-	const scale = useMotionValue(1);
-	/* A dealt Note is simply there: opaque on its first frame, never faded. */
-	const opacity = useMotionValue(1);
-	const handle = useRef<NoteHandle>({
-		left,
-		top,
-		width,
-		height,
-		x,
-		y,
-		rotate,
-		scale,
-		opacity,
-	});
-	/**
-	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
-	 * is a state, not a move: which Card is in front changes at once, with
-	 * no pulse. `scale` stays the raw value the drag animates, and the two
-	 * are multiplied on the way to the DOM.
-	 */
-	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	const shownScale = useTransform(() => scale.get() * restScale);
-	/**
-	 * The box's origin travels as a transform, not as `left`/`top`, so two
-	 * of the four properties on MORPH leave the layout path; `width` and
-	 * `height` have to stay, because a Note genuinely reflows its text
-	 * between a Card and a Sheet. The drag offset rides along in the same
-	 * translate, so the two cannot fight over it.
-	 */
-	const shownX = useTransform(() => left.get() + x.get());
-	const shownY = useTransform(() => top.get() + y.get());
-	const section = useRef<HTMLElement>(null);
-
-	useEffect(() => {
-		if (preview) return;
-		register(card.id, handle.current);
-		return () => {
-			register(card.id, null);
-		};
-		/* register is a fresh closure every render; the handle is not */
-	}, [card.id, preview]);
-
-	/* the box: animate to wherever the model puts the Note now. A preview
-	   is placed, never moved: it appears where it will be, at once. And a
-	   box that changed because the Panes were re-measured, with the form
-	   unchanged, is a resize, not a move: the Note is where its Pane put
-	   it, at once. A change of form in the same pass is still a morph. */
-	const boxPass = useRef({ form, epoch });
-	useEffect(() => {
-		const previous = boxPass.current;
-		boxPass.current = { form, epoch };
-		const resized = previous.epoch !== epoch && previous.form === form;
-		if (reduce || preview || resized) {
-			left.jump(box.left);
-			top.jump(box.top);
-			width.jump(box.width);
-			height.jump(box.height);
-			return;
-		}
-		const controls = [
-			animate(left, box.left, MORPH),
-			animate(top, box.top, MORPH),
-			animate(width, box.width, MORPH),
-			animate(height, box.height, MORPH),
-		];
-		return () => {
-			for (const control of controls) control.stop();
-		};
-	}, [
-		box.left,
-		box.top,
-		box.width,
-		box.height,
-		left,
-		top,
-		width,
-		height,
-		reduce,
-		preview,
-		epoch,
-		form,
-		MORPH,
-	]);
-
-	function down(event: ReactPointerEvent<HTMLElement>) {
-		const target = event.target as HTMLElement;
-		/* a button is a click, except a link in a Cover's title while the
-		   links drag: that one is the Heading's to read past the slop */
-		if (
-			target.closest("button") &&
-			!(design.linksDrag && target.closest("[data-heading-title] button"))
-		)
-			return;
-		if (covered) return;
-		/* a Sheet is handled by its bar, never by its content: a Card is
-		   picked up from anywhere, a Sheet's body only scrolls. A Cover's
-		   bar is its Heading. */
-		if (form === "card" || target.closest("[data-heading]")) onDown(event);
-	}
-
-	const sheet = form === "sheet";
-	const below = place === "below" && !sheet;
-	/**
-	 * Which transition the Heading and the Blocks ride when they swap ends.
-	 * A change of form is a morph on `MORPH`; a deck tap changes only which
-	 * edge the Heading sits at, on `HEADING_EDGE`.
-	 */
-	const previousForm = useRef(form);
-	const morphing = previousForm.current !== form;
-	useEffect(() => {
-		previousForm.current = form;
-	}, [form]);
-	const positionSpec = morphing ? MORPH : transition(HEADING_EDGE);
-	const headingOffset = useMotionValue(0);
-	const bodyOffset = useMotionValue(0);
-	const previousPositions = useRef<{
-		form: NoteForm;
-		below: boolean;
-		heading: number;
-		body: number;
-	} | null>(null);
-	useLayoutEffect(() => {
-		const heading =
-			section.current?.querySelector<HTMLElement>("[data-heading]");
-		const body =
-			section.current?.querySelector<HTMLElement>("[data-scroller]");
-		if (!heading || !body) return;
-		const previous = previousPositions.current;
-		previousPositions.current = {
-			form,
-			below,
-			heading: heading.offsetTop,
-			body: body.offsetTop,
-		};
-		if (
-			previous?.form === form &&
-			previous.below !== below &&
-			!held &&
-			!reduce &&
-			HEADING_EDGE.ms > 0
-		) {
-			headingOffset.set(
-				headingOffset.get() + previous.heading - heading.offsetTop,
-			);
-			bodyOffset.set(bodyOffset.get() + previous.body - body.offsetTop);
-			const controls = [
-				animate(headingOffset, 0, transition(HEADING_EDGE)),
-				animate(bodyOffset, 0, transition(HEADING_EDGE)),
-			];
-			return () => {
-				for (const control of controls) control.stop();
-			};
-		}
-		headingOffset.jump(0);
-		bodyOffset.jump(0);
-	}, [
-		below,
-		form,
-		held,
-		reduce,
-		HEADING_EDGE,
-		transition,
-		headingOffset,
-		bodyOffset,
-	]);
-	/* the border is the Card's fate: blue where letting go opens it, red
-	   on a swiped Deck a release would sweep, and its resting colour
-	   otherwise. A Card that would leave also dims; see `LEAVING`. */
-	const borderColor =
-		swiping && pastCommit
-			? "var(--destructive)"
-			: fate === "open" || preview
-				? "var(--link)"
-				: ground
-					? "transparent"
-					: "var(--line-strong)";
-	const subject = card.subject;
-	const dataForm = ground ? "ground" : form;
-	const note = subject.kind === "Note" ? subject.note : null;
-	const ported = usePortedReading(note);
-	const portedFollow = usePortedFollow(note?.word ?? "", onFollow);
-	const isCover = sheet && !ground && back !== null;
-	const folded = useFolded(section, isCover && design.variant === "shrink");
-	const {
-		column,
-		gutterRem,
-		body: bodyWidth,
-		title: coverWidth,
-	} = sheetColumn(subject, sheet, ported !== null);
-	const titles = ported
-		? {
-				card: (
-					<PortedTitle
-						note={ported}
-						presentation="Card"
-						follow={portedFollow}
-					/>
-				),
-				cover: (
-					<PortedTitle
-						note={ported}
-						presentation="Sheet"
-						follow={portedFollow}
-					/>
-				),
-			}
-		: null;
-
-	return (
-		<motion.article
-			ref={section}
-			aria-label={`${subjectLabel(subject)} ${ground ? "ground" : sheet ? "sheet" : "card"}`}
-			data-card-id={card.id}
-			data-form={dataForm}
-			data-place={sheet ? undefined : place}
-			data-held={held || undefined}
-			data-arm={held && swiping ? "sweep" : undefined}
-			data-fate={fate ?? undefined}
-			data-past={pastCommit}
-			data-swiping={swiping || undefined}
-			data-pane={paneId}
-			data-sheet-id={sheetId ?? undefined}
-			data-preview={preview || undefined}
-			/* The border is the arm state. A Note is dealt wearing its
-			   resting colour; only arming changes it. */
-			initial={false}
-			animate={{ borderColor }}
-			transition={transition(NOTE_BORDER)}
-			style={{
-				left: 0,
-				top: 0,
-				width,
-				height,
-				x: shownX,
-				y: shownY,
-				rotate,
-				scale: shownScale,
-				opacity,
-				zIndex: z,
-				...(preview ? { borderStyle: "dashed" } : {}),
-			}}
-			onPointerDown={down}
-			/* `contain` stops the width/height spring's recalc at this Note
-			   rather than letting it walk the deck */
-			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
-		>
-			{/* the content column: one width in every form, centred inside a
-			    Heading and a scroller that both span the Pane, so the scrollbar
-			    sits at the Pane's edge, not the column's. A ghost's ink is
-			    quiet, on paper as opaque as any: nothing shows through */}
-			<div
-				className={`flex min-h-0 w-full flex-1 flex-col ${preview ? "opacity-50" : ""}`}
-			>
-				<HeadingBlock
-					subject={subject}
-					form={form}
-					ground={ground}
-					back={back}
-					clear={clear}
-					coverRem={coverHeadingRem(design.variant, folded)}
-					coverWidth={coverWidth}
-					folded={folded}
-					titles={titles}
-					morphing={morphing}
-					grab={
-						sheet &&
-						!ground &&
-						!covered &&
-						!preview &&
-						allows("lift")
-					}
-					atBottom={below}
-					layout={!held && morphing}
-					offset={headingOffset}
-					positionSpec={positionSpec}
-					column={column}
-				/>
-				{/* the Blocks travel with the Heading: the row it vacates is
-				    the row they take */}
-				<motion.div
-					data-scroller=""
-					layout={!held && morphing ? "position" : false}
-					style={{ y: bodyOffset }}
-					layoutDependency={`${form}:${below.toString()}`}
-					transition={{ layout: positionSpec }}
-					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
-				>
-					{ported ? (
-						/* a Card's links are inert until it is a Sheet (#485) */
-						<div
-							inert={!sheet}
-							className={
-								sheet
-									? "[&_[data-note-presentation]>article]:pt-3"
-									: ""
-							}
-						>
-							<PortedBlocks
-								note={ported}
-								presentation={sheet ? "Sheet" : "Card"}
-								follow={portedFollow}
-							/>
-						</div>
-					) : (
-						<div
-							className={`mx-auto flex w-full flex-col gap-3 ${below ? "pt-3" : sheet ? "pt-4 pb-4" : "pb-4"}`}
-							style={{
-								maxWidth: bodyWidth,
-								paddingInline: `${gutterRem.toString()}rem`,
-							}}
-						>
-							{subject.kind === "Text" ? (
-								<TextBlock
-									text={subject.text}
-									focus={subject.focus}
-									form={form}
-									shown={showText}
-									litWord={litWord}
-									onSegment={onSegment}
-									onSegmentDown={onSegmentDown}
-								/>
-							) : (
-								<>
-									<ContextsBlock
-										note={subject.note}
-										form={form}
-										litWord={litWord}
-										onSegment={onSegment}
-										onSegmentDown={onSegmentDown}
-									/>
-									<BodyBlock note={subject.note} />
-									<LinksBlock
-										note={subject.note}
-										form={form}
-										onFollow={onFollow}
-										onSegmentDown={onSegmentDown}
-									/>
-								</>
-							)}
-						</div>
-					)}
-					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
-					<motion.div
-						aria-hidden="true"
-						initial={false}
-						animate={{ opacity: sheet || below ? 0 : 1 }}
-						transition={transition(CLIP_FADE)}
-						className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
-					/>
-				</motion.div>
-			</div>
-		</motion.article>
-	);
-}
-
-/* --------------------------------------------------------------- blocks */
-
-/**
- * The Heading: pinned first, the Note's lift handle in every form. As a
- * Card it is the one-line row (form, then gloss), at the bottom edge when
- * the Card is a Card Tail. As a Cover it is the Cover's bar: ← in its left
- * margin, × in its right, and the title on the body's column; its height
- * is the design's (see `heading-design.tsx`). As a Ground it folds shut,
- * because the Pane bar carries the label. A ported Note's title is its
- * real Reading Header, in both faces.
- *
- * The row is one element whose height rides `MORPH` with the Note's box,
- * so the Cover's top edge is the Note's own edge in every frame. Only the
- * words change: the face leaving goes on `BAR_EXIT`, the one arriving
- * follows on `BAR_ENTER`, and the row between them never fades. A change
- * of height with no change of form, a fold or a switch of design, rides
- * `HEADING_RESIZE`.
- */
-function HeadingBlock({
-	subject,
-	form,
-	ground,
-	back,
-	clear,
-	coverRem,
-	coverWidth,
-	folded,
-	titles,
-	morphing,
-	grab,
-	atBottom,
-	layout,
-	offset,
-	positionSpec,
-	column,
-}: {
-	subject: Subject;
-	form: NoteForm;
-	ground: boolean;
-	back: CoverBack | null;
-	clear: CoverBack | null;
-	/** The Cover face's height, in rem. */
-	coverRem: number;
-	/** The body column the Cover's title sits on, gutters included. */
-	coverWidth: string;
-	folded: boolean;
-	/** A ported Note's real title, as a Card and as a Cover. */
-	titles: { card: ReactNode; cover: ReactNode } | null;
-	/** The form changed this render: the row rides `MORPH`. */
-	morphing: boolean;
-	/** The row is the Cover's handle right now. */
-	grab: boolean;
-	atBottom: boolean;
-	layout: boolean;
-	offset: MotionValue<number>;
-	/** What the row's position rides; see `positionSpec` in `PresentationView`. */
-	positionSpec: ReturnType<typeof motionOf>;
-	/** The content column's width; the Card's row is centred at it. */
-	column: string;
-}) {
-	const { transition, MORPH, BAR_ENTER, BAR_EXIT, HEADING_RESIZE } =
-		useDeckMotion();
-	const design = useHeadingDesign();
-	const rem = remPx();
-	const face = form === "card" ? "card" : ground || !back ? null : "cover";
-	const rowRem =
-		face === "card" ? HEADER_REM : face === "cover" ? coverRem : 0;
-	const title =
-		subject.kind === "Text" ? subject.text.title : subject.note.tail.form;
-	const gloss = subjectGloss(subject);
-	const fade = {
-		initial: { opacity: 0 },
-		animate: { opacity: 1, transition: transition(BAR_ENTER) },
-		exit: { opacity: 0, transition: transition(BAR_EXIT) },
-	};
-	const rowSpec = morphing ? MORPH : transition(HEADING_RESIZE);
-	return (
-		<motion.div
-			data-heading=""
-			data-heading-variant={face === "cover" ? design.variant : undefined}
-			data-folded={face === "cover" ? folded : undefined}
-			/* `initial={false}`: a Note is dealt at its size; only a change
-			   of form is a move. */
-			initial={false}
-			layout={layout ? "position" : false}
-			layoutDependency={`${form}:${atBottom.toString()}`}
-			transition={{
-				...rowSpec,
-				layout: positionSpec,
-			}}
-			animate={{ height: rowRem * rem, opacity: face ? 1 : 0 }}
-			style={{ order: atBottom ? 2 : 0, y: offset }}
-			className={`relative w-full shrink-0 overflow-hidden select-none ${grab ? "cursor-grab touch-none active:cursor-grabbing" : ""}`}
-		>
-			<AnimatePresence initial={false}>
-				{face === "card" ? (
-					<motion.div
-						key="card"
-						{...fade}
-						className={`absolute inset-0 flex justify-center ${titles ? "px-3.5" : "px-4"} ${atBottom ? "" : "pb-2"}`}
-					>
-						<div
-							className="relative flex h-full w-full min-w-0 items-end gap-4"
-							style={{ maxWidth: column }}
-						>
-							{titles ? (
-								/* a Card's links are inert until it is a Sheet (#485) */
-								<div
-									inert
-									className={`min-w-0 flex-1 ${ONE_LINE_TITLE} ${atBottom ? "pb-3" : ""}`}
-								>
-									{titles.card}
-								</div>
-							) : (
-								<>
-									<h2
-										className={`min-w-0 flex-1 truncate font-serif text-[1rem] font-normal leading-tight text-ink ${atBottom ? "pb-3" : ""}`}
-									>
-										{title}
-									</h2>
-									{gloss ? (
-										<span
-											className={`shrink-0 pb-[0.15rem] text-[0.72rem] text-ink-muted ${atBottom ? "pb-3" : ""}`}
-										>
-											{gloss}
-										</span>
-									) : null}
-								</>
-							)}
-						</div>
-					</motion.div>
-				) : face === "cover" && back && clear ? (
-					<motion.div
-						key="cover"
-						{...fade}
-						className="absolute inset-0"
-					>
-						<SheetChrome
-							ruled={coverHeadingRuled(design.variant, folded)}
-							maxWidth={coverWidth}
-							back={back}
-							clear={clear}
-							linksDrag={design.linksDrag}
-						>
-							{titles ? (
-								titles.cover
-							) : (
-								<SheetTitle subject={subject} />
-							)}
-						</SheetChrome>
-					</motion.div>
-				) : null}
-			</AnimatePresence>
-		</motion.div>
-	);
-}
-
-/** A dummy Sheet's title in its chrome: the form, then what kind of Note it is. */
-function SheetTitle({ subject }: { subject: Subject }) {
-	const gloss = subjectGloss(subject);
-	return (
-		<div className="flex min-w-0 items-baseline gap-3">
-			<h2 className="min-w-0 truncate font-serif text-[1rem] font-normal leading-[1.4] text-ink">
-				{subject.kind === "Text"
-					? subject.text.title
-					: subject.note.tail.form}
-			</h2>
-			{subject.kind === "Note" ? (
-				<span className="shrink-0 font-mono text-[0.62rem] tracking-[0.08em] text-ink-muted uppercase">
-					{subject.note.kind}
-					{gloss ? (
-						<span className="ms-2 normal-case tracking-normal">
-							{gloss}
-						</span>
-					) : null}
-				</span>
-			) : null}
-		</div>
-	);
-}
-
-/**
- * A Pane bar's face: the Ground's chrome, laid out as a Cover's Heading.
- * A Rooted Pane shows its ← and its trail; a Floating Pane its ×, and its
- * Ground's title, the real one when the Ground is a ported Note.
- */
-function PaneBarFace({
-	subject,
-	titled,
-	width,
-	back,
-	clear,
-	onFollow,
-	children,
-}: {
-	/** The Ground's Subject when it is a Sheet: its column is the bar's. */
-	subject: Subject | null;
-	/** Shows the Ground's title; otherwise the trail. */
-	titled: boolean;
-	/** The column when the Ground is a list rather than a Sheet. */
-	width: string | null;
-	back: CoverBack | null;
-	clear: CoverBack | null;
-	onFollow: (link: NoteLink) => void;
-	/** The trail. */
-	children: ReactNode;
-}) {
-	const design = useHeadingDesign();
-	const note = subject?.kind === "Note" ? subject.note : null;
-	const ported = usePortedReading(note);
-	const portedFollow = usePortedFollow(note?.word ?? "", onFollow);
-	return (
-		<SheetChrome
-			ruled={false}
-			maxWidth={
-				width ??
-				(subject
-					? sheetColumn(subject, true, ported !== null).title
-					: "")
-			}
-			back={back}
-			clear={clear}
-			linksDrag={design.linksDrag}
-		>
-			{!titled || !subject ? (
-				children
-			) : ported ? (
-				<PortedTitle
-					note={ported}
-					presentation="Sheet"
-					follow={portedFollow}
-				/>
-			) : (
-				<SheetTitle subject={subject} />
-			)}
-		</SheetChrome>
-	);
-}
-
-/**
- * A Segment: a word that deals when clicked and lifts when dragged, in
- * Sheet form. In Card form it is inert text (issue 485, provisional).
- */
-function Segment({
-	word,
-	live,
-	lit,
-	focused,
-	onSegment,
-	onSegmentDown,
-}: {
-	word: string;
-	live: boolean;
-	lit: boolean;
-	focused: boolean;
-	onSegment: (word: string, element: HTMLElement) => void;
-	onSegmentDown: (
-		event: ReactPointerEvent<HTMLElement>,
-		make: () => Subject,
-	) => void;
-}) {
-	if (!live)
-		return (
-			<span data-segment={word} className={lit ? "text-ink" : undefined}>
-				{word}
-			</span>
-		);
-	return (
-		<button
-			type="button"
-			data-word={word}
-			aria-pressed={lit}
-			aria-current={focused ? "location" : undefined}
-			onPointerDown={(event) =>
-				onSegmentDown(event, () => ({
-					kind: "Note",
-					note: noteFor("Reading", word),
-				}))
-			}
-			onClick={(event) => onSegment(word, event.currentTarget)}
-			className="rounded-[0.2rem] px-[0.08em] text-word-unknown decoration-word-resolving decoration-[1.5px] underline-offset-[0.2em] hover:underline aria-[current=location]:bg-selection/40 aria-pressed:bg-selection aria-pressed:text-selection-foreground"
-		>
-			{word}
-		</button>
-	);
-}
-
-/** A Text's Blocks: its Sentences, every word a Segment once it is a Sheet. */
-function TextBlock({
-	text,
-	focus,
-	form,
-	shown,
-	litWord,
-	onSegment,
-	onSegmentDown,
-}: {
-	text: DummyText;
-	focus: TextFocus | null;
-	form: NoteForm;
-	shown: boolean;
-	litWord: string | null;
-	onSegment: (word: string, element: HTMLElement) => void;
-	onSegmentDown: (
-		event: ReactPointerEvent<HTMLElement>,
-		make: () => Subject,
-	) => void;
-}) {
-	const sheet = form === "sheet";
-	const lit = useRef<HTMLParagraphElement>(null);
-	const block = useRef<HTMLDivElement>(null);
-	/* a Cover pushed by Go to source arrives scrolled to its Sentence */
-	useEffect(() => {
-		if (sheet && focus) lit.current?.scrollIntoView({ block: "center" });
-	}, [sheet, focus]);
-	/* room under the last Sentence, so any Sentence can be scrolled clear
-	   of the Deck: as tall as the body that scrolls it */
-	const [trailer, setTrailer] = useState(0);
-	useLayoutEffect(() => {
-		if (!sheet) return;
-		const scroller = block.current?.closest<HTMLElement>("[data-scroller]");
-		if (!scroller) return;
-		const measure = () => setTrailer(scroller.clientHeight);
-		measure();
-		const observer = new ResizeObserver(measure);
-		observer.observe(scroller);
-		return () => observer.disconnect();
-	}, [sheet, shown]);
-	if (!shown) return null;
-	return (
-		<div
-			ref={block}
-			data-block="text"
-			className={`font-serif text-ink ${sheet ? "px-4 pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
-		>
-			{text.sentences.map((sentence, sentenceIndex) => {
-				const focused = focus?.sentence === sentenceIndex;
-				return (
-					<p
-						key={sentence.join(" ")}
-						ref={focused ? lit : undefined}
-						data-sentence={sentenceIndex}
-						className={`${sheet ? "mb-[1.75rem]" : "mb-2"} ${focused ? "rounded-md bg-raised/60 -mx-2 px-2" : ""}`}
-					>
-						{sentence.map((word, index) => (
-							<span key={`${word}-${index.toString()}`}>
-								<Segment
-									word={word}
-									live={sheet}
-									lit={
-										litWord !== null &&
-										cleanWord(word) === litWord
-									}
-									focused={
-										focused &&
-										cleanWord(word) === focus.word
-									}
-									onSegment={onSegment}
-									onSegmentDown={onSegmentDown}
-								/>
-								{index < sentence.length - 1 ? " " : ""}
-							</span>
-						))}
-					</p>
-				);
-			})}
-			{sheet ? (
-				<div aria-hidden="true" style={{ height: trailer }} />
-			) : null}
-		</div>
-	);
-}
-
-/**
- * Source Contexts: pinned, part of the Anchor. A Card shows the two most
- * recent; a Sheet shows a page and can load more. In a Sheet, every word
- * is a Segment that deals a Deck belonging to that Sheet.
- */
-function ContextsBlock({
-	note,
-	form,
-	litWord,
-	onSegment,
-	onSegmentDown,
-}: {
-	note: DummyNote;
-	form: NoteForm;
-	litWord: string | null;
-	onSegment: (word: string, element: HTMLElement) => void;
-	onSegmentDown: (
-		event: ReactPointerEvent<HTMLElement>,
-		make: () => Subject,
-	) => void;
-}) {
-	const allows = useDeckInteractions();
-	const { transition, CONTEXT_ITEM, contextDelayFor } = useDeckMotion();
-	const sheet = form === "sheet";
-	const [shown, setShown] = useState(CONTEXT_PAGE);
-	useEffect(() => {
-		if (!sheet) setShown(CONTEXT_PAGE);
-	}, [sheet]);
-	const visible = note.contexts.slice(0, sheet ? shown : CARD_CONTEXTS);
-	const more = note.contexts.length - visible.length;
-	/**
-	 * Where the arriving group starts, so the stagger counts from the first
-	 * item that is actually new rather than from the top of the list.
-	 */
-	const settled = useRef(visible.length);
-	const arrivingFrom = settled.current;
-	useEffect(() => {
-		settled.current = visible.length;
-	}, [visible.length]);
-	return (
-		<div data-block="contexts" className="flex flex-col gap-1">
-			<div className="flex items-baseline justify-between font-mono text-[0.58rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
-				<span>Source contexts</span>
-				<span>{note.contexts.length.toString()}</span>
-			</div>
-			<ul className="flex flex-col gap-0.5 text-[0.8rem] leading-relaxed text-ink-soft">
-				<AnimatePresence initial={false}>
-					{visible.map((context, index) => (
-						<motion.li
-							key={contextKey(context)}
-							initial={{ opacity: 0, height: 0 }}
-							animate={{
-								opacity: 1,
-								height: "auto",
-								transition: transition(
-									after(
-										CONTEXT_ITEM,
-										contextDelayFor(index - arrivingFrom),
-									),
-								),
-							}}
-							exit={{
-								opacity: 0,
-								height: 0,
-								transition: transition(CONTEXT_ITEM),
-							}}
-							className="overflow-hidden"
-						>
-							{context.words.map((word, wordIndex) => (
-								<span key={`${word}-${wordIndex.toString()}`}>
-									<Segment
-										word={word}
-										live={sheet}
-										lit={
-											cleanWord(word) === note.word ||
-											(litWord !== null &&
-												cleanWord(word) === litWord)
-										}
-										focused={false}
-										onSegment={onSegment}
-										onSegmentDown={onSegmentDown}
-									/>
-									{wordIndex < context.words.length - 1
-										? " "
-										: ""}
-								</span>
-							))}
-						</motion.li>
-					))}
-				</AnimatePresence>
-			</ul>
-			{sheet && more > 0 ? (
-				<button
-					type="button"
-					onClick={(event) => {
-						event.stopPropagation();
-						if (allows("contexts"))
-							setShown((n) => n + CONTEXT_PAGE);
-					}}
-					disabled={!allows("contexts")}
-					className="self-start text-[0.72rem] text-link underline-offset-2 hover:underline"
-				>
-					{`Load ${Math.min(more, CONTEXT_PAGE).toString()} more`}
-				</button>
-			) : null}
-		</div>
-	);
-}
-
-function contextKey(context: SourceContext): string {
-	return `${context.textId ?? "filler"}:${context.sentence.toString()}:${context.words.join(" ")}`;
-}
-
-/** The Note's lines. The same in every form; a Card only clips them. */
-function BodyBlock({ note }: { note: DummyNote }) {
-	return (
-		<div
-			data-block="body"
-			className="space-y-1.5 text-[0.85rem] leading-relaxed text-ink-soft"
-		>
-			{note.lines.map((line, index) => (
-				<p key={`${index.toString()}-${line}`}>{line}</p>
-			))}
-		</div>
-	);
-}
-
-/**
- * Onward Links. In a Sheet a tap pushes a Cover and a drag lifts the
- * target as a fresh Card; in a Card they are inert (issue 485, provisional).
- */
-function LinksBlock({
-	note,
-	form,
-	onFollow,
-	onSegmentDown,
-}: {
-	note: DummyNote;
-	form: NoteForm;
-	onFollow: (link: NoteLink) => void;
-	onSegmentDown: (
-		event: ReactPointerEvent<HTMLElement>,
-		make: () => Subject,
-	) => void;
-}) {
-	const allows = useDeckInteractions();
-	const live = form === "sheet";
-	return (
-		<ul
-			data-block="links"
-			className="flex flex-wrap gap-x-4 gap-y-1 text-[0.85rem]"
-		>
-			{note.links.map((link) => {
-				const label =
-					link.kind === "Text"
-						? `↩ ${link.label} (${link.focus.word})`
-						: link.label;
-				return (
-					<li key={link.label}>
-						{live ? (
-							<button
-								type="button"
-								data-link={link.label}
-								disabled={!allows("follow")}
-								onPointerDown={(event) => {
-									event.stopPropagation();
-									onSegmentDown(event, () =>
-										subjectOfLink(link),
-									);
-								}}
-								onClick={(event) => {
-									event.stopPropagation();
-									onFollow(link);
-								}}
-								className="text-link decoration-link-shadow decoration-[1.5px] underline-offset-[0.2em] hover:underline disabled:no-underline"
-							>
-								{label}
-							</button>
-						) : (
-							<span data-link={link.label} className="text-link">
-								{label}
-							</span>
-						)}
-					</li>
-				);
-			})}
-		</ul>
-	);
-}
-
-/* -------------------------------------------------------------- zones */
-
-/** What a release in the held Card's own Pane does, as the zone says it. */
-function homeLabel(drag: Drag): string {
-	switch (drag.home) {
-		case "slot":
-			return "Back on the Deck";
-		case "close":
-			return "Close";
-		default:
-			return "Back in place";
-	}
-}
-
-/** What letting go of `drag` over `destination` does to its Card. */
-function fateOf(drag: Drag, destination: Destination | null): Fate {
-	if (destination?.kind === "sheet" || destination?.kind === "pane")
-		return "open";
-	/* anywhere else it goes home, and for a Card from nowhere, or a Cover
-	   on no live Deck, home is away */
-	return drag.home === "close" || drag.home === "vanish" ? "leave" : "rest";
-}
-
-function DropZones({
-	paneId,
-	regions,
-	destination,
-	homeLabel,
-	shown,
-}: {
-	paneId: string;
-	regions: DropRegions;
-	destination: Destination | null;
-	/** What the cover region says when it is the held Card's home. */
-	homeLabel: string;
-	/** The regions are read whether or not they are drawn; this draws them. */
-	shown: boolean;
-}) {
-	const { ZONE_FEEDBACK_MS } = useDeckMotion();
-	const here =
-		destination && "paneId" in destination && destination.paneId === paneId
-			? destination
-			: null;
-	const zoneClass =
-		"pointer-events-none absolute grid place-items-center border border-dashed border-link/40 bg-link/5 transition-colors data-[shown=false]:invisible data-[active=true]:border-link data-[active=true]:bg-link/15";
-	const labelClass =
-		"rounded-md bg-raised px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase";
-	return (
-		<>
-			{regions.edges.map(({ edge, box }) => {
-				const active = here?.kind === "pane" && here.edge === edge;
-				return (
-					<div
-						key={edge}
-						aria-hidden="true"
-						data-edge={edge}
-						data-active={active}
-						data-shown={shown}
-						className={zoneClass}
-						style={{
-							...box,
-							zIndex: Z.zone,
-							transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-						}}
-					>
-						{active ? (
-							<span className={labelClass}>New pane</span>
-						) : null}
-					</div>
-				);
-			})}
-			<div
-				aria-hidden="true"
-				data-zone="cover"
-				data-active={here?.kind === "sheet" || here?.kind === "home"}
-				data-shown={shown}
-				className={zoneClass}
-				style={{
-					...regions.cover,
-					zIndex: Z.zone,
-					transitionDuration: `${ZONE_FEEDBACK_MS}ms`,
-				}}
-			>
-				{here?.kind === "sheet" ? (
-					<span className={labelClass}>Open as Cover</span>
-				) : here?.kind === "home" ? (
-					<span className={labelClass}>{homeLabel}</span>
-				) : null}
-			</div>
-		</>
 	);
 }

@@ -66,10 +66,15 @@ export function coverHeadingRem(
 }
 
 /**
- * Whether a `shrink` Heading is folded: its Cover's body has scrolled past
+ * Whether a `shrink` Heading is folded: its Sheet's body has scrolled past
  * `FOLD_AT_PX`. It unfolds only back at the top, so the height the fold
  * gives the body cannot scroll it back under the line and flicker.
  */
+export function foldedAt(was: boolean, scrollTop: number): boolean {
+	return was ? scrollTop > 0 : scrollTop > FOLD_AT_PX;
+}
+
+/** `foldedAt`, for a Cover, whose Heading is its own. */
 export function useFolded(
 	section: RefObject<HTMLElement | null>,
 	watching: boolean,
@@ -84,9 +89,7 @@ export function useFolded(
 			section.current?.querySelector<HTMLElement>("[data-scroller]");
 		if (!scroller) return;
 		const update = () =>
-			setFolded((was) =>
-				was ? scroller.scrollTop > 0 : scroller.scrollTop > FOLD_AT_PX,
-			);
+			setFolded((was) => foldedAt(was, scroller.scrollTop));
 		update();
 		scroller.addEventListener("scroll", update, { passive: true });
 		return () => scroller.removeEventListener("scroll", update);
