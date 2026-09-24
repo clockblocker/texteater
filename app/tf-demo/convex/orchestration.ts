@@ -101,6 +101,13 @@ export const submitText = action({
 		);
 		if (limitViolation !== undefined)
 			return { status: "Rejected", message: limitViolation };
+		// Intake is not deterministic, so re-analysing a stored Text would
+		// pay for every model call and then often disagree with it.
+		const analyzed = await ctx.runQuery(
+			internal.persistence.analyzedSubmission,
+			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
+		);
+		if (analyzed) return { status: "Accepted", textId: analyzed };
 		const sentenceCount = sentences.length;
 		const requestId = crypto.randomUUID();
 		if (args.inspectionVisitorId) {

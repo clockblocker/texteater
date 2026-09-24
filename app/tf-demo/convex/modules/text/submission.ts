@@ -5,7 +5,7 @@ import {
 	MAX_SOURCE_SENTENCES,
 } from "../../../server/textSubmissionLimits";
 import type { Id } from "../../_generated/dataModel";
-import type { MutationCtx } from "../../_generated/server";
+import type { MutationCtx, QueryCtx } from "../../_generated/server";
 import {
 	loadStoredSegments,
 	MAX_SEGMENTS_PER_SENTENCE,
@@ -51,6 +51,39 @@ function assertIndex(value: number, name: string): void {
 	if (!Number.isSafeInteger(value) || value < 0) {
 		throw new Error(`${name} must be a non-negative safe integer.`);
 	}
+}
+
+/**
+ * The Text a re-submission would only reproduce: stored under `submissionKey`
+ * with the same source text, and with every Sentence's Segments in place.
+ * Null when intake still has work to do, such as after Analysis Stripping.
+ */
+export async function findAnalyzedSubmission(
+	ctx: QueryCtx,
+	input: { readonly submissionKey: string; readonly sourceText: string },
+): Promise<Id<"texts"> | null> {
+	const text = await ctx.db
+		.query("texts")
+		.withIndex("by_submission_key", (q) =>
+			q.eq("submissionKey", input.submissionKey),
+		)
+		.unique();
+	if (!text || text.sourceText !== input.sourceText) return null;
+	const sentences = await ctx.db
+		.query("sentences")
+		.withIndex("by_text_id_and_position", (q) => q.eq("textId", text._id))
+		.take(MAX_SOURCE_SENTENCES);
+	if (sentences.length === 0) return null;
+	for (const sentence of sentences) {
+		const segments = await loadStoredSegments(ctx, sentence._id);
+		if (
+			segments.length === 0 ||
+			segments.some(({ index }, position) => index !== position) ||
+			segments.map(({ text }) => text).join("") !== sentence.stitchedText
+		)
+			return null;
+	}
+	return text._id;
 }
 
 /** Persist one analyzed Text while making submission-key retries idempotent. */

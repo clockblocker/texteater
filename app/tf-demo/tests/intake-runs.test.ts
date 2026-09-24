@@ -397,10 +397,33 @@ test("submitText records one summary row per attempt, with no text, prompt or mo
 	for (const text of ["Banken", "banks.", "Repair", "Determine"])
 		expect(stored).not.toContain(text);
 
-	await submitBankTexts(t, "banks");
+	await submitBankTexts(t, "banks-again");
 	const rows = await intakeRuns(t);
-	expect(rows.map((item) => item.submissionKey)).toEqual(["banks", "banks"]);
+	expect(rows.map((item) => item.submissionKey)).toEqual([
+		"banks",
+		"banks-again",
+	]);
 	expect(new Set(rows.map((item) => item.runId)).size).toBe(2);
+});
+
+test("re-submitting an analyzed Text returns it without any model call", async () => {
+	const t = createTestConvex();
+	const first = await submitBankTexts(t, "banks");
+	const providers = fakeProviders(bankTexts());
+	try {
+		expect(
+			await t.action(api.orchestration.submitText, {
+				submissionKey: "banks",
+				sourceText: "Die Banken. The banks.",
+			}),
+		).toEqual(first);
+		expect(providers.requests).toEqual([]);
+	} finally {
+		providers.restore();
+	}
+	expect(await t.run((ctx) => ctx.db.query("texts").collect())).toHaveLength(
+		1,
+	);
 });
 
 test("a re-submission whose stored analysis differs throws a coded Conflict", async () => {

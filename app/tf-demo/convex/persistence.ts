@@ -10,7 +10,11 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import type { Id } from "./_generated/dataModel";
-import { internalMutation, type MutationCtx } from "./_generated/server";
+import {
+	internalMutation,
+	internalQuery,
+	type MutationCtx,
+} from "./_generated/server";
 import { findReadingByKey, findSurface } from "./dumdictStorage/storage";
 import {
 	createDumdictTransaction,
@@ -42,7 +46,10 @@ import {
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
-import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
+import {
+	findAnalyzedSubmission,
+	persistSubmittedText as persistSubmittedTextImplementation,
+} from "./modules/text/submission";
 
 /** What every Occurrence commit names: the click and the session committing it. */
 const occurrenceCommitArgs = {
@@ -168,6 +175,13 @@ export const persistSubmittedText = internalMutation({
 		deduplicated: v.boolean(),
 	}),
 	handler: persistSubmittedTextImplementation,
+});
+
+/** The stored Text a re-submission would only reproduce, if any. */
+export const analyzedSubmission = internalQuery({
+	args: { submissionKey: v.string(), sourceText: v.string() },
+	returns: v.union(v.null(), v.id("texts")),
+	handler: findAnalyzedSubmission,
 });
 
 export const persistUnresolvedClick = internalMutation({
