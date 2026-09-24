@@ -58,6 +58,7 @@ const noteSectionLabelClassName =
  * `<label>` when `htmlFor` names the control it titles.
  */
 export function NoteSectionLabel({
+	children,
 	className,
 	htmlFor,
 	...props
@@ -69,7 +70,9 @@ export function NoteSectionLabel({
 				htmlFor={htmlFor}
 				className={cn(noteSectionLabelClassName, className)}
 				{...props}
-			/>
+			>
+				{children}
+			</label>
 		);
 	}
 	return (
@@ -77,6 +80,8 @@ export function NoteSectionLabel({
 			data-slot="note-section-label"
 			className={cn(noteSectionLabelClassName, className)}
 			{...props}
-		/>
+		>
+			{children}
+		</h2>
 	);
 }

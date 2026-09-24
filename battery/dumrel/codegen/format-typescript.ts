@@ -1,9 +1,24 @@
 import { fileURLToPath } from "node:url";
 
+/** Biome can need a second pass to settle long member chains. */
+const maxFormattingPasses = 3;
+
 export async function formatTypeScript(
 	source: string,
 	path: URL,
 ): Promise<string> {
+	let current = source;
+	for (let pass = 0; pass < maxFormattingPasses; pass++) {
+		const formatted = await formatOnce(current, path);
+		if (formatted === current) return formatted;
+		current = formatted;
+	}
+	throw Error(
+		`Biome did not settle on a format for ${fileURLToPath(path)} after ${maxFormattingPasses} passes`,
+	);
+}
+
+async function formatOnce(source: string, path: URL): Promise<string> {
 	const formatter = Bun.spawn(
 		[
 			fileURLToPath(

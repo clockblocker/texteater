@@ -1,10 +1,10 @@
 import { rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { findRepositoryRoot } from "../lib/workspaces";
 import {
 	evaluateSharedRss,
 	RSS_SHARED_BUDGET_BYTES,
 } from "../dum-runtime-verification/policy";
+import { findRepositoryRoot } from "../lib/workspaces";
 import { preparePublishedRuntime } from "./published-runtime";
 
 export const SHARED_RSS_SAMPLE_COUNT = 7;

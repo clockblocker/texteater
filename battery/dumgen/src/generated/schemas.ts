@@ -3776,14 +3776,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R0.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R0.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3795,14 +3793,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R1.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R1.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3814,14 +3810,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R2.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R2.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3833,14 +3827,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R3.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R3.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3855,14 +3847,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R4.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R4.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3874,14 +3864,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R5.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R5.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3893,14 +3881,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R6.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R6.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3912,14 +3898,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R7.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R7.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3932,14 +3916,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R8.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R8.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3951,14 +3933,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R9.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R9.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3970,14 +3950,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R10.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R10.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -3989,14 +3967,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R11.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R11.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4008,14 +3984,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R12.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R12.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4027,14 +4001,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R13.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R13.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4046,14 +4018,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R14.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R14.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4065,14 +4035,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R15.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R15.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4084,14 +4052,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R16.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R16.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4106,14 +4072,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R17.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R17.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4125,14 +4089,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R18.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R18.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4144,14 +4106,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R19.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R19.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4163,14 +4123,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R20.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R20.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4182,14 +4140,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R21.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R21.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4201,14 +4157,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R22.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R22.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4220,14 +4174,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R23.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R23.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4239,14 +4191,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R24.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R24.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4258,14 +4208,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R25.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R25.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4277,14 +4225,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R26.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R26.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4296,14 +4242,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R27.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R27.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4315,14 +4259,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R28.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R28.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4337,14 +4279,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R29.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R29.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4356,14 +4296,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R30.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R30.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4378,14 +4316,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R31.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R31.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4397,14 +4333,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R32.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R32.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4416,14 +4350,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R33.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R33.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4435,14 +4367,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R34.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R34.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4454,14 +4384,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R35.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R35.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4473,14 +4401,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R36.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R36.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4492,14 +4418,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R37.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R37.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4511,14 +4435,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R38.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R38.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4530,14 +4452,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R39.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R39.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4549,14 +4469,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R40.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R40.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4568,14 +4486,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R41.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R41.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4587,14 +4503,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R42.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R42.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4606,14 +4520,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R43.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R43.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4625,14 +4537,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R44.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R44.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4644,14 +4554,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R45.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R45.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4663,14 +4571,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R46.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R46.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4682,14 +4588,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R47.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R47.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4701,14 +4605,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R48.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R48.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4720,14 +4622,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R49.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R49.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4739,14 +4639,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R50.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R50.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4758,14 +4656,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R51.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R51.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4777,14 +4673,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R52.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R52.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4796,14 +4690,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R53.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R53.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4815,14 +4707,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R54.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R54.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4834,14 +4724,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R55.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R55.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4853,14 +4741,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R56.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R56.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4872,14 +4758,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R57.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R57.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4891,14 +4775,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R58.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R58.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4910,14 +4792,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R59.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R59.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4929,14 +4809,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R60.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R60.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4948,14 +4826,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R61.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R61.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4967,14 +4843,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R62.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R62.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -4986,14 +4860,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R63.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R63.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5005,14 +4877,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R64.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R64.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5024,14 +4894,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R65.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R65.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5043,14 +4911,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R66.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R66.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5062,14 +4928,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R67.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R67.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5081,14 +4945,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R68.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R68.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5100,14 +4962,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R69.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R69.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5119,14 +4979,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R70.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R70.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5138,14 +4996,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R71.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R71.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5157,14 +5013,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R72.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R72.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5176,14 +5030,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R73.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R73.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5195,14 +5047,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R74.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R74.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5214,14 +5064,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R75.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R75.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5233,14 +5081,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R76.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R76.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5252,14 +5098,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R77.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R77.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5271,14 +5115,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R78.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R78.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5290,14 +5132,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R79.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R79.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5309,14 +5149,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R80.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R80.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5328,14 +5166,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R81.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R81.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5347,14 +5183,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R82.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R82.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5366,14 +5200,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R83.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R83.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5385,14 +5217,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R84.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R84.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5404,14 +5234,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R85.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R85.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5423,14 +5251,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R86.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R86.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5442,14 +5268,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R87.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R87.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5461,14 +5285,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R88.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R88.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5480,14 +5302,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R89.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R89.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5499,14 +5319,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R90.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R90.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5518,14 +5336,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R91.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R91.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5537,14 +5353,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R92.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R92.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5556,14 +5370,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R93.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R93.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5575,14 +5387,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R94.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R94.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
@@ -5594,14 +5404,12 @@ export const grammarSchemas = {
 			family: true,
 			kind: true,
 		}),
-		surface: z
-			.strictObject(R95.surfaceSchema.shape)
-			.omit({
-				unitKind: true,
-				language: true,
-				lemma: true,
-				normalizedSurface: true,
-			}),
+		surface: z.strictObject(R95.surfaceSchema.shape).omit({
+			unitKind: true,
+			language: true,
+			lemma: true,
+			normalizedSurface: true,
+		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),

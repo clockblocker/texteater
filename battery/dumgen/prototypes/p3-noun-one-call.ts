@@ -12,7 +12,6 @@
  * head is marked, testing whether feature judgments survive without fixed
  * membership (what a click-time call would see before membership is known).
  */
-import { germanArticleForm } from "dumling";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import type { Questions, TypeSafeExecutor } from "promptsmith/typesafe";
 import { choice } from "promptsmith/typesafe";
