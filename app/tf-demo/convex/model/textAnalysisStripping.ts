@@ -12,6 +12,10 @@ type ReadingCleanupCursor = {
 		| "KnowledgeChanges"
 		| "StructuralReferences"
 		| "AccumulatedKnowledge"
+		| "GenerationAttempts"
+		| "GeneratedRelationRuns"
+		| "GeneratedRelationProposals"
+		| "PersonalAnnotations"
 		| "OutgoingSemanticEdges"
 		| "IncomingSemanticEdges"
 		| "Reading";

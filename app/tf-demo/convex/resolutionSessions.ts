@@ -18,6 +18,7 @@ import {
 } from "./model/resolutionSessions";
 import {
 	beginSegmentResolution,
+	finishDeletedSessionsResolution,
 	finishSegmentResolution,
 } from "./model/segmentResolutionState";
 import {
@@ -931,13 +932,10 @@ export const cleanup = mutation({
 		const deletableTerminalRows = terminalRows.filter(
 			(_row, index) => terminalReadingExists[index],
 		);
-		const activeSegmentIds = [
-			...new Set(activeRows.map((row) => row.segmentId)),
-		];
-		await Promise.all(
-			activeSegmentIds.map((segmentId) =>
-				finishSegmentResolution(ctx, segmentId, "PermanentFailure"),
-			),
+		await finishDeletedSessionsResolution(
+			ctx,
+			activeRows,
+			"PermanentFailure",
 		);
 		const rowsToDelete = [...activeRows, ...deletableTerminalRows];
 		await Promise.all(rowsToDelete.map((row) => ctx.db.delete(row._id)));

@@ -9,10 +9,12 @@ import {
 	clearVisitorDataBatch,
 	getTextAnalysisCandidates,
 	listTextIds,
+	readingCleanupPhaseTables,
 	resetDemoDataBatch,
 	resetDemoTableNames,
 	stripAllAnalyses,
 	stripTextAnalysisGraphBatch,
+	visitorResetPhaseTables,
 } from "../convex/demoReset";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import { persistSubmittedText } from "../convex/persistence";
@@ -204,6 +206,116 @@ describe("tf-demo post-reset contract", () => {
 		for (const tableName of schemaTableNames) {
 			expect(db.rows(tableName), tableName).toEqual([]);
 		}
+	});
+
+	test("every Reading- or Visitor-owned table appears in its cleanup sweep", () => {
+		const readingOwnershipFields = new Set([
+			"readingId",
+			"readingKey",
+			"ownerReadingKey",
+			"sourceReadingId",
+			"sourceReadingKey",
+			"targetReadingId",
+		]);
+		/** Tables whose rows leave with something other than the owner sweep. */
+		const readingSweepExemptions: Record<string, string> = {
+			readings: "the swept Reading itself",
+			attestations: "a Reading with an Attestation is never pruned",
+			definitionTexts: "removed with the Definition Text before pruning",
+			resolutionSessions: "removed with their Sentence",
+		};
+		const visitorSweepExemptions: Record<string, string> = {
+			inspectionClicks:
+				"Resolution Inspector diagnostics, cleared as a set",
+		};
+		const readingSwept = new Set<string>(
+			Object.values(readingCleanupPhaseTables).flat(),
+		);
+		const visitorSwept = new Set<string>(
+			Object.values(visitorResetPhaseTables),
+		);
+		for (const [tableName, table] of Object.entries(tfDemoSchema.tables)) {
+			const fields = Object.keys(
+				(table.validator as { fields?: Record<string, unknown> })
+					.fields ?? {},
+			);
+			if (
+				fields.some((field) => readingOwnershipFields.has(field)) &&
+				!(tableName in readingSweepExemptions)
+			) {
+				expect(readingSwept.has(tableName), tableName).toBe(true);
+			}
+			if (
+				fields.includes("visitorId") &&
+				!(tableName in visitorSweepExemptions)
+			) {
+				expect(visitorSwept.has(tableName), tableName).toBe(true);
+			}
+		}
+	});
+
+	test("pruning a Reading clears the rows that would haunt its next incarnation", async () => {
+		const db = new IndexedTestDb({
+			readings: [{ _id: "readings-1", readingKey: "reading-key-1" }],
+			knowledgeGenerationAttempts: [
+				{
+					_id: "attempt-running",
+					ownerReadingKey: "reading-key-1",
+					state: "Running",
+					updatedAt: 1,
+				},
+				{
+					_id: "attempt-waiting",
+					ownerReadingKey: "reading-key-1",
+					state: "Waiting",
+					updatedAt: 2,
+				},
+				{
+					_id: "attempt-other",
+					ownerReadingKey: "reading-key-2",
+					state: "Running",
+					updatedAt: 1,
+				},
+			],
+			generatedRelationRuns: [
+				{ _id: "run-1", sourceReadingId: "readings-1" },
+			],
+			generatedRelationProposals: [
+				{ _id: "proposal-1", sourceReadingId: "readings-1" },
+			],
+			personalAnnotations: [
+				{
+					_id: "annotation-1",
+					visitorId: "visitor-1",
+					readingId: "readings-1",
+				},
+				{
+					_id: "annotation-other",
+					visitorId: "visitor-1",
+					readingId: "readings-2",
+				},
+			],
+		});
+		let cursor: unknown;
+		for (let batch = 0; batch < 4; batch += 1) {
+			const result = (await runTestMutation(db, clearReadingDataBatch, {
+				readingKeys: ["reading-key-1"],
+				...(cursor ? { cursor } : {}),
+			})) as { nextCursor: unknown };
+			cursor = result.nextCursor;
+			if (!cursor) break;
+		}
+
+		expect(cursor).toBeNull();
+		expect(db.rows("readings")).toEqual([]);
+		expect(
+			db.rows("knowledgeGenerationAttempts").map(({ _id }) => _id),
+		).toEqual(["attempt-other"]);
+		expect(db.rows("generatedRelationRuns")).toEqual([]);
+		expect(db.rows("generatedRelationProposals")).toEqual([]);
+		expect(db.rows("personalAnnotations").map(({ _id }) => _id)).toEqual([
+			"annotation-other",
+		]);
 	});
 
 	test("reset batches spend one transaction-wide budget and expose continuation", async () => {

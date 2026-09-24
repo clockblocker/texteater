@@ -357,10 +357,7 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
-		.index("by_source_reading_id", {
-			fields: ["sourceReadingId"],
-			staged: true,
-		})
+		.index("by_source_reading_id", ["sourceReadingId"])
 		.index("by_context_attestation_id", {
 			fields: ["contextAttestationId"],
 			staged: true,
@@ -388,10 +385,7 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
-		.index("by_source_reading_id", {
-			fields: ["sourceReadingId"],
-			staged: true,
-		})
+		.index("by_source_reading_id", ["sourceReadingId"])
 		.index("by_context_attestation_id", {
 			fields: ["contextAttestationId"],
 			staged: true,
@@ -415,7 +409,9 @@ export default defineSchema({
 		readingId: v.id("readings"),
 		text: v.string(),
 		updatedAt: v.number(),
-	}).index("by_visitor_id_and_reading_id", ["visitorId", "readingId"]),
+	})
+		.index("by_visitor_id_and_reading_id", ["visitorId", "readingId"])
+		.index("by_reading_id", ["readingId"]),
 
 	readingLanguageLayouts: defineTable({
 		visitorId: v.string(),

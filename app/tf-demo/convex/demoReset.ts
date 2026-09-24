@@ -14,7 +14,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { finishSegmentResolution } from "./model/segmentResolutionState";
+import { finishDeletedSessionsResolution } from "./model/segmentResolutionState";
 import {
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
@@ -150,6 +150,17 @@ type VisitorResetPhase =
 	| "VisitorClicks"
 	| "Done";
 
+/** The table each Visitor reset phase sweeps for one Visitor. */
+export const visitorResetPhaseTables = {
+	ResolutionSessions: "resolutionSessions",
+	GenerationAttempts: "knowledgeGenerationAttempts",
+	KnowledgeSettings: "knowledgeSettings",
+	PersonalAnnotations: "personalAnnotations",
+	ReadingLanguageLayouts: "readingLanguageLayouts",
+	ReadingFamilyKindLayouts: "readingFamilyKindLayouts",
+	VisitorClicks: "visitorClicks",
+} as const satisfies Record<Exclude<VisitorResetPhase, "Done">, TableNames>;
+
 const visitorResetResultValidator = v.object({
 	deleted: v.number(),
 	hasMore: v.boolean(),
@@ -175,23 +186,10 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				const activeSegmentIds = [
-					...new Set(
-						rows.flatMap((row) =>
-							row.lifecycle?.state === "Active"
-								? [row.segmentId]
-								: [],
-						),
-					),
-				];
-				await Promise.all(
-					activeSegmentIds.map((segmentId) =>
-						finishSegmentResolution(
-							ctx,
-							segmentId,
-							"PermanentFailure",
-						),
-					),
+				await finishDeletedSessionsResolution(
+					ctx,
+					rows,
+					"PermanentFailure",
 				);
 				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
 				deleted = rows.length;
@@ -470,19 +468,10 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 			return { deleted: next.analyses.length, hasMore: true };
 		}
 		if (next.sessions.length > 0) {
-			const activeSegmentIds = [
-				...new Set(
-					next.sessions.flatMap((session) =>
-						session.lifecycle?.state === "Active"
-							? [session.segmentId]
-							: [],
-					),
-				),
-			];
-			await Promise.all(
-				activeSegmentIds.map((segmentId) =>
-					finishSegmentResolution(ctx, segmentId, "PermanentFailure"),
-				),
+			await finishDeletedSessionsResolution(
+				ctx,
+				next.sessions,
+				"PermanentFailure",
 			);
 			await Promise.all(
 				next.sessions.map((session) => ctx.db.delete(session._id)),
@@ -562,6 +551,10 @@ const readingCleanupPhaseValidator = v.union(
 	v.literal("KnowledgeChanges"),
 	v.literal("StructuralReferences"),
 	v.literal("AccumulatedKnowledge"),
+	v.literal("GenerationAttempts"),
+	v.literal("GeneratedRelationRuns"),
+	v.literal("GeneratedRelationProposals"),
+	v.literal("PersonalAnnotations"),
 	v.literal("OutgoingSemanticEdges"),
 	v.literal("IncomingSemanticEdges"),
 	v.literal("Reading"),
@@ -572,9 +565,28 @@ type ReadingCleanupPhase =
 	| "KnowledgeChanges"
 	| "StructuralReferences"
 	| "AccumulatedKnowledge"
+	| "GenerationAttempts"
+	| "GeneratedRelationRuns"
+	| "GeneratedRelationProposals"
+	| "PersonalAnnotations"
 	| "OutgoingSemanticEdges"
 	| "IncomingSemanticEdges"
 	| "Reading";
+
+/** The tables each Reading cleanup phase sweeps for a pruned Reading. */
+export const readingCleanupPhaseTables = {
+	PendingRelations: ["pendingSemanticRelations"],
+	KnowledgeChanges: ["knowledgeChanges"],
+	StructuralReferences: ["structuralShadowReferences"],
+	AccumulatedKnowledge: ["accumulatedKnowledge"],
+	GenerationAttempts: ["knowledgeGenerationAttempts"],
+	GeneratedRelationRuns: ["generatedRelationRuns"],
+	GeneratedRelationProposals: ["generatedRelationProposals"],
+	PersonalAnnotations: ["personalAnnotations"],
+	OutgoingSemanticEdges: ["semanticRelationEdges"],
+	IncomingSemanticEdges: ["semanticRelationEdges"],
+	Reading: ["readingEntries", "readings"],
+} as const satisfies Record<ReadingCleanupPhase, readonly TableNames[]>;
 
 type ReadingCleanupCursor = {
 	itemIndex: number;
@@ -595,6 +607,14 @@ function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 		case "StructuralReferences":
 			return "AccumulatedKnowledge";
 		case "AccumulatedKnowledge":
+			return "GenerationAttempts";
+		case "GenerationAttempts":
+			return "GeneratedRelationRuns";
+		case "GeneratedRelationRuns":
+			return "GeneratedRelationProposals";
+		case "GeneratedRelationProposals":
+			return "PersonalAnnotations";
+		case "PersonalAnnotations":
 			return "OutgoingSemanticEdges";
 		case "OutgoingSemanticEdges":
 			return "IncomingSemanticEdges";
@@ -602,6 +622,54 @@ function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
 			return "Reading";
 		case "Reading":
 			return "PendingRelations";
+	}
+}
+
+function takeReadingOwnedRows(
+	ctx: MutationCtx,
+	phase:
+		| "GeneratedRelationRuns"
+		| "GeneratedRelationProposals"
+		| "PersonalAnnotations"
+		| "OutgoingSemanticEdges"
+		| "IncomingSemanticEdges",
+	readingId: Id<"readings">,
+	limit: number,
+): Promise<{ _id: Id<TableNames> }[]> {
+	switch (phase) {
+		case "GeneratedRelationRuns":
+			return ctx.db
+				.query("generatedRelationRuns")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", readingId),
+				)
+				.take(limit);
+		case "GeneratedRelationProposals":
+			return ctx.db
+				.query("generatedRelationProposals")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", readingId),
+				)
+				.take(limit);
+		case "PersonalAnnotations":
+			return ctx.db
+				.query("personalAnnotations")
+				.withIndex("by_reading_id", (q) => q.eq("readingId", readingId))
+				.take(limit);
+		case "OutgoingSemanticEdges":
+			return ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", readingId),
+				)
+				.take(limit);
+		case "IncomingSemanticEdges":
+			return ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_target_reading_id", (q) =>
+					q.eq("targetReadingId", readingId),
+				)
+				.take(limit);
 	}
 }
 
@@ -697,6 +765,25 @@ export const clearReadingDataBatch = internalMutation({
 					}
 					break;
 				}
+				case "GenerationAttempts": {
+					// Attempts are keyed by the Reading's identity key, so a
+					// leftover one would block the next Reading with this key.
+					const rows = await ctx.db
+						.query("knowledgeGenerationAttempts")
+						.withIndex("by_owner_reading_key_and_updated_at", (q) =>
+							q.eq("ownerReadingKey", readingKey),
+						)
+						.take(remaining);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "GeneratedRelationRuns":
+				case "GeneratedRelationProposals":
+				case "PersonalAnnotations":
 				case "OutgoingSemanticEdges":
 				case "IncomingSemanticEdges": {
 					const reading = await ctx.db
@@ -706,31 +793,17 @@ export const clearReadingDataBatch = internalMutation({
 						)
 						.unique();
 					if (!reading) break;
-					if (cursor.phase === "OutgoingSemanticEdges") {
-						const rows = await ctx.db
-							.query("semanticRelationEdges")
-							.withIndex("by_source_reading_id", (q) =>
-								q.eq("sourceReadingId", reading._id),
-							)
-							.take(remaining);
-						await Promise.all(
-							rows.map((row) => ctx.db.delete(row._id)),
-						);
-						deleted += rows.length;
-						phaseComplete = rows.length < remaining;
-					} else if (cursor.phase === "IncomingSemanticEdges") {
-						const rows = await ctx.db
-							.query("semanticRelationEdges")
-							.withIndex("by_target_reading_id", (q) =>
-								q.eq("targetReadingId", reading._id),
-							)
-							.take(remaining);
-						await Promise.all(
-							rows.map((row) => ctx.db.delete(row._id)),
-						);
-						deleted += rows.length;
-						phaseComplete = rows.length < remaining;
-					}
+					const rows = await takeReadingOwnedRows(
+						ctx,
+						cursor.phase,
+						reading._id,
+						remaining,
+					);
+					await Promise.all(
+						rows.map((row) => ctx.db.delete(row._id)),
+					);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
 					break;
 				}
 				case "Reading": {

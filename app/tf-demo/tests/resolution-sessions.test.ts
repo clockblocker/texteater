@@ -1290,6 +1290,45 @@ describe("Resolution Session", () => {
 		expect(db.queriedIndexes).not.toContain("by_stage_and_updated_at");
 	});
 
+	test("cleanup ends Segment Resolution State once per deleted session", async () => {
+		const old = Date.now() - 10_000;
+		const staleSession = (id: string) => ({
+			_id: id,
+			segmentId: "segment-1",
+			lifecycle: {
+				state: "Active",
+				progress: "Starting",
+				activity: "Scheduled",
+			},
+			updatedAt: old,
+		});
+		const db = new SessionDb({
+			segments: [
+				{
+					_id: "segment-1",
+					kind: "ResolvableText",
+					resolutionState: { kind: "Active", activeSessionCount: 2 },
+				},
+			],
+			resolutionSessions: [
+				staleSession("stale-1"),
+				staleSession("stale-2"),
+			],
+		});
+		await handler<
+			{ staleBefore: number; terminalBefore: number },
+			{ deleted: number; hasMore: boolean }
+		>(cleanup)(
+			{ db },
+			{ staleBefore: Date.now() - 1, terminalBefore: Date.now() - 1 },
+		);
+
+		expect(db.rows("resolutionSessions")).toEqual([]);
+		expect(db.rows("segments")[0]?.resolutionState).toEqual({
+			kind: "PermanentFailure",
+		});
+	});
+
 	test("projection exposes learner-safe fields only", () => {
 		const grammar = projectResolutionGrammar(grammaticalInput("Bank"));
 		const reading = projectResolutionReading(readingInput("🏦", "Bank"));

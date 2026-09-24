@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 
 import {
 	beginSegmentResolution,
+	finishDeletedSessionsResolution,
 	finishSegmentResolution,
 } from "../convex/model/segmentResolutionState";
 
@@ -105,4 +106,39 @@ test("committed Attestation membership heals every stale terminal write", async 
 		),
 	).toBe(false);
 	expect(fixture.segment().resolutionState).toBeUndefined();
+});
+
+test("deleting two Active sessions on one Segment ends both contributions", async () => {
+	const fixture = stateHarness({
+		_id: "segment-1",
+		kind: "ResolvableText",
+		resolutionState: { kind: "Active", activeSessionCount: 3 },
+	});
+	const active = { state: "Active" } as const;
+
+	await finishDeletedSessionsResolution(
+		fixture.ctx as never,
+		[
+			{ segmentId: "segment-1" as never, lifecycle: active },
+			{ segmentId: "segment-1" as never, lifecycle: active },
+			{
+				segmentId: "segment-1" as never,
+				lifecycle: { state: "Terminal" },
+			},
+		],
+		"PermanentFailure",
+	);
+	expect(fixture.segment().resolutionState).toEqual({
+		kind: "Active",
+		activeSessionCount: 1,
+	});
+
+	await finishDeletedSessionsResolution(
+		fixture.ctx as never,
+		[{ segmentId: "segment-1" as never, lifecycle: active }],
+		"PermanentFailure",
+	);
+	expect(fixture.segment().resolutionState).toEqual({
+		kind: "PermanentFailure",
+	});
 });
