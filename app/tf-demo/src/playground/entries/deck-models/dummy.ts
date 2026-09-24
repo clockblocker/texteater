@@ -56,8 +56,9 @@ export type DummyNote = {
 	/** Source Contexts: sentences the word was met in, most recent first. */
 	readonly contexts: readonly SourceContext[];
 	/**
-	 * A key into the fake db when this Note is ported: its Blocks and its
-	 * Heading are the real renderers', fed by the fixture.
+	 * The Lemma form of a Reading in the fake db when this Note is ported:
+	 * its Blocks and its Heading are the real renderers', fed by the fixture.
+	 * A form, not a db key: the fake db's ids follow insertion order.
 	 */
 	readonly fixture?: string;
 };
@@ -186,7 +187,7 @@ const RELATED: Readonly<Record<string, string>> = {
 
 /** Notes rendered from the fake db rather than from the dummy pools. */
 const PORTED: Readonly<Record<string, string>> = {
-	"Reading:Dämmerung": "Reading:readings-653",
+	"Reading:Dämmerung": "Dämmerung",
 };
 
 export function noteId(kind: NoteKind, word: string): string {

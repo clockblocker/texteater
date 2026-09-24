@@ -44,9 +44,15 @@ export function FixtureNotesProvider({ children }: { children: ReactNode }) {
  */
 export function usePortedReading(note: DummyNote | null): ReadingNote | null {
 	const snapshot = useContext(FixtureContext);
-	const key = note?.fixture;
+	const form = note?.fixture;
 	return useMemo(() => {
-		const data = key ? snapshot?.notes[key] : undefined;
+		const data = form
+			? Object.values(snapshot?.notes ?? {}).find(
+					(candidate) =>
+						candidate.kind === "Reading" &&
+						candidate.reading.lemma.canonicalForm === form,
+				)
+			: undefined;
 		if (data?.kind !== "Reading") return null;
 		const { lemma } = data.reading;
 		/* the spread loses which Lemma kind this is; it is the same one */
@@ -60,7 +66,7 @@ export function usePortedReading(note: DummyNote | null): ReadingNote | null {
 				},
 			},
 		} as ReadingNote;
-	}, [snapshot, key]);
+	}, [snapshot, form]);
 }
 
 /** Every link of a ported Note, as the deck's own: a Note of the word, or its source. */
