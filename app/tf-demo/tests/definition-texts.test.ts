@@ -378,6 +378,7 @@ test(
 					sentenceId,
 					segmentId: segment._id,
 					attestationId,
+					readingId,
 					clickedAt: 1,
 				});
 				return attestationId;

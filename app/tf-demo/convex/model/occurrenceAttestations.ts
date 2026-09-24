@@ -79,7 +79,6 @@ export async function loadCompleteOccurrenceMembers(
 ): Promise<{
 	readonly sentenceId: Id<"sentences">;
 	readonly memberSegmentIndices: number[];
-	readonly memberSegmentIds: Id<"segments">[];
 	readonly memberTexts: string[];
 } | null> {
 	const segments = await ctx.db
@@ -105,7 +104,6 @@ export async function loadCompleteOccurrenceMembers(
 	return {
 		sentenceId,
 		memberSegmentIndices: orderedSegments.map(({ index }) => index),
-		memberSegmentIds: orderedSegments.map(({ _id }) => _id),
 		memberTexts: orderedSegments.map(({ text }) => text),
 	};
 }

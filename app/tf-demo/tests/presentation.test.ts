@@ -121,7 +121,10 @@ function attest(
 	});
 }
 
-/** Records that a Visitor clicked one Segment. */
+/**
+ * Records that a Visitor clicked one Segment. Like Segment Selection, the
+ * Encounter of an attested Segment carries its occurrence and Reading.
+ */
 function encounter(
 	t: TestConvexDb,
 	visitorId: string,
@@ -131,13 +134,24 @@ function encounter(
 	return t.run(async (ctx) => {
 		const segment = await ctx.db.get(segmentId);
 		const sentence = segment ? await ctx.db.get(segment.sentenceId) : null;
-		if (!sentence) throw new Error("Expected a stored Sentence.");
+		if (!segment || !sentence)
+			throw new Error("Expected a stored Sentence.");
+		const attestationId = segment.attestationMembership?.attestationId;
+		const attestation = attestationId
+			? await ctx.db.get(attestationId)
+			: null;
 		return ctx.db.insert("visitorClicks", {
 			requestId: `click:${visitorId}:${segmentId}`,
 			visitorId,
 			textId: sentence.textId,
 			sentenceId: sentence._id,
 			segmentId,
+			...(attestation
+				? {
+						attestationId: attestation._id,
+						readingId: attestation.readingId,
+					}
+				: {}),
 			clickedAt: 1,
 		});
 	});
@@ -560,12 +574,18 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		["Bank"],
 		["Bank"],
 	]);
+	const newest = await submitText(t, [
+		["Bänke"],
+		["Bänke"],
+		["Bänke"],
+		["Bänke"],
+	]);
 	const [sentenceOld, sentenceA] = textA.segmentIds;
 	const [sentenceB] = textB.segmentIds;
 
 	const oldId = await attest(t, bank, [sentenceOld?.[2]]);
 	await encounter(t, "visitor-1", sentenceOld?.[2]);
-	// Newer occurrences only another Visitor has met fill the first page.
+	// Occurrences only another Visitor has met never take a page's place.
 	for (const segments of others.segmentIds) {
 		await attest(t, bank, [segments[0]]);
 		await encounter(t, "visitor-2", segments[0]);
@@ -573,7 +593,14 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	const newAId = await attest(t, bank, [sentenceA?.[4]]);
 	await encounter(t, "visitor-1", sentenceA?.[4]);
 	const newBId = await attest(t, bank, [sentenceB?.[6], sentenceB?.[2]]);
+	// Meeting both members of one occurrence quotes it once.
 	await encounter(t, "visitor-1", sentenceB?.[6]);
+	await encounter(t, "visitor-1", sentenceB?.[2]);
+	const newestIds: Id<"attestations">[] = [];
+	for (const segments of newest.segmentIds) {
+		newestIds.unshift(await attest(t, bank, [segments[0]]));
+		await encounter(t, "visitor-1", segments[0]);
+	}
 
 	const first = await t.run((ctx) =>
 		loadSourceContextPage(
@@ -584,17 +611,15 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		),
 	);
 	expect(first.page.map(({ attestationId }) => attestationId)).toEqual([
+		...newestIds,
 		newBId,
-		newAId,
 	]);
-	expect(first.page.map(({ textId }) => textId)).toEqual([
-		textB.textId,
-		textA.textId,
-	]);
-	expect(first.page[0]?.memberSegmentIndices).toEqual([2, 6]);
-	expect(first.page[0]?.memberTexts).toEqual(["steht", "dazwischen"]);
-	expect(first.page[0]?.origin).toEqual({ kind: "Text" });
-	expect(first.page[0]?.target).toEqual({
+	const quotedB = first.page.at(-1);
+	expect(quotedB?.textId).toBe(textB.textId);
+	expect(quotedB?.memberSegmentIndices).toEqual([2, 6]);
+	expect(quotedB?.memberTexts).toEqual(["steht", "dazwischen"]);
+	expect(quotedB?.origin).toEqual({ kind: "Text" });
+	expect(quotedB?.target).toEqual({
 		kind: "Text",
 		textId: textB.textId,
 		focusAttestationId: newBId,
@@ -611,9 +636,53 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 		),
 	);
 	expect(continuation.page.map(({ attestationId }) => attestationId)).toEqual(
-		[oldId],
+		[newAId, oldId],
 	);
+	expect(continuation.page.map(({ textId }) => textId)).toEqual([
+		textA.textId,
+		textA.textId,
+	]);
 	expect(continuation.isDone).toBe(true);
+});
+
+test("a Visitor's first Source Context page holds their own occurrences however many others attest the Reading", async () => {
+	const t = createTestConvex();
+	const bank = await insertReading(t, {
+		unitKind: "Reading",
+		lemma: bankLemma,
+		emojiDescription: "🏦",
+	});
+	const own = await submitText(t, [
+		["Bank", "."],
+		["Bank", "!"],
+	]);
+	const others = await submitText(
+		t,
+		Array.from({ length: 20 }, () => ["Bank"]),
+	);
+	const ownIds: Id<"attestations">[] = [];
+	for (const segments of own.segmentIds) {
+		ownIds.unshift(await attest(t, bank, [segments[0]]));
+		await encounter(t, "visitor-1", segments[0]);
+	}
+	// Twenty newer occurrences of the same Reading only other Visitors met.
+	for (const segments of others.segmentIds) {
+		await attest(t, bank, [segments[0]]);
+		await encounter(t, "visitor-2", segments[0]);
+	}
+
+	const first = await t.run((ctx) =>
+		loadSourceContextPage(
+			ctx,
+			bank.readingId,
+			bank.readingKey,
+			"visitor-1",
+		),
+	);
+	expect(first.page.map(({ attestationId }) => attestationId)).toEqual(
+		ownIds,
+	);
+	expect(first.isDone).toBe(true);
 });
 
 test("Source Contexts include only occurrences encountered by this Visitor", async () => {

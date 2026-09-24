@@ -454,6 +454,8 @@ export default defineSchema({
 		sentenceId: v.id("sentences"),
 		segmentId: v.id("segments"),
 		attestationId: v.optional(v.id("attestations")),
+		/** The Reading of `attestationId`, copied beside it; an Attestation never changes Reading. */
+		readingId: v.optional(v.id("readings")),
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
@@ -465,7 +467,8 @@ export default defineSchema({
 		])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
 		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"])
-		.index("by_visitor_id_and_sentence_id", ["visitorId", "sentenceId"]),
+		.index("by_visitor_id_and_sentence_id", ["visitorId", "sentenceId"])
+		.index("by_visitor_id_and_reading_id", ["visitorId", "readingId"]),
 
 	resolutionSessions: defineTable({
 		requestId: v.string(),

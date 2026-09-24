@@ -11,7 +11,6 @@ import {
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
-import { findVisitorEncounter } from "../../model/visitorClicks";
 import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
 	projectSentenceView,
@@ -389,6 +388,11 @@ export async function loadReadingSourceContexts(
 	);
 }
 
+/**
+ * One page of the Source Contexts this Visitor has encountered, newest
+ * Encounter first. It pages the Visitor's own Encounters of the Reading, so
+ * other Visitors' occurrences never leave a page empty.
+ */
 export async function loadSourceContextPage(
 	ctx: QueryCtx,
 	readingId: Id<"readings">,
@@ -397,25 +401,30 @@ export async function loadSourceContextPage(
 	contextCursor?: string,
 ) {
 	const result = await ctx.db
-		.query("attestations")
-		.withIndex("by_reading_id", (q) => q.eq("readingId", readingId))
+		.query("visitorClicks")
+		.withIndex("by_visitor_id_and_reading_id", (q) =>
+			q.eq("visitorId", visitorId).eq("readingId", readingId),
+		)
 		.order("desc")
 		.paginate({
 			cursor: contextCursor ?? null,
 			numItems: SOURCE_CONTEXT_PAGE_SIZE,
 		});
+	// Encounters of several members of one occurrence quote it once.
+	const attestationIds = [
+		...new Set(
+			result.page.flatMap(({ attestationId }) =>
+				attestationId ? [attestationId] : [],
+			),
+		),
+	];
 	const projected = await Promise.all(
-		result.page.map((attestation) =>
-			projectSourceContext(ctx, attestation._id, visitorId, readingKey),
+		attestationIds.map((attestationId) =>
+			projectSourceContext(ctx, attestationId, visitorId, readingKey),
 		),
 	);
-	const seen = new Set<Id<"attestations">>();
 	return {
-		page: projected.flatMap((context) => {
-			if (!context || seen.has(context.attestationId)) return [];
-			seen.add(context.attestationId);
-			return [context];
-		}),
+		page: projected.filter((context) => context !== null),
 		continueCursor: result.continueCursor,
 		isDone: result.isDone,
 	};
@@ -574,12 +583,6 @@ async function projectSourceContext(
 ): Promise<SourceContextProjection | null> {
 	const members = await loadCompleteOccurrenceMembers(ctx, attestationId);
 	if (!members) return null;
-	const encounters = await Promise.all(
-		members.memberSegmentIds.map((segmentId) =>
-			findVisitorEncounter(ctx, { visitorId, segmentId }),
-		),
-	);
-	if (!encounters.some(Boolean)) return null;
 	const sentence = await ctx.db.get(members.sentenceId);
 	if (!sentence) return null;
 	const text = await ctx.db.get(sentence.textId);

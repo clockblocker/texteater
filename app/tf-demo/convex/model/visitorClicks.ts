@@ -3,7 +3,7 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 type VisitorEncounterContext = MutationCtx | QueryCtx;
 
-export async function findVisitorEncounter(
+async function findVisitorEncounter(
 	ctx: VisitorEncounterContext,
 	input: {
 		visitorId: string;
@@ -65,9 +65,10 @@ export async function ensureVisitorEncounter(
 			);
 		}
 		if (input.attestationId && !existing.attestationId) {
-			await ctx.db.patch(existing._id, {
-				attestationId: input.attestationId,
-			});
+			await ctx.db.patch(
+				existing._id,
+				await encounteredOccurrence(ctx, input.attestationId),
+			);
 		}
 		return { clickId: existing._id, created: false as const };
 	}
@@ -78,8 +79,25 @@ export async function ensureVisitorEncounter(
 		textId: input.textId,
 		sentenceId: input.sentenceId,
 		segmentId: input.segmentId,
-		...(input.attestationId ? { attestationId: input.attestationId } : {}),
+		...(input.attestationId
+			? await encounteredOccurrence(ctx, input.attestationId)
+			: {}),
 		clickedAt: Date.now(),
 	});
 	return { clickId, created: true as const };
+}
+
+/**
+ * The occurrence an Encounter advances to, with its Reading beside it so a
+ * Reading Note can page this Visitor's Source Contexts by Reading.
+ */
+async function encounteredOccurrence(
+	ctx: MutationCtx,
+	attestationId: Id<"attestations">,
+) {
+	const attestation = await ctx.db.get(attestationId);
+	if (!attestation) {
+		throw new Error("Visitor Encounter refers to a missing Attestation.");
+	}
+	return { attestationId, readingId: attestation.readingId };
 }

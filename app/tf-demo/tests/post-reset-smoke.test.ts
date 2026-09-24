@@ -156,6 +156,7 @@ const readingSweepExemptions: Record<string, string> = {
 	attestations: "a Reading with an Attestation is never pruned",
 	definitionTexts: "removed with the Definition Text before pruning",
 	resolutionSessions: "removed with their Sentence",
+	visitorClicks: "a click's Reading is its Attestation's, so never pruned",
 };
 
 const visitorSweepExemptions: Record<string, string> = {

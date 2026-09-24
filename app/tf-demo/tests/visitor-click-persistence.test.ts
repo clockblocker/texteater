@@ -265,6 +265,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			sentenceId,
 			segmentId,
 			attestationId,
+			readingId,
 			clickedAt: expect.any(Number),
 		},
 	]);
