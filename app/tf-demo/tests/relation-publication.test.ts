@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import esbuild from "esbuild";
-import { internal } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
+import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { COMPILED_RELATION_VERDICT } from "../convex/model/compiledRelationVerdict";
 import {
 	effectiveRelationPublicationPolicy,
@@ -574,4 +575,38 @@ test("commit-time rollback keeps base Knowledge changes and drops relation chang
 			[],
 		).changes,
 	).toEqual([baseChange.envelope.change]);
+});
+
+test("an action's draft context is the Visitor's settings and the publication authorization in one read", async () => {
+	const t = createTestConvex();
+	const settings = defaultKnowledgeSettings();
+	const russianOff = {
+		...settings,
+		translations: { ...settings.translations, ru: false },
+	};
+	await t.mutation(api.knowledgeSettings.update, {
+		visitorId: "visitor-1",
+		settings: russianOff,
+	});
+	await t.mutation(internal.relationPublication.setRollback, {
+		stopped: true,
+		reason: "sampled semantic regression",
+	});
+
+	expect(
+		await t.query(internal.knowledgeSettings.getDraftContext, {
+			visitorId: "visitor-1",
+		}),
+	).toEqual({
+		settings: russianOff,
+		authorization: await t.query(
+			internal.relationPublication.getAuthorization,
+			{},
+		),
+	});
+	expect(
+		await t.query(internal.knowledgeSettings.getDraftContext, {
+			visitorId: "visitor-2",
+		}),
+	).toMatchObject({ settings, authorization: { rollbackStopped: true } });
 });

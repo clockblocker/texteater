@@ -39,7 +39,7 @@ import {
 } from "../server/sentenceAnalysisStorage";
 import { splitInSentences } from "../server/sentenceSplitting";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
-import { api, internal } from "./_generated/api";
+import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
 import { createConvexDumdictStorage } from "./dumdictStorage/adapter";
@@ -217,14 +217,14 @@ function orchestratorFor(
 	return createTfDemoOrchestrator({
 		draftKnowledge: ({ encounter, lemma, visitorId, settle }) =>
 			Effect.gen(function* () {
-				const [settings, authorization] = yield* Effect.tryPromise(() =>
-					Promise.all([
-						ctx.runQuery(api.knowledgeSettings.get, { visitorId }),
+				const { settings, authorization } = yield* Effect.tryPromise(
+					() =>
 						ctx.runQuery(
-							internal.relationPublication.getAuthorization,
-							{},
+							internal.knowledgeSettings.getDraftContext,
+							{
+								visitorId,
+							},
 						),
-					]),
 				);
 				const { generationRequestFor } = yield* Effect.promise(
 					() => import("../server/generatedKnowledgeRequest"),

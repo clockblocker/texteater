@@ -3,8 +3,12 @@ import type { KnowledgePreferences } from "../shared/knowledge-preferences";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 
 import type { MutationCtx, QueryCtx } from "./_generated/server";
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import { knowledgeSettingsValidator } from "./model/validators";
+import {
+	loadRelationPublicationAuthorization,
+	publicationAuthorizationValidator,
+} from "./relationPublication";
 
 function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {
@@ -40,6 +44,22 @@ export const get = query({
 	args: { visitorId: v.string() },
 	returns: knowledgeSettingsValidator,
 	handler: (ctx, { visitorId }) => loadKnowledgeSettings(ctx, visitorId),
+});
+
+/**
+ * What an action needs to draft Knowledge for one Visitor: their settings and
+ * the relation-publication authorization, read as one snapshot in one hop.
+ */
+export const getDraftContext = internalQuery({
+	args: { visitorId: v.string() },
+	returns: v.object({
+		settings: knowledgeSettingsValidator,
+		authorization: publicationAuthorizationValidator,
+	}),
+	handler: async (ctx, { visitorId }) => ({
+		settings: await loadKnowledgeSettings(ctx, visitorId),
+		authorization: await loadRelationPublicationAuthorization(ctx),
+	}),
 });
 
 export const update = mutation({
