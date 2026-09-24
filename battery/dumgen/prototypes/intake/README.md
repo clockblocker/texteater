@@ -470,6 +470,33 @@ members. `vote` (argmax of the summed Kind mass, `None` can win) scores the
 same; `score` finds more expressions at the same pass count, so the
 fixtures use it.
 
+The mean let fixed words carry a free one in: in `ganz und gar normal zu
+sein` the pairs `und–normal` 0.60 and `gar–normal` 0.63 linked `normal`
+(own Score 0.99, `None` 0.82), and the other three held the mean at 1.66.
+`phraseme-linkage.ts` asks production's questions once per sentence and
+re-assembles the layer under each membership policy over the same answers
+(2026-09-24, 318 sentences, one sample, paired):
+
+    zsh -ic 'bun prototypes/intake/phraseme-linkage.ts'
+
+| membership | trickiest 100 pass | all 545 pass | flips vs single link |
+| --- | --- | --- | --- |
+| single link at 0.5, mean ≥ 1.5 (before) | 54 | 380 | — |
+| complete linkage at 0.5 | 53 | 379 | +8 −9 |
+| own Score ≥ 1.0, then single link | 54 | 380 | none |
+| own Score ≥ 1.25, then single link | 58 | 384 | +4 −0 |
+| own Score ≥ 1.5, then single link | **64** | **395** | +15 −0 |
+
+The trickiest 100 are every Phraseme gold click, the Lexeme clicks in the
+same sentences, then the Lexeme clicks with the strongest pair Noul. Tau
+cannot separate `und` (0.61, 0.63) from `normal` (0.60, 0.63); the word's
+own Score can. Complete linkage drops an article or preposition with one weak
+pair (`ließ die Katze aus dem Sack`, `trifft eine Entscheidung`). The gate is
+production now. Four of its gains (`stellte einen Antrag`, `übte Kritik`)
+rest on click gold that calls Funktionsverbgefüge Lexemes against ADR 0028;
+`zum Beispiel` and `vor allem` stay wrong, split into words instead of
+Collocations where the gold wants a two-word ADV.
+
 `fixtures.ts` now emits both layers: `targets` are Lexeme Targets, `phrasemes`
 are Phraseme Targets whose members are target ids, and the gold has a
 `phrasemes` list per sentence naming member words by head. On the 16

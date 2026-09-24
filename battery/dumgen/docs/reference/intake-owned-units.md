@@ -83,9 +83,10 @@ Invariants enforced in code, never asked:
 - An abbreviation is one Segment; its surface is the expansion from the
   fusion table.
 - A Phraseme Target's members are words, projected by Head from the pair
-  answers, and it has at least two. The fixedness Score establishes it (mean
-  at or above 1.5); the Kind Choice only names it. A word belongs to at most
-  one Phraseme.
+  answers, and it has at least two. The fixedness Score establishes it: only
+  a word whose own Score is at or above 1.5 is linked by the pair answers, so
+  fixed neighbours never carry a free word in. The Kind Choice only names
+  it. A word belongs to at most one Phraseme.
 - The governor vote is summed per word (`nimmt` and `teil` vote together)
   and the word reaching 0.6 governs. Without one, a preposition the Lexeme
   layer made a verb's `GovernedPreposition` member is governed by that verb.

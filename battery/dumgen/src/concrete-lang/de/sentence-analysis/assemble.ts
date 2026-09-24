@@ -6,8 +6,8 @@
  * (a group glued around two Heads is split at them); a fused word never
  * joins a group whole, its adposition is a singleton and its article joins
  * the next NOUN without one; a Phraseme's members are words, projected by
- * Head, and the fixedness Score establishes it. Government comes last,
- * over the finished Lexeme Targets.
+ * Head, and only a word whose own fixedness Score reaches the floor joins
+ * one. Government comes last, over the finished Lexeme Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -31,7 +31,7 @@ export type AssemblyPolicy = {
 	readonly membershipTau: number;
 	/** Phraseme membership: the pair Noul at or above this joins two words. */
 	readonly phrasemeTau: number;
-	/** Mean fixedness at or above this establishes an expression. */
+	/** A word's own fixedness Score at or above this lets it join an expression. */
 	readonly fixednessFloor: number;
 };
 
@@ -385,8 +385,12 @@ export function assembleAnalysis(
 	);
 
 	// ---------------------------------------------------- Phraseme layer
+	// The floor gates each word before the pairs link: a free word two fixed
+	// words vouch for (`ganz und gar normal`) is never carried in by them.
 	const heads = [...headIndexOf.values()].filter(
-		(head, position, all) => all.indexOf(head) === position,
+		(head, position, all) =>
+			all.indexOf(head) === position &&
+			(scoreOf(answers, `fix_${head}`) ?? 0) >= policy.fixednessFloor,
 	);
 	const parent = new Map<number, number>(heads.map((head) => [head, head]));
 	const find = (index: number): number => {
@@ -425,7 +429,6 @@ export function assembleAnalysis(
 			fixedness +=
 				(scoreOf(answers, `fix_${head}`) ?? 0) / component.length;
 		}
-		if (fixedness < policy.fixednessFloor) continue;
 		const named = Object.entries(kindMass).filter(
 			([option]) => option !== "None" && option !== "Unresolved",
 		);

@@ -46,6 +46,8 @@ type Plan = {
 		readonly heads: readonly number[];
 		readonly kind: string;
 		readonly fixedness: number;
+		/** Free words the pair answers still tie to the expression. */
+		readonly carried?: readonly number[];
 	}[];
 	/** Governor and case per governable preposition index; every other one is None. */
 	readonly government?: Readonly<
@@ -59,6 +61,11 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 		plan.words.some((word) => word.includes(a) && word.includes(b));
 	const expression = (index: number) =>
 		plan.expressions.find((entry) => entry.heads.includes(index));
+	const tiedTo = (index: number) =>
+		plan.expressions.find(
+			(entry) =>
+				entry.heads.includes(index) || entry.carried?.includes(index),
+		);
 	return async (request) => {
 		const answers = Object.fromEntries(
 			Object.entries(request.questions as Questions).map(
@@ -68,16 +75,17 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					if (question.type === "noul") {
 						const [a, b] = numbers as [number, number];
 						const shared =
-							expression(a) !== undefined &&
-							expression(a) === expression(b);
+							tiedTo(a) !== undefined && tiedTo(a) === tiedTo(b);
 						return [
 							id,
 							{ type: "noul", noul: shared ? 0.9 : 0.05 },
 						];
 					}
 					if (question.type === "score") {
-						const value =
-							expression(numbers[0] ?? -1)?.fixedness ?? 0.4;
+						const index = numbers[0] ?? -1;
+						const value = tiedTo(index)?.carried?.includes(index)
+							? 1
+							: (expression(index)?.fixedness ?? 0.4);
 						const levels = question.criteria.length;
 						return [
 							id,
@@ -257,6 +265,44 @@ test("a Funktionsverbgefüge is a Collocation over words, the fused article reac
 	expect(
 		Object.keys(request.questions).filter((id) => id.startsWith("same_")),
 	).toHaveLength(28);
+});
+
+test("a free word the pair answers tie to an expression stays out of it", async () => {
+	const sentence = sentenceOf(
+		"ganz-und-gar",
+		"Sie sind ganz und gar normal.",
+	);
+	// Sie0 sind2 ganz4 und6 gar8 normal10
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADV",
+			6: "Lexeme/CCONJ",
+			8: "Lexeme/ADV",
+			10: "Lexeme/ADJ",
+		},
+		roles: {},
+		// `normal` is free (fixedness 1), though every pair ties it in and
+		// the mean over all four words would still clear the floor.
+		expressions: [
+			{ heads: [4, 6, 8], kind: "Idiom", fixedness: 2, carried: [10] },
+		],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence }),
+	);
+	expect(resolvedUnitAt(analysis, 9)).toEqual({
+		family: "Phraseme",
+		kind: "Idiom",
+		offsets: [9, 14, 18],
+	});
+	expect(resolvedUnitAt(analysis, 22)).toEqual({
+		family: "Lexeme",
+		kind: "ADJ",
+		offsets: [22],
+	});
 });
 
 test("a word glued around two Heads is split at them and each keeps its own route", async () => {

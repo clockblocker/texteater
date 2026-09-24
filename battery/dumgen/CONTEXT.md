@@ -59,9 +59,10 @@ names it.
 _Avoid_: phraseme route
 
 **Fixedness**:
-the mean of the fixedness Score over a Phraseme Target's words: free
-combination, preferred combination, collocation, fixed expression. At or
-above the floor an expression exists.
+the fixedness Score of a word inside the wording around it: free
+combination, preferred combination, collocation, fixed expression. Only a
+word at or above the floor is a member of a Phraseme Target; the target's
+fixedness is the mean over its words.
 _Avoid_: confidence, idiomaticity
 
 **Member**:
