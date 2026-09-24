@@ -7,11 +7,13 @@ import {
 	assertResolutionLifecycle,
 	assertResolutionProgressTransition,
 	MAX_RESOLUTION_RUNS,
-	projectResolutionGrammar,
-	projectResolutionReading,
 	RESOLUTION_RETENTION_MS,
 	STALE_RUN_AFTER_MS,
 } from "../convex/model/resolutionSessions";
+import {
+	projectResolutionGrammar,
+	projectResolutionReading,
+} from "../server/resolutionSessionProjection";
 import {
 	createTestConvex,
 	submitText,

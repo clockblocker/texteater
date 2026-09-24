@@ -15,6 +15,11 @@ function stableValue(value: unknown): unknown {
 	return value;
 }
 
+/** JSON with object keys sorted recursively, so key order never matters. */
+export function stableFingerprint(value: unknown): string {
+	return JSON.stringify(stableValue(value));
+}
+
 /** Returns tf-demo's stable database key for a canonical Lemma value. */
 export function lemmaIdentityKey<L extends Dumling.Language>(
 	lemma: Dumling.Lemma<L>,
@@ -24,7 +29,7 @@ export function lemmaIdentityKey(lemma: unknown): string {
 	const parsed = parseUnit(lemma);
 	if (!parsed.success) throw parsed.error;
 	if (parsed.chain.unitKind !== "Lemma") throw new Error("Expected a Lemma.");
-	return JSON.stringify(stableValue(parsed.chain.value));
+	return stableFingerprint(parsed.chain.value);
 }
 
 /** Dictionary Reading key includes the canonical unit tag and all Lemma features. */
@@ -33,5 +38,5 @@ export function readingIdentityKey(reading: Dumling.Reading): string {
 	if (!parsed.success) throw parsed.error;
 	if (parsed.chain.unitKind !== "Reading")
 		throw new Error("Expected a Reading.");
-	return JSON.stringify(stableValue(parsed.chain.value));
+	return stableFingerprint(parsed.chain.value);
 }

@@ -1,25 +1,39 @@
+import { type Infer, v } from "convex/values";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
 
 const MAX_BATCHES = 1_000;
-const DESCRIPTOR_PAGE_SIZE = 20;
+/** Readings one descriptor call may describe. */
+export const DESCRIPTOR_PAGE_SIZE = 20;
 
-type ReadingCleanupCursor = {
-	itemIndex: number;
-	phase:
-		| "PendingRelations"
-		| "KnowledgeChanges"
-		| "StructuralReferences"
-		| "AccumulatedKnowledge"
-		| "GenerationAttempts"
-		| "GeneratedRelationRuns"
-		| "GeneratedRelationProposals"
-		| "PersonalAnnotations"
-		| "OutgoingSemanticEdges"
-		| "IncomingSemanticEdges"
-		| "Reading";
-};
+/**
+ * Reading cleanup phases, in order. Attempts go first: once an attempt is
+ * gone its in-flight publication is rejected, so it cannot write Knowledge
+ * back behind a later phase.
+ */
+const readingCleanupPhaseValidator = v.union(
+	v.literal("GenerationAttempts"),
+	v.literal("PendingRelations"),
+	v.literal("KnowledgeChanges"),
+	v.literal("StructuralReferences"),
+	v.literal("AccumulatedKnowledge"),
+	v.literal("GeneratedRelationRuns"),
+	v.literal("GeneratedRelationProposals"),
+	v.literal("PersonalAnnotations"),
+	v.literal("OutgoingSemanticEdges"),
+	v.literal("IncomingSemanticEdges"),
+	v.literal("Reading"),
+);
+
+export type ReadingCleanupPhase = Infer<typeof readingCleanupPhaseValidator>;
+
+export const readingCleanupCursorValidator = v.object({
+	itemIndex: v.number(),
+	phase: readingCleanupPhaseValidator,
+});
+
+export type ReadingCleanupCursor = Infer<typeof readingCleanupCursorValidator>;
 
 type LemmaCleanupCursor = {
 	itemIndex: number;

@@ -1,6 +1,5 @@
 import { type Infer, v } from "convex/values";
 import { derivePendingEntryId } from "dumdict/pending";
-import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 import type { Doc } from "./_generated/dataModel";
@@ -19,7 +18,7 @@ import {
 	directSemanticRelationValidator,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
-	relationPublicationRunValidator,
+	type relationPublicationRunValidator,
 	relationReviewStatusValidator,
 	relationTargetShadowValidator,
 } from "./model/validators";
@@ -403,25 +402,6 @@ export const recordRejectedOutput = internalMutation({
 	},
 });
 
-export const recordPublicationFailure = internalMutation({
-	args: {
-		attemptKey: v.string(),
-		run: relationPublicationRunValidator,
-	},
-	returns: v.null(),
-	handler: async (ctx, args) => {
-		const attempt = await ctx.db
-			.query("knowledgeGenerationAttempts")
-			.withIndex("by_attempt_key", (q) =>
-				q.eq("attemptKey", args.attemptKey),
-			)
-			.unique();
-		if (!attempt) return null;
-		await recordCommittedRelationRun(ctx, attempt, args.run, true);
-		return null;
-	},
-});
-
 const monitoringCountsValidator = v.object({
 	relation: directSemanticRelationValidator,
 	generatedTargets: v.number(),
@@ -633,5 +613,3 @@ export const recordReview = internalMutation({
 		return null;
 	},
 });
-
-export const directRelationKindInventory = directSemanticRelationValues;

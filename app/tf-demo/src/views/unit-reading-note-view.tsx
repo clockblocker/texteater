@@ -10,6 +10,7 @@ import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import type { ReadingNoteTarget } from "@/lib/navigation";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReadingNoteSkeleton } from "@/views/note-skeletons";
@@ -19,7 +20,7 @@ import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
 
-export type UnitReadingNote = Extract<
+type UnitReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
 	{ readonly kind: "Reading" }
 >;
@@ -27,17 +28,14 @@ export type UnitReadingNote = Extract<
 export function UnitReadingNoteView({
 	target,
 	presentation = "Sheet",
-	visitorId: visitorIdOverride,
 	resolutionRequestId,
 }: {
 	presentation?: "Card" | "Sheet";
 	target: ReadingNoteTarget;
-	visitorId?: string;
 	/** The Resolution this Reading was just committed from; it stands in while the stored Note loads. */
 	resolutionRequestId?: string;
 }) {
-	const anonymousVisitorId = useAnonymousVisitorId();
-	const visitorId = visitorIdOverride ?? anonymousVisitorId;
+	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
 		...convexQuery(api.readingNotes.get, {
 			readingId: target.readingId,
@@ -204,7 +202,7 @@ function ReadingNoteContainer({
 		personalAnnotation: {
 			isSaving: personalAnnotationMutation.isPending,
 			error: personalAnnotationMutation.error
-				? mutationMessage(personalAnnotationMutation.error)
+				? visitorErrorMessage(personalAnnotationMutation.error)
 				: null,
 			save: savePersonalAnnotation,
 		},
@@ -227,8 +225,4 @@ function ReadingNoteContainer({
 	};
 
 	return renderNote({ noteData: pagination.note, capabilities });
-}
-
-function mutationMessage(error: unknown): string {
-	return error instanceof Error ? error.message : "Knowledge update failed.";
 }

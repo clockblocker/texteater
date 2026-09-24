@@ -25,24 +25,6 @@ export function withoutKeys(
 	return result;
 }
 
-export function stableFingerprint(value: unknown): string {
-	return JSON.stringify(sortValue(value));
-}
-
-function sortValue(value: unknown): unknown {
-	if (Array.isArray(value)) return value.map(sortValue);
-	if (value !== null && typeof value === "object") {
-		return Object.fromEntries(
-			Object.entries(value as AnyRecord)
-				.sort(([left], [right]) =>
-					left < right ? -1 : left > right ? 1 : 0,
-				)
-				.map(([key, child]) => [key, sortValue(child)]),
-		);
-	}
-	return value;
-}
-
 export function requireChangeKind(
 	value: unknown,
 ): "Contribute" | "Correct" | "Retract" {

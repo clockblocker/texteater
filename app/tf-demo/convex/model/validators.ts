@@ -670,6 +670,14 @@ export const storedGrammaticalCheckpointValidator =
 		}),
 	});
 
+export const readingCheckpointValidator = v.object({
+	resolution: v.object({
+		decision: v.union(v.literal("Reuse"), v.literal("New")),
+		emojiDescription: v.string(),
+	}),
+	reading: readingValueValidator,
+});
+
 export const reusableAttestationValidator = v.object({
 	attestationId: v.id("attestations"),
 	grammatical: resolvedGrammaticalValidator,

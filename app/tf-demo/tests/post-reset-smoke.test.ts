@@ -1061,7 +1061,7 @@ describe("tf-demo post-reset contract", () => {
 		expect(
 			await t.run((ctx) => loadRelationProjections(ctx, targetReadingId)),
 		).toMatchObject({
-			fingerprints: [
+			resolved: [
 				{
 					relation: "hyponym",
 					targetCanonicalForm: "laufen",
@@ -1077,7 +1077,7 @@ describe("tf-demo post-reset contract", () => {
 				await t.run((ctx) =>
 					loadRelationProjections(ctx, sourceReadingId),
 				)
-			).fingerprints,
+			).resolved,
 		).toEqual([
 			expect.objectContaining({
 				relation: "hypernym",
@@ -1089,7 +1089,7 @@ describe("tf-demo post-reset contract", () => {
 			const readingId = await readingIdFor(t, reading);
 			expect(
 				(await t.run((ctx) => loadRelationProjections(ctx, readingId)))
-					.fingerprints,
+					.resolved,
 			).toEqual([]);
 		}
 	});

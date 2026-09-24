@@ -1,9 +1,5 @@
 import type { Id } from "../convex/_generated/dataModel";
 
-export type LibraryTarget = {
-	readonly kind: "Library";
-};
-
 export type SettingsTarget = {
 	readonly kind: "Settings";
 	readonly textId?: string;
@@ -22,7 +18,7 @@ export type TextTarget = {
 };
 
 /** Lands on the Definition block and lights the members of one occurrence inside it. */
-export type DefinitionFocus = {
+type DefinitionFocus = {
 	readonly kind: "Definition";
 	readonly attestationId: string;
 };
@@ -54,16 +50,6 @@ export type ShadowNoteTarget = {
 	readonly shadowId: string;
 };
 
-export type NoteTarget =
-	| ReadingNoteTarget
-	| LemmaNoteTarget
-	| SurfaceNoteTarget
-	| AttestationNoteTarget
-	| ShadowNoteTarget;
-
-/** @deprecated Prefer the individual Note target types. */
-export type UnitReadingNoteTarget = ReadingNoteTarget;
-
 /** @deprecated Prefer LemmaNoteTarget, SurfaceNoteTarget, or AttestationNoteTarget. */
 export type RouteNoteTarget =
 	| LemmaNoteTarget
@@ -74,10 +60,3 @@ export type ResolutionTarget = {
 	readonly kind: "Resolution";
 	readonly requestId: string;
 };
-
-export type NavigationTarget =
-	| LibraryTarget
-	| SettingsTarget
-	| TextTarget
-	| NoteTarget
-	| ResolutionTarget;

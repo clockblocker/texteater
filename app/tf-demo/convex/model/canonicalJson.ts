@@ -18,7 +18,3 @@ export function canonicalJson(value: unknown): string {
 	}
 	return serialized;
 }
-
-export function sameCanonicalJson(left: unknown, right: unknown): boolean {
-	return canonicalJson(left) === canonicalJson(right);
-}

@@ -8,7 +8,6 @@ import {
 	projectReadingValue,
 } from "../convex/modules/notes/projections";
 import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
-import { projectResolvedRelationTargets } from "../convex/modules/notes/relations";
 import { isUnitReadingFamily } from "../convex/modules/notes/unitReadingFamilies";
 import {
 	get as getReadingNote,
@@ -327,56 +326,6 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 	});
 	expect(note.relations).toHaveLength(1);
 	expect(note.structuralReferences).toHaveLength(1);
-});
-
-test("projects stored semantic endpoints as Lemma Route Note targets", () => {
-	const relations = [
-		{
-			relation: "hypernym" as const,
-			targetLemmaKey: "stored-lemma-key",
-			targetCanonicalForm: "Institut",
-		},
-		{
-			relation: "antonym" as const,
-			targetLemmaKey: "construction-lemma-key",
-			targetCanonicalForm: "Sparkasse",
-		},
-		{
-			relation: "synonym" as const,
-			targetLemmaKey: "dangling-lemma-key",
-			targetCanonicalForm: "Geldinstitut",
-		},
-	];
-
-	expect(
-		projectResolvedRelationTargets(relations, [
-			{
-				lemmaKey: "stored-lemma-key",
-				lemmaId: "lemma_123",
-			},
-			{
-				lemmaKey: "construction-lemma-key",
-				lemmaId: "lemma_456",
-			},
-		]),
-	).toEqual([
-		{
-			relation: "hypernym",
-			targetCanonicalForm: "Institut",
-			target: {
-				kind: "Lemma",
-				lemmaId: "lemma_123",
-			},
-		},
-		{
-			relation: "antonym",
-			targetCanonicalForm: "Sparkasse",
-			target: {
-				kind: "Lemma",
-				lemmaId: "lemma_456",
-			},
-		},
-	]);
 });
 
 test("note and text queries expose target-specific interfaces", () => {

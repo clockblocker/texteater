@@ -7,6 +7,7 @@ import {
 } from "../../../server/textSubmissionLimits";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../../_generated/server";
+import { assertNonEmpty } from "../../model/resolutionLookup";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	type sentenceInputValidator,
@@ -24,11 +25,6 @@ export type PersistedSubmittedText = {
 	sentenceIds: Array<Id<"sentences">>;
 	deduplicated: boolean;
 };
-
-function assertNonEmpty(value: string, name: string): void {
-	if (value.trim().length === 0)
-		throw new Error(`${name} must not be empty.`);
-}
 
 /** One analysis per Sentence: a retry never duplicates or overwrites it. */
 async function ensureSentenceAnalysis(

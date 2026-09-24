@@ -21,7 +21,7 @@ export type ResolutionStepTarget = {
 	readonly stepKind: ResolutionStepKind;
 };
 
-export type WorkspaceNoteTarget =
+type WorkspaceNoteTarget =
 	| ReadingNoteTarget
 	| LemmaNoteTarget
 	| SurfaceNoteTarget
@@ -32,7 +32,7 @@ export type WorkspaceNoteTarget =
 
 export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
 
-export type SurfaceNotePresentationContext = {
+type SurfaceNotePresentationContext = {
 	/** Selects one of the aggregate Surface Note's analyses for this Presentation. */
 	readonly activeAnalysisKey: Id<"surfaces">;
 };
@@ -79,8 +79,6 @@ export type WorkspaceSubject =
 	| ContextualSurfaceNoteSubject
 	| ContextualReadingNoteSubject
 	| ContextFreeNoteSubject;
-
-export type WorkspacePresentation = "Card" | "Sheet";
 
 export function workspaceSubjectFor(
 	target: SurfaceNoteTarget,

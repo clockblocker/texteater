@@ -1,17 +1,12 @@
 import { v } from "convex/values";
 import { selectGrammaticalAlternatives } from "dumgen/authored";
 import type * as Dumling from "dumling/types";
-import {
-	directSemanticRelationValues,
-	parseReadingKnowledge,
-	projectSemanticRelations,
-} from "dumrel";
+import { parseReadingKnowledge, projectSemanticRelations } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { readingIdentityKey as readingFingerprint } from "../../../server/linguisticIdentity";
-
-const semanticRelationValues = directSemanticRelationValues;
-
-import { lemmaIdentityKey } from "../../../server/linguisticIdentity";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey as readingFingerprint,
+} from "../../../server/linguisticIdentity";
 import {
 	parseGermanLemma,
 	parseGermanReading,
@@ -23,25 +18,6 @@ import { semanticRelationValidator } from "../../model/validators";
 const MAX_RELATIONS_PER_NOTE = 50;
 const MAX_RELATION_NEIGHBORHOOD_READINGS = 50;
 const MAX_RELATION_NEIGHBORHOOD_EDGES = 250;
-
-type UnknownRecord = Record<string, unknown>;
-
-export const relationFingerprintProjectionValidator = v.union(
-	v.object({
-		relation: semanticRelationValidator,
-		targetKind: v.optional(v.literal("lemma")),
-		targetLemmaKey: v.string(),
-		targetCanonicalForm: v.string(),
-		provenance: v.union(v.literal("direct"), v.literal("inferred")),
-	}),
-	v.object({
-		relation: semanticRelationValidator,
-		targetKind: v.literal("reading"),
-		targetReadingKey: v.string(),
-		targetCanonicalForm: v.string(),
-		provenance: v.union(v.literal("direct"), v.literal("inferred")),
-	}),
-);
 
 export const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
@@ -74,24 +50,6 @@ export type GrammaticalAlternative = {
 	readonly canonicalForm: string;
 };
 
-export type RelationFingerprintProjection =
-	| {
-			readonly relation: Dumrel.SemanticRelation;
-			readonly targetKind?: "lemma";
-			readonly targetLemmaKey: string;
-			readonly targetReadingKey?: never;
-			readonly targetCanonicalForm: string;
-			readonly provenance: "direct" | "inferred";
-	  }
-	| {
-			readonly relation: Dumrel.SemanticRelation;
-			readonly targetKind: "reading";
-			readonly targetReadingKey: string;
-			readonly targetLemmaKey?: never;
-			readonly targetCanonicalForm: string;
-			readonly provenance: "direct" | "inferred";
-	  };
-
 export type RelationProjection<
 	LemmaId extends string = string,
 	ReadingId extends string = string,
@@ -106,84 +64,6 @@ export type RelationProjection<
 		  }
 		| { readonly kind: "Reading"; readonly readingId: ReadingId };
 };
-
-export function flattenDirectSemanticRelations(
-	semanticRelationsValue: unknown,
-): RelationFingerprintProjection[] {
-	const semanticRelations = optionalRecord(semanticRelationsValue);
-	if (!semanticRelations) return [];
-	const readingMode = semanticRelations.targetKind === "reading";
-
-	return semanticRelationValues
-		.flatMap((relation) => {
-			const targets = semanticRelations[relation];
-			if (!Array.isArray(targets)) return [];
-			return targets.flatMap(
-				(target): RelationFingerprintProjection[] => {
-					const targetRecord = optionalRecord(target);
-					const lemma = readingMode
-						? optionalRecord(targetRecord?.lemma)
-						: targetRecord;
-					const targetCanonicalForm = optionalNonEmptyString(
-						lemma?.canonicalForm,
-					);
-					if (readingMode && targetCanonicalForm && targetRecord) {
-						return [
-							{
-								relation,
-								targetKind: "reading",
-								targetReadingKey: readingFingerprint(
-									targetRecord as unknown as Dumling.Reading,
-								),
-								targetCanonicalForm,
-								provenance: "direct",
-							},
-						];
-					}
-					return targetCanonicalForm && lemma
-						? [
-								{
-									relation,
-									targetLemmaKey: lemmaIdentityKey(lemma),
-									targetCanonicalForm,
-									provenance: "direct",
-								},
-							]
-						: [];
-				},
-			);
-		})
-		.slice(0, MAX_RELATIONS_PER_NOTE);
-}
-
-export function projectResolvedRelationTargets<LemmaId extends string>(
-	relations: readonly RelationFingerprintProjection[],
-	targetLemmas: readonly {
-		readonly lemmaKey: string;
-		readonly lemmaId: LemmaId;
-	}[],
-): RelationProjection<LemmaId>[] {
-	const lemmaIdByKey = new Map(
-		targetLemmas.map(({ lemmaKey, lemmaId }) => [lemmaKey, lemmaId]),
-	);
-	return relations.flatMap(
-		({ targetLemmaKey, ...relation }): RelationProjection<LemmaId>[] => {
-			if (relation.targetKind === "reading" || !targetLemmaKey) return [];
-			const lemmaId = lemmaIdByKey.get(targetLemmaKey);
-			return lemmaId
-				? [
-						{
-							...relation,
-							target: {
-								kind: "Lemma",
-								lemmaId,
-							},
-						},
-					]
-				: [];
-		},
-	);
-}
 
 type RelationNeighborhood = {
 	readings: Map<Id<"readings">, Doc<"readings">>;
@@ -532,7 +412,6 @@ export async function loadRelationProjections(
 	const source = await ctx.db.get(readingId);
 	if (!source)
 		return {
-			fingerprints: [],
 			knowledge: {},
 			resolved: [],
 			truncated: false,
@@ -574,7 +453,6 @@ export async function loadRelationProjections(
 		throw new Error(
 			"One Reading Note cannot mix Lemma- and Reading-targeted Semantic Relations.",
 		);
-	const fingerprints: RelationFingerprintProjection[] = [];
 	const resolved: RelationProjection<Id<"lemmas">, Id<"readings">>[] = [];
 	const knowledge: PresentedRelations = readingMode
 		? { targetKind: "reading" }
@@ -588,14 +466,6 @@ export async function loadRelationProjections(
 				knowledge.targetKind !== "reading"
 			)
 				continue;
-			fingerprints.push({
-				relation: projection.relation,
-				targetKind: "reading",
-				targetReadingKey: targetDoc.readingKey,
-				targetCanonicalForm:
-					projection.targetReading.lemma.canonicalForm,
-				provenance: projection.provenance,
-			});
 			resolved.push({
 				relation: projection.relation,
 				targetCanonicalForm:
@@ -613,20 +483,7 @@ export async function loadRelationProjections(
 		}
 		if (!("lemmaKey" in targetDoc) || knowledge.targetKind === "reading")
 			continue;
-		const target = parseGermanLemma({
-			unitKind: "Lemma",
-			language: targetDoc.language,
-			family: targetDoc.family,
-			kind: targetDoc.kind,
-			canonicalForm: targetDoc.canonicalForm,
-			coreFeatures: targetDoc.coreFeatures,
-		});
-		fingerprints.push({
-			relation: projection.relation,
-			targetLemmaKey: targetDoc.lemmaKey,
-			targetCanonicalForm: targetDoc.canonicalForm,
-			provenance: projection.provenance,
-		});
+		const target = parseStoredGermanLemma(targetDoc);
 		resolved.push({
 			relation: projection.relation,
 			targetCanonicalForm: targetDoc.canonicalForm,
@@ -640,7 +497,7 @@ export async function loadRelationProjections(
 		if (bucket) bucket.push(target);
 		else knowledge[projection.relation] = [target];
 	}
-	return { fingerprints, knowledge, resolved, truncated };
+	return { knowledge, resolved, truncated };
 }
 
 export async function loadGrammaticalAlternatives(
@@ -675,18 +532,6 @@ export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
 		if (error instanceof Error && error.name === "InvalidInput") return [];
 		throw error;
 	}
-}
-
-function optionalRecord(value: unknown): UnknownRecord | null {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as UnknownRecord)
-		: null;
-}
-
-function optionalNonEmptyString(value: unknown): string | null {
-	return typeof value === "string" && value.trim().length > 0
-		? value.trim()
-		: null;
 }
 
 export type PresentedRelations =

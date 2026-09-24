@@ -42,14 +42,17 @@ import {
 import { splitInSentences } from "../server/sentenceSplitting";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { internal } from "./_generated/api";
-import type { Id, TableNames } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
 import { createConvexDumdictStorage } from "./dumdictActionStorage";
 import { inspectionFor } from "./inspectionAction";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import { resolutionSessionGuardValidator } from "./model/validators";
-import { createResolutionSessionLifecycle } from "./resolutionSessionLifecycle";
+import {
+	convexId,
+	createResolutionSessionLifecycle,
+} from "./resolutionSessionLifecycle";
 
 const submitTextResultValidator = v.union(
 	v.object({
@@ -79,10 +82,6 @@ function visitorErrorIn(error: unknown): ConvexError<Value> | undefined {
 		if (thrown instanceof ConvexError) return thrown;
 	}
 	return undefined;
-}
-
-function convexId<TableName extends TableNames>(value: string): Id<TableName> {
-	return value as Id<TableName>;
 }
 
 export const submitText = action({

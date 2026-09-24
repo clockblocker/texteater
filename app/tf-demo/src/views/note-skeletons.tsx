@@ -113,11 +113,7 @@ export function ReadingNoteSkeleton({
 	);
 }
 
-export function LemmaNoteSkeleton({
-	presentation,
-}: {
-	presentation: Presentation;
-}) {
+function LemmaNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
@@ -145,11 +141,7 @@ export function LemmaNoteSkeleton({
 	);
 }
 
-export function SurfaceNoteSkeleton({
-	presentation,
-}: {
-	presentation: Presentation;
-}) {
+function SurfaceNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
@@ -168,7 +160,7 @@ export function SurfaceNoteSkeleton({
 	);
 }
 
-export function AttestationNoteSkeleton({
+function AttestationNoteSkeleton({
 	presentation,
 }: {
 	presentation: Presentation;

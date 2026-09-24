@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type { Id } from "../_generated/dataModel";
-import type { MutationCtx, QueryCtx } from "../_generated/server";
+import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
 import {
 	lexemeKindValues,
@@ -17,7 +17,6 @@ const commonPhrasemeKinds = new Set<string>(
 	phrasemeKindValues.filter((kind) => kind !== "Collocation"),
 );
 
-type ServerCtx = MutationCtx | QueryCtx;
 type UnknownRecord = Record<string, unknown>;
 
 export type ShadowDescriptor = {
@@ -269,18 +268,6 @@ export async function attachPendingShadowReference(
 	recordValue: unknown,
 ): Promise<Id<"shadows">> {
 	return internShadow(ctx, pendingShadowDescriptor(recordValue));
-}
-
-export async function shadowMatchesDescriptor(
-	ctx: ServerCtx,
-	shadowId: Id<"shadows">,
-	descriptorValue: unknown,
-): Promise<boolean> {
-	const [shadow, descriptor] = await Promise.all([
-		ctx.db.get(shadowId),
-		Promise.resolve(normalizeShadowDescriptor(descriptorValue)),
-	]);
-	return Boolean(shadow && shadowIsCompatible(shadow, descriptor));
 }
 
 export async function syncStructuralShadowReferences(

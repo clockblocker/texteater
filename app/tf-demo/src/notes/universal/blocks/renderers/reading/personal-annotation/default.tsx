@@ -1,5 +1,6 @@
 import { LinkButton, NoteSection } from "lego";
 import { useId, useLayoutEffect, useRef, useState } from "react";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 
 import type { ReadingPresentationCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
@@ -57,9 +58,10 @@ function PersonalAnnotationEditor({
 			setDraftOverride(null);
 		} catch (cause) {
 			setError(
-				cause instanceof Error
-					? cause.message
-					: "Personal Annotation could not be saved.",
+				visitorErrorMessage(
+					cause,
+					"Personal Annotation could not be saved.",
+				),
 			);
 		} finally {
 			setSaving(false);

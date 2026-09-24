@@ -9,6 +9,10 @@ import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
 } from "../server/resolutionSessionExecution";
+import {
+	projectResolutionGrammar,
+	projectResolutionReading,
+} from "../server/resolutionSessionProjection";
 import { fromStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
@@ -17,15 +21,14 @@ import {
 	resolvedGrammaticalActionResult,
 	resolvedGrammaticalCheckpoint,
 } from "./model/grammarCheckpoint";
-import {
-	projectResolutionGrammar,
-	projectResolutionReading,
-	type ResolutionSessionGuard,
-} from "./model/resolutionSessions";
+import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 
 const OWNER = "app/tf-demo · resolutionSessions";
 
-function convexId<TableName extends TableNames>(value: string): Id<TableName> {
+/** Brands an ID string a server port handed back as a Convex document ID. */
+export function convexId<TableName extends TableNames>(
+	value: string,
+): Id<TableName> {
 	return value as Id<TableName>;
 }
 

@@ -4,6 +4,7 @@ import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useReducer, useRef, useState } from "react";
 import type { ShadowNoteTarget } from "@/lib/navigation";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { ShadowNoteSkeleton } from "@/views/note-skeletons";
@@ -15,7 +16,7 @@ import {
 	reduceShadowControls,
 } from "./shadow-note-controls";
 
-export type ShadowNote = Extract<
+type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
 	{ readonly kind: "Shadow" }
 >;
@@ -101,10 +102,7 @@ function ShadowNoteContainer({
 			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
 			dispatchControls({
 				type: "failed",
-				message:
-					cause instanceof Error
-						? cause.message
-						: "The Shadow reference could not be changed.",
+				message: visitorErrorMessage(cause),
 			});
 		} finally {
 			if (isCurrentShadowAction(attempt, actionEpoch.current)) {

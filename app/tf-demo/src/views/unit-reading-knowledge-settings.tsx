@@ -10,6 +10,7 @@ import {
 	FieldSet,
 } from "lego";
 import { useEffect, useState } from "react";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
 import {
@@ -42,11 +43,7 @@ export function KnowledgeSettingsForm({
 			await updateSettings({ visitorId, settings: next });
 		} catch (cause) {
 			setSettings(initialSettings);
-			setError(
-				cause instanceof Error
-					? cause.message
-					: "Knowledge settings update failed.",
-			);
+			setError(visitorErrorMessage(cause));
 		} finally {
 			setIsSaving(false);
 		}

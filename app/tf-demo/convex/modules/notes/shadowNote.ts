@@ -26,7 +26,7 @@ import {
 const SHADOW_REFERENCE_PAGE_SIZE = 50;
 const MAX_SHADOW_CANDIDATE_LEMMAS = 100;
 
-const unitShadowProjectionValidator = v.object({
+export const unitShadowProjectionValidator = v.object({
 	language: v.string(),
 	canonicalForm: v.string(),
 	family: v.string(),

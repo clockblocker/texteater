@@ -65,5 +65,3 @@ export type RendererRegistry<
 						: never
 				: never
 		: never;
-
-// type aasd = RendererRegistry<"de", "Reading", "Lexeme", "VERB">["Definition"];

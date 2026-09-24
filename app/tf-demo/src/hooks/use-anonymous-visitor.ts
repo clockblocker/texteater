@@ -10,7 +10,7 @@ export function useAnonymousVisitorId(): string {
 	return visitorId;
 }
 
-export function loadOrCreateVisitorId(): string {
+function loadOrCreateVisitorId(): string {
 	try {
 		const stored = localStorage.getItem(VISITOR_STORAGE_KEY);
 		if (stored) {

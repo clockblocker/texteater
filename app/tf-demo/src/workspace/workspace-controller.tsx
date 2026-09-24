@@ -11,7 +11,7 @@ export type WorkspaceCardTarget = {
 	readonly presentationContext?: NotePresentationContext;
 };
 
-export type PresentCardsOptions = {
+type PresentCardsOptions = {
 	/** Element the deck should present below, e.g. the clicked segment. */
 	readonly anchor?: Element | null;
 };
@@ -25,7 +25,6 @@ export type WorkspaceInteraction = {
 		cards: readonly WorkspaceCardTarget[],
 		options?: PresentCardsOptions,
 	) => void;
-	readonly reconcile: (target: WorkspaceTarget) => void;
 };
 
 /** A pending arrival gesture for the current Presentation, acknowledged once consumed. */

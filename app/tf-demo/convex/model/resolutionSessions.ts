@@ -12,12 +12,10 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { inspectionRequested } from "./inspection";
 import { scheduleKnowledgeGeneration } from "./knowledgeScheduling";
 
-export { projectResolutionGrammar, projectResolutionReading };
-
 import { reconstructReusableAttestation } from "./resolutionLookup";
 import {
 	activeResolutionActivityValidator,
-	type readingValueValidator,
+	type readingCheckpointValidator,
 	type resolutionActivityValidator,
 	resolutionFailureCodeValidator,
 	type resolutionGenerationEventValidator,
@@ -84,10 +82,7 @@ type SafeGenerationFailure = Infer<typeof safeGenerationFailureValidator>;
 type ResolutionGenerationEvent = Infer<
 	typeof resolutionGenerationEventValidator
 >;
-type ReadingCheckpoint = {
-	resolution: { decision: "Reuse" | "New"; emojiDescription: string };
-	reading: Infer<typeof readingValueValidator>;
-};
+type ReadingCheckpoint = Infer<typeof readingCheckpointValidator>;
 type ResolutionSession = Doc<"resolutionSessions">;
 
 const progressPosition: Readonly<Record<ResolutionProgress, number>> = {
@@ -1201,7 +1196,7 @@ function phaseForProgress(progress: ResolutionProgress): ResolutionPhase {
 				: "Commit";
 }
 
-function assertIdentifier(value: string, name: string): void {
+export function assertIdentifier(value: string, name: string): void {
 	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
 		throw new Error(`${name} must contain 1 to 200 characters.`);
 	}

@@ -1,4 +1,4 @@
-export type TransportPhase = {
+type TransportPhase = {
 	name: string;
 	offsetMs: number;
 	durationMs: number;

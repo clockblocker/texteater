@@ -32,6 +32,7 @@ import {
 	loadRelationProjections,
 	relationProjectionValidator,
 } from "./relations";
+import { unitShadowProjectionValidator } from "./shadowNote";
 import {
 	projectOccurrenceSource,
 	type SourceOrigin,
@@ -45,13 +46,6 @@ import type { UnitReadingFamily } from "./unitReadingFamilies";
 const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
 const MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE = 200;
 const SOURCE_CONTEXT_PAGE_SIZE = 6;
-
-const unitShadowProjectionValidator = v.object({
-	language: v.string(),
-	canonicalForm: v.string(),
-	family: v.string(),
-	kind: v.string(),
-});
 
 const readingValueLemmaValidator = v.object({
 	unitKind: v.literal("Lemma"),

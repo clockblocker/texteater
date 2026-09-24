@@ -39,7 +39,6 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 		() => ({
 			follow: (next) => setTarget(segmentsFromTarget(next)),
 			presentCards: () => {},
-			reconcile: () => {},
 		}),
 		[setTarget],
 	);

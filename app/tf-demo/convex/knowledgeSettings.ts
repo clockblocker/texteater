@@ -5,16 +5,11 @@ import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { internalQuery, mutation, query } from "./_generated/server";
 import { knowledgeSettingsValidator } from "./model/validators";
+import { assertVisitorId } from "./model/visitorId";
 import {
 	loadRelationPublicationAuthorization,
 	publicationAuthorizationValidator,
 } from "./relationPublication";
-
-function assertVisitorId(visitorId: string): void {
-	if (visitorId.trim().length === 0 || visitorId.length > 200) {
-		throw new Error("visitorId must contain between 1 and 200 characters.");
-	}
-}
 
 export function defaultKnowledgeSettings(): KnowledgePreferences {
 	return cloneKnowledgeSettings(DEFAULT_KNOWLEDGE_SETTINGS);

@@ -13,6 +13,7 @@ import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { requireClickableSegment } from "./model/resolutionLookup";
 import {
 	advanceResolutionSession,
+	assertIdentifier,
 	claimResolutionRun,
 	deleteResolutionSessions,
 	failResolutionRun,
@@ -29,7 +30,7 @@ import {
 	startResolutionSession,
 } from "./model/resolutionSessions";
 import {
-	readingValueValidator,
+	readingCheckpointValidator,
 	resolutionActivityValidator,
 	resolutionGenerationEventValidator,
 	resolutionGrammarProjectionValidator,
@@ -49,7 +50,6 @@ import {
 } from "./resolutionContext";
 import { saveInspectionStep } from "./resolutionInspection";
 
-const MAX_IDENTIFIER_LENGTH = 200;
 const CLEANUP_BATCH_SIZE = 200;
 /**
  * Bytes one cleanup page may read before it stops. The page may run one
@@ -58,14 +58,6 @@ const CLEANUP_BATCH_SIZE = 200;
  * 11 MiB of Convex's 16 MiB per-transaction limit.
  */
 const CLEANUP_BATCH_MAX_BYTES = 4 * 1024 * 1024;
-
-const readingCheckpointValidator = v.object({
-	resolution: v.object({
-		decision: v.union(v.literal("Reuse"), v.literal("New")),
-		emojiDescription: v.string(),
-	}),
-	reading: readingValueValidator,
-});
 
 export const selectSegment = mutation({
 	args: {
@@ -532,12 +524,6 @@ function cleanupPage<Table extends GenericTableInfo>(
 		numItems: CLEANUP_BATCH_SIZE,
 		maximumBytesRead: CLEANUP_BATCH_MAX_BYTES,
 	});
-}
-
-function assertIdentifier(value: string, name: string): void {
-	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
 }
 
 function assertCleanupCutoff(value: number, name: string): void {

@@ -1,3 +1,4 @@
+import type { PresentationForm } from "react-resizable-panels/workspace";
 import {
 	ResolutionNoteView,
 	ResolutionStepNoteView,
@@ -8,15 +9,14 @@ import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
 import {
 	activeAnalysisKeyOf,
-	type WorkspacePresentation,
 	type WorkspaceSubject,
+	workspaceSubjectKey,
 } from "@/workspace/sheet-workspace";
 
 /** Maps one workspace Subject to the view that presents it. */
 export function renderApplicationSubject(
 	subject: WorkspaceSubject,
-	presentation: WorkspacePresentation,
-	options: { readonly visitorId?: string } = {},
+	presentation: PresentationForm,
 ) {
 	const { target } = subject;
 	switch (target.kind) {
@@ -28,7 +28,6 @@ export function renderApplicationSubject(
 					key={`${target.readingId}:${target.focus?.attestationId ?? ""}`}
 					target={target}
 					presentation={presentation}
-					visitorId={options.visitorId}
 					resolutionRequestId={
 						"presentationContext" in subject &&
 						subject.presentationContext &&
@@ -43,8 +42,7 @@ export function renderApplicationSubject(
 		case "Attestation":
 			return (
 				<RouteNoteView
-					visitorId={options.visitorId}
-					key={noteTargetKey(target)}
+					key={workspaceSubjectKey(subject)}
 					target={target}
 					presentation={presentation}
 					activeAnalysisKey={
@@ -102,21 +100,5 @@ export function renderCardTail(subject: WorkspaceSubject) {
 			return "Resolving";
 		case "ResolutionStep":
 			return target.stepKind;
-	}
-}
-
-function noteTargetKey(
-	target: Extract<
-		WorkspaceSubject["target"],
-		{ readonly kind: "Lemma" | "Surface" | "Attestation" }
-	>,
-): string {
-	switch (target.kind) {
-		case "Lemma":
-			return `Lemma:${target.lemmaId}`;
-		case "Surface":
-			return `Surface:${target.language}:${target.normalizedSurface}`;
-		case "Attestation":
-			return `Attestation:${target.attestationId}`;
 	}
 }

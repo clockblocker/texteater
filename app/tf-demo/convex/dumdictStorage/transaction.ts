@@ -10,6 +10,7 @@ import type * as Dumling from "dumling/types";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
+	stableFingerprint,
 } from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import { internalMutation, type MutationCtx } from "../_generated/server";
@@ -19,7 +20,6 @@ import {
 	requireChangeKind,
 	requireRecord,
 	requireString,
-	stableFingerprint,
 	withoutKeys,
 } from "../model/readingKnowledge";
 import {

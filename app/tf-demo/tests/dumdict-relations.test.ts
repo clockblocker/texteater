@@ -548,7 +548,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			await t.run((ctx) => loadRelationProjections(ctx, gehenReadingId)),
 		).toMatchObject({
-			fingerprints: [
+			resolved: [
 				{
 					relation: "nearSynonym",
 					targetCanonicalForm: "laufen",

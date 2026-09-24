@@ -12,8 +12,6 @@ import type {
 	Task,
 } from "dumgen/types";
 import type * as Dumling from "dumling/types";
-import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
-import type * as Dumrel from "dumrel/types";
 import * as Cause from "effect/Cause";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
@@ -45,7 +43,7 @@ import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
  * Drafts usually land before the Emoji Description (~1.3 s against ~2 s), but
  * one provider stall can hold a leaf for up to the Luna deadline.
  */
-export const DRAFT_GRACE_MS = 1_500;
+const DRAFT_GRACE_MS = 1_500;
 
 /**
  * Accepted German sentences analysed at once during intake. Their requests
@@ -53,7 +51,7 @@ export const DRAFT_GRACE_MS = 1_500;
  * tooling/measure-intake-concurrency.ts (#558): 8 is within noise of 16 on
  * 16- and 25-sentence texts, and 4 is slower.
  */
-export const SENTENCE_ANALYSIS_CONCURRENCY = 8;
+const SENTENCE_ANALYSIS_CONCURRENCY = 8;
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -999,38 +997,9 @@ function effectFrom<Value, Error>(
 	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 
-export function applyValidatedReadingKnowledgeChange(input: {
-	readonly reading: unknown;
-	readonly knowledge?: unknown;
-	readonly change: unknown;
-}): {
-	readonly change: Dumrel.KnowledgeChange;
-	readonly knowledge: Dumrel.ReadingKnowledge;
-} {
-	const reading = parseGermanReading(input.reading);
-	const current = parseReadingKnowledge({
-		source: reading,
-		knowledge: input.knowledge ?? {},
-	});
-	if (!current.success) throw current.error;
-	const updated = applyKnowledgeChange({
-		source: reading,
-		knowledge: current.value,
-		change: input.change,
-	});
-	if (!updated.success) throw updated.error;
-	// applyKnowledgeChange has validated the complete source-aware change.
-	return {
-		change: input.change as Dumrel.KnowledgeChange,
-		knowledge: updated.value,
-	};
-}
-
-export function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
+function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
-
-export { readingIdentityKey } from "./linguisticIdentity";
 
 function parseGermanSentence(stored: PersistedSentence): EncounterSentence {
 	if (stored.language !== "de") {

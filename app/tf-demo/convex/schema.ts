@@ -15,7 +15,7 @@ import {
 	languageValidator,
 	orthographyValidator,
 	readingBlockKindValidator,
-	readingValueValidator,
+	readingCheckpointValidator,
 	realizationCoverageValidator,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
@@ -467,15 +467,7 @@ export default defineSchema({
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
 		grammaticalCheckpoint: v.optional(storedGrammaticalCheckpointValidator),
-		readingCheckpoint: v.optional(
-			v.object({
-				resolution: v.object({
-					decision: v.union(v.literal("Reuse"), v.literal("New")),
-					emojiDescription: v.string(),
-				}),
-				reading: readingValueValidator,
-			}),
-		),
+		readingCheckpoint: v.optional(readingCheckpointValidator),
 		readingId: v.optional(v.id("readings")),
 		attestationId: v.optional(v.id("attestations")),
 		failureCode: v.optional(resolutionFailureCodeValidator),

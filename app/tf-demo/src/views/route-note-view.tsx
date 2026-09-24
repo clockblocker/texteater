@@ -14,10 +14,7 @@ import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
-export type RouteNote = Exclude<
-	NonNullable<FunctionReturnType<typeof api.routeNotes.get>>,
-	{ readonly kind: "Shadow" | "Reading" }
->;
+type RouteNote = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;
 type PaginatedRouteNote = Extract<RouteNote, { kind: "Lemma" }>;
 type PaginatedSurfaceNote = Extract<RouteNote, { kind: "Surface" }>;
 
@@ -25,16 +22,13 @@ export function RouteNoteView({
 	target,
 	presentation = "Sheet",
 	activeAnalysisKey,
-	visitorId: visitorIdOverride,
 }: {
-	visitorId?: string;
 	target: RouteNoteTarget;
 	presentation?: "Card" | "Sheet";
 	activeAnalysisKey?: Id<"surfaces">;
 }) {
 	const { follow } = useWorkspaceInteraction();
-	const anonymousVisitorId = useAnonymousVisitorId();
-	const visitorId = visitorIdOverride ?? anonymousVisitorId;
+	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
 		...convexQuery(api.routeNotes.get, {
 			...routeNoteQueryArgs(target, activeAnalysisKey),

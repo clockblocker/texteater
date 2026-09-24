@@ -12,12 +12,12 @@ import {
 	useRef,
 } from "react";
 import {
+	type PresentationForm,
 	selectVisibleSheets,
 	type WorkspaceCommand,
 	type WorkspaceRenderContext,
 } from "react-resizable-panels/workspace";
 import {
-	type ApplicationWorkspaceStorage,
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,
 } from "./application-workspace-persistence";
@@ -29,10 +29,7 @@ import {
 	type OccurrenceReveal,
 	reduceApplicationWorkspaceSession,
 } from "./application-workspace-state";
-import type {
-	WorkspacePresentation,
-	WorkspaceSubject,
-} from "./sheet-workspace";
+import type { WorkspaceSubject } from "./sheet-workspace";
 import { useWorkspaceSentenceReveal } from "./useWorkspaceSentenceReveal";
 import {
 	type OccurrenceRevealHandle,
@@ -67,26 +64,15 @@ const RuntimeContext = createContext<Runtime | null>(null);
 
 export function ApplicationWorkspaceProvider({
 	children,
-	storage,
-	initialSession,
 }: {
 	children: ReactNode;
-	storage?: ApplicationWorkspaceStorage | null;
-	initialSession?: ApplicationWorkspaceSession;
 }) {
 	const [session, dispatch] = useReducer(
 		reduceApplicationWorkspaceSession,
-		{ storage, initialSession },
-		(options) =>
-			loadApplicationWorkspace(
-				options.initialSession ?? createApplicationWorkspaceSession(),
-				options.storage,
-			),
+		undefined,
+		() => loadApplicationWorkspace(createApplicationWorkspaceSession()),
 	);
-	useEffect(
-		() => saveApplicationWorkspace(session, storage),
-		[session, storage],
-	);
+	useEffect(() => saveApplicationWorkspace(session), [session]);
 	const { workspace } = session;
 	const visible = selectVisibleSheets(workspace, workspace.activePaneId);
 	const activeText = visible.findLast(
@@ -131,7 +117,7 @@ export function ApplicationWorkspaceProvider({
 type ApplicationWorkspaceProps = {
 	renderSubject(
 		subject: WorkspaceSubject,
-		presentation: WorkspacePresentation,
+		presentation: PresentationForm,
 	): ReactNode;
 	renderLibrary(): ReactNode;
 	labelSubject(subject: WorkspaceSubject): string;
@@ -251,12 +237,6 @@ function ApplicationPresentation({
 					originPresentationId: presentationId,
 					target,
 				}),
-			reconcile: (target) =>
-				dispatch({
-					type: "ReconcilePresentation",
-					presentationId,
-					target,
-				}),
 			presentCards: (candidates, options) => {
 				const anchor = options?.anchor;
 				if (anchor instanceof HTMLElement) {
@@ -266,16 +246,7 @@ function ApplicationPresentation({
 				dispatch({
 					type: "ReconcileCardLayer",
 					originPresentationId: presentationId,
-					candidates: candidates.map((candidate) => ({
-						key: candidate.key,
-						target: candidate.target,
-						...(candidate.presentationContext
-							? {
-									presentationContext:
-										candidate.presentationContext,
-								}
-							: {}),
-					})),
+					candidates,
 				});
 			},
 		}),

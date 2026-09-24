@@ -13,7 +13,7 @@ import {
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
-import { parseSubmittedTextId, type SentenceView } from "@/lib/action-results";
+import type { SentenceView } from "@/lib/action-results";
 import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
@@ -93,8 +93,15 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 				submissionKey: textDetail.submissionKey,
 				sourceText: textDetail.sourceText,
 			});
-			if (parseSubmittedTextId(result) !== textDetail.textId) {
-				throw new Error("Segments were saved to a different Text.");
+			if (result.status === "Rejected") {
+				setSegmentationError(result.message);
+				return;
+			}
+			if (result.textId !== textDetail.textId) {
+				setSegmentationError(
+					"Segments were saved to a different Text.",
+				);
+				return;
 			}
 			setNotice("Text split into segments.");
 		} catch (cause) {

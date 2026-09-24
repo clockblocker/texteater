@@ -19,6 +19,7 @@ import { DataControls } from "@/components/data-controls";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useMotionPreference } from "@/lib/motion-preference";
 import type { SettingsTarget } from "@/lib/navigation";
+import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
 
@@ -83,8 +84,8 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 								className="text-sm text-destructive"
 								role="alert"
 							>
-								{settingsQuery.error instanceof Error
-									? settingsQuery.error.message
+								{settingsQuery.error
+									? visitorErrorMessage(settingsQuery.error)
 									: "Knowledge settings could not be loaded."}
 							</p>
 						)}

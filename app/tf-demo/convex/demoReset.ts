@@ -19,9 +19,14 @@ import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import { loadStoredSegments } from "./model/storedSegments";
 import {
+	DESCRIPTOR_PAGE_SIZE,
+	type ReadingCleanupCursor,
+	type ReadingCleanupPhase,
+	readingCleanupCursorValidator,
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
 } from "./model/textAnalysisStripping";
+import { assertVisitorId } from "./model/visitorId";
 
 const BATCH_SIZE = 400;
 /**
@@ -38,7 +43,6 @@ const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
 const MAX_BATCHES = 1_000;
 const MAX_CLEANUP_PHASE_STEPS = 64;
 const MAX_SENTENCES_PER_TEXT = 256;
-const DESCRIPTOR_PAGE_SIZE = 20;
 const TEXT_PAGE_SIZE = 20;
 
 const resolutionInspectionTableNames = [
@@ -85,12 +89,6 @@ export const resetDemoTableNames = [
 	"sentences",
 	"texts",
 ] as const satisfies readonly TableNames[];
-
-function assertVisitorId(visitorId: string): void {
-	if (visitorId.trim().length === 0 || visitorId.length > 200) {
-		throw new Error("visitorId must contain 1 to 200 characters.");
-	}
-}
 
 const tableResetResultValidator = v.object({
 	deleted: v.number(),
@@ -570,48 +568,6 @@ export const describeReadingCleanupCandidates = internalQuery({
 			descriptor ? [descriptor] : [],
 		);
 	},
-});
-
-/**
- * Reading cleanup phases, in order. Attempts go first: once an attempt is
- * gone its in-flight publication is rejected, so it cannot write Knowledge
- * back behind a later phase.
- */
-const readingCleanupPhaseValidator = v.union(
-	v.literal("GenerationAttempts"),
-	v.literal("PendingRelations"),
-	v.literal("KnowledgeChanges"),
-	v.literal("StructuralReferences"),
-	v.literal("AccumulatedKnowledge"),
-	v.literal("GeneratedRelationRuns"),
-	v.literal("GeneratedRelationProposals"),
-	v.literal("PersonalAnnotations"),
-	v.literal("OutgoingSemanticEdges"),
-	v.literal("IncomingSemanticEdges"),
-	v.literal("Reading"),
-);
-
-type ReadingCleanupPhase =
-	| "GenerationAttempts"
-	| "PendingRelations"
-	| "KnowledgeChanges"
-	| "StructuralReferences"
-	| "AccumulatedKnowledge"
-	| "GeneratedRelationRuns"
-	| "GeneratedRelationProposals"
-	| "PersonalAnnotations"
-	| "OutgoingSemanticEdges"
-	| "IncomingSemanticEdges"
-	| "Reading";
-
-type ReadingCleanupCursor = {
-	itemIndex: number;
-	phase: ReadingCleanupPhase;
-};
-
-const readingCleanupCursorValidator = v.object({
-	itemIndex: v.number(),
-	phase: readingCleanupPhaseValidator,
 });
 
 function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {

@@ -1,11 +1,11 @@
 import { type RefObject, useCallback, useLayoutEffect, useRef } from "react";
 
-export type WorkspaceSentenceRevealRequest = {
+type WorkspaceSentenceRevealRequest = {
 	anchor: HTMLElement;
 	presentationId: string;
 };
 
-export type WorkspaceSentenceRevealOptions<S> = {
+type WorkspaceSentenceRevealOptions<S> = {
 	root: RefObject<HTMLElement | null>;
 	state: S;
 	/** Wait until the state update that opened the destination has settled. */

@@ -18,3 +18,12 @@ test("any other failure shows a generic message", () => {
 	])
 		expect(visitorErrorMessage(error)).toBe("Something went wrong.");
 });
+
+test("a caller can name its own fallback for an uncoded failure", () => {
+	expect(
+		visitorErrorMessage(
+			new Error("Index missing."),
+			"Could not load more.",
+		),
+	).toBe("Could not load more.");
+});

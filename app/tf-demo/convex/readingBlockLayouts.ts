@@ -17,15 +17,10 @@ import {
 	readingBlockLayoutValidator,
 	readingBlockRouteValidator,
 } from "./model/validators";
+import { assertVisitorId } from "./model/visitorId";
 
 type LayoutCtx = QueryCtx | MutationCtx;
 const MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE = 128;
-
-function assertVisitorId(visitorId: string): void {
-	if (visitorId.trim().length === 0 || visitorId.length > 200) {
-		throw new Error("visitorId must contain between 1 and 200 characters.");
-	}
-}
 
 function availableLanguageBlocks(
 	_targetLanguage: SupportedTargetLanguage,
@@ -110,17 +105,6 @@ async function findFamilyKindLayout(
 
 async function loadFamilyKindLayout(
 	ctx: LayoutCtx,
-	visitorId: string,
-	route: ReadingBlockRoute,
-): Promise<SerializedReadingBlockLayout> {
-	const stored = await findFamilyKindLayout(ctx, visitorId, route);
-	return stored
-		? reconcileReadingBlockLayout(stored, stored.order)
-		: loadLanguageLayout(ctx, visitorId, route.targetLanguage);
-}
-
-async function loadFamilyKindLayoutForMutation(
-	ctx: MutationCtx,
 	visitorId: string,
 	route: ReadingBlockRoute,
 ): Promise<SerializedReadingBlockLayout> {
@@ -320,11 +304,7 @@ export const setFamilyKindBlockOrder = mutation({
 	handler: async (ctx, { visitorId, route, order }) => {
 		assertVisitorId(visitorId);
 		assertReadingBlockOrder(order);
-		const current = await loadFamilyKindLayoutForMutation(
-			ctx,
-			visitorId,
-			route,
-		);
+		const current = await loadFamilyKindLayout(ctx, visitorId, route);
 		const next = { order: [...order], hidden: [...current.hidden] };
 		await storeFamilyKindLayout(ctx, visitorId, route, next, Date.now());
 		return cloneLayout(next);
@@ -342,11 +322,7 @@ export const setFamilyKindBlockVisibility = mutation({
 	handler: async (ctx, { visitorId, route, blockKind, visible }) => {
 		assertVisitorId(visitorId);
 		assertReadingBlockSupported(blockKind);
-		const current = await loadFamilyKindLayoutForMutation(
-			ctx,
-			visitorId,
-			route,
-		);
+		const current = await loadFamilyKindLayout(ctx, visitorId, route);
 		const next = setBlockVisibility(current, blockKind, visible);
 		await storeFamilyKindLayout(ctx, visitorId, route, next, Date.now());
 		return cloneLayout(next);

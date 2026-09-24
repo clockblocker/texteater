@@ -13,17 +13,12 @@ import {
 	workspaceSubjectFor,
 	workspaceSubjectsEqual,
 } from "./sheet-workspace";
+import type { WorkspaceCardTarget } from "./workspace-controller";
 
 /** The Library is a workspace subject so the battery can keep it as the base Sheet. */
 export type ApplicationWorkspaceSubject =
 	| { readonly kind: "Library" }
 	| WorkspaceSubject;
-
-export type ApplicationCardCandidate = {
-	readonly key: string;
-	readonly target: WorkspaceTarget;
-	readonly presentationContext?: NotePresentationContext;
-};
 
 /**
  * A one-shot arrival gesture for a Text Sheet: scroll to one occurrence and
@@ -53,20 +48,12 @@ export type ApplicationWorkspaceAction =
 			readonly target: WorkspaceTarget;
 			readonly originPresentationId?: string;
 	  }
-	| {
-			readonly type: "RevealLibrary";
-			readonly originPresentationId?: string;
-	  }
+	| { readonly type: "RevealLibrary" }
 	| { readonly type: "CloseAllSheets" }
 	| {
 			readonly type: "ReconcileCardLayer";
 			readonly originPresentationId: string;
-			readonly candidates: readonly ApplicationCardCandidate[];
-	  }
-	| {
-			readonly type: "ReconcilePresentation";
-			readonly presentationId: string;
-			readonly target: WorkspaceTarget;
+			readonly candidates: readonly WorkspaceCardTarget[];
 	  }
 	| {
 			readonly type: "AcknowledgeReveal";
@@ -100,13 +87,11 @@ export function reduceApplicationWorkspaceSession(
 				action.presentationContext,
 			);
 		case "RevealLibrary":
-			return revealLibrary(session, action.originPresentationId);
+			return revealLibrary(session);
 		case "CloseAllSheets":
 			return createApplicationWorkspaceSession();
 		case "ReconcileCardLayer":
 			return reconcileCardLayer(session, action);
-		case "ReconcilePresentation":
-			return reconcilePresentation(session, action);
 		case "AcknowledgeReveal":
 			return session.pendingReveal?.presentationId ===
 				action.presentationId
@@ -187,11 +172,8 @@ function withoutReveal(
 
 function revealLibrary(
 	session: ApplicationWorkspaceSession,
-	originPresentationId: string | undefined,
 ): ApplicationWorkspaceSession {
-	const paneId = originPresentationId
-		? activePaneForPresentation(session.workspace, originPresentationId)
-		: session.workspace.activePaneId;
+	const paneId = session.workspace.activePaneId;
 	if (!paneId) return session;
 	const exposedLibrary = selectVisibleSheets(session.workspace, paneId).at(
 		-1,
@@ -214,27 +196,6 @@ function revealLibrary(
 			locked: false,
 		}),
 	);
-}
-
-function reconcilePresentation(
-	session: ApplicationWorkspaceSession,
-	action: Extract<
-		ApplicationWorkspaceAction,
-		{ readonly type: "ReconcilePresentation" }
-	>,
-): ApplicationWorkspaceSession {
-	if (session.workspace.gesture) return session;
-	const presentation = session.workspace.presentations[action.presentationId];
-	const subject = workspaceSubjectFor(action.target);
-	if (!presentation || subjectsEqual(presentation.subject, subject))
-		return session;
-	return withWorkspace(session, {
-		...session.workspace,
-		presentations: {
-			...session.workspace.presentations,
-			[action.presentationId]: { ...presentation, subject },
-		},
-	});
 }
 
 function reconcileCardLayer(

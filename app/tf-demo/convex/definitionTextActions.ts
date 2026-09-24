@@ -64,7 +64,7 @@ export const materialize = internalAction({
 						stitchedText: sync.definition,
 					}),
 				);
-				const persisted = await ctx.runMutation(
+				await ctx.runMutation(
 					internal.definitionTexts.persistSegmented,
 					{
 						ownerReadingKey,
@@ -79,7 +79,6 @@ export const materialize = internalAction({
 					},
 				);
 				outcome = { kind: "Ready" };
-				if (persisted === "Stale") outcome = { kind: "Ready" };
 			}
 		} catch (error) {
 			console.error("Definition Text materialization failed", error);

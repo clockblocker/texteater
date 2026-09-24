@@ -22,6 +22,7 @@ import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
+import { applyTrustedReadingKnowledgeChange } from "../convex/model/readingKnowledge";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
 import {
 	createInspectionCapture,
@@ -29,7 +30,6 @@ import {
 	inspected,
 } from "../server/inspectionCapture";
 import {
-	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 	type RecordedClick,
@@ -556,35 +556,25 @@ test("mismatched Reading checkpoints and oversized submissions fail before write
 });
 
 test("Knowledge changes validate against the exact tagged source Reading", () => {
-	const first = applyValidatedReadingKnowledgeChange({
-		reading,
-		change: {
+	const first = applyTrustedReadingKnowledgeChange(reading, undefined, {
+		kind: "Contribute",
+		aspect: "definition",
+		value: "Financial institution",
+	});
+	expect(first.definition).toBe("Financial institution");
+	expect(() =>
+		applyTrustedReadingKnowledgeChange(reading, first, {
 			kind: "Contribute",
 			aspect: "definition",
-			value: "Financial institution",
-		},
-	});
-	expect(first.knowledge.definition).toBe("Financial institution");
-	expect(() =>
-		applyValidatedReadingKnowledgeChange({
-			reading,
-			knowledge: first.knowledge,
-			change: {
-				kind: "Contribute",
-				aspect: "definition",
-				value: "Bench",
-			},
+			value: "Bench",
 		}),
 	).toThrow("conflicts");
 	expect(() =>
-		applyValidatedReadingKnowledgeChange({
-			reading,
-			change: {
-				kind: "Contribute",
-				aspect: "semanticRelations",
-				relation: "hyponym",
-				value: [lemma],
-			},
+		applyTrustedReadingKnowledgeChange(reading, undefined, {
+			kind: "Contribute",
+			aspect: "semanticRelations",
+			relation: "hyponym",
+			value: [lemma],
 		}),
 	).toThrow();
 });

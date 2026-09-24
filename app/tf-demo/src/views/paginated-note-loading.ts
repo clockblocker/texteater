@@ -1,5 +1,7 @@
 import type { FunctionReturnType } from "convex/server";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { visitorErrorMessage } from "@/lib/visitor-error";
+import type { ShadowNoteReferrer } from "@/notes/universal/note/capabilities";
 import type { api } from "../../convex/_generated/api";
 
 type NoteData = NonNullable<
@@ -9,7 +11,6 @@ type NoteData = NonNullable<
 >;
 type AnyReadingNoteData = Extract<NoteData, { readonly kind: "Reading" }>;
 type ShadowNoteData = Extract<NoteData, { readonly kind: "Shadow" }>;
-type ShadowNoteReferrer = ShadowNoteData["references"]["page"][number];
 type NoteDataFor<K extends NoteData["kind"]> = Extract<
 	NoteData,
 	{ readonly kind: K }
@@ -47,7 +48,7 @@ export type PaginatedNoteLoader<Note extends PaginatedNote> = {
  * The part of a Note one "load more" returns. Each Note kind keeps its own
  * list shape; only the list and its continuation travel, never the body.
  */
-export type NotePage<Note extends PaginatedNote> = Note extends {
+type NotePage<Note extends PaginatedNote> = Note extends {
 	readonly kind: "Reading";
 }
 	? Note["sourceContexts"]
@@ -131,10 +132,10 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 				if (requestedRevision !== revision) return;
 				publish({
 					...snapshot,
-					error:
-						cause instanceof Error
-							? cause.message
-							: defaultFailureMessage(requestedNote),
+					error: visitorErrorMessage(
+						cause,
+						defaultFailureMessage(requestedNote),
+					),
 				});
 			} finally {
 				if (requestedRevision === revision) {

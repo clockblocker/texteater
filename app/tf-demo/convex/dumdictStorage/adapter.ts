@@ -91,7 +91,7 @@ export function createConvexDumdictStorage(
 							.loadDumdictCleanupRelationsContext,
 						{
 							locatorKeys: resolutions.map(({ locator }) =>
-								pendingLocatorIdentityKey(locator),
+								pendingLocatorIndexKey(locator),
 							),
 						},
 					) as unknown as Promise<CleanupRelationsSlice<"de">>,
@@ -112,10 +112,4 @@ function storageEffect<Value>(
 			cause,
 		}),
 	});
-}
-
-function pendingLocatorIdentityKey(
-	input: Parameters<typeof pendingLocatorIndexKey>[0],
-): string {
-	return pendingLocatorIndexKey(input);
 }

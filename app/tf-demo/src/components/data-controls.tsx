@@ -24,25 +24,20 @@ import { useState } from "react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
-import { parseSubmittedTextId } from "@/lib/action-results";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
-type TextId = Id<"texts">;
+type DemoText = {
+	textId: Id<"texts">;
+	submissionKey: string;
+	sourceText: string;
+	isAnalyzed: boolean;
+};
 
-export function DataControls({
-	text,
-}: {
-	text?: {
-		textId: TextId;
-		submissionKey: string;
-		sourceText: string;
-		isAnalyzed: boolean;
-	};
-}) {
+export function DataControls({ text }: { text?: DemoText }) {
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
 	const demoData = useDemoDataControls(text);
@@ -96,22 +91,11 @@ function WorkspaceCard({
 	);
 }
 
-function useDemoDataControls(
-	text:
-		| {
-				textId: TextId;
-				submissionKey: string;
-				sourceText: string;
-				isAnalyzed: boolean;
-		  }
-		| undefined,
-) {
+function useDemoDataControls(text: DemoText | undefined) {
 	const { revealLibrary } = useWorkspaceController();
 	const visitorId = useAnonymousVisitorId();
 	const [notice, setNotice] = useState<string | null>(null);
-	const [interactionError, setInteractionError] = useState<string | null>(
-		null,
-	);
+	const [error, setError] = useState<string | null>(null);
 	const clearSharedData = usePendingAction(api.demoReset.clearSharedData);
 	const clearVisitorData = usePendingAction(api.demoReset.clearVisitorData);
 	const stripAnalyses = usePendingAction(api.demoReset.stripAnalyses);
@@ -121,36 +105,35 @@ function useDemoDataControls(
 		clearVisitorData.isPending ||
 		stripAnalyses.isPending ||
 		segmentText.isPending;
-	const error = interactionError;
 
 	async function handleClearVisitorData() {
 		setNotice(null);
-		setInteractionError(null);
+		setError(null);
 		try {
 			const result = await clearVisitorData.run({ visitorId });
 			setNotice(`Cleared ${result.deleted} visitor-owned records.`);
 		} catch (cause) {
-			setInteractionError(visitorErrorMessage(cause));
+			setError(visitorErrorMessage(cause));
 		}
 	}
 
 	async function handleStripTextAnalysis() {
 		setNotice(null);
-		setInteractionError(null);
+		setError(null);
 		try {
 			const result = await stripAnalyses.run({});
 			setNotice(
 				`Stripped ${result.removed} analysis records from ${result.strippedTexts} Texts and cleared ${result.removedInspectionRecords} Resolution Inspector records. The Texts and their Sentences were kept.`,
 			);
 		} catch (cause) {
-			setInteractionError(visitorErrorMessage(cause));
+			setError(visitorErrorMessage(cause));
 		}
 	}
 
 	async function handleSegmentText() {
 		if (!text) return;
 		setNotice(null);
-		setInteractionError(null);
+		setError(null);
 		try {
 			const result = await segmentText.run({
 				visitorId,
@@ -160,19 +143,23 @@ function useDemoDataControls(
 				submissionKey: text.submissionKey,
 				sourceText: text.sourceText,
 			});
-			const analyzedTextId = parseSubmittedTextId(result);
-			if (analyzedTextId !== text.textId) {
-				throw new Error("Analysis was saved to a different Text.");
+			if (result.status === "Rejected") {
+				setError(result.message);
+				return;
+			}
+			if (result.textId !== text.textId) {
+				setError("Analysis was saved to a different Text.");
+				return;
 			}
 			setNotice("Text split into segments.");
 		} catch (cause) {
-			setInteractionError(visitorErrorMessage(cause));
+			setError(visitorErrorMessage(cause));
 		}
 	}
 
 	async function handleClearSharedData() {
 		setNotice(null);
-		setInteractionError(null);
+		setError(null);
 		try {
 			const result = await clearSharedData.run({});
 			revealLibrary();
@@ -180,7 +167,7 @@ function useDemoDataControls(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
 			);
 		} catch (cause) {
-			setInteractionError(visitorErrorMessage(cause));
+			setError(visitorErrorMessage(cause));
 		}
 	}
 
@@ -249,12 +236,7 @@ function DemoDataCard({
 	handleSegmentText,
 	handleClearSharedData,
 }: {
-	text?: {
-		textId: TextId;
-		submissionKey: string;
-		sourceText: string;
-		isAnalyzed: boolean;
-	};
+	text?: DemoText;
 	/** Whether this deployment allows the global wipes (TF_DEMO_ADMIN). */
 	admin: boolean;
 	notice: string | null;
