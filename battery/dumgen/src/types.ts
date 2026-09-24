@@ -219,7 +219,13 @@ export type OperationTrace = {
 export type DumgenOptions = {
 	/** Generated text awaiting a Reading owner; source and shape checks are local only. */
 	readonly knowledgeDraft?: unknown;
+	/**
+	 * The transport for generation. Interrupting an operation aborts the
+	 * request's signal and waits for this promise, so an executor must settle
+	 * promptly once its signal aborts.
+	 */
 	readonly execute: ModelExecutor;
+	/** The transport for judgments; like `execute`, it must settle promptly once its signal aborts. */
 	readonly judge: TypeSafeExecutor;
 	readonly configuration?: Partial<ModelConfiguration>;
 	readonly judgmentConfiguration?: {

@@ -9,7 +9,7 @@ import {
 import { resolveAuthoredGrammarIdentity } from "../src/concrete-lang/de/grammatical-resolution/authored-identity.js";
 import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
-import { operationTask } from "../src/universal/trace.js";
+import { operation } from "../src/universal/trace.js";
 import { choiceAnswers } from "./execution-fixture.js";
 
 const member = (form: string, kind: string, grammaticalCase?: string) => {
@@ -106,7 +106,7 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 			onOperation: (trace) => traces.push(trace),
 		};
 		const result = await Effect.runPromise(
-			operationTask(options)("resolveGrammar", {}, (signal) =>
+			operation(options)("resolveGrammar", {}, (scope) =>
 				resolveAuthoredGrammarIdentity(
 					options,
 					{
@@ -117,9 +117,10 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 						markedContext: "<TARGET>der</TARGET> Mann",
 						sentenceInitial: false,
 					},
-					signal,
+					scope,
+					[],
 					mappings,
-				),
+				).pipe(Effect.map(({ member }) => member)),
 			),
 		);
 		expect(result).toBe(der);
@@ -147,7 +148,7 @@ test("confirmed absence is Closed DET CatalogMiss, Open PRON miss, or explicit u
 		};
 		const result = await Effect.runPromise(
 			Effect.either(
-				operationTask(options)("resolveGrammar", {}, (signal) =>
+				operation(options)("resolveGrammar", {}, (scope) =>
 					resolveAuthoredGrammarIdentity(
 						options,
 						{
@@ -158,8 +159,9 @@ test("confirmed absence is Closed DET CatalogMiss, Open PRON miss, or explicit u
 							markedContext: "unknown",
 							sentenceInitial: false,
 						},
-						signal,
-					),
+						scope,
+						[],
+					).pipe(Effect.map(({ member }) => member)),
 				),
 			),
 		);
@@ -197,10 +199,10 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 		};
 		const traces: OperationTrace[] = [];
 		const result = await Effect.runPromise(
-			operationTask({
+			operation({
 				...options,
 				onOperation: (trace) => traces.push(trace),
-			})("resolveGrammar", {}, (signal) =>
+			})("resolveGrammar", {}, (scope) =>
 				resolveAuthoredGrammarIdentity(
 					options,
 					{
@@ -211,8 +213,9 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 						markedContext: `<TARGET>${spelled}</TARGET> kommt`,
 						sentenceInitial,
 					},
-					signal,
-				),
+					scope,
+					[],
+				).pipe(Effect.map(({ member }) => member)),
 			),
 		);
 		expect(result, spelled).toBe(expected);

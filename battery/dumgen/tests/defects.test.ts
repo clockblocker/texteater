@@ -4,7 +4,7 @@ import type { KnowledgeInput, OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { DumgenFailure } from "../src/universal/failure.js";
 import { executeGeneration } from "../src/universal/model.js";
-import { operationTask } from "../src/universal/trace.js";
+import { operation } from "../src/universal/trace.js";
 import { rejectJudgment } from "./execution-fixture.js";
 
 const input = {
@@ -57,9 +57,10 @@ function generation(
 		execute,
 		onOperation: (trace: OperationTrace) => traces.push(trace),
 	};
-	return operationTask(options)("reading", {}, (signal) =>
+	return operation(options)("reading", {}, (scope) =>
 		executeGeneration(
 			options,
+			scope,
 			{
 				stage: "reading",
 				route: "de",
@@ -67,9 +68,9 @@ function generation(
 				systemPrompt: "Generate text",
 				outputFormat: "text",
 				configuration: { model: "luna", settings: {} },
-				signal,
 			},
 			validate,
+			[],
 		),
 	);
 }
@@ -77,13 +78,15 @@ function generation(
 test("a TypeError inside an operation is a defect, and its trace says Defect", async () => {
 	const traces: OperationTrace[] = [];
 	const exit = await Effect.runPromiseExit(
-		operationTask({
+		operation({
 			judge: rejectJudgment,
 			execute: async () => ({ output: null }),
 			onOperation: (trace) => traces.push(trace),
-		})("reading", {}, async () => {
-			throw new TypeError("undefined is not a function");
-		}),
+		})("reading", {}, () =>
+			Effect.sync(() => {
+				throw new TypeError("undefined is not a function");
+			}),
+		),
 	);
 	expect(defect(exit)).toBeInstanceOf(TypeError);
 	expect(traces[0]).toMatchObject({

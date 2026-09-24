@@ -1,4 +1,5 @@
 import { normalizeText } from "dumrel";
+import * as Effect from "effect/Effect";
 import type { z } from "zod";
 import type { DumgenOptions } from "../../../../types.js";
 import { DumgenFailure } from "../../../../universal/failure.js";
@@ -8,7 +9,7 @@ import {
 	executeGeneration,
 } from "../../../../universal/model.js";
 import { choice } from "../../../../universal/questions.js";
-import { operationTask, recordEvent } from "../../../../universal/trace.js";
+import { operation, recordEvent } from "../../../../universal/trace.js";
 import { translationAnalysisInputSchema } from "../structured-schemas.js";
 export type TranslationResolution =
 	| { decision: "Covered"; existingIndex: number; translation: string }
@@ -18,10 +19,8 @@ export function resolveOrGenerateTranslation(
 	options: DumgenOptions,
 	raw: z.input<typeof translationAnalysisInputSchema>,
 ) {
-	return operationTask(options)(
-		"resolveOrGenerateTranslation",
-		raw,
-		async (signal): Promise<TranslationResolution> => {
+	return operation(options)("resolveOrGenerateTranslation", raw, (scope) =>
+		Effect.gen(function* () {
 			const parsed = translationAnalysisInputSchema.safeParse(raw);
 			if (!parsed.success)
 				throw new DumgenFailure(
@@ -40,8 +39,10 @@ export function resolveOrGenerateTranslation(
 					"Complete translation candidates exceed the judgment budget",
 					route,
 				);
+			// Generation follows only a NoMatch selection, so it depends on it.
+			let selection: string[] = [];
 			if (candidates.length) {
-				const result = await judgmentCaller(options)(
+				const judged = yield* judgmentCaller(options)(
 					stage,
 					route,
 					input,
@@ -62,10 +63,12 @@ export function resolveOrGenerateTranslation(
 							} as Record<string, string>,
 						),
 					},
-					signal,
+					scope,
+					[],
 				);
-				const answer = result.answers.coverage;
-				recordEvent(signal, "TranslationSelection", {
+				selection = [judged.id];
+				const answer = judged.output.answers.coverage;
+				recordEvent(scope, "TranslationSelection", {
 					candidates,
 					answer,
 				});
@@ -88,18 +91,22 @@ export function resolveOrGenerateTranslation(
 							"Unknown translation candidate",
 							route,
 						);
-					return { decision: "Covered", existingIndex, translation };
+					return {
+						decision: "Covered",
+						existingIndex,
+						translation,
+					} as TranslationResolution;
 				}
 			} else
-				recordEvent(signal, "EmptyTranslationCandidates", {
+				recordEvent(scope, "EmptyTranslationCandidates", {
 					candidates,
 				});
-			const translation = await executeGeneration(
+			const { output: translation } = yield* executeGeneration(
 				options,
+				scope,
 				{
 					stage,
 					route,
-					signal,
 					configuration: effectiveConfiguration(options, route),
 					input,
 					systemPrompt:
@@ -128,6 +135,7 @@ export function resolveOrGenerateTranslation(
 						);
 					return normalizeText(value.translation);
 				},
+				selection,
 			);
 			const existingIndex = candidates.indexOf(translation);
 			const result: TranslationResolution =
@@ -135,13 +143,13 @@ export function resolveOrGenerateTranslation(
 					? { decision: "Add", translation }
 					: { decision: "Covered", existingIndex, translation };
 			recordEvent(
-				signal,
+				scope,
 				existingIndex < 0
 					? "GeneratedTranslation"
 					: "GeneratedTranslationCollision",
 				result,
 			);
 			return result;
-		},
+		}),
 	);
 }

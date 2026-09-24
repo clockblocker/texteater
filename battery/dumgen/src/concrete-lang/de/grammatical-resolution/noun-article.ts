@@ -1,10 +1,11 @@
 import { germanArticleForm } from "dumling";
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import type { DumgenOptions, Encounter } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { choice } from "../../../universal/questions.js";
-import { recordEvent } from "../../../universal/trace.js";
+import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import {
 	indexedContext,
 	markedContext,
@@ -128,7 +129,8 @@ export function nounArticleState(encounter: Encounter) {
 	};
 }
 
-export async function resolveNounArticle(
+/** The article's evidence, if any, and the IDs of the calls that judged it. */
+export function resolveNounArticle(
 	options: DumgenOptions,
 	encounter: Encounter,
 	output: Pick<
@@ -142,125 +144,136 @@ export async function resolveNounArticle(
 		/** The speculative Case answer, if any. */
 		case: string | undefined;
 	},
-	signal: AbortSignal,
+	scope: OperationScope,
+	dependsOn: readonly string[],
 ) {
-	const bag = output.surface.inflectionalFeatures as Record<
-		string,
-		string | null
-	> | null;
-	if (!bag) return null;
-	const core = output.lemma.coreFeatures as Record<string, string | null>;
-	const fail = (message: string): never => {
-		throw new DumgenFailure(
-			"Unresolved",
-			"resolveGrammar",
-			message,
-			"de/Lexeme/NOUN",
-		);
-	};
-	let candidate: ArticleCandidate | undefined;
-	if (judged.attachment !== undefined) {
-		if (judged.attachment === "Unresolved")
-			return fail("Unresolved noun article attachment");
-		if (judged.attachment !== "None") {
-			candidate = judged.candidates.get(judged.attachment);
-			if (!candidate)
-				return fail("Article attachment is not an eligible candidate");
-			if (candidate.realization === "Owned") {
-				const orthography = output.memberOrthographies[0];
-				if (orthography === undefined)
-					return fail("Article member evidence is not aligned");
-				candidate = { ...candidate, orthography };
+	return Effect.gen(function* () {
+		const calls: string[] = [];
+		const bag = output.surface.inflectionalFeatures as Record<
+			string,
+			string | null
+		> | null;
+		if (!bag) return { article: null, calls };
+		const core = output.lemma.coreFeatures as Record<string, string | null>;
+		const fail = (message: string): never => {
+			throw new DumgenFailure(
+				"Unresolved",
+				"resolveGrammar",
+				message,
+				"de/Lexeme/NOUN",
+			);
+		};
+		let candidate: ArticleCandidate | undefined;
+		if (judged.attachment !== undefined) {
+			if (judged.attachment === "Unresolved")
+				return fail("Unresolved noun article attachment");
+			if (judged.attachment !== "None") {
+				candidate = judged.candidates.get(judged.attachment);
+				if (!candidate)
+					return fail(
+						"Article attachment is not an eligible candidate",
+					);
+				if (candidate.realization === "Owned") {
+					const orthography = output.memberOrthographies[0];
+					if (orthography === undefined)
+						return fail("Article member evidence is not aligned");
+					candidate = { ...candidate, orthography };
+				}
 			}
 		}
-	}
-	// Attachment precedes Case. A selected article constrains its possible analyses;
-	// a unique Case is determined by the morphology, not a separate model guess.
-	const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
-	if (!field) throw Error("Missing noun Case schema");
-	let cases = field.values;
-	if (candidate) {
-		if (!bag.number || (bag.number !== "Plur" && !core.gender))
+		// Attachment precedes Case. A selected article constrains its possible analyses;
+		// a unique Case is determined by the morphology, not a separate model guess.
+		const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
+		if (!field) throw Error("Missing noun Case schema");
+		let cases = field.values;
+		if (candidate) {
+			if (!bag.number || (bag.number !== "Plur" && !core.gender))
+				return fail("Article requires known noun agreement");
+			const selectedArticle = candidate;
+			cases = ["Nom", "Acc", "Dat", "Gen"].filter(
+				(caseValue) =>
+					germanArticleForm({
+						article: selectedArticle.article,
+						case: caseValue,
+						number: bag.number ?? null,
+						gender: core.gender ?? null,
+					}) === selectedArticle.form &&
+					(selectedArticle.case === null ||
+						caseValue === selectedArticle.case),
+			);
+			if (!cases.length)
+				return fail("Article form and noun agreement are incompatible");
+		}
+		const speculative =
+			judged.case === undefined || judged.case === "Unresolved"
+				? undefined
+				: judged.case === "Unmarked"
+					? null
+					: judged.case;
+		if (cases.length === 1) bag.case = String(cases[0]);
+		else if (speculative !== undefined && cases.includes(speculative))
+			bag.case = speculative;
+		else {
+			// The speculative answer is incompatible with the attached article:
+			// ask again over the compatible values only.
+			const { id, output: result } = yield* judgmentCaller(options)(
+				"resolveGrammar",
+				"de/Lexeme/NOUN/case",
+				{
+					...markedContext(encounter),
+					article: candidate
+						? `${candidate.realization}: ${candidate.attested} supplies ${candidate.form}`
+						: "No attached article",
+				},
+				{
+					[casePath]: featureQuestion("NOUN", casePath, {
+						values: cases,
+						open: false,
+					}),
+				},
+				scope,
+				dependsOn,
+			);
+			calls.push(id);
+			const selected = result.answers[casePath].choice;
+			if (selected === "Unresolved") return fail("Unresolved noun Case");
+			bag.case = selected === "Unmarked" ? null : selected;
+		}
+		if (!candidate) {
+			bag.article = null;
+			return { article: null, calls };
+		}
+		if (!bag.case || !bag.number)
 			return fail("Article requires known noun agreement");
-		const selectedArticle = candidate;
-		cases = ["Nom", "Acc", "Dat", "Gen"].filter(
-			(caseValue) =>
-				germanArticleForm({
-					article: selectedArticle.article,
-					case: caseValue,
-					number: bag.number ?? null,
-					gender: core.gender ?? null,
-				}) === selectedArticle.form &&
-				(selectedArticle.case === null ||
-					caseValue === selectedArticle.case),
-		);
-		if (!cases.length)
-			return fail("Article form and noun agreement are incompatible");
-	}
-	const speculative =
-		judged.case === undefined || judged.case === "Unresolved"
-			? undefined
-			: judged.case === "Unmarked"
-				? null
-				: judged.case;
-	if (cases.length === 1) bag.case = String(cases[0]);
-	else if (speculative !== undefined && cases.includes(speculative))
-		bag.case = speculative;
-	else {
-		// The speculative answer is incompatible with the attached article:
-		// ask again over the compatible values only.
-		const result = await judgmentCaller(options)(
-			"resolveGrammar",
-			"de/Lexeme/NOUN/case",
-			{
-				...markedContext(encounter),
-				article: candidate
-					? `${candidate.realization}: ${candidate.attested} supplies ${candidate.form}`
-					: "No attached article",
-			},
-			{
-				[casePath]: featureQuestion("NOUN", casePath, {
-					values: cases,
-					open: false,
-				}),
-			},
-			signal,
-		);
-		const selected = result.answers[casePath].choice;
-		if (selected === "Unresolved") return fail("Unresolved noun Case");
-		bag.case = selected === "Unmarked" ? null : selected;
-	}
-	if (!candidate) {
-		bag.article = null;
-		return null;
-	}
-	if (!bag.case || !bag.number)
-		return fail("Article requires known noun agreement");
-	const reference = nounArticleReference({
-		article: candidate.article,
-		case: bag.case,
-		number: bag.number,
-		gender: core.gender ?? null,
-		spelled: candidate.form,
-	});
-	bag.article = candidate.article;
-	recordEvent(signal, "NounArticleEvidence", {
-		segmentIndex: candidate.segmentIndex,
-		realization: candidate.realization,
-		attested: candidate.attested,
-		orthography: candidate.orthography,
-		articleForm: candidate.form,
-		case: bag.case,
-	});
-	return {
-		reference,
-		evidence: {
+		const reference = nounArticleReference({
+			article: candidate.article,
+			case: bag.case,
+			number: bag.number,
+			gender: core.gender ?? null,
+			spelled: candidate.form,
+		});
+		bag.article = candidate.article;
+		recordEvent(scope, "NounArticleEvidence", {
+			segmentIndex: candidate.segmentIndex,
+			realization: candidate.realization,
 			attested: candidate.attested,
 			orthography: candidate.orthography,
-		},
-		coverage:
-			candidate.realization === "Owned"
-				? ("Full" as const)
-				: ("Partial" as const),
-	};
+			articleForm: candidate.form,
+			case: bag.case,
+		});
+		return {
+			article: {
+				reference,
+				evidence: {
+					attested: candidate.attested,
+					orthography: candidate.orthography,
+				},
+				coverage:
+					candidate.realization === "Owned"
+						? ("Full" as const)
+						: ("Partial" as const),
+			},
+			calls,
+		};
+	});
 }

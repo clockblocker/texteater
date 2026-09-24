@@ -9,7 +9,7 @@ import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { DumgenFailure } from "../src/universal/failure.js";
 import { judgmentCaller } from "../src/universal/judgment.js";
 import { executeGeneration } from "../src/universal/model.js";
-import { operationTask, recordEvent } from "../src/universal/trace.js";
+import { operation, recordEvent } from "../src/universal/trace.js";
 
 const judge: TypeSafeExecutor = async (request, options) => {
 	expect(options?.retry?.maxRetries).toBe(0);
@@ -54,43 +54,50 @@ function fixture() {
 
 test("complete operations retain both executors, dependencies, low confidence and all raw metadata", async () => {
 	const { options, traces } = fixture();
-	const run = operationTask(options)(
+	const run = operation(options)(
 		"recognition",
 		{ text: "example" },
-		async (signal) => {
-			const answer = await judgmentCaller(options)(
-				"reading",
-				"de",
-				{ candidates: ["existing"] },
-				{
-					selection: choice("Which Reading fits?", {
-						NoMatch: null,
-						existing: null,
-						Unresolved: null,
-					}),
-				},
-				signal,
-			);
-			expect(answer.answers.selection.choice).toBe("NoMatch");
-			const output = await executeGeneration(
-				options,
-				{
-					stage: "reading",
-					route: "de",
-					input: "example",
-					systemPrompt: "Generate text",
-					outputSchema: { type: "string" },
-					configuration: { model: "luna-configured", settings: {} },
-					signal,
-				},
-				(raw) => {
-					if (typeof raw !== "string") throw Error("Expected string");
-					return raw;
-				},
-			);
-			recordEvent(signal, "CollisionFold", { existing: output });
-			return output;
-		},
+		(scope) =>
+			Effect.gen(function* () {
+				const { id, output: answer } = yield* judgmentCaller(options)(
+					"reading",
+					"de",
+					{ candidates: ["existing"] },
+					{
+						selection: choice("Which Reading fits?", {
+							NoMatch: null,
+							existing: null,
+							Unresolved: null,
+						}),
+					},
+					scope,
+					[],
+				);
+				expect(answer.answers.selection.choice).toBe("NoMatch");
+				const { output } = yield* executeGeneration(
+					options,
+					scope,
+					{
+						stage: "reading",
+						route: "de",
+						input: "example",
+						systemPrompt: "Generate text",
+						outputSchema: { type: "string" },
+						configuration: {
+							model: "luna-configured",
+							settings: {},
+						},
+					},
+					(raw) => {
+						if (typeof raw !== "string")
+							throw Error("Expected string");
+						return raw;
+					},
+					[id],
+				);
+				recordEvent(scope, "CollisionFold", { existing: output });
+				return output;
+			}),
 	);
 	expect(await Effect.runPromise(run)).toBe("generated");
 	const trace = traces[0];
@@ -118,20 +125,23 @@ test("complete operations retain both executors, dependencies, low confidence an
 
 test("provider success and invalid output remain distinct from the final operation outcome", async () => {
 	const { options, traces } = fixture();
-	const run = operationTask(options)("grammar", {}, async (signal) => {
-		await judgmentCaller(options)(
-			"grammar",
-			"de",
-			{},
-			{ form: choice("Form?", { Fin: null, Inf: null }) },
-			signal,
-		);
-		throw new DumgenFailure(
-			"Unresolved",
-			"grammar",
-			"Contradictory applicable features",
-		);
-	});
+	const run = operation(options)("grammar", {}, (scope) =>
+		Effect.gen(function* () {
+			yield* judgmentCaller(options)(
+				"grammar",
+				"de",
+				{},
+				{ form: choice("Form?", { Fin: null, Inf: null }) },
+				scope,
+				[],
+			);
+			throw new DumgenFailure(
+				"Unresolved",
+				"grammar",
+				"Contradictory applicable features",
+			);
+		}),
+	);
 	expect((await Effect.runPromise(Effect.either(run)))._tag).toBe("Left");
 	expect(traces[0]).toMatchObject({
 		outcome: "Failure",
@@ -144,13 +154,14 @@ test("provider success and invalid output remain distinct from the final operati
 	};
 	await Effect.runPromise(
 		Effect.either(
-			operationTask(malformed)("grammar", {}, (signal) =>
+			operation(malformed)("grammar", {}, (scope) =>
 				judgmentCaller(malformed)(
 					"grammar",
 					"de",
 					{},
 					{ form: choice("Form?", { Fin: null, Inf: null }) },
-					signal,
+					scope,
+					[],
 				),
 			),
 		),
@@ -186,24 +197,32 @@ test("cancellation interrupts the Effect and prevents dependent generation", asy
 		},
 	};
 	const controller = new AbortController();
-	const run = operationTask(blocking)("reading", {}, async (signal) => {
-		await judgmentCaller(blocking)(
-			"reading",
-			"de",
-			{},
-			{ fit: choice("Fits?", { Yes: null, No: null }) },
-			signal,
-		);
-		return blocking.execute({
-			stage: "reading",
-			route: "de",
-			input: {},
-			systemPrompt: "Never",
-			outputSchema: {},
-			configuration: { model: "luna", settings: {} },
-			signal,
-		});
-	});
+	const run = operation(blocking)("reading", {}, (scope) =>
+		Effect.gen(function* () {
+			const { id } = yield* judgmentCaller(blocking)(
+				"reading",
+				"de",
+				{},
+				{ fit: choice("Fits?", { Yes: null, No: null }) },
+				scope,
+				[],
+			);
+			return yield* executeGeneration(
+				blocking,
+				scope,
+				{
+					stage: "reading",
+					route: "de",
+					input: {},
+					systemPrompt: "Never",
+					outputSchema: {},
+					configuration: { model: "luna", settings: {} },
+				},
+				(output) => output,
+				[id],
+			);
+		}),
+	);
 	const result = Effect.runPromiseExit(run, { signal: controller.signal });
 	await started;
 	controller.abort();

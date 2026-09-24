@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
 import type {
 	DumgenOptions,
 	Encounter,
@@ -9,10 +10,10 @@ import {
 	effectiveConfiguration,
 	executeGeneration,
 } from "../../../universal/model.js";
-import { settleAll } from "../../../universal/task.js";
 import {
 	fingerprint,
-	operationTask,
+	type OperationScope,
+	operation,
 	recordEvent,
 } from "../../../universal/trace.js";
 import {
@@ -97,10 +98,8 @@ export function draftKnowledge(
 		request: KnowledgeRequest;
 	},
 ) {
-	return operationTask(options)(
-		"draftKnowledge",
-		input,
-		async (signal): Promise<KnowledgeDraft> => {
+	return operation(options)("draftKnowledge", input, (scope) =>
+		Effect.gen(function* () {
 			const encounter = validateEncounter(
 				input.encounter,
 				"draftKnowledge",
@@ -120,16 +119,15 @@ export function draftKnowledge(
 					"draftKnowledge",
 					"Draft Lemma and Encounter routes disagree",
 				);
-			const sourceFingerprint = await knowledgeDraftFingerprint(
-				encounter,
-				lemma,
+			const sourceFingerprint = yield* Effect.promise(() =>
+				knowledgeDraftFingerprint(encounter, lemma),
 			);
 			if (
 				lemma.language !== "de" ||
 				authoredFor(lemma) ||
 				closedRoute(lemma)
 			)
-				return { sourceFingerprint, texts: [] };
+				return { sourceFingerprint, texts: [] } as KnowledgeDraft;
 			const route = `de/${lemma.family}/${lemma.kind}`;
 			const jobs = Object.entries(input.request).flatMap(
 				([aspect, selection]) => {
@@ -143,63 +141,56 @@ export function draftKnowledge(
 						aspect === "translations"
 							? Object.keys(selection ?? {})
 							: [undefined]
-					).map(
-						async (language): Promise<KnowledgeDraft["texts"]> => {
-							try {
-								const text = await executeGeneration(
+					).map((language) =>
+						executeGeneration(
+							options,
+							scope,
+							{
+								stage: "draftKnowledge",
+								route,
+								configuration: effectiveConfiguration(
 									options,
-									{
-										stage: "draftKnowledge",
-										route,
-										signal,
-										configuration: effectiveConfiguration(
-											options,
-											route,
-										),
-										input:
-											aspect === "transcription"
-												? draftInput(lemma)
-												: draftInput(lemma, encounter),
-										systemPrompt:
-											aspect === "transcription"
-												? transcriptionPrompt
-												: senseTextPrompt(
-														aspect,
-														language,
-													),
-										outputFormat: "text",
-									},
-									(output) =>
-										draftText(
-											"draftKnowledge",
-											route,
-											output,
-										),
-									[],
-								);
-								return text
-									? [
-											{
-												aspect,
-												...(language
-													? { language }
-													: {}),
-												text,
-											},
-										]
-									: [];
-							} catch (error) {
-								signal.throwIfAborted();
-								if (!(error instanceof DumgenFailure))
-									throw error;
-								recordEvent(signal, "KnowledgeDraftFailed", {
-									aspect,
-									language: language ?? null,
-									message: String(error),
-								});
-								return [];
-							}
-						},
+									route,
+								),
+								input:
+									aspect === "transcription"
+										? draftInput(lemma)
+										: draftInput(lemma, encounter),
+								systemPrompt:
+									aspect === "transcription"
+										? transcriptionPrompt
+										: senseTextPrompt(aspect, language),
+								outputFormat: "text",
+							},
+							(output) =>
+								draftText("draftKnowledge", route, output),
+							[],
+						).pipe(
+							Effect.map(
+								({ output: text }): KnowledgeDraft["texts"] =>
+									text
+										? [
+												{
+													aspect,
+													...(language
+														? { language }
+														: {}),
+													text,
+												},
+											]
+										: [],
+							),
+							Effect.catchAll((error) =>
+								Effect.sync(() => {
+									recordEvent(scope, "KnowledgeDraftFailed", {
+										aspect,
+										language: language ?? null,
+										message: String(error),
+									});
+									return [];
+								}),
+							),
+						),
 					);
 				},
 			);
@@ -207,63 +198,66 @@ export function draftKnowledge(
 				input.request.semanticRelations ?? {},
 			);
 			const relationsJob = requested.length
-				? (async () => {
-						try {
-							const candidates = await executeGeneration(
+				? executeGeneration(
+						options,
+						scope,
+						{
+							stage: "draftRelationCandidates",
+							route,
+							configuration: effectiveConfiguration(
 								options,
-								{
-									stage: "draftRelationCandidates",
-									route,
-									signal,
-									configuration: effectiveConfiguration(
-										options,
+								route,
+							),
+							input: draftInput(
+								lemma,
+								encounter,
+								`<requested_relations>${requested.join(", ")}</requested_relations>`,
+							),
+							systemPrompt:
+								"Propose up to 16 distinct German dictionary forms that stand in the relations listed in <requested_relations> to the German headword in <target_lemma>, as used at <TARGET> in <marked_sentence>. The sentence is the sense anchor: relate only to the meaning the marked target carries here, not another sense of the same headword. Keep a single word for a single word and a fixed expression for a fixed expression. Do not include the headword itself, incidental neighbors or inflected forms. Reply with one dictionary form per line and nothing else.",
+							outputFormat: "text",
+						},
+						(output) =>
+							[
+								...new Set(
+									draftText(
+										"draftRelationCandidates",
 										route,
-									),
-									input: draftInput(
-										lemma,
-										encounter,
-										`<requested_relations>${requested.join(", ")}</requested_relations>`,
-									),
-									systemPrompt:
-										"Propose up to 16 distinct German dictionary forms that stand in the relations listed in <requested_relations> to the German headword in <target_lemma>, as used at <TARGET> in <marked_sentence>. The sentence is the sense anchor: relate only to the meaning the marked target carries here, not another sense of the same headword. Keep a single word for a single word and a fixed expression for a fixed expression. Do not include the headword itself, incidental neighbors or inflected forms. Reply with one dictionary form per line and nothing else.",
-									outputFormat: "text",
-								},
-								(output) =>
-									[
-										...new Set(
-											draftText(
-												"draftRelationCandidates",
-												route,
-												output,
-											)
-												.split("\n")
-												.map((line) => line.trim())
-												.filter(Boolean),
-										),
-									].slice(0, 16),
-								[],
-							);
-							return { requested, candidates };
-						} catch (error) {
-							signal.throwIfAborted();
-							if (!(error instanceof DumgenFailure)) throw error;
-							recordEvent(signal, "RelationDraftFailed", {
-								message: String(error),
-							});
-							return undefined;
-						}
-					})()
-				: Promise.resolve(undefined);
-			const textsJob = settleAll(jobs);
-			await Promise.allSettled([textsJob, relationsJob]);
-			const texts = await textsJob,
-				relations = await relationsJob;
+										output,
+									)
+										.split("\n")
+										.map((line) => line.trim())
+										.filter(Boolean),
+								),
+							].slice(0, 16),
+						[],
+					).pipe(
+						Effect.map(({ output: candidates }) => ({
+							requested,
+							candidates,
+						})),
+						Effect.catchAll((error) =>
+							Effect.sync(() => {
+								recordEvent(scope, "RelationDraftFailed", {
+									message: String(error),
+								});
+								return undefined;
+							}),
+						),
+					)
+				: Effect.succeed(undefined);
+			// A failed draft is recorded and dropped while its siblings continue;
+			// only a defect or interruption stops them.
+			const [texts, relations] = yield* Effect.all(
+				[Effect.all(jobs, { concurrency: "unbounded" }), relationsJob],
+				{ concurrency: "unbounded" },
+			);
 			return {
 				sourceFingerprint,
 				texts: texts.flat(),
 				...(relations ? { relations } : {}),
-			};
-		},
+			} as KnowledgeDraft;
+		}),
 	);
 }
 
@@ -275,7 +269,7 @@ export async function draftedTexts(
 		reading: Dumling.Reading;
 		request: KnowledgeRequest;
 	},
-	signal: AbortSignal,
+	scope: OperationScope,
 ): Promise<Map<string, string>> {
 	const accepted = new Map<string, string>();
 	const draft = options.knowledgeDraft;
@@ -316,7 +310,7 @@ export async function draftedTexts(
 	);
 	for (const item of texts)
 		accepted.set(`${item.aspect}/${item.language ?? ""}`, item.text);
-	recordEvent(signal, "KnowledgeDraftReused", {
+	recordEvent(scope, "KnowledgeDraftReused", {
 		aspects: [...accepted.keys()],
 	});
 	return accepted;

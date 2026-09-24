@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
 import type {
@@ -12,7 +13,7 @@ import {
 	executeGeneration,
 } from "../../../universal/model.js";
 import { choice } from "../../../universal/questions.js";
-import { recordEvent } from "../../../universal/trace.js";
+import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
@@ -131,753 +132,805 @@ const verbalIdentityPolicy =
 const partialCoveragePolicy =
 	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
 
-export async function resolveGrammarJudgments(
+/**
+ * Each round trip depends on every earlier one: the follow-ups ask only what
+ * the earlier answers left open.
+ */
+export function resolveGrammarJudgments(
 	options: DumgenOptions,
 	encounter: Encounter,
-	signal: AbortSignal,
+	scope: OperationScope,
 	lemmaCandidates: readonly LemmaCandidate[] = [],
-): Promise<GrammarOutput> {
-	const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
-	if (
-		encounter.target.family === "Morpheme" ||
-		encounter.target.kind === "PUNCT"
-	)
-		throw new DumgenFailure(
-			"NotImplemented",
-			"resolveGrammar",
-			"Production is not enabled for this grammar route",
-			route,
-		);
-	const fail = (message: string): never => {
-		throw new DumgenFailure("Unresolved", "resolveGrammar", message, route);
-	};
-	const input = markedContext(encounter);
-	const canonicalFormCandidate = input.members.join(" ");
-	// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
-	// 102 → 0/154), so a stored Lemma of the same route found under another
-	// word would become this target's Lemma: "stolz" for "normal".
-	const targetTexts = new Set([...input.members, canonicalFormCandidate]);
-	const storedLemmas = lemmaCandidates
-		.filter(({ foundUnder }) =>
-			foundUnder.some((text) => targetTexts.has(text)),
-		)
-		.map(({ lemma }) => lemma)
-		.filter(
-			(lemma) =>
-				lemma.language === encounter.sentence.language &&
-				lemma.family === encounter.target.family &&
-				lemma.kind === encounter.target.kind,
-		);
-	// Every source here sets Lemma precision.
-	const canonicalFormAlternatives = [
-		...new Set([
-			...storedLemmas.map((lemma) => lemma.canonicalForm),
-			...(encounter.target.kind === "NOUN" ? input.members : []),
-		]),
-	]
-		.filter((text) => text !== canonicalFormCandidate)
-		.slice(0, 64);
-	const schema = modelSchemas[`grammar/${route}`];
-	if (!schema)
-		throw new DumgenFailure(
-			"NotImplemented",
-			"resolveGrammar",
-			"No grammatical route",
-			route,
-		);
-	const catalog = grammarFeatureFields(route);
-	const verbal = ["VERB", "AUX", "Idiom", "Collocation"].includes(
-		encounter.target.kind,
-	);
-	const auxiliary = encounter.target.kind === "AUX";
-	const constructionFeature = (path: string) =>
-		/\.(perfect|future|passive)$/u.test(path);
-	const mapped =
-		encounter.target.kind === "DET" || encounter.target.kind === "PRON";
-	// Several grammar Readings share one AUX Lemma; the identity is the Lemma.
-	const identities = auxiliary
-		? authoredMembers.filter(
-				(member, index) =>
-					member.lemma.kind === "AUX" &&
-					!authoredMembers
-						.slice(0, index)
-						.some((prior) => sameValue(prior.lemma, member.lemma)),
-			)
-		: [];
-	const questions: Questions = {
-		support: choice(
-			"Under `policy`, can the fixed target in `markedContext` support a coherent analysis on `route`?",
-			{
-				Supported: "Yes, keep route and membership unchanged",
-				Unresolved: "No defensible analysis on the supplied target",
-			},
-		),
-		spelling: choice(
-			"Under `policy.orthography` and `policy.route`, is the Surface realized by `members` in `markedContext` a canonical spelling of its Lemma or a licensed variant? Inflection alone never means Variant.",
-			{ Canonical: null, Variant: null, Unresolved: null },
-		),
-		historicalStatus: choice(
-			"Is the grammatical use of this target archaic?",
-			{
-				Current: "Current use, including licensed old spelling",
-				Archaic: "The grammatical use itself is archaic",
-				Unresolved: null,
-			},
-		),
-	};
-	if (catalog.has("surface.inflectionalFeatures"))
-		questions.inflection = inflectionQuestion(encounter.target.kind);
-	for (const [path, field] of catalog) {
+): Effect.Effect<GrammarOutput, DumgenFailure> {
+	return Effect.gen(function* () {
+		const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
 		if (
-			!(
-				path.startsWith("lemma.coreFeatures.") ||
-				path.startsWith("surface.inflectionalFeatures.")
-			)
+			encounter.target.family === "Morpheme" ||
+			encounter.target.kind === "PUNCT"
 		)
-			continue;
-		if (auxiliary && path.startsWith("lemma.")) continue;
-		if (auxiliary && constructionFeature(path)) continue; // Construction belongs to the Unit, not the auxiliary.
-		if (
-			encounter.target.kind === "NOUN" &&
-			(path.endsWith(".article") || path.endsWith(".case"))
-		)
-			continue;
-		if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
-		questions[path] = featureQuestion(encounter.target.kind, path, field);
-	}
-	for (const [index] of input.members.entries()) {
-		questions[`orthography_${index}`] = choice(
-			`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
-			{
-				Standard:
-					"Licensed spelling/capitalization, including variants",
-				Typo: "Actual local spelling or casing error",
-				Unresolved: null,
-			},
-		);
-		questions[`normalization_${index}`] = choice(
-			`Under \`policy\`, how should \`members[${index}]\` be positionally normalized in \`markedContext\`?`,
-			normalizations,
-		);
-	}
-	const partial = [
-		"Idiom",
-		"DiscourseFormula",
-		"Proverb",
-		"Aphorism",
-	].includes(encounter.target.kind);
-	if (partial)
-		questions.coverage = choice(
-			"Is all fixed lexical material realized, or is some genuinely unrealized?",
-			{
-				Full: "All fixed material realized",
-				Partial: "Recoverable fixed material genuinely unrealized",
-				Unresolved: null,
-			},
-		);
-	if (auxiliary)
-		questions.identity = choice(
-			"Which reviewed AUX Lemma (sein, haben or werden) is realized by the supplied auxiliary? Finite features belong to its Surface; perfect, future and passive belong to the verb it serves.",
-			{
-				...Object.fromEntries(
-					identities.map((member, index) => [
-						`identity_${index}`,
-						JSON.stringify(member.lemma),
-					]),
-				),
-				NoMatch:
-					"The required AUX identity is absent from the reviewed catalog",
-				Unresolved: "Cannot choose a defensible identity",
-			},
-		);
-	else if (encounter.target.kind !== "DET")
-		questions.canonical = choice(
-			"Under `policy.canonicalForm`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in `markedContext`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.",
-			{
-				...Object.fromEntries(
-					canonicalFormAlternatives.map((text, index) => [
-						`candidate_${index}`,
-						text,
-					]),
-				),
-				CandidateIsCanonical:
-					"`canonicalFormCandidate` is already the exact dictionary headword",
-				CandidateIsNotCanonical:
-					"The dictionary headword is absent from both `canonicalFormCandidate` and every `canonicalFormAlternatives` value",
-				Unresolved:
-					"Cannot defensibly establish whether the concrete candidate is the dictionary headword",
-			},
-		);
-	// Speculative questions whose candidates come from raw source text ride in
-	// the same round trip; code consumes them only when they apply.
-	const articleCandidates =
-		encounter.target.kind === "NOUN"
-			? nounArticleCandidates(encounter)
-			: null;
-	if (articleCandidates)
-		Object.assign(
-			questions,
-			nounArticleQuestions(encounter, articleCandidates),
-		);
-	const lexicalStringCandidates = auxiliary
-		? {}
-		: speculativeLexicalStringCandidates(catalog, input.members);
-	for (const [key, candidates] of Object.entries(lexicalStringCandidates))
-		questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
-	const governedPreposition =
-		verbal && !auxiliary && input.members.length > 1;
-	if (governedPreposition)
-		questions.governedPreposition = choice(
-			"Under `policy.verbalIdentity`, which supplied member is the preposition this verbal target lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.",
-			{
-				...Object.fromEntries(
-					input.members.map((text, index) => [
-						`member_${index}`,
-						`\`members[${index}]\` (${text}) is the lexically governed preposition`,
-					]),
-				),
-				Absent: "No member is a lexically governed preposition",
-				Unresolved: "Government cannot be defensibly decided",
-			},
-		);
-	const judge = judgmentCaller(options);
-	const state = {
-		...input,
-		route,
-		canonicalFormCandidate,
-		canonicalFormAlternatives,
-		storedLemmas,
-		...(articleCandidates ? nounArticleState(encounter) : {}),
-		...(Object.keys(lexicalStringCandidates).length
-			? { lexicalStringCandidates }
-			: {}),
-		policy: {
-			...sharedPolicy,
-			...(verbal
-				? {
-						verbalIdentity: verbalIdentityPolicy,
-						canonicalExample:
-							"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
-						verbalComposition: verbalCompositionGuidance,
-					}
-				: {}),
-			...(encounter.target.kind === "NOUN" ? { noun: nounPolicy } : {}),
-			...(partial ? { coverage: partialCoveragePolicy } : {}),
-			route: routeGuidance[encounter.target.kind] ?? "",
-		},
-		reviewedIdentities: identities.map((member) => member.lemma),
-	};
-	const result = await judge(
-		"resolveGrammar",
-		`${route}/features`,
-		state,
-		questions,
-		signal,
-	);
-	const consumed = new Set<string>();
-	function selected(id: string): string {
-		consumed.add(id);
-		const answer = result.answers[id];
-		if (
-			!answer ||
-			answer.type !== "choice" ||
-			answer.choice === "Unresolved"
-		)
-			return fail(`Unresolved applicable question ${id}`);
-		return answer.choice;
-	}
-	/** A speculative answer: consumed when applicable, never a failure by itself. */
-	function speculative(id: string): string | undefined {
-		if (!(id in questions)) return undefined;
-		consumed.add(id);
-		const answer = result.answers[id];
-		return answer?.type === "choice" ? answer.choice : undefined;
-	}
-	try {
-		selected("support");
-		const core: Record<string, unknown> = {};
-		const openFeatures: string[] = [];
-		for (const [path, field] of catalog)
-			if (path.startsWith("lemma.coreFeatures.") && !auxiliary) {
-				const key = path.slice("lemma.coreFeatures.".length),
-					answer = selected(path);
-				if (field.open) {
-					core[key] = null;
-					if (answer === "Present") openFeatures.push(key);
-				} else core[key] = answer === unmarked ? null : answer;
-			}
-		const surface: Record<string, unknown> = {
-			spelling: selected("spelling"),
-			surfaceFeatures:
-				selected("historicalStatus") === "Archaic"
-					? { historicalStatus: "Archaic" }
-					: null,
-		};
-		if (questions.inflection) {
-			surface.inflectionalFeatures = null;
-			if (selected("inflection") === "Marked") {
-				const bag: Record<string, unknown> = {};
-				const form = verbal
-					? selected("surface.inflectionalFeatures.verbForm")
-					: undefined;
-				for (const [path] of catalog)
-					if (path.startsWith("surface.inflectionalFeatures.")) {
-						const key = path.slice(
-							"surface.inflectionalFeatures.".length,
-						);
-						if (
-							encounter.target.kind === "NOUN" &&
-							(key === "article" || key === "case")
-						) {
-							bag[key] = null;
-							continue;
-						}
-						if (verbal && key === "voice") continue;
-						if (
-							auxiliary &&
-							constructionFeature(
-								`surface.inflectionalFeatures.${key}`,
-							)
-						) {
-							bag[key] = null;
-							continue;
-						}
-						if (
-							verbal &&
-							key === "participleForm" &&
-							form !== "Part"
-						)
-							continue;
-						if (
-							verbal &&
-							["tense", "mood", "person", "number"].includes(
-								key,
-							) &&
-							form !== "Fin"
-						) {
-							bag[key] = null;
-							continue;
-						}
-						if (
-							verbal &&
-							key === "tense" &&
-							selected("surface.inflectionalFeatures.mood") ===
-								"Imp"
-						) {
-							bag[key] = null;
-							continue;
-						}
-						const answer = selected(path);
-						bag[key] = answer === unmarked ? null : answer;
-					}
-				if (verbal) bag.voice = bag.passive === null ? null : "Pass";
-				surface.inflectionalFeatures = bag;
-			}
-		}
-		const memberOrthographies = input.members.map(
-			(_, index) =>
-				selected(`orthography_${index}`) as "Standard" | "Typo",
-		);
-		const normalizationModes = input.members.map((_, index) =>
-			selected(`normalization_${index}`),
-		);
-		let governedPrepositionEvidence: {
-			attested: string;
-			orthography: "Standard" | "Typo";
-		} | null = null;
-		if (governedPreposition) {
-			const answer = selected("governedPreposition");
-			if (answer !== "Absent") {
-				const position = Number(answer.slice("member_".length));
-				const attested = input.members[position];
-				const orthography = memberOrthographies[position];
-				if (attested === undefined || orthography === undefined)
-					return fail("Unaligned governed-preposition evidence");
-				governedPrepositionEvidence = { attested, orthography };
-			}
-		}
-		const normalizedMembers = input.members.map((text, index) =>
-			transformed(text, normalizationModes[index]!),
-		);
-		const needed: Record<string, string> = {};
-		for (const [index, mode] of normalizationModes.entries())
-			if (mode === "Generate")
-				needed[`member_${index}`] =
-					`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
-		let coverage = partial
-			? (selected("coverage") as "Full" | "Partial")
-			: "Full";
-		const mechanicalCanonical =
-			coverage === "Full" &&
-			surface.spelling === "Canonical" &&
-			["DiscourseFormula", "Proverb", "Aphorism"].includes(
-				encounter.target.kind,
+			throw new DumgenFailure(
+				"NotImplemented",
+				"resolveGrammar",
+				"Production is not enabled for this grammar route",
+				route,
 			);
-		const copiedCanonical = () =>
-			encounter.target.kind === "DiscourseFormula"
-				? normalizedMembers.join(" ").toLocaleLowerCase("de")
-				: normalizedMembers.join(" ");
-		let lemma: GrammarOutput["lemma"];
-		if (auxiliary) {
-			const identity = selected("identity");
-			if (identity === "NoMatch")
-				throw new DumgenFailure(
-					"CatalogMiss",
-					"resolveGrammar",
-					"Required AUX identity is absent from the reviewed catalog",
-					route,
-				);
-			const member =
-				identities[Number(identity.slice("identity_".length))];
-			if (!member) return fail("Missing selected AUX identity");
-			lemma = {
-				canonicalForm: member.lemma.canonicalForm,
-				coreFeatures: member.lemma.coreFeatures,
-			};
-			recordEvent(signal, "AuthoredIdentity", { lemma: member.lemma });
-		} else {
-			const member = mapped
-				? await resolveAuthoredGrammarIdentity(
-						options,
-						{
-							kind: encounter.target.kind as "DET" | "PRON",
-							spelled: normalizedMembers.join(" "),
-							core,
-							inflection: surface.inflectionalFeatures,
-							markedContext: input.markedContext,
-							sentenceInitial:
-								encounter.target.memberSegmentIndices[0] ===
-								encounter.sentence.segments.findIndex(
-									(segment) =>
-										segment.kind === "ResolvableText",
-								),
-						},
-						signal,
-					)
+		const fail = (message: string): never => {
+			throw new DumgenFailure(
+				"Unresolved",
+				"resolveGrammar",
+				message,
+				route,
+			);
+		};
+		const input = markedContext(encounter);
+		const canonicalFormCandidate = input.members.join(" ");
+		// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
+		// 102 → 0/154), so a stored Lemma of the same route found under another
+		// word would become this target's Lemma: "stolz" for "normal".
+		const targetTexts = new Set([...input.members, canonicalFormCandidate]);
+		const storedLemmas = lemmaCandidates
+			.filter(({ foundUnder }) =>
+				foundUnder.some((text) => targetTexts.has(text)),
+			)
+			.map(({ lemma }) => lemma)
+			.filter(
+				(lemma) =>
+					lemma.language === encounter.sentence.language &&
+					lemma.family === encounter.target.family &&
+					lemma.kind === encounter.target.kind,
+			);
+		// Every source here sets Lemma precision.
+		const canonicalFormAlternatives = [
+			...new Set([
+				...storedLemmas.map((lemma) => lemma.canonicalForm),
+				...(encounter.target.kind === "NOUN" ? input.members : []),
+			]),
+		]
+			.filter((text) => text !== canonicalFormCandidate)
+			.slice(0, 64);
+		const schema = modelSchemas[`grammar/${route}`];
+		if (!schema)
+			throw new DumgenFailure(
+				"NotImplemented",
+				"resolveGrammar",
+				"No grammatical route",
+				route,
+			);
+		const catalog = grammarFeatureFields(route);
+		const verbal = ["VERB", "AUX", "Idiom", "Collocation"].includes(
+			encounter.target.kind,
+		);
+		const auxiliary = encounter.target.kind === "AUX";
+		const constructionFeature = (path: string) =>
+			/\.(perfect|future|passive)$/u.test(path);
+		const mapped =
+			encounter.target.kind === "DET" || encounter.target.kind === "PRON";
+		// Several grammar Readings share one AUX Lemma; the identity is the Lemma.
+		const identities = auxiliary
+			? authoredMembers.filter(
+					(member, index) =>
+						member.lemma.kind === "AUX" &&
+						!authoredMembers
+							.slice(0, index)
+							.some((prior) =>
+								sameValue(prior.lemma, member.lemma),
+							),
+				)
+			: [];
+		const questions: Questions = {
+			support: choice(
+				"Under `policy`, can the fixed target in `markedContext` support a coherent analysis on `route`?",
+				{
+					Supported: "Yes, keep route and membership unchanged",
+					Unresolved: "No defensible analysis on the supplied target",
+				},
+			),
+			spelling: choice(
+				"Under `policy.orthography` and `policy.route`, is the Surface realized by `members` in `markedContext` a canonical spelling of its Lemma or a licensed variant? Inflection alone never means Variant.",
+				{ Canonical: null, Variant: null, Unresolved: null },
+			),
+			historicalStatus: choice(
+				"Is the grammatical use of this target archaic?",
+				{
+					Current: "Current use, including licensed old spelling",
+					Archaic: "The grammatical use itself is archaic",
+					Unresolved: null,
+				},
+			),
+		};
+		if (catalog.has("surface.inflectionalFeatures"))
+			questions.inflection = inflectionQuestion(encounter.target.kind);
+		for (const [path, field] of catalog) {
+			if (
+				!(
+					path.startsWith("lemma.coreFeatures.") ||
+					path.startsWith("surface.inflectionalFeatures.")
+				)
+			)
+				continue;
+			if (auxiliary && path.startsWith("lemma.")) continue;
+			if (auxiliary && constructionFeature(path)) continue; // Construction belongs to the Unit, not the auxiliary.
+			if (
+				encounter.target.kind === "NOUN" &&
+				(path.endsWith(".article") || path.endsWith(".case"))
+			)
+				continue;
+			if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
+			questions[path] = featureQuestion(
+				encounter.target.kind,
+				path,
+				field,
+			);
+		}
+		for (const [index] of input.members.entries()) {
+			questions[`orthography_${index}`] = choice(
+				`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
+				{
+					Standard:
+						"Licensed spelling/capitalization, including variants",
+					Typo: "Actual local spelling or casing error",
+					Unresolved: null,
+				},
+			);
+			questions[`normalization_${index}`] = choice(
+				`Under \`policy\`, how should \`members[${index}]\` be positionally normalized in \`markedContext\`?`,
+				normalizations,
+			);
+		}
+		const partial = [
+			"Idiom",
+			"DiscourseFormula",
+			"Proverb",
+			"Aphorism",
+		].includes(encounter.target.kind);
+		if (partial)
+			questions.coverage = choice(
+				"Is all fixed lexical material realized, or is some genuinely unrealized?",
+				{
+					Full: "All fixed material realized",
+					Partial: "Recoverable fixed material genuinely unrealized",
+					Unresolved: null,
+				},
+			);
+		if (auxiliary)
+			questions.identity = choice(
+				"Which reviewed AUX Lemma (sein, haben or werden) is realized by the supplied auxiliary? Finite features belong to its Surface; perfect, future and passive belong to the verb it serves.",
+				{
+					...Object.fromEntries(
+						identities.map((member, index) => [
+							`identity_${index}`,
+							JSON.stringify(member.lemma),
+						]),
+					),
+					NoMatch:
+						"The required AUX identity is absent from the reviewed catalog",
+					Unresolved: "Cannot choose a defensible identity",
+				},
+			);
+		else if (encounter.target.kind !== "DET")
+			questions.canonical = choice(
+				"Under `policy.canonicalForm`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in `markedContext`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.",
+				{
+					...Object.fromEntries(
+						canonicalFormAlternatives.map((text, index) => [
+							`candidate_${index}`,
+							text,
+						]),
+					),
+					CandidateIsCanonical:
+						"`canonicalFormCandidate` is already the exact dictionary headword",
+					CandidateIsNotCanonical:
+						"The dictionary headword is absent from both `canonicalFormCandidate` and every `canonicalFormAlternatives` value",
+					Unresolved:
+						"Cannot defensibly establish whether the concrete candidate is the dictionary headword",
+				},
+			);
+		// Speculative questions whose candidates come from raw source text ride in
+		// the same round trip; code consumes them only when they apply.
+		const articleCandidates =
+			encounter.target.kind === "NOUN"
+				? nounArticleCandidates(encounter)
 				: null;
-			if (member) {
+		if (articleCandidates)
+			Object.assign(
+				questions,
+				nounArticleQuestions(encounter, articleCandidates),
+			);
+		const lexicalStringCandidates = auxiliary
+			? {}
+			: speculativeLexicalStringCandidates(catalog, input.members);
+		for (const [key, candidates] of Object.entries(lexicalStringCandidates))
+			questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
+		const governedPreposition =
+			verbal && !auxiliary && input.members.length > 1;
+		if (governedPreposition)
+			questions.governedPreposition = choice(
+				"Under `policy.verbalIdentity`, which supplied member is the preposition this verbal target lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.",
+				{
+					...Object.fromEntries(
+						input.members.map((text, index) => [
+							`member_${index}`,
+							`\`members[${index}]\` (${text}) is the lexically governed preposition`,
+						]),
+					),
+					Absent: "No member is a lexically governed preposition",
+					Unresolved: "Government cannot be defensibly decided",
+				},
+			);
+		const judge = judgmentCaller(options);
+		const state = {
+			...input,
+			route,
+			canonicalFormCandidate,
+			canonicalFormAlternatives,
+			storedLemmas,
+			...(articleCandidates ? nounArticleState(encounter) : {}),
+			...(Object.keys(lexicalStringCandidates).length
+				? { lexicalStringCandidates }
+				: {}),
+			policy: {
+				...sharedPolicy,
+				...(verbal
+					? {
+							verbalIdentity: verbalIdentityPolicy,
+							canonicalExample:
+								"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
+							verbalComposition: verbalCompositionGuidance,
+						}
+					: {}),
+				...(encounter.target.kind === "NOUN"
+					? { noun: nounPolicy }
+					: {}),
+				...(partial ? { coverage: partialCoveragePolicy } : {}),
+				route: routeGuidance[encounter.target.kind] ?? "",
+			},
+			reviewedIdentities: identities.map((member) => member.lemma),
+		};
+		const features = yield* judge(
+			"resolveGrammar",
+			`${route}/features`,
+			state,
+			questions,
+			scope,
+			[],
+		);
+		const result = features.output;
+		const upstream = [features.id];
+		const consumed = new Set<string>();
+		function selected(id: string): string {
+			consumed.add(id);
+			const answer = result.answers[id];
+			if (
+				!answer ||
+				answer.type !== "choice" ||
+				answer.choice === "Unresolved"
+			)
+				return fail(`Unresolved applicable question ${id}`);
+			return answer.choice;
+		}
+		/** A speculative answer: consumed when applicable, never a failure by itself. */
+		function speculative(id: string): string | undefined {
+			if (!(id in questions)) return undefined;
+			consumed.add(id);
+			const answer = result.answers[id];
+			return answer?.type === "choice" ? answer.choice : undefined;
+		}
+		try {
+			selected("support");
+			const core: Record<string, unknown> = {};
+			const openFeatures: string[] = [];
+			for (const [path, field] of catalog)
+				if (path.startsWith("lemma.coreFeatures.") && !auxiliary) {
+					const key = path.slice("lemma.coreFeatures.".length),
+						answer = selected(path);
+					if (field.open) {
+						core[key] = null;
+						if (answer === "Present") openFeatures.push(key);
+					} else core[key] = answer === unmarked ? null : answer;
+				}
+			const surface: Record<string, unknown> = {
+				spelling: selected("spelling"),
+				surfaceFeatures:
+					selected("historicalStatus") === "Archaic"
+						? { historicalStatus: "Archaic" }
+						: null,
+			};
+			if (questions.inflection) {
+				surface.inflectionalFeatures = null;
+				if (selected("inflection") === "Marked") {
+					const bag: Record<string, unknown> = {};
+					const form = verbal
+						? selected("surface.inflectionalFeatures.verbForm")
+						: undefined;
+					for (const [path] of catalog)
+						if (path.startsWith("surface.inflectionalFeatures.")) {
+							const key = path.slice(
+								"surface.inflectionalFeatures.".length,
+							);
+							if (
+								encounter.target.kind === "NOUN" &&
+								(key === "article" || key === "case")
+							) {
+								bag[key] = null;
+								continue;
+							}
+							if (verbal && key === "voice") continue;
+							if (
+								auxiliary &&
+								constructionFeature(
+									`surface.inflectionalFeatures.${key}`,
+								)
+							) {
+								bag[key] = null;
+								continue;
+							}
+							if (
+								verbal &&
+								key === "participleForm" &&
+								form !== "Part"
+							)
+								continue;
+							if (
+								verbal &&
+								["tense", "mood", "person", "number"].includes(
+									key,
+								) &&
+								form !== "Fin"
+							) {
+								bag[key] = null;
+								continue;
+							}
+							if (
+								verbal &&
+								key === "tense" &&
+								selected(
+									"surface.inflectionalFeatures.mood",
+								) === "Imp"
+							) {
+								bag[key] = null;
+								continue;
+							}
+							const answer = selected(path);
+							bag[key] = answer === unmarked ? null : answer;
+						}
+					if (verbal)
+						bag.voice = bag.passive === null ? null : "Pass";
+					surface.inflectionalFeatures = bag;
+				}
+			}
+			const memberOrthographies = input.members.map(
+				(_, index) =>
+					selected(`orthography_${index}`) as "Standard" | "Typo",
+			);
+			const normalizationModes = input.members.map((_, index) =>
+				selected(`normalization_${index}`),
+			);
+			let governedPrepositionEvidence: {
+				attested: string;
+				orthography: "Standard" | "Typo";
+			} | null = null;
+			if (governedPreposition) {
+				const answer = selected("governedPreposition");
+				if (answer !== "Absent") {
+					const position = Number(answer.slice("member_".length));
+					const attested = input.members[position];
+					const orthography = memberOrthographies[position];
+					if (attested === undefined || orthography === undefined)
+						return fail("Unaligned governed-preposition evidence");
+					governedPrepositionEvidence = { attested, orthography };
+				}
+			}
+			const normalizedMembers = input.members.map((text, index) =>
+				transformed(text, normalizationModes[index]!),
+			);
+			const needed: Record<string, string> = {};
+			for (const [index, mode] of normalizationModes.entries())
+				if (mode === "Generate")
+					needed[`member_${index}`] =
+						`Required normalized text for supplied member ${index}; preserve its inflection and position. Correct only the judged typo or licensed constrained noun suspension.`;
+			let coverage = partial
+				? (selected("coverage") as "Full" | "Partial")
+				: "Full";
+			const mechanicalCanonical =
+				coverage === "Full" &&
+				surface.spelling === "Canonical" &&
+				["DiscourseFormula", "Proverb", "Aphorism"].includes(
+					encounter.target.kind,
+				);
+			const copiedCanonical = () =>
+				encounter.target.kind === "DiscourseFormula"
+					? normalizedMembers.join(" ").toLocaleLowerCase("de")
+					: normalizedMembers.join(" ");
+			let lemma: GrammarOutput["lemma"];
+			if (auxiliary) {
+				const identity = selected("identity");
+				if (identity === "NoMatch")
+					throw new DumgenFailure(
+						"CatalogMiss",
+						"resolveGrammar",
+						"Required AUX identity is absent from the reviewed catalog",
+						route,
+					);
+				const member =
+					identities[Number(identity.slice("identity_".length))];
+				if (!member) return fail("Missing selected AUX identity");
 				lemma = {
 					canonicalForm: member.lemma.canonicalForm,
 					coreFeatures: member.lemma.coreFeatures,
 				};
-				recordEvent(signal, "AuthoredIdentity", {
-					lemma: member.lemma,
-				});
-			} else if (mechanicalCanonical) {
-				lemma = {
-					canonicalForm: copiedCanonical(),
-					coreFeatures: core,
-				};
+				recordEvent(scope, "AuthoredIdentity", { lemma: member.lemma });
 			} else {
-				const canonical = selected("canonical");
-				const chosen =
-					canonical === "CandidateIsCanonical"
-						? canonicalFormCandidate
-						: canonical.startsWith("candidate_")
-							? canonicalFormAlternatives[
-									Number(canonical.slice("candidate_".length))
-								]
-							: undefined;
-				// A VERB Canonical Form is infinitive-shaped. A chosen supplied
-				// text that is not means no exact text is available, so Luna
-				// supplies the required missing text (#442 Canonical Form row,
-				// #445); code enforcing a domain invariant is not a review judge
-				// (ADR 0023). Generated text is never checked.
-				const rejected =
-					encounter.target.kind === "VERB" &&
-					chosen !== undefined &&
-					!infinitiveShaped(chosen);
-				if (rejected)
-					recordEvent(signal, "NonInfinitiveCanonicalForm", {
-						rejected: chosen,
-						answer: canonical,
+				const identity = mapped
+					? yield* resolveAuthoredGrammarIdentity(
+							options,
+							{
+								kind: encounter.target.kind as "DET" | "PRON",
+								spelled: normalizedMembers.join(" "),
+								core,
+								inflection: surface.inflectionalFeatures,
+								markedContext: input.markedContext,
+								sentenceInitial:
+									encounter.target.memberSegmentIndices[0] ===
+									encounter.sentence.segments.findIndex(
+										(segment) =>
+											segment.kind === "ResolvableText",
+									),
+							},
+							scope,
+							[...upstream],
+						)
+					: null;
+				upstream.push(...(identity?.calls ?? []));
+				const member = identity?.member;
+				if (member) {
+					lemma = {
+						canonicalForm: member.lemma.canonicalForm,
+						coreFeatures: member.lemma.coreFeatures,
+					};
+					recordEvent(scope, "AuthoredIdentity", {
+						lemma: member.lemma,
 					});
-				lemma = {
-					canonicalForm: rejected ? undefined : chosen,
-					coreFeatures: core,
-				};
-				if (canonical === "CandidateIsNotCanonical" || rejected)
-					needed.canonicalForm =
-						"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
+				} else if (mechanicalCanonical) {
+					lemma = {
+						canonicalForm: copiedCanonical(),
+						coreFeatures: core,
+					};
+				} else {
+					const canonical = selected("canonical");
+					const chosen =
+						canonical === "CandidateIsCanonical"
+							? canonicalFormCandidate
+							: canonical.startsWith("candidate_")
+								? canonicalFormAlternatives[
+										Number(
+											canonical.slice(
+												"candidate_".length,
+											),
+										)
+									]
+								: undefined;
+					// A VERB Canonical Form is infinitive-shaped. A chosen supplied
+					// text that is not means no exact text is available, so Luna
+					// supplies the required missing text (#442 Canonical Form row,
+					// #445); code enforcing a domain invariant is not a review judge
+					// (ADR 0023). Generated text is never checked.
+					const rejected =
+						encounter.target.kind === "VERB" &&
+						chosen !== undefined &&
+						!infinitiveShaped(chosen);
+					if (rejected)
+						recordEvent(scope, "NonInfinitiveCanonicalForm", {
+							rejected: chosen,
+							answer: canonical,
+						});
+					lemma = {
+						canonicalForm: rejected ? undefined : chosen,
+						coreFeatures: core,
+					};
+					if (canonical === "CandidateIsNotCanonical" || rejected)
+						needed.canonicalForm =
+							"Exact dictionary Canonical Form of the fixed supplied identity. Supply only missing text, not grammatical labels.";
+				}
 			}
-		}
 
-		try {
-			parse(
-				`grammar/${route}`,
-				{
-					lemma: {
-						...lemma,
-						canonicalForm: lemma.canonicalForm ?? "pending",
+			try {
+				parse(
+					`grammar/${route}`,
+					{
+						lemma: {
+							...lemma,
+							canonicalForm: lemma.canonicalForm ?? "pending",
+						},
+						surface,
+						memberOrthographies,
+						normalizedMembers,
+						realizationCoverage: coverage,
+						...(verbal
+							? {
+									expletiveEvidence: null,
+									governedPrepositionEvidence: null,
+								}
+							: {}),
+						...(encounter.target.kind === "NOUN"
+							? { articleEvidence: null }
+							: {}),
 					},
+					"resolveGrammar",
+					true,
+				);
+			} catch (error) {
+				if (!(error instanceof DumgenFailure)) throw error;
+				recordEvent(scope, "IncoherentApplicableFeatures", {
+					lemma,
 					surface,
-					memberOrthographies,
-					normalizedMembers,
-					realizationCoverage: coverage,
-					...(verbal
-						? {
-								expletiveEvidence: null,
-								governedPrepositionEvidence: null,
-							}
-						: {}),
-					...(encounter.target.kind === "NOUN"
-						? { articleEvidence: null }
-						: {}),
-				},
-				"resolveGrammar",
-				true,
-			);
-		} catch {
-			recordEvent(signal, "IncoherentApplicableFeatures", {
+				});
+				return fail(
+					"Applicable grammatical answers do not compose into a legal analysis",
+				);
+			}
+			if (Object.keys(needed).length) {
+				const wantsCanonical = Boolean(needed.canonicalForm);
+				const wantsMembers =
+					Object.keys(needed).length > (wantsCanonical ? 1 : 0);
+				const textStage = wantsCanonical
+					? wantsMembers
+						? "generateCanonicalFormAndNormalizedMembers"
+						: "generateCanonicalForm"
+					: "generateNormalizedMembers";
+				const invalidText = (message: string) =>
+					new DumgenFailure(
+						"InvalidModelOutput",
+						textStage,
+						message,
+						`${route}/text`,
+					);
+				const generation = yield* executeGeneration(
+					options,
+					scope,
+					{
+						stage: textStage,
+						route: `${route}/text`,
+						input: {
+							...input,
+							route,
+							needed,
+							...(wantsCanonical
+								? {
+										judgedCore: core,
+										...(governedPrepositionEvidence
+											? {
+													governedPreposition:
+														governedPrepositionEvidence.attested,
+												}
+											: {}),
+										canonicalFormPolicy:
+											canonicalFormGuidance[
+												encounter.target.kind
+											] ??
+											"Canonical Form is the exact dictionary headword.",
+									}
+								: {}),
+							...(wantsMembers
+								? {
+										judgedSurface: surface,
+										memberOrthographies,
+										memberPolicy: normalizedMemberGuidance,
+									}
+								: {}),
+						},
+						systemPrompt: textSystemPrompt,
+						outputSchema: {
+							type: "object",
+							properties: Object.fromEntries(
+								Object.keys(needed).map((key) => [
+									key,
+									{ type: "string", minLength: 1 },
+								]),
+							),
+							required: Object.keys(needed),
+							additionalProperties: false,
+						},
+						configuration: effectiveConfiguration(options, route),
+					},
+					(raw) => {
+						if (
+							!raw ||
+							typeof raw !== "object" ||
+							Array.isArray(raw)
+						)
+							throw invalidText("Expected requested text fields");
+						const values = raw as Record<string, unknown>;
+						if (
+							Object.keys(values).length !==
+								Object.keys(needed).length ||
+							Object.keys(needed).some(
+								(key) =>
+									typeof values[key] !== "string" ||
+									!(values[key] as string).trim() ||
+									(key.startsWith("member_") &&
+										/\s/u.test(values[key] as string)),
+							)
+						)
+							throw invalidText(
+								"Generated text does not match the requested fields",
+							);
+						return values as Record<string, string>;
+					},
+					[...upstream],
+				);
+				upstream.push(generation.id);
+				const generated = generation.output;
+				if (generated.canonicalForm)
+					lemma.canonicalForm = generated.canonicalForm;
+				for (const [index] of normalizedMembers.entries())
+					if (generated[`member_${index}`])
+						normalizedMembers[index] =
+							generated[`member_${index}`]!;
+			}
+			if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
+			// Speculative lexical strings answered in the first round trip settle
+			// the open feature; only unresolved ones need the follow-up.
+			const pendingFeatures = openFeatures.filter((key) => {
+				const answer = speculative(`text.${key}`);
+				const text =
+					answer?.startsWith("text_") &&
+					lexicalStringCandidates[key]?.[
+						Number(answer.slice("text_".length))
+					];
+				if (!text) return true;
+				core[key] = text;
+				return false;
+			});
+			if (pendingFeatures.length) {
+				const words = [
+					...normalizedMembers,
+					...String(lemma.canonicalForm).split(/\s+|\.\.\./u),
+				].filter(Boolean);
+				const followup: Questions = {};
+				const candidates: Record<string, string[]> = {};
+				for (const key of pendingFeatures) {
+					candidates[key] = [
+						...new Set(
+							key === "hasSepPrefix"
+								? words.flatMap((word) =>
+										Array.from(
+											{ length: word.length },
+											(_, index) =>
+												word.slice(0, index + 1),
+										),
+									)
+								: words,
+						),
+					];
+					if (candidates[key]!.length > 254)
+						return fail(
+							"Too many complete lexical-string candidates",
+						);
+					followup[key] = choice(
+						`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable lexical prefixes, never a governed preposition or an adposition with its own complement.`,
+						{
+							...Object.fromEntries(
+								candidates[key]!.map((text, index) => [
+									`text_${index}`,
+									text,
+								]),
+							),
+							Unresolved:
+								"None is defensible; do not revise the prior feature judgment",
+						},
+					);
+				}
+				const lexicalStrings = yield* judge(
+					"resolveGrammar",
+					`${route}/lexical-strings`,
+					{
+						...state,
+						lemma: JSON.stringify(lemma),
+						normalizedMembers,
+						candidates,
+					},
+					followup,
+					scope,
+					[...upstream],
+				);
+				upstream.push(lexicalStrings.id);
+				for (const key of pendingFeatures) {
+					const answer = lexicalStrings.output.answers[key];
+					if (
+						!answer ||
+						answer.type !== "choice" ||
+						answer.choice === "Unresolved"
+					)
+						return fail(`Unresolved ${key}`);
+					core[key] =
+						candidates[key]![
+							Number(answer.choice.slice("text_".length))
+						];
+				}
+			}
+			const judgedArticle = articleCandidates
+				? yield* resolveNounArticle(
+						options,
+						encounter,
+						{
+							lemma,
+							surface,
+							normalizedMembers,
+							memberOrthographies,
+						},
+						{
+							candidates: articleCandidates,
+							attachment: speculative("attachment"),
+							case: speculative(
+								"surface.inflectionalFeatures.case",
+							),
+						},
+						scope,
+						[...upstream],
+					)
+				: null;
+			const article = judgedArticle?.article;
+			if (article) {
+				coverage = article.coverage;
+			}
+			let expletiveEvidence = null;
+			if (
+				verbal &&
+				(surface.inflectionalFeatures as Record<string, unknown> | null)
+					?.expletive === "Subject"
+			) {
+				const positions = normalizedMembers.flatMap((text, index) =>
+					text.toLocaleLowerCase("de") === "es" ? [index] : [],
+				);
+				const [position] = positions;
+				if (positions.length !== 1 || position === undefined)
+					return fail(
+						"Subject es needs one unambiguous owned occurrence",
+					);
+				const attested = input.members[position];
+				const orthography = memberOrthographies[position];
+				if (attested === undefined || orthography === undefined)
+					return fail("Unaligned subject es evidence");
+				normalizedMembers[position] = "es";
+				expletiveEvidence = {
+					attested,
+					orthography,
+				};
+			}
+			const output = {
+				...(verbal
+					? { expletiveEvidence, governedPrepositionEvidence }
+					: {}),
+				...(encounter.target.kind === "NOUN"
+					? { articleEvidence: article?.evidence ?? null }
+					: {}),
 				lemma,
 				surface,
-			});
-			return fail(
-				"Applicable grammatical answers do not compose into a legal analysis",
-			);
-		}
-		if (Object.keys(needed).length) {
-			const wantsCanonical = Boolean(needed.canonicalForm);
-			const wantsMembers =
-				Object.keys(needed).length > (wantsCanonical ? 1 : 0);
-			const textStage = wantsCanonical
-				? wantsMembers
-					? "generateCanonicalFormAndNormalizedMembers"
-					: "generateCanonicalForm"
-				: "generateNormalizedMembers";
-			const invalidText = (message: string) =>
-				new DumgenFailure(
-					"InvalidModelOutput",
-					textStage,
-					message,
-					`${route}/text`,
-				);
-			const generated = await executeGeneration(
-				options,
-				{
-					stage: textStage,
-					route: `${route}/text`,
-					input: {
-						...input,
-						route,
-						needed,
-						...(wantsCanonical
-							? {
-									judgedCore: core,
-									...(governedPrepositionEvidence
-										? {
-												governedPreposition:
-													governedPrepositionEvidence.attested,
-											}
-										: {}),
-									canonicalFormPolicy:
-										canonicalFormGuidance[
-											encounter.target.kind
-										] ??
-										"Canonical Form is the exact dictionary headword.",
-								}
-							: {}),
-						...(wantsMembers
-							? {
-									judgedSurface: surface,
-									memberOrthographies,
-									memberPolicy: normalizedMemberGuidance,
-								}
-							: {}),
-					},
-					systemPrompt: textSystemPrompt,
-					outputSchema: {
-						type: "object",
-						properties: Object.fromEntries(
-							Object.keys(needed).map((key) => [
-								key,
-								{ type: "string", minLength: 1 },
-							]),
-						),
-						required: Object.keys(needed),
-						additionalProperties: false,
-					},
-					configuration: effectiveConfiguration(options, route),
-					signal,
-				},
-				(raw) => {
-					if (!raw || typeof raw !== "object" || Array.isArray(raw))
-						throw invalidText("Expected requested text fields");
-					const values = raw as Record<string, unknown>;
-					if (
-						Object.keys(values).length !==
-							Object.keys(needed).length ||
-						Object.keys(needed).some(
-							(key) =>
-								typeof values[key] !== "string" ||
-								!(values[key] as string).trim() ||
-								(key.startsWith("member_") &&
-									/\s/u.test(values[key] as string)),
-						)
-					)
-						throw invalidText(
-							"Generated text does not match the requested fields",
-						);
-					return values as Record<string, string>;
-				},
-			);
-			if (generated.canonicalForm)
-				lemma.canonicalForm = generated.canonicalForm;
-			for (const [index] of normalizedMembers.entries())
-				if (generated[`member_${index}`])
-					normalizedMembers[index] = generated[`member_${index}`]!;
-		}
-		if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
-		// Speculative lexical strings answered in the first round trip settle
-		// the open feature; only unresolved ones need the follow-up.
-		const pendingFeatures = openFeatures.filter((key) => {
-			const answer = speculative(`text.${key}`);
-			const text =
-				answer?.startsWith("text_") &&
-				lexicalStringCandidates[key]?.[
-					Number(answer.slice("text_".length))
-				];
-			if (!text) return true;
-			core[key] = text;
-			return false;
-		});
-		if (pendingFeatures.length) {
-			const words = [
-				...normalizedMembers,
-				...String(lemma.canonicalForm).split(/\s+|\.\.\./u),
-			].filter(Boolean);
-			const followup: Questions = {};
-			const candidates: Record<string, string[]> = {};
-			for (const key of pendingFeatures) {
-				candidates[key] = [
-					...new Set(
-						key === "hasSepPrefix"
-							? words.flatMap((word) =>
-									Array.from(
-										{ length: word.length },
-										(_, index) => word.slice(0, index + 1),
-									),
-								)
-							: words,
-					),
-				];
-				if (candidates[key]!.length > 254)
-					return fail("Too many complete lexical-string candidates");
-				followup[key] = choice(
-					`Choose the exact ${key} established by the lexical feature judgment. Prefixes are separable lexical prefixes, never a governed preposition or an adposition with its own complement.`,
-					{
-						...Object.fromEntries(
-							candidates[key]!.map((text, index) => [
-								`text_${index}`,
-								text,
-							]),
-						),
-						Unresolved:
-							"None is defensible; do not revise the prior feature judgment",
-					},
-				);
-			}
-			const resolved = await judge(
-				"resolveGrammar",
-				`${route}/lexical-strings`,
-				{
-					...state,
-					lemma: JSON.stringify(lemma),
-					normalizedMembers,
-					candidates,
-				},
-				followup,
-				signal,
-			);
-			for (const key of pendingFeatures) {
-				const answer = resolved.answers[key];
-				if (
-					!answer ||
-					answer.type !== "choice" ||
-					answer.choice === "Unresolved"
-				)
-					return fail(`Unresolved ${key}`);
-				core[key] =
-					candidates[key]![
-						Number(answer.choice.slice("text_".length))
-					];
-			}
-		}
-		const article = articleCandidates
-			? await resolveNounArticle(
-					options,
-					encounter,
-					{
-						lemma,
-						surface,
-						normalizedMembers,
-						memberOrthographies,
-					},
-					{
-						candidates: articleCandidates,
-						attachment: speculative("attachment"),
-						case: speculative("surface.inflectionalFeatures.case"),
-					},
-					signal,
-				)
-			: null;
-		if (article) {
-			coverage = article.coverage;
-		}
-		let expletiveEvidence = null;
-		if (
-			verbal &&
-			(surface.inflectionalFeatures as Record<string, unknown> | null)
-				?.expletive === "Subject"
-		) {
-			const positions = normalizedMembers.flatMap((text, index) =>
-				text.toLocaleLowerCase("de") === "es" ? [index] : [],
-			);
-			const [position] = positions;
-			if (positions.length !== 1 || position === undefined)
-				return fail(
-					"Subject es needs one unambiguous owned occurrence",
-				);
-			const attested = input.members[position];
-			const orthography = memberOrthographies[position];
-			if (attested === undefined || orthography === undefined)
-				return fail("Unaligned subject es evidence");
-			normalizedMembers[position] = "es";
-			expletiveEvidence = {
-				attested,
-				orthography,
+				memberOrthographies,
+				normalizedMembers,
+				realizationCoverage: coverage,
 			};
+			try {
+				return parse<GrammarOutput>(
+					`grammar/${route}`,
+					output,
+					"resolveGrammar",
+					true,
+				);
+			} catch (error) {
+				if (!(error instanceof DumgenFailure)) throw error;
+				recordEvent(scope, "IncoherentApplicableFeatures", output);
+				return fail(
+					"Applicable grammatical answers do not compose into a legal analysis",
+				);
+			}
+		} finally {
+			recordEvent(scope, "JudgmentApplicability", {
+				consumed: [...consumed],
+				ignored: Object.keys(questions).filter(
+					(id) => !consumed.has(id),
+				),
+			});
 		}
-		const output = {
-			...(verbal
-				? { expletiveEvidence, governedPrepositionEvidence }
-				: {}),
-			...(encounter.target.kind === "NOUN"
-				? { articleEvidence: article?.evidence ?? null }
-				: {}),
-			lemma,
-			surface,
-			memberOrthographies,
-			normalizedMembers,
-			realizationCoverage: coverage,
-		};
-		try {
-			return parse<GrammarOutput>(
-				`grammar/${route}`,
-				output,
-				"resolveGrammar",
-				true,
-			);
-		} catch {
-			recordEvent(signal, "IncoherentApplicableFeatures", output);
-			return fail(
-				"Applicable grammatical answers do not compose into a legal analysis",
-			);
-		}
-	} finally {
-		recordEvent(signal, "JudgmentApplicability", {
-			consumed: [...consumed],
-			ignored: Object.keys(questions).filter((id) => !consumed.has(id)),
-		});
-	}
+	});
 }

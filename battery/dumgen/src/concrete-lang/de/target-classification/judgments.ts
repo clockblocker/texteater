@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import type {
 	AnalysisTarget,
@@ -6,7 +7,7 @@ import type {
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
-import { recordEvent } from "../../../universal/trace.js";
+import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { validateEncounter } from "../../../universal/validation.js";
 import {
 	assembleTarget,
@@ -30,47 +31,50 @@ Free substantive interrogatives, demonstratives, relatives, quantifiers and nega
 German common nouns include their overt definite/indefinite article as fixed members, even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ. A noun absorbs at most one article, the one opening its own nominal phrase; an article separated from the clicked noun by a verb, a clause boundary or another noun belongs to that other noun and never joins: clicking Weg in Der Weg ist das Ziel gives [Der,Weg], never das. Article clicks resolve the same noun. In compatible nominal coordination, only the closest eligible noun owns the overt article: der Aufstieg und Abstieg gives [der,Aufstieg] and [Abstieg]. Closest means Segment distance within that nominal scope, excluding nested phrases; ties are Unresolved. Longer compatible coordination may share the article, but another explicit article or clause boundary stops sharing. Incompatible agreement and proximity alone never license sharing. Only forms of the true definite article der/die/das or indefinite article ein are absorbed. mein/dieser/kein are NOT absorbed articles in this domain: kein Haus gives [kein] DET and [Haus] NOUN, mein Hund gives [mein] DET and [Hund] NOUN. Clicking either does not include the other. mein/dieser/kein remain independent DETs; im/zum/ins remain ADP and do not join nouns. Their internal article may supply noun grammar later without adding the fused word to noun membership. Bare nouns stay bare. These noun rules preserve any larger established idiom boundary.
 A target is defensible only when the exact assembled members form the complete realized fixed unit, with no omitted present fixed member and no added free material. Uncertainty or contradictory membership must remain Unresolved; do not repair, trim, extend or replace the assembled group.`;
 
-export async function classifyGermanTarget(
+export function classifyGermanTarget(
 	options: DumgenOptions,
 	input: { sentence: SegmentedSentence; clickedSegmentIndex: number },
-	signal: AbortSignal,
-): Promise<AnalysisTarget<"de">> {
-	const judge = judgmentCaller(options);
-	const membership = membershipQuestions(input);
-	// Membership and route are independent judgments over the same state, so
-	// they travel in one round trip. The route is asked about the complete
-	// unit containing the clicked occurrence rather than about the assembled
-	// group; the grammar stage's own support question guards the assembly.
-	const result = await judge<Questions>(
-		"classifyTarget",
-		"de/target",
-		classificationState(input, targetCriteria),
-		{ ...membership, route: routeQuestion },
-		signal,
-	);
-	const assembly = assembleTarget(input, result.answers);
-	recordEvent(signal, "JudgmentApplicability", {
-		consumed: [...Object.keys(membership), "route"],
-		ignored: [],
-	});
-	if (assembly.decision === "Unresolved")
-		throw new DumgenFailure(
-			"Unresolved",
+	scope: OperationScope,
+) {
+	return Effect.gen(function* () {
+		const judge = judgmentCaller(options);
+		const membership = membershipQuestions(input);
+		// Membership and route are independent judgments over the same state, so
+		// they travel in one round trip. The route is asked about the complete
+		// unit containing the clicked occurrence rather than about the assembled
+		// group; the grammar stage's own support question guards the assembly.
+		const { output: result } = yield* judge<Questions>(
 			"classifyTarget",
-			assembly.reason,
+			"de/target",
+			classificationState(input, targetCriteria),
+			{ ...membership, route: routeQuestion },
+			scope,
+			[],
 		);
-	recordEvent(signal, "TargetAssembled", {
-		memberSegmentIndices: assembly.memberSegmentIndices,
-	});
-	return validateEncounter(
-		{
-			sentence: input.sentence,
-			target: {
-				family: assembly.family,
-				kind: assembly.kind,
-				memberSegmentIndices: assembly.memberSegmentIndices,
+		const assembly = assembleTarget(input, result.answers);
+		recordEvent(scope, "JudgmentApplicability", {
+			consumed: [...Object.keys(membership), "route"],
+			ignored: [],
+		});
+		if (assembly.decision === "Unresolved")
+			throw new DumgenFailure(
+				"Unresolved",
+				"classifyTarget",
+				assembly.reason,
+			);
+		recordEvent(scope, "TargetAssembled", {
+			memberSegmentIndices: assembly.memberSegmentIndices,
+		});
+		return validateEncounter(
+			{
+				sentence: input.sentence,
+				target: {
+					family: assembly.family,
+					kind: assembly.kind,
+					memberSegmentIndices: assembly.memberSegmentIndices,
+				},
 			},
-		},
-		"classifyTarget",
-	).target as AnalysisTarget<"de">;
+			"classifyTarget",
+		).target as AnalysisTarget<"de">;
+	});
 }
