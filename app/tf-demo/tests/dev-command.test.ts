@@ -10,7 +10,7 @@ test("dev reports how to stop the process occupying the Convex port", async () =
 	try {
 		const manifest = JSON.parse(
 			await readFile(join(packageDirectory, "package.json"), "utf8"),
-		) as { scripts: { dev: string } };
+		) as { scripts: { "dev:package": string } };
 		const convexExecutable = join(fixtureDirectory, "convex");
 		const lsofExecutable = join(fixtureDirectory, "lsof");
 		await Promise.all([
@@ -25,7 +25,7 @@ test("dev reports how to stop the process occupying the Convex port", async () =
 			chmod(lsofExecutable, 0o755),
 		]);
 
-		const child = Bun.spawn(["sh", "-c", manifest.scripts.dev], {
+		const child = Bun.spawn(["sh", "-c", manifest.scripts["dev:package"]], {
 			cwd: packageDirectory,
 			env: {
 				...process.env,
