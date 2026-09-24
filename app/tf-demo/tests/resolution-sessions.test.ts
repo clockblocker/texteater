@@ -212,7 +212,17 @@ describe("Resolution Session", () => {
 				({ requestId }) => requestId,
 			),
 		).toEqual(["request-0"]);
-		expect((await pendingScheduled(t)).length - scheduledBefore).toBe(1);
+		// Only request-1 starts a Knowledge run, scheduled with its watchdog.
+		expect((await pendingScheduled(t)).slice(scheduledBefore)).toEqual([
+			{
+				name: "knowledgeGenerationActions:runKnowledgeGeneration",
+				args: { attemptKey: "request-1" },
+			},
+			{
+				name: "knowledgeGeneration:recoverStaleRun",
+				args: { attemptKey: "request-1", runNumber: 1 },
+			},
+		]);
 	});
 
 	test("inspection records repeat selections separately while encounters stay deduplicated", async () => {

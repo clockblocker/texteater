@@ -633,6 +633,10 @@ describe("tf-demo post-reset contract", () => {
 				name: "knowledgeGenerationActions:runKnowledgeGeneration",
 				args: [{ attemptKey: "attempt-visitor-2" }],
 			},
+			{
+				name: "knowledgeGeneration:recoverStaleRun",
+				args: [{ attemptKey: "attempt-visitor-2", runNumber: 1 }],
+			},
 		]);
 	});
 

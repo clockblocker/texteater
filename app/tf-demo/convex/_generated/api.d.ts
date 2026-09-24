@@ -31,7 +31,8 @@ import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexe
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_grammarCheckpoint from "../model/grammarCheckpoint.js";
 import type * as model_inspection from "../model/inspection.js";
-import type * as model_knowledgeGenerationAttempts from "../model/knowledgeGenerationAttempts.js";
+import type * as model_knowledgeAttempts from "../model/knowledgeAttempts.js";
+import type * as model_knowledgeCoverage from "../model/knowledgeCoverage.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
 import type * as model_nounArticleMigration from "../model/nounArticleMigration.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
@@ -102,7 +103,8 @@ declare const fullApi: ApiFromModules<{
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/grammarCheckpoint": typeof model_grammarCheckpoint;
   "model/inspection": typeof model_inspection;
-  "model/knowledgeGenerationAttempts": typeof model_knowledgeGenerationAttempts;
+  "model/knowledgeAttempts": typeof model_knowledgeAttempts;
+  "model/knowledgeCoverage": typeof model_knowledgeCoverage;
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
   "model/nounArticleMigration": typeof model_nounArticleMigration;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;

@@ -56,6 +56,8 @@ export const runKnowledgeGeneration = internalAction({
 				  }
 				| undefined;
 			let generationCompleted = false;
+			/** The run `begin` claimed; only it may end the attempt. */
+			let claimedRun: number | null = null;
 			const operationTraces: string[] = [];
 			let publicationQueue = Promise.resolve();
 			const pendingContributions: KnowledgeProduction["changes"][number][] =
@@ -75,6 +77,7 @@ export const runKnowledgeGeneration = internalAction({
 						}),
 				);
 				if (!input || input.kind === "Full") return null;
+				claimedRun = input.runNumber;
 				if (input.reading.lemma.language !== "de") {
 					throw new Error("Unsupported Knowledge language.");
 				}
@@ -189,10 +192,11 @@ export const runKnowledgeGeneration = internalAction({
 							}).encounter,
 							reading,
 							request: {
-								...missingKnowledgeRequest(
-									request,
-									input.existingKnowledge,
-								),
+								...missingKnowledgeRequest(request, {
+									knowledge: input.existingKnowledge,
+									checkedRelationKinds:
+										input.checkedRelationKinds,
+								}),
 								// Coverage is per occurrence: stored government may miss this sentence's.
 								...("governedPrepositions" in request
 									? { governedPrepositions: null }
@@ -220,6 +224,7 @@ export const runKnowledgeGeneration = internalAction({
 								.recordKnowledgeCatalogMiss,
 							{
 								attemptKey,
+								runNumber: input.runNumber,
 								miss: generated,
 								productionEvidence: {
 									request,
@@ -252,6 +257,7 @@ export const runKnowledgeGeneration = internalAction({
 				console.error("Knowledge generation attempt failed", error);
 				await ctx.runMutation(internal.knowledgeGeneration.fail, {
 					attemptKey,
+					runNumber: claimedRun,
 					failureCode: "generationFailed",
 					productionEvidence: {
 						request: requested,

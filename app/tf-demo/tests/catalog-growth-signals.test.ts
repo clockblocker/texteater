@@ -186,7 +186,11 @@ describe("Catalog Growth Signals", () => {
 		for (let call = 0; call < 2; call += 1) {
 			await t.mutation(
 				internal.catalogGrowthSignals.recordKnowledgeCatalogMiss,
-				{ attemptKey: "attempt-key", miss: withoutCandidate },
+				{
+					attemptKey: "attempt-key",
+					runNumber: 1,
+					miss: withoutCandidate,
+				},
 			);
 		}
 

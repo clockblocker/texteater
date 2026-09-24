@@ -390,43 +390,25 @@ export async function replaceAccumulatedKnowledge(
 		)
 		.unique();
 	const status = options.status ?? existing?.status ?? "Partial";
-	if (knowledge === undefined) {
-		if (!existing) return null;
-		await syncStructuralShadowReferences(ctx, ownerReadingKey, {});
-		await syncDefinitionText(ctx, ownerReadingKey, {});
-		await ctx.db.replace(existing._id, {
-			ownerReadingKey,
-			knowledge: {},
+	if (knowledge === undefined && !existing) return null;
+	const content = knowledge ?? {};
+	await syncStructuralShadowReferences(ctx, ownerReadingKey, content);
+	await syncDefinitionText(ctx, ownerReadingKey, content);
+	if (existing) {
+		// Coverage evidence outlives the content it was recorded beside.
+		await ctx.db.patch(existing._id, {
+			knowledge: content,
 			status,
-			...(existing.coveredTranslationLanguages
-				? {
-						coveredTranslationLanguages:
-							existing.coveredTranslationLanguages,
-					}
-				: {}),
 			updatedAt: Date.now(),
 		});
 		return existing._id;
 	}
-	await syncStructuralShadowReferences(ctx, ownerReadingKey, knowledge);
-	await syncDefinitionText(ctx, ownerReadingKey, knowledge);
-	const value = {
+	return ctx.db.insert("accumulatedKnowledge", {
 		ownerReadingKey,
-		knowledge,
+		knowledge: content,
 		status,
-		...(existing?.coveredTranslationLanguages
-			? {
-					coveredTranslationLanguages:
-						existing.coveredTranslationLanguages,
-				}
-			: {}),
 		updatedAt: Date.now(),
-	};
-	if (existing) {
-		await ctx.db.replace(existing._id, value);
-		return existing._id;
-	}
-	return ctx.db.insert("accumulatedKnowledge", value);
+	});
 }
 
 /** Create a status row for Knowledge stored outside the base-Knowledge column. */

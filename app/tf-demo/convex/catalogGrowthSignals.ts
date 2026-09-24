@@ -2,8 +2,11 @@ import { type Infer, v } from "convex/values";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import { canonicalJson } from "./model/canonicalJson";
-import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
-import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
+import {
+	failKnowledgeRun,
+	findKnowledgeAttempt,
+	ownsKnowledgeRun,
+} from "./model/knowledgeAttempts";
 import {
 	requireActiveResolutionSession,
 	settleResolutionSession,
@@ -118,32 +121,29 @@ export const recordAndSettleCatalogMiss = internalMutation({
 export const recordKnowledgeCatalogMiss = internalMutation({
 	args: {
 		attemptKey: v.string(),
+		runNumber: v.number(),
 		miss: catalogMissValidator,
 		productionEvidence: v.optional(knowledgeProductionEvidenceValidator),
 	},
 	returns: v.null(),
-	handler: async (ctx, { attemptKey, miss, productionEvidence }) => {
-		const attempt = await ctx.db
-			.query("knowledgeGenerationAttempts")
-			.withIndex("by_attempt_key", (q) => q.eq("attemptKey", attemptKey))
-			.unique();
-		if (attempt?.state !== "Running") return null;
-		if (productionEvidence)
-			await recordKnowledgeProductionRun(
-				ctx,
-				attempt,
-				productionEvidence,
-				"Failure",
-			);
+	handler: async (
+		ctx,
+		{ attemptKey, runNumber, miss, productionEvidence },
+	) => {
+		const attempt = await findKnowledgeAttempt(ctx, attemptKey);
+		if (!attempt || !ownsKnowledgeRun(attempt, runNumber)) return null;
 		await recordCatalogGrowthSignal(ctx, miss, attemptKey);
-		await ctx.db.patch(attempt._id, {
-			state: "Failed",
-			failureCode: "catalogMiss",
-			failureMessage:
-				"No reviewed catalog member matches this encounter.",
-			updatedAt: Date.now(),
-		});
-		await scheduleNextWaitingKnowledgeAttempt(ctx, attempt.ownerReadingKey);
+		await failKnowledgeRun(
+			ctx,
+			attempt,
+			runNumber,
+			{
+				failureCode: "catalogMiss",
+				failureMessage:
+					"No reviewed catalog member matches this encounter.",
+			},
+			productionEvidence,
+		);
 		return null;
 	},
 });

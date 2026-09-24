@@ -287,6 +287,10 @@ export default defineSchema({
 		coveredTranslationLanguages: v.optional(
 			v.array(translationLanguageValidator),
 		),
+		/** Relation kinds a committed run answered; edges cannot show an empty answer. */
+		checkedRelationKinds: v.optional(
+			v.array(directSemanticRelationValidator),
+		),
 		updatedAt: v.number(),
 	}).index("by_owner_reading_key", ["ownerReadingKey"]),
 

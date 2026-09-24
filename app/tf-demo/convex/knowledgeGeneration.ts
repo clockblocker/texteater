@@ -2,30 +2,41 @@ import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import type { KnowledgeFailure, KnowledgeRequest } from "dumgen/types";
 import { translationLanguageValues } from "dumrel";
-import type * as Dumrel from "dumrel/types";
 import {
-	attestedGovernment,
-	uncoveredGovernment,
-} from "../server/attestedGovernment";
-import { knowledgeRequestComplete } from "../server/knowledgeCompletion";
+	answeredRelationKinds,
+	knowledgeRequestComplete,
+} from "../server/knowledgeCompletion";
 import { parseGermanReading } from "../server/operationalParsing";
-import { internal } from "./_generated/api";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	type MutationCtx,
 	mutation,
-	type QueryCtx,
 } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { canonicalJson } from "./model/canonicalJson";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
-import { inspectionRequested } from "./model/inspection";
-import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
+import {
+	claimKnowledgeRun,
+	demandKnowledgeAttempt,
+	endKnowledgeRun,
+	failKnowledgeRun,
+	findKnowledgeAttempt,
+	ownsKnowledgeRun,
+	recordKnowledgePublication,
+	recoverStaleKnowledgeRun,
+} from "./model/knowledgeAttempts";
+import {
+	findAccumulatedKnowledge,
+	knowledgeCoverageOf,
+	missingKnowledge,
+	nothingMissing,
+	occurrenceGovernment,
+	recordCoverageEvidence,
+} from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
-import { loadSentenceAnalysis } from "./model/resolutionLookup";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
 	directSemanticRelationValidator,
@@ -49,109 +60,12 @@ const attemptInputValidator = v.object({
 	attestationId: v.id("attestations"),
 });
 
-async function scheduleRun(ctx: MutationCtx, attemptKey: string) {
-	const inspect = await inspectionRequested(ctx, attemptKey);
-	await ctx.scheduler.runAfter(
-		0,
-		internal.knowledgeGenerationActions.runKnowledgeGeneration,
-		{ attemptKey, ...(inspect ? { inspect } : {}) },
-	);
-}
+const GENERATION_FAILED_MESSAGE = "Knowledge generation failed. Please retry.";
 
 function assertKey(value: string, name: string): void {
 	if (value.trim().length === 0 || value.length > 200) {
 		throw new Error(`${name} must contain between 1 and 200 characters.`);
 	}
-}
-
-type KnowledgeStateCtx = MutationCtx | QueryCtx;
-
-function findGenerationAttempt(ctx: KnowledgeStateCtx, attemptKey: string) {
-	return ctx.db
-		.query("knowledgeGenerationAttempts")
-		.withIndex("by_attempt_key", (q) => q.eq("attemptKey", attemptKey))
-		.unique();
-}
-
-function findAccumulatedKnowledge(
-	ctx: KnowledgeStateCtx,
-	ownerReadingKey: string,
-) {
-	return ctx.db
-		.query("accumulatedKnowledge")
-		.withIndex("by_owner_reading_key", (q) =>
-			q.eq("ownerReadingKey", ownerReadingKey),
-		)
-		.unique();
-}
-
-async function hasActiveGenerationAttempt(
-	ctx: KnowledgeStateCtx,
-	ownerReadingKey: string,
-): Promise<boolean> {
-	const [scheduled, running] = await Promise.all(
-		(["Scheduled", "Running"] as const).map((state) =>
-			ctx.db
-				.query("knowledgeGenerationAttempts")
-				.withIndex("by_owner_reading_key_and_state", (q) =>
-					q.eq("ownerReadingKey", ownerReadingKey).eq("state", state),
-				)
-				.take(1),
-		),
-	);
-	return scheduled.length > 0 || running.length > 0;
-}
-
-function coveredTranslationLanguages(
-	accumulated: {
-		readonly knowledge: unknown;
-		readonly coveredTranslationLanguages?: readonly string[];
-	} | null,
-): Set<Dumrel.TranslationLanguage> {
-	const covered = new Set<Dumrel.TranslationLanguage>();
-	const knowledge = accumulated?.knowledge;
-	if (
-		!knowledge ||
-		typeof knowledge !== "object" ||
-		Array.isArray(knowledge)
-	) {
-		return covered;
-	}
-	const translations = Reflect.get(knowledge, "translations");
-	if (!translations || typeof translations !== "object") return covered;
-	for (const language of translationLanguageValues) {
-		if (
-			Array.isArray(Reflect.get(translations, language)) &&
-			Reflect.get(translations, language).length > 0
-		)
-			covered.add(language);
-	}
-	return covered;
-}
-
-function missingTranslationLanguages(
-	accumulated: Parameters<typeof coveredTranslationLanguages>[0],
-	requested: readonly Dumrel.TranslationLanguage[],
-): Dumrel.TranslationLanguage[] {
-	const covered = coveredTranslationLanguages(accumulated);
-	return requested.filter((language) => !covered.has(language));
-}
-
-/** The governed prepositions intake attested for this occurrence (ADR 0030). */
-async function occurrenceGovernment(
-	ctx: MutationCtx,
-	occurrence: NonNullable<
-		Awaited<ReturnType<typeof loadOccurrenceAttestation>>
-	>,
-) {
-	return attestedGovernment(
-		await loadSentenceAnalysis(ctx, occurrence.sentence._id),
-		{
-			stitchedText: occurrence.sentence.stitchedText,
-			segments: occurrence.segments,
-		},
-		occurrence.memberSegmentIndices,
-	);
 }
 
 export async function scheduleKnowledgeGeneration(
@@ -184,55 +98,20 @@ export async function scheduleKnowledgeGeneration(
 	const translationLanguages = translationLanguageValues.filter(
 		(language) => settings.translations[language],
 	);
-	if (
-		accumulated?.status === "Full" &&
-		missingTranslationLanguages(accumulated, translationLanguages)
-			.length === 0 &&
-		uncoveredGovernment(
-			await occurrenceGovernment(ctx, occurrence),
-			accumulated.knowledge,
-		).length === 0
-	) {
-		return;
-	}
-
-	const existing = await findGenerationAttempt(ctx, input.attemptKey);
-	if (existing) {
-		if (
-			existing.visitorId !== input.visitorId ||
-			existing.readingId !== input.readingId ||
-			existing.attestationId !== input.attestationId ||
-			existing.ownerReadingKey !== ownerReadingKey
-		) {
-			throw new Error("attemptKey collides with a different occurrence.");
-		}
-		if (existing.state === "Failed") {
-			const waiting = await hasActiveGenerationAttempt(
-				ctx,
-				ownerReadingKey,
-			);
-			await ctx.db.patch(existing._id, {
-				state: waiting ? "Waiting" : "Scheduled",
-				failureCode: undefined,
-				failureMessage: undefined,
-				updatedAt: Date.now(),
-			});
-			if (!waiting) await scheduleRun(ctx, input.attemptKey);
-		}
-		return;
-	}
-	const now = Date.now();
-	const waiting = await hasActiveGenerationAttempt(ctx, ownerReadingKey);
-	await ctx.db.insert("knowledgeGenerationAttempts", {
+	const missing = missingKnowledge(accumulated, {
+		translationLanguages,
+		// Government can only be all that is missing once the base is covered.
+		attestedGovernment:
+			accumulated?.status === "Full"
+				? await occurrenceGovernment(ctx, occurrence)
+				: [],
+	});
+	if (nothingMissing(missing)) return;
+	await demandKnowledgeAttempt(ctx, {
 		...input,
 		ownerReadingKey,
 		translationLanguages,
-		state: waiting ? "Waiting" : "Scheduled",
-		createdAt: now,
-		updatedAt: now,
 	});
-	if (waiting) return;
-	await scheduleRun(ctx, input.attemptKey);
 }
 
 export const retry = mutation({
@@ -295,6 +174,8 @@ const generationInputValidator = v.union(
 		encounter: v.any(),
 		attestation: v.any(),
 		existingKnowledge: v.any(),
+		/** Relation kinds already answered; edges cannot show an empty answer. */
+		checkedRelationKinds: v.array(directSemanticRelationValidator),
 		knowledgeDraftJson: v.optional(v.string()),
 		runNumber: v.number(),
 		translationLanguages: v.array(translationLanguageValidator),
@@ -328,54 +209,13 @@ export const begin = internalMutation({
 	args: { attemptKey: v.string() },
 	returns: generationInputValidator,
 	handler: async (ctx, { attemptKey }): Promise<GenerationInput> => {
-		const attempt = await findGenerationAttempt(ctx, attemptKey);
-		if (!attempt) return null;
-		const accumulated = await findAccumulatedKnowledge(
-			ctx,
-			attempt.ownerReadingKey,
-		);
-		const translationLanguages = attempt.translationLanguages ?? ["en"];
-		const missingTranslations = missingTranslationLanguages(
-			accumulated,
-			translationLanguages,
-		);
-		const occurrence = await loadOccurrenceAttestation(
-			ctx,
-			attempt.attestationId,
-		);
-		const governedPrepositions = occurrence
-			? uncoveredGovernment(
-					await occurrenceGovernment(ctx, occurrence),
-					accumulated?.knowledge,
-				)
-			: [];
-		if (
-			accumulated?.status === "Full" &&
-			missingTranslations.length === 0 &&
-			governedPrepositions.length === 0
-		) {
-			await ctx.db.patch(attempt._id, {
-				state: "LostRace",
-				updatedAt: Date.now(),
-			});
-			await scheduleNextWaitingKnowledgeAttempt(
-				ctx,
-				attempt.ownerReadingKey,
-			);
-			return { kind: "Full" };
-		}
-		let runNumber = attempt.runNumber ?? 1;
-		if (attempt.state === "Scheduled" || attempt.state === "Failed") {
-			runNumber = (attempt.runNumber ?? 0) + 1;
-			await ctx.db.patch(attempt._id, {
-				state: "Running",
-				runNumber,
-				publicationSequence: undefined,
-				failureCode: undefined,
-				failureMessage: undefined,
-				updatedAt: Date.now(),
-			});
-		}
+		const attempt = await findKnowledgeAttempt(ctx, attemptKey);
+		// Only a Scheduled attempt has a run to claim; any other action is late.
+		if (attempt?.state !== "Scheduled") return null;
+		const [accumulated, occurrence] = await Promise.all([
+			findAccumulatedKnowledge(ctx, attempt.ownerReadingKey),
+			loadOccurrenceAttestation(ctx, attempt.attestationId),
+		]);
 		if (
 			!occurrence ||
 			occurrence.reading._id !== attempt.readingId ||
@@ -385,50 +225,41 @@ export const begin = internalMutation({
 				"Generation attempt no longer matches its occurrence.",
 			);
 		}
+		const missing = missingKnowledge(accumulated, {
+			translationLanguages: attempt.translationLanguages ?? ["en"],
+			attestedGovernment: await occurrenceGovernment(ctx, occurrence),
+		});
+		if (nothingMissing(missing)) {
+			await endKnowledgeRun(ctx, attempt, null, { kind: "LostRace" });
+			return { kind: "Full" };
+		}
+		const runNumber = await claimKnowledgeRun(ctx, attempt);
+		if (runNumber === null) return null;
+		const coverage = knowledgeCoverageOf(accumulated);
 		return {
 			kind: "Generate",
 			reading: occurrence.publicReading,
 			encounter: occurrence.encounter,
 			attestation: occurrence.publicAttestation,
-			existingKnowledge: accumulated?.knowledge ?? {},
+			existingKnowledge: coverage.knowledge,
+			checkedRelationKinds: [...coverage.checkedRelationKinds],
 			...(attempt.knowledgeDraftJson
 				? { knowledgeDraftJson: attempt.knowledgeDraftJson }
 				: {}),
 			runNumber,
-			translationLanguages: missingTranslations,
-			topUpOnly: accumulated?.status === "Full",
-			governedPrepositions,
+			translationLanguages: [...missing.translationLanguages],
+			topUpOnly: !missing.base,
+			governedPrepositions: [...missing.governedPrepositions],
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
 });
 
-async function failAttempt(
-	ctx: MutationCtx,
-	attempt: Doc<"knowledgeGenerationAttempts">,
-	failureCode: string,
-	productionEvidence?: Infer<typeof knowledgeProductionEvidenceValidator>,
-): Promise<void> {
-	if (productionEvidence)
-		await recordKnowledgeProductionRun(
-			ctx,
-			attempt,
-			productionEvidence,
-			"Failure",
-		);
-	if (attempt.state === "Committed" || attempt.state === "LostRace") return;
-	await ctx.db.patch(attempt._id, {
-		state: "Failed",
-		failureCode: failureCode.slice(0, 100),
-		failureMessage: "Knowledge generation failed. Please retry.",
-		updatedAt: Date.now(),
-	});
-	await scheduleNextWaitingKnowledgeAttempt(ctx, attempt.ownerReadingKey);
-}
-
 export const fail = internalMutation({
 	args: {
 		attemptKey: v.string(),
+		/** The run the action claimed, or null when it never claimed one. */
+		runNumber: v.union(v.number(), v.null()),
 		failureCode: v.string(),
 		failureMessage: v.string(),
 		productionEvidence: v.optional(knowledgeProductionEvidenceValidator),
@@ -444,22 +275,33 @@ export const fail = internalMutation({
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
-		const attempt = await findGenerationAttempt(ctx, args.attemptKey);
-		if (!attempt) return null;
+		const attempt = await findKnowledgeAttempt(ctx, args.attemptKey);
+		if (!attempt || !ownsKnowledgeRun(attempt, args.runNumber)) return null;
 		if (args.rejectedRelationRun)
 			await recordRejectedRelationOutput(
 				ctx,
 				attempt,
 				args.rejectedRelationRun,
 			);
-		await failAttempt(
+		await failKnowledgeRun(
 			ctx,
 			attempt,
-			args.failureCode,
+			args.runNumber,
+			{
+				failureCode: args.failureCode,
+				// Provider text never reaches the learner; only the code persists.
+				failureMessage: GENERATION_FAILED_MESSAGE,
+			},
 			args.productionEvidence,
 		);
 		return null;
 	},
+});
+
+export const recoverStaleRun = internalMutation({
+	args: { attemptKey: v.string(), runNumber: v.number() },
+	returns: v.boolean(),
+	handler: (ctx, args) => recoverStaleKnowledgeRun(ctx, args),
 });
 
 const BASE_TEXT_ASPECTS = new Set([
@@ -495,14 +337,11 @@ export const publish = internalMutation({
 		v.object({ status: v.literal("Rejected"), message: v.string() }),
 	),
 	handler: async (ctx, args) => {
-		const attempt = await findGenerationAttempt(ctx, args.attemptKey);
+		const attempt = await findKnowledgeAttempt(ctx, args.attemptKey);
 		if (!attempt)
 			throw new Error("Knowledge generation attempt does not exist.");
 		const runNumber = args.relationPublication.runNumber;
-		if (
-			attempt.state !== "Running" ||
-			(attempt.runNumber ?? 1) !== runNumber
-		)
+		if (!ownsKnowledgeRun(attempt, runNumber))
 			return { status: "Ignored" as const };
 		if (
 			!args.final &&
@@ -520,25 +359,26 @@ export const publish = internalMutation({
 			ctx,
 			attempt.ownerReadingKey,
 		);
-		const requestedTranslations = attempt.translationLanguages ?? ["en"];
+		// The race check: before its first batch, did another run cover this
+		// demand since the claim? A Full Reading still takes government a new
+		// sentence attests, which only the batch itself shows here.
 		if (
 			!attempt.publicationSequence &&
-			accumulated?.status === "Full" &&
-			missingTranslationLanguages(accumulated, requestedTranslations)
-				.length === 0 &&
-			// A Full Reading still takes government a new sentence attests.
+			nothingMissing(
+				missingKnowledge(accumulated, {
+					translationLanguages: attempt.translationLanguages ?? [
+						"en",
+					],
+					attestedGovernment: [],
+				}),
+			) &&
 			!args.changes.some(
 				(change) => change?.aspect === "governedPrepositions",
 			)
 		) {
-			await ctx.db.patch(attempt._id, {
-				state: "LostRace",
-				updatedAt: Date.now(),
+			await endKnowledgeRun(ctx, attempt, runNumber, {
+				kind: "LostRace",
 			});
-			await scheduleNextWaitingKnowledgeAttempt(
-				ctx,
-				attempt.ownerReadingKey,
-			);
 			return { status: "AlreadyFull" as const };
 		}
 
@@ -590,10 +430,14 @@ export const publish = internalMutation({
 					args.relationPublication,
 					true,
 				);
-			await failAttempt(
+			await failKnowledgeRun(
 				ctx,
 				attempt,
-				"generationFailed",
+				runNumber,
+				{
+					failureCode: "generationFailed",
+					failureMessage: GENERATION_FAILED_MESSAGE,
+				},
 				args.productionEvidence,
 			);
 			return { status: "Rejected" as const, message };
@@ -615,8 +459,22 @@ export const publish = internalMutation({
 				? (entry.record as Record<string, unknown>)
 				: {};
 		const knowledge = record.knowledge ?? accumulated?.knowledge ?? {};
+		const answered = args.final
+			? answeredRelationKinds(
+					args.relationPublication.requestedKinds,
+					publishRelations,
+					args.productionEvidence.failures,
+				)
+			: [];
+		const coverage = knowledgeCoverageOf(accumulated, knowledge);
 		const complete = knowledgeRequestComplete(
-			knowledge,
+			{
+				knowledge: coverage.knowledge,
+				checkedRelationKinds: [
+					...coverage.checkedRelationKinds,
+					...answered,
+				],
+			},
 			args.productionEvidence.request as KnowledgeRequest,
 			args.productionEvidence.failures as KnowledgeFailure[],
 		);
@@ -643,13 +501,7 @@ export const publish = internalMutation({
 			ctx,
 			attempt.ownerReadingKey,
 		);
-		if (refreshed) {
-			await ctx.db.patch(refreshed._id, {
-				coveredTranslationLanguages: [
-					...new Set([...coveredTranslationLanguages(refreshed)]),
-				],
-			});
-		}
+		if (refreshed) await recordCoverageEvidence(ctx, refreshed, answered);
 		await Promise.all(
 			changes.map((change, index) =>
 				ctx.db.insert("knowledgeChanges", {
@@ -661,10 +513,7 @@ export const publish = internalMutation({
 			),
 		);
 		if (!args.final) {
-			await ctx.db.patch(attempt._id, {
-				publicationSequence: sequence,
-				updatedAt: Date.now(),
-			});
+			await recordKnowledgePublication(ctx, attempt, sequence);
 			return { status: "Committed" as const };
 		}
 		await recordCommittedRelationRun(
@@ -673,20 +522,20 @@ export const publish = internalMutation({
 			args.relationPublication,
 			!publishRelations,
 		);
-		await ctx.db.patch(attempt._id, {
-			publicationSequence: sequence,
-			state: args.productionEvidence.failures.length
-				? "Failed"
-				: "Committed",
-			failureCode: args.productionEvidence.failures.length
-				? "partialKnowledge"
-				: undefined,
-			failureMessage: args.productionEvidence.failures.length
-				? `Saved available Knowledge. Could not complete: ${[...new Set(args.productionEvidence.failures.map((failure) => (failure.leaf ? `${failure.aspect}/${failure.leaf}` : failure.aspect)))].join(", ")}.`
-				: undefined,
-			updatedAt: Date.now(),
-		});
-		await scheduleNextWaitingKnowledgeAttempt(ctx, attempt.ownerReadingKey);
+		const { failures } = args.productionEvidence;
+		await endKnowledgeRun(
+			ctx,
+			attempt,
+			runNumber,
+			failures.length
+				? {
+						kind: "Failed",
+						failureCode: "partialKnowledge",
+						failureMessage: `Saved available Knowledge. Could not complete: ${[...new Set(failures.map((failure) => (failure.leaf ? `${failure.aspect}/${failure.leaf}` : failure.aspect)))].join(", ")}.`,
+					}
+				: { kind: "Committed" },
+			{ publicationSequence: sequence },
+		);
 		return { status: "Committed" as const };
 	},
 });

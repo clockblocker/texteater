@@ -5,7 +5,7 @@ import {
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Doc, Id, TableNames } from "./_generated/dataModel";
+import type { Id, TableNames } from "./_generated/dataModel";
 import {
 	type ActionCtx,
 	action,
@@ -15,7 +15,7 @@ import {
 	type MutationCtx,
 } from "./_generated/server";
 import { bumpDictionaryRevision } from "./dumdictStorage/storage";
-import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
+import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
 	type StripTextAnalysisResult,
@@ -149,43 +149,6 @@ const visitorResetResultValidator = v.object({
 	nextPhase: visitorResetPhaseValidator,
 });
 
-/**
- * Deletes Knowledge generation attempts with their production runs, spending
- * at most `budget` deletions. Reports the owner Reading keys whose Scheduled
- * or Running attempt went, since a Waiting one may have queued behind it.
- */
-async function deleteGenerationAttempts(
-	ctx: MutationCtx,
-	attempts: readonly Doc<"knowledgeGenerationAttempts">[],
-	budget: number,
-): Promise<{
-	deleted: number;
-	complete: boolean;
-	endedActiveOwners: Set<string>;
-}> {
-	let deleted = 0;
-	const endedActiveOwners = new Set<string>();
-	for (const attempt of attempts) {
-		const runs = await ctx.db
-			.query("knowledgeProductionRuns")
-			.withIndex("by_attempt_key_and_run", (q) =>
-				q.eq("attemptKey", attempt.attemptKey),
-			)
-			.take(budget - deleted);
-		await Promise.all(runs.map((run) => ctx.db.delete(run._id)));
-		deleted += runs.length;
-		if (deleted >= budget) {
-			return { deleted, complete: false, endedActiveOwners };
-		}
-		await ctx.db.delete(attempt._id);
-		deleted += 1;
-		if (attempt.state === "Scheduled" || attempt.state === "Running") {
-			endedActiveOwners.add(attempt.ownerReadingKey);
-		}
-	}
-	return { deleted, complete: true, endedActiveOwners };
-}
-
 export const clearVisitorDataBatch = internalMutation({
 	args: {
 		visitorId: v.string(),
@@ -220,18 +183,11 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				const removed = await deleteGenerationAttempts(
+				const removed = await deleteKnowledgeAttempts(
 					ctx,
 					attempts,
 					BATCH_SIZE,
 				);
-				// Another Visitor's attempt may be waiting behind a removed one.
-				for (const ownerReadingKey of removed.endedActiveOwners) {
-					await scheduleNextWaitingKnowledgeAttempt(
-						ctx,
-						ownerReadingKey,
-					);
-				}
 				deleted = removed.deleted;
 				nextPhase =
 					removed.complete && attempts.length < BATCH_SIZE
@@ -776,7 +732,7 @@ export const clearReadingDataBatch = internalMutation({
 							q.eq("ownerReadingKey", readingKey),
 						)
 						.take(remaining);
-					const removed = await deleteGenerationAttempts(
+					const removed = await deleteKnowledgeAttempts(
 						ctx,
 						attempts,
 						remaining,
