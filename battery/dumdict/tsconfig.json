@@ -4,14 +4,7 @@
 		"paths": {
 			"dumdict": ["./src/index.ts"],
 			"dumdict/pending": ["./src/pending.ts"],
-			"dumdict/runtime": ["./src/runtime.ts"],
-			"dumling": ["../dumling/src/index.ts"],
-			"dumling/types": ["../dumling/src/types.ts"],
-			"dumling/validation": ["../dumling/src/validation/operations.ts"],
-			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
-			"dumrel": ["../dumrel/src/index.ts"],
-			"dumrel/types": ["../dumrel/src/types.ts"],
-			"dumrel/schema": ["../dumrel/src/schemas.ts"]
+			"dumdict/runtime": ["./src/runtime.ts"]
 		}
 	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

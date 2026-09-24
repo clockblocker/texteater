@@ -8,8 +8,12 @@
 	],
 	"compilerOptions": {
 		"paths": {
-			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
-			"dumrel/schema": ["../dumrel/src/schemas.ts"]
+			"dumgen": ["./src/index.ts"],
+			"dumgen/authored": ["./src/authored.ts"],
+			"dumgen/development": ["./src/development.ts"],
+			"dumgen/schemas": ["./src/schemas.ts"],
+			"dumgen/types": ["./src/types.ts"],
+			"dumgen/validation": ["./src/validation.ts"]
 		}
 	}
 }
