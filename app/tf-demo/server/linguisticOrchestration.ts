@@ -6,6 +6,7 @@ import type {
 	Dumgen,
 	Encounter,
 	KnowledgeDraft,
+	LemmaCandidate,
 	SegmentedSentence,
 	SegmentKind,
 	SentenceAnalysis,
@@ -282,7 +283,7 @@ export type ResolutionContext = {
 	readonly recorded: RecordedClick | null;
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
-	readonly lemmaCandidates: readonly Dumling.Lemma<"de">[];
+	readonly lemmaCandidates: readonly LemmaCandidate<"de">[];
 	/** The stored Sentence Analysis, read before click-time classification. */
 	readonly analysis?: SentenceAnalysis | null;
 };

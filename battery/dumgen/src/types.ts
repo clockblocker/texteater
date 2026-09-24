@@ -77,6 +77,17 @@ export type KnowledgeInput<L extends DumgenLanguage = DumgenLanguage> =
 			{ encounter: { sentence: { language: L } } }
 		>
 	>;
+/**
+ * A stored Lemma and the Sentence texts a host looked it up under. Each text is
+ * one Segment's text or several joined with single spaces; the Lemma's
+ * headword or one of its stored Surfaces matched it. Measured: jev takes an
+ * offered candidate almost always, so resolveGrammar offers a Lemma only when
+ * it was found under the target's own members.
+ */
+export type LemmaCandidate<L extends DumgenLanguage = DumgenLanguage> = {
+	readonly lemma: Dumling.Lemma<L>;
+	readonly foundUnder: readonly string[];
+};
 export type EmojiDescription = Dumling.Reading["emojiDescription"];
 export type ReadingEmojiDescriptionResolution = {
 	readonly decision: "Reuse" | "New";
@@ -126,10 +137,10 @@ export interface Dumgen {
 	resolveGrammar<L extends DumgenLanguage>(
 		input: Encounter<L>,
 		/**
-		 * Same-target Canonical Form candidates. Measured: jev takes an offered
-		 * same-target candidate almost always, so pass only candidates you trust.
+		 * Stored Lemmas the host found in the Encounter's Sentence. Only those
+		 * found under the target's own text become Canonical Form candidates.
 		 */
-		lemmaCandidates?: readonly Dumling.Lemma<L>[],
+		lemmaCandidates?: readonly LemmaCandidate<L>[],
 	): Task<Dumling.Attestation<L>>;
 	resolveOrGenerateReadingEmojiDescription<L extends DumgenLanguage>(
 		input: ComparisonInput<L>,

@@ -3,7 +3,11 @@ import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { operationExperiment } from "../src/development.js";
-import type { JudgmentRequest, OperationTrace } from "../src/types.js";
+import type {
+	JudgmentRequest,
+	LemmaCandidate,
+	OperationTrace,
+} from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 import { validateEncounter } from "../src/universal/validation.js";
 import { grammarFixture } from "./grammar-fixture.js";
@@ -21,7 +25,7 @@ const stored = {
 } as const satisfies Dumling.Lemma<"de">;
 
 /** Runs the evaluator on one retained case with a recording fake executor. */
-async function evaluate(extra: { lemmaCandidates?: Dumling.Lemma[] } = {}) {
+async function evaluate(extra: { lemmaCandidates?: LemmaCandidate[] } = {}) {
 	const golden = operationExperiment(route, grammarFixture(null)).corpus
 		.cases[caseId];
 	if (!golden) throw Error(`Missing ${caseId}`);
@@ -51,8 +55,9 @@ const canonicalOptions = (request: SentRequest | undefined) => {
 };
 
 test("an injected stored Lemma is offered as a canonical candidate and traced", async () => {
+	const candidate = { lemma: stored, foundUnder: ["kleine"] };
 	const { output, requests, traces } = await evaluate({
-		lemmaCandidates: [stored],
+		lemmaCandidates: [candidate],
 	});
 	expect(canonicalOptions(requests[0])).toMatchObject({
 		candidate_0: "klein",
@@ -63,8 +68,25 @@ test("an injected stored Lemma is offered as a canonical candidate and traced", 
 		canonicalFormAlternatives: ["klein"],
 		storedLemmas: [stored],
 	});
-	expect(traces[0]?.input).toMatchObject({ lemmaCandidates: [stored] });
+	expect(traces[0]?.input).toMatchObject({ lemmaCandidates: [candidate] });
 	expect(output).toMatchObject({ lemma: { canonicalForm: "klein" } });
+});
+
+test("a stored Lemma found under another word of the sentence is not offered", async () => {
+	const { requests } = await evaluate({
+		lemmaCandidates: [
+			{ lemma: stored, foundUnder: ["Hund", "Der kleine"] },
+		],
+	});
+	expect(
+		Object.keys(canonicalOptions(requests[0])).filter((key) =>
+			key.startsWith("candidate_"),
+		),
+	).toEqual([]);
+	expect(requests[0]?.state).toMatchObject({
+		canonicalFormAlternatives: [],
+		storedLemmas: [],
+	});
 });
 
 test("without injection the request is the one production sends with no candidates", async () => {

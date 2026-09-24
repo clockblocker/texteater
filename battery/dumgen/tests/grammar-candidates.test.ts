@@ -87,12 +87,15 @@ test("an inflected noun can select a stored headword without generating text", a
 			},
 		}).resolveGrammar(inflected, [
 			{
-				unitKind: "Lemma",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				...expected.lemma,
-				coreFeatures: { gender: "Masc", hyph: null },
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					...expected.lemma,
+					coreFeatures: { gender: "Masc", hyph: null },
+				},
+				foundUnder: ["den Aufstiegen"],
 			},
 		]),
 	);

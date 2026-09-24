@@ -73,8 +73,12 @@ export function createResolutionSessionLifecycle(
 							"recorded" | "reusable"
 						>),
 						sentence,
-						lemmaCandidates:
-							input.context.lemmaCandidates.map(parseGermanLemma),
+						lemmaCandidates: input.context.lemmaCandidates.map(
+							({ lemma, foundUnder }) => ({
+								lemma: parseGermanLemma(lemma),
+								foundUnder,
+							}),
+						),
 						analysis,
 					},
 					checkpoints: {

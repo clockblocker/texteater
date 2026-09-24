@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
 import {
@@ -40,7 +40,13 @@ export const resolutionContextValidator = v.object({
 			definitionText: v.boolean(),
 		}),
 	),
-	lemmaCandidates: v.array(lemmaValueValidator),
+	/** Stored Lemmas and the Sentence texts they were found under. */
+	lemmaCandidates: v.array(
+		v.object({
+			lemma: lemmaValueValidator,
+			foundUnder: v.array(v.string()),
+		}),
+	),
 	/** Intake's Sentence Analysis, read before click-time classification. */
 	analysis: v.union(v.null(), storedSentenceAnalysisValidator),
 });
@@ -106,21 +112,25 @@ export async function loadResolutionContext(
 			phrases.push(words.slice(start, end).map(spellingOf).join(" "));
 		}
 	}
-	const spellings = [
-		...new Set(
-			[
-				words[clicked] ? spellingOf(words[clicked]) : "",
-				...phrases,
-				...words.map(spellingOf),
-			].flatMap((text) => [
-				text,
-				text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),
-				text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1),
-			]),
-		),
-	]
-		.filter(Boolean)
-		.slice(0, 64);
+	// Every word is looked up so a target's far member, such as a separated
+	// prefix, still finds its Lemma; each spelling keeps the Sentence text it
+	// came from, and Dumgen offers only Lemmas found under the target's own.
+	const foundUnder = new Map<string, Set<string>>();
+	for (const text of [
+		words[clicked] ? spellingOf(words[clicked]) : "",
+		...phrases,
+		...words.map(spellingOf),
+	].filter(Boolean))
+		for (const spelling of [
+			text,
+			text.slice(0, 1).toLocaleLowerCase("de") + text.slice(1),
+			text.slice(0, 1).toLocaleUpperCase("de") + text.slice(1),
+		])
+			foundUnder.set(
+				spelling,
+				(foundUnder.get(spelling) ?? new Set()).add(text),
+			);
+	const spellings = [...foundUnder.keys()].slice(0, 64);
 	const matches = await Promise.all(
 		spellings.map(async (spelling) => {
 			const [lemmas, surfaces] = await Promise.all([
@@ -146,20 +156,37 @@ export async function loadResolutionContext(
 					(id) => ctx.db.get(id),
 				),
 			);
+			const texts = [...(foundUnder.get(spelling) ?? [])];
 			return [
 				...lemmas,
 				...owners.flatMap((lemma) =>
 					lemma?.language === "de" ? [lemma] : [],
 				),
-			];
+			].map((lemma) => ({ lemma, texts }));
 		}),
 	);
-	const lemmas = new Map(matches.flat().map((lemma) => [lemma._id, lemma]));
+	const candidates = new Map<
+		Id<"lemmas">,
+		{ lemma: Doc<"lemmas">; foundUnder: Set<string> }
+	>();
+	for (const { lemma, texts } of matches.flat()) {
+		const candidate = candidates.get(lemma._id) ?? {
+			lemma,
+			foundUnder: new Set<string>(),
+		};
+		for (const text of texts) candidate.foundUnder.add(text);
+		candidates.set(lemma._id, candidate);
+	}
 	return {
 		recorded: null,
 		reusable: null,
 		sentence,
-		lemmaCandidates: [...lemmas.values()].slice(0, 64).map(lemmaValue),
+		lemmaCandidates: [...candidates.values()]
+			.slice(0, 64)
+			.map(({ lemma, foundUnder }) => ({
+				lemma: lemmaValue(lemma),
+				foundUnder: [...foundUnder],
+			})),
 		analysis,
 	};
 }

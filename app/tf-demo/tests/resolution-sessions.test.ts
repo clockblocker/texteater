@@ -1879,7 +1879,10 @@ test("beginRun atomically claims work, loads sentence and stored Surface candida
 			reusable: null,
 			sentence: { stitchedText: "Die Banken." },
 			lemmaCandidates: [
-				expect.objectContaining({ canonicalForm: "Bank" }),
+				{
+					lemma: expect.objectContaining({ canonicalForm: "Bank" }),
+					foundUnder: ["Banken"],
+				},
 			],
 		},
 	});

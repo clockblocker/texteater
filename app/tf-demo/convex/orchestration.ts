@@ -517,7 +517,12 @@ function createConvexPersistence(
 			);
 			return {
 				...context,
-				lemmaCandidates: context.lemmaCandidates.map(parseGermanLemma),
+				lemmaCandidates: context.lemmaCandidates.map(
+					({ lemma, foundUnder }) => ({
+						lemma: parseGermanLemma(lemma),
+						foundUnder,
+					}),
+				),
 				analysis: context.analysis
 					? fromStoredSentenceAnalysis(context.analysis)
 					: null,

@@ -1,10 +1,9 @@
-import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
 import type { LinguisticCorpus } from "../concrete-lang/de/authoring.js";
 import { grammarPromptRoutes } from "../generated/prompts.js";
-import type { DumgenOptions, Segment } from "../types.js";
+import type { DumgenOptions, LemmaCandidate, Segment } from "../types.js";
 import { createDumgen } from "../universal/dumgen.js";
 import { validateEncounter } from "../universal/validation.js";
 
@@ -50,7 +49,7 @@ export function grammarOperationExperiment(
 			const input = raw as {
 				markedContext: string;
 				members: string[];
-				lemmaCandidates?: readonly Dumling.Lemma[];
+				lemmaCandidates?: readonly LemmaCandidate[];
 			};
 			const segments: Segment[] = [],
 				members: number[] = [];

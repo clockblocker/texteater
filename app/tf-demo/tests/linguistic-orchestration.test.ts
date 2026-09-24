@@ -927,7 +927,7 @@ test("stored Lemma candidates reach grammar before headword generation, while Re
 				return {
 					recorded: null,
 					reusable: null,
-					lemmaCandidates: [lemma],
+					lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
 					sentence: {
 						sentenceId: "sentence-1",
 						textId: "text-1",

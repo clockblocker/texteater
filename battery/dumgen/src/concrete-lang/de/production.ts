@@ -6,6 +6,7 @@ import type {
 	Encounter,
 	KnowledgeProduction,
 	KnowledgeRequest,
+	LemmaCandidate,
 	KnowledgeInput as PublicKnowledgeInput,
 	SegmentedSentence,
 } from "../../types.js";
@@ -114,7 +115,7 @@ export function createGermanOperations(
 		},
 		resolveGrammar<L extends Dumling.Language>(
 			raw: Encounter<L>,
-			lemmaCandidates: readonly Dumling.Lemma<L>[] = [],
+			lemmaCandidates: readonly LemmaCandidate<L>[] = [],
 		) {
 			return task(
 				"resolveGrammar",
@@ -126,12 +127,28 @@ export function createGermanOperations(
 							"resolveGrammar",
 							"At most 64 stored Lemma candidates are supported",
 						);
-					const candidates = lemmaCandidates.map((value) =>
-						parse<Dumling.Lemma>(
-							"lemmaSchema",
-							value,
-							"resolveGrammar",
-						),
+					const candidates = lemmaCandidates.map(
+						({ lemma, foundUnder }) => {
+							if (
+								!Array.isArray(foundUnder) ||
+								!foundUnder.every(
+									(text) => typeof text === "string" && text,
+								)
+							)
+								throw new DumgenFailure(
+									"InvalidInput",
+									"resolveGrammar",
+									"A Lemma candidate names the non-empty texts it was found under",
+								);
+							return {
+								lemma: parse<Dumling.Lemma>(
+									"lemmaSchema",
+									lemma,
+									"resolveGrammar",
+								),
+								foundUnder,
+							};
+						},
 					);
 					const encounter = validateEncounter(raw, "resolveGrammar");
 					supported(encounter, "resolveGrammar");

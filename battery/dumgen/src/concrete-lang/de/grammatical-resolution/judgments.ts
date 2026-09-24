@@ -1,7 +1,10 @@
-import type * as Dumling from "dumling/types";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
-import type { DumgenOptions, Encounter } from "../../../types.js";
+import type {
+	DumgenOptions,
+	Encounter,
+	LemmaCandidate,
+} from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import {
@@ -132,7 +135,7 @@ export async function resolveGrammarJudgments(
 	options: DumgenOptions,
 	encounter: Encounter,
 	signal: AbortSignal,
-	lemmaCandidates: readonly Dumling.Lemma[] = [],
+	lemmaCandidates: readonly LemmaCandidate[] = [],
 ): Promise<GrammarOutput> {
 	const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
 	if (
@@ -150,14 +153,22 @@ export async function resolveGrammarJudgments(
 	};
 	const input = markedContext(encounter);
 	const canonicalFormCandidate = input.members.join(" ");
-	const storedLemmas = lemmaCandidates.filter(
-		(lemma) =>
-			lemma.language === encounter.sentence.language &&
-			lemma.family === encounter.target.family &&
-			lemma.kind === encounter.target.kind,
-	);
-	// Every source here sets Lemma precision: jev takes an offered same-target
-	// candidate almost always (E2: CandidateIsNotCanonical 102 → 0/154).
+	// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
+	// 102 → 0/154), so a stored Lemma of the same route found under another
+	// word would become this target's Lemma: "stolz" for "normal".
+	const targetTexts = new Set([...input.members, canonicalFormCandidate]);
+	const storedLemmas = lemmaCandidates
+		.filter(({ foundUnder }) =>
+			foundUnder.some((text) => targetTexts.has(text)),
+		)
+		.map(({ lemma }) => lemma)
+		.filter(
+			(lemma) =>
+				lemma.language === encounter.sentence.language &&
+				lemma.family === encounter.target.family &&
+				lemma.kind === encounter.target.kind,
+		);
+	// Every source here sets Lemma precision.
 	const canonicalFormAlternatives = [
 		...new Set([
 			...storedLemmas.map((lemma) => lemma.canonicalForm),
