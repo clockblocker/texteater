@@ -106,6 +106,25 @@ export type KnowledgeProduction<L extends DumgenLanguage = DumgenLanguage> = {
 	})[];
 };
 export type Task<T> = Effect.Effect<T, DumgenFailure>;
+/**
+ * The event `segment` records for every input sentence before its trace is
+ * emitted. Failed carries its DumgenFailure tag or Defect; Interrupted work
+ * had begun, NotStarted work never did.
+ */
+export type SentenceOutcome = {
+	readonly index: number;
+	readonly outcome:
+		| "Accepted"
+		| "UnsupportedLanguage"
+		| "Unintelligible"
+		| "Failed"
+		| "Interrupted"
+		| "NotStarted";
+	/** Present for Accepted. */
+	readonly language?: DumgenLanguage;
+	/** Present for Failed. */
+	readonly tag?: string;
+};
 export interface Dumgen {
 	segment(input: {
 		readonly sourceSentences: readonly [string, ...string[]];

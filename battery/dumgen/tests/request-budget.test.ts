@@ -330,3 +330,72 @@ test("cancellation interrupts active requests; queued ones never start or record
 	]);
 	expect(queuedEvents(traces[0])).toEqual([]);
 });
+
+test("every sentence gets a SentenceOutcome: finished ones keep theirs, running ones are Interrupted and queued ones NotStarted", async () => {
+	const traces: OperationTrace[] = [];
+	const dumgen = createDumgen({
+		judge: async (request, options) => {
+			const { sourceText } = request.state as { sourceText: string };
+			if (sourceText === "Bonjour.")
+				return choiceAnswers(request.questions, (id) =>
+					id === "language"
+						? "UnsupportedLanguage"
+						: id === "validity"
+							? "Accepted"
+							: "Unchanged",
+				);
+			if (sourceText === "Hallo.")
+				return choiceAnswers(request.questions, (id) =>
+					id === "language"
+						? "de"
+						: id === "validity"
+							? "Accepted"
+							: "Unchanged",
+				);
+			if (sourceText === "Kaputt.") {
+				await sleep(10);
+				throw Error("offline");
+			}
+			return new Promise((_resolve, reject) =>
+				options?.signal?.addEventListener("abort", () =>
+					reject(Error("Canceled")),
+				),
+			);
+		},
+		execute: async () => {
+			throw Error("Unexpected stitching");
+		},
+		requestBudget: 3,
+		onOperation: (trace) => traces.push(trace),
+	});
+	const result = await Effect.runPromise(
+		Effect.either(
+			dumgen.segment({
+				sourceSentences: [
+					"Hallo.",
+					"Bonjour.",
+					"Kaputt.",
+					"Läuft noch.",
+					"Wartet.",
+					"Wartet auch.",
+				],
+			}),
+		),
+	);
+	expect(result).toMatchObject({
+		_tag: "Left",
+		left: { _tag: "ProviderFailure" },
+	});
+	expect(
+		traces[0]?.events
+			.filter((event) => event.kind === "SentenceOutcome")
+			.map((event) => event.data),
+	).toEqual([
+		{ index: 0, outcome: "Accepted", language: "de" },
+		{ index: 1, outcome: "UnsupportedLanguage" },
+		{ index: 2, outcome: "Failed", tag: "ProviderFailure" },
+		{ index: 3, outcome: "Interrupted" },
+		{ index: 4, outcome: "Interrupted" },
+		{ index: 5, outcome: "NotStarted" },
+	]);
+});

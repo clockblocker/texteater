@@ -1,4 +1,5 @@
 import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
 import { segmentGerman } from "../concrete-lang/de/segmentation/segment.js";
 import { segmentEnglish } from "../concrete-lang/en/segmentation/segment.js";
 import { segmentHebrew } from "../concrete-lang/he/segmentation/segment.js";
@@ -6,13 +7,19 @@ import type {
 	DumgenOptions,
 	SegmentationDecision,
 	SegmentedSentence,
+	SentenceOutcome,
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 import { judgmentCaller } from "./judgment.js";
 import { effectiveConfiguration, executeGeneration } from "./model.js";
 import { choice } from "./questions.js";
 import { isStitchedText } from "./segmentation.js";
-import { operation, type RequestBudget, recordEvent } from "./trace.js";
+import {
+	failureOf,
+	operation,
+	type RequestBudget,
+	recordEvent,
+} from "./trace.js";
 import { parse } from "./validation.js";
 
 const segmenters = { de: segmentGerman, en: segmentEnglish, he: segmentHebrew };
@@ -43,10 +50,10 @@ export function createSegmentation(
 			// failed sentence fails the operation and interrupts the others.
 			const decide = (
 				index: number,
-				sourceText: string,
+				state: { id: string; sourceText: string },
 			): Effect.Effect<SegmentationDecision, DumgenFailure> =>
 				Effect.gen(function* () {
-					const state = { id: String(index), sourceText };
+					const { sourceText } = state;
 					const judged = yield* judgmentCaller(options)(
 						"segment",
 						"intake",
@@ -203,10 +210,62 @@ export function createSegmentation(
 					});
 					return decision;
 				});
+			// Every sentence gets a SentenceOutcome before the trace is emitted.
+			// A sentence whose intake judgment began is Interrupted; one whose
+			// judgment never started is NotStarted.
+			const outcomes: SentenceOutcome[] = [];
+			const outcomeOf = (
+				index: number,
+				state: object,
+				exit: Exit.Exit<SegmentationDecision, DumgenFailure>,
+			): SentenceOutcome => {
+				if (Exit.isSuccess(exit))
+					return exit.value.decision === "Accepted"
+						? {
+								index,
+								outcome: "Accepted",
+								language: exit.value.language,
+							}
+						: { index, outcome: exit.value.decision };
+				const { tag } = failureOf(exit.cause);
+				if (tag !== "Interrupted")
+					return { index, outcome: "Failed", tag };
+				return {
+					index,
+					outcome: scope.calls.some(
+						(call) => call.request.input === state,
+					)
+						? "Interrupted"
+						: "NotStarted",
+				};
+			};
 			return Effect.forEach(
 				input.sourceSentences,
-				(sourceText, index) => decide(index, sourceText),
+				(sourceText, index) => {
+					const state = { id: String(index), sourceText };
+					return decide(index, state).pipe(
+						Effect.onExit((exit) =>
+							Effect.sync(() => {
+								outcomes[index] = outcomeOf(index, state, exit);
+							}),
+						),
+					);
+				},
 				{ concurrency: "unbounded" },
+			).pipe(
+				Effect.ensuring(
+					Effect.sync(() => {
+						for (const index of input.sourceSentences.keys())
+							recordEvent(
+								scope,
+								"SentenceOutcome",
+								outcomes[index] ?? {
+									index,
+									outcome: "NotStarted",
+								},
+							);
+					}),
+				),
 			);
 		});
 	};

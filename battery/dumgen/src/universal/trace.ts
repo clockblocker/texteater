@@ -266,13 +266,20 @@ export function expected<T, R>(
 	});
 }
 
-function failureOf(
+/** A failure's DumgenFailure tag, Defect, or Interrupted. */
+export function failureOf(
 	cause: Cause.Cause<DumgenFailure>,
 ): NonNullable<OperationTrace["failure"]> {
 	const failure = Cause.failureOption(cause);
 	if (Option.isSome(failure))
 		return { tag: failure.value._tag, message: failure.value.message };
-	const [defect] = Chunk.toReadonlyArray(Cause.defects(cause));
+	const defects = Chunk.toReadonlyArray(Cause.defects(cause));
+	const [defect] = defects;
+	if (
+		defect instanceof DumgenFailure &&
+		defects.every((item) => item instanceof DumgenFailure)
+	)
+		return { tag: defect._tag, message: defect.message };
 	if (defect !== undefined)
 		return {
 			tag: "Defect",
