@@ -1021,7 +1021,11 @@ describe("Resolution Session", () => {
 				internal.demoReset.stripTextAnalysisGraphBatch,
 				{ textId },
 			);
-			expect(first).toEqual({ deleted: 1, hasMore: true });
+			expect(first).toEqual({
+				deleted: 1,
+				hasMore: true,
+				nextPosition: 0,
+			});
 			expect(await rows(stripped, "resolutionSessions")).toEqual([]);
 			expect(await segmentState(stripped, segmentId)).toEqual({
 				kind: "PermanentFailure",

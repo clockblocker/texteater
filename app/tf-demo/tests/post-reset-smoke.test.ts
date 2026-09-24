@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import { getFunctionName } from "convex/server";
 import { createDumdictService } from "dumdict";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
-import type { MutationCtx } from "../convex/_generated/server";
-import { resetDemoTableNames } from "../convex/demoReset";
+import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
+import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
 import { createConvexDumdictStorage } from "../convex/dumdictStorage/adapter";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
+import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
@@ -498,6 +500,85 @@ describe("tf-demo post-reset contract", () => {
 		expect(await tableRows(t, "inspectionPayloads")).toEqual([]);
 		expect(await tableRows(t, "inspectionSteps")).toEqual([]);
 		expect(await tableRows(t, "inspectionClicks")).toEqual([]);
+	});
+
+	test("stripping a long Text removes its Segments in batches of about Segments / batch size", async () => {
+		const t = createTestConvex({ transactionLimits: true });
+		const reading = await insertReading(t, "reading-key-1");
+		// Five Sentences of 256 Segments: 128 attested words, their spaces, and a stop.
+		const sentences = Array.from({ length: 5 }, () => [
+			...Array.from({ length: 128 }, (_, index) => [
+				...(index === 0 ? [] : [" "]),
+				"Bank",
+			]).flat(),
+			".",
+		]);
+		const { textId, segmentIds } = await submitText(t, sentences);
+		const segmentCount = segmentIds.flat().length;
+		expect(segmentCount).toBe(1_280);
+		await t.run(async (ctx) => {
+			const surfaceId = (await ctx.db.get(reading.attestationId))
+				?.surfaceId;
+			if (!surfaceId) throw new Error("Expected a stored Surface.");
+			for (const segmentId of segmentIds.flat()) {
+				const segment = await ctx.db.get(segmentId);
+				const sentence =
+					segment && (await ctx.db.get(segment.sentenceId));
+				if (!sentence || segment.kind !== "ResolvableText") continue;
+				const attestationId = await ctx.db.insert("attestations", {
+					surfaceId,
+					readingId: reading.readingId,
+					realizationCoverage: "Full",
+				});
+				await ctx.db.patch(segmentId, {
+					attestationMembership: {
+						attestationId,
+						orthography: "Standard",
+					},
+				});
+				await ctx.db.insert("visitorClicks", {
+					requestId: `request:${segmentId}`,
+					visitorId: "visitor-1",
+					textId,
+					sentenceId: sentence._id,
+					segmentId,
+					attestationId,
+					readingId: reading.readingId,
+					clickedAt: 1,
+				});
+			}
+		});
+
+		let batches = 0;
+		const context = actionContext(t);
+		const result = await stripTextAnalysisGraph(
+			{
+				...context,
+				runMutation: (reference: never, args: never) => {
+					if (
+						getFunctionName(reference) ===
+						getFunctionName(
+							internal.demoReset.stripTextAnalysisGraphBatch,
+						)
+					) {
+						batches += 1;
+					}
+					return context.runMutation(reference, args);
+				},
+			} as unknown as ActionCtx,
+			textId,
+		);
+
+		// 1,280 Segments, 640 Encounters, and 640 Attestations.
+		expect(result.removed).toBe(2_560);
+		// One more step finds nothing left.
+		expect(batches).toBe(Math.ceil(segmentCount / STRIP_SEGMENT_BATCH) + 1);
+		expect(await tableRows(t, "segments")).toEqual([]);
+		expect(await tableRows(t, "visitorClicks")).toEqual([]);
+		expect(
+			(await tableRows(t, "attestations")).map(({ _id }) => _id),
+		).toEqual([reading.attestationId]);
+		expect(await tableRows(t, "sentences")).toHaveLength(5);
 	});
 
 	test("the bounded reset inventory stays complete as the schema changes", async () => {

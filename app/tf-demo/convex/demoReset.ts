@@ -23,6 +23,10 @@ import {
 } from "./model/textAnalysisStripping";
 
 const BATCH_SIZE = 400;
+/** Segments one strip step deletes, each with its Encounters and emptied Attestation. */
+export const STRIP_SEGMENT_BATCH = 128;
+/** Encounters and Segments one strip step may delete, far below the write limit. */
+const STRIP_DELETE_BUDGET = 1_000;
 const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
 const MAX_BATCHES = 1_000;
 const MAX_CLEANUP_PHASE_STEPS = 64;
@@ -376,92 +380,103 @@ export const getTextAnalysisCandidates = internalQuery({
 	},
 });
 
+/**
+ * One bounded step of stripping a Text: from the first Sentence at or after
+ * `fromPosition` that still has analysis, it deletes its Sentence Analysis,
+ * then its Resolution Sessions, then up to `STRIP_SEGMENT_BATCH` Segments
+ * with their Visitor Encounters and the Attestations they leave memberless.
+ * `nextPosition` is where the next step resumes.
+ */
 export const stripTextAnalysisGraphBatch = internalMutation({
-	args: { textId: v.id("texts") },
-	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
-	handler: async (ctx, { textId }) => {
-		if (!(await ctx.db.get(textId))) return { deleted: 0, hasMore: false };
-		const sentences = await ctx.db
+	args: { textId: v.id("texts"), fromPosition: v.optional(v.number()) },
+	returns: v.object({
+		deleted: v.number(),
+		hasMore: v.boolean(),
+		nextPosition: v.number(),
+	}),
+	handler: async (ctx, { textId, fromPosition = 0 }) => {
+		const done = { deleted: 0, hasMore: false, nextPosition: fromPosition };
+		if (!(await ctx.db.get(textId))) return done;
+		const sentences = ctx.db
 			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
-			.take(MAX_SENTENCES_PER_TEXT + 1);
-		if (sentences.length > MAX_SENTENCES_PER_TEXT) {
-			throw new Error(
-				`Analysis stripping supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
+			.withIndex("by_text_id_and_position", (q) =>
+				q.eq("textId", textId).gte("position", fromPosition),
 			);
+		for await (const sentence of sentences) {
+			const deleted = await stripSentenceAnalysisBatch(ctx, sentence._id);
+			if (deleted > 0) {
+				return {
+					deleted,
+					hasMore: true,
+					nextPosition: sentence.position,
+				};
+			}
 		}
+		return done;
+	},
+});
 
-		const workBySentence = await Promise.all(
-			sentences.map(async (sentence) => {
-				const [sessions, segments, analyses] = await Promise.all([
-					ctx.db
-						.query("resolutionSessions")
-						.withIndex("by_sentence_id", (q) =>
-							q.eq("sentenceId", sentence._id),
-						)
-						.take(BATCH_SIZE),
-					ctx.db
-						.query("segments")
-						.withIndex("by_sentence_id_and_index", (q) =>
-							q.eq("sentenceId", sentence._id),
-						)
-						.take(BATCH_SIZE),
-					ctx.db
-						.query("sentenceAnalyses")
-						.withIndex("by_sentence_id", (q) =>
-							q.eq("sentenceId", sentence._id),
-						)
-						.take(BATCH_SIZE),
-				]);
-				return { sessions, segments, analyses };
-			}),
+/** Deletes one bounded step of a Sentence's analysis; 0 when none is left. */
+async function stripSentenceAnalysisBatch(
+	ctx: MutationCtx,
+	sentenceId: Id<"sentences">,
+): Promise<number> {
+	const analyses = await ctx.db
+		.query("sentenceAnalyses")
+		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
+		.take(STRIP_SEGMENT_BATCH);
+	if (analyses.length > 0) {
+		await Promise.all(
+			analyses.map((analysis) => ctx.db.delete(analysis._id)),
 		);
-		const next = workBySentence.find(
-			({ sessions, segments, analyses }) =>
-				sessions.length > 0 ||
-				segments.length > 0 ||
-				analyses.length > 0,
-		);
-		if (!next) return { deleted: 0, hasMore: false };
-		if (next.analyses.length > 0) {
-			await Promise.all(
-				next.analyses.map((analysis) => ctx.db.delete(analysis._id)),
-			);
-			return { deleted: next.analyses.length, hasMore: true };
-		}
-		if (next.sessions.length > 0) {
-			await deleteResolutionSessions(ctx, next.sessions);
-			return { deleted: next.sessions.length, hasMore: true };
-		}
-		const segment = next.segments[0];
-		if (!segment) return { deleted: 0, hasMore: false };
+		return analyses.length;
+	}
+	const sessions = await ctx.db
+		.query("resolutionSessions")
+		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
+		.take(STRIP_SEGMENT_BATCH);
+	if (sessions.length > 0) {
+		await deleteResolutionSessions(ctx, sessions);
+		return sessions.length;
+	}
+
+	const segments = await ctx.db
+		.query("segments")
+		.withIndex("by_sentence_id_and_index", (q) =>
+			q.eq("sentenceId", sentenceId),
+		)
+		.take(STRIP_SEGMENT_BATCH);
+	let deleted = 0;
+	const leftAttestationIds = new Set<Id<"attestations">>();
+	for (const segment of segments) {
+		const clickBudget = STRIP_DELETE_BUDGET - deleted;
 		const clicks = await ctx.db
 			.query("visitorClicks")
 			.withIndex("by_segment_id", (q) => q.eq("segmentId", segment._id))
-			.take(BATCH_SIZE);
-		if (clicks.length > 0) {
-			await Promise.all(clicks.map((click) => ctx.db.delete(click._id)));
-			return { deleted: clicks.length, hasMore: true };
-		}
-
+			.take(clickBudget);
+		await Promise.all(clicks.map((click) => ctx.db.delete(click._id)));
+		deleted += clicks.length;
+		// A Segment goes only after its last Encounter; the rest wait a step.
+		if (clicks.length === clickBudget) break;
 		const attestationId = segment.attestationMembership?.attestationId;
+		if (attestationId) leftAttestationIds.add(attestationId);
 		await ctx.db.delete(segment._id);
-		let deleted = 1;
-		if (attestationId) {
-			const survivor = await ctx.db
-				.query("segments")
-				.withIndex("by_attestation_id", (q) =>
-					q.eq("attestationMembership.attestationId", attestationId),
-				)
-				.first();
-			if (!survivor && (await ctx.db.get(attestationId))) {
-				await ctx.db.delete(attestationId);
-				deleted += 1;
-			}
+		deleted += 1;
+	}
+	for (const attestationId of leftAttestationIds) {
+		const survivor = await ctx.db
+			.query("segments")
+			.withIndex("by_attestation_id", (q) =>
+				q.eq("attestationMembership.attestationId", attestationId),
+			)
+			.first();
+		if (!survivor && (await ctx.db.get(attestationId))) {
+			await ctx.db.delete(attestationId);
+			deleted += 1;
 		}
-		return { deleted, hasMore: true };
-	},
-});
+	}
+	return deleted;
+}
 
 export const describeReadingCleanupCandidates = internalQuery({
 	args: { readingIds: v.array(v.id("readings")) },

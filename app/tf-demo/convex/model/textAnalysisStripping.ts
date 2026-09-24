@@ -59,12 +59,14 @@ export async function stripTextAnalysisGraph(
 		return { removed: 0, deletedReadings: 0, deletedLemmas: 0 };
 	}
 	let removed = 0;
+	let fromPosition = 0;
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
 			internal.demoReset.stripTextAnalysisGraphBatch,
-			{ textId },
+			{ textId, fromPosition },
 		);
 		removed += result.deleted;
+		fromPosition = result.nextPosition;
 		if (!result.hasMore) break;
 		if (batch === MAX_BATCHES - 1) {
 			throw new Error(
