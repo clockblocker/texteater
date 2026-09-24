@@ -41,6 +41,7 @@ import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_resolutionLookup from "../model/resolutionLookup.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_shadows from "../model/shadows.js";
+import type * as model_storedSegments from "../model/storedSegments.js";
 import type * as model_textAnalysisStripping from "../model/textAnalysisStripping.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorClicks from "../model/visitorClicks.js";
@@ -113,6 +114,7 @@ declare const fullApi: ApiFromModules<{
   "model/resolutionLookup": typeof model_resolutionLookup;
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/shadows": typeof model_shadows;
+  "model/storedSegments": typeof model_storedSegments;
   "model/textAnalysisStripping": typeof model_textAnalysisStripping;
   "model/validators": typeof model_validators;
   "model/visitorClicks": typeof model_visitorClicks;

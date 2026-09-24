@@ -31,6 +31,7 @@ import {
 	requireCommittingSession,
 	settleResolutionSession,
 } from "./model/resolutionSessions";
+import { spellingOf } from "./model/storedSegments";
 import {
 	occurrenceAttestationInputValidator,
 	readingDecisionValidator,
@@ -340,8 +341,7 @@ export const persistResolvedClick = internalMutation({
 			}
 			// A fusion component is attested as the word it stands for.
 			if (
-				(member.surface ?? member.text) !==
-				attestedMembers[memberPosition]?.attested
+				spellingOf(member) !== attestedMembers[memberPosition]?.attested
 			) {
 				throw new Error(
 					"Attestation member text must equal its Segment text.",

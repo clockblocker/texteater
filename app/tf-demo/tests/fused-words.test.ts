@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test";
 import type { SentenceAnalysis } from "dumgen/types";
-import { encounterSentenceOf, storedSegmentsOf } from "../server/fusedWords";
+import {
+	encounterSentenceOf,
+	storedSegmentsOf,
+} from "../convex/model/storedSegments";
 
 const piece = (
 	offset: number,

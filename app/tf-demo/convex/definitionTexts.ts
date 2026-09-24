@@ -10,13 +10,13 @@ import {
 	findDefinitionText,
 	writeDefinitionText,
 } from "./model/definitionTexts";
+import { loadStoredSegments } from "./model/storedSegments";
 import {
 	definitionTextStateValidator,
 	languageValidator,
 	segmentInputValidator,
 } from "./model/validators";
 
-const MAX_SEGMENTS_PER_SENTENCE = 512;
 const MAX_SENTENCES_PER_DEFINITION = 8;
 
 export const loadSync = internalQuery({
@@ -191,12 +191,7 @@ async function deleteDefinitionTextRows(ctx: MutationCtx, textId: Id<"texts">) {
 		throw new Error("A Definition Text holds at most one Sentence.");
 	}
 	for (const sentence of sentences) {
-		const segments = await ctx.db
-			.query("segments")
-			.withIndex("by_sentence_id_and_index", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.take(MAX_SEGMENTS_PER_SENTENCE + 1);
+		const segments = await loadStoredSegments(ctx, sentence._id);
 		if (
 			segments.some(
 				(segment) =>

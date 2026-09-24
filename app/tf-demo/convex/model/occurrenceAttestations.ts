@@ -1,4 +1,3 @@
-import { encounterSentenceOf } from "../../server/fusedWords";
 import {
 	parseGermanAttestation,
 	parseGermanReading,
@@ -6,8 +5,12 @@ import {
 
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
-
-const MAX_SEGMENTS_PER_SENTENCE = 512;
+import {
+	encounterSentenceOf,
+	loadStoredSegments,
+	MAX_SEGMENTS_PER_SENTENCE,
+	spellingOf,
+} from "./storedSegments";
 
 type ServerCtx = QueryCtx | MutationCtx;
 
@@ -167,17 +170,7 @@ export async function loadOccurrenceAttestation(
 	if (!sentence) return null;
 	if (sentence.language !== "de")
 		throw new Error("Only German occurrences are supported.");
-	const sentenceSegments = await ctx.db
-		.query("segments")
-		.withIndex("by_sentence_id_and_index", (q) =>
-			q.eq("sentenceId", sentenceId),
-		)
-		.take(MAX_SEGMENTS_PER_SENTENCE + 1);
-	if (sentenceSegments.length > MAX_SEGMENTS_PER_SENTENCE) {
-		throw new Error(
-			`A Sentence may contain at most ${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
-		);
-	}
+	const sentenceSegments = await loadStoredSegments(ctx, sentenceId);
 	const orderedSentenceSegments = [...sentenceSegments].sort(
 		(left, right) => left.index - right.index,
 	);
@@ -203,7 +196,7 @@ export async function loadOccurrenceAttestation(
 	const publicAttestation = {
 		unitKind: "Attestation" as const,
 		members: orderedMembers.map((member) => ({
-			attested: member.surface ?? member.text,
+			attested: spellingOf(member),
 			orthography: member.attestationMembership?.orthography as
 				| "Standard"
 				| "Typo",

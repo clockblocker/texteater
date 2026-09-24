@@ -8,12 +8,13 @@ import {
 	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
+import { spellingOf } from "./model/storedSegments";
 import {
 	languageValidator,
 	lemmaValueValidator,
 	recordedClickValidator,
 	reusableAttestationValidator,
-	segmentKindValidator,
+	storedSegmentValidator,
 	storedSentenceAnalysisValidator,
 } from "./model/validators";
 
@@ -28,14 +29,7 @@ export const resolutionContextValidator = v.object({
 			segmentedSentenceId: v.string(),
 			language: languageValidator,
 			stitchedText: v.string(),
-			segments: v.array(
-				v.object({
-					index: v.number(),
-					kind: segmentKindValidator,
-					text: v.string(),
-					surface: v.optional(v.string()),
-				}),
-			),
+			segments: v.array(storedSegmentValidator),
 			/** Whether the Sentence belongs to a hidden Definition Text. */
 			definitionText: v.boolean(),
 		}),
@@ -97,9 +91,6 @@ export async function loadResolutionContext(
 	const clicked = words.findIndex(
 		(segment) => segment.index === input.clickedSegmentIndex,
 	);
-	// A fusion component is looked up by the word it stands for.
-	const spellingOf = (word: (typeof words)[number]) =>
-		word.surface ?? word.text;
 	// Include nearby phrases as well as individual words: articles, separated verbs,
 	// and inflected forms can lead to stored Surfaces with a different headword.
 	const phrases: string[] = [];

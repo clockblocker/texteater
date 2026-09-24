@@ -71,7 +71,13 @@ export const segmentInputValidator = v.object({
 export const storedSegmentInputValidator = v.object({
 	kind: segmentKindValidator,
 	text: v.string(),
+	/** The word a fusion component stands for: `in` for the `i` of `im`. */
 	surface: v.optional(v.string()),
+});
+
+/** A stored Segment at its storage key; see model/storedSegments.ts. */
+export const storedSegmentValidator = storedSegmentInputValidator.extend({
+	index: v.number(),
 });
 
 export const orthographyValidator = literalUnion(memberOrthographyValues);

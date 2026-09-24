@@ -1,4 +1,6 @@
+import type { Infer } from "convex/values";
 import type { Id } from "../../convex/_generated/dataModel";
+import type { sentenceSegmentViewValidator } from "../../convex/modules/text/sentenceView";
 
 export type SegmentKind =
 	| "ResolvableText"
@@ -6,17 +8,10 @@ export type SegmentKind =
 	| "Whitespace"
 	| "Punctuation";
 
-export type SentenceSegmentView = {
-	readonly index: number;
-	readonly kind: SegmentKind;
-	readonly text: string;
-	/** Present on a fusion component: the word it stands for. */
-	readonly surface?: string;
-	readonly attestationId?: Id<"attestations">;
-	readonly encountered: boolean;
-	readonly gender?: "Fem" | "Masc" | "Neut";
-	readonly resolutionState?: "Active" | "Unresolved" | "PermanentFailure";
-};
+/** A stored Segment as a Visitor sees it in the reader. */
+export type SentenceSegmentView = Readonly<
+	Infer<typeof sentenceSegmentViewValidator>
+>;
 
 export type SentenceView = {
 	readonly sentenceId: Id<"sentences">;

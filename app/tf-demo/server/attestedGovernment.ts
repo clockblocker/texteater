@@ -1,39 +1,18 @@
 import { governedPrepositionsAt } from "dumgen/authored";
 import type { GovernedPrepositionDraft } from "dumgen/types";
 import {
+	type StoredSegment,
+	storedSegmentRanges,
+} from "../convex/model/storedSegments";
+import {
 	fromStoredSentenceAnalysis,
 	type StoredSentenceAnalysis,
 } from "./sentenceAnalysisStorage";
 
 type StoredSentence = {
 	readonly stitchedText: string;
-	readonly segments: readonly {
-		readonly index: number;
-		readonly text: string;
-	}[];
+	readonly segments: readonly Pick<StoredSegment, "index" | "text">[];
 };
-
-/**
- * Each stored Segment's `[start, end)` range in the Stitched Text, the bridge
- * from index-keyed stored Segments to offset-keyed analysed ones. Null when
- * the stored Segments do not concatenate to the Stitched Text.
- */
-export function storedSegmentRanges(
-	stored: StoredSentence,
-): Map<number, { start: number; end: number }> | null {
-	const ranges = new Map<number, { start: number; end: number }>();
-	let cursor = 0;
-	for (const segment of [...stored.segments].sort(
-		(left, right) => left.index - right.index,
-	)) {
-		ranges.set(segment.index, {
-			start: cursor,
-			end: cursor + segment.text.length,
-		});
-		cursor += segment.text.length;
-	}
-	return cursor === stored.stitchedText.length ? ranges : null;
-}
 
 /**
  * The governed prepositions one stored occurrence attests (ADR 0030): intake

@@ -6,13 +6,16 @@ import {
 	targetOf,
 } from "dumgen";
 import type { SentenceAnalysis } from "dumgen/types";
-import { storedSegmentRanges } from "./attestedGovernment";
+import {
+	type StoredSegment,
+	storedSegmentRanges,
+} from "../convex/model/storedSegments";
 
-export type StoredSegmentForSelection = {
-	readonly index: number;
-	readonly kind: string;
-	readonly text: string;
-};
+/** Selection reads offsets, which a stored Segment's text alone determines. */
+export type StoredSegmentForSelection = Pick<
+	StoredSegment,
+	"index" | "kind" | "text"
+>;
 
 export type SelectedAnalysisTarget = {
 	readonly family: "Lexeme" | "Phraseme";

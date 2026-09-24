@@ -8,7 +8,6 @@ import type {
 	KnowledgeDraft,
 	LemmaCandidate,
 	SegmentedSentence,
-	SegmentKind,
 	SentenceAnalysis,
 	Task,
 } from "dumgen/types";
@@ -22,12 +21,13 @@ import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
 import {
+	assertStoredSentence,
 	type EncounterSentence,
 	encounterSentenceOf,
 	type StoredSegment,
 	type StoredSegmentValue,
 	storedSegmentsOf,
-} from "./fusedWords";
+} from "../convex/model/storedSegments";
 import type { InspectionCapture } from "./inspectionCapture";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
@@ -970,38 +970,8 @@ function parseGermanSentence(stored: PersistedSentence): EncounterSentence {
 	if (stored.language !== "de") {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}
-	const ordered = [...stored.segments].sort(
-		(left, right) => left.index - right.index,
-	);
-	for (const [expectedIndex, { index, kind, text }] of ordered.entries()) {
-		if (index !== expectedIndex) {
-			throw new Error(
-				"Persisted Segment indices must be contiguous and zero-based.",
-			);
-		}
-		if (
-			!isSegmentKind(kind) ||
-			typeof text !== "string" ||
-			text.length === 0
-		) {
-			throw new Error("Persisted Segment data is invalid.");
-		}
-	}
-	if (ordered.map(({ text }) => text).join("") !== stored.stitchedText) {
-		throw new Error(
-			"Persisted Segments do not reconstruct the Stitched Text.",
-		);
-	}
+	assertStoredSentence(stored);
 	return encounterSentenceOf(stored);
-}
-
-function isSegmentKind(value: string): value is SegmentKind {
-	return (
-		value === "ResolvableText" ||
-		value === "OpaqueText" ||
-		value === "Whitespace" ||
-		value === "Punctuation"
-	);
 }
 
 /** The stored Segments an Encounter's target names, for committing membership. */

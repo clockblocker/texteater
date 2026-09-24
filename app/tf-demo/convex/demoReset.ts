@@ -17,6 +17,7 @@ import {
 import { bumpDictionaryRevision } from "./dumdictStorage/storage";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
+import { loadStoredSegments } from "./model/storedSegments";
 import {
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
@@ -27,7 +28,6 @@ const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
 const MAX_BATCHES = 1_000;
 const MAX_CLEANUP_PHASE_STEPS = 64;
 const MAX_SENTENCES_PER_TEXT = 256;
-const MAX_SEGMENTS_PER_SENTENCE = 512;
 const DESCRIPTOR_PAGE_SIZE = 20;
 const TEXT_PAGE_SIZE = 20;
 
@@ -352,22 +352,10 @@ export const getTextAnalysisCandidates = internalQuery({
 			);
 		}
 		const segmentsBySentence = await Promise.all(
-			sentences.map((sentence) =>
-				ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", sentence._id),
-					)
-					.take(MAX_SEGMENTS_PER_SENTENCE + 1),
-			),
+			sentences.map((sentence) => loadStoredSegments(ctx, sentence._id)),
 		);
 		const attestationIds = new Set<Id<"attestations">>();
 		for (const segments of segmentsBySentence) {
-			if (segments.length > MAX_SEGMENTS_PER_SENTENCE) {
-				throw new Error(
-					`Analysis stripping supports at most ${MAX_SEGMENTS_PER_SENTENCE} Segments per Sentence.`,
-				);
-			}
 			for (const segment of segments) {
 				if (segment.attestationMembership) {
 					attestationIds.add(

@@ -27,10 +27,10 @@ import {
 	resolutionRouteProjectionValidator,
 	resolutionRunStateValidator,
 	safeGenerationFailureValidator,
-	segmentKindValidator,
 	segmentResolutionStateValidator,
 	storedGrammaticalCheckpointValidator,
 	storedKnowledgeSettingsValidator,
+	storedSegmentValidator,
 	storedSentenceAnalysisValidator,
 	surfaceSpellingValidator,
 	textOriginValidator,
@@ -120,11 +120,7 @@ export default defineSchema({
 
 	segments: defineTable({
 		sentenceId: v.id("sentences"),
-		index: v.number(),
-		kind: segmentKindValidator,
-		text: v.string(),
-		/** The word a fusion component stands for: `in` for the `i` of `im`. */
-		surface: v.optional(v.string()),
+		...storedSegmentValidator.fields,
 		resolutionState: v.optional(segmentResolutionStateValidator),
 		attestationMembership: v.optional(
 			v.object({

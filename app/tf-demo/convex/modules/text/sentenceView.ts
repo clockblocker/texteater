@@ -3,9 +3,10 @@ import { coreGender } from "../../../shared/grammatical-gender";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
+import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	languageValidator,
-	segmentKindValidator,
+	storedSegmentValidator,
 } from "../../model/validators";
 import { findVisitorEncounter } from "../../model/visitorClicks";
 
@@ -15,19 +16,13 @@ export const grammaticalGenderValidator = v.union(
 	v.literal("Neut"),
 );
 
-const MAX_SEGMENTS_PER_SENTENCE = 512;
-
 export const presentedSegmentResolutionStateValidator = v.union(
 	v.literal("Active"),
 	v.literal("Unresolved"),
 	v.literal("PermanentFailure"),
 );
 
-export const sentenceSegmentViewValidator = v.object({
-	index: v.number(),
-	kind: segmentKindValidator,
-	text: v.string(),
-	surface: v.optional(v.string()),
+export const sentenceSegmentViewValidator = storedSegmentValidator.extend({
 	attestationId: v.optional(v.id("attestations")),
 	encountered: v.boolean(),
 	gender: v.optional(grammaticalGenderValidator),
@@ -44,18 +39,6 @@ export const sentenceViewValidator = v.object({
 	segments: v.array(sentenceSegmentViewValidator),
 });
 
-export function loadSentenceSegments(
-	ctx: QueryCtx,
-	sentenceId: Id<"sentences">,
-): Promise<Doc<"segments">[]> {
-	return ctx.db
-		.query("segments")
-		.withIndex("by_sentence_id_and_index", (q) =>
-			q.eq("sentenceId", sentenceId),
-		)
-		.take(MAX_SEGMENTS_PER_SENTENCE);
-}
-
 /**
  * One Sentence as a Visitor sees it in the reader: every Segment, the
  * occurrence it belongs to, and the resolution state this Visitor has
@@ -67,7 +50,7 @@ export async function projectSentenceView(
 	sentence: Doc<"sentences">,
 	visitorId: string,
 ) {
-	const segments = await loadSentenceSegments(ctx, sentence._id);
+	const segments = await loadStoredSegments(ctx, sentence._id);
 	const encounters = await Promise.all(
 		segments.map((segment) =>
 			findVisitorEncounter(ctx, { visitorId, segmentId: segment._id }),

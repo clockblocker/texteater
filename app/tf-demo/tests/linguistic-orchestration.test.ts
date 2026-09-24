@@ -20,8 +20,8 @@ import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
+import type { StoredSegment } from "../convex/model/storedSegments";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
-import type { StoredSegment } from "../server/fusedWords";
 import { createInspectionCapture } from "../server/inspectionCapture";
 import {
 	applyValidatedReadingKnowledgeChange,

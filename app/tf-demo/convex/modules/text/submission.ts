@@ -6,9 +6,11 @@ import {
 } from "../../../server/textSubmissionLimits";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx } from "../../_generated/server";
+import {
+	loadStoredSegments,
+	MAX_SEGMENTS_PER_SENTENCE,
+} from "../../model/storedSegments";
 import type { sentenceInputValidator } from "../../model/validators";
-
-const MAX_SEGMENTS_PER_SENTENCE = 512;
 
 type SubmittedText = {
 	submissionKey: string;
@@ -126,12 +128,7 @@ export async function persistSubmittedText(
 		);
 		const existingSegments = await Promise.all(
 			existingSentences.map((sentence) =>
-				ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", sentence._id),
-					)
-					.take(MAX_SEGMENTS_PER_SENTENCE),
+				loadStoredSegments(ctx, sentence._id),
 			),
 		);
 		if (existingSegments.some((segments) => segments.length > 0)) {
