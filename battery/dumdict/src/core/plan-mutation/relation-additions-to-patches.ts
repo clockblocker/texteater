@@ -1,10 +1,9 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import type { StoreRevision } from "../../domain-types";
+import type { PlannedChangeOp, StoreRevision } from "../../domain-types";
 import type { ReadingKnowledgeChange } from "../../dto";
 import { readingFingerprint } from "../identity";
 import type { PlannedRelationAddition } from "../plan-relation-maintenance";
-import type { PlannedChangeOp } from "../planned-changes";
 
 type ReadingPatch<L extends Dumling.Language> = Extract<
 	PlannedChangeOp<L>,

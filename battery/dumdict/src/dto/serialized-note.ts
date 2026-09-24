@@ -1,7 +1,10 @@
 import type * as Dumling from "dumling/types";
-
-import type { LemmaRecord, ReadingEntry, SurfaceEntry } from "./entries";
-import type { PendingSemanticRelationRecord } from "./pending";
+import type {
+	LemmaRecord,
+	PendingSemanticRelationRecord,
+	ReadingEntry,
+	SurfaceEntry,
+} from "../domain-types";
 
 /**
  * Version 1 dictionary-note wire aggregate.

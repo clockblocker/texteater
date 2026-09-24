@@ -1,8 +1,11 @@
 import type * as Dumling from "dumling/types";
 
 import type * as Effect from "effect/Effect";
+import type {
+	CommitChangesRequest,
+	CommitChangesResult,
+} from "../domain-types";
 import type { DumdictStorageFailure } from "../public/results";
-import type { CommitChangesRequest, CommitChangesResult } from "./commit";
 import type {
 	CleanupRelationsSlice,
 	FindStoredReadingsStorageRequest,
@@ -49,12 +52,7 @@ export type DumdictStoragePort<L extends Dumling.Language> = {
 	) => Effect.Effect<CommitChangesResult, DumdictStorageFailure>;
 };
 
-export type DumdictServiceConfig<L extends Dumling.Language> = {
-	language?: L;
-};
-
 export type CreateDumdictServiceOptions<L extends Dumling.Language> = {
 	language: L;
 	storage: DumdictStoragePort<L>;
-	config?: DumdictServiceConfig<L>;
 };

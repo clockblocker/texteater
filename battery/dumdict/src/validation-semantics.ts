@@ -1,10 +1,10 @@
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { readingFingerprint } from "./core/identity";
+import { lemmaFingerprint, readingFingerprint } from "./core/identity";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
-import { makeLemmaId, makeSurfaceId } from "./dumling-id.js";
+import { makeSurfaceId } from "./dumling-id.js";
 
 export function retainDumdictPlan<Value>(value: Value): DeepReadonly<Value> {
 	return value as DeepReadonly<Value>;
@@ -47,9 +47,7 @@ function lemmaUsesLanguage(
 
 function sameLemma(left: Dumling.Lemma, right: Dumling.Lemma): boolean {
 	if (left.language !== right.language) return false;
-	return (
-		makeLemmaId(left.language, left) === makeLemmaId(right.language, right)
-	);
+	return lemmaFingerprint(left) === lemmaFingerprint(right);
 }
 
 function sameReading(left: Dumling.Reading, right: Dumling.Reading): boolean {

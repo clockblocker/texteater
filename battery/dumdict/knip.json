@@ -1,8 +1,9 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
-		"src/dangerously-heavy-schema-tree.ts",
+		"src/memory.ts",
 		"src/pending.ts",
+		"src/planning.ts",
 		"src/public-schema.ts",
 		"src/relations.ts",
 		"src/runtime.ts",

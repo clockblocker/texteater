@@ -1,7 +1,14 @@
+export type {
+	DumdictPendingSemanticRelation,
+	LemmaRecord,
+	PendingEntryId,
+	PendingSemanticRelationLocator,
+	PendingSemanticRelationRecord,
+	ReadingEntry,
+	ReadingKnowledgeChange,
+	StoreRevision,
+	SurfaceEntry,
+} from "../domain-types";
 export * from "./drafts";
-export * from "./entries";
-export * from "./knowledge";
 export * from "./notes";
-export * from "./pending";
-export * from "./revisions";
 export * from "./serialized-note";

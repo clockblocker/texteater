@@ -20,13 +20,3 @@ export function makeSurfaceId<L extends Dumling.Language>(
 		throw new Error("Unit language does not match the dictionary");
 	return unitFingerprint(result.chain.value) as SurfaceId<L>;
 }
-export function makeLemmaId<L extends Dumling.Language>(
-	language: L,
-	lemma: Dumling.Lemma<L>,
-): string {
-	const result = parseUnit(lemma);
-	if (!result.success) throw result.error;
-	if (result.chain.language !== language)
-		throw new Error("Unit language does not match the dictionary");
-	return unitFingerprint(result.chain.value);
-}

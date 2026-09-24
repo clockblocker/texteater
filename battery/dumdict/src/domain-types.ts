@@ -91,7 +91,7 @@ export type ChangePrecondition<L extends Dumling.Language> =
 			value: string;
 	  };
 
-type ReadingKnowledgeChange<L extends Dumling.Language> = {
+export type ReadingKnowledgeChange<L extends Dumling.Language> = {
 	reading: Dumling.Reading<L>;
 	change: Dumrel.KnowledgeChange<Dumling.Reading<L>>;
 };

@@ -25,9 +25,6 @@ export type InMemoryStorageState<L extends Dumling.Language> = {
 		lemma: Dumling.Lemma<L>,
 	): SerializedDictionaryNote<L> | undefined;
 	findStoredReading(reading: Dumling.Reading<L>): ReadingEntry<L> | undefined;
-	findStoredBundleByReading(
-		reading: Dumling.Reading<L>,
-	): SerializedDictionaryNote<L> | undefined;
 	findStoredSurfaceById(
 		surfaceId: string,
 	): SerializedDictionaryNote<L>["ownedSurfaceEntries"][number] | undefined;
@@ -52,12 +49,6 @@ export function createInMemoryStorageState<L extends Dumling.Language>(
 			state.storedNotes
 				.flatMap(({ readingEntries }) => readingEntries)
 				.find((entry) => sameReading(entry.reading, reading)),
-		findStoredBundleByReading: (reading) =>
-			state.storedNotes.find(({ readingEntries }) =>
-				readingEntries.some((entry) =>
-					sameReading(entry.reading, reading),
-				),
-			),
 		findStoredSurfaceById: (surfaceId) =>
 			state.storedNotes
 				.flatMap(({ ownedSurfaceEntries }) => ownedSurfaceEntries)

@@ -6,7 +6,6 @@ import type {
 	StoreRevision,
 } from "../dto";
 import type { SurfaceId } from "../dumling-id";
-import type { DumdictDiagnostic } from "./diagnostics";
 
 export type AffectedDictionaryEntities<L extends Dumling.Language> = {
 	lemmas?: Dumling.Lemma<L>[];
@@ -27,7 +26,6 @@ export type ReadingCandidate<L extends Dumling.Language> = {
 export type FindStoredReadingsResult<L extends Dumling.Language> = {
 	revision: StoreRevision;
 	candidates: ReadingCandidate<L>[];
-	diagnostics?: DumdictDiagnostic[];
 };
 
 export type CleanupPendingRelation<L extends Dumling.Language> =
@@ -38,7 +36,6 @@ export type GetInfoForRelationsCleanupResult<L extends Dumling.Language> = {
 	canonicalForm: string;
 	candidateLemmas: Dumling.Lemma<L>[];
 	pendingRelations: CleanupPendingRelation<L>[];
-	diagnostics?: DumdictDiagnostic[];
 };
 
 export type MutationResult<L extends Dumling.Language> = {
@@ -47,14 +44,12 @@ export type MutationResult<L extends Dumling.Language> = {
 	nextRevision: StoreRevision;
 	affected: AffectedDictionaryEntities<L>;
 	summary: MutationSummary;
-	diagnostics?: readonly DumdictDiagnostic[];
 };
 
 export type PreparedMutation<L extends Dumling.Language> = Readonly<{
 	plan: import("../storage").DumdictPlan<L>;
 	affected: AffectedDictionaryEntities<L>;
 	summary: MutationSummary;
-	diagnostics?: readonly DumdictDiagnostic[];
 }>;
 
 export type DumdictInvalidInput = Readonly<{
@@ -94,10 +89,6 @@ export type DumdictCommitFailure =
 	| DumdictRevisionConflict
 	| DumdictSemanticPreconditionFailure
 	| DumdictStorageFailure;
-
-export type MutationConflictCode =
-	| "revisionConflict"
-	| "semanticPreconditionFailed";
 
 export type MutationRejectedCode =
 	| "readingAlreadyExists"

@@ -1,7 +1,7 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 
-import type { DumdictPendingSemanticRelation } from "./pending";
+import type { DumdictPendingSemanticRelation } from "../domain-types";
 
 export type OwnedSurfaceDraft<out L extends Dumling.Language> = {
 	surface: Dumling.Surface<L>;

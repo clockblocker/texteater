@@ -27,8 +27,5 @@ export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 			options.sliceValidation.relationsCleanupInfo(slice, canonicalForm);
 			return lookupRelationsCleanupInfo(slice);
 		}),
-		Effect.withSpan("dumdict.getInfoForRelationsCleanup", {
-			attributes: { canonicalForm },
-		}),
 	);
 }

@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type { PlannedChangeOp } from "../../domain-types";
 import type {
 	PendingSemanticRelationRecord,
 	ReadingKnowledgeChange,
@@ -23,7 +24,6 @@ import {
 	planRelationMaintenance,
 	type RelationRequest,
 } from "../plan-relation-maintenance";
-import type { PlannedChangeOp } from "../planned-changes";
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";

@@ -65,7 +65,6 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun test",
-		"test:external": "bun test tests/external",
 		"test:internal": "bun test tests/internal",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},

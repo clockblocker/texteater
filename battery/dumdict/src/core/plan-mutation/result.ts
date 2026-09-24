@@ -1,12 +1,11 @@
 import type * as Dumling from "dumling/types";
-
+import type { PlannedChangeOp } from "../../domain-types";
 import type { StoreRevision } from "../../dto";
 import type {
 	AffectedDictionaryEntities,
 	MutationRejectedCode,
 	MutationSummary,
 } from "../../public";
-import type { PlannedChangeOp } from "../planned-changes";
 
 export type PlanMutationResult<L extends Dumling.Language> = {
 	status: "planned";

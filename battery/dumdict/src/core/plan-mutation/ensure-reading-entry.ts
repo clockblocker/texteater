@@ -1,10 +1,9 @@
 import type * as Dumling from "dumling/types";
-
+import type { PlannedChangeOp } from "../../domain-types";
 import type { ReadingEntry } from "../../dto";
 import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";
 import { readingLemma } from "../identity";
-import type { PlannedChangeOp } from "../planned-changes";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function sameValue(left: unknown, right: unknown): boolean {

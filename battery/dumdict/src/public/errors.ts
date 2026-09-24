@@ -18,10 +18,3 @@ export class DumdictLanguageMismatchError extends Error {
 		this.actualLanguage = input.actualLanguage;
 	}
 }
-
-export class DumdictNotImplementedError extends Error {
-	constructor(feature: string) {
-		super(`${feature} is not implemented yet`);
-		this.name = "DumdictNotImplementedError";
-	}
-}

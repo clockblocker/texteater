@@ -8,8 +8,6 @@ import {
 } from "./context-request";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
-export type { ReadingEntryContextLoad } from "./context-request";
-
 type ContextFor<
 	L extends Dumling.Language,
 	Load extends ReadingEntryContextLoad<L>,

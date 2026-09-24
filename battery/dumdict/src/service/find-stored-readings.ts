@@ -28,8 +28,5 @@ export function findStoredReadings<L extends Dumling.Language>(
 			options.sliceValidation.storedReadings(slice, request.lemma);
 			return lookupStoredReadings(slice);
 		}),
-		Effect.withSpan("dumdict.findStoredReadings", {
-			attributes: { request },
-		}),
 	);
 }
