@@ -18,7 +18,6 @@ import type { NoteLink } from "./dummy";
 import { remPx, sheetColumn } from "./geometry";
 import {
 	coverHeadingRem,
-	coverHeadingRuled,
 	ONE_LINE_TITLE,
 	SheetChrome,
 	useFolded,
@@ -321,7 +320,7 @@ export function PresentationView({
 	const ported = usePortedReading(note);
 	const portedFollow = usePortedFollow(note?.word ?? "", onFollow);
 	const isCover = sheet && !ground && back !== null;
-	const folded = useFolded(section, isCover && design.variant === "shrink");
+	const folded = useFolded(section, isCover);
 	const {
 		column,
 		gutterRem,
@@ -398,7 +397,7 @@ export function PresentationView({
 					ground={ground}
 					back={back}
 					clear={clear}
-					coverRem={coverHeadingRem(design.variant, folded)}
+					coverRem={coverHeadingRem(folded)}
 					coverWidth={coverWidth}
 					folded={folded}
 					titles={titles}
@@ -427,12 +426,14 @@ export function PresentationView({
 					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
 					{ported ? (
-						/* a Card's links are inert until it is a Sheet (#485) */
+						/* a Card's links are inert until it is a Sheet (#485).
+						   A Sheet's Heading is its title, so the first Block
+						   keeps only the air it keeps under a title */
 						<div
 							inert={!sheet}
 							className={
 								sheet
-									? "[&_[data-note-presentation]>article]:pt-3"
+									? "[&_[data-note-presentation]>article]:pt-0"
 									: ""
 							}
 						>
@@ -498,8 +499,8 @@ export function PresentationView({
  * The Heading: pinned first, the Note's lift handle in every form. As a
  * Card it is the one-line row (form, then gloss), at the bottom edge when
  * the Card is a Card Tail. As a Cover it is the Cover's bar: ← in its left
- * margin, × in its right, and the title on the body's column; its height
- * is the design's (see `heading-design.tsx`). As a Ground it folds shut,
+ * margin, × in its right, and the title on the body's column; it folds
+ * to the bar's height once the body scrolls (see `heading-design.tsx`). As a Ground it folds shut,
  * because the Pane bar carries the label. A ported Note's title is its
  * real Reading Header, in both faces.
  *
@@ -507,7 +508,7 @@ export function PresentationView({
  * so the Cover's top edge is the Note's own edge in every frame. Only the
  * words change: the face leaving goes on `BAR_EXIT`, the one arriving
  * follows on `BAR_ENTER`, and the row between them never fades. A change
- * of height with no change of form, a fold or a switch of design, rides
+ * of height with no change of form, a fold, rides
  * `HEADING_RESIZE`.
  */
 export function HeadingBlock({
@@ -571,7 +572,6 @@ export function HeadingBlock({
 	return (
 		<motion.div
 			data-heading=""
-			data-heading-variant={face === "cover" ? design.variant : undefined}
 			data-folded={face === "cover" ? folded : undefined}
 			/* `initial={false}`: a Note is dealt at its size; only a change
 			   of form is a move. */
@@ -630,7 +630,7 @@ export function HeadingBlock({
 						className="absolute inset-0"
 					>
 						<SheetChrome
-							ruled={coverHeadingRuled(design.variant, folded)}
+							ruled={folded}
 							maxWidth={coverWidth}
 							back={back}
 							clear={clear}

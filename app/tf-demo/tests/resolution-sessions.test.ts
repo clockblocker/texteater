@@ -1470,6 +1470,7 @@ describe("Resolution Session", () => {
 						{
 							segmentedSentenceId: "segmented-1",
 							position: 0,
+							paragraph: 0,
 							language: "de",
 							stitchedText: "Die Banken.",
 							segments: [

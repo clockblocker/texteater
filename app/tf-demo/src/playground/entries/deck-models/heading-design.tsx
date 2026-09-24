@@ -9,27 +9,16 @@ import {
 import { BAR_REM } from "./motion-spec";
 
 /**
- * How a Cover draws its Heading, prototyped behind two switches while a
- * real Reading Note is ported in. In every design ← hangs in the Cover's
- * left margin, × in its right, and the title sits on the body's own column,
- * so the Heading's first letter is the Blocks' first letter.
+ * How a Cover draws its Heading. ← hangs in the Cover's left margin, × in
+ * its right, and the title sits on the body's own column, so the Heading's
+ * first letter is the Blocks' first letter.
  *
- * - `bar`: one row at the Pane bar's height, a divider edge to edge.
- * - `heading`: the Notes page's title row, with room above it and no rule
- *   of its own: the first Block's rule is the one under the title.
- * - `shrink`: `heading` while the body rests at its top, `bar` once it
- *   scrolls; the divider arrives with the fold.
+ * The Heading folds on scroll: while the body rests at its top it is the
+ * Notes page's title row, with room above it and no rule of its own (the
+ * first Block's rule is the one under the title); once the body scrolls it
+ * folds to the Pane bar's height, and the divider arrives with the fold.
  */
-export const HEADING_VARIANTS = ["bar", "heading", "shrink"] as const;
-export type HeadingVariant = (typeof HEADING_VARIANTS)[number];
-export const HEADING_VARIANT_LABEL: Record<HeadingVariant, string> = {
-	bar: "Bar",
-	heading: "Heading",
-	shrink: "Folds on scroll",
-};
-
 export type HeadingDesign = {
-	readonly variant: HeadingVariant;
 	/**
 	 * On: pressing a link in the Heading and moving past the slop lifts the
 	 * Cover, and a release inside the slop follows the link. Off: a link,
@@ -39,7 +28,6 @@ export type HeadingDesign = {
 };
 
 export const DEFAULT_HEADING_DESIGN: HeadingDesign = {
-	variant: "bar",
 	linksDrag: true,
 };
 
@@ -56,17 +44,12 @@ const TALL_REM = 4.5;
 /** The fold starts this far into the body, and undoes only at its top. */
 const FOLD_AT_PX = 24;
 
-export function coverHeadingRem(
-	variant: HeadingVariant,
-	folded: boolean,
-): number {
-	return variant === "bar" || (variant === "shrink" && folded)
-		? BAR_REM
-		: TALL_REM;
+export function coverHeadingRem(folded: boolean): number {
+	return folded ? BAR_REM : TALL_REM;
 }
 
 /**
- * Whether a `shrink` Heading is folded: its Sheet's body has scrolled past
+ * Whether a Heading is folded: its Sheet's body has scrolled past
  * `FOLD_AT_PX`. It unfolds only back at the top, so the height the fold
  * gives the body cannot scroll it back under the line and flicker.
  */
@@ -112,14 +95,6 @@ const STILL_LINKS =
 /** One line in every design: the row's height is fixed, so the title truncates. */
 export const ONE_LINE_TITLE =
 	"[&_[data-slot=note-title-row]]:flex-nowrap [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:truncate";
-
-/** Whether a Cover's Heading draws its divider: as a bar, never as a heading. */
-export function coverHeadingRuled(
-	variant: HeadingVariant,
-	folded: boolean,
-): boolean {
-	return variant === "bar" || (variant === "shrink" && folded);
-}
 
 /**
  * A Sheet's chrome: ← in the left margin, × in the right, the title on the

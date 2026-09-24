@@ -299,6 +299,7 @@ async function ensureOccurrence(
 						{
 							segmentedSentenceId: occurrence.segmentedSentenceId,
 							position: 0,
+							paragraph: 0,
 							language: "de",
 							stitchedText: sourceText,
 							segments: [...occurrence.segments],

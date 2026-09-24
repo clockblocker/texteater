@@ -36,6 +36,7 @@ export const sentenceSegmentViewValidator = v.object({
 export const sentenceViewValidator = v.object({
 	sentenceId: v.id("sentences"),
 	position: v.number(),
+	paragraph: v.optional(v.number()),
 	language: languageValidator,
 	stitchedText: v.string(),
 	heading: v.optional(v.string()),
@@ -95,6 +96,9 @@ export async function projectSentenceView(
 	return {
 		sentenceId: sentence._id,
 		position: sentence.position,
+		...(sentence.paragraph === undefined
+			? {}
+			: { paragraph: sentence.paragraph }),
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
 		...(sentence.heading ? { heading: sentence.heading } : {}),

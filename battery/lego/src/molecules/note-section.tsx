@@ -4,8 +4,13 @@ import { cn } from "../utils";
 import { NoteRule } from "./note-rule";
 
 /**
- * A titled block of a Note. Comfortable density shows the label between
- * dashed rules; compact density drops the label and keeps a rule on top.
+ * A titled block of a Note. Comfortable density shows the label on the
+ * column's start edge, with a dashed rule running on from it; compact
+ * density drops the label and keeps a rule on top.
+ *
+ * A section after another section takes twice the air it keeps under its
+ * label, so a label belongs to what follows it. The first section keeps
+ * less, and stays with the title above it.
  *
  * Every block passes a `label`. Pass `""` on purpose for the rare body-only
  * block, and the section draws the separating rule itself.
@@ -28,7 +33,7 @@ export function NoteSection({
 		<section
 			data-slot="note-section"
 			className={cn(
-				"min-w-0 pt-5 compact:pt-3",
+				"min-w-0 pt-4 compact:pt-3 [section+&]:pt-8 compact:[section+&]:pt-3",
 				!headless &&
 					"compact:before:mb-2 compact:before:block compact:before:border-t compact:before:border-dashed compact:before:border-line compact:before:content-['']",
 				className,
@@ -46,7 +51,7 @@ export function NoteSection({
 }
 
 const noteSectionLabelClassName =
-	"mb-3 flex items-center font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase before:me-1.5 before:flex-1 before:border-t before:border-dashed before:border-line before:content-[''] after:ms-1.5 after:w-1.5 after:border-t after:border-dashed after:border-line after:content-[''] compact:hidden";
+	"mb-3 flex items-center font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase after:ms-2 after:flex-1 after:border-t after:border-dashed after:border-line after:content-[''] compact:hidden";
 
 /**
  * Small monospaced caps set into a dashed rule. Renders a heading, or a

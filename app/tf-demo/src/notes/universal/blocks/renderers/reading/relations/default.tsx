@@ -57,6 +57,7 @@ export const renderDefaultReadingRelations = (({
 						<li key={relation.locatorKey}>
 							<LinkButton
 								tone="shadow"
+								className="relative"
 								onClick={() =>
 									PresentationCapabilities.follow(
 										relation.target,
@@ -64,9 +65,12 @@ export const renderDefaultReadingRelations = (({
 								}
 								aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
 							>
+								{/* the lock hangs in the margin, so a locked
+								    word lines up with every other word */}
 								<LockIcon
 									aria-hidden="true"
 									strokeWidth={1.5}
+									className="absolute end-full top-1/2 -translate-y-1/2 compact:static compact:translate-y-0"
 								/>
 								<RelationMark relation={relation.relation} />
 								{relation.targetCanonicalForm}

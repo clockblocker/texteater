@@ -100,6 +100,11 @@ export default defineSchema({
 		segmentedSentenceId: v.string(),
 		textId: v.id("texts"),
 		position: v.number(),
+		/**
+		 * Sentences sharing a paragraph run together in the reader. Absent for
+		 * Sentences stored before paragraphs were kept; each reads alone.
+		 */
+		paragraph: v.optional(v.number()),
 		language: languageValidator,
 		stitchedText: v.string(),
 	})

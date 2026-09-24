@@ -66,6 +66,7 @@ export async function persistSubmittedText(
 	const sentenceKeys = new Set<string>();
 	for (const sentence of input.sentences) {
 		assertIndex(sentence.position, "sentence.position");
+		assertIndex(sentence.paragraph, "sentence.paragraph");
 		assertNonEmpty(sentence.segmentedSentenceId, "segmentedSentenceId");
 		assertNonEmpty(sentence.stitchedText, "stitchedText");
 		if (positions.has(sentence.position)) {
@@ -225,6 +226,7 @@ export async function persistSubmittedText(
 					segmentedSentenceId: submitted.segmentedSentenceId,
 					textId: existingText._id,
 					position: submitted.position,
+					paragraph: submitted.paragraph,
 					language: submitted.language,
 					stitchedText: submitted.stitchedText,
 				};
@@ -284,6 +286,7 @@ export async function persistSubmittedText(
 					segmentedSentenceId: sentence.segmentedSentenceId,
 					textId,
 					position: sentence.position,
+					paragraph: sentence.paragraph,
 					language: sentence.language,
 					stitchedText: sentence.stitchedText,
 				});

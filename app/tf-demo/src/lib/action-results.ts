@@ -19,6 +19,8 @@ export type SentenceSegmentView = {
 export type SentenceView = {
 	readonly sentenceId: Id<"sentences">;
 	readonly position: number;
+	/** Sentences sharing a paragraph run together; absent reads alone. */
+	readonly paragraph?: number;
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly heading?: string;

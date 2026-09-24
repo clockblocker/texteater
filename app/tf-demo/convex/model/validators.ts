@@ -225,6 +225,7 @@ export const storedSentenceAnalysisValidator = v.object({
 export const sentenceInputValidator = v.object({
 	segmentedSentenceId: v.string(),
 	position: v.number(),
+	paragraph: v.number(),
 	language: languageValidator,
 	stitchedText: v.string(),
 	segments: v.array(segmentInputValidator),

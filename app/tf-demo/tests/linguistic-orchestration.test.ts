@@ -873,7 +873,7 @@ test("submission inspection captures sentence boundaries and segmentation inputs
 	expect(split?.status).toBe("Success");
 	expect(JSON.parse(split?.payloadJson ?? "null")).toEqual({
 		input: { sourceText: "Hallo. Welt!" },
-		output: ["Hallo.", "Welt!"],
+		output: [["Hallo.", "Welt!"]],
 	});
 	expect(inspection.steps.some((step) => step.kind === "TypeSafe")).toBe(
 		true,
@@ -886,6 +886,36 @@ test("submission inspection captures sentence boundaries and segmentation inputs
 		),
 	).toBe(true);
 	expect(run.submitted).toHaveLength(1);
+});
+
+test("submission stores the paragraph each sentence reads in", async () => {
+	const run = setup([
+		{
+			language: "de",
+			items: ["Hallo.", "Welt!", "Tschüss."].map((stitchedText, id) => ({
+				id: id.toString(),
+				decision: "Accepted",
+				language: "de",
+				stitchedText,
+			})),
+		},
+	]);
+	await Effect.runPromise(
+		run.orchestrator.submitText({
+			submissionKey: "paragraphs",
+			sourceText: "Hallo. Welt!\n\nTschüss.",
+		}),
+	);
+	expect(
+		run.submitted[0]?.sentences.map(({ position, paragraph }) => [
+			position,
+			paragraph,
+		]),
+	).toEqual([
+		[0, 0],
+		[1, 0],
+		[2, 1],
+	]);
 });
 
 test("stored Lemma candidates reach grammar before headword generation, while Reading selection remains contextual", async () => {

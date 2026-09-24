@@ -2,7 +2,13 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { Button, NoteLinesSkeleton } from "lego";
 import { BookOpenIcon } from "lucide-react";
-import { type ComponentProps, useEffect, useRef, useState } from "react";
+import {
+	type ComponentProps,
+	Fragment,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
@@ -296,34 +302,65 @@ export function SentenceList({
 			className="space-y-7 text-lg leading-[1.52] font-[430] tracking-[-0.015em] @max-md:space-y-6 @max-md:text-base"
 			aria-label="Text"
 		>
-			{sentences.map((sentence) => (
-				<section key={sentence.sentenceId}>
-					{sentence.heading ? (
+			{paragraphsOf(sentences).map((paragraph) => (
+				<section key={paragraph[0].sentenceId}>
+					{paragraph[0].heading ? (
 						<h2 className="mb-2 text-base font-semibold tracking-normal">
-							{sentence.heading}
+							{paragraph[0].heading}
 						</h2>
 					) : null}
-					<ReaderSentence
-						sentence={sentence}
-						selectedSegmentKey={selectedSegmentKey}
-						onSegmentClick={onSegmentClick}
-						onSentenceElement={(element) => {
-							if (element) {
-								sentenceElements.current.set(
-									sentence.sentenceId,
-									element,
-								);
-							} else {
-								sentenceElements.current.delete(
-									sentence.sentenceId,
-								);
-							}
-						}}
-					/>
+					{paragraph.map((sentence, index) => (
+						<Fragment key={sentence.sentenceId}>
+							{index > 0 ? " " : null}
+							<ReaderSentence
+								sentence={sentence}
+								selectedSegmentKey={selectedSegmentKey}
+								onSegmentClick={onSegmentClick}
+								className="text-reader__sentence inline"
+								onSentenceElement={(element) => {
+									if (element) {
+										sentenceElements.current.set(
+											sentence.sentenceId,
+											element,
+										);
+									} else {
+										sentenceElements.current.delete(
+											sentence.sentenceId,
+										);
+									}
+								}}
+							/>
+						</Fragment>
+					))}
 				</section>
 			))}
 		</article>
 	);
+}
+
+type Paragraph = readonly [SentenceView, ...SentenceView[]];
+
+/**
+ * Consecutive Sentences sharing a paragraph, in order. A Sentence without a
+ * paragraph, or one opening under a heading, starts a paragraph of its own.
+ */
+function paragraphsOf(sentences: readonly SentenceView[]): Paragraph[] {
+	const paragraphs: Paragraph[] = [];
+	let current: [SentenceView, ...SentenceView[]] | undefined;
+	for (const sentence of sentences) {
+		if (
+			current &&
+			sentence.paragraph !== undefined &&
+			sentence.paragraph === current[0].paragraph &&
+			!sentence.heading
+		) {
+			current.push(sentence);
+		} else {
+			current = [sentence];
+			paragraphs.push(current);
+		}
+	}
+	return paragraphs;
 }
 
 /** The reading column before its sentences arrive: two passages of bones set on the passage leading. */

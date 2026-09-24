@@ -39,10 +39,10 @@ export const Z = {
 
 export const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
 
-/** A Cover's box: the Pane inset by these. A Ground fills its Pane. */
+/** A Cover's box: the Pane inset by these, one inset all round. A Ground fills its Pane. */
 export const SHEET_INSET_X_REM = 1.5;
 
-export const SHEET_INSET_Y_REM = 1;
+export const SHEET_INSET_Y_REM = 1.5;
 
 /** How far the return band reaches below the Deck's cards. */
 export const RETURN_PAD_REM = 3;

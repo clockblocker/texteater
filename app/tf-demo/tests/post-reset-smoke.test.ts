@@ -482,6 +482,7 @@ test("submission retries reuse exact segmentation despite a fresh generated sent
 			{
 				segmentedSentenceId: "first",
 				position: 0,
+				paragraph: 0,
 				language: "de",
 				stitchedText: "Banken",
 				segments: [{ kind: "ResolvableText", text: "Banken" }],

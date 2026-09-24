@@ -29,7 +29,7 @@ import {
 	type ClassificationReason,
 	selectAnalysisTarget,
 } from "./sentenceAnalysisSelection";
-import { splitInSentences } from "./sentenceSplitting";
+import { splitInParagraphs } from "./sentenceSplitting";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**
@@ -56,6 +56,8 @@ export type PersistedSentence = {
 export type SubmittedSentence = {
 	readonly segmentedSentenceId: string;
 	readonly position: number;
+	/** The paragraph the Sentence reads in; Sentences sharing one run together. */
+	readonly paragraph: number;
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
@@ -344,8 +346,10 @@ export function createTfDemoOrchestrator(options: {
 			assertNonEmpty(input.submissionKey, "submissionKey");
 			assertNonEmpty(input.sourceText, "sourceText");
 
-			const split = Effect.sync(() => splitInSentences(input.sourceText));
-			const sourceSentences = yield* options.inspection
+			const split = Effect.sync(() =>
+				splitInParagraphs(input.sourceText),
+			);
+			const paragraphs = yield* options.inspection
 				? options.inspection.effect(
 						"Split text into sentences",
 						"app/tf-demo · Intl.Segmenter (de, sentence)",
@@ -353,6 +357,10 @@ export function createTfDemoOrchestrator(options: {
 						split,
 					)
 				: split;
+			const sourceSentences = paragraphs.flat();
+			const paragraphOf = paragraphs.flatMap((sentences, paragraph) =>
+				sentences.map(() => paragraph),
+			);
 			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
 			const firstSourceSentence = sourceSentences[0];
 			if (firstSourceSentence === undefined)
@@ -381,6 +389,7 @@ export function createTfDemoOrchestrator(options: {
 						(analysis): SubmittedSentence => ({
 							segmentedSentenceId: sentence.id,
 							position,
+							paragraph: paragraphOf[position] ?? position,
 							language: sentence.language,
 							stitchedText: sentence.segments
 								.map(({ text }) => text)

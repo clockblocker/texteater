@@ -37,7 +37,7 @@ export const renderReadingDefinition = (({
 				aria-busy="true"
 			>
 				<NoteLinesSkeleton
-					className="px-2 py-1"
+					className="py-1"
 					widths={
 						presentation === "Card"
 							? ["w-full", "w-2/3"]
@@ -84,7 +84,7 @@ export const renderReadingDefinition = (({
 
 	return (
 		<NoteSection aria-label="Definition" label="Definition">
-			<p className="px-2 py-1 leading-relaxed text-ink text-pretty">
+			<p className="py-1 leading-relaxed text-ink text-pretty">
 				{text}
 			</p>
 		</NoteSection>
@@ -123,7 +123,7 @@ function DefinitionSentence({
 		<div
 			data-slot="definition-sentence"
 			data-focused={focused || undefined}
-			className="px-2 py-1 leading-relaxed text-pretty transition-opacity duration-150 data-[focused=true]:opacity-70 motion-reduce:transition-none"
+			className="py-1 leading-relaxed text-pretty transition-opacity duration-150 data-[focused=true]:opacity-70 motion-reduce:transition-none"
 		>
 			<ReaderSentence
 				sentence={sentence}

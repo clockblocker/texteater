@@ -51,8 +51,6 @@ import {
 	coverHeadingRem,
 	DEFAULT_HEADING_DESIGN,
 	foldedAt,
-	HEADING_VARIANT_LABEL,
-	HEADING_VARIANTS,
 	type HeadingDesign,
 	HeadingDesignProvider,
 } from "./heading-design";
@@ -236,10 +234,7 @@ function CompassRuntime({
 	function barRemOf(pane: PaneNode | null): number {
 		if (!pane || isRooted(pane) || groundOf(pane).kind !== "Sheet")
 			return BAR_REM;
-		return coverHeadingRem(
-			headingDesign.variant,
-			foldedGrounds.has(pane.id),
-		);
+		return coverHeadingRem(foldedGrounds.has(pane.id));
 	}
 	const headingDesignRef = useRef(headingDesign);
 	headingDesignRef.current = headingDesign;
@@ -2423,34 +2418,9 @@ function CompassRuntime({
 						/>
 					</label>
 					<fieldset className="flex flex-col gap-1.5 border-t border-line pt-2">
-						<legend className="float-left mb-1 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
+						<legend className="mb-1 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-ink-muted uppercase">
 							Cover Heading
 						</legend>
-						<div className="clear-left grid grid-cols-3 gap-0.5 rounded-md border border-line p-0.5">
-							{HEADING_VARIANTS.map((variant) => (
-								<label
-									key={variant}
-									className="grid cursor-pointer place-items-center rounded-[0.3rem] px-1 py-1 text-center text-[0.72rem] leading-tight text-ink-soft transition-colors select-none hover:text-ink has-[:checked]:bg-raised has-[:checked]:text-ink has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-link/50"
-								>
-									<input
-										type="radio"
-										name="cover-heading-design"
-										value={variant}
-										checked={
-											headingDesign.variant === variant
-										}
-										onChange={() =>
-											setHeadingDesign((design) => ({
-												...design,
-												variant,
-											}))
-										}
-										className="sr-only"
-									/>
-									{HEADING_VARIANT_LABEL[variant]}
-								</label>
-							))}
-						</div>
 						<label className="flex cursor-pointer items-center justify-between gap-3 select-none">
 							<span>Links in the Heading drag</span>
 							<input

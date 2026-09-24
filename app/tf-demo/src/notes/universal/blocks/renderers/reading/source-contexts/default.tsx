@@ -23,7 +23,7 @@ export const renderDefaultReadingSourceContexts = (({
 			className="compact:before:hidden"
 		>
 			{sourceContexts.items.length > 0 ? (
-				<ul className="grid gap-5 compact:gap-3">
+				<ul className="grid gap-3">
 					{sourceContexts.items.map((sourceContext) => (
 						<li key={sourceContext.attestationId}>
 							<SourceQuote

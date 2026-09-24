@@ -3,8 +3,11 @@ import type * as React from "react";
 import { cn } from "../utils";
 import { type LinkTone, linkToneClasses } from "./link-tone";
 
+/* The passage starts 1.75rem in, where a Mark's word does: a Mark is at
+   least 1rem with 0.75rem after it. The static quote draws its bar on
+   itself, so its padding gives the bar's width back. */
 const passage =
-	"py-1 ps-[clamp(1rem,2.5cqi,2.5rem)] text-start leading-[1.55] font-[430] tracking-[-0.012em] compact:ps-3";
+	"py-1 ps-7 text-start leading-[1.55] font-[430] tracking-[-0.012em] compact:ps-3";
 
 const bar =
 	"border-s-[3px] border-line transition-colors duration-150 motion-reduce:transition-none";
@@ -41,6 +44,7 @@ export function Quote({
 					linkToneClasses[tone],
 					bar,
 					passage,
+					"ps-[calc(1.75rem_-_3px)]",
 					"has-[[data-slot=reader-segment]:hover]:border-link has-[[data-slot=reader-segment]:focus-visible]:border-link",
 					className,
 				)}
