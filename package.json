@@ -13,7 +13,7 @@
 		"benchmark:dum-shared": "bun tooling/dum-entrypoint-rss/shared.ts",
 		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
 		"build": "bun tooling/manifest-policy.ts repository && turbo run build:package",
-		"check": "bun tooling/run-workspaces.ts check --if-present",
+		"check": "turbo run build:package --output-logs=errors-only && bun tooling/run-workspaces.ts check --if-present",
 		"check:docs": "bun tooling/documentation-integrity.ts",
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev:package --filter=@texteater/tf-demo",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
