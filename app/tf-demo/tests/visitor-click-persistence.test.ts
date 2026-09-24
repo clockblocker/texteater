@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage/transaction";
 import type schema from "../convex/schema";
 import {
 	lemmaIdentityKey,
@@ -128,7 +128,7 @@ test("a host-composed empty Dumdict plan does not advance revision", async () =>
 	const before = await rows(t, "dictionaryState");
 
 	const result = await t.run((ctx) =>
-		createDumdictTransaction(ctx).commit({
+		applyDumdictPlanInTransaction(ctx, {
 			baseRevision: "convex-2",
 			changes: [],
 		}),
@@ -145,9 +145,8 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 	// empty dictionary shows the adapter wrote nothing before rejecting,
 	// rather than a rollback discarding its writes.
 	await t.run(async (ctx) => {
-		const dictionary = createDumdictTransaction(ctx);
 		await expect(
-			dictionary.commit({
+			applyDumdictPlanInTransaction(ctx, {
 				baseRevision: "convex-0",
 				changes: [
 					{
@@ -159,7 +158,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 			}),
 		).rejects.toThrow();
 		await expect(
-			dictionary.commit({
+			applyDumdictPlanInTransaction(ctx, {
 				baseRevision: "convex-0",
 				changes: [
 					{

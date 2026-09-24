@@ -14,6 +14,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { bumpDictionaryRevision } from "./dumdictStorage/storage";
 import { scheduleNextWaitingKnowledgeAttempt } from "./model/knowledgeGenerationAttempts";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
@@ -79,15 +80,6 @@ function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {
 		throw new Error("visitorId must contain 1 to 200 characters.");
 	}
-}
-
-async function bumpDictionaryRevision(ctx: MutationCtx): Promise<void> {
-	const state = await ctx.db
-		.query("dictionaryState")
-		.withIndex("by_key", (q) => q.eq("key", "global"))
-		.unique();
-	if (state) await ctx.db.patch(state._id, { revision: state.revision + 1 });
-	else await ctx.db.insert("dictionaryState", { key: "global", revision: 1 });
 }
 
 const tableResetResultValidator = v.object({

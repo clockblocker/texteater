@@ -23,7 +23,7 @@ import {
 	createConvexDumdictStorage,
 	dictionaryPlanResult,
 } from "../convex/dumdictActionStorage";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage/transaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {
@@ -196,10 +196,10 @@ function readingEntryContext(
 	});
 }
 
-/** Commits a plan through the mutation-side dictionary in one transaction. */
+/** Commits a plan through the mutation-side applier in one transaction. */
 function commitInTransaction(t: TestConvexDb, plan: DumdictPlan<"de">) {
 	return t.run((ctx) =>
-		createDumdictTransaction(ctx).commit(dictionaryPlanResult(plan)),
+		applyDumdictPlanInTransaction(ctx, dictionaryPlanResult(plan)),
 	);
 }
 

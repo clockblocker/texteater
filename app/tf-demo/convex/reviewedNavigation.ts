@@ -3,6 +3,7 @@ import { selectNounHeadingArticle } from "dumgen/authored";
 import { readingIdentityKey } from "../server/linguisticIdentity";
 import { parseGermanLemma } from "../server/operationalParsing";
 import { internalMutation, internalQuery } from "./_generated/server";
+import { bumpDictionaryRevision } from "./dumdictStorage/storage";
 import { completeAuthoredComponentKnowledge } from "./dumdictStorage/transaction";
 import { lemmaValue, readingValue } from "./model/occurrenceAttestations";
 import { lemmaValueValidator, readingValueValidator } from "./model/validators";
@@ -42,7 +43,7 @@ export const destination = internalQuery({
 		)?._id ?? null,
 });
 
-/** Also supports opening legacy article entries before the backfill has run. */
+/** Completes an article entry stored before its reviewed Knowledge was authored. */
 export const completeNounArticleKnowledge = internalMutation({
 	args: { lemmaId: v.id("lemmas") },
 	returns: v.id("readings"),
@@ -62,17 +63,7 @@ export const completeNounArticleKnowledge = internalMutation({
 			throw new Error("Article Reading has not been materialized.");
 		if (!(await completeAuthoredComponentKnowledge(ctx, selected.reading)))
 			return reading._id;
-		const state = await ctx.db
-			.query("dictionaryState")
-			.withIndex("by_key", (q) => q.eq("key", "global"))
-			.unique();
-		if (state)
-			await ctx.db.patch(state._id, { revision: state.revision + 1 });
-		else
-			await ctx.db.insert("dictionaryState", {
-				key: "global",
-				revision: 1,
-			});
+		await bumpDictionaryRevision(ctx);
 		return reading._id;
 	},
 });

@@ -52,13 +52,23 @@ export async function getState(ctx: ServerCtx) {
 		.unique();
 }
 
-/** Current revision for app-owned composition of an ordinary Dumdict plan. */
-export async function loadDumdictRevision(ctx: ServerCtx): Promise<string> {
+export async function currentRevision(ctx: ServerCtx): Promise<string> {
 	return revisionString((await getState(ctx))?.revision ?? 0);
 }
 
-export async function currentRevision(ctx: ServerCtx): Promise<string> {
-	return revisionString((await getState(ctx))?.revision ?? 0);
+/** The one place dictionary writes advance the revision readers compare against. */
+export async function bumpDictionaryRevision(
+	ctx: MutationCtx,
+): Promise<string> {
+	const state = await getState(ctx);
+	const next = (state?.revision ?? 0) + 1;
+	if (state) await ctx.db.patch(state._id, { revision: next });
+	else
+		await ctx.db.insert("dictionaryState", {
+			key: STATE_KEY,
+			revision: next,
+		});
+	return revisionString(next);
 }
 
 export function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
@@ -179,14 +189,6 @@ export async function findLemma(ctx: ServerCtx, lemma: unknown) {
 	return dictionary ? { canonical, dictionary } : null;
 }
 
-/** True when the exact ordinary Lemma is already part of the dictionary. */
-export async function hasDumdictLemma(
-	ctx: ServerCtx,
-	lemma: unknown,
-): Promise<boolean> {
-	return (await findLemma(ctx, lemma)) !== null;
-}
-
 export async function findLemmaByKey(ctx: ServerCtx, lemmaKey: string) {
 	const canonical = await ctx.db
 		.query("lemmas")
@@ -235,14 +237,6 @@ export async function findReadingByKey(ctx: ServerCtx, readingKey: string) {
 		.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
 		.unique();
 	return canonical ? loadReading(ctx, canonical) : null;
-}
-
-/** Internal app seam for composing ordinary Dumdict writes atomically. */
-export async function loadDumdictReadingEntryByKey(
-	ctx: ServerCtx,
-	readingKey: string,
-) {
-	return (await findReadingByKey(ctx, readingKey))?.entry ?? null;
 }
 
 export async function loadReading(

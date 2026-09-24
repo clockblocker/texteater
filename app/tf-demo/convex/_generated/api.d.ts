@@ -17,7 +17,6 @@ import type * as dumdictStorage from "../dumdictStorage.js";
 import type * as dumdictStorage_adapter from "../dumdictStorage/adapter.js";
 import type * as dumdictStorage_contextRequest from "../dumdictStorage/contextRequest.js";
 import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionaryPlan.js";
-import type * as dumdictStorage_planner from "../dumdictStorage/planner.js";
 import type * as dumdictStorage_queries from "../dumdictStorage/queries.js";
 import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
 import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
@@ -91,7 +90,6 @@ declare const fullApi: ApiFromModules<{
   "dumdictStorage/adapter": typeof dumdictStorage_adapter;
   "dumdictStorage/contextRequest": typeof dumdictStorage_contextRequest;
   "dumdictStorage/dictionaryPlan": typeof dumdictStorage_dictionaryPlan;
-  "dumdictStorage/planner": typeof dumdictStorage_planner;
   "dumdictStorage/queries": typeof dumdictStorage_queries;
   "dumdictStorage/storage": typeof dumdictStorage_storage;
   "dumdictStorage/transaction": typeof dumdictStorage_transaction;

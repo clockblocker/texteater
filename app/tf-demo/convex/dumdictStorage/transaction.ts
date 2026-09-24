@@ -32,6 +32,7 @@ import { dumdictPlannedChangeValidator } from "../model/validators";
 import {
 	applyReadingKnowledgeChange,
 	assertLemmaRecordHasNoKnowledge,
+	bumpDictionaryRevision,
 	type CompactReadingEntry,
 	findCanonicalLemma,
 	findCanonicalReading,
@@ -48,7 +49,6 @@ import {
 	readingIdentityKey,
 	requireDirectSemanticRelation,
 	revisionString,
-	STATE_KEY,
 	withoutSemanticRelationTargets,
 } from "./storage";
 
@@ -851,16 +851,9 @@ export async function applyDumdictPlanInTransaction(
 		}
 	}
 
-	const nextNumber = (state?.revision ?? 0) + 1;
-	if (state) await ctx.db.patch(state._id, { revision: nextNumber });
-	else
-		await ctx.db.insert("dictionaryState", {
-			key: STATE_KEY,
-			revision: nextNumber,
-		});
 	return {
 		status: "committed" as const,
-		nextRevision: revisionString(nextNumber),
+		nextRevision: await bumpDictionaryRevision(ctx),
 	};
 }
 
