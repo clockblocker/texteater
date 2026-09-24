@@ -5,6 +5,7 @@ import type { Questions, TypeSafeExecutor } from "promptsmith/typesafe";
 import type { SentenceAnalysis } from "./concrete-lang/de/sentence-analysis/analysis.js";
 import type * as Generated from "./generated/types.js";
 import type {
+	KnowledgeFailure,
 	Segment,
 	SegmentationDecision,
 	SegmentedSentence as Sentence,
@@ -30,7 +31,11 @@ export type {
 	SelectedRoute,
 	SentenceAnalysis,
 } from "./concrete-lang/de/sentence-analysis/analysis.js";
-export type { Segment, SegmentationDecision } from "./generated/types.js";
+export type {
+	KnowledgeFailure,
+	Segment,
+	SegmentationDecision,
+} from "./generated/types.js";
 export type DumgenLanguage = Dumling.Language;
 export type SegmentKind = Segment["kind"];
 export type SegmentedSentence<L extends DumgenLanguage = DumgenLanguage> =
@@ -54,10 +59,18 @@ export type AnalysisTarget<L extends DumgenLanguage = DumgenLanguage> =
 	Encounter<L>["target"];
 // Map each complete schema branch independently so Encounter and unit routes
 // remain correlated. Domain units retain Dumling's own mutability contract.
-type OperationInput<T> = T extends { encounter: unknown }
+type OperationInput<T> = T extends {
+	encounter: {
+		sentence: { language: infer L extends DumgenLanguage };
+		target: infer Target;
+	};
+}
 	? {
 			readonly [K in keyof T]: K extends "encounter"
-				? Immutable<T[K]>
+				? {
+						readonly sentence: SegmentedSentence<L>;
+						readonly target: Immutable<Target>;
+					}
 				: K extends "candidates"
 					? Readonly<T[K]>
 					: T[K];
@@ -94,8 +107,6 @@ export type ReadingEmojiDescriptionResolution = {
 	readonly emojiDescription: EmojiDescription;
 };
 export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
-export type KnowledgeFailure =
-	Generated.KnowledgeProduction["failures"][number];
 export type KnowledgeProduction<L extends DumgenLanguage = DumgenLanguage> = {
 	readonly failures: readonly KnowledgeFailure[];
 	readonly changes: readonly Dumrel.KnowledgeChange<Dumling.Reading<L>>[];

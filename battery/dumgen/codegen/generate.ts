@@ -6,9 +6,11 @@ import {
 } from "dumval/compiler";
 import { z } from "zod";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
+import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import { loadRoutes } from "../../dumling/codegen/routes.js";
 import { encodedValidation as dumlingValidation } from "../../dumling/src/generated/validation.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { dumrelOutputTypes } from "../../dumrel/codegen/output-types.js";
 import { encodedValidation as dumrelValidation } from "../../dumrel/src/generated/validation.js";
 import { normalizeText } from "../../dumrel/src/semantics.js";
 
@@ -88,7 +90,7 @@ await emit(
 );
 await emit(
 	"types.ts",
-	`// Generated public DTOs.\n${emitValidationOutputTypes({ artifact: compiled, exports: { Segment: "segmentSchema", SegmentedSentence: "segmentedSentenceSchema", SegmentationDecision: "segmentationDecisionSchema", Encounter: "encounterSchema", GenerationInput: "generationInput", ComparisonInput: "comparisonInput", KnowledgeInput: "knowledgeInput", SegmentInput: "segmentInputSchema", KnowledgeProduction: "knowledgeProductionSchema" }, typePreservingOperations: operations.map((operation) => operation.name) })}`,
+	`// Generated public DTOs.\n${emitValidationOutputTypes({ artifact: compiled, exports: { Segment: "segmentSchema", SegmentedSentence: "segmentedSentenceSchema", SegmentationDecision: "segmentationDecisionSchema", Encounter: "encounterSchema", GenerationInput: "generationInput", ComparisonInput: "comparisonInput", KnowledgeInput: "knowledgeInput", SegmentInput: "segmentInputSchema", KnowledgeFailure: "knowledgeFailureSchema", KnowledgeProduction: "knowledgeProductionSchema" }, typePreservingOperations: operations.map((operation) => operation.name), external: [dumrelOutputTypes(), dumlingOutputTypes()] })}`,
 );
 await emit(
 	"model-schemas.ts",

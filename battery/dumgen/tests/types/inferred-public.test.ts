@@ -95,7 +95,7 @@ describe("public Dumgen types read as their Domain names", () => {
 		expect(
 			await inferred("GermanNounKnowledgeInput"),
 		).toMatchInlineSnapshot(
-			`"type GermanNounKnowledgeInput = { readonly encounter: { readonly sentence: SegmentedSentence<"de">; readonly target: { readonly family: "Lexeme"; readonly kind: "NOUN"; readonly memberSegmentIndices: readonly [number, ...number[]]; }; }; readonly reading: { unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "NOUN"; canonicalForm: string; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; }; emojiDescription: string; }; readonly request: KnowledgeRequestMask; readonly governedPrepositions?: { preposition: string; case: "Acc" | "Dat" | "Gen"; }[] | undefined; }"`,
+			`"type GermanNounKnowledgeInput = { readonly encounter: { readonly sentence: SegmentedSentence<"de">; readonly target: { readonly family: "Lexeme"; readonly kind: "NOUN"; readonly memberSegmentIndices: readonly [number, ...number[]]; }; }; readonly reading: { unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "NOUN"; canonicalForm: string; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; }; emojiDescription: string; }; readonly request: KnowledgeRequestMask; readonly governedPrepositions?: { preposition: string; case: GovernedCase; }[] | undefined; }"`,
 		);
 	}, 30_000);
 
