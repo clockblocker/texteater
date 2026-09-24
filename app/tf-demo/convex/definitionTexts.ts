@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -8,6 +9,9 @@ import {
 } from "./_generated/server";
 import {
 	findDefinitionText,
+	ownsDefinitionTextRun,
+	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
+	scheduleDefinitionTextRun,
 	writeDefinitionText,
 } from "./model/definitionTexts";
 import { loadStoredSegments } from "./model/storedSegments";
@@ -18,6 +22,8 @@ import {
 } from "./model/validators";
 
 const MAX_SENTENCES_PER_DEFINITION = 8;
+
+const DEFINITION_FAILED_MESSAGE = "Definition segmentation failed.";
 
 export const loadSync = internalQuery({
 	args: { ownerReadingKey: v.string() },
@@ -59,19 +65,53 @@ export const loadSync = internalQuery({
 	},
 });
 
+/**
+ * Claims the Scheduled row for a new run and returns its number. Any other
+ * state means the action is late or a duplicate and must not run.
+ */
 export const markRunning = internalMutation({
 	args: { ownerReadingKey: v.string() },
-	returns: v.null(),
+	returns: v.union(v.number(), v.null()),
 	handler: async (ctx, { ownerReadingKey }) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
-		if (row && row.state !== "Running") {
-			await ctx.db.patch(row._id, {
-				state: "Running",
-				failureMessage: undefined,
-				updatedAt: Date.now(),
-			});
+		if (row?.state !== "Scheduled") return null;
+		const runNumber = (row.runNumber ?? 0) + 1;
+		await ctx.db.patch(row._id, {
+			state: "Running",
+			runNumber,
+			failureMessage: undefined,
+			updatedAt: Date.now(),
+		});
+		return runNumber;
+	},
+});
+
+/**
+ * The watchdog every scheduled run carries. A run that stayed Scheduled or
+ * Running longer than an action may live lost its action, so the row goes
+ * back to Scheduled and materializes again for the latest definition.
+ */
+export const recoverStaleRun = internalMutation({
+	args: { ownerReadingKey: v.string(), runNumber: v.number() },
+	returns: v.boolean(),
+	handler: async (ctx, args) => {
+		const row = await findDefinitionText(ctx, args.ownerReadingKey);
+		if (!row || !ownsDefinitionTextRun(row, args.runNumber)) return false;
+		const age = Date.now() - row.updatedAt;
+		if (age < STALE_DEFINITION_TEXT_RUN_AFTER_MS) {
+			await ctx.scheduler.runAfter(
+				STALE_DEFINITION_TEXT_RUN_AFTER_MS - age,
+				internal.definitionTexts.recoverStaleRun,
+				args,
+			);
+			return false;
 		}
-		return null;
+		await ctx.db.patch(row._id, {
+			state: "Scheduled",
+			updatedAt: Date.now(),
+		});
+		await scheduleDefinitionTextRun(ctx, row);
+		return true;
 	},
 });
 
@@ -114,15 +154,21 @@ export const deleteRows = internalMutation({
 export const persistSegmented = internalMutation({
 	args: {
 		ownerReadingKey: v.string(),
+		runNumber: v.number(),
 		definition: v.string(),
 		language: languageValidator,
 		segmentedSentenceId: v.string(),
 		segments: v.array(segmentInputValidator),
 	},
 	returns: v.union(v.literal("Ready"), v.literal("Stale")),
-	handler: async (ctx, args) => {
+	handler: async (ctx, { runNumber, ...args }) => {
 		const row = await findDefinitionText(ctx, args.ownerReadingKey);
-		if (!row || row.definition !== args.definition) return "Stale";
+		if (
+			row?.state !== "Running" ||
+			row.runNumber !== runNumber ||
+			row.definition !== args.definition
+		)
+			return "Stale";
 		if (row.textId) {
 			throw new Error(
 				"A live Definition Text must be removed before its replacement is written.",
@@ -133,19 +179,35 @@ export const persistSegmented = internalMutation({
 	},
 });
 
+/**
+ * Ends `runNumber`. A definition that changed while it ran is scheduled again
+ * in this transaction, so no dying action can leave the row without a run. A
+ * run that no longer owns the row, being late or replaced, changes nothing.
+ */
 export const settle = internalMutation({
 	args: {
 		ownerReadingKey: v.string(),
+		runNumber: v.number(),
 		outcome: v.union(
 			v.object({ kind: v.literal("Ready") }),
 			v.object({ kind: v.literal("Retracted") }),
-			v.object({ kind: v.literal("Failed"), message: v.string() }),
+			v.object({ kind: v.literal("Failed") }),
 		),
 	},
-	returns: v.union(v.literal("Settled"), v.literal("Reschedule")),
-	handler: async (ctx, { ownerReadingKey, outcome }) => {
+	returns: v.union(
+		v.literal("Settled"),
+		v.literal("Rescheduled"),
+		v.literal("Ignored"),
+	),
+	handler: async (ctx, { ownerReadingKey, runNumber, outcome }) => {
 		const row = await findDefinitionText(ctx, ownerReadingKey);
-		if (!row) return "Settled";
+		// A run that persisted its Text already left the row Ready.
+		if (
+			!row ||
+			row.runNumber !== runNumber ||
+			(row.state !== "Running" && row.state !== "Ready")
+		)
+			return "Ignored";
 		if (outcome.kind === "Retracted") {
 			if (row.definition === undefined) {
 				await ctx.db.delete(row._id);
@@ -155,12 +217,14 @@ export const settle = internalMutation({
 				state: "Scheduled",
 				updatedAt: Date.now(),
 			});
-			return "Reschedule";
+			await scheduleDefinitionTextRun(ctx, row);
+			return "Rescheduled";
 		}
 		if (outcome.kind === "Failed") {
 			await ctx.db.patch(row._id, {
 				state: "Failed",
-				failureMessage: outcome.message.slice(0, 200),
+				// The internal error stays in the log; the learner sees this.
+				failureMessage: DEFINITION_FAILED_MESSAGE,
 				updatedAt: Date.now(),
 			});
 			return "Settled";
@@ -170,7 +234,8 @@ export const settle = internalMutation({
 				state: "Scheduled",
 				updatedAt: Date.now(),
 			});
-			return "Reschedule";
+			await scheduleDefinitionTextRun(ctx, row);
+			return "Rescheduled";
 		}
 		if (row.state !== "Ready") {
 			await ctx.db.patch(row._id, {

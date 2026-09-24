@@ -7,6 +7,7 @@ import { stripAllAnalyses } from "../convex/demoReset";
 import {
 	definitionOf,
 	findDefinitionText,
+	STALE_DEFINITION_TEXT_RUN_AFTER_MS,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
 import { listLibraryTexts } from "../convex/texts";
@@ -55,13 +56,33 @@ function sync(t: TestConvexDb, knowledge: unknown) {
 	return t.run((ctx) => syncDefinitionText(ctx, READING_KEY, knowledge));
 }
 
-/** The materializer runs that are waiting to fire. */
-async function scheduledRuns(t: TestConvexDb) {
+async function scheduled(t: TestConvexDb, name: string) {
 	return (
 		await t.run((ctx) =>
 			ctx.db.system.query("_scheduled_functions").collect(),
 		)
-	).map(({ args }) => args[0]);
+	)
+		.filter((job) => job.name === name)
+		.map(({ args }) => args[0]);
+}
+
+/** The materializer runs that are waiting to fire. */
+function scheduledRuns(t: TestConvexDb) {
+	return scheduled(t, "definitionTextActions:materialize");
+}
+
+/** The watchdogs guarding scheduled runs, in order. */
+function scheduledWatchdogs(t: TestConvexDb) {
+	return scheduled(t, "definitionTexts:recoverStaleRun");
+}
+
+/** Claims the Scheduled row's next run, as the materializer does first. */
+async function claimRun(t: TestConvexDb, ownerReadingKey = READING_KEY) {
+	const runNumber = await t.mutation(internal.definitionTexts.markRunning, {
+		ownerReadingKey,
+	});
+	if (runNumber === null) throw new Error("Expected a run to claim.");
+	return runNumber;
 }
 
 async function tableRows<Table extends "definitionTexts" | "texts">(
@@ -94,6 +115,9 @@ test("a new definition schedules one materialization and repeats do not reschedu
 
 	await sync(t, { definition: "Ein Gebäude." });
 	expect(await scheduledRuns(t)).toEqual([{ ownerReadingKey: READING_KEY }]);
+	expect(await scheduledWatchdogs(t)).toEqual([
+		{ ownerReadingKey: READING_KEY, runNumber: 1 },
+	]);
 	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
 		ownerReadingKey: READING_KEY,
 		definition: "Ein Gebäude.",
@@ -123,9 +147,11 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 		language: "de",
 	});
 
+	const firstRun = await claimRun(t);
 	expect(
 		await t.mutation(internal.definitionTexts.persistSegmented, {
 			ownerReadingKey: READING_KEY,
+			runNumber: firstRun,
 			definition: "Ein Gebäude.",
 			language: "de",
 			segmentedSentenceId: "definition:test",
@@ -152,6 +178,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
+			runNumber: firstRun,
 			outcome: { kind: "Ready" },
 		}),
 	).toBe("Settled");
@@ -175,9 +202,11 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 		sentences: 0,
 		segments: 0,
 	});
+	const secondRun = await claimRun(t);
 	expect(
 		await t.mutation(internal.definitionTexts.persistSegmented, {
 			ownerReadingKey: READING_KEY,
+			runNumber: secondRun,
 			definition: "Ein Gebäude.",
 			language: "de",
 			segmentedSentenceId: "definition:stale",
@@ -186,6 +215,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	).toBe("Stale");
 	await t.mutation(internal.definitionTexts.persistSegmented, {
 		ownerReadingKey: READING_KEY,
+		runNumber: secondRun,
 		definition: "Ein Bauwerk.",
 		language: "de",
 		segmentedSentenceId: "definition:test-2",
@@ -198,6 +228,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	// Retracted: the pointer clears and settling removes the state row.
 	await sync(t, {});
 	expect(await scheduledRuns(t)).toHaveLength(3);
+	const retractingRun = await claimRun(t);
 	await t.mutation(internal.definitionTexts.deleteTextRows, {
 		ownerReadingKey: READING_KEY,
 		textId: replacement._id,
@@ -205,6 +236,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
+			runNumber: retractingRun,
 			outcome: { kind: "Retracted" },
 		}),
 	).toBe("Settled");
@@ -212,29 +244,157 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 	expect(await tableRows(t, "texts")).toHaveLength(0);
 });
 
-test("a definition that changed mid-run is rescheduled when the run settles", async () => {
+test("a definition that changed mid-run is rescheduled in the settling transaction", async () => {
 	const t = createTestConvex();
 	await seedReading(t);
 	await sync(t, { definition: "Alt." });
+	const runNumber = await claimRun(t);
+	// The change lands while the run segments the old definition.
+	await sync(t, { definition: "Neu." });
+	expect(await scheduledRuns(t)).toHaveLength(1);
+	expect(
+		await t.mutation(internal.definitionTexts.persistSegmented, {
+			ownerReadingKey: READING_KEY,
+			runNumber,
+			definition: "Alt.",
+			language: "de",
+			segmentedSentenceId: "definition:alt",
+			segments: proseSegments("Alt."),
+		}),
+	).toBe("Stale");
+	expect(
+		await t.mutation(internal.definitionTexts.settle, {
+			ownerReadingKey: READING_KEY,
+			runNumber,
+			outcome: { kind: "Ready" },
+		}),
+	).toBe("Rescheduled");
+	expect((await tableRows(t, "definitionTexts"))[0]?.state).toBe("Scheduled");
+	expect(await scheduledRuns(t)).toHaveLength(2);
+	expect((await scheduledWatchdogs(t)).at(-1)).toEqual({
+		ownerReadingKey: READING_KEY,
+		runNumber: 2,
+	});
+});
+
+test("a materialization that never settles is run again by its watchdog, and its late writes are ignored", async () => {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Alt." });
+	const deadRun = await claimRun(t);
+	// The action dies here, and a later change only records the definition.
+	await sync(t, { definition: "Neu." });
+	expect(await scheduledRuns(t)).toHaveLength(1);
+
+	// A run still inside an action's lifetime is left alone and checked again.
+	expect(
+		await t.mutation(internal.definitionTexts.recoverStaleRun, {
+			ownerReadingKey: READING_KEY,
+			runNumber: deadRun,
+		}),
+	).toBe(false);
+	expect(await scheduledWatchdogs(t)).toHaveLength(2);
+
+	jest.setSystemTime(Date.now() + STALE_DEFINITION_TEXT_RUN_AFTER_MS);
+	expect(
+		await t.mutation(internal.definitionTexts.recoverStaleRun, {
+			ownerReadingKey: READING_KEY,
+			runNumber: deadRun,
+		}),
+	).toBe(true);
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
+		state: "Scheduled",
+		definition: "Neu.",
+	});
+	expect(await scheduledRuns(t)).toHaveLength(2);
+	expect((await scheduledWatchdogs(t)).at(-1)).toEqual({
+		ownerReadingKey: READING_KEY,
+		runNumber: deadRun + 1,
+	});
+
+	// The dead run's late writes no longer own the row.
+	const late = {
+		ownerReadingKey: READING_KEY,
+		runNumber: deadRun,
+	};
+	expect(
+		await t.mutation(internal.definitionTexts.persistSegmented, {
+			...late,
+			definition: "Neu.",
+			language: "de",
+			segmentedSentenceId: "definition:late",
+			segments: proseSegments("Neu."),
+		}),
+	).toBe("Stale");
+	expect(
+		await t.mutation(internal.definitionTexts.settle, {
+			...late,
+			outcome: { kind: "Failed" },
+		}),
+	).toBe("Ignored");
+
+	const rerun = await claimRun(t);
 	await t.mutation(internal.definitionTexts.persistSegmented, {
 		ownerReadingKey: READING_KEY,
-		definition: "Alt.",
+		runNumber: rerun,
+		definition: "Neu.",
 		language: "de",
-		segmentedSentenceId: "definition:alt",
-		segments: proseSegments("Alt."),
-	});
-	await t.run(async (ctx) => {
-		const [row] = await ctx.db.query("definitionTexts").collect();
-		if (!row) throw new Error("Expected a Definition Text row.");
-		await ctx.db.patch(row._id, { definition: "Neu.", state: "Running" });
+		segmentedSentenceId: "definition:neu",
+		segments: proseSegments("Neu."),
 	});
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
+			runNumber: rerun,
 			outcome: { kind: "Ready" },
 		}),
-	).toBe("Reschedule");
-	expect((await tableRows(t, "definitionTexts"))[0]?.state).toBe("Scheduled");
+	).toBe("Settled");
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
+		state: "Ready",
+		materializedDefinition: "Neu.",
+	});
+	expect(
+		(await tableRows(t, "texts")).map(({ sourceText }) => sourceText),
+	).toEqual(["Neu."]);
+	// A late watchdog of the settled run finds nothing to recover.
+	expect(
+		await t.mutation(internal.definitionTexts.recoverStaleRun, {
+			ownerReadingKey: READING_KEY,
+			runNumber: rerun,
+		}),
+	).toBe(false);
+});
+
+test("the watchdog reruns a Scheduled row whose action never claimed it, and a failure keeps a safe message", async () => {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Alt." });
+	jest.setSystemTime(Date.now() + STALE_DEFINITION_TEXT_RUN_AFTER_MS);
+	expect(
+		await t.mutation(internal.definitionTexts.recoverStaleRun, {
+			ownerReadingKey: READING_KEY,
+			runNumber: 1,
+		}),
+	).toBe(true);
+	expect(await scheduledRuns(t)).toHaveLength(2);
+
+	const runNumber = await claimRun(t);
+	expect(runNumber).toBe(1);
+	// A duplicate action finds the run already claimed.
+	expect(
+		await t.mutation(internal.definitionTexts.markRunning, {
+			ownerReadingKey: READING_KEY,
+		}),
+	).toBeNull();
+	await t.mutation(internal.definitionTexts.settle, {
+		ownerReadingKey: READING_KEY,
+		runNumber,
+		outcome: { kind: "Failed" },
+	});
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
+		state: "Failed",
+		failureMessage: "Definition segmentation failed.",
+	});
 });
 
 /** Wraps a database reader so every method called on it or its queries is named in `calls`. */
@@ -500,8 +660,10 @@ async function materializeDefinition(
 	definition: string,
 ) {
 	await t.run((ctx) => syncDefinitionText(ctx, readingKey, { definition }));
+	const runNumber = await claimRun(t, readingKey);
 	await t.mutation(internal.definitionTexts.persistSegmented, {
 		ownerReadingKey: readingKey,
+		runNumber,
 		definition,
 		language: "de",
 		segmentedSentenceId: `definition:${readingKey}`,
@@ -509,6 +671,7 @@ async function materializeDefinition(
 	});
 	await t.mutation(internal.definitionTexts.settle, {
 		ownerReadingKey: readingKey,
+		runNumber,
 		outcome: { kind: "Ready" },
 	});
 	return definitionSegments(t, readingKey);

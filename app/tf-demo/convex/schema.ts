@@ -95,6 +95,8 @@ export default defineSchema({
 		/** The definition the live Definition Text was segmented from. */
 		materializedDefinition: v.optional(v.string()),
 		state: definitionTextStateValidator,
+		/** The last materialization run claimed; a late run cannot settle a newer one. */
+		runNumber: v.optional(v.number()),
 		textId: v.optional(v.id("texts")),
 		sentenceId: v.optional(v.id("sentences")),
 		failureMessage: v.optional(v.string()),

@@ -16,23 +16,26 @@ const dumgen = createProductionDumgen();
  * retracted, then segments and persists the requested one. Trusted
  * segmentation runs without intake, so the generator's target language is
  * taken as given. A definition that changed while this ran is picked up by
- * a rescheduled run.
+ * the run `settle` schedules, and a run that dies before settling by the
+ * watchdog its scheduling set.
  */
 export const materialize = internalAction({
 	args: { ownerReadingKey: v.string() },
 	returns: v.null(),
 	handler: async (ctx, { ownerReadingKey }) => {
+		const runNumber = await ctx.runMutation(
+			internal.definitionTexts.markRunning,
+			{ ownerReadingKey },
+		);
+		if (runNumber === null) return null;
 		const sync = await ctx.runQuery(internal.definitionTexts.loadSync, {
 			ownerReadingKey,
 		});
 		if (!sync) return null;
-		await ctx.runMutation(internal.definitionTexts.markRunning, {
-			ownerReadingKey,
-		});
 		let outcome:
 			| { kind: "Ready" }
 			| { kind: "Retracted" }
-			| { kind: "Failed"; message: string };
+			| { kind: "Failed" };
 		try {
 			const replace =
 				sync.textId !== undefined &&
@@ -65,6 +68,7 @@ export const materialize = internalAction({
 					internal.definitionTexts.persistSegmented,
 					{
 						ownerReadingKey,
+						runNumber,
 						definition: sync.definition,
 						language: sentence.language,
 						segmentedSentenceId: sentence.id,
@@ -79,25 +83,13 @@ export const materialize = internalAction({
 			}
 		} catch (error) {
 			console.error("Definition Text materialization failed", error);
-			outcome = {
-				kind: "Failed",
-				message:
-					error instanceof Error
-						? error.message
-						: "Definition segmentation failed.",
-			};
+			outcome = { kind: "Failed" };
 		}
-		const settled = await ctx.runMutation(internal.definitionTexts.settle, {
+		await ctx.runMutation(internal.definitionTexts.settle, {
 			ownerReadingKey,
+			runNumber,
 			outcome,
 		});
-		if (settled === "Reschedule") {
-			await ctx.scheduler.runAfter(
-				0,
-				internal.definitionTextActions.materialize,
-				{ ownerReadingKey },
-			);
-		}
 		return null;
 	},
 });

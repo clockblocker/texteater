@@ -19,6 +19,20 @@ const materializeDefinitionText = makeFunctionReference<
 	null
 >;
 
+const recoverStaleDefinitionTextRun = makeFunctionReference<
+	"mutation",
+	{ ownerReadingKey: string; runNumber: number },
+	boolean
+>("definitionTexts:recoverStaleRun") as unknown as FunctionReference<
+	"mutation",
+	"internal",
+	{ ownerReadingKey: string; runNumber: number },
+	boolean
+>;
+
+/** Longer than a Convex action may run, so a quiet run is a dead one. */
+export const STALE_DEFINITION_TEXT_RUN_AFTER_MS = 11 * 60 * 1_000;
+
 /** The definition aspect of stored Reading Knowledge, or null when absent. */
 export function definitionOf(knowledge: unknown): string | null {
 	if (
@@ -51,7 +65,7 @@ export function findDefinitionText(
  * Knowledge. A changed or retracted definition schedules the materializer,
  * which strips the previous Definition Text before segmenting the next one.
  * An in-flight materialization is not rescheduled; it re-reads the requested
- * definition when it settles.
+ * definition when it settles, and its watchdog reruns it if it never does.
  */
 export async function syncDefinitionText(
 	ctx: MutationCtx,
@@ -68,7 +82,7 @@ export async function syncDefinitionText(
 			state: "Scheduled",
 			updatedAt: Date.now(),
 		});
-		await schedule(ctx, ownerReadingKey);
+		await scheduleDefinitionTextRun(ctx, { ownerReadingKey });
 		return;
 	}
 	const settled = existing.state === "Ready" || existing.state === "Failed";
@@ -94,17 +108,42 @@ export async function syncDefinitionText(
 		failureMessage: undefined,
 		updatedAt: Date.now(),
 	});
-	if (settled) await schedule(ctx, ownerReadingKey);
+	if (settled) await scheduleDefinitionTextRun(ctx, existing);
 }
 
-async function schedule(
+/**
+ * Schedules the next materialization run of a Scheduled row together with
+ * the watchdog that reruns it if the action dies before settling.
+ */
+export async function scheduleDefinitionTextRun(
 	ctx: MutationCtx,
-	ownerReadingKey: string,
+	row: Pick<Doc<"definitionTexts">, "ownerReadingKey" | "runNumber">,
 ): Promise<void> {
 	if (!ctx.scheduler) return;
 	await ctx.scheduler.runAfter(0, materializeDefinitionText, {
-		ownerReadingKey,
+		ownerReadingKey: row.ownerReadingKey,
 	});
+	await ctx.scheduler.runAfter(
+		STALE_DEFINITION_TEXT_RUN_AFTER_MS,
+		recoverStaleDefinitionTextRun,
+		{
+			ownerReadingKey: row.ownerReadingKey,
+			runNumber: (row.runNumber ?? 0) + 1,
+		},
+	);
+}
+
+/**
+ * Whether `runNumber` is the row's current run: the one a Scheduled row will
+ * claim next, or the one a Running row claimed.
+ */
+export function ownsDefinitionTextRun(
+	row: Pick<Doc<"definitionTexts">, "state" | "runNumber">,
+	runNumber: number,
+): boolean {
+	return row.state === "Scheduled"
+		? (row.runNumber ?? 0) + 1 === runNumber
+		: row.state === "Running" && row.runNumber === runNumber;
 }
 
 /**
@@ -153,6 +192,9 @@ export async function writeDefinitionText(
 		definition: input.definition,
 		materializedDefinition: input.definition,
 		state: "Ready" as const,
+		...(existing?.runNumber !== undefined
+			? { runNumber: existing.runNumber }
+			: {}),
 		textId,
 		sentenceId,
 		updatedAt: Date.now(),
