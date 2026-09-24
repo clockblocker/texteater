@@ -6,6 +6,7 @@
 			"!!dist",
 			"!!node_modules",
 			"!!.astro",
+			"!!**/.runs",
 			"!!bun.lock",
 			"!!**/bun.lock",
 			"!!package-lock.json",

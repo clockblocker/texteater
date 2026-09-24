@@ -29,6 +29,7 @@ const sourceExtensions = new Set([
 const ignoredDirectories = new Set([
 	".astro",
 	".git",
+	".runs",
 	"dist",
 	"node_modules",
 	"experimets",
