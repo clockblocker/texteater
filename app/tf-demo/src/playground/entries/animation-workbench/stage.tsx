@@ -298,40 +298,6 @@ export function Stage({ entry, nav }: { entry: Entry; nav: Nav }) {
 									const value =
 										variant.motion[parameter.key] ??
 										DEFAULT_DECK_MOTION[parameter.key];
-									if (parameter.choices)
-										return (
-											<label
-												key={parameter.key}
-												className="flex items-center justify-between gap-3 text-xs text-ink-muted"
-											>
-												{parameter.label}
-												<select
-													aria-label={parameter.label}
-													value={value}
-													className="rounded-md border border-line bg-paper px-2 py-1.5 text-ink"
-													onChange={(event) =>
-														patch({
-															[parameter.key]:
-																Number(
-																	event.target
-																		.value,
-																),
-														})
-													}
-												>
-													{parameter.choices.map(
-														(choice, index) => (
-															<option
-																key={choice}
-																value={index}
-															>
-																{choice}
-															</option>
-														),
-													)}
-												</select>
-											</label>
-										);
 									return (
 										<div
 											key={parameter.key}

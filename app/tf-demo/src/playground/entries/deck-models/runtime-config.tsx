@@ -10,19 +10,13 @@ export const DEFAULT_DECK_MOTION = {
 	morphDamping: spec.MORPH.damping,
 	durationScale: 1,
 	zoneFeedbackMs: 150,
-	holdMs: spec.LONG_PRESS_MS,
 	groundPressMs: spec.GROUND_PRESS_MS,
 	commitDistance: 88,
-	throwVelocity: 0.3,
+	throwProjectionMs: spec.THROW_PROJECTION_MS,
 	armSlop: 8,
 	clickSlop: 4,
-	armReleaseMs: 650,
 	velocityStaleMs: 100,
 	settleTimeoutMs: spec.SETTLE_TIMEOUT_MS,
-	/* an index into spec.SNAP_BACK_MODELS; see the note there */
-	snapBackModel: spec.SNAP_BACK_MODELS.indexOf("under"),
-	snapLandPx: spec.SNAP_LAND_PX,
-	holdScale: spec.HOLD_SCALE,
 	flyDistance: spec.FLY_DISTANCE,
 	flyRotateTo: spec.FLY_ROTATE_TO,
 	tiltMax: spec.TILT_MAX,
@@ -30,8 +24,6 @@ export const DEFAULT_DECK_MOTION = {
 	deckFollow: spec.DECK_FOLLOW,
 	deckFollowFalloff: spec.DECK_FOLLOW_FALLOFF,
 	swipeBreakPx: spec.SWIPE_BREAK_PX,
-	expandScaleMax: spec.EXPAND_SCALE_MAX,
-	expandPerPx: 1 / 800,
 	contextStaggerMs: spec.CONTEXT_STAGGER,
 	contextStaggerMaxMs: spec.CONTEXT_STAGGER_MAX,
 } as const;
@@ -45,14 +37,12 @@ export type DeckMotionOverrides = Partial<MotionParameters> & {
 		Record<
 			| "border"
 			| "clip"
-			| "kindLabel"
 			| "contexts"
 			| "barEnter"
 			| "barExit"
 			| "flyTravel"
 			| "flyRotate"
 			| "flyFade"
-			| "armLabel"
 			| "holdRelease",
 			spec.Tween
 		>
@@ -87,27 +77,17 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		HEADING_EDGE: spec.tween(p.headingEdgeMs),
 		OPEN_SCALE: p.openScale,
 		ZONE_FEEDBACK_MS: p.zoneFeedbackMs * p.durationScale,
-		LONG_PRESS_MS: p.holdMs,
-		HOLD_SHRINK: spec.tween(
-			p.holdMs / Math.max(0.01, p.durationScale),
-			"linear",
-		),
 		GROUND_PRESS_MS: p.groundPressMs,
 		GROUND_SHRINK: spec.tween(
 			p.groundPressMs / Math.max(0.01, p.durationScale),
 			"linear",
 		),
-		HOLD_SCALE: p.holdScale,
 		ARM_SLOP: p.armSlop,
 		CLICK_SLOP: p.clickSlop,
 		COMMIT: p.commitDistance,
-		THROW: p.throwVelocity,
-		HOLD_RELEASE_MS: p.armReleaseMs,
+		THROW_PROJECTION_MS: p.throwProjectionMs,
 		VELOCITY_STALE_MS: p.velocityStaleMs,
 		SETTLE_TIMEOUT_MS: p.settleTimeoutMs * p.durationScale,
-		SNAP_BACK:
-			spec.SNAP_BACK_MODELS[Math.round(p.snapBackModel)] ?? "under",
-		SNAP_LAND_PX: p.snapLandPx,
 		FLY_DISTANCE: p.flyDistance,
 		FLY_ROTATE_TO: p.flyRotateTo,
 		TILT_MAX: p.tiltMax,
@@ -117,8 +97,6 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 		DECK_FOLLOW_SPRING: transition(spec.DECK_FOLLOW_SPRING),
 		SWIPE_BREAK_PX: p.swipeBreakPx,
 		TEAR_CATCH_UP: transition(spec.TEAR_CATCH_UP),
-		expandScaleFor: (dy: number) =>
-			spec.expandScaleFor(dy, p.expandScaleMax, p.expandPerPx),
 		contextDelayFor: (nth: number) =>
 			Math.min(
 				p.contextStaggerMaxMs,
@@ -126,14 +104,12 @@ export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 			),
 		NOTE_BORDER: p.specs?.border ?? spec.NOTE_BORDER,
 		CLIP_FADE: p.specs?.clip ?? spec.CLIP_FADE,
-		KIND_LABEL: p.specs?.kindLabel ?? spec.KIND_LABEL,
 		CONTEXT_ITEM: p.specs?.contexts ?? spec.CONTEXT_ITEM,
 		BAR_ENTER: p.specs?.barEnter ?? spec.BAR_ENTER,
 		BAR_EXIT: p.specs?.barExit ?? spec.BAR_EXIT,
 		FLY_TRAVEL: p.specs?.flyTravel ?? spec.FLY_TRAVEL,
 		FLY_ROTATE: p.specs?.flyRotate ?? spec.FLY_ROTATE,
 		FLY_FADE: p.specs?.flyFade ?? spec.FLY_FADE,
-		ARM_LABEL: p.specs?.armLabel ?? spec.ARM_LABEL,
 		HOLD_RELEASE: p.specs?.holdRelease ?? spec.HOLD_RELEASE,
 	};
 }

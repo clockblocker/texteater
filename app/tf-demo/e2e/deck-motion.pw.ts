@@ -231,25 +231,6 @@ test("sheet morph permits collapse but isolates the bar lift", async ({
 	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
 });
 
-test("a real margin hold lifts the sheet and pointer cancellation restores it", async ({
-	page,
-}) => {
-	await page.goto("/playground/animation-workbench/sheet-lift");
-	const frame = page.locator("[data-deck-frame]");
-	const margin = frame.locator('[data-sheet-margin="left"]');
-	const box = await margin.boundingBox();
-	if (!box) throw new Error("Missing sheet margin geometry");
-	await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-	await page.mouse.down();
-	await expect(frame.locator('[data-holding="true"]')).toHaveCount(1);
-	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
-	await frame.dispatchEvent("pointercancel", { pointerId: 1, bubbles: true });
-	await page.mouse.up();
-	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
-	await expect(frame.locator('[data-form="card"]')).toHaveCount(0);
-});
-
 test("a free drag shows the real edge target and splits a pane on release", async ({
 	page,
 }) => {
@@ -382,50 +363,21 @@ test("system reduced motion suppresses drag tilt in both specimens", async ({
 	}
 });
 
-test("the snap-back model decides when the deck closes over a returning card", async ({
+test("the deck closes over a returning card at the release", async ({
 	page,
 }) => {
 	await page.goto("/playground/animation-workbench/snap-back");
-	await page
-		.getByRole("button", { name: "Show controls", exact: true })
-		.click();
-	/* the models are the entry's own presets: they are in the Version list
-	   of a reader who has never saved a variant */
-	const version = page.getByRole("combobox", { name: "Version" });
-	await expect(version.locator("option")).toHaveText([
-		"Baseline",
-		/^lifted/,
-		/^land/,
-		/^quick/,
-		/^setdown/,
-	]);
-	await version.selectOption({ value: "preset:lifted" });
-	await page
-		.getByRole("button", { name: "Hide controls", exact: true })
-		.click();
-	const returnOf = async (kind: string) => {
-		const card = page.locator(
-			`[data-specimen="${kind}"] [data-place="open"]`,
-		);
-		const box = await card.boundingBox();
-		if (!box) throw new Error("Missing card geometry");
-		await startDrag(page, card, 180, 60);
-		const samples = returnSamples(card, box);
-		await page.mouse.up();
-		return arrival(await samples);
-	};
-
-	/* the baseline is `under`: the stack is restored at the release, so
-	   the Card travels the last of its way home beneath the Deck */
-	const baseline = await returnOf("baseline");
-	expect(baseline.closedFrom).toBeGreaterThan(50);
-	expect(baseline.closedAt).toBeLessThan(60);
-
-	/* the candidate is `lifted`, the model this replaced: it only ever
-	   closes over a Card that is already home */
-	const candidate = await returnOf("candidate");
-	expect(candidate.homeAt).not.toBeNull();
-	expect(candidate.closedFrom).toBeLessThan(8);
+	const card = page.locator('[data-deck-frame] [data-place="open"]');
+	const box = await card.boundingBox();
+	if (!box) throw new Error("Missing card geometry");
+	await startDrag(page, card, 180, 60);
+	const samples = returnSamples(card, box);
+	await page.mouse.up();
+	/* the Card gets its resting z back while it is still far from home,
+	   so it travels the last of its way under the Deck */
+	const { closedFrom, closedAt } = arrival(await samples);
+	expect(closedFrom).toBeGreaterThan(50);
+	expect(closedAt).toBeLessThan(60);
 });
 
 test("a returning card does not cross its slot, however it was let go", async ({
@@ -625,6 +577,47 @@ test("a swipe moves the whole deck, turns it at the line and springs it back tog
 			),
 		)
 		.toBe(true);
+});
+
+test("a card taken up shows its Cover at once, and a release does what was shown", async ({
+	page,
+}) => {
+	await page.goto("/playground/deck-models");
+	const frame = page.locator("[data-deck-frame]");
+	await frame.locator('[data-word="noch"]').click();
+	const card = frame.locator('[data-place="open"]');
+	const ghost = frame.locator('[data-form="sheet"][data-preview]');
+	const heading = await card.locator("[data-heading]").boundingBox();
+	if (!heading) throw new Error("Missing heading geometry");
+	const x = heading.x + heading.width / 2;
+	const y = heading.y + heading.height / 2;
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	/* slowly up past the line: the ghost Cover, and no label, no wait */
+	for (let step = 1; step <= 12; step++) {
+		await page.mouse.move(x, y - step * 10);
+		await page.waitForTimeout(20);
+	}
+	await expect(ghost).toHaveCount(1);
+	await expect(frame.locator('[data-held][data-fate="open"]')).toHaveCount(1);
+	/* back down onto the Deck: the ghost goes and the Card will rest */
+	for (let step = 11; step >= 0; step--) {
+		await page.mouse.move(x, y - step * 10);
+		await page.waitForTimeout(20);
+	}
+	await page.waitForTimeout(150);
+	await expect(ghost).toHaveCount(0);
+	await expect(frame.locator('[data-held][data-fate="rest"]')).toHaveCount(1);
+	await page.mouse.up();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(0);
+	await expect(frame.locator('[data-form="card"]')).toHaveCount(4);
+
+	/* a short flick up is read where it was heading: it opens */
+	await page.mouse.move(x, y);
+	await page.mouse.down();
+	await page.mouse.move(x, y - 40, { steps: 3 });
+	await page.mouse.up();
+	await expect(frame.locator('[data-form="sheet"]')).toHaveCount(1);
 });
 
 test("a card pulled off a swipe tears loose: the deck goes home and the card follows the hand", async ({

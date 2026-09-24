@@ -46,9 +46,7 @@ import {
 	CARD_WIDTH_REM,
 	CONTEXT_PAGE,
 	HEADER_REM,
-	LIFT_SCALE,
 	LOOSE_CARD_REM,
-	liftShadow,
 	type motionOf,
 	PILE_HEIGHT_REM,
 } from "./motion-spec";
@@ -164,7 +162,19 @@ type Destination =
 	| { readonly kind: "home"; readonly paneId: string }
 	| { readonly kind: "sheet"; readonly paneId: string }
 	| { readonly kind: "pane"; readonly paneId: string; readonly edge: Edge };
-type Arm = "sweep" | "expand";
+/**
+ * Where a gesture on a Note is. `pressed`: down, not yet past the slop,
+ * so letting go is a tap. `swiping`: it started leftward on a Card on a
+ * Deck and moves the whole Deck until the finger lifts or pulls the Card
+ * loose. `held`: the Card is in hand and goes where the pointer says.
+ * Nothing changes phase on a timer.
+ */
+type Phase = "pressed" | "swiping" | "held";
+/**
+ * What letting go now does to the Card in hand, shown on the Card before
+ * it is done: it opens somewhere, it goes back to rest, or it leaves.
+ */
+type Fate = "open" | "rest" | "leave";
 type Box = {
 	readonly left: number;
 	readonly top: number;
@@ -182,8 +192,6 @@ type NoteHandle = {
 	readonly rotate: MotionValue<number>;
 	readonly scale: MotionValue<number>;
 	readonly opacity: MotionValue<number>;
-	/** How far off the Deck the Card is held, 0 → 1; `setdown` only. */
-	readonly lift: MotionValue<number>;
 };
 /** A Sheet a Deck can belong to: a Ground rung or a Cover, found by id. */
 type SheetRef = {
@@ -202,7 +210,7 @@ type Drag = {
 	readonly start: { x: number; y: number; t: number };
 	/** The box the Note holds while in hand; its drag offset is on top. */
 	readonly origin: Box;
-	/** The Pane the gesture started in: where ↑ and a throw up open a Cover. */
+	/** The Pane the gesture started in. */
 	readonly paneId: string;
 	/** The Deck the Note rests in, if it rests in one: its slot, and what a swipe sweeps. */
 	readonly deckSheet: number | null;
@@ -213,16 +221,9 @@ type Drag = {
 	 * Link or a Segment came from nowhere.
 	 */
 	readonly home: "slot" | "restore" | "close" | "vanish";
-	arm: Arm | null;
-	armedAt: number;
-	free: boolean;
-	/** Lifted out of a Sheet: a release in place leaves it on the Deck. */
-	lifted: boolean;
-	/**
-	 * The pointer has travelled past the slop. Until then the Card stays on
-	 * the Deck untouched, so a tap is only a tap.
-	 */
-	moved: boolean;
+	phase: Phase;
+	/** Lifted out of a Sheet or from nowhere, rather than picked off a Deck. */
+	readonly lifted: boolean;
 	v: { vx: number; vy: number };
 	last: { x: number; y: number; t: number };
 	/**
@@ -282,7 +283,7 @@ const Z = {
 	zone: 30,
 	/** The return band, over the Deck's Pane's zones. */
 	returnZone: 35,
-	/** The Held Card, over everything until it has landed. */
+	/** The Held Card, over everything until it is let go. */
 	held: 40,
 } as const;
 const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
@@ -332,7 +333,7 @@ const RULES = [
 	},
 	{
 		move: "Drag ↑ a Card",
-		means: "Arms Open as a Cover. Hold a beat and it relaxes into a plain drag.",
+		means: "Takes it in hand. Far enough up, or flicked up, a ghost Cover shows where it opens, and letting go opens it; back down on the Deck, it rests. Any drag but a swipe is in hand at once, and a release does what the ghost and the Card's border show.",
 	},
 	{
 		move: "Drag ← a Card",
@@ -735,9 +736,8 @@ function CompassRuntime({
 		MORPH,
 		ARM_SLOP,
 		COMMIT,
-		THROW,
+		THROW_PROJECTION_MS,
 		VELOCITY_STALE_MS,
-		HOLD_RELEASE_MS,
 		CLICK_SLOP,
 		GROUND_PRESS_MS,
 		GROUND_SHRINK,
@@ -745,12 +745,9 @@ function CompassRuntime({
 		ZONE_FEEDBACK_MS,
 		OPEN_SCALE,
 		SETTLE_TIMEOUT_MS,
-		SNAP_BACK,
-		SNAP_LAND_PX,
-		SNAP_RETURN,
-		LIFT,
 		leanFor,
-		expandScaleFor,
+		LEAVING,
+		LEAVING_OPACITY,
 		deckFollowFor,
 		DECK_FOLLOW_SPRING,
 		rubberBand,
@@ -784,16 +781,12 @@ function CompassRuntime({
 	const [destination, setDestination] = useState<Destination | null>(null);
 	const [pastCommit, setPastCommit] = useState(false);
 	/**
-	 * A returning Card has reached its slot and the Deck has closed over
-	 * it: it is drawn in the stack again rather than above it. Which frame
-	 * this turns on is what the snap-back models disagree about.
-	 */
-	const [landed, setLanded] = useState(false);
-	/**
 	 * The gesture is over and the Note is on its way home. It stops being
 	 * boxed at the hand from this frame: the release is where it learns
 	 * its slot, not the teardown, so the box morphs to the slot while the
 	 * drag offset unwinds on its own spring and the two read as one move.
+	 * The Deck closes over it at once: it travels home under the Cards
+	 * that overlap it, so nothing happens on arrival.
 	 */
 	const [returning, setReturning] = useState(false);
 	/** Drop zones stay in the DOM for hit-testing; this only shows them. */
@@ -822,9 +815,11 @@ function CompassRuntime({
 	const layoutRef = useRef(layout);
 	layoutRef.current = layout;
 	const settlingRef = useRef(false);
-	const landedRef = useRef(false);
-	/** Live subscriptions watching a return for its arrival. */
-	const landWatch = useRef<(() => void)[]>([]);
+	/** `returning`, read by handlers: a returning Card can be taken back. */
+	const returningRef = useRef(false);
+	/** Looks at a still hand again once its throw has gone stale; see `reassess`. */
+	const staleTimer = useRef<number | undefined>(undefined);
+	useEffect(() => () => window.clearTimeout(staleTimer.current), []);
 	/** The return's own animations, so a fresh grab can take the Card back. */
 	const returnRun = useRef<{ stop: () => void }[]>([]);
 	const root = useRef<HTMLDivElement>(null);
@@ -925,16 +920,6 @@ function CompassRuntime({
 		deck.cards.filter((card) => !open.has(card.id));
 	const expandedOf = (deck: Deck, cards: readonly Presentation[]) =>
 		cards.find((card) => card.id === deck.expandedId) ?? cards[0] ?? null;
-
-	/* the held Note's offset drives the commit line */
-	useEffect(() => {
-		const d = drag;
-		if (!d?.arm) return;
-		const value = d.arm === "sweep" ? d.h.x : d.h.y;
-		const update = (v: number) => setPastCommit(v < -COMMIT);
-		update(value.get());
-		return value.on("change", update);
-	}, [drag, COMMIT]);
 
 	/* --- geometry: the Panes' boxes, kept fresh --- */
 
@@ -1265,19 +1250,21 @@ function CompassRuntime({
 		};
 	}
 	/**
-	 * What is under the pointer. The return band follows its Deck's Pane,
-	 * so it is read live; everything else is read off the
+	 * Where letting go at this point, `now`, sends the Card: the one answer
+	 * the preview and the release both read. The return band follows its
+	 * Deck's Pane, so it is read live; everything else is read off the
 	 * Panes as they rested before any preview moved them, so a ghost
 	 * opening never moves the region that opened it. Leaving a region
-	 * takes a little more than entering it did. The Pane bar is chrome,
-	 * then the band, then the sides; the rest of a Pane opens a Cover.
+	 * takes a little more than entering it did. The Pane bar is chrome;
+	 * then a Card taken up off its Deck, which opens over it; then the
+	 * band, then the sides; the rest of a Pane opens a Cover.
 	 */
 	function destinationAt(
 		px: number,
 		py: number,
 		d: Drag,
+		now: number,
 	): Destination | null {
-		if (!allows("drop")) return null;
 		const frameBox = root.current?.getBoundingClientRect();
 		if (!frameBox) return null;
 		const x = px - frameBox.left;
@@ -1290,10 +1277,25 @@ function CompassRuntime({
 		if (
 			holder?.deck &&
 			holderBox &&
-			!inside(dropRegions(holderBox, d.card, rem).bar, x, y) &&
-			inside(returnZone(holderBox, d.card), x, y)
-		)
-			return { kind: "return" };
+			!inside(dropRegions(holderBox, d.card, rem).bar, x, y)
+		) {
+			const band = inside(returnZone(holderBox, d.card), x, y);
+			/* a Card taken up off its Deck, far enough or fast enough, opens
+			   over it: a move, not a place, since the band reaches up the
+			   whole Deck and the Card may start at its foot */
+			const current = destinationRef.current;
+			const line =
+				current?.kind === "sheet" ? HYSTERESIS_PX - COMMIT : -COMMIT;
+			if (
+				!d.lifted &&
+				allows("expand") &&
+				projected(d, now).dy < line &&
+				(band || (!allows("drop") && inside(holderBox, x, y)))
+			)
+				return { kind: "sheet", paneId: holder.paneId };
+			if (band) return { kind: "return" };
+		}
+		if (!allows("drop")) return null;
 		/* no drop until the rest boxes describe this layout */
 		const panes = panesOf(layoutRef.current);
 		if (
@@ -1342,20 +1344,16 @@ function CompassRuntime({
 		h.rotate.jump(0);
 		h.scale.jump(1);
 		h.opacity.jump(1);
-		h.lift.jump(0);
 	}
 	/**
-	 * Forget a return in flight: its arrival watch and its animations.
-	 * A Card picked up again mid-return is under the pointer from that
-	 * frame on, and nothing that was taking it home may still be writing.
+	 * Forget a return in flight. A Card picked up again mid-return is
+	 * under the pointer from that frame on, and nothing that was taking it
+	 * home may still be writing.
 	 */
 	function endReturn() {
-		for (const stop of landWatch.current) stop();
-		landWatch.current = [];
 		for (const run of returnRun.current) run.stop();
 		returnRun.current = [];
-		landedRef.current = false;
-		setLanded(false);
+		returningRef.current = false;
 		setReturning(false);
 	}
 	function currentBox(h: NoteHandle): Box {
@@ -1383,7 +1381,7 @@ function CompassRuntime({
 		if (
 			event.button !== 0 ||
 			dragRef.current ||
-			(settlingRef.current && !landedRef.current)
+			(settlingRef.current && !returningRef.current)
 		)
 			return;
 		const h = handles.current.get(card.id);
@@ -1403,11 +1401,8 @@ function CompassRuntime({
 			paneId: sheet.paneId,
 			deckSheet: sheet.sheetId,
 			home: "slot",
-			arm: null,
-			armedAt: 0,
-			free: false,
+			phase: "pressed",
 			lifted: false,
-			moved: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
 			gap: null,
@@ -1463,21 +1458,18 @@ function CompassRuntime({
 			paneId,
 			deckSheet,
 			home,
-			arm: null,
-			armedAt: 0,
-			free: true,
+			phase: "held",
 			lifted: true,
-			moved: true,
 			v: { vx: 0, vy: 0 },
 			last: { x: lift.x, y: lift.y, t: now },
 			gap: null,
 		};
 		dragRef.current = d;
 		setDrag(d);
-		setDestination(destinationAt(lift.x, lift.y, d));
+		setDestination(destinationAt(lift.x, lift.y, d, now));
 	}
 	/**
-	 * A Sheet lifted by its Heading or a held margin: a Cover leaves its
+	 * A Sheet lifted by its Heading or its Pane bar: a Cover leaves its
 	 * stack, a Floating Ground takes its whole Pane with it. If the Card is
 	 * still on a live Deck it shrinks toward its slot there; otherwise it
 	 * is in hand and a release in its own Pane closes it, as ← would.
@@ -1700,12 +1692,11 @@ function CompassRuntime({
 			make,
 		};
 	}
-	function release(d: Drag, reason: string) {
-		d.arm = null;
-		d.free = true;
-		setPastCommit(false);
+	/** The Card is in hand from here on: the drop regions read it. */
+	function takeInHand(d: Drag, reason: string) {
+		d.phase = "held";
 		settleTransform(d.h);
-		log(`${reason}: plain drag`);
+		log(`${reason}: in hand`);
 		setDrag({ ...d });
 	}
 	function frameMove(event: ReactPointerEvent<HTMLElement>) {
@@ -1734,44 +1725,60 @@ function CompassRuntime({
 		d.v = { vx: d.v.vx * 0.6 + vx * 0.4, vy: d.v.vy * 0.6 + vy * 0.4 };
 		d.last = { x: event.clientX, y: event.clientY, t: event.timeStamp };
 		/* a swiped Card is placed by the swipe, on its rubber band */
-		if (d.arm !== "sweep") {
+		if (d.phase !== "swiping") {
 			h.x.set(dx + (d.gap?.x.get() ?? 0));
 			h.y.set(dy + (d.gap?.y.get() ?? 0));
 		}
-
-		if (!d.arm && !d.free && Math.hypot(dx, dy) > ARM_SLOP) {
-			d.moved = true;
-			if (!reduce && SNAP_BACK === "setdown")
-				animate(h.lift, 1, transition(LIFT));
-			if (Math.abs(dx) > Math.abs(dy)) {
-				if (dx < 0 && allows("sweep") && d.deckSheet !== null) {
-					d.arm = "sweep";
-					d.armedAt = event.timeStamp;
-					log("Drag ←: swipe the Deck");
-					setDrag({ ...d });
-				} else release(d, dx < 0 ? "Drag ←" : "Drag →");
-			} else if (dy < 0 && allows("expand")) {
-				d.arm = "expand";
-				d.armedAt = event.timeStamp;
-				log("Drag ↑: armed Open as Cover");
+		/* past the slop the gesture is one thing or the other, and stays so:
+		   leftward off a Deck it swipes the Deck, any other way the Card is
+		   in hand */
+		if (d.phase === "pressed" && Math.hypot(dx, dy) > ARM_SLOP) {
+			if (
+				dx < 0 &&
+				Math.abs(dx) > Math.abs(dy) &&
+				allows("sweep") &&
+				d.deckSheet !== null
+			) {
+				d.phase = "swiping";
+				log("Drag ←: swipe the Deck");
 				setDrag({ ...d });
-			} else release(d, "Drag ↓");
+			} else takeInHand(d, "Drag");
 		}
-
-		if (d.arm === "sweep") swipeDeck(d, dx, dy);
-		else if (d.arm === "expand") {
-			h.scale.set(reduce ? 1 : expandScaleFor(dy));
-			if (event.timeStamp - d.armedAt > HOLD_RELEASE_MS)
-				release(d, "Held a beat");
-			else if (dy > 12) release(d, "Turned back");
-		}
-
-		const next = d.free
-			? destinationAt(event.clientX, event.clientY, d)
-			: null;
+		if (d.phase === "swiping") swipeDeck(d, dx, dy);
+		reassess(d, event.clientX, event.clientY, event.timeStamp);
+	}
+	/**
+	 * Where the hand is headed: its travel so far, carried on at the speed
+	 * it is moving for `THROW_PROJECTION_MS`. A flick reads as the move it
+	 * is the start of, and a hand that has stopped carries nothing on.
+	 */
+	function projected(d: Drag, now: number): { dx: number; dy: number } {
+		const fresh = now - d.last.t <= VELOCITY_STALE_MS;
+		const { vx, vy } = fresh ? d.v : { vx: 0, vy: 0 };
+		return {
+			dx: d.last.x - d.start.x + vx * THROW_PROJECTION_MS,
+			dy: d.last.y - d.start.y + vy * THROW_PROJECTION_MS,
+		};
+	}
+	/**
+	 * What letting go now would do, shown before it is done: the commit
+	 * line of a swipe, and where a Card in hand would land. The release
+	 * reads the same two things, so it does what is shown.
+	 */
+	function reassess(d: Drag, px: number, py: number, now: number) {
+		window.clearTimeout(staleTimer.current);
+		setPastCommit(d.phase === "swiping" && projected(d, now).dx < -COMMIT);
+		const next = d.phase === "held" ? destinationAt(px, py, d, now) : null;
 		setDestination((current) =>
 			sameDestination(current, next) ? current : next,
 		);
+		/* a hand that stops has no throw left in it: once its speed has
+		   gone stale, look again without it */
+		if (now - d.last.t <= VELOCITY_STALE_MS)
+			staleTimer.current = window.setTimeout(() => {
+				if (dragRef.current === d)
+					reassess(d, d.last.x, d.last.y, performance.now());
+			}, VELOCITY_STALE_MS + 1);
 	}
 	/** Every other Card on the Deck `d`'s Card rests in, and how many ranks away it is. */
 	function followersOf(d: Drag): { h: NoteHandle; distance: number }[] {
@@ -1865,7 +1872,7 @@ function CompassRuntime({
 			gap.y.jump(0);
 			place();
 		}
-		release(d, "Pulled off the swipe");
+		takeInHand(d, "Pulled off the swipe");
 	}
 	function settle(run: () => Promise<unknown>, then: () => void) {
 		settlingRef.current = true;
@@ -1878,10 +1885,8 @@ function CompassRuntime({
 			/* a Card picked up again while it was settling is in hand now,
 			   and tearing the drag down under it would drop it */
 			if (dragRef.current) return;
-			landWatch.current = [];
 			returnRun.current = [];
-			landedRef.current = false;
-			setLanded(false);
+			returningRef.current = false;
 			setReturning(false);
 			setLoose(null);
 			setDrag(null);
@@ -1904,34 +1909,12 @@ function CompassRuntime({
 		animate(h.scale, 1, SPRING);
 	}
 	/**
-	 * The Deck closes over the returning Card. Everything the models
-	 * disagree about is when this runs.
-	 */
-	function rejoinStack() {
-		for (const stop of landWatch.current) stop();
-		landWatch.current = [];
-		landedRef.current = true;
-		setLanded(true);
-	}
-	/**
-	 * Rejoin the stack once the drag offset is within `SNAP_LAND_PX` of
-	 * nothing. That is the gesture unwinding, which for a Card is the
-	 * whole of its journey home.
-	 */
-	function watchForLanding(h: NoteHandle) {
-		const check = () => {
-			if (Math.hypot(h.x.get(), h.y.get()) > SNAP_LAND_PX) return;
-			rejoinStack();
-		};
-		landWatch.current = [h.x.on("change", check), h.y.on("change", check)];
-		check();
-	}
-	/**
-	 * The Card goes back to the slot it was picked up from. The travel is
-	 * the same in every model bar `quick`; what differs is the frame the
-	 * Deck closes over it — see `SNAP_BACK_MODELS`.
+	 * The Card goes back to the slot it was picked up from, and the Deck
+	 * closes over it at the release rather than on arrival: the frame it
+	 * gets its resting z back is then no event at all.
 	 */
 	function snapBack(h: NoteHandle) {
+		returningRef.current = true;
 		setReturning(true);
 		if (reduce) {
 			for (const [value, rest] of [
@@ -1939,29 +1922,21 @@ function CompassRuntime({
 				[h.y, 0],
 				[h.rotate, 0],
 				[h.scale, 1],
-				[h.lift, 0],
 			] as const)
 				value.jump(rest);
-			rejoinStack();
 			settle(
 				() => Promise.resolve(),
 				() => {},
 			);
 			return;
 		}
-		if (SNAP_BACK === "under") rejoinStack();
-		else if (SNAP_BACK !== "lifted") watchForLanding(h);
-		const home = SNAP_BACK === "quick" ? transition(SNAP_RETURN) : SPRING;
 		settle(
 			() => {
 				const run = [
-					animate(h.x, 0, home),
-					animate(h.y, 0, home),
-					animate(h.rotate, 0, home),
-					animate(h.scale, 1, home),
-					/* the lift only ever left the ground in `setdown`;
-					   in every other model this animates 0 to 0 */
-					animate(h.lift, 0, SPRING),
+					animate(h.x, 0, SPRING),
+					animate(h.y, 0, SPRING),
+					animate(h.rotate, 0, SPRING),
+					animate(h.scale, 1, SPRING),
 				];
 				returnRun.current = run;
 				return Promise.all(run);
@@ -2034,11 +2009,9 @@ function CompassRuntime({
 		if (reduce) {
 			h.rotate.jump(0);
 			h.scale.jump(1);
-			h.lift.jump(0);
 		} else {
 			animate(h.rotate, 0, MORPH);
 			animate(h.scale, 1, MORPH);
-			animate(h.lift, 0, MORPH);
 		}
 		gestureCheckpoint.current = null;
 		dragRef.current = null;
@@ -2073,25 +2046,22 @@ function CompassRuntime({
 		dragRef.current = null;
 		/* the release takes the Card from where it is, gap and all */
 		d.gap?.stop();
+		window.clearTimeout(staleTimer.current);
 		const { h } = d;
-		const dx = h.x.get();
-		const dy = h.y.get();
-		const { vx, vy } =
-			event.timeStamp - d.last.t > VELOCITY_STALE_MS
-				? { vx: 0, vy: 0 }
-				: d.v;
 		const card = d.card;
-		const travelled = Math.hypot(dx, dy);
 
-		if (travelled < CLICK_SLOP + 2) {
-			if (d.lifted) {
-				if (d.home === "slot")
-					log("Released in place: stays on the Deck");
-				/* a tap on a bar is not a close: the Sheet stays */
-				if (d.home === "close") restore(d, "Released in place");
-				else goHome(d);
-				return;
-			}
+		if (d.lifted && Math.hypot(h.x.get(), h.y.get()) < CLICK_SLOP + 2) {
+			if (d.home === "slot") log("Released in place: stays on the Deck");
+			/* a tap on a bar is not a close: the Sheet stays */
+			if (d.home === "close") restore(d, "Released in place");
+			else goHome(d);
+			return;
+		}
+		if (d.phase === "pressed") {
+			/* never past the slop, so a tap: the few px it gave go back */
+			for (const value of [h.x, h.y])
+				if (reduce) value.jump(0);
+				else animate(value, 0, SPRING);
 			setDrag(null);
 			const sheet =
 				d.deckSheet === null
@@ -2104,25 +2074,20 @@ function CompassRuntime({
 			else expand(sheet.sheetId, card);
 			return;
 		}
-		if (d.arm === "sweep") {
-			if (dx < -COMMIT || vx < -THROW) sweepByDrag(d, "Swipe ←");
+		/* the release reads what the preview read: `projected` and
+		   `destinationAt` at this moment, so it does what was shown */
+		if (d.phase === "swiping") {
+			if (projected(d, event.timeStamp).dx < -COMMIT)
+				sweepByDrag(d, "Swipe ←");
 			else snapDeck(d);
 			return;
 		}
-		if (d.arm === "expand") {
-			if (dy < -COMMIT || vy < -THROW)
-				growFromHand(d, () => openCover(d.paneId, card, "Open ↑"));
-			else snapBack(h);
-			return;
-		}
-		if (allows("expand") && vy < -THROW) {
-			const target = destinationAt(event.clientX, event.clientY, d);
-			const paneId =
-				target && "paneId" in target ? target.paneId : d.paneId;
-			growFromHand(d, () => openCover(paneId, card, "Throw ↑"));
-			return;
-		}
-		const target = destinationAt(event.clientX, event.clientY, d);
+		const target = destinationAt(
+			event.clientX,
+			event.clientY,
+			d,
+			event.timeStamp,
+		);
 		if (!target || target.kind === "return") {
 			goHome(d);
 			return;
@@ -2160,7 +2125,7 @@ function CompassRuntime({
 			setDrag(null);
 			setDestination(null);
 			setPastCommit(false);
-		} else if (d.arm === "sweep") snapDeck(d);
+		} else if (d.phase === "swiping") snapDeck(d);
 		else snapBack(d.h);
 	}
 
@@ -2257,10 +2222,24 @@ function CompassRuntime({
 
 	/* --- render --- */
 
-	const dragging = drag !== null;
-	const showZones = allows("drop") && dragging && drag.free;
-	/* a swipe has no label: the Deck moving with the finger is the label */
-	const armLabel = drag?.arm === "expand" ? "Open as Cover" : null;
+	const showZones = allows("drop") && drag?.phase === "held";
+	/* nothing wears a label: the ghost says where a Card opens, the moving
+	   Deck says it is being swiped, and the Card's own border and ink say
+	   what letting go does to it */
+	const fate: Fate | null =
+		drag?.phase === "held" ? fateOf(drag, destination) : null;
+	/* a Card that would leave dims, so the loss shows before it happens */
+	const leaving = fate === "leave";
+	useEffect(() => {
+		const d = dragRef.current;
+		if (d?.phase !== "held") return;
+		const controls = animate(
+			d.h.opacity,
+			leaving ? LEAVING_OPACITY : 1,
+			transition(LEAVING),
+		);
+		return () => controls.stop();
+	}, [leaving, transition, LEAVING]);
 	const register = (id: number, handle: NoteHandle | null) => {
 		if (handle) handles.current.set(id, handle);
 		else handles.current.delete(id);
@@ -2512,11 +2491,14 @@ function CompassRuntime({
 		/* a swiped Deck moves as a stack: every Card keeps its z, and every
 		   Card wears the commit line */
 		const swiping =
-			drag?.arm === "sweep" && drag.deckSheet === sheet.sheetId;
+			drag?.phase === "swiping" && drag.deckSheet === sheet.sheetId;
 		return order.flatMap((card, index) => {
 			const place: Place =
 				index < openAt ? "above" : index > openAt ? "below" : "open";
-			const held = drag?.moved === true && drag.card.id === card.id;
+			const held =
+				drag !== null &&
+				drag.phase !== "pressed" &&
+				drag.card.id === card.id;
 			if (heldOnly && !held) return [];
 			const slot: Box = {
 				left: column.left,
@@ -2525,9 +2507,9 @@ function CompassRuntime({
 				height: slotHeight,
 			};
 			/* z rises toward the expanded Card from both sides; a Held
-			   Card is over all of them until it has landed */
+			   Card is over all of them until it is let go */
 			const z =
-				held && !landed && !swiping
+				held && !returning && !swiping
 					? Z.held
 					: Z.deck +
 						(place === "open"
@@ -2544,11 +2526,9 @@ function CompassRuntime({
 					box={held && drag && !returning ? drag.origin : slot}
 					z={z}
 					held={held}
-					arm={held ? (drag?.arm ?? null) : null}
-					free={held ? (drag?.free ?? false) : false}
+					fate={held ? fate : null}
 					swiping={swiping}
-					pastCommit={(held || swiping) && pastCommit}
-					armLabel={held ? armLabel : null}
+					pastCommit={swiping && pastCommit}
 					paneId={sheet.paneId}
 					sheetId={null}
 					ground={false}
@@ -2557,7 +2537,6 @@ function CompassRuntime({
 					epoch={layoutEpoch}
 					register={register}
 					onDown={(event) => cardDown(event, card, sheet)}
-					onHoldLift={() => {}}
 					onFollow={() => {}}
 					onSegment={() => {}}
 					onSegmentDown={() => {}}
@@ -2607,10 +2586,8 @@ function CompassRuntime({
 						}
 						z={Z.sheet + index}
 						held={false}
-						arm={null}
-						free={false}
+						fate={null}
 						pastCommit={false}
-						armLabel={null}
 						paneId={pane.id}
 						sheetId={ghost ? null : sheet.sheetId}
 						ground={sheet.ground}
@@ -2642,9 +2619,6 @@ function CompassRuntime({
 							grabs
 								? (event) => coverHeadingDown(event, sheet)
 								: () => {}
-						}
-						onHoldLift={(lift) =>
-							liftSheet(sheet, lift, "Hold margin")
 						}
 						onFollow={(link) => follow(pane.id, link)}
 						onSegment={(word, element) =>
@@ -2688,10 +2662,8 @@ function CompassRuntime({
 					box={held && drag ? drag.origin : inHand.box}
 					z={Z.held}
 					held={held}
-					arm={held ? (drag?.arm ?? null) : null}
-					free={held ? (drag?.free ?? false) : false}
-					pastCommit={held && pastCommit}
-					armLabel={held ? armLabel : null}
+					fate={held ? fate : null}
+					pastCommit={false}
 					paneId={drag?.paneId ?? ROOT_PANE}
 					sheetId={null}
 					ground={false}
@@ -2700,7 +2672,6 @@ function CompassRuntime({
 					epoch={layoutEpoch}
 					register={register}
 					onDown={() => {}}
-					onHoldLift={() => {}}
 					onFollow={() => {}}
 					onSegment={() => {}}
 					onSegmentDown={() => {}}
@@ -2897,11 +2868,9 @@ function PresentationView({
 	box,
 	z,
 	held,
-	arm,
-	free,
+	fate,
 	swiping = false,
 	pastCommit,
-	armLabel,
 	paneId,
 	sheetId,
 	ground,
@@ -2913,7 +2882,6 @@ function PresentationView({
 	register,
 	back = null,
 	onDown,
-	onHoldLift,
 	onFollow,
 	onSegment,
 	onSegmentDown,
@@ -2924,12 +2892,12 @@ function PresentationView({
 	box: Box;
 	z: number;
 	held: boolean;
-	arm: Arm | null;
-	free: boolean;
+	/** In hand: what letting go now does to it. */
+	fate: Fate | null;
 	/** On a Deck being swiped: it moves with the Deck, whichever Card leads. */
 	swiping?: boolean;
+	/** On a swiped Deck that a release now would sweep. */
 	pastCommit: boolean;
-	armLabel: string | null;
 	paneId: string;
 	/** The Sheet this is, when it is one; a Deck can belong to it. */
 	sheetId: number | null;
@@ -2949,7 +2917,6 @@ function PresentationView({
 	/** A Cover's ←, drawn in its Heading; a Ground's is on the Pane bar. */
 	back?: CoverBack | null;
 	onDown: (event: ReactPointerEvent<HTMLElement>) => void;
-	onHoldLift: (lift: Lift) => void;
 	onFollow: (link: NoteLink) => void;
 	onSegment: (word: string, element: HTMLElement) => void;
 	onSegmentDown: (
@@ -2961,18 +2928,9 @@ function PresentationView({
 		transition,
 		MORPH,
 		OPEN_SCALE,
-		HOLD_SCALE,
-		HOLD_SHRINK,
-		HOLD_RELEASE,
-		LONG_PRESS_MS,
-		CLICK_SLOP,
 		HEADING_EDGE,
 		NOTE_BORDER,
 		CLIP_FADE,
-		ARM_LABEL,
-		ARM_LABEL_FROM,
-		ARM_LABEL_ARMED,
-		ARM_LABEL_COMMITTED,
 	} = useDeckMotion();
 	const allows = useDeckInteractions();
 	const reduce = useDeckReducedMotion();
@@ -2986,7 +2944,6 @@ function PresentationView({
 	const scale = useMotionValue(1);
 	/* A dealt Note is simply there: opaque on its first frame, never faded. */
 	const opacity = useMotionValue(1);
-	const lift = useMotionValue(0);
 	const handle = useRef<NoteHandle>({
 		left,
 		top,
@@ -2997,19 +2954,15 @@ function PresentationView({
 		rotate,
 		scale,
 		opacity,
-		lift,
 	});
 	/**
 	 * The open Card rests larger than the ones behind it (`OPEN_SCALE`). It
 	 * is a state, not a move: which Card is in front changes at once, with
-	 * no pulse. `scale` stays the raw value the drag and the hold animate,
-	 * and the two are multiplied on the way to the DOM.
+	 * no pulse. `scale` stays the raw value the drag animates, and the two
+	 * are multiplied on the way to the DOM.
 	 */
 	const restScale = form === "card" && place === "open" ? OPEN_SCALE : 1;
-	const shownScale = useTransform(
-		() => scale.get() * restScale * (1 + lift.get() * LIFT_SCALE),
-	);
-	const shownShadow = useTransform(() => liftShadow(lift.get()));
+	const shownScale = useTransform(() => scale.get() * restScale);
 	/**
 	 * The box's origin travels as a transform, not as `left`/`top`, so two
 	 * of the four properties on MORPH leave the layout path; `width` and
@@ -3019,16 +2972,7 @@ function PresentationView({
 	 */
 	const shownX = useTransform(() => left.get() + x.get());
 	const shownY = useTransform(() => top.get() + y.get());
-	const [holding, setHolding] = useState(false);
-	const [origin, setOrigin] = useState("50% 50%");
 	const section = useRef<HTMLElement>(null);
-	const hold = useRef<{ timer: number; pointer: Lift } | null>(null);
-	useEffect(
-		() => () => {
-			if (hold.current) window.clearTimeout(hold.current.timer);
-		},
-		[],
-	);
 
 	useEffect(() => {
 		if (preview) return;
@@ -3080,77 +3024,6 @@ function PresentationView({
 		form,
 		MORPH,
 	]);
-
-	/* the hold on a Sheet margin or a Rooted Ground's Heading: shrink toward
-	   the finger, then lift. Reduced motion keeps the hold — the border still
-	   turns — without the shrink, which is the only part of it that moves. */
-	useEffect(() => {
-		if (held) return;
-		if (reduce) {
-			scale.jump(1);
-			return;
-		}
-		const controls = animate(
-			scale,
-			holding ? HOLD_SCALE : 1,
-			transition(holding ? HOLD_SHRINK : HOLD_RELEASE),
-		);
-		return () => controls.stop();
-	}, [
-		holding,
-		held,
-		scale,
-		reduce,
-		HOLD_SCALE,
-		HOLD_SHRINK,
-		HOLD_RELEASE,
-		transition,
-	]);
-
-	function startHold(event: ReactPointerEvent<HTMLElement>) {
-		if (event.button !== 0 || hold.current) return;
-		event.preventDefault();
-		event.stopPropagation();
-		const pointer = {
-			pointerId: event.pointerId,
-			x: event.clientX,
-			y: event.clientY,
-		};
-		const rect = section.current?.getBoundingClientRect();
-		if (rect)
-			setOrigin(
-				`${(((pointer.x - rect.left) / rect.width) * 100).toFixed(1)}% ${(((pointer.y - rect.top) / rect.height) * 100).toFixed(1)}%`,
-			);
-		setHolding(true);
-		hold.current = {
-			pointer,
-			timer: window.setTimeout(() => {
-				const current = hold.current;
-				hold.current = null;
-				setHolding(false);
-				setOrigin("50% 50%");
-				if (current) onHoldLift(current.pointer);
-			}, LONG_PRESS_MS),
-		};
-	}
-	function holdMove(event: ReactPointerEvent<HTMLElement>) {
-		const current = hold.current;
-		if (!current || current.pointer.pointerId !== event.pointerId) return;
-		if (
-			Math.hypot(
-				event.clientX - current.pointer.x,
-				event.clientY - current.pointer.y,
-			) > CLICK_SLOP
-		)
-			stopHold();
-	}
-	function stopHold() {
-		if (hold.current) window.clearTimeout(hold.current.timer);
-		hold.current = null;
-		setHolding(false);
-		setOrigin("50% 50%");
-	}
-	useEffect(() => stopHold, []);
 
 	function down(event: ReactPointerEvent<HTMLElement>) {
 		const target = event.target as HTMLElement;
@@ -3227,12 +3100,13 @@ function PresentationView({
 		headingOffset,
 		bodyOffset,
 	]);
-	/* a swiped Deck turns only once a release would sweep it: before
-	   that, the move says what is happening and the colour says nothing */
+	/* the border is the Card's fate: blue where letting go opens it, red
+	   on a swiped Deck a release would sweep, and its resting colour
+	   otherwise. A Card that would leave also dims; see `LEAVING`. */
 	const borderColor =
 		swiping && pastCommit
 			? "var(--destructive)"
-			: arm === "expand" || free || holding || preview
+			: fate === "open" || preview
 				? "var(--link)"
 				: ground
 					? "transparent"
@@ -3241,7 +3115,6 @@ function PresentationView({
 	const dataForm = ground ? "ground" : form;
 	/* one column width in every form: a Text Sheet reads at prose width */
 	const column = sheet && subject.kind === "Text" ? "42rem" : CARD_WIDTH;
-
 	return (
 		<motion.article
 			ref={section}
@@ -3250,10 +3123,10 @@ function PresentationView({
 			data-form={dataForm}
 			data-place={sheet ? undefined : place}
 			data-held={held || undefined}
-			data-arm={arm ?? undefined}
+			data-arm={held && swiping ? "sweep" : undefined}
+			data-fate={fate ?? undefined}
 			data-past={pastCommit}
 			data-swiping={swiping || undefined}
-			data-holding={holding}
 			data-pane={paneId}
 			data-sheet-id={sheetId ?? undefined}
 			data-preview={preview || undefined}
@@ -3272,18 +3145,10 @@ function PresentationView({
 				rotate,
 				scale: shownScale,
 				opacity,
-				boxShadow: shownShadow,
 				zIndex: z,
-				transformOrigin: origin,
 				...(preview ? { borderStyle: "dashed" } : {}),
 			}}
 			onPointerDown={down}
-			/* the Rooted Ground's Heading press is watched here: the same
-			   hold as a margin, one second long, ended by a move or a release */
-			onPointerMove={holdMove}
-			onPointerUp={stopHold}
-			onPointerCancel={stopHold}
-			onPointerLeave={stopHold}
 			/* `contain` stops the width/height spring's recalc at this Note
 			   rather than letting it walk the deck */
 			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
@@ -3366,55 +3231,9 @@ function PresentationView({
 					/>
 				</motion.div>
 			</div>
-			{/* a Cover's own margins: hold one to lift the Cover as a Card */}
-			{sheet && !ground && !covered && allows("lift")
-				? MARGINS.map((margin) => (
-						<div
-							key={margin}
-							aria-hidden="true"
-							data-sheet-margin={margin}
-							onPointerDown={(event) => startHold(event)}
-							onPointerMove={holdMove}
-							onPointerUp={stopHold}
-							onPointerCancel={stopHold}
-							onPointerLeave={stopHold}
-							className={`absolute z-10 touch-none select-none ${MARGIN_CLASS[margin]}`}
-							style={
-								margin === "bottom"
-									? undefined
-									: { top: `${BAR_REM.toString()}rem` }
-							}
-						/>
-					))
-				: null}
-			<AnimatePresence>
-				{armLabel ? (
-					<motion.div
-						key={armLabel}
-						initial={ARM_LABEL_FROM}
-						animate={
-							pastCommit ? ARM_LABEL_COMMITTED : ARM_LABEL_ARMED
-						}
-						exit={ARM_LABEL_FROM}
-						transition={transition(ARM_LABEL)}
-						className="absolute top-3 left-3 z-10 rounded-md border border-link bg-paper px-2 py-0.5 font-mono text-[0.62rem] font-bold tracking-[0.12em] text-link uppercase"
-					>
-						{armLabel}
-					</motion.div>
-				) : null}
-			</AnimatePresence>
 		</motion.article>
 	);
 }
-
-const MARGINS = ["left", "right", "bottom"] as const;
-/* the side margins start under the Heading: the Heading is the Cover's
-   bar, and its ← sits in the left margin's column */
-const MARGIN_CLASS: Record<(typeof MARGINS)[number], string> = {
-	left: "bottom-0 left-0 w-6",
-	right: "bottom-0 right-0 w-6",
-	bottom: "inset-x-0 bottom-0 h-5",
-};
 
 /* --------------------------------------------------------------- blocks */
 
@@ -3876,6 +3695,15 @@ function homeLabel(drag: Drag): string {
 		default:
 			return "Back in place";
 	}
+}
+
+/** What letting go of `drag` over `destination` does to its Card. */
+function fateOf(drag: Drag, destination: Destination | null): Fate {
+	if (destination?.kind === "sheet" || destination?.kind === "pane")
+		return "open";
+	/* anywhere else it goes home, and for a Card from nowhere, or a Cover
+	   on no live Deck, home is away */
+	return drag.home === "close" || drag.home === "vanish" ? "leave" : "rest";
 }
 
 function DropZones({
