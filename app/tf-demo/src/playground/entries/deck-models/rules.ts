@@ -38,6 +38,10 @@ export const RULES = [
 		means: "Every Cover in the Pane leaves at once, each as its ← would, and the Ground shows.",
 	},
 	{
+		move: "Click beside a Cover",
+		means: "The gap between a Pane and its Covers is the Cover's ×.",
+	},
+	{
 		move: "Drag a Cover's Heading",
 		means: "Lifts the Cover into a Held Card. A Floating Ground lifts by its Pane bar the same way, and its Pane closes behind it.",
 	},

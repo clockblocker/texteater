@@ -39,7 +39,10 @@ export const Z = {
 
 export const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
 
-/** A Cover's box: the Pane inset by these, one inset all round. A Ground fills its Pane. */
+/**
+ * A Cover's box: flush with its Pane's top, over the Pane bar, and inset
+ * by these from the Pane's sides and foot. A Ground fills its Pane.
+ */
 export const SHEET_INSET_X_REM = 1.5;
 
 export const SHEET_INSET_Y_REM = 1.5;
@@ -199,16 +202,18 @@ export function sameBoxes(
 	);
 }
 
-/** Where a Cover sits in a Pane: under the bar, inset from the edges. */
-export function coverBoxIn(pane: Box, rem: number, barRem = BAR_REM): Box {
+/**
+ * Where a Cover sits in a Pane: from the Pane's top edge, over its bar,
+ * and inset from its sides and foot. A Cover carries its own bar.
+ */
+export function coverBoxIn(pane: Box, rem: number): Box {
 	const insetX = SHEET_INSET_X_REM * rem;
 	const insetY = SHEET_INSET_Y_REM * rem;
-	const bar = barRem * rem;
 	return {
 		left: pane.left + insetX,
-		top: pane.top + bar + insetY,
+		top: pane.top,
 		width: Math.max(0, pane.width - 2 * insetX),
-		height: Math.max(0, pane.height - bar - 2 * insetY),
+		height: Math.max(0, pane.height - insetY),
 	};
 }
 

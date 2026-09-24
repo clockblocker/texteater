@@ -1,3 +1,4 @@
+import { ArrowLeftIcon, XIcon } from "lucide-react";
 import {
 	createContext,
 	type ReactNode,
@@ -97,9 +98,12 @@ export const ONE_LINE_TITLE =
 	"[&_[data-slot=note-title-row]]:flex-nowrap [&_[data-slot=note-title]]:min-w-0 [&_[data-slot=note-title]]:truncate";
 
 /**
- * A Sheet's chrome: ← in the left margin, × in the right, the title on the
- * body's column. A Cover draws it as its Heading; a Ground's Pane bar draws
- * it too, because a Ground's chrome is its Pane's (ADR 0006).
+ * A Sheet's chrome: ← in the column's left gutter, × in its right, the
+ * title on the body's column between them. A Cover draws it as its
+ * Heading; a Ground's Pane bar draws it too, because a Ground's chrome is
+ * its Pane's (ADR 0006). The three share one line, so ← and × sit level
+ * with the title's middle whatever the row's height, and they stay by the
+ * title however wide the Sheet is.
  */
 export function SheetChrome({
 	ruled,
@@ -118,22 +122,45 @@ export function SheetChrome({
 	linksDrag: boolean;
 	children: ReactNode;
 }) {
+	const gutter = `${COVER_GUTTER_REM.toString()}rem`;
 	return (
 		<>
 			<div className="absolute inset-0 flex">
 				<div
-					className="relative mx-auto flex h-full w-full min-w-0 items-end pb-2"
-					style={{
-						maxWidth,
-						paddingInline: `${COVER_GUTTER_REM.toString()}rem`,
-					}}
+					className="mx-auto grid h-full w-full min-w-0 items-end pb-2"
+					style={{ maxWidth }}
 				>
 					<div
-						data-heading-title=""
-						data-links={linksDrag ? "drag" : "still"}
-						className={`min-w-0 flex-1 ${ONE_LINE_TITLE} ${linksDrag ? "" : STILL_LINKS}`}
+						className="grid min-w-0 items-center"
+						style={{
+							gridTemplateColumns: `${gutter} minmax(0, 1fr) ${gutter}`,
+						}}
 					>
-						{children}
+						{back ? (
+							<ChromeButton
+								control={back}
+								name="back"
+								className="col-start-1 justify-self-start"
+							>
+								<ArrowLeftIcon aria-hidden="true" />
+							</ChromeButton>
+						) : null}
+						<div
+							data-heading-title=""
+							data-links={linksDrag ? "drag" : "still"}
+							className={`col-start-2 row-start-1 min-w-0 ${ONE_LINE_TITLE} ${linksDrag ? "" : STILL_LINKS}`}
+						>
+							{children}
+						</div>
+						{clear ? (
+							<ChromeButton
+								control={clear}
+								name="clear"
+								className="col-start-3 justify-self-end"
+							>
+								<XIcon aria-hidden="true" />
+							</ChromeButton>
+						) : null}
 					</div>
 				</div>
 			</div>
@@ -141,37 +168,33 @@ export function SheetChrome({
 				aria-hidden="true"
 				className={`absolute inset-x-0 bottom-0 h-px bg-line transition-opacity duration-200 ease-out ${ruled ? "opacity-100" : "opacity-0"}`}
 			/>
-			{back ? (
-				<ChromeButton
-					side="start"
-					control={back}
-					glyph="←"
-					name="back"
-				/>
-			) : null}
-			{clear ? (
-				<ChromeButton
-					side="end"
-					control={clear}
-					glyph="×"
-					name="clear"
-				/>
-			) : null}
 		</>
 	);
 }
 
-/** ← or ×: level with the title's middle, whatever the row's height. */
+/**
+ * ← or ×: one icon size and one stroke, at the outer side of its gutter so
+ * the title keeps some air. At rest it is chrome, in ink; under the
+ * pointer it grows a touch and glows with what it does: ← the blue of a
+ * link, × the red a Card turns when letting go removes it. Its box is
+ * larger than the line it sits on; the negative margin keeps it from
+ * making the line taller.
+ */
+const CHROME_HOVER = {
+	back: "enabled:hover:text-link enabled:hover:drop-shadow-[0_0_6px_color-mix(in_oklab,var(--link)_55%,transparent)]",
+	clear: "enabled:hover:text-destructive enabled:hover:drop-shadow-[0_0_6px_color-mix(in_oklab,var(--destructive)_55%,transparent)]",
+} as const;
+
 function ChromeButton({
-	side,
 	control,
-	glyph,
 	name,
+	className,
+	children,
 }: {
-	side: "start" | "end";
 	control: HeadingControl;
-	glyph: string;
-	name: string;
+	name: keyof typeof CHROME_HOVER;
+	className: string;
+	children: ReactNode;
 }) {
 	return (
 		<button
@@ -181,9 +204,9 @@ function ChromeButton({
 			aria-label={control.label}
 			title={control.label}
 			onClick={control.onPress}
-			className={`absolute bottom-[0.3rem] grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[0.95rem] leading-none text-link transition-transform duration-150 ease-out hover:bg-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 active:scale-[0.94] disabled:text-ink-muted disabled:hover:bg-transparent disabled:active:scale-100 ${side === "start" ? "start-1.5" : "end-1.5"}`}
+			className={`${className} ${CHROME_HOVER[name]} row-start-1 -my-1.5 grid size-8 place-items-center rounded-md text-ink-muted transition-[color,scale,filter] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link/50 enabled:hover:scale-115 enabled:active:scale-95 disabled:text-ink-muted/40 [&_svg]:size-4 [&_svg]:stroke-[1.75]`}
 		>
-			{glyph}
+			{children}
 		</button>
 	);
 }

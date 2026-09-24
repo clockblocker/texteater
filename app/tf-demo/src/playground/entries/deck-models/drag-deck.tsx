@@ -1819,6 +1819,24 @@ function CompassRuntime({
 			return next;
 		});
 	}
+	/**
+	 * A click in the gap between a Pane and its Covers is the top Cover's
+	 * ×. The Covers hide everything of the Pane but that gap, so a click
+	 * that lands on the Pane or its Ground while it has Covers landed there.
+	 * A Card lying over the gap is its own.
+	 */
+	function clearFromGap(target: HTMLElement): boolean {
+		if (target.closest('[data-form="card"], [data-return-zone]'))
+			return false;
+		const at = target.closest<HTMLElement>(
+			'[data-deck-pane], [data-form="ground"]',
+		);
+		const paneId = at?.dataset.deckPane ?? at?.dataset.pane;
+		const pane = paneId ? findPane(layoutRef.current, paneId) : null;
+		if (!pane?.covers.length) return false;
+		clearCovers(pane.id);
+		return true;
+	}
 	function pageClick(event: ReactMouseEvent<HTMLElement>) {
 		if (swallowClick.current) {
 			swallowClick.current = false;
@@ -1826,8 +1844,10 @@ function CompassRuntime({
 			event.stopPropagation();
 			return;
 		}
-		if (!allows("dismiss") || !dismissOnClick.current) return;
+		if (!dismissOnClick.current) return;
 		const target = event.target as HTMLElement;
+		if (clearFromGap(target)) return;
+		if (!allows("dismiss")) return;
 		if (target.closest(DISMISS_EXEMPT_SELECTOR)) return;
 		const sheetId = Number(
 			target.closest<HTMLElement>("[data-sheet-id]")?.dataset.sheetId,
@@ -1977,10 +1997,15 @@ function CompassRuntime({
 					data-pane-bar=""
 					data-handle={handle}
 					data-holding={holdingHere}
+					/* a Cover lies over the bar and carries its own, so the
+					   Pane's steps back under it rather than peek past its
+					   sides */
+					inert={covered}
 					initial={false}
 					animate={{
 						scale: holdingHere ? 0.985 : 1,
 						height: barRem * rem,
+						opacity: covered ? 0 : 1,
 					}}
 					/* the bar's height and its Ground's box move as one */
 					transition={{
@@ -1988,13 +2013,14 @@ function CompassRuntime({
 							holdingHere ? GROUND_SHRINK : HOLD_RELEASE,
 						),
 						height: MORPH,
+						opacity: transition(covered ? BAR_EXIT : BAR_ENTER),
 					}}
 					onPointerDown={(event) => paneBarDown(event, pane)}
 					onPointerMove={paneBarMove}
 					onPointerUp={stopBarHold}
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
-					className={`absolute inset-x-0 top-0 z-20 border-b bg-paper select-none ${pane.preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					className={`absolute inset-x-0 top-0 border-b bg-paper select-none ${covered ? "pointer-events-none z-0" : "z-20"} ${pane.preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
 					style={{ transformOrigin: "0% 50%" }}
 				>
 					<PaneBarFace
@@ -2242,7 +2268,7 @@ function CompassRuntime({
 						box={
 							sheet.ground
 								? groundBoxIn(paneBox, rem, barRemOf(pane))
-								: coverBoxIn(paneBox, rem, barRemOf(pane))
+								: coverBoxIn(paneBox, rem)
 						}
 						z={Z.sheet + index}
 						held={false}
