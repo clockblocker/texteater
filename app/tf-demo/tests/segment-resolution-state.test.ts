@@ -1,144 +1,113 @@
-import { expect, test } from "bun:test";
-
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { api, internal } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import {
-	beginSegmentResolution,
-	finishDeletedSessionsResolution,
-	finishSegmentResolution,
-} from "../convex/model/segmentResolutionState";
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
+import {
+	bankOccurrenceCommit,
+	type Selection,
+	startSession,
+} from "./support/occurrences";
 
-function stateHarness(
-	initial: Record<string, unknown> = {
-		_id: "segment-1",
-		kind: "ResolvableText",
-	},
-) {
-	let segment = { ...initial };
-	const ctx = {
-		db: {
-			async get(id: string) {
-				return id === segment._id ? segment : null;
-			},
-			async patch(id: string, patch: Record<string, unknown>) {
-				if (id !== segment._id) throw new Error("Unexpected Segment.");
-				segment = { ...segment, ...patch };
-			},
-		},
-	};
-	return {
-		ctx,
-		segment: () => segment,
-		commitMembership() {
-			segment = {
-				...segment,
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Exact",
-				},
-			};
-		},
-	};
+beforeEach(() => {
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
+async function bankenSegment(t: TestConvexDb) {
+	const { sentenceIds, segmentIds } = await submitText(t, [
+		["Die", " ", "Banken", "."],
+	]);
+	const sentenceId = sentenceIds[0];
+	const segmentId = segmentIds[0]?.[2];
+	if (!sentenceId || !segmentId) throw new Error("Expected a Sentence.");
+	const select = (requestId: string, visitorId: string): Selection => ({
+		requestId,
+		visitorId,
+		sentenceId,
+		clickedSegmentIndex: 2,
+	});
+	return { segmentId, select };
 }
 
-test("shared Segment Resolution State counts concurrent active sessions", async () => {
-	const fixture = stateHarness();
+/** The Segment's Resolution State; null once membership clears it. */
+function segmentState(t: TestConvexDb, segmentId: Id<"segments">) {
+	return t.run(
+		async (ctx) => (await ctx.db.get(segmentId))?.resolutionState ?? null,
+	);
+}
 
-	expect(
-		await beginSegmentResolution(
-			fixture.ctx as never,
-			"segment-1" as never,
-		),
-	).toBe(true);
-	expect(
-		await beginSegmentResolution(
-			fixture.ctx as never,
-			"segment-1" as never,
-		),
-	).toBe(true);
-	expect(fixture.segment().resolutionState).toEqual({
+const internalFailure = {
+	kind: "Internal",
+	phase: "Grammar",
+	diagnosticId: "diagnostic-1",
+	errorName: "Error",
+	errorFingerprint: "fnv1a-1",
+} as const;
+
+test("shared Segment Resolution State counts concurrent active sessions", async () => {
+	const t = createTestConvex();
+	const { segmentId, select } = await bankenSegment(t);
+	const first = await startSession(t, select("request-1", "visitor-1"));
+	const second = await startSession(t, select("request-2", "visitor-2"));
+	expect(await segmentState(t, segmentId)).toEqual({
 		kind: "Active",
 		activeSessionCount: 2,
 	});
 
-	await finishSegmentResolution(
-		fixture.ctx as never,
-		"segment-1" as never,
-		"Unresolved",
-	);
-	expect(fixture.segment().resolutionState).toEqual({
+	await t.mutation(internal.persistence.persistUnresolvedClick, {
+		...select("request-1", "visitor-1"),
+		sessionGuard: first,
+	});
+	expect(await segmentState(t, segmentId)).toEqual({
 		kind: "Active",
 		activeSessionCount: 1,
 	});
 
-	await finishSegmentResolution(
-		fixture.ctx as never,
-		"segment-1" as never,
-		"PermanentFailure",
-	);
-	expect(fixture.segment().resolutionState).toEqual({
+	await t.mutation(internal.resolutionSessions.recordRunFailure, {
+		guard: second,
+		failure: internalFailure,
+	});
+	expect(await segmentState(t, segmentId)).toEqual({
 		kind: "PermanentFailure",
 	});
 
-	await beginSegmentResolution(fixture.ctx as never, "segment-1" as never);
-	expect(fixture.segment().resolutionState).toEqual({
+	await startSession(t, select("request-3", "visitor-3"));
+	expect(await segmentState(t, segmentId)).toEqual({
 		kind: "Active",
 		activeSessionCount: 1,
 	});
 });
 
 test("committed Attestation membership heals every stale terminal write", async () => {
-	const fixture = stateHarness({
-		_id: "segment-1",
-		kind: "ResolvableText",
-		resolutionState: { kind: "Active", activeSessionCount: 2 },
-	});
-	fixture.commitMembership();
+	const t = createTestConvex();
+	const { segmentId, select } = await bankenSegment(t);
+	const winner = await startSession(t, select("request-1", "visitor-1"));
+	const loser = await startSession(t, select("request-2", "visitor-2"));
 
-	await finishSegmentResolution(
-		fixture.ctx as never,
-		"segment-1" as never,
-		"PermanentFailure",
+	await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(select("request-1", "visitor-1"), winner),
 	);
-	expect(fixture.segment().resolutionState).toBeUndefined();
+	expect(await segmentState(t, segmentId)).toBeNull();
+
+	await t.mutation(internal.resolutionSessions.recordRunFailure, {
+		guard: loser,
+		failure: internalFailure,
+	});
+	expect(await segmentState(t, segmentId)).toBeNull();
+
 	expect(
-		await beginSegmentResolution(
-			fixture.ctx as never,
-			"segment-1" as never,
-		),
-	).toBe(false);
-	expect(fixture.segment().resolutionState).toBeUndefined();
-});
-
-test("deleting two Active sessions on one Segment ends both contributions", async () => {
-	const fixture = stateHarness({
-		_id: "segment-1",
-		kind: "ResolvableText",
-		resolutionState: { kind: "Active", activeSessionCount: 3 },
-	});
-	const active = { state: "Active" } as const;
-
-	await finishDeletedSessionsResolution(
-		fixture.ctx as never,
-		[
-			{ segmentId: "segment-1" as never, lifecycle: active },
-			{ segmentId: "segment-1" as never, lifecycle: active },
-			{
-				segmentId: "segment-1" as never,
-				lifecycle: { state: "Terminal" },
-			},
-		],
-		"PermanentFailure",
-	);
-	expect(fixture.segment().resolutionState).toEqual({
-		kind: "Active",
-		activeSessionCount: 1,
-	});
-
-	await finishDeletedSessionsResolution(
-		fixture.ctx as never,
-		[{ segmentId: "segment-1" as never, lifecycle: active }],
-		"PermanentFailure",
-	);
-	expect(fixture.segment().resolutionState).toEqual({
-		kind: "PermanentFailure",
-	});
+		await t.mutation(api.resolutionSessions.selectSegment, {
+			...select("request-3", "visitor-3"),
+			routeNoteRequested: false,
+		}),
+	).toMatchObject({ kind: "Available" });
+	expect(await segmentState(t, segmentId)).toBeNull();
 });

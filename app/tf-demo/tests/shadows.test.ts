@@ -1,12 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import {
-	clearLemmaDataBatch,
-	clearReadingDataBatch,
-	clearSharedDataBatch,
-	clearVisitorDataBatch,
-	resetDemoDataBatch,
-	resetDemoTableNames,
-} from "../convex/demoReset";
+import { api, internal } from "../convex/_generated/api";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
+import type { MutationCtx } from "../convex/_generated/server";
+import { resetDemoTableNames } from "../convex/demoReset";
 import {
 	attachPendingShadowReference,
 	collectStructuralShadowReferences,
@@ -16,171 +12,13 @@ import {
 	shadowIsCompatible,
 	shadowKeyFor,
 } from "../convex/model/shadows";
-import { get as shadowNoteQuery } from "../convex/shadowNotes";
 import {
 	auditPendingShadowReferencesPage,
 	auditStructuralShadowReferencesPage,
 	backfillPendingShadowReferencesPage,
 	backfillStructuralShadowReferencesPage,
 } from "../convex/shadows";
-
-type Row = Record<string, unknown> & { _id: string };
-
-function nestedValue(row: Row, path: string): unknown {
-	return path.split(".").reduce<unknown>((value, key) => {
-		if (value === null || typeof value !== "object") return undefined;
-		return (value as Record<string, unknown>)[key];
-	}, row);
-}
-
-class ShadowDb {
-	private tables = new Map<string, Map<string, Row>>();
-	private nextId = 1;
-
-	constructor(seed: Record<string, readonly Row[]> = {}) {
-		for (const [table, rows] of Object.entries(seed)) {
-			this.tables.set(
-				table,
-				new Map(rows.map((row) => [row._id, structuredClone(row)])),
-			);
-		}
-	}
-
-	rows(table: string): Row[] {
-		return [...(this.tables.get(table)?.values() ?? [])].map((row) =>
-			structuredClone(row),
-		);
-	}
-
-	snapshot() {
-		return Object.fromEntries(
-			[...this.tables].map(([table, rows]) => [
-				table,
-				[...rows.values()].map((row) => structuredClone(row)),
-			]),
-		);
-	}
-
-	normalizeId(_table: string, value: string) {
-		return /^[A-Za-z0-9_-]+$/.test(value) ? value : null;
-	}
-
-	async get(id: string): Promise<Row | null> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (row) return structuredClone(row);
-		}
-		return null;
-	}
-
-	query(table: string) {
-		const conditions: Array<[string, unknown]> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				conditions.push([field, value]);
-				return range;
-			},
-		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
-				conditions.every(
-					([field, value]) => nestedValue(row, field) === value,
-				),
-			);
-		const terminal = {
-			async first() {
-				return matches()[0] ?? null;
-			},
-			async unique() {
-				const rows = matches();
-				if (rows.length > 1) throw new Error("Expected a unique row.");
-				return rows[0] ?? null;
-			},
-			async take(limit: number) {
-				return matches().slice(0, limit);
-			},
-			async paginate(options: {
-				cursor: string | null;
-				numItems: number;
-			}) {
-				const start = options.cursor ? Number(options.cursor) : 0;
-				const rows = matches();
-				const page = rows.slice(start, start + options.numItems);
-				const next = start + page.length;
-				return {
-					page,
-					continueCursor: String(next),
-					isDone: next >= rows.length,
-				};
-			},
-		};
-		return {
-			...terminal,
-			withIndex(_name: string, build: (value: typeof range) => unknown) {
-				build(range);
-				return terminal;
-			},
-		};
-	}
-
-	async insert(table: string, value: Record<string, unknown>) {
-		const id = `${table}_${this.nextId++}`;
-		const rows = this.tables.get(table) ?? new Map<string, Row>();
-		rows.set(id, { _id: id, ...structuredClone(value) });
-		this.tables.set(table, rows);
-		return id;
-	}
-
-	async patch(id: string, value: Record<string, unknown>) {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (!row) continue;
-			rows.set(id, { ...row, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-
-	async replace(id: string, value: Record<string, unknown>) {
-		for (const rows of this.tables.values()) {
-			if (!rows.has(id)) continue;
-			rows.set(id, { _id: id, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-
-	async delete(id: string) {
-		for (const rows of this.tables.values()) {
-			if (rows.delete(id)) return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-}
-
-function handler(value: unknown) {
-	return (
-		value as {
-			_handler: (ctx: unknown, args: unknown) => Promise<unknown>;
-		}
-	)._handler;
-}
-
-const getShadowNote = {
-	_handler: (
-		ctx: unknown,
-		args: {
-			target: { shadowId: string };
-			contextCursor?: string;
-		},
-	) =>
-		handler(shadowNoteQuery)(ctx, {
-			shadowId: args.target.shadowId,
-			...(args.contextCursor
-				? { contextCursor: args.contextCursor }
-				: {}),
-		}),
-};
+import { createTestConvex, type TestConvexDb } from "./support/convex";
 
 const nounShadow = {
 	language: "de",
@@ -228,6 +66,70 @@ function pendingRecord(
 			targetPendingId,
 		},
 	};
+}
+
+function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+function replaceKnowledge(
+	t: TestConvexDb,
+	ownerReadingKey: string,
+	knowledge: unknown,
+) {
+	return t.run((ctx) =>
+		replaceAccumulatedKnowledge(ctx, ownerReadingKey, knowledge),
+	);
+}
+
+/** Interns the pending target's Shadow and stores the Pending Semantic Relation. */
+function insertPendingRelation(
+	ctx: MutationCtx,
+	record: ReturnType<typeof pendingRecord>,
+	shadowId: Id<"shadows">,
+) {
+	return ctx.db.insert("pendingSemanticRelations", {
+		locatorKey: JSON.stringify([
+			record.locator.sourceReadingKey,
+			record.locator.relation,
+			record.locator.targetPendingId,
+		]),
+		sourceReadingKey: record.locator.sourceReadingKey,
+		targetCanonicalForm: "Bank",
+		shadowId,
+		record,
+	});
+}
+
+/** A dictionary Lemma and its Reading, owner of `readingKey`. */
+async function insertSourceReading(
+	ctx: MutationCtx,
+	readingKey = "reading-source",
+) {
+	const lemmaId = await ctx.db.insert("lemmas", {
+		lemmaKey: `lemma:${readingKey}`,
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm: "laufen",
+		coreFeatures: {},
+	});
+	return ctx.db.insert("readings", {
+		readingKey,
+		lemmaId,
+		emojiDescription: "🏃",
+	});
+}
+
+function shadowNote(
+	t: TestConvexDb,
+	shadowId: Id<"shadows">,
+	contextCursor?: string,
+) {
+	return t.query(api.shadowNotes.get, {
+		shadowId,
+		...(contextCursor ? { contextCursor } : {}),
+	});
 }
 
 describe("Shadow descriptor and storage seam", () => {
@@ -284,57 +186,67 @@ describe("Shadow descriptor and storage seam", () => {
 	});
 
 	test("atomically replaces structural projection, keeps dormant rows, and reuses the same Shadow ID", async () => {
-		const db = new ShadowDb();
-		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(
-			ctx,
-			"reading-source",
-			structuralKnowledge(),
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-source", structuralKnowledge());
+		expect(await rows(t, "structuralShadowReferences")).toHaveLength(4);
+		const shadows = await rows(t, "shadows");
+		expect(shadows).toHaveLength(1);
+		const shadowId = shadows[0]?._id;
+		const referenceIds = (await rows(t, "structuralShadowReferences")).map(
+			({ _id }) => _id,
 		);
-		expect(db.rows("structuralShadowReferences")).toHaveLength(4);
-		expect(db.rows("shadows")).toHaveLength(1);
-		const shadowId = db.rows("shadows")[0]?._id;
-		const referenceIds = db
-			.rows("structuralShadowReferences")
-			.map(({ _id }) => _id);
 
-		await replaceAccumulatedKnowledge(
-			ctx,
-			"reading-source",
-			structuralKnowledge(),
-		);
+		await replaceKnowledge(t, "reading-source", structuralKnowledge());
 		expect(
-			db.rows("structuralShadowReferences").map(({ _id }) => _id),
+			(await rows(t, "structuralShadowReferences")).map(({ _id }) => _id),
 		).toEqual(referenceIds);
 
-		await replaceAccumulatedKnowledge(ctx, "reading-source", undefined);
-		expect(db.rows("structuralShadowReferences")).toEqual([]);
-		expect(db.rows("shadows").map(({ _id }) => _id)).toEqual([shadowId]);
+		await replaceKnowledge(t, "reading-source", undefined);
+		expect(await rows(t, "structuralShadowReferences")).toEqual([]);
+		expect((await rows(t, "shadows")).map(({ _id }) => _id)).toEqual([
+			shadowId,
+		]);
 
-		await replaceAccumulatedKnowledge(ctx, "reading-source", {
+		await replaceKnowledge(t, "reading-source", {
 			lexicalBreakdown: [nounShadow, verbShadow],
 		});
 		expect(
-			db
-				.rows("shadows")
-				.find(({ shadowKey }) => shadowKey === shadowKeyFor(nounShadow))
-				?._id,
+			(await rows(t, "shadows")).find(
+				({ shadowKey }) => shadowKey === shadowKeyFor(nounShadow),
+			)?._id,
 		).toBe(shadowId);
 	});
 
 	test("rejects a malformed replacement before changing authoritative or projected state", async () => {
-		const db = new ShadowDb();
-		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "reading-source", {
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-source", {
 			lexicalBreakdown: [nounShadow, verbShadow],
 		});
-		const before = db.snapshot();
-		await expect(
-			replaceAccumulatedKnowledge(ctx, "reading-source", {
-				lexicalBreakdown: [nounShadow, { family: "Lexeme" }],
-			}),
-		).rejects.toThrow("exactly language");
-		expect(db.snapshot()).toEqual(before);
+		const snapshot = async () => ({
+			accumulatedKnowledge: await rows(t, "accumulatedKnowledge"),
+			definitionTexts: await rows(t, "definitionTexts"),
+			shadows: await rows(t, "shadows"),
+			structuralShadowReferences: await rows(
+				t,
+				"structuralShadowReferences",
+			),
+		});
+		const before = await snapshot();
+
+		// The failure is caught inside the transaction, so any write made
+		// before validation would commit and show up in the snapshot.
+		const failure = await t.run(async (ctx) => {
+			try {
+				await replaceAccumulatedKnowledge(ctx, "reading-source", {
+					lexicalBreakdown: [nounShadow, { family: "Lexeme" }],
+				});
+				return null;
+			} catch (error) {
+				return error instanceof Error ? error.message : String(error);
+			}
+		});
+		expect(failure).toContain("exactly language");
+		expect(await snapshot()).toEqual(before);
 	});
 });
 
@@ -355,235 +267,157 @@ describe("Shadow backfills and presentation", () => {
 	});
 
 	test("backfills pending and structural references idempotently and audits them in bounded pages", async () => {
-		const record = pendingRecord();
-		const db = new ShadowDb({
-			pendingSemanticRelations: [
-				{
-					_id: "pending_legacy",
-					locatorKey: '["reading-source","synonym","pending-1"]',
-					sourceReadingKey: "reading-source",
-					targetCanonicalForm: " Bank ",
-					record,
-				},
-			],
-			accumulatedKnowledge: [
-				{
-					_id: "knowledge_legacy",
-					ownerReadingKey: "reading-source",
-					knowledge: structuralKnowledge(),
-					updatedAt: 1,
-				},
-			],
+		const t = createTestConvex();
+		await t.run(async (ctx) => {
+			await ctx.db.insert("pendingSemanticRelations", {
+				locatorKey: '["reading-source","synonym","pending-1"]',
+				sourceReadingKey: "reading-source",
+				targetCanonicalForm: " Bank ",
+				record: pendingRecord(),
+			});
+			await ctx.db.insert("accumulatedKnowledge", {
+				ownerReadingKey: "reading-source",
+				knowledge: structuralKnowledge(),
+				status: "Partial",
+				updatedAt: 1,
+			});
 		});
 		const paginationOpts = { cursor: null, numItems: 50 };
 		const structuralPaginationOpts = { cursor: null, numItems: 8 };
+		const backfillPending = () =>
+			t.mutation(internal.shadows.backfillPendingShadowReferencesPage, {
+				paginationOpts,
+			});
+		const backfillStructural = () =>
+			t.mutation(
+				internal.shadows.backfillStructuralShadowReferencesPage,
+				{
+					paginationOpts: structuralPaginationOpts,
+				},
+			);
+		const auditPending = () =>
+			t.query(internal.shadows.auditPendingShadowReferencesPage, {
+				paginationOpts,
+			});
+		const auditStructural = () =>
+			t.query(internal.shadows.auditStructuralShadowReferencesPage, {
+				paginationOpts,
+			});
+
 		await expect(
-			handler(backfillStructuralShadowReferencesPage)(
-				{ db },
-				{ paginationOpts: { cursor: null, numItems: 9 } },
+			t.mutation(
+				internal.shadows.backfillStructuralShadowReferencesPage,
+				{
+					paginationOpts: { cursor: null, numItems: 9 },
+				},
 			),
 		).rejects.toThrow("at most 8 Reading owners");
-		expect(
-			await handler(backfillPendingShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ changed: 1, malformed: 0 });
-		expect(
-			await handler(backfillStructuralShadowReferencesPage)(
-				{ db },
-				{ paginationOpts: structuralPaginationOpts },
-			),
-		).toMatchObject({ changed: 1, malformed: 0 });
-		expect(db.rows("shadows")).toHaveLength(1);
-		expect(db.rows("structuralShadowReferences")).toHaveLength(4);
+		expect(await backfillPending()).toMatchObject({
+			changed: 1,
+			malformed: 0,
+		});
+		expect(await backfillStructural()).toMatchObject({
+			changed: 1,
+			malformed: 0,
+		});
+		expect(await rows(t, "shadows")).toHaveLength(1);
+		expect(await rows(t, "structuralShadowReferences")).toHaveLength(4);
 
-		expect(
-			await handler(backfillPendingShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ changed: 0 });
-		expect(
-			await handler(backfillStructuralShadowReferencesPage)(
-				{ db },
-				{ paginationOpts: structuralPaginationOpts },
-			),
-		).toMatchObject({ changed: 0 });
-		expect(
-			await handler(auditPendingShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ valid: 1, missing: 0, mismatched: 0, malformed: 0 });
-		expect(
-			await handler(auditStructuralShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ valid: 4, missing: 0, mismatched: 0, malformed: 0 });
-		const shadow = db.rows("shadows")[0];
+		expect(await backfillPending()).toMatchObject({ changed: 0 });
+		expect(await backfillStructural()).toMatchObject({ changed: 0 });
+		expect(await auditPending()).toMatchObject({
+			valid: 1,
+			missing: 0,
+			mismatched: 0,
+			malformed: 0,
+		});
+		expect(await auditStructural()).toMatchObject({
+			valid: 4,
+			missing: 0,
+			mismatched: 0,
+			malformed: 0,
+		});
+		const [shadow] = await rows(t, "shadows");
 		if (!shadow) throw new Error("Expected a Shadow row.");
-		await db.patch(shadow._id, { kind: "VERB" });
-		expect(
-			await handler(auditPendingShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ valid: 0, mismatched: 1 });
-		expect(
-			await handler(auditStructuralShadowReferencesPage)(
-				{ db },
-				{ paginationOpts },
-			),
-		).toMatchObject({ valid: 0, mismatched: 4 });
+		await t.run((ctx) => ctx.db.patch(shadow._id, { kind: "VERB" }));
+		expect(await auditPending()).toMatchObject({ valid: 0, mismatched: 1 });
+		expect(await auditStructural()).toMatchObject({
+			valid: 0,
+			mismatched: 4,
+		});
 	});
 
 	test("groups exact pending and structural references by referring Unit Reading Note and hides dormancy", async () => {
-		const db = new ShadowDb({
-			lemmas: [
-				{
-					unitKind: "Lemma",
-					_id: "lemma_source",
-					lemmaKey: "lemma-key",
-					language: "de",
-					family: "Lexeme",
-					kind: "VERB",
-					canonicalForm: "laufen",
-					coreFeatures: {},
-				},
-			],
-			readings: [
-				{
-					_id: "reading_source",
-					readingKey: "reading-source",
-					lemmaId: "lemma_source",
-					emojiDescription: "🏃",
-				},
-			],
-		});
-		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "reading-source", {
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-source", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
-		const record = pendingRecord();
-		const shadowId = await attachPendingShadowReference(ctx, record);
-		await db.insert("pendingSemanticRelations", {
-			locatorKey: '["reading-source","synonym","pending-1"]',
-			sourceReadingKey: "reading-source",
-			targetCanonicalForm: "Bank",
-			shadowId,
-			record,
+		const shadowId = await t.run(async (ctx) => {
+			await insertSourceReading(ctx);
+			const record = pendingRecord();
+			const id = await attachPendingShadowReference(ctx, record);
+			await insertPendingRelation(ctx, record, id);
+			return id;
 		});
 
-		const note = (await handler(getShadowNote)(
-			{ db },
-			{ target: { kind: "Shadow", shadowId } },
-		)) as Record<string, unknown> & {
-			references: {
-				continueCursor: string;
-				page: Array<{
-					pendingRelations: unknown[];
-					structuralReferences: unknown[];
-				}>;
-			};
-		};
+		const note = await shadowNote(t, shadowId);
+		if (!note) throw new Error("Expected a Shadow Note.");
 		expect(note.kind).toBe("Shadow");
 		expect(note.references.page).toHaveLength(1);
 		expect(note.references.page[0]?.pendingRelations).toHaveLength(1);
 		expect(note.references.page[0]?.structuralReferences).toHaveLength(0);
-		const structuralPage = (await handler(getShadowNote)(
-			{ db },
-			{
-				target: { kind: "Shadow", shadowId },
-				contextCursor: note.references.continueCursor,
-			},
-		)) as typeof note;
+		const structuralPage = await shadowNote(
+			t,
+			shadowId,
+			note.references.continueCursor,
+		);
 		expect(
-			structuralPage.references.page[0]?.structuralReferences,
+			structuralPage?.references.page[0]?.structuralReferences,
 		).toHaveLength(2);
 
-		for (const row of db.rows("pendingSemanticRelations")) {
-			await db.delete(row._id);
-		}
-		await replaceAccumulatedKnowledge(ctx, "reading-source", undefined);
+		await t.run(async (ctx) => {
+			for (const row of await ctx.db
+				.query("pendingSemanticRelations")
+				.collect()) {
+				await ctx.db.delete(row._id);
+			}
+		});
+		await replaceKnowledge(t, "reading-source", undefined);
+		expect(await shadowNote(t, shadowId)).toBeNull();
 		expect(
-			await handler(getShadowNote)(
-				{ db },
-				{ target: { kind: "Shadow", shadowId } },
-			),
-		).toBeNull();
-		expect(db.rows("shadows").some(({ _id }) => _id === shadowId)).toBe(
-			true,
-		);
+			(await rows(t, "shadows")).some(({ _id }) => _id === shadowId),
+		).toBe(true);
 	});
 
 	test("pages every admitted incoming reference through indexed Shadow lookups", async () => {
-		const db = new ShadowDb({
-			lemmas: [
-				{
-					unitKind: "Lemma",
-					_id: "lemma_source",
-					lemmaKey: "lemma-key",
-					language: "de",
-					family: "Lexeme",
-					kind: "VERB",
-					canonicalForm: "laufen",
-					coreFeatures: {},
-				},
-			],
-			readings: [
-				{
-					_id: "reading_source",
-					readingKey: "reading-source",
-					lemmaId: "lemma_source",
-					emojiDescription: "🏃",
-				},
-			],
+		const t = createTestConvex();
+		const shadowId = await t.run(async (ctx) => {
+			await insertSourceReading(ctx);
+			const id = await attachPendingShadowReference(ctx, pendingRecord());
+			for (let index = 0; index < 51; index += 1) {
+				await insertPendingRelation(
+					ctx,
+					pendingRecord("reading-source", `pending-${index}`),
+					id,
+				);
+			}
+			return id;
 		});
-		const ctx = { db } as never;
-		const shadowId = await attachPendingShadowReference(
-			ctx,
-			pendingRecord(),
+
+		const first = await shadowNote(t, shadowId);
+		expect(first?.references.page[0]?.pendingRelations).toHaveLength(50);
+		expect(first?.references.isDone).toBe(false);
+		const second = await shadowNote(
+			t,
+			shadowId,
+			first?.references.continueCursor,
 		);
-		for (let index = 0; index < 51; index += 1) {
-			const targetPendingId = `pending-${index}`;
-			await db.insert("pendingSemanticRelations", {
-				locatorKey: JSON.stringify([
-					"reading-source",
-					"synonym",
-					targetPendingId,
-				]),
-				sourceReadingKey: "reading-source",
-				targetCanonicalForm: "Bank",
-				shadowId,
-				record: pendingRecord("reading-source", targetPendingId),
-			});
-		}
-		const first = (await handler(getShadowNote)(
-			{ db },
-			{ target: { kind: "Shadow", shadowId } },
-		)) as {
-			references: {
-				page: Array<{ pendingRelations: unknown[] }>;
-				continueCursor: string;
-				isDone: boolean;
-			};
-		};
-		expect(first.references.page[0]?.pendingRelations).toHaveLength(50);
-		expect(first.references.isDone).toBe(false);
-		const second = (await handler(getShadowNote)(
-			{ db },
-			{
-				target: { kind: "Shadow", shadowId },
-				contextCursor: first.references.continueCursor,
-			},
-		)) as typeof first;
-		expect(second.references.page[0]?.pendingRelations).toHaveLength(1);
-		expect(second.references.isDone).toBe(true);
+		expect(second?.references.page[0]?.pendingRelations).toHaveLength(1);
+		expect(second?.references.isDone).toBe(true);
 	});
 
 	test("inspects zero, one, or many dictionary-backed candidates by the exact normalized descriptor", async () => {
+		const t = createTestConvex();
 		const lemmaRows = [
 			["candidate-1", "de", "Bank", "Lexeme", "NOUN", "🏦"],
 			["candidate-2", "de", "Bank", "Lexeme", "NOUN", "🏦"],
@@ -592,280 +426,216 @@ describe("Shadow backfills and presentation", () => {
 			["wrong-family", "de", "Bank", "Phraseme", "NOUN", "🧩"],
 			["wrong-kind", "de", "Bank", "Lexeme", "VERB", "🏦"],
 		] as const;
-		const db = new ShadowDb({
-			dictionaryState: [{ _id: "state", key: "global", revision: 7 }],
-			lemmas: [
-				{
-					unitKind: "Lemma",
-					_id: "lemma-source",
-					lemmaKey: "source",
-					language: "de",
-					canonicalForm: "laufen",
-					family: "Lexeme",
-					kind: "VERB",
-					coreFeatures: {},
-				},
-				...lemmaRows.map(
-					([id, language, canonicalForm, family, kind]) => ({
-						unitKind: "Lemma",
-						_id: `lemma-${id}`,
-						lemmaKey: id,
-						language,
-						canonicalForm,
-						family,
-						kind,
-						coreFeatures: id.startsWith("candidate-")
-							? { sense: id }
-							: {},
-					}),
-				),
-			],
-			readings: [
-				{
-					_id: "reading-source",
-					readingKey: "reading-source",
-					lemmaId: "lemma-source",
-					emojiDescription: "🏃",
-				},
-				...lemmaRows.map(([id, , , , , emoji]) => ({
-					_id: `reading-${id}`,
+		const { shadowId, candidates } = await t.run(async (ctx) => {
+			await ctx.db.insert("dictionaryState", {
+				key: "global",
+				revision: 7,
+			});
+			await insertSourceReading(ctx);
+			const stored = [];
+			for (const [
+				id,
+				language,
+				canonicalForm,
+				family,
+				kind,
+				emoji,
+			] of lemmaRows) {
+				const lemmaId = await ctx.db.insert("lemmas", {
+					lemmaKey: id,
+					language,
+					canonicalForm,
+					family,
+					kind,
+					coreFeatures: id.startsWith("candidate-")
+						? { sense: id }
+						: {},
+				});
+				const readingId = await ctx.db.insert("readings", {
 					readingKey: id,
-					lemmaId: `lemma-${id}`,
+					lemmaId,
 					emojiDescription: emoji,
-				})),
-			],
-			readingEntries: lemmaRows.map(([id]) => ({
-				_id: `entry-${id}`,
-				readingId: `reading-${id}`,
-				record: {},
-			})),
-			dictionaryLemmas: lemmaRows.map(([id]) => ({
-				_id: `dictionary-${id}`,
-				lemmaId: `lemma-${id}`,
-			})),
+				});
+				await ctx.db.insert("readingEntries", {
+					readingId,
+					record: {},
+				});
+				const dictionaryLemmaId = await ctx.db.insert(
+					"dictionaryLemmas",
+					{ lemmaId },
+				);
+				stored.push({ lemmaId, dictionaryLemmaId });
+			}
+			const record = pendingRecord();
+			const id = await attachPendingShadowReference(ctx, record);
+			await insertPendingRelation(ctx, record, id);
+			return { shadowId: id, candidates: stored.slice(0, 2) };
 		});
-		const ctx = { db } as never;
-		const record = pendingRecord();
-		const shadowId = await attachPendingShadowReference(ctx, record);
-		await db.insert("pendingSemanticRelations", {
-			locatorKey: '["reading-source","synonym","pending-1"]',
-			sourceReadingKey: "reading-source",
-			targetCanonicalForm: "Bank",
-			shadowId,
-			record,
-		});
+		const [first, second] = candidates;
+		if (!first || !second) throw new Error("Expected two candidates.");
 
-		const note = (await handler(getShadowNote)(
-			{ db },
-			{ target: { kind: "Shadow", shadowId } },
-		)) as {
-			inspection: {
-				revision: string;
-				candidates: Array<{
-					lemmaId: string;
-					coreFeatures: Array<{ name: string; value: string }>;
-				}>;
-			};
-		};
-		expect(note.inspection.revision).toBe("convex-7");
+		const note = await shadowNote(t, shadowId);
+		expect(note?.inspection.revision).toBe("convex-7");
 		expect(
-			note.inspection.candidates.map(({ lemmaId }) => lemmaId),
-		).toEqual(["lemma-candidate-1", "lemma-candidate-2"]);
+			note?.inspection.candidates.map(({ lemmaId }) => lemmaId),
+		).toEqual([first.lemmaId, second.lemmaId]);
 		expect(
-			note.inspection.candidates.map(({ coreFeatures }) => coreFeatures),
+			note?.inspection.candidates.map(({ coreFeatures }) => coreFeatures),
 		).toEqual([
 			[{ name: "sense", value: "candidate-1" }],
 			[{ name: "sense", value: "candidate-2" }],
 		]);
 
-		await db.delete("dictionary-candidate-2");
-		const one = (await handler(getShadowNote)(
-			{ db },
-			{ target: { kind: "Shadow", shadowId } },
-		)) as typeof note;
-		expect(one.inspection.candidates).toHaveLength(1);
-		await db.delete("dictionary-candidate-1");
-		const zero = (await handler(getShadowNote)(
-			{ db },
-			{ target: { kind: "Shadow", shadowId } },
-		)) as typeof note;
-		expect(zero.inspection.candidates).toEqual([]);
+		await t.run((ctx) => ctx.db.delete(second.dictionaryLemmaId));
+		const one = await shadowNote(t, shadowId);
+		expect(one?.inspection.candidates).toHaveLength(1);
+		await t.run((ctx) => ctx.db.delete(first.dictionaryLemmaId));
+		const zero = await shadowNote(t, shadowId);
+		expect(zero?.inspection.candidates).toEqual([]);
 	});
 });
 
 describe("Shadow reset lifecycle", () => {
 	async function lifecycleDb() {
-		const db = new ShadowDb();
-		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "reading-doomed", {
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-doomed", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
-		await replaceAccumulatedKnowledge(ctx, "reading-survivor", {
+		await replaceKnowledge(t, "reading-survivor", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
-		const pending = pendingRecord("reading-doomed");
-		const activeShadowId = await attachPendingShadowReference(ctx, pending);
-		await db.insert("pendingSemanticRelations", {
-			locatorKey: '["reading-doomed","synonym","pending-1"]',
-			sourceReadingKey: "reading-doomed",
-			targetCanonicalForm: "Bank",
-			shadowId: activeShadowId,
-			record: pending,
+		const { activeShadowId, dormantShadowId } = await t.run(async (ctx) => {
+			const pending = pendingRecord("reading-doomed");
+			const active = await attachPendingShadowReference(ctx, pending);
+			await insertPendingRelation(ctx, pending, active);
+			const dormant = await attachPendingShadowReference(ctx, {
+				...pending,
+				pending: { relation: "synonym", target: verbShadow },
+			});
+			return { activeShadowId: active, dormantShadowId: dormant };
 		});
-		const dormantShadowId = await attachPendingShadowReference(ctx, {
-			...pending,
-			pending: { relation: "synonym", target: verbShadow },
-		});
-		return { db, activeShadowId, dormantShadowId };
+		return { t, activeShadowId, dormantShadowId };
 	}
 
 	test("analysis stripping removes doomed references, preserves survivor activity, and visitor reset leaves Shadows", async () => {
-		const { db, activeShadowId, dormantShadowId } = await lifecycleDb();
-		await handler(clearReadingDataBatch)(
-			{ db },
-			{ readingKeys: ["reading-doomed"] },
+		const { t, activeShadowId, dormantShadowId } = await lifecycleDb();
+		await t.mutation(internal.demoReset.clearReadingDataBatch, {
+			readingKeys: ["reading-doomed"],
+		});
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+		const references = await rows(t, "structuralShadowReferences");
+		expect(
+			references.every(
+				({ ownerReadingKey }) => ownerReadingKey === "reading-survivor",
+			),
+		).toBe(true);
+		expect(
+			references.some(({ shadowId }) => shadowId === activeShadowId),
+		).toBe(true);
+		expect((await rows(t, "shadows")).map(({ _id }) => _id).sort()).toEqual(
+			[activeShadowId, dormantShadowId].sort(),
 		);
-		expect(db.rows("pendingSemanticRelations")).toEqual([]);
-		expect(
-			db
-				.rows("structuralShadowReferences")
-				.every(
-					({ ownerReadingKey }) =>
-						ownerReadingKey === "reading-survivor",
-				),
-		).toBe(true);
-		expect(
-			db
-				.rows("structuralShadowReferences")
-				.some(({ shadowId }) => shadowId === activeShadowId),
-		).toBe(true);
-		expect(
-			db
-				.rows("shadows")
-				.map(({ _id }) => _id)
-				.sort(),
-		).toEqual([activeShadowId, dormantShadowId].sort());
 
-		await handler(clearVisitorDataBatch)(
-			{ db },
-			{ visitorId: "visitor-1" },
+		await t.mutation(internal.demoReset.clearVisitorDataBatch, {
+			visitorId: "visitor-1",
+		});
+		expect((await rows(t, "shadows")).map(({ _id }) => _id).sort()).toEqual(
+			[activeShadowId, dormantShadowId].sort(),
 		);
-		expect(
-			db
-				.rows("shadows")
-				.map(({ _id }) => _id)
-				.sort(),
-		).toEqual([activeShadowId, dormantShadowId].sort());
 	});
 
 	for (const [name, reset] of [
-		["shared reset", clearSharedDataBatch],
-		["full reset", resetDemoDataBatch],
+		["shared reset", internal.demoReset.clearSharedDataBatch],
+		["full reset", internal.demoReset.resetDemoDataBatch],
 	] as const) {
 		test(`${name} removes active and dormant Shadow rows`, async () => {
-			const { db } = await lifecycleDb();
+			const { t } = await lifecycleDb();
 			let tableIndex = 0;
 			for (
 				let batch = 0;
 				batch < 100 && tableIndex < resetDemoTableNames.length;
 				batch += 1
 			) {
-				const result = (await handler(reset)(
-					{ db },
-					{ tableIndex },
-				)) as { hasMore: boolean; nextTableIndex: number };
+				const result = await t.mutation(reset, { tableIndex });
 				tableIndex = result.nextTableIndex;
 				if (!result.hasMore) break;
 			}
-			expect(db.rows("pendingSemanticRelations")).toEqual([]);
-			expect(db.rows("structuralShadowReferences")).toEqual([]);
-			expect(db.rows("shadows")).toEqual([]);
+			expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+			expect(await rows(t, "structuralShadowReferences")).toEqual([]);
+			expect(await rows(t, "shadows")).toEqual([]);
 		});
 	}
 });
 
 test("Reading deletion removes outgoing edges and preserves incoming edges until the target Lemma dies", async () => {
-	const db = new ShadowDb({
-		lemmas: [
-			{
-				unitKind: "Lemma",
-				_id: "lemma-doomed",
-				lemmaKey: "doomed",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Ziel",
-				coreFeatures: {},
-			},
-			{
-				unitKind: "Lemma",
-				_id: "lemma-survivor",
-				lemmaKey: "survivor",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Quelle",
-				coreFeatures: {},
-			},
-		],
-		dictionaryLemmas: [
-			{ _id: "dictionary-doomed", lemmaId: "lemma-doomed" },
-			{ _id: "dictionary-survivor", lemmaId: "lemma-survivor" },
-		],
-		readings: [
-			{
-				_id: "reading-doomed-id",
-				readingKey: "reading-doomed",
-				lemmaId: "lemma-doomed",
-				emojiDescription: "🎯",
-			},
-			{
-				_id: "reading-survivor-id",
-				readingKey: "reading-survivor",
-				lemmaId: "lemma-survivor",
-				emojiDescription: "➡️",
-			},
-		],
-		readingEntries: [
-			{ _id: "entry-doomed", readingId: "reading-doomed-id", record: {} },
-			{
-				_id: "entry-survivor",
-				readingId: "reading-survivor-id",
-				record: {},
-			},
-		],
-		semanticRelationEdges: [
-			{
-				_id: "edge-outgoing",
-				sourceReadingId: "reading-doomed-id",
+	const t = createTestConvex();
+	const { doomedLemmaId, doomedReadingId, incomingEdgeId } = await t.run(
+		async (ctx) => {
+			const insertOwner = async (
+				key: string,
+				canonicalForm: string,
+				emojiDescription: string,
+			) => {
+				const lemmaId = await ctx.db.insert("lemmas", {
+					lemmaKey: key,
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm,
+					coreFeatures: {},
+				});
+				await ctx.db.insert("dictionaryLemmas", { lemmaId });
+				const readingId = await ctx.db.insert("readings", {
+					readingKey: `reading-${key}`,
+					lemmaId,
+					emojiDescription,
+				});
+				await ctx.db.insert("readingEntries", {
+					readingId,
+					record: {},
+				});
+				return { lemmaId, readingId };
+			};
+			const doomed = await insertOwner("doomed", "Ziel", "🎯");
+			const survivor = await insertOwner("survivor", "Quelle", "➡️");
+			await ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId: doomed.readingId,
 				relation: "hypernym",
-				targetLemmaId: "lemma-survivor",
-			},
-			{
-				_id: "edge-incoming",
-				sourceReadingId: "reading-survivor-id",
-				relation: "hyponym",
-				targetLemmaId: "lemma-doomed",
-			},
-		],
-	});
-	for (let attempt = 0; attempt < 3; attempt += 1) {
-		await handler(clearReadingDataBatch)(
-			{ db },
-			{ readingKeys: ["reading-doomed"] },
-		);
-	}
-	expect(db.rows("semanticRelationEdges").map(({ _id }) => _id)).toEqual([
-		"edge-incoming",
-	]);
-	expect(db.rows("readings").map(({ _id }) => _id)).not.toContain(
-		"reading-doomed-id",
+				targetLemmaId: survivor.lemmaId,
+			});
+			const incoming = await ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId: survivor.readingId,
+				relation: "holonym",
+				targetLemmaId: doomed.lemmaId,
+			});
+			return {
+				doomedLemmaId: doomed.lemmaId,
+				doomedReadingId: doomed.readingId,
+				incomingEdgeId: incoming,
+			};
+		},
 	);
 
-	await handler(clearLemmaDataBatch)({ db }, { lemmaIds: ["lemma-doomed"] });
-	expect(db.rows("semanticRelationEdges")).toEqual([]);
-	await handler(clearLemmaDataBatch)({ db }, { lemmaIds: ["lemma-doomed"] });
-	expect(db.rows("lemmas").map(({ _id }) => _id)).not.toContain(
-		"lemma-doomed",
+	for (let attempt = 0; attempt < 3; attempt += 1) {
+		await t.mutation(internal.demoReset.clearReadingDataBatch, {
+			readingKeys: ["reading-doomed"],
+		});
+	}
+	expect(
+		(await rows(t, "semanticRelationEdges")).map(({ _id }) => _id),
+	).toEqual([incomingEdgeId]);
+	expect((await rows(t, "readings")).map(({ _id }) => _id)).not.toContain(
+		doomedReadingId,
+	);
+
+	await t.mutation(internal.demoReset.clearLemmaDataBatch, {
+		lemmaIds: [doomedLemmaId],
+	});
+	expect(await rows(t, "semanticRelationEdges")).toEqual([]);
+	await t.mutation(internal.demoReset.clearLemmaDataBatch, {
+		lemmaIds: [doomedLemmaId],
+	});
+	expect((await rows(t, "lemmas")).map(({ _id }) => _id)).not.toContain(
+		doomedLemmaId,
 	);
 });

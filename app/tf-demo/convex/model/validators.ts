@@ -369,7 +369,6 @@ export const resolutionProgressValidator = v.union(
 export const resolutionActivityValidator = v.union(
 	v.literal("Scheduled"),
 	v.literal("Running"),
-	v.literal("WaitingForRetry"),
 	v.literal("Terminal"),
 );
 
@@ -382,7 +381,6 @@ export const resolutionOutcomeValidator = v.union(
 const activeResolutionActivityValidator = v.union(
 	v.literal("Scheduled"),
 	v.literal("Running"),
-	v.literal("WaitingForRetry"),
 );
 
 export const resolutionLifecycleValidator = v.union(
@@ -705,67 +703,6 @@ export const resolvedClickCommitValidator = v.union(
 export const readingDecisionValidator = v.union(
 	v.literal("Reuse"),
 	v.literal("New"),
-);
-
-const readingResolutionValidator = v.object({
-	decision: readingDecisionValidator,
-	emojiDescription: v.string(),
-});
-
-export const resolveSegmentResultValidator = v.union(
-	v.object({ catalogMiss: catalogMissValidator }),
-	v.object({
-		grammatical: resolvedGrammaticalValidator,
-		reading: readingValueValidator,
-		reused: v.literal(true),
-		deduplicated: v.literal(true),
-		persisted: v.object({
-			status: v.literal("Resolved"),
-			clickId: v.id("visitorClicks"),
-			readingId: v.id("readings"),
-			occurrence: reusableAttestationValidator,
-		}),
-	}),
-	v.object({
-		grammatical: v.object({
-			decision: v.literal("Unresolved"),
-			language: grammaticalLanguageValidator,
-		}),
-		deduplicated: v.literal(true),
-		persisted: v.object({
-			status: v.literal("Unresolved"),
-			clickId: v.id("visitorClicks"),
-		}),
-	}),
-	v.object({
-		grammatical: resolvedGrammaticalValidator,
-		reading: readingValueValidator,
-		reused: v.literal(true),
-		persisted: reusedResolvedClickCommitValidator,
-	}),
-	v.object({
-		grammatical: resolvedGrammaticalValidator,
-		reading: readingValueValidator,
-		reused: v.literal(true),
-		persisted: lateResolvedClickCommitValidator,
-	}),
-	v.object({
-		grammatical: nonResolvedGrammaticalValidator,
-		persisted: unresolvedClickCommitValidator,
-	}),
-	v.object({
-		grammatical: resolvedGrammaticalValidator,
-		readingResolution: readingResolutionValidator,
-		reading: readingValueValidator,
-		persisted: resolvedClickConflictValidator,
-	}),
-	v.object({
-		grammatical: resolvedGrammaticalValidator,
-		readingResolution: readingResolutionValidator,
-		reading: readingValueValidator,
-		reused: v.boolean(),
-		persisted: committedOccurrenceValidator,
-	}),
 );
 
 export const knowledgeProductionEvidenceValidator = v.object({

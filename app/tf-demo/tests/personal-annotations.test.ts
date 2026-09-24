@@ -1,60 +1,65 @@
 import { expect, test } from "bun:test";
 
-import {
-	loadPersonalAnnotation,
-	update as updatePersonalAnnotation,
-} from "../convex/personalAnnotations";
-import { IndexedTestDb, runTestMutation } from "./support/indexed-db";
+import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
+import { loadPersonalAnnotation } from "../convex/personalAnnotations";
+import { createTestConvex, type TestConvexDb } from "./support/convex";
+
+function insertReading(t: TestConvexDb) {
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: "lemma-key",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Bank",
+			coreFeatures: {},
+		});
+		return ctx.db.insert("readings", {
+			readingKey: "reading-key",
+			lemmaId,
+			emojiDescription: "🏦",
+		});
+	});
+}
+
+function annotationFor(
+	t: TestConvexDb,
+	visitorId: string,
+	readingId: Id<"readings">,
+) {
+	return t.run((ctx) => loadPersonalAnnotation(ctx, visitorId, readingId));
+}
 
 test("Personal Annotations are isolated per Visitor and blank text removes storage", async () => {
-	const db = new IndexedTestDb({
-		readings: [
-			{
-				_id: "readings-1",
-				readingKey: "reading-key",
-				lemmaId: "lemmas-1",
-				emojiDescription: "🏦",
-			},
-		],
-	});
+	const t = createTestConvex();
+	const readingId = await insertReading(t);
 
-	await runTestMutation(db, updatePersonalAnnotation, {
+	await t.mutation(api.personalAnnotations.update, {
 		visitorId: "visitor-a",
-		readingId: "readings-1",
+		readingId,
 		text: "Remember the financial sense.",
 	});
-	await runTestMutation(db, updatePersonalAnnotation, {
+	await t.mutation(api.personalAnnotations.update, {
 		visitorId: "visitor-b",
-		readingId: "readings-1",
+		readingId,
 		text: "Compare with die Sitzbank.",
 	});
 
-	await expect(
-		loadPersonalAnnotation(
-			{ db } as never,
-			"visitor-a",
-			"readings-1" as never,
-		),
-	).resolves.toBe("Remember the financial sense.");
-	await expect(
-		loadPersonalAnnotation(
-			{ db } as never,
-			"visitor-b",
-			"readings-1" as never,
-		),
-	).resolves.toBe("Compare with die Sitzbank.");
+	expect(await annotationFor(t, "visitor-a", readingId)).toBe(
+		"Remember the financial sense.",
+	);
+	expect(await annotationFor(t, "visitor-b", readingId)).toBe(
+		"Compare with die Sitzbank.",
+	);
 
-	await runTestMutation(db, updatePersonalAnnotation, {
+	await t.mutation(api.personalAnnotations.update, {
 		visitorId: "visitor-a",
-		readingId: "readings-1",
+		readingId,
 		text: "   ",
 	});
-	expect(db.rows("personalAnnotations")).toHaveLength(1);
-	await expect(
-		loadPersonalAnnotation(
-			{ db } as never,
-			"visitor-a",
-			"readings-1" as never,
-		),
-	).resolves.toBe("");
+	expect(
+		await t.run((ctx) => ctx.db.query("personalAnnotations").collect()),
+	).toHaveLength(1);
+	expect(await annotationFor(t, "visitor-a", readingId)).toBe("");
 });

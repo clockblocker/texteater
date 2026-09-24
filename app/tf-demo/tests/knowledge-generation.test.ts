@@ -1,18 +1,9 @@
-import { expect, test } from "bun:test";
-import { type FunctionReference, getFunctionName } from "convex/server";
-import {
-	begin,
-	fail,
-	publish,
-	retry,
-	scheduleKnowledgeGeneration,
-} from "../convex/knowledgeGeneration";
-import { runKnowledgeGeneration as runGeneration } from "../convex/knowledgeGenerationActions";
-import {
-	defaultKnowledgeSettings,
-	get as getKnowledgeSettings,
-	update as updateKnowledgeSettings,
-} from "../convex/knowledgeSettings";
+import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
+import type { FunctionArgs } from "convex/server";
+import { api, internal } from "../convex/_generated/api";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
+import { scheduleKnowledgeGeneration } from "../convex/knowledgeGeneration";
+import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import {
 	effectiveRelationPublicationPolicy,
 	GENERATED_SEMANTIC_RELATION_POLICY,
@@ -26,12 +17,26 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
+import {
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
 
 const PRODUCTION_EVIDENCE = {
 	request: { definition: null },
 	failures: [],
 	operationTraces: [],
 };
+
+beforeEach(() => {
+	// Scheduling a Knowledge attempt queues its action; nothing here runs it.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 test("retry requests skip saved text and covered translations but retain missing leaves", () => {
 	expect(
@@ -51,150 +56,14 @@ test("retry requests skip saved text and covered translations but retain missing
 		definition: null,
 	});
 });
-type Row = Record<string, unknown> & { _id: string };
 
-class GenerationDb {
-	private readonly tables = new Map<string, Map<string, Row>>();
-	private nextId = 1;
-
-	constructor(seed: Record<string, readonly Row[]>) {
-		for (const [table, rows] of Object.entries(seed)) {
-			this.tables.set(
-				table,
-				new Map(rows.map((row) => [row._id, structuredClone(row)])),
-			);
-		}
-	}
-
-	rows(table: string): Row[] {
-		return [...(this.tables.get(table)?.values() ?? [])];
-	}
-
-	async get(id: string): Promise<Row | null> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (row) return row;
-		}
-		return null;
-	}
-
-	query(table: string) {
-		const predicates: Array<(row: Row) => boolean> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				predicates.push((row) => {
-					let member: unknown = row;
-					for (const part of field.split(".")) {
-						if (!member || typeof member !== "object") return false;
-						member = (member as Record<string, unknown>)[part];
-					}
-					return member === value;
-				});
-				return range;
-			},
-		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
-				predicates.every((predicate) => predicate(row)),
-			);
-		return {
-			async take(limit: number) {
-				return matches().slice(0, limit);
-			},
-			async collect() {
-				return matches();
-			},
-			withIndex(_name: string, build: (range: typeof range) => unknown) {
-				build(range);
-				const indexed = {
-					async collect() {
-						return matches();
-					},
-					async unique() {
-						const rows = matches();
-						if (rows.length > 1)
-							throw new Error("Expected a unique row.");
-						return rows[0] ?? null;
-					},
-					async first() {
-						return matches()[0] ?? null;
-					},
-					async take(limit: number) {
-						return matches().slice(0, limit);
-					},
-				};
-				return indexed;
-			},
-		};
-	}
-
-	async insert(table: string, value: Record<string, unknown>) {
-		const id = `${table}-${this.nextId++}`;
-		const rows = this.tables.get(table) ?? new Map<string, Row>();
-		rows.set(id, { _id: id, ...structuredClone(value) });
-		this.tables.set(table, rows);
-		return id;
-	}
-
-	async patch(id: string, value: Record<string, unknown>) {
-		for (const rows of this.tables.values()) {
-			const existing = rows.get(id);
-			if (!existing) continue;
-			const next = { ...existing, ...structuredClone(value) };
-			for (const [key, member] of Object.entries(next)) {
-				if (member === undefined) delete next[key];
-			}
-			rows.set(id, next);
-			return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-
-	async replace(id: string, value: Record<string, unknown>) {
-		for (const rows of this.tables.values()) {
-			if (!rows.has(id)) continue;
-			rows.set(id, { _id: id, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-
-	async delete(id: string) {
-		for (const rows of this.tables.values()) {
-			if (rows.delete(id)) return;
-		}
-	}
-}
-
-function handler<TArgs, TResult>(value: unknown) {
-	return (
-		value as {
-			_handler: (ctx: unknown, args: TArgs) => Promise<TResult>;
-		}
-	)._handler;
-}
-
-function attempt(id: string, attemptKey: string): Row {
-	return {
-		_id: id,
-		attemptKey,
-		visitorId: "visitor-1",
-		ownerReadingKey: "reading-key",
-		readingId: "reading-1",
-		attestationId: "attestation-1",
-		state: "Running",
-		createdAt: 1,
-		updatedAt: 1,
-	};
-}
-
-const EMPTY_RELATION_RUN = {
+const EMPTY_RELATION_RUN: PublishArgs["relationPublication"] = {
 	runNumber: 1,
 	requestedKinds: [],
 	artifactPath: null,
 	fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
 	proposals: [],
-} as const;
+};
 
 const BANK_LEMMA = {
 	unitKind: "Lemma",
@@ -210,257 +79,278 @@ const BANK_READING = {
 	emojiDescription: "🏦",
 } as const;
 const BANK_READING_KEY = readingIdentityKey(BANK_READING);
+const ANGST_READING = {
+	...BANK_READING,
+	lemma: { ...BANK_LEMMA, canonicalForm: "Angst" },
+} as const;
 
-/** Dictionary rows the mutation-side planner needs to find the Reading it patches. */
-function dictionaryRows(
-	record: Record<string, unknown> = {},
-): Record<string, readonly Row[]> {
-	return {
-		lemmas: [
-			{
-				_id: "lemma-1",
-				lemmaKey: lemmaIdentityKey(BANK_LEMMA),
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
-			},
-		],
-		dictionaryLemmas: [{ _id: "dictionary-lemma-1", lemmaId: "lemma-1" }],
-		readings: [
-			{
-				_id: "reading-1",
-				readingKey: BANK_READING_KEY,
-				lemmaId: "lemma-1",
-				emojiDescription: "🏦",
-			},
-		],
-		readingEntries: [
-			{
-				_id: "entry-1",
-				readingId: "reading-1",
-				record: {
-					attestedTranslations: [],
-					attestations: [],
-					notes: "",
-					...record,
-				},
-			},
-		],
-	};
-}
-
-function dictionaryAttempt(id: string, attemptKey: string): Row {
-	return { ...attempt(id, attemptKey), ownerReadingKey: BANK_READING_KEY };
-}
-
-function publishArgs(
-	overrides: Record<string, unknown> & { attemptKey: string },
-) {
-	return {
-		final: true,
-		reading: BANK_READING,
-		changes: [],
-		pendingRelations: [],
-		relationPublication: EMPTY_RELATION_RUN,
-		productionEvidence: PRODUCTION_EVIDENCE,
-		...overrides,
-	};
-}
-
-function occurrenceRows(): Record<string, readonly Row[]> {
-	return {
-		lemmas: [
-			{
-				unitKind: "Lemma",
-				_id: "lemma-1",
-				lemmaKey: "lemma-key",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
-			},
-		],
-		surfaces: [
-			{
-				_id: "surface-1",
-				lemmaId: "lemma-1",
-				language: "de",
-				normalizedSurface: "Bank",
-				inflectionalFeatures: null,
-
-				spelling: "Canonical",
-
-				surfaceFeatures: null,
-			},
-		],
-		readings: [
-			{
-				_id: "reading-1",
-				readingKey: "reading-key",
-				lemmaId: "lemma-1",
-				emojiDescription: "🏦",
-			},
-		],
-		attestations: [
-			{
-				_id: "attestation-1",
-				surfaceId: "surface-1",
-				readingId: "reading-1",
-				realizationCoverage: "Full",
-				articleEvidence: null,
-			},
-		],
-		sentences: [
-			{
-				_id: "sentence-1",
-				segmentedSentenceId: "segmented-sentence-1",
-				language: "de",
-			},
-		],
-		segments: [
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "ResolvableText",
-				text: "Bank",
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Standard",
-				},
-			},
-			{
-				_id: "segment-2",
-				sentenceId: "sentence-1",
-				index: 1,
-				kind: "PlainText",
-				text: " am Fluss",
-			},
-		],
-	};
-}
+type SeededReading = typeof BANK_READING | typeof ANGST_READING;
+type ReadingRecord = Record<string, unknown>;
+type Occurrence = {
+	readonly readingId: Id<"readings">;
+	readonly lemmaId: Id<"lemmas">;
+	readonly attestationId: Id<"attestations">;
+	readonly segmentId: Id<"segments">;
+	readonly readingKey: string;
+};
 
 /** "Angst vor Hunden": intake says the NOUN Angst governs vor + Dat. */
-function governedOccurrenceRows(): Record<string, readonly Row[]> {
-	const rows = occurrenceRows();
+function governedAnalysis(segmentedSentenceId: string) {
 	const segment = (
 		offset: number,
 		text: string,
-		kind = "ResolvableText",
-	) => ({
-		offset,
-		kind,
-		text,
-		surface: text,
-	});
+		kind: "ResolvableText" | "Whitespace" = "ResolvableText",
+	) => ({ offset, kind, text, surface: text });
 	const target = (id: string, offset: number, kind: string) => ({
 		id,
-		members: [{ offset, role: "Head" }],
+		members: [{ offset, role: "Head" as const }],
 		routeMass: [{ key: kind, share: 1 }],
 		identity: null,
 		provenance: "vote",
 	});
 	return {
-		...rows,
-		lemmas: [
-			{
-				...(rows.lemmas?.[0] as Row),
-				canonicalForm: "Angst",
-			},
-		],
-		sentences: [
-			{
-				_id: "sentence-1",
-				segmentedSentenceId: "segmented-sentence-1",
-				language: "de",
-				stitchedText: "Angst vor Hunden",
-			},
-		],
+		sentenceId: segmentedSentenceId,
+		language: "de" as const,
+		stitchedText: "Angst vor Hunden",
 		segments: [
-			{
-				...(rows.segments?.[0] as Row),
-				text: "Angst",
-			},
-			{
-				_id: "segment-2",
-				sentenceId: "sentence-1",
-				index: 1,
-				kind: "OpaqueText",
-				text: " vor Hunden",
-			},
+			segment(0, "Angst"),
+			segment(5, " ", "Whitespace"),
+			segment(6, "vor"),
+			segment(9, " ", "Whitespace"),
+			segment(10, "Hunden"),
 		],
-		sentenceAnalyses: [
+		targets: [
+			target("t1", 0, "NOUN"),
+			target("t2", 6, "ADP"),
+			target("t3", 10, "NOUN"),
+		],
+		phrasemes: [],
+		fusions: [],
+		government: [
 			{
-				_id: "analysis-1",
-				sentenceId: "sentence-1",
-				analysis: {
-					sentenceId: "segmented-sentence-1",
-					language: "de",
-					stitchedText: "Angst vor Hunden",
-					segments: [
-						segment(0, "Angst"),
-						segment(5, " ", "Whitespace"),
-						segment(6, "vor"),
-						segment(9, " ", "Whitespace"),
-						segment(10, "Hunden"),
-					],
-					targets: [
-						target("t1", 0, "NOUN"),
-						target("t2", 6, "ADP"),
-						target("t3", 10, "NOUN"),
-					],
-					phrasemes: [],
-					fusions: [],
-					government: [
-						{
-							offset: 6,
-							preposition: "vor",
-							case: "Dat",
-							governor: "t1",
-						},
-					],
-				},
+				offset: 6,
+				preposition: "vor",
+				case: "Dat" as const,
+				governor: "t1",
 			},
 		],
 	};
 }
 
-test("a Full Reading still tops up government its new sentence attests, and only once", async () => {
-	const fullKnowledge = (knowledge: Row["knowledge"]) => [
-		{
-			_id: "knowledge-full",
-			ownerReadingKey: "reading-key",
-			knowledge,
-			status: "Full",
-			coveredTranslationLanguages: ["en", "ru"],
+/**
+ * Stores one saved occurrence of a Reading: its Sentence, Lemma, Surface,
+ * Reading, and Attestation, with the first Segment as the only member.
+ */
+async function seedOccurrence(
+	t: TestConvexDb,
+	reading: SeededReading = BANK_READING,
+): Promise<Occurrence> {
+	const governed = reading.lemma.canonicalForm === "Angst";
+	const { sentenceIds, segmentIds } = await submitText(t, [
+		[
+			{ kind: "ResolvableText", text: reading.lemma.canonicalForm },
+			{
+				kind: "OpaqueText",
+				text: governed ? " vor Hunden" : " am Fluss",
+			},
+		],
+	]);
+	const sentenceId = sentenceIds[0];
+	const segmentId = segmentIds[0]?.[0];
+	if (!sentenceId || !segmentId) throw new Error("Expected a Segment.");
+	const readingKey = readingIdentityKey(reading);
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: lemmaIdentityKey(reading.lemma),
+			language: "de",
+			family: reading.lemma.family,
+			kind: reading.lemma.kind,
+			canonicalForm: reading.lemma.canonicalForm,
+			coreFeatures: reading.lemma.coreFeatures,
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey,
+			lemmaId,
+			emojiDescription: reading.emojiDescription,
+		});
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: `surface:${readingKey}`,
+			lemmaId,
+			language: "de",
+			normalizedSurface: reading.lemma.canonicalForm,
+			inflectionalFeatures: null,
+			spelling: "Canonical",
+			surfaceFeatures: null,
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId,
+			readingId,
+			realizationCoverage: "Full",
+			articleEvidence: null,
+		});
+		await ctx.db.patch(segmentId, {
+			attestationMembership: { attestationId, orthography: "Standard" },
+		});
+		if (governed) {
+			const sentence = await ctx.db.get(sentenceId);
+			if (!sentence) throw new Error("Expected a stored Sentence.");
+			await ctx.db.insert("sentenceAnalyses", {
+				sentenceId,
+				analysis: governedAnalysis(sentence.segmentedSentenceId),
+			});
+		}
+		return { readingId, lemmaId, attestationId, segmentId, readingKey };
+	});
+}
+
+/** Registers the Reading in the dictionary the publication planner patches. */
+async function addToDictionary(
+	t: TestConvexDb,
+	occurrence: Occurrence,
+	record: ReadingRecord = {},
+) {
+	await t.run(async (ctx) => {
+		await ctx.db.insert("dictionaryLemmas", {
+			lemmaId: occurrence.lemmaId,
+		});
+		await ctx.db.insert("readingEntries", {
+			readingId: occurrence.readingId,
+			record: {
+				attestedTranslations: [],
+				attestations: [],
+				notes: "",
+				...record,
+			},
+		});
+	});
+}
+
+async function seedDictionaryReading(
+	t: TestConvexDb,
+	record: ReadingRecord = {},
+) {
+	const occurrence = await seedOccurrence(t);
+	await addToDictionary(t, occurrence, record);
+	return occurrence;
+}
+
+async function insertAttempt(
+	t: TestConvexDb,
+	occurrence: Occurrence,
+	attemptKey: string,
+	overrides: {
+		state?: "Waiting" | "Running" | "Failed";
+		failureCode?: string;
+		failureMessage?: string;
+		createdAt?: number;
+	} = {},
+) {
+	const createdAt = overrides.createdAt ?? 1;
+	await t.run((ctx) =>
+		ctx.db.insert("knowledgeGenerationAttempts", {
+			attemptKey,
+			visitorId: "visitor-1",
+			ownerReadingKey: occurrence.readingKey,
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+			state: "Running",
+			...overrides,
+			createdAt,
+			updatedAt: createdAt,
+		}),
+	);
+}
+
+async function insertAccumulatedKnowledge(
+	t: TestConvexDb,
+	occurrence: Occurrence,
+	value: {
+		knowledge: unknown;
+		status: "Partial" | "Full";
+		coveredTranslationLanguages?: ("en" | "ru")[];
+	},
+) {
+	await t.run((ctx) =>
+		ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: occurrence.readingKey,
+			...value,
 			updatedAt: 1,
-		},
-	];
-	const input = {
+		}),
+	);
+}
+
+function schedule(
+	t: TestConvexDb,
+	input: Parameters<typeof scheduleKnowledgeGeneration>[1],
+) {
+	return t.run((ctx) => scheduleKnowledgeGeneration(ctx, input));
+}
+
+/** The attempts whose Knowledge action has been queued, in order. */
+async function scheduledAttempts(t: TestConvexDb) {
+	const jobs = await t.run((ctx) =>
+		ctx.db.system.query("_scheduled_functions").collect(),
+	);
+	return jobs.map(({ name, args }) => ({ name, args: args[0] }));
+}
+
+function queued(...attemptKeys: string[]) {
+	return attemptKeys.map((attemptKey) => ({
+		name: "knowledgeGenerationActions:runKnowledgeGeneration",
+		args: { attemptKey },
+	}));
+}
+
+function attempts(t: TestConvexDb) {
+	return t.run((ctx) =>
+		ctx.db.query("knowledgeGenerationAttempts").collect(),
+	);
+}
+
+function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+type PublishArgs = FunctionArgs<typeof internal.knowledgeGeneration.publish>;
+
+function publishArgs(
+	overrides: Partial<PublishArgs> & { attemptKey: string },
+): PublishArgs {
+	return {
+		final: true,
+		reading: BANK_READING,
+		changes: [],
+		pendingRelations: [],
+		productionEvidence: PRODUCTION_EVIDENCE,
+		relationPublication: EMPTY_RELATION_RUN,
+		...overrides,
+	};
+}
+
+function publish(t: TestConvexDb, args: PublishArgs) {
+	return t.mutation(internal.knowledgeGeneration.publish, args);
+}
+
+test("a Full Reading still tops up government its new sentence attests, and only once", async () => {
+	const input = (occurrence: Occurrence) => ({
 		attemptKey: "government-top-up",
 		visitorId: "visitor-1",
-		readingId: "reading-1",
-		attestationId: "attestation-1",
-	};
-	const db = new GenerationDb({
-		...governedOccurrenceRows(),
-		accumulatedKnowledge: fullKnowledge({
-			translations: { en: ["fear"], ru: ["страх"] },
-		}),
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
 	});
-	await scheduleKnowledgeGeneration(
-		{ db, scheduler: { async runAfter() {} } } as never,
-		input as never,
-	);
-	expect(db.rows("knowledgeGenerationAttempts")).toHaveLength(1);
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t, ANGST_READING);
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { translations: { en: ["fear"], ru: ["страх"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en", "ru"],
+	});
+	await schedule(t, input(occurrence));
+	expect(await attempts(t)).toHaveLength(1);
 	expect(
-		await handler<{ attemptKey: string }, unknown>(begin)(
-			{ db },
-			{ attemptKey: input.attemptKey },
-		),
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "government-top-up",
+		}),
 	).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
@@ -470,45 +360,40 @@ test("a Full Reading still tops up government its new sentence attests, and only
 		}),
 	);
 
-	const coveredDb = new GenerationDb({
-		...governedOccurrenceRows(),
-		accumulatedKnowledge: fullKnowledge({
+	const covered = createTestConvex();
+	const coveredOccurrence = await seedOccurrence(covered, ANGST_READING);
+	await insertAccumulatedKnowledge(covered, coveredOccurrence, {
+		knowledge: {
 			translations: { en: ["fear"], ru: ["страх"] },
 			governedPrepositions: [
 				{ preposition: { canonicalForm: "vor" }, case: "Dat" },
 			],
-		}),
+		},
+		status: "Full",
+		coveredTranslationLanguages: ["en", "ru"],
 	});
-	await scheduleKnowledgeGeneration(
-		{ db: coveredDb, scheduler: { async runAfter() {} } } as never,
-		input as never,
-	);
-	expect(coveredDb.rows("knowledgeGenerationAttempts")).toEqual([]);
+	await schedule(covered, input(coveredOccurrence));
+	expect(await attempts(covered)).toEqual([]);
 });
 
 test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
-	const db = new GenerationDb({
-		...dictionaryRows({
-			knowledge: {
-				definition: "canonical",
-				translations: { en: ["bank"] },
-			},
-		}),
-		knowledgeGenerationAttempts: [
-			dictionaryAttempt("attempt-1", "attempt-1"),
-			dictionaryAttempt("attempt-2", "attempt-2"),
-		],
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t, {
+		knowledge: {
+			definition: "canonical",
+			translations: { en: ["bank"] },
+		},
 	});
-	const run = handler<unknown, { status: string }>(publish);
-	const ctx = { db };
+	await insertAttempt(t, occurrence, "attempt-1");
+	await insertAttempt(t, occurrence, "attempt-2");
 
-	expect(await run(ctx, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
+	expect(await publish(t, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
 		status: "Committed",
 	});
-	expect(await run(ctx, publishArgs({ attemptKey: "attempt-2" }))).toEqual({
+	expect(await publish(t, publishArgs({ attemptKey: "attempt-2" }))).toEqual({
 		status: "AlreadyFull",
 	});
-	expect(db.rows("accumulatedKnowledge")).toEqual([
+	expect(await rows(t, "accumulatedKnowledge")).toEqual([
 		expect.objectContaining({
 			ownerReadingKey: BANK_READING_KEY,
 			knowledge: {
@@ -518,7 +403,7 @@ test("existing requested content completes an empty generated batch and the firs
 			status: "Full",
 		}),
 	]);
-	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+	expect(await attempts(t)).toEqual([
 		expect.objectContaining({
 			attemptKey: "attempt-1",
 			state: "Committed",
@@ -528,31 +413,28 @@ test("existing requested content completes an empty generated batch and the firs
 });
 
 test("commit-time relation blocking keeps base evidence and records publication failure", async () => {
-	const db = new GenerationDb({
-		...dictionaryRows(),
-		knowledgeGenerationAttempts: [
-			dictionaryAttempt("attempt-1", "attempt-1"),
-		],
-	});
-	const relationPublication = {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "attempt-1");
+	const relationPublication: PublishArgs["relationPublication"] = {
 		runNumber: 1,
-		requestedKinds: ["synonym"] as const,
+		requestedKinds: ["synonym"],
 		artifactPath: "gate/verdict.json",
 		fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
 		proposals: [
 			{
-				relation: "synonym" as const,
+				relation: "synonym",
 				targetShadow: {
-					language: "de" as const,
-					family: "Lexeme" as const,
+					language: "de",
+					family: "Lexeme",
 					kind: "NOUN",
 					canonicalForm: "Geldinstitut",
 				},
 			},
 		],
 	};
-	const result = await handler<unknown, { status: string }>(publish)(
-		{ db },
+	const result = await publish(
+		t,
 		publishArgs({
 			attemptKey: "attempt-1",
 			changes: [
@@ -584,16 +466,16 @@ test("commit-time relation blocking keeps base evidence and records publication 
 	);
 	expect(result).toEqual({ status: "Committed" });
 	// The blocked relation never reaches the dictionary: no pending Shadow, no edge.
-	expect(db.rows("pendingSemanticRelations")).toEqual([]);
-	expect(db.rows("knowledgeChanges")).toEqual([
+	expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+	expect(await rows(t, "knowledgeChanges")).toEqual([
 		expect.objectContaining({
 			change: expect.objectContaining({ aspect: "definition" }),
 		}),
 	]);
-	expect(db.rows("readingEntries")[0]?.record).toMatchObject({
+	expect((await rows(t, "readingEntries"))[0]?.record).toMatchObject({
 		knowledge: { definition: "Ein Geldinstitut." },
 	});
-	expect(db.rows("generatedRelationRuns")).toEqual([
+	expect(await rows(t, "generatedRelationRuns")).toEqual([
 		expect.objectContaining({
 			relation: "synonym",
 			generatedTargets: 1,
@@ -602,64 +484,104 @@ test("commit-time relation blocking keeps base evidence and records publication 
 			pendingShadows: 0,
 		}),
 	]);
-	expect(db.rows("generatedRelationProposals")).toEqual([
+	expect(await rows(t, "generatedRelationProposals")).toEqual([
 		expect.objectContaining({ outcome: "PublicationFailed" }),
 	]);
 });
 
 test("manual writes never downgrade Full and failures persist only a safe category", async () => {
-	const db = new GenerationDb({
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-1",
-				ownerReadingKey: "reading-key",
-				knowledge: { definition: "winner" },
-				status: "Full",
-				updatedAt: 1,
-			},
-		],
-		knowledgeGenerationAttempts: [attempt("attempt-1", "attempt-1")],
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { definition: "winner" },
+		status: "Full",
 	});
-	await replaceAccumulatedKnowledge({ db } as never, "reading-key", {
-		definition: "manual",
-	});
-	await handler<
-		{ attemptKey: string; failureCode: string; failureMessage: string },
-		null
-	>(fail)(
-		{ db },
-		{
-			attemptKey: "attempt-1",
-			failureCode: "providerPayload",
-			failureMessage: "secret provider response",
-		},
+	await insertAttempt(t, occurrence, "attempt-1");
+	await t.run((ctx) =>
+		replaceAccumulatedKnowledge(ctx, occurrence.readingKey, {
+			definition: "manual",
+		}),
 	);
-	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		attemptKey: "attempt-1",
+		failureCode: "providerPayload",
+		failureMessage: "secret provider response",
+	});
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
 		knowledge: { definition: "manual" },
 		status: "Full",
 	});
-	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+	expect((await attempts(t))[0]).toMatchObject({
 		state: "Failed",
 		failureMessage: "Knowledge generation failed. Please retry.",
 	});
 });
 
-test("Full is a zero-call cache hit and generation keeps the complete German base mask", async () => {
-	const mutations: string[] = [];
-	const result = await handler<{ attemptKey: string }, null>(runGeneration)(
-		{
-			async runMutation(reference: FunctionReference<"mutation">) {
-				mutations.push(getFunctionName(reference));
-				return { kind: "Full" };
-			},
-			async runQuery() {
-				throw new Error("Full attempts need no query hop.");
-			},
+/** Stubs the model provider and restores it with the fixture API key. */
+function stubProvider(respond: (modelInput: ModelInput) => Promise<string>) {
+	const previousFetch = globalThis.fetch;
+	const previousKey = process.env.OPENAI_API_KEY;
+	const requests: ModelInput[] = [];
+	process.env.OPENAI_API_KEY = "fixture";
+	globalThis.fetch = (async (_url, init) => {
+		const body = JSON.parse(String(init?.body));
+		const modelInput: ModelInput = JSON.parse(body.input[1].content);
+		requests.push(modelInput);
+		return Response.json({
+			status: "completed",
+			output: [
+				{
+					content: [
+						{
+							type: "output_text",
+							text: JSON.stringify({
+								value: { text: await respond(modelInput) },
+							}),
+						},
+					],
+				},
+			],
+		});
+	}) as typeof fetch;
+	return {
+		requests,
+		restore() {
+			globalThis.fetch = previousFetch;
+			if (previousKey === undefined) delete process.env.OPENAI_API_KEY;
+			else process.env.OPENAI_API_KEY = previousKey;
 		},
-		{ attemptKey: "already-full" },
-	);
-	expect(result).toBeNull();
-	expect(mutations).toEqual(["knowledgeGeneration:begin"]);
+	};
+}
+
+type ModelInput = { readonly aspect?: string; readonly language?: string };
+
+test("Full is a zero-call cache hit and generation keeps the complete German base mask", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en", "ru"],
+	});
+	await insertAttempt(t, occurrence, "already-full");
+	const provider = stubProvider(async () => {
+		throw new Error("A Full attempt needs no model call.");
+	});
+	try {
+		expect(
+			await t.action(
+				internal.knowledgeGenerationActions.runKnowledgeGeneration,
+				{ attemptKey: "already-full" },
+			),
+		).toBeNull();
+	} finally {
+		provider.restore();
+	}
+	expect(provider.requests).toEqual([]);
+	expect(await attempts(t)).toEqual([
+		expect.objectContaining({ state: "LostRace" }),
+	]);
+	expect(await rows(t, "knowledgeChanges")).toEqual([]);
 
 	const request = generationRequestFor(
 		{
@@ -799,14 +721,11 @@ test("production publication remains empty without a reviewed verdict", () => {
 });
 
 test("the production application path keeps generated relations outside Dumdict", async () => {
-	const db = new GenerationDb({
-		...dictionaryRows(),
-		knowledgeGenerationAttempts: [
-			dictionaryAttempt("attempt-1", "attempt-1"),
-		],
-	});
-	const result = await handler<unknown, { status: string }>(publish)(
-		{ db },
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "attempt-1");
+	const result = await publish(
+		t,
 		publishArgs({
 			attemptKey: "attempt-1",
 			changes: [
@@ -837,7 +756,7 @@ test("the production application path keeps generated relations outside Dumdict"
 	);
 
 	expect(result).toEqual({ status: "Committed" });
-	expect(db.rows("knowledgeChanges")).toEqual([
+	expect(await rows(t, "knowledgeChanges")).toEqual([
 		expect.objectContaining({
 			knowledgeChangeKey: "attempt-1:1:1:0",
 			change: {
@@ -847,56 +766,44 @@ test("the production application path keeps generated relations outside Dumdict"
 			},
 		}),
 	]);
-	expect(db.rows("pendingSemanticRelations")).toEqual([]);
-	expect(db.rows("semanticRelationEdges")).toEqual([]);
-	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+	expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
+	expect(await rows(t, "semanticRelationEdges")).toEqual([]);
+	expect((await attempts(t))[0]).toMatchObject({
 		state: "Committed",
 		publicationSequence: 1,
 	});
 });
 
 test("scheduling is exact, idempotent, skips Full, and retries Failed", async () => {
-	const scheduled: Array<{ attemptKey: string }> = [];
-	const db = new GenerationDb(occurrenceRows());
-	const ctx = {
-		db,
-		scheduler: {
-			async runAfter(
-				_delay: number,
-				_reference: unknown,
-				args: { attemptKey: string },
-			) {
-				scheduled.push(args);
-			},
-		},
-	};
 	const knowledgeDraftJson = JSON.stringify({
 		sourceFingerprint: "draft-source",
 		texts: [],
 	});
-	const input = {
+	const inputFor = (occurrence: Occurrence, attemptKey: string) => ({
 		knowledgeDraftJson,
-		attemptKey: "request-1",
+		attemptKey,
 		visitorId: "visitor-1",
-		readingId: "reading-1",
-		attestationId: "attestation-1",
-	} as never;
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	});
 
-	await scheduleKnowledgeGeneration(ctx as never, input);
-	await scheduleKnowledgeGeneration(ctx as never, input);
-	expect(scheduled).toEqual([{ attemptKey: "request-1" }]);
-	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	const input = inputFor(occurrence, "request-1");
+	await schedule(t, input);
+	await schedule(t, input);
+	expect(await scheduledAttempts(t)).toEqual(queued("request-1"));
+	expect(await attempts(t)).toEqual([
 		expect.objectContaining({
 			attemptKey: "request-1",
-			ownerReadingKey: "reading-key",
+			ownerReadingKey: BANK_READING_KEY,
 			state: "Scheduled",
 			knowledgeDraftJson,
 		}),
 	]);
-	const loaded = await handler<{ attemptKey: string }, unknown>(begin)(
-		{ db },
-		{ attemptKey: "request-1" },
-	);
+	const loaded = await t.mutation(internal.knowledgeGeneration.begin, {
+		attemptKey: "request-1",
+	});
 	expect(loaded).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
@@ -915,66 +822,43 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	expect(JSON.stringify(loaded)).toContain("Bank");
 	expect(JSON.stringify(loaded)).toContain("am Fluss");
 
+	const otherReadingId = await t.run((ctx) =>
+		ctx.db.insert("readings", {
+			readingKey: "reading-other",
+			lemmaId: occurrence.lemmaId,
+			emojiDescription: "🪑",
+		}),
+	);
 	await expect(
-		scheduleKnowledgeGeneration(
-			ctx as never,
-			{
-				...input,
-				readingId: "reading-other",
-			} as never,
-		),
+		schedule(t, { ...input, readingId: otherReadingId }),
 	).rejects.toThrow("exact saved occurrence");
 
-	const fullDb = new GenerationDb({
-		...occurrenceRows(),
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-full",
-				ownerReadingKey: "reading-key",
-				knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
-				status: "Full",
-				coveredTranslationLanguages: ["en", "ru"],
-				updatedAt: 1,
-			},
-		],
+	const full = createTestConvex();
+	const fullOccurrence = await seedOccurrence(full);
+	await insertAccumulatedKnowledge(full, fullOccurrence, {
+		knowledge: { translations: { en: ["bank"], ru: ["банк"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en", "ru"],
 	});
-	const fullSchedules: unknown[] = [];
-	await scheduleKnowledgeGeneration(
-		{
-			db: fullDb,
-			scheduler: {
-				async runAfter(...args: unknown[]) {
-					fullSchedules.push(args);
-				},
-			},
-		} as never,
-		{ ...input, attemptKey: "full-request" } as never,
-	);
-	expect(fullSchedules).toEqual([]);
-	expect(fullDb.rows("knowledgeGenerationAttempts")).toEqual([]);
+	await schedule(full, inputFor(fullOccurrence, "full-request"));
+	expect(await scheduledAttempts(full)).toEqual([]);
+	expect(await attempts(full)).toEqual([]);
 
-	const supplementDb = new GenerationDb({
-		...occurrenceRows(),
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-english",
-				ownerReadingKey: "reading-key",
-				knowledge: { translations: { en: ["bank"] } },
-				status: "Full",
-				coveredTranslationLanguages: ["en"],
-				updatedAt: 1,
-			},
-		],
+	const supplement = createTestConvex();
+	const supplementOccurrence = await seedOccurrence(supplement);
+	await insertAccumulatedKnowledge(supplement, supplementOccurrence, {
+		knowledge: { translations: { en: ["bank"] } },
+		status: "Full",
+		coveredTranslationLanguages: ["en"],
 	});
-	await scheduleKnowledgeGeneration(
-		{ db: supplementDb, scheduler: { async runAfter() {} } } as never,
-		{ ...input, attemptKey: "russian-supplement" } as never,
+	await schedule(
+		supplement,
+		inputFor(supplementOccurrence, "russian-supplement"),
 	);
 	expect(
-		await handler<{ attemptKey: string }, unknown>(begin)(
-			{ db: supplementDb },
-			{ attemptKey: "russian-supplement" },
-		),
+		await supplement.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "russian-supplement",
+		}),
 	).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
@@ -984,100 +868,48 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		}),
 	);
 
-	const retryDb = new GenerationDb({
-		...occurrenceRows(),
-		visitorClicks: [
-			{
-				_id: "click-1",
-				visitorId: "visitor-1",
-				attestationId: "attestation-1",
-			},
-		],
-		knowledgeGenerationAttempts: [
-			{
-				...attempt("attempt-1", "retry-request"),
-				state: "Failed",
-				failureCode: "generationFailed",
-				failureMessage: "Knowledge generation failed. Please retry.",
-			},
-		],
-	});
-	const retrySchedules: Array<{ attemptKey: string }> = [];
-	await handler<
-		{
-			attemptKey: string;
-			visitorId: string;
-			readingId: string;
-			attestationId: string;
-		},
-		null
-	>(retry)(
-		{
-			db: retryDb,
-			scheduler: {
-				async runAfter(
-					_delay: number,
-					_reference: unknown,
-					args: { attemptKey: string },
-				) {
-					retrySchedules.push(args);
-				},
-			},
-		},
-		{
-			attemptKey: "retry-request",
+	const retry = createTestConvex();
+	const retryOccurrence = await seedOccurrence(retry);
+	await retry.run((ctx) =>
+		ctx.db.insert("visitorClicks", {
+			requestId: "click-request",
 			visitorId: "visitor-1",
-			readingId: "reading-1",
-			attestationId: "attestation-1",
-		},
+			segmentId: retryOccurrence.segmentId,
+			attestationId: retryOccurrence.attestationId,
+			clickedAt: 1,
+		}),
 	);
-	expect(retrySchedules).toEqual([{ attemptKey: "retry-request" }]);
-	expect(retryDb.rows("knowledgeGenerationAttempts")[0]).toEqual(
-		expect.objectContaining({ state: "Scheduled" }),
-	);
-	expect(retryDb.rows("knowledgeGenerationAttempts")[0]).not.toHaveProperty(
-		"failureMessage",
-	);
+	await insertAttempt(retry, retryOccurrence, "retry-request", {
+		state: "Failed",
+		failureCode: "generationFailed",
+		failureMessage: "Knowledge generation failed. Please retry.",
+	});
+	await retry.mutation(api.knowledgeGeneration.retry, {
+		attemptKey: "retry-request",
+		visitorId: "visitor-1",
+		readingId: retryOccurrence.readingId,
+		attestationId: retryOccurrence.attestationId,
+	});
+	expect(await scheduledAttempts(retry)).toEqual(queued("retry-request"));
+	const [retried] = await attempts(retry);
+	expect(retried).toEqual(expect.objectContaining({ state: "Scheduled" }));
+	expect(retried).not.toHaveProperty("failureMessage");
 });
 
 test("a second Knowledge demand for the same Reading waits for the active attempt", async () => {
-	const scheduled: Array<{ attemptKey: string }> = [];
-	const db = new GenerationDb(occurrenceRows());
-	const ctx = {
-		db,
-		scheduler: {
-			async runAfter(
-				_delay: number,
-				_reference: unknown,
-				args: { attemptKey: string },
-			) {
-				scheduled.push(args);
-			},
-		},
-	};
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
 	const input = {
 		visitorId: "visitor-1",
-		readingId: "reading-1",
-		attestationId: "attestation-1",
-	} as const;
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	};
 
-	await scheduleKnowledgeGeneration(
-		ctx as never,
-		{
-			...input,
-			attemptKey: "resolution-request",
-		} as never,
-	);
-	await scheduleKnowledgeGeneration(
-		ctx as never,
-		{
-			...input,
-			attemptKey: "coverage-request",
-		} as never,
-	);
+	await schedule(t, { ...input, attemptKey: "resolution-request" });
+	await schedule(t, { ...input, attemptKey: "coverage-request" });
 
-	expect(scheduled).toEqual([{ attemptKey: "resolution-request" }]);
-	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+	expect(await scheduledAttempts(t)).toEqual(queued("resolution-request"));
+	expect(await attempts(t)).toEqual([
 		expect.objectContaining({
 			attemptKey: "resolution-request",
 			state: "Scheduled",
@@ -1090,49 +922,22 @@ test("a second Knowledge demand for the same Reading waits for the active attemp
 });
 
 test("settling an active Knowledge attempt schedules the next waiting demand", async () => {
-	const db = new GenerationDb({
-		...occurrenceRows(),
-		knowledgeGenerationAttempts: [
-			attempt("active-attempt", "resolution-request"),
-			{
-				...attempt("waiting-attempt", "coverage-request"),
-				state: "Waiting",
-				createdAt: 2,
-				updatedAt: 2,
-			},
-		],
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAttempt(t, occurrence, "resolution-request");
+	await insertAttempt(t, occurrence, "coverage-request", {
+		state: "Waiting",
+		createdAt: 2,
 	});
-	const scheduled: Array<{ attemptKey: string }> = [];
 
-	await handler<
-		{
-			attemptKey: string;
-			failureCode: string;
-			failureMessage: string;
-		},
-		null
-	>(fail)(
-		{
-			db,
-			scheduler: {
-				async runAfter(
-					_delay: number,
-					_reference: unknown,
-					args: { attemptKey: string },
-				) {
-					scheduled.push(args);
-				},
-			},
-		},
-		{
-			attemptKey: "resolution-request",
-			failureCode: "generationFailed",
-			failureMessage: "failed",
-		},
-	);
+	await t.mutation(internal.knowledgeGeneration.fail, {
+		attemptKey: "resolution-request",
+		failureCode: "generationFailed",
+		failureMessage: "failed",
+	});
 
-	expect(scheduled).toEqual([{ attemptKey: "coverage-request" }]);
-	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+	expect(await scheduledAttempts(t)).toEqual(queued("coverage-request"));
+	expect(await attempts(t)).toEqual([
 		expect.objectContaining({
 			attemptKey: "resolution-request",
 			state: "Failed",
@@ -1145,22 +950,16 @@ test("settling an active Knowledge attempt schedules the next waiting demand", a
 });
 
 test("a rejected dictionary plan fails the final publication without recording changes", async () => {
-	const db = new GenerationDb({
-		...occurrenceRows(),
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-1",
-				ownerReadingKey: "reading-key",
-				knowledge: { definition: "partial" },
-				status: "Partial",
-				updatedAt: 1,
-			},
-		],
-		// The attempt's Reading is not in the dictionary, so planning is rejected.
-		knowledgeGenerationAttempts: [attempt("attempt-1", "attempt-1")],
+	const t = createTestConvex();
+	// The attempt's Reading is not in the dictionary, so planning is rejected.
+	const occurrence = await seedOccurrence(t);
+	await insertAccumulatedKnowledge(t, occurrence, {
+		knowledge: { definition: "partial" },
+		status: "Partial",
 	});
-	const result = await handler<unknown, { status: string }>(publish)(
-		{ db },
+	await insertAttempt(t, occurrence, "attempt-1");
+	const result = await publish(
+		t,
 		publishArgs({
 			attemptKey: "attempt-1",
 			changes: [
@@ -1173,54 +972,41 @@ test("a rejected dictionary plan fails the final publication without recording c
 		}),
 	);
 	expect(result).toMatchObject({ status: "Rejected" });
-	expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+	expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
 		knowledge: { definition: "partial" },
 		status: "Partial",
 	});
-	expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+	expect((await attempts(t))[0]).toMatchObject({
 		state: "Failed",
 		failureCode: "generationFailed",
 	});
-	expect(db.rows("knowledgeChanges")).toEqual([]);
-	expect(
-		await handler<unknown, { status: string }>(publish)(
-			{ db },
-			publishArgs({ attemptKey: "attempt-1" }),
-		),
-	).toEqual({ status: "Ignored" });
+	expect(await rows(t, "knowledgeChanges")).toEqual([]);
+	expect(await publish(t, publishArgs({ attemptKey: "attempt-1" }))).toEqual({
+		status: "Ignored",
+	});
 });
 
 test("Knowledge settings default enabled and persist independently per visitor", async () => {
-	const db = new GenerationDb({});
-	const getSettings = handler<{ visitorId: string }, unknown>(
-		getKnowledgeSettings,
-	);
-	const updateSettings = handler<
-		{
-			visitorId: string;
-			settings: ReturnType<typeof defaultKnowledgeSettings>;
-		},
-		unknown
-	>(updateKnowledgeSettings);
+	const t = createTestConvex();
 	const defaults = defaultKnowledgeSettings();
 	expect(defaults.semanticRelations.nearAntonym).toBe(true);
 	expect(defaults.translations).toEqual({ en: true, ru: true });
-	expect(await getSettings({ db }, { visitorId: "visitor-1" })).toEqual(
-		defaults,
-	);
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
+	).toEqual(defaults);
 	const hiddenDefinition = { ...defaults, definition: false };
 	expect(
-		await updateSettings(
-			{ db },
-			{ visitorId: "visitor-1", settings: hiddenDefinition },
-		),
+		await t.mutation(api.knowledgeSettings.update, {
+			visitorId: "visitor-1",
+			settings: hiddenDefinition,
+		}),
 	).toEqual(hiddenDefinition);
-	expect(await getSettings({ db }, { visitorId: "visitor-1" })).toEqual(
-		hiddenDefinition,
-	);
-	expect(await getSettings({ db }, { visitorId: "visitor-2" })).toEqual(
-		defaults,
-	);
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-1" }),
+	).toEqual(hiddenDefinition);
+	expect(
+		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-2" }),
+	).toEqual(defaults);
 
 	expect(
 		generationRequestFor(
@@ -1244,96 +1030,77 @@ test("Knowledge settings default enabled and persist independently per visitor",
 test.each([false, true])(
 	"the generation action publishes before a slow translation and retries failed publication (failure=%s)",
 	async (failFirstPublication) => {
-		const db = new GenerationDb({
-			...occurrenceRows(),
-			knowledgeGenerationAttempts: [attempt("progress", "progress")],
-		});
-		await db.patch("segment-2", { kind: "OpaqueText" });
+		// Nothing is scheduled here; the action is run directly and polled.
+		jest.useRealTimers();
+		const t = createTestConvex();
+		const occurrence = await seedOccurrence(t);
+		// A Reading missing from the dictionary rejects the first publication,
+		// a transient failure the final publication recovers from.
+		if (!failFirstPublication) await addToDictionary(t, occurrence);
+		await insertAttempt(t, occurrence, "progress");
 		const slow = Promise.withResolvers<void>();
-		const published = Promise.withResolvers<void>();
-		const publications: Array<{
-			final: boolean;
-			changes: unknown[];
-		}> = [];
-		const previousFetch = globalThis.fetch;
-		const previousKey = process.env.OPENAI_API_KEY;
-		process.env.OPENAI_API_KEY = "fixture";
-		globalThis.fetch = (async (_url, init) => {
-			const body = JSON.parse(String(init?.body));
-			const modelInput = JSON.parse(body.input[1].content);
+		const firstPublication = Promise.withResolvers<void>();
+		const errors = spyOn(console, "error").mockImplementation(
+			(message: unknown) => {
+				if (message === "Incremental Knowledge publication failed")
+					firstPublication.resolve();
+			},
+		);
+		const provider = stubProvider(async (modelInput) => {
 			if (modelInput.language === "en") await slow.promise;
-			return Response.json({
-				status: "completed",
-				output: [
-					{
-						content: [
-							{
-								type: "output_text",
-								text: JSON.stringify({
-									value: {
-										text:
-											modelInput.aspect === "definition"
-												? "Ein Geldinstitut."
-												: modelInput.language === "ru"
-													? "банк"
-													: "bank",
-									},
-								}),
-							},
-						],
-					},
-				],
-			});
-		}) as typeof fetch;
+			return modelInput.aspect === "definition"
+				? "Ein Geldinstitut."
+				: modelInput.language === "ru"
+					? "банк"
+					: "bank";
+		});
+		const committedChanges = () =>
+			t.run((ctx) => ctx.db.query("knowledgeChanges").take(10));
 		let finished = false;
 		try {
-			const running = handler<{ attemptKey: string }, null>(
-				runGeneration,
-			)(
-				{
-					async runQuery(reference: FunctionReference<"query">) {
-						throw Error(
-							`Unexpected query ${getFunctionName(reference)}`,
-						);
-					},
-					async runMutation(
-						reference: FunctionReference<"mutation">,
-						args: (typeof publications)[number],
-					) {
-						const name = getFunctionName(reference);
-						if (name === "knowledgeGeneration:begin")
-							return handler<{ attemptKey: string }, unknown>(
-								begin,
-							)({ db }, { attemptKey: "progress" });
-						if (name !== "knowledgeGeneration:publish")
-							throw Error(`Unexpected mutation ${name}`);
-						publications.push(args);
-						if (!args.final) published.resolve();
-						if (failFirstPublication && publications.length === 1)
-							throw Error("Simulated transient commit failure");
-						return { status: "Committed" };
-					},
-				},
-				{ attemptKey: "progress" },
-			).then(() => {
-				finished = true;
-			});
-			await published.promise;
+			const running = t
+				.action(
+					internal.knowledgeGenerationActions.runKnowledgeGeneration,
+					{ attemptKey: "progress" },
+				)
+				.then(() => {
+					finished = true;
+				});
+			if (!failFirstPublication) {
+				void (async () => {
+					while (!finished && (await committedChanges()).length === 0)
+						await Bun.sleep(1);
+					firstPublication.resolve();
+				})();
+			}
+			await firstPublication.promise;
 			expect(finished).toBe(false);
-			expect(publications[0]?.final).toBe(false);
-			expect(publications[0]?.changes.length).toBeLessThan(3);
+			expect((await committedChanges()).length).toBeLessThan(3);
+			expect((await attempts(t))[0]).toMatchObject({ state: "Running" });
+			if (failFirstPublication) {
+				expect(await committedChanges()).toEqual([]);
+				await addToDictionary(t, occurrence);
+			}
 			slow.resolve();
 			await running;
 			// The final publication always carries every change; the mutation
 			// drops what this run already published.
-			expect(publications.at(-1)?.final).toBe(true);
-			expect(publications.at(-1)?.changes).toHaveLength(3);
-			expect(publications.length).toBeGreaterThan(1);
+			const changes = await committedChanges();
+			expect(changes).toHaveLength(3);
+			const sequences = new Set(
+				changes.map(
+					({ knowledgeChangeKey }) =>
+						knowledgeChangeKey.split(":")[2],
+				),
+			);
+			expect(sequences.size).toBeGreaterThan(1);
+			expect((await attempts(t))[0]).toMatchObject({
+				state: "Committed",
+			});
 		} finally {
 			slow.resolve();
-			globalThis.fetch = previousFetch;
-			if (previousKey === undefined) delete process.env.OPENAI_API_KEY;
-			else process.env.OPENAI_API_KEY = previousKey;
+			provider.restore();
+			errors.mockRestore();
 		}
 	},
 );
@@ -1341,12 +1108,9 @@ test.each([false, true])(
 test.each([false, true])(
 	"partial generation commits valid changes and retains its final trace (incremental=%s)",
 	async (incremental) => {
-		const db = new GenerationDb({
-			...dictionaryRows(),
-			knowledgeGenerationAttempts: [
-				dictionaryAttempt("partial", "partial"),
-			],
-		});
+		const t = createTestConvex();
+		const occurrence = await seedDictionaryReading(t);
+		await insertAttempt(t, occurrence, "partial");
 		const change = {
 			kind: "Contribute",
 			aspect: "definition",
@@ -1370,7 +1134,6 @@ test.each([false, true])(
 				}),
 			],
 		};
-		const commit = handler<unknown, { status: string }>(publish);
 		if (incremental) {
 			const intermediate = publishArgs({
 				attemptKey: "partial",
@@ -1382,39 +1145,36 @@ test.each([false, true])(
 					operationTraces: [],
 				},
 			});
-			expect(await commit({ db }, intermediate)).toEqual({
+			expect(await publish(t, intermediate)).toEqual({
 				status: "Committed",
 			});
-			expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+			expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
 				knowledge: { definition: "Ein Geldinstitut." },
 				status: "Partial",
 			});
-			expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+			expect((await attempts(t))[0]).toMatchObject({
 				state: "Running",
 				publicationSequence: 1,
 			});
-			expect(db.rows("knowledgeProductionRuns")).toEqual([]);
+			expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
 			// A repeated contribution is deduplicated by content, not by sequence.
-			expect(await commit({ db }, intermediate)).toEqual({
+			expect(await publish(t, intermediate)).toEqual({
 				status: "Committed",
 			});
-			expect(db.rows("knowledgeChanges")).toHaveLength(1);
+			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
 			expect(
-				await commit(
-					{ db },
-					{
-						...intermediate,
-						relationPublication: {
-							...EMPTY_RELATION_RUN,
-							runNumber: 999,
-						},
+				await publish(t, {
+					...intermediate,
+					relationPublication: {
+						...intermediate.relationPublication,
+						runNumber: 999,
 					},
-				),
+				}),
 			).toEqual({ status: "Ignored" });
-			expect(db.rows("knowledgeChanges")).toHaveLength(1);
+			expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
 		}
-		const result = await commit(
-			{ db },
+		const result = await publish(
+			t,
 			publishArgs({
 				attemptKey: "partial",
 				changes: [change],
@@ -1422,17 +1182,17 @@ test.each([false, true])(
 			}),
 		);
 		expect(result.status).toBe("Committed");
-		expect(db.rows("knowledgeChanges")).toHaveLength(1);
-		expect(db.rows("accumulatedKnowledge")[0]).toMatchObject({
+		expect(await rows(t, "knowledgeChanges")).toHaveLength(1);
+		expect((await rows(t, "accumulatedKnowledge"))[0]).toMatchObject({
 			status: "Partial",
 			knowledge: { definition: "Ein Geldinstitut." },
 			coveredTranslationLanguages: [],
 		});
-		expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
+		expect((await attempts(t))[0]).toMatchObject({
 			state: "Failed",
 			failureCode: "partialKnowledge",
 		});
-		expect(db.rows("knowledgeProductionRuns")[0]).toMatchObject({
+		expect((await rows(t, "knowledgeProductionRuns"))[0]).toMatchObject({
 			outcome: "Partial",
 			evidence,
 		});

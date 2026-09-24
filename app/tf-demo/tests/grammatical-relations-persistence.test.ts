@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
-import { getFunctionName } from "convex/server";
 import { nounArticleReference } from "dumgen";
 import type * as Dumling from "dumling/types";
-import * as storageFunctions from "../convex/dumdictStorage";
+import { api } from "../convex/_generated/api";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
 	completeAuthoredComponentKnowledge,
 	materializeGrammaticalComponent,
@@ -11,20 +11,12 @@ import {
 	loadGrammaticalAlternatives,
 	reviewedAlternatives,
 } from "../convex/modules/notes/relations";
-import {
-	followGrammaticalAlternative,
-	followNounArticle,
-} from "../convex/orchestration";
-import * as navigationFunctions from "../convex/reviewedNavigation";
+import schema from "../convex/schema";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
-import {
-	IndexedTestDb,
-	runTestMutation,
-	runTestQuery,
-} from "./support/indexed-db";
+import { createTestConvex, type TestConvexDb } from "./support/convex";
 
 const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
 	unitKind: "Lemma",
@@ -51,70 +43,80 @@ const reading: Dumling.Reading<"de", "Lexeme", "PRON"> = {
 	lemma,
 	emojiDescription: "👤",
 };
-function database() {
-	return new IndexedTestDb({
-		lemmas: [
-			{
-				_id: "source-lemma",
-				lemmaKey: lemmaIdentityKey(lemma),
-				...lemma,
-			},
-		],
-		readings: [
-			{
-				_id: "source-reading",
-				readingKey: readingIdentityKey(reading),
-				lemmaId: "source-lemma",
-				emojiDescription: reading.emojiDescription,
-			},
-		],
-	});
-}
-function runNavigation(db: IndexedTestDb, action: unknown, args: unknown) {
-	const functions = new Map<string, unknown>([
-		...Object.entries(storageFunctions).map(
-			([name, fn]) => [`dumdictStorage:${name}`, fn] as const,
-		),
-		...Object.entries(navigationFunctions).map(
-			([name, fn]) => [`reviewedNavigation:${name}`, fn] as const,
-		),
-	]);
-	const implementation = (reference: unknown) => {
-		const name = getFunctionName(reference as never);
-		const fn = functions.get(name);
-		if (!fn) throw new Error(`Unexpected function: ${name}`);
-		return fn;
-	};
-	return (
-		action as {
-			_handler: (ctx: unknown, args: unknown) => Promise<string>;
-		}
-	)._handler(
-		{
-			runQuery: (reference: unknown, args: unknown) =>
-				runTestQuery(db, implementation(reference), args),
-			runMutation: (reference: unknown, args: unknown) =>
-				runTestMutation(db, implementation(reference), args),
-		},
-		args,
+const noun = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "Frau",
+	coreFeatures: { gender: "Fem", hyph: null },
+} as const;
+
+/** Stores a Lemma row as the dictionary does, without its `unitKind`. */
+async function insertLemma(
+	t: TestConvexDb,
+	lemmaUnit: Dumling.Lemma<"de">,
+): Promise<Id<"lemmas">> {
+	const { unitKind: _, ...stored } = lemmaUnit;
+	return t.run((ctx) =>
+		ctx.db.insert("lemmas", {
+			lemmaKey: lemmaIdentityKey(lemmaUnit),
+			...stored,
+		}),
 	);
 }
 
-function follow(db: IndexedTestDb, readingKey: string) {
-	return runNavigation(db, followGrammaticalAlternative, {
-		sourceReadingId: "source-reading",
-		readingKey,
-	});
+/** A database holding the `mich` source Reading. */
+async function database() {
+	const t = createTestConvex();
+	const sourceLemmaId = await insertLemma(t, lemma);
+	const sourceReadingId = await t.run((ctx) =>
+		ctx.db.insert("readings", {
+			readingKey: readingIdentityKey(reading),
+			lemmaId: sourceLemmaId,
+			emojiDescription: reading.emojiDescription,
+		}),
+	);
+	return { t, sourceLemmaId, sourceReadingId };
+}
+
+/** Every stored row, by table, so a no-op can be shown to write nothing. */
+function snapshot(t: TestConvexDb) {
+	return t.run(async (ctx) =>
+		Object.fromEntries(
+			await Promise.all(
+				(Object.keys(schema.tables) as TableNames[]).map(
+					async (table) =>
+						[table, await ctx.db.query(table).collect()] as const,
+				),
+			),
+		),
+	);
+}
+
+function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+async function knowledgeRows(t: TestConvexDb) {
+	return (await rows(t, "accumulatedKnowledge")).map(
+		({ _id, knowledge }) => ({
+			_id,
+			knowledge: knowledge as {
+				definition: string;
+				translations: { en: string[] };
+			},
+		}),
+	);
 }
 
 test("reviewed alternatives are visible without preloading and only the selected Reading is materialized", async () => {
-	const db = database();
-	const before = db.snapshot();
-	const alternatives = await loadGrammaticalAlternatives(
-		{ db } as never,
-		"source-reading" as never,
+	const { t, sourceReadingId } = await database();
+	const before = await snapshot(t);
+	const alternatives = await t.run((ctx) =>
+		loadGrammaticalAlternatives(ctx, sourceReadingId),
 	);
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 	const mir = alternatives.find(
 		(value) => value.canonicalForm === "mir" && value.feature === "case",
 	);
@@ -125,101 +127,91 @@ test("reviewed alternatives are visible without preloading and only the selected
 				value.canonicalForm === "uns" && value.feature === "number",
 		),
 	).toBe(true);
-	const destination = await follow(db, mir.readingKey);
-	expect(db.rows("readings")).toHaveLength(2);
-	expect(db.rows("lemmas")).toHaveLength(2);
-	expect(db.rows("surfaces")).toHaveLength(0);
-	expect(db.rows("accumulatedKnowledge")).toHaveLength(0);
-	const entry = db
-		.rows("readingEntries")
-		.find((row) => row.readingId === destination);
-	if (!entry) throw Error("Expected the destination reading entry");
-	await db.patch(entry._id, {
-		record: {
-			...(entry.record as object),
-			knowledge: { definition: "User-authored note" },
-		},
+	const follow = () =>
+		t.action(api.orchestration.followGrammaticalAlternative, {
+			sourceReadingId,
+			readingKey: mir.readingKey,
+		});
+	const destination = await follow();
+	expect(await rows(t, "readings")).toHaveLength(2);
+	expect(await rows(t, "lemmas")).toHaveLength(2);
+	expect(await rows(t, "surfaces")).toHaveLength(0);
+	expect(await rows(t, "accumulatedKnowledge")).toHaveLength(0);
+	await t.run(async (ctx) => {
+		const entry = await ctx.db
+			.query("readingEntries")
+			.withIndex("by_reading_id", (q) => q.eq("readingId", destination))
+			.unique();
+		if (!entry) throw Error("Expected the destination reading entry");
+		await ctx.db.patch(entry._id, {
+			record: {
+				...(entry.record as object),
+				knowledge: { definition: "User-authored note" },
+			},
+		});
 	});
-	const stored = db.snapshot();
-	expect(await follow(db, mir.readingKey)).toBe(destination);
-	expect(db.snapshot()).toEqual(stored);
+	const stored = await snapshot(t);
+	expect(await follow()).toBe(destination);
+	expect(await snapshot(t)).toEqual(stored);
 });
 
 test("unreviewed destinations cannot create arbitrary Readings", async () => {
-	const db = database();
-	const before = db.snapshot();
-	await expect(follow(db, "invented-reading")).rejects.toThrow(
-		"not a reviewed",
-	);
-	expect(db.snapshot()).toEqual(before);
+	const { t, sourceReadingId } = await database();
+	const before = await snapshot(t);
+	await expect(
+		t.action(api.orchestration.followGrammaticalAlternative, {
+			sourceReadingId,
+			readingKey: "invented-reading",
+		}),
+	).rejects.toThrow("not a reviewed");
+	expect(await snapshot(t)).toEqual(before);
 	expect(
 		reviewedAlternatives({ ...lemma, canonicalForm: "unreviewed" }),
 	).toEqual([]);
 });
 
 test("noun heading navigation materializes the authored DET Reading without relations or encounters", async () => {
-	const noun = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "NOUN",
-		canonicalForm: "Frau",
-		coreFeatures: { gender: "Fem", hyph: null },
-	} as const;
-	const db = new IndexedTestDb({
-		lemmas: [
-			{ ...noun, _id: "noun-lemma", lemmaKey: lemmaIdentityKey(noun) },
-		],
+	const t = createTestConvex();
+	const lemmaId = await insertLemma(t, noun);
+	const id = await t.action(api.orchestration.followNounArticle, {
+		lemmaId,
 	});
-	const id = await runNavigation(db, followNounArticle, {
-		lemmaId: "noun-lemma",
+	const articleLemma = await t.run(async (ctx) => {
+		const article = await ctx.db.get(id);
+		return article ? ctx.db.get(article.lemmaId) : null;
 	});
-	const reading = await db.get(id);
-	expect(await db.get(String(reading?.lemmaId))).toMatchObject({
-		kind: "DET",
-		canonicalForm: "die",
-	});
-	const knowledge = db.rows("accumulatedKnowledge")[0]?.knowledge as
-		| { definition?: string }
-		| undefined;
-	expect(knowledge?.definition).toContain("Artikel");
+	expect(articleLemma).toMatchObject({ kind: "DET", canonicalForm: "die" });
+	expect((await knowledgeRows(t))[0]?.knowledge.definition).toContain(
+		"Artikel",
+	);
 	for (const table of [
 		"surfaces",
 		"attestations",
 		"visitorClicks",
 		"semanticRelationEdges",
-	])
-		expect(db.rows(table)).toHaveLength(0);
-	const before = db.snapshot();
+	] as const)
+		expect(await rows(t, table)).toHaveLength(0);
+	const before = await snapshot(t);
 	expect(
-		await runNavigation(db, followNounArticle, { lemmaId: "noun-lemma" }),
+		await t.action(api.orchestration.followNounArticle, { lemmaId }),
 	).toBe(id);
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 });
 
 test("noun heading navigation rejects non-nouns before writing", async () => {
-	const db = database();
-	const before = db.snapshot();
+	const { t, sourceLemmaId } = await database();
+	const before = await snapshot(t);
 	await expect(
-		runNavigation(db, followNounArticle, { lemmaId: "source-lemma" }),
+		t.action(api.orchestration.followNounArticle, {
+			lemmaId: sourceLemmaId,
+		}),
 	).rejects.toThrow("no noun heading article");
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 });
 
 test("noun composition creates its article Reading with authored Knowledge before navigation", async () => {
-	const noun = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "NOUN",
-		canonicalForm: "Frau",
-		coreFeatures: { gender: "Fem", hyph: null },
-	} as const;
-	const db = new IndexedTestDb({
-		lemmas: [
-			{ ...noun, _id: "noun-lemma", lemmaKey: lemmaIdentityKey(noun) },
-		],
-	});
+	const t = createTestConvex();
+	const lemmaId = await insertLemma(t, noun);
 	const reference = nounArticleReference({
 		article: "Definite",
 		case: "Dat",
@@ -227,23 +219,22 @@ test("noun composition creates its article Reading with authored Knowledge befor
 		gender: "Fem",
 		spelled: "der",
 	});
-	await materializeGrammaticalComponent({ db } as never, reference);
-	expect(db.rows("accumulatedKnowledge")).toHaveLength(1);
-	const id = await runNavigation(db, followNounArticle, {
-		lemmaId: "noun-lemma",
+	await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
+	expect(await rows(t, "accumulatedKnowledge")).toHaveLength(1);
+	const id = await t.action(api.orchestration.followNounArticle, {
+		lemmaId,
 	});
-	const knowledge = db.rows("accumulatedKnowledge")[0]?.knowledge as
-		| { definition?: string }
-		| undefined;
-	expect(knowledge?.definition).toContain("Artikel");
-	expect(db.rows("readings")).toHaveLength(1);
-	expect(db.rows("semanticRelationEdges")).toHaveLength(0);
-	expect(db.rows("visitorClicks")).toHaveLength(0);
-	const before = db.snapshot();
+	expect((await knowledgeRows(t))[0]?.knowledge.definition).toContain(
+		"Artikel",
+	);
+	expect(await rows(t, "readings")).toHaveLength(1);
+	expect(await rows(t, "semanticRelationEdges")).toHaveLength(0);
+	expect(await rows(t, "visitorClicks")).toHaveLength(0);
+	const before = await snapshot(t);
 	expect(
-		await runNavigation(db, followNounArticle, { lemmaId: "noun-lemma" }),
+		await t.action(api.orchestration.followNounArticle, { lemmaId }),
 	).toBe(id);
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 });
 
 for (const [article, gender, spelled, canonical] of [
@@ -253,7 +244,7 @@ for (const [article, gender, spelled, canonical] of [
 	["Indefinite", "Fem", "eine", "ein"],
 ] as const) {
 	test(`noun composition immediately stores authored Knowledge for ${canonical}`, async () => {
-		const db = new IndexedTestDb({});
+		const t = createTestConvex();
 		const reference = nounArticleReference({
 			article,
 			gender,
@@ -261,29 +252,26 @@ for (const [article, gender, spelled, canonical] of [
 			case: "Nom",
 			number: "Sing",
 		});
-		await materializeGrammaticalComponent({ db } as never, reference);
-		const knowledge = db.rows("accumulatedKnowledge")[0]?.knowledge as {
-			definition: string;
-			translations: { en: string[] };
-		};
-		expect(knowledge.definition).toContain(`„${canonical}“`);
-		expect(knowledge.translations.en).toEqual(
+		await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
+		const knowledge = (await knowledgeRows(t))[0]?.knowledge;
+		expect(knowledge?.definition).toContain(`„${canonical}“`);
+		expect(knowledge?.translations.en).toEqual(
 			canonical === "ein" ? ["a", "an"] : ["the"],
 		);
-		expect(db.rows("readingEntries")[0]?.record).toHaveProperty(
+		expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(
 			"knowledge",
 			knowledge,
 		);
-		expect(db.rows("attestations")).toHaveLength(0);
-		expect(db.rows("visitorClicks")).toHaveLength(0);
-		const before = db.snapshot();
-		await materializeGrammaticalComponent({ db } as never, reference);
-		expect(db.snapshot()).toEqual(before);
+		expect(await rows(t, "attestations")).toHaveLength(0);
+		expect(await rows(t, "visitorClicks")).toHaveLength(0);
+		const before = await snapshot(t);
+		await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
+		expect(await snapshot(t)).toEqual(before);
 	});
 }
 
 test("authored article backfill repairs empty entries and preserves existing Knowledge", async () => {
-	const db = new IndexedTestDb({});
+	const t = createTestConvex();
 	const reference = nounArticleReference({
 		article: "Definite",
 		gender: "Fem",
@@ -291,51 +279,38 @@ test("authored article backfill repairs empty entries and preserves existing Kno
 		case: "Dat",
 		number: "Sing",
 	});
-	await materializeGrammaticalComponent({ db } as never, reference);
-	const entry = db.rows("readingEntries")[0];
-	const accumulated = db.rows("accumulatedKnowledge")[0];
-	if (!entry || !accumulated) throw new Error("Missing article records");
-	await db.patch(entry._id, {
-		record: { notes: "Keep my notes", attestedTranslations: [] },
+	const complete = () =>
+		t.run((ctx) =>
+			completeAuthoredComponentKnowledge(ctx, reference.reading),
+		);
+	await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
+	await t.run(async (ctx) => {
+		const entry = await ctx.db.query("readingEntries").first();
+		const accumulated = await ctx.db.query("accumulatedKnowledge").first();
+		if (!entry || !accumulated) throw new Error("Missing article records");
+		await ctx.db.patch(entry._id, {
+			record: { notes: "Keep my notes", attestedTranslations: [] },
+		});
+		await ctx.db.delete(accumulated._id);
 	});
-	await db.delete(accumulated._id);
-	expect(
-		await completeAuthoredComponentKnowledge(
-			{ db } as never,
-			reference.reading,
-		),
-	).toBe(true);
-	const restored = db.rows("accumulatedKnowledge")[0];
-	expect(
-		(restored?.knowledge as { definition: string } | undefined)?.definition,
-	).toContain("„die“");
-	expect(db.rows("readingEntries")[0]?.record).toHaveProperty(
+	expect(await complete()).toBe(true);
+	const [restored] = await knowledgeRows(t);
+	expect(restored?.knowledge.definition).toContain("„die“");
+	expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(
 		"notes",
 		"Keep my notes",
 	);
 	if (!restored) throw new Error("Missing restored Knowledge");
-	await db.patch(restored._id, {
-		knowledge: { definition: "My edited definition" },
-	});
-	await completeAuthoredComponentKnowledge(
-		{ db } as never,
-		reference.reading,
+	await t.run((ctx) =>
+		ctx.db.patch(restored._id, {
+			knowledge: { definition: "My edited definition" },
+		}),
 	);
-	expect(
-		(
-			db.rows("accumulatedKnowledge")[0]?.knowledge as
-				| {
-						definition: string;
-				  }
-				| undefined
-		)?.definition,
-	).toBe("My edited definition");
-	const before = db.snapshot();
-	expect(
-		await completeAuthoredComponentKnowledge(
-			{ db } as never,
-			reference.reading,
-		),
-	).toBe(false);
-	expect(db.snapshot()).toEqual(before);
+	await complete();
+	expect((await knowledgeRows(t))[0]?.knowledge.definition).toBe(
+		"My edited definition",
+	);
+	const before = await snapshot(t);
+	expect(await complete()).toBe(false);
+	expect(await snapshot(t)).toEqual(before);
 });

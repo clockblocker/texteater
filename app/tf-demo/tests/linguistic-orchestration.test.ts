@@ -1,5 +1,4 @@
-import { expect, test } from "bun:test";
-import { type FunctionReference, getFunctionName } from "convex/server";
+import { expect, jest, test } from "bun:test";
 import {
 	type CommitChangesRequest,
 	createDumdictService,
@@ -19,7 +18,7 @@ import type {
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { pipelineFixture } from "../../../battery/dumgen/tests/pipeline-fixture.js";
-import type { Id } from "../convex/_generated/dataModel";
+import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
 import type { StoredSegment } from "../server/fusedWords";
@@ -38,6 +37,8 @@ import {
 	MAX_SOURCE_SENTENCES,
 	MAX_SOURCE_TEXT_CHARACTERS,
 } from "../server/textSubmissionLimits";
+import { actionContext, createTestConvex } from "./support/convex";
+import { startSession } from "./support/occurrences";
 
 const revision = "revision-0" as StoreRevision;
 function createPlanningStorage(candidates: Dumling.Reading<"de">[]) {
@@ -1553,37 +1554,58 @@ test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored ana
 
 test("a Resolution Session run restores the stored analysis to record masses and its click selects from the analysis", async () => {
 	const analysis = verfuegungAnalysis({ collocation: true });
-	const calls: string[] = [];
-	const ctx = {
-		async runMutation(reference: FunctionReference<"mutation">) {
-			calls.push(getFunctionName(reference));
-			return {
-				selection: verfuegungSelection,
-				checkpoints: {},
-				context: {
-					recorded: null,
-					reusable: null,
-					sentence: {
-						sentenceId: "sentence-1",
-						textId: "text-1",
-						segmentedSentenceId: "sentence-1",
-						language: "de",
-						stitchedText: verfuegungText,
-						segments: verfuegungSegments,
-						definitionText: false,
-					},
-					lemmaCandidates: [],
+	jest.useFakeTimers();
+	const t = createTestConvex();
+	const { sentenceIds } = await t.mutation(
+		internal.persistence.persistSubmittedText,
+		{
+			submissionKey: "verfuegung",
+			sourceText: verfuegungText,
+			sentences: [
+				{
+					segmentedSentenceId: "verfuegung:0",
+					position: 0,
+					paragraph: 0,
+					language: "de",
+					stitchedText: verfuegungText,
+					segments: verfuegungSegments.map(({ kind, text }) => ({
+						kind,
+						text,
+					})),
 					analysis: toStoredSentenceAnalysis(analysis),
 				},
-			};
+			],
 		},
-	} as unknown as ActionCtx;
-	const input = await createResolutionSessionLifecycle(ctx, {
-		requestId: "request-1",
-		runToken: "run-1",
-		segmentId: "segment-1" as Id<"segments">,
-	}).begin();
-	expect(calls).toEqual(["resolutionSessions:beginRun"]);
+	);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a stored Sentence.");
+	const guard = await startSession(t, {
+		...verfuegungSelection,
+		sentenceId,
+	});
+	const input = await createResolutionSessionLifecycle(
+		actionContext(t) as unknown as ActionCtx,
+		guard,
+	)
+		.begin()
+		.finally(() => jest.useRealTimers());
+	// begin() claimed the run through the real beginRun mutation.
+	expect(
+		await t.run(async (ctx) => {
+			const claimed = await ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", guard.requestId),
+				)
+				.unique();
+			return claimed?.lifecycle;
+		}),
+	).toEqual({
+		state: "Active",
+		progress: "RouteAvailable",
+		activity: "Running",
+	});
+
 	if (!input?.context) throw new Error("Expected a restored context.");
 	expect(input.context.analysis?.targets[0]?.routeMass).toEqual({
 		PRON: 0.9,

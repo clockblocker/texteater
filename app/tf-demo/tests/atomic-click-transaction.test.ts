@@ -1,425 +1,414 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { nounArticleReference } from "dumgen";
+import { internal } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
+import type { MutationCtx } from "../convex/_generated/server";
 import {
 	migrateCompositionAttestation,
 	migrateCompositionOwnership,
 	migrateNounArticle,
 } from "../convex/model/nounArticleMigration";
-import { persistResolvedClick } from "../convex/persistence";
+import schema from "../convex/schema";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
+import {
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
+import {
+	bankOccurrenceCommit,
+	dieBankenOccurrenceCommit,
+	bankLemma as lemma,
+	bankReading as reading,
+	resolutionSessionRow,
+	type Selection,
+	startSession,
+	bankenSurface as surface,
+} from "./support/occurrences";
 
-type Row = Record<string, unknown> & { _id: string };
+type TableName = keyof typeof schema.tables;
 
-function nestedValue(row: Row, path: string): unknown {
-	return path.split(".").reduce<unknown>((value, key) => {
-		if (value === null || typeof value !== "object") return undefined;
-		return (value as Record<string, unknown>)[key];
-	}, row);
-}
-
-class TransactionalDb {
-	private tables = new Map<string, Map<string, Row>>();
-	private nextId = 1;
-
-	constructor(seed: Record<string, readonly Row[]> = {}) {
-		for (const [table, rows] of Object.entries(seed)) {
-			this.tables.set(
-				table,
-				new Map(rows.map((row) => [row._id, structuredClone(row)])),
-			);
-		}
-	}
-
-	fork(): TransactionalDb {
-		const copy = new TransactionalDb(this.snapshot());
-		copy.nextId = this.nextId;
-		return copy;
-	}
-
-	adopt(committed: TransactionalDb): void {
-		this.tables = committed.tables;
-		this.nextId = committed.nextId;
-	}
-
-	snapshot(): Record<string, Row[]> {
-		return Object.fromEntries(
-			[...this.tables].map(([table, rows]) => [
-				table,
-				[...rows.values()].map((row) => structuredClone(row)),
-			]),
-		);
-	}
-
-	rows(table: string): Row[] {
-		return [...(this.tables.get(table)?.values() ?? [])];
-	}
-
-	async get(id: string): Promise<Row | null> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (row) return row;
-		}
-		return null;
-	}
-
-	async delete(id: string) {
-		for (const rows of this.tables.values()) rows.delete(id);
-	}
-
-	query(table: string) {
-		const conditions: Array<[string, unknown]> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				conditions.push([field, value]);
-				return range;
-			},
-		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
-				conditions.every(
-					([field, value]) => nestedValue(row, field) === value,
-				),
-			);
-		return {
-			async take(limit: number) {
-				return matches().slice(0, limit);
-			},
-			withIndex(_name: string, build: (value: typeof range) => unknown) {
-				build(range);
-				return {
-					async unique() {
-						const rows = matches();
-						if (rows.length > 1)
-							throw new Error("Expected a unique row.");
-						return rows[0] ?? null;
-					},
-					async take(limit: number) {
-						return matches().slice(0, limit);
-					},
-				};
-			},
-		};
-	}
-
-	async insert(
-		table: string,
-		value: Record<string, unknown>,
-	): Promise<string> {
-		const id = `${table}-${this.nextId++}`;
-		const rows = this.tables.get(table) ?? new Map<string, Row>();
-		rows.set(id, { _id: id, ...structuredClone(value) });
-		this.tables.set(table, rows);
-		return id;
-	}
-
-	async patch(id: string, value: Record<string, unknown>): Promise<void> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (!row) continue;
-			rows.set(id, { ...row, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Cannot patch missing row ${id}.`);
-	}
-}
-
-const handler = (
-	persistResolvedClick as unknown as {
-		_handler: (ctx: unknown, args: unknown) => Promise<unknown>;
-	}
-)._handler;
-
-async function runTransaction(
-	db: TransactionalDb,
-	args: unknown,
-	scheduler?: { runAfter: (...args: unknown[]) => Promise<void> },
-) {
-	const draft = db.fork();
-	const result = await handler({ db: draft, scheduler }, args);
-	db.adopt(draft);
-	return result;
-}
-
-const lemma = {
-	unitKind: "Lemma",
-	language: "de",
-	family: "Lexeme",
-	kind: "NOUN",
-	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
-} as const;
-const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" } as const;
-const surface = {
-	unitKind: "Surface",
-	language: "de",
-	normalizedSurface: "Banken",
-	spelling: "Canonical",
-
-	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
-
-	lemma,
-} as const;
 const lemmaKey = lemmaIdentityKey(lemma);
 const readingKey = readingFingerprint(reading);
 const surfaceKey = makeSurfaceId("de", surface);
 const note = { attestedTranslations: [], attestations: [], notes: "" };
 
-function clickArgs(readingDecision: "New" | "Reuse" = "New") {
-	return {
-		requestId: "request-1",
-		visitorId: "visitor-1",
-		sentenceId: "sentence-1",
-		clickedSegmentIndex: 0,
-		reading,
-		readingKey,
-		readingDecision,
-		occurrence: {
-			memberSegmentIndices: [0],
-			attestation: {
-				unitKind: "Attestation",
-				members: [{ attested: "Banken", orthography: "Standard" }],
-				realizationCoverage: "Full",
-				articleEvidence: null,
-				surface,
-			},
-			surfaceKey,
-			lemmaKey,
-		},
-	};
+/** The tables an Occurrence commit writes besides its session and Segment. */
+const dictionaryAndOccurrenceTables = [
+	"lemmas",
+	"readings",
+	"surfaces",
+	"dictionaryLemmas",
+	"readingEntries",
+	"ownedSurfaces",
+	"dictionaryState",
+	"attestations",
+	"accumulatedKnowledge",
+	"knowledgeGenerationAttempts",
+] as const satisfies readonly TableName[];
+
+beforeEach(() => {
+	// A Segment Selection schedules its Resolution Session; nothing here runs it.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
+function rows<Table extends TableName>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
 }
 
-function sourceSeed(): Record<string, readonly Row[]> {
-	return {
-		sentences: [
-			{
-				_id: "sentence-1",
-				segmentedSentenceId: "segmented-1",
-				language: "de",
-			},
-		],
-		segments: [
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "ResolvableText",
-				text: "Banken",
-			},
-		],
+/** Every row of the given tables, all of the schema's by default. */
+function snapshot(
+	t: TestConvexDb,
+	tables: readonly TableName[] = Object.keys(schema.tables) as TableName[],
+) {
+	return t.run(async (ctx) =>
+		Object.fromEntries(
+			await Promise.all(
+				tables.map(async (table) => [
+					table,
+					await ctx.db.query(table).collect(),
+				]),
+			),
+		),
+	);
+}
+
+/** Stores one Sentence and selects the Segment at `clickedSegmentIndex`. */
+async function selectIn(
+	t: TestConvexDb,
+	segments: readonly string[],
+	clickedSegmentIndex = 0,
+) {
+	const { sentenceIds, segmentIds } = await submitText(t, [segments]);
+	const sentenceId = sentenceIds[0];
+	const sentenceSegmentIds = segmentIds[0];
+	if (!sentenceId || !sentenceSegmentIds) {
+		throw new Error("Expected a stored Sentence.");
+	}
+	const selection: Selection = {
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId,
+		clickedSegmentIndex,
 	};
+	const guard = await startSession(t, selection);
+	return { selection, guard, segmentIds: sentenceSegmentIds };
+}
+
+function insertBankLemma(ctx: MutationCtx) {
+	const { unitKind: _unitKind, ...fields } = lemma;
+	return ctx.db.insert("lemmas", { lemmaKey, ...fields });
+}
+
+function insertBankReading(ctx: MutationCtx, lemmaId: Id<"lemmas">) {
+	return ctx.db.insert("readings", {
+		readingKey,
+		lemmaId,
+		emojiDescription: reading.emojiDescription,
+	});
+}
+
+async function expectCompleted(
+	t: TestConvexDb,
+	requestId: string,
+	attestationId: Id<"attestations">,
+) {
+	expect(await resolutionSessionRow(t, requestId)).toMatchObject({
+		lifecycle: {
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
+		},
+		attestationId,
+	});
 }
 
 test("a New Reading plans and commits dictionary, occurrence membership, and Click in one transaction", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const result = await runTransaction(db, clickArgs("New"));
+	const t = createTestConvex();
+	const { selection, guard, segmentIds } = await selectIn(t, ["Banken"]);
+
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "New"),
+	);
 
 	expect(result).toMatchObject({ status: "Committed", deduplicated: false });
-	expect(db.rows("lemmas")).toHaveLength(1);
-	expect(db.rows("readings")).toHaveLength(1);
-	expect(db.rows("surfaces")).toHaveLength(1);
-	expect(db.rows("attestations")).toHaveLength(1);
-	expect(db.rows("visitorClicks")).toHaveLength(1);
-	expect(db.rows("dictionaryState")[0]?.revision).toBe(1);
-	expect(db.rows("segments")[0]?.attestationMembership).toMatchObject({
+	if (result.status !== "Committed") throw new Error("Expected a commit.");
+	expect(await rows(t, "lemmas")).toHaveLength(1);
+	expect(await rows(t, "readings")).toHaveLength(1);
+	expect(await rows(t, "surfaces")).toHaveLength(1);
+	expect(await rows(t, "attestations")).toHaveLength(1);
+	expect(await rows(t, "visitorClicks")).toEqual([
+		expect.objectContaining({ attestationId: result.attestationId }),
+	]);
+	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(1);
+	const [segment] = await rows(t, "segments");
+	expect(segment?._id).toBe(segmentIds[0]);
+	expect(segment?.attestationMembership).toEqual({
+		attestationId: result.attestationId,
 		orthography: "Standard",
 	});
+	// Committed Attestation Membership replaces the Segment Resolution State.
+	expect(segment?.resolutionState).toBeUndefined();
+	await expectCompleted(t, "request-1", result.attestationId);
 });
 
 test("Knowledge drafts follow the committed occurrence and a late writer cannot replace them", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const scheduled: unknown[][] = [];
-	const scheduler = {
-		async runAfter(...args: unknown[]) {
-			scheduled.push(args);
-		},
-	};
+	const t = createTestConvex();
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+	const lateSelection = { ...selection, requestId: "late-writer" };
+	const lateGuard = await startSession(t, lateSelection);
 	const knowledgeDraftJson = JSON.stringify({
 		sourceFingerprint: "original",
 		texts: [],
 	});
-	const args = { ...clickArgs("New"), knowledgeDraftJson };
-	await runTransaction(db, args, scheduler);
-	expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+
+	const first = await t.mutation(internal.persistence.persistResolvedClick, {
+		...bankOccurrenceCommit(selection, guard, "New"),
+		knowledgeDraftJson,
+	});
+	if (first.status !== "Committed") throw new Error("Expected a commit.");
+	expect(await rows(t, "knowledgeGenerationAttempts")).toEqual([
 		expect.objectContaining({
 			knowledgeDraftJson,
-			readingId: db.rows("readings")[0]?._id,
+			readingId: first.readingId,
 		}),
 	]);
-	const late = await runTransaction(
-		db,
-		{
-			...args,
-			requestId: "late-writer",
-			knowledgeDraftJson: JSON.stringify({
-				sourceFingerprint: "late",
-				texts: [],
-			}),
-		},
-		scheduler,
-	);
-	expect(late).toMatchObject({ status: "Reused" });
+
+	const late = await t.mutation(internal.persistence.persistResolvedClick, {
+		...bankOccurrenceCommit(lateSelection, lateGuard, "New"),
+		knowledgeDraftJson: JSON.stringify({
+			sourceFingerprint: "late",
+			texts: [],
+		}),
+	});
+
+	expect(late).toMatchObject({
+		status: "Reused",
+		attestationId: first.attestationId,
+	});
+	const attempts = await rows(t, "knowledgeGenerationAttempts");
 	expect(
-		db
-			.rows("knowledgeGenerationAttempts")
-			.find((row) => row.attemptKey === "late-writer")
+		attempts.find(({ attemptKey }) => attemptKey === "late-writer")
 			?.knowledgeDraftJson,
 	).toBeUndefined();
-	expect(db.rows("knowledgeGenerationAttempts")[0]?.knowledgeDraftJson).toBe(
-		knowledgeDraftJson,
+	expect(
+		attempts.find(({ attemptKey }) => attemptKey === "request-1")
+			?.knowledgeDraftJson,
+	).toBe(knowledgeDraftJson);
+	const knowledgeRuns = (
+		await t.run((ctx) =>
+			ctx.db.system.query("_scheduled_functions").collect(),
+		)
+	).filter(
+		({ name }) =>
+			name === "knowledgeGenerationActions:runKnowledgeGeneration",
 	);
-	expect(scheduled).toHaveLength(1);
+	expect(knowledgeRuns).toHaveLength(1);
+	expect(await rows(t, "attestations")).toHaveLength(1);
+	// The late writer's session settles on the winner it reused.
+	await expectCompleted(t, "late-writer", first.attestationId);
 });
 
 test("a New Reading adopts canonical-only Lemma, Reading, and Surface rows", async () => {
-	const seed = sourceSeed();
-	seed.lemmas = [{ _id: "lemma-canonical", lemmaKey, ...lemma }];
-	seed.readings = [
-		{
-			_id: "reading-canonical",
-			readingKey,
-			lemmaId: "lemma-canonical",
-			emojiDescription: reading.emojiDescription,
-		},
-	];
-	seed.surfaces = [
-		{
-			_id: "surface-canonical",
+	const t = createTestConvex();
+	const canonical = await t.run(async (ctx) => {
+		const lemmaId = await insertBankLemma(ctx);
+		const readingId = await insertBankReading(ctx, lemmaId);
+		const surfaceId = await ctx.db.insert("surfaces", {
 			surfaceKey,
-			lemmaId: "lemma-canonical",
+			lemmaId,
 			language: surface.language,
 			normalizedSurface: surface.normalizedSurface,
 			spelling: surface.spelling,
 			surfaceFeatures: surface.surfaceFeatures,
 			inflectionalFeatures: surface.inflectionalFeatures,
-		},
-	];
-	const db = new TransactionalDb(seed);
+		});
+		return { lemmaId, readingId, surfaceId };
+	});
+	const { selection, guard } = await selectIn(t, ["Banken"]);
 
-	const result = await runTransaction(db, clickArgs("New"));
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "New"),
+	);
 
 	expect(result).toMatchObject({
 		status: "Committed",
-		readingId: "reading-canonical",
+		readingId: canonical.readingId,
 	});
-	expect(db.rows("lemmas")).toHaveLength(1);
-	expect(db.rows("readings")).toHaveLength(1);
-	expect(db.rows("surfaces")).toHaveLength(1);
-	expect(db.rows("dictionaryLemmas")).toEqual([
-		expect.objectContaining({ lemmaId: "lemma-canonical" }),
+	expect(await rows(t, "lemmas")).toHaveLength(1);
+	expect(await rows(t, "readings")).toHaveLength(1);
+	expect(await rows(t, "surfaces")).toHaveLength(1);
+	expect(await rows(t, "dictionaryLemmas")).toEqual([
+		expect.objectContaining({ lemmaId: canonical.lemmaId }),
 	]);
-	expect(db.rows("readingEntries")).toEqual([
-		expect.objectContaining({ readingId: "reading-canonical" }),
+	expect(await rows(t, "readingEntries")).toEqual([
+		expect.objectContaining({ readingId: canonical.readingId }),
 	]);
-	expect(db.rows("ownedSurfaces")).toEqual([
-		expect.objectContaining({ surfaceId: "surface-canonical" }),
+	expect(await rows(t, "ownedSurfaces")).toEqual([
+		expect.objectContaining({ surfaceId: canonical.surfaceId }),
 	]);
-	expect(db.rows("attestations")[0]).toMatchObject({
-		readingId: "reading-canonical",
-		surfaceId: "surface-canonical",
+	expect((await rows(t, "attestations"))[0]).toMatchObject({
+		readingId: canonical.readingId,
+		surfaceId: canonical.surfaceId,
 	});
 });
 
 test("a reused Reading gains a previously unseen Surface in the occurrence transaction", async () => {
-	const seed = sourceSeed();
-	seed.dictionaryState = [
-		{ _id: "dictionary-state-1", key: "global", revision: 0 },
-	];
-	seed.lemmas = [{ _id: "lemma-1", lemmaKey, ...lemma }];
-	seed.dictionaryLemmas = [{ _id: "dictionary-lemma-1", lemmaId: "lemma-1" }];
-	seed.readings = [
-		{
-			_id: "reading-1",
-			readingKey,
-			lemmaId: "lemma-1",
-			emojiDescription: reading.emojiDescription,
-		},
-	];
-	seed.readingEntries = [
-		{ _id: "reading-entry-1", readingId: "reading-1", record: note },
-	];
-	const db = new TransactionalDb(seed);
-
-	const result = await runTransaction(db, clickArgs("Reuse"));
-
-	expect(result).toMatchObject({
-		status: "Committed",
-		readingId: "reading-1",
+	const t = createTestConvex();
+	const readingId = await t.run(async (ctx) => {
+		await ctx.db.insert("dictionaryState", { key: "global", revision: 0 });
+		const lemmaId = await insertBankLemma(ctx);
+		await ctx.db.insert("dictionaryLemmas", { lemmaId });
+		const readingId = await insertBankReading(ctx, lemmaId);
+		await ctx.db.insert("readingEntries", { readingId, record: note });
+		return readingId;
 	});
-	expect(db.rows("readings")).toHaveLength(1);
-	expect(db.rows("surfaces")).toHaveLength(1);
-	expect(db.rows("ownedSurfaces")).toHaveLength(1);
-	expect(db.rows("attestations")[0]?.readingId).toBe("reading-1");
-	expect(db.rows("dictionaryState")[0]?.revision).toBe(1);
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "Reuse"),
+	);
+
+	expect(result).toMatchObject({ status: "Committed", readingId });
+	expect(await rows(t, "readings")).toHaveLength(1);
+	expect(await rows(t, "surfaces")).toHaveLength(1);
+	expect(await rows(t, "ownedSurfaces")).toHaveLength(1);
+	expect((await rows(t, "attestations"))[0]?.readingId).toBe(readingId);
+	expect((await rows(t, "dictionaryState"))[0]?.revision).toBe(1);
 });
 
 test("a reused Reading that no longer exists is reported as a dictionary conflict without writes", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const before = db.snapshot();
+	const t = createTestConvex();
+	const { selection, guard, segmentIds } = await selectIn(t, ["Banken"]);
+	const before = await snapshot(t, dictionaryAndOccurrenceTables);
 
-	const result = await runTransaction(db, clickArgs("Reuse"));
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "Reuse"),
+	);
 
 	expect(result).toMatchObject({
 		status: "DictionaryConflict",
 		code: "semanticPreconditionFailed",
 	});
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t, dictionaryAndOccurrenceTables)).toEqual(before);
+	const [segment] = await rows(t, "segments");
+	expect(segment?._id).toBe(segmentIds[0]);
+	expect(segment?.attestationMembership).toBeUndefined();
+	// The conflict settles the session and the Segment it ran for.
+	expect(segment?.resolutionState).toEqual({ kind: "PermanentFailure" });
+	expect(
+		(await resolutionSessionRow(t, "request-1")).lifecycle,
+	).toMatchObject({ state: "Terminal", outcome: "PermanentFailure" });
+	expect((await rows(t, "visitorClicks"))[0]?.attestationId).toBeUndefined();
 });
 
-test("a post-plan host failure rolls back dictionary and occurrence writes", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const before = db.snapshot();
-	const draft = db.fork();
-	const insert = draft.insert.bind(draft);
-	draft.insert = async (table, value) => {
-		if (table === "attestations")
-			throw new Error(
-				"Simulated host failure after the dictionary commit.",
-			);
-		return insert(table, value);
-	};
+test("a failure after the dictionary commit rolls back dictionary, occurrence, and session writes", async () => {
+	const t = createTestConvex();
+	// An earlier occurrence already holds this commit's Knowledge attempt key,
+	// so Knowledge scheduling, the commit's last step, refuses it.
+	await t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: "lemma:haus",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Haus",
+			coreFeatures: {},
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey: "reading:haus",
+			lemmaId,
+			emojiDescription: "🏠",
+		});
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: "surface:haus",
+			lemmaId,
+			language: "de",
+			normalizedSurface: "Haus",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId,
+			readingId,
+			realizationCoverage: "Full",
+		});
+		await ctx.db.insert("knowledgeGenerationAttempts", {
+			attemptKey: "request-1",
+			visitorId: "visitor-1",
+			ownerReadingKey: "reading:haus",
+			readingId,
+			attestationId,
+			state: "Scheduled",
+			createdAt: 1,
+			updatedAt: 1,
+		});
+	});
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+	const before = await snapshot(t);
 
-	await expect(handler({ db: draft }, clickArgs("New"))).rejects.toThrow(
-		"Simulated host failure after the dictionary commit.",
-	);
-	expect(db.snapshot()).toEqual(before);
-	expect(db.rows("dictionaryState")).toEqual([]);
-	expect(db.rows("attestations")).toEqual([]);
-	expect(db.rows("visitorClicks")).toEqual([]);
+	await expect(
+		t.mutation(
+			internal.persistence.persistResolvedClick,
+			bankOccurrenceCommit(selection, guard, "New"),
+		),
+	).rejects.toThrow("attemptKey collides with a different occurrence.");
+
+	expect(await snapshot(t)).toEqual(before);
+	expect(await rows(t, "dictionaryState")).toEqual([]);
+	expect(await rows(t, "attestations")).toHaveLength(1);
+	expect((await rows(t, "visitorClicks"))[0]?.attestationId).toBeUndefined();
+	expect(
+		(await resolutionSessionRow(t, "request-1")).lifecycle,
+	).toMatchObject({ state: "Active" });
 });
 
 test("an unknown surfaceKey is rejected without durable writes", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const before = db.snapshot();
-	const args = clickArgs("New");
+	const t = createTestConvex();
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+	const before = await snapshot(t);
+	const args = bankOccurrenceCommit(selection, guard, "New");
 	args.occurrence.surfaceKey = makeSurfaceId("de", {
 		...surface,
 		normalizedSurface: "Bank",
 	});
 
-	await expect(runTransaction(db, args)).rejects.toThrow(
+	await expect(
+		t.mutation(internal.persistence.persistResolvedClick, args),
+	).rejects.toThrow(
 		"Canonical Lemma, Surface, and Reading must be committed first.",
 	);
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 });
 
 test("a readingKey for a different Reading is rejected without durable writes", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const before = db.snapshot();
-	const args = clickArgs("New");
+	const t = createTestConvex();
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+	const before = await snapshot(t);
+	const args = bankOccurrenceCommit(selection, guard, "New");
 	args.readingKey = readingFingerprint({
 		...reading,
 		emojiDescription: "🏧",
 	});
 
-	await expect(runTransaction(db, args)).rejects.toThrow(
+	await expect(
+		t.mutation(internal.persistence.persistResolvedClick, args),
+	).rejects.toThrow(
 		"readingKey does not match the selected Reading identity.",
 	);
-	expect(db.snapshot()).toEqual(before);
+	expect(await snapshot(t)).toEqual(before);
 });
 
 test("a noun article materializes its Reading without a second occurrence", async () => {
@@ -445,73 +434,40 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		lemma: articleLemma,
 		emojiDescription: "👉",
 	} as const;
-	const nounSurface = {
-		...surface,
-		normalizedSurface: "die Banken",
-		inflectionalFeatures: {
-			...surface.inflectionalFeatures,
-			article: "Definite",
-		},
-	} as const;
-	const nounKey = makeSurfaceId("de", nounSurface);
-	const seed = sourceSeed();
-	seed.segments = [
-		{
-			_id: "article-segment",
-			sentenceId: "sentence-1",
-			index: 0,
-			kind: "ResolvableText",
-			text: "die",
-		},
-		{
-			_id: "noun-segment",
-			sentenceId: "sentence-1",
-			index: 2,
-			kind: "ResolvableText",
-			text: "Banken",
-		},
-	];
-	const db = new TransactionalDb(seed);
-	const args = clickArgs("New");
-	await runTransaction(db, {
-		...args,
-		clickedSegmentIndex: 2,
-		occurrence: {
-			...args.occurrence,
-			surfaceKey: nounKey,
-			memberSegmentIndices: [0, 2],
-			attestation: {
-				...args.occurrence.attestation,
-				surface: nounSurface,
-				articleEvidence: { attested: "die", orthography: "Standard" },
-				members: [
-					{ attested: "die", orthography: "Standard" },
-					{ attested: "Banken", orthography: "Standard" },
-				],
-			},
-		},
-	});
-	expect(db.rows("lemmas")).toHaveLength(2);
-	expect(db.rows("readings")).toHaveLength(2);
-	expect(db.rows("surfaces")).toHaveLength(2);
-	expect(db.rows("attestations")).toHaveLength(1);
-	expect(db.rows("visitorClicks")).toHaveLength(1);
-	const attestation = db.rows("attestations")[0];
-	if (!attestation) throw new Error("Missing noun Attestation");
-	expect(
-		db
-			.rows("segments")
-			.every(
-				(row) =>
-					(row.attestationMembership as { attestationId: string })
-						.attestationId === attestation._id,
-			),
-	).toBe(true);
-	const component = db
-		.rows("readings")
-		.find((row) => row.readingKey === readingFingerprint(articleReading));
+	const t = createTestConvex();
+	const { selection, guard, segmentIds } = await selectIn(
+		t,
+		["die", " ", "Banken"],
+		2,
+	);
+
+	const result = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		dieBankenOccurrenceCommit(selection, guard, [0, 2]),
+	);
+
+	if (result.status !== "Committed") throw new Error("Expected a commit.");
+	expect(await rows(t, "lemmas")).toHaveLength(2);
+	expect(await rows(t, "readings")).toHaveLength(2);
+	expect(await rows(t, "surfaces")).toHaveLength(2);
+	expect(await rows(t, "attestations")).toHaveLength(1);
+	expect(await rows(t, "visitorClicks")).toHaveLength(1);
+	const members = (await rows(t, "segments")).filter(({ _id }) =>
+		[segmentIds[0], segmentIds[2]].includes(_id),
+	);
+	expect(members).toHaveLength(2);
+	for (const member of members) {
+		expect(member.attestationMembership?.attestationId).toBe(
+			result.attestationId,
+		);
+		expect(member.resolutionState).toBeUndefined();
+	}
+	const component = (await rows(t, "readings")).find(
+		(row) => row.readingKey === readingFingerprint(articleReading),
+	);
 	expect(component).toBeDefined();
-	expect(attestation.readingId).not.toBe(component?._id);
+	expect(result.readingId).not.toBe(component?._id);
+	await expectCompleted(t, "request-1", result.attestationId);
 });
 
 test("article owner migration preserves Surface and occurrence IDs and is repeatable", async () => {
@@ -535,59 +491,56 @@ test("article owner migration preserves Surface and occurrence IDs and is repeat
 			case: "Dat",
 			number: "Sing",
 		},
-		articleReference: oldReference,
 	} as const;
-	const row = {
-		...oldSurface,
-		_id: "surface-old",
-		lemmaId: "lemma-bank",
-		surfaceKey: "legacy-noun-surface-key",
-	};
-	const db = new TransactionalDb({
-		lemmas: [
-			{
-				...surface.lemma,
-				_id: "lemma-bank",
-				lemmaKey: lemmaIdentityKey(surface.lemma),
-			},
-		],
-		surfaces: [row],
-		ownedSurfaces: [
-			{
-				_id: "owned-old",
-				surfaceId: row._id,
-				record: { notes: "keep this", attestedTranslations: [] },
-			},
-		],
-		attestations: [
-			{
-				_id: "attestation-old",
-				surfaceId: row._id,
-				readingId: "reading-bank",
-			},
-		],
+	const t = createTestConvex();
+	const seeded = await t.run(async (ctx) => {
+		const lemmaId = await insertBankLemma(ctx);
+		const readingId = await insertBankReading(ctx, lemmaId);
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: "legacy-noun-surface-key",
+			lemmaId,
+			language: oldSurface.language,
+			normalizedSurface: oldSurface.normalizedSurface,
+			spelling: oldSurface.spelling,
+			surfaceFeatures: oldSurface.surfaceFeatures,
+			inflectionalFeatures: oldSurface.inflectionalFeatures,
+			articleReference: oldReference,
+		});
+		const ownedSurfaceId = await ctx.db.insert("ownedSurfaces", {
+			surfaceId,
+			record: { notes: "keep this", attestedTranslations: [] },
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId,
+			readingId,
+			realizationCoverage: "Full",
+		});
+		return { surfaceId, ownedSurfaceId, attestationId };
 	});
-	const migrate = migrateNounArticle as unknown as (
-		ctx: unknown,
-		row: unknown,
-	) => Promise<void>;
-	await migrate({ db }, row);
-	const updated = await db.get(row._id);
+	const migrate = () =>
+		t.run(async (ctx) => {
+			const row = await ctx.db.get(seeded.surfaceId);
+			if (!row) throw new Error("Missing Surface.");
+			await migrateNounArticle(ctx, row);
+		});
+
+	await migrate();
+
+	const updated = await t.run((ctx) => ctx.db.get(seeded.surfaceId));
 	expect(updated).toMatchObject({
-		_id: row._id,
-		surfaceKey: makeSurfaceId(
-			"de",
-			(({ articleReference: _legacy, ...value }) => value)(oldSurface),
-		),
+		_id: seeded.surfaceId,
+		surfaceKey: makeSurfaceId("de", oldSurface),
 	});
-	expect(db.rows("attestations")[0]?.surfaceId).toBe(row._id);
+	expect(updated?.articleReference).toBeUndefined();
 	expect(
-		db.rows("ownedSurfaces").find((value) => value._id === "owned-old")
-			?.record,
+		(await t.run((ctx) => ctx.db.get(seeded.attestationId)))?.surfaceId,
+	).toBe(seeded.surfaceId);
+	expect(
+		(await t.run((ctx) => ctx.db.get(seeded.ownedSurfaceId)))?.record,
 	).toEqual({ notes: "keep this", attestedTranslations: [] });
-	const snapshot = db.snapshot();
-	await migrate({ db }, updated);
-	expect(db.snapshot()).toEqual(snapshot);
+	const migrated = await snapshot(t);
+	await migrate();
+	expect(await snapshot(t)).toEqual(migrated);
 });
 
 test("composition cutover reconciles collisions while preserving encounters, annotations and saved Surface IDs", async () => {
@@ -600,126 +553,138 @@ test("composition cutover reconciles collisions while preserving encounters, ann
 			number: "Sing",
 		},
 	} as const;
-	const common = {
-		language: "de",
-		lemmaId: "lemma-bank",
-		normalizedSurface: value.normalizedSurface,
-		spelling: value.spelling,
-		surfaceFeatures: value.surfaceFeatures,
-		inflectionalFeatures: value.inflectionalFeatures,
-	};
-	const old = {
-		...common,
-		_id: "surface-old",
-		surfaceKey: "legacy-collision-key",
-		articleReference: { obsolete: true },
-	};
-	const current = {
-		...common,
-		_id: "surface-current",
-		surfaceKey: makeSurfaceId("de", value),
-	};
-	const protectedRows = {
-		visitorClicks: [
-			{
-				_id: "click-old",
-				attestationId: "attestation-old",
-				segmentId: "segment-old",
-				visitorId: "visitor",
-			},
-		],
-		personalAnnotations: [
-			{
-				_id: "annotation-old",
-				readingId: "reading-bank",
-				text: "remember this",
-			},
-		],
-		accumulatedKnowledge: [
-			{
-				_id: "knowledge-old",
-				ownerReadingKey: "reading-bank",
-				knowledge: { definition: "keep" },
-			},
-		],
-		segments: [
-			{
-				_id: "segment-old",
-				attestationMembership: {
-					attestationId: "attestation-old",
-					orthography: "Standard",
-				},
-			},
-		],
-	};
-	const db = new TransactionalDb({
-		...protectedRows,
-		lemmas: [
-			{
-				...surface.lemma,
-				_id: "lemma-bank",
-				lemmaKey: lemmaIdentityKey(surface.lemma),
-			},
-		],
-		surfaces: [old, current],
-		ownedSurfaces: [
-			{
-				_id: "owned-old",
-				surfaceId: old._id,
-				record: { notes: "old note", attestedTranslations: ["old"] },
-			},
-			{
-				_id: "owned-current",
-				surfaceId: current._id,
-				record: {
-					notes: "current note",
-					attestedTranslations: ["new"],
-				},
-			},
-		],
-		attestations: [
-			{
-				_id: "attestation-old",
-				surfaceId: old._id,
-				readingId: "reading-bank",
-				realizationCoverage: "Full",
-			},
-		],
+	const t = createTestConvex();
+	const { sentenceIds, segmentIds } = await submitText(t, [["Bank"]]);
+	const sentenceId = sentenceIds[0];
+	const segmentId = segmentIds[0]?.[0];
+	if (!sentenceId || !segmentId) throw new Error("Expected a Segment.");
+	const seeded = await t.run(async (ctx) => {
+		const lemmaId = await insertBankLemma(ctx);
+		const readingId = await insertBankReading(ctx, lemmaId);
+		const common = {
+			language: "de" as const,
+			lemmaId,
+			normalizedSurface: value.normalizedSurface,
+			spelling: value.spelling,
+			surfaceFeatures: value.surfaceFeatures,
+			inflectionalFeatures: value.inflectionalFeatures,
+		};
+		const oldId = await ctx.db.insert("surfaces", {
+			...common,
+			surfaceKey: "legacy-collision-key",
+			articleReference: { obsolete: true },
+		});
+		const currentId = await ctx.db.insert("surfaces", {
+			...common,
+			surfaceKey: makeSurfaceId("de", value),
+		});
+		const ownedOldId = await ctx.db.insert("ownedSurfaces", {
+			surfaceId: oldId,
+			record: { notes: "old note", attestedTranslations: ["old"] },
+		});
+		const ownedCurrentId = await ctx.db.insert("ownedSurfaces", {
+			surfaceId: currentId,
+			record: { notes: "current note", attestedTranslations: ["new"] },
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId: oldId,
+			readingId,
+			realizationCoverage: "Full",
+		});
+		await ctx.db.patch(segmentId, {
+			attestationMembership: { attestationId, orthography: "Standard" },
+		});
+		const sentence = await ctx.db.get(sentenceId);
+		if (!sentence) throw new Error("Missing Sentence.");
+		await ctx.db.insert("visitorClicks", {
+			requestId: "click-old",
+			visitorId: "visitor",
+			textId: sentence.textId,
+			sentenceId,
+			segmentId,
+			attestationId,
+			clickedAt: 1,
+		});
+		await ctx.db.insert("personalAnnotations", {
+			visitorId: "visitor",
+			readingId,
+			text: "remember this",
+			updatedAt: 1,
+		});
+		await ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: readingKey,
+			knowledge: { definition: "keep" },
+			status: "Partial",
+			updatedAt: 1,
+		});
+		return { oldId, currentId, ownedOldId, ownedCurrentId, attestationId };
 	});
-	const migrate = migrateNounArticle as unknown as (
-		ctx: unknown,
-		row: unknown,
-	) => Promise<void>;
-	const ownership = migrateCompositionOwnership as unknown as typeof migrate;
-	const occurrence =
-		migrateCompositionAttestation as unknown as typeof migrate;
-	await migrate({ db }, old);
-	expect(await db.get(old._id)).toMatchObject({ redirectedTo: current._id });
-	expect((await db.get(old._id))?.articleReference).toBeUndefined();
-	await ownership({ db }, await db.get("owned-old"));
-	await occurrence({ db }, await db.get("attestation-old"));
-	expect((await db.get("attestation-old"))?.surfaceId).toBe(current._id);
-	expect((await db.get("owned-current"))?.record).toEqual({
+	const protectedTables = [
+		"visitorClicks",
+		"personalAnnotations",
+		"accumulatedKnowledge",
+		"segments",
+	] as const;
+	const protectedRows = await snapshot(t, protectedTables);
+	const migrateSurface = () =>
+		t.run(async (ctx) => {
+			const row = await ctx.db.get(seeded.oldId);
+			if (!row) throw new Error("Missing Surface.");
+			await migrateNounArticle(ctx, row);
+		});
+	const migrateAttestation = () =>
+		t.run(async (ctx) => {
+			const row = await ctx.db.get(seeded.attestationId);
+			if (!row) throw new Error("Missing Attestation.");
+			await migrateCompositionAttestation(ctx, row);
+		});
+
+	await migrateSurface();
+	const redirected = await t.run((ctx) => ctx.db.get(seeded.oldId));
+	expect(redirected).toMatchObject({ redirectedTo: seeded.currentId });
+	expect(redirected?.articleReference).toBeUndefined();
+	await t.run(async (ctx) => {
+		const row = await ctx.db.get(seeded.ownedOldId);
+		if (!row) throw new Error("Missing owned Surface.");
+		await migrateCompositionOwnership(ctx, row);
+	});
+	await migrateAttestation();
+
+	expect(
+		(await t.run((ctx) => ctx.db.get(seeded.attestationId)))?.surfaceId,
+	).toBe(seeded.currentId);
+	expect(
+		(await t.run((ctx) => ctx.db.get(seeded.ownedCurrentId)))?.record,
+	).toEqual({
 		notes: "current note\n\nold note",
 		attestedTranslations: ["new", "old"],
 	});
-	for (const [table, rows] of Object.entries(protectedRows))
-		expect(db.rows(table)).toEqual(expect.arrayContaining(rows));
-	const snapshot = db.snapshot();
-	await migrate({ db }, await db.get(old._id));
-	await occurrence({ db }, await db.get("attestation-old"));
-	expect(db.snapshot()).toEqual(snapshot);
+	expect(await t.run((ctx) => ctx.db.get(seeded.ownedOldId))).toBeNull();
+	const afterCutover = await snapshot(t, protectedTables);
+	for (const table of protectedTables) {
+		expect(afterCutover[table], table).toEqual(
+			expect.arrayContaining(protectedRows[table] ?? []),
+		);
+	}
+	const migrated = await snapshot(t);
+	await migrateSurface();
+	await migrateAttestation();
+	expect(await snapshot(t)).toEqual(migrated);
 });
 
 test("an in-flight legacy Surface proposal cannot reintroduce articleReference", async () => {
-	const db = new TransactionalDb(sourceSeed());
-	const args = clickArgs("New");
+	const t = createTestConvex();
+	const { selection, guard } = await selectIn(t, ["Banken"]);
+	const before = await snapshot(t);
+	const args = bankOccurrenceCommit(selection, guard, "New");
 	Object.assign(args.occurrence.attestation, {
 		surface: { ...surface, articleReference: null },
 	});
-	const before = db.snapshot();
-	await expect(runTransaction(db, args)).rejects.toThrow();
-	expect(db.snapshot()).toEqual(before);
+
+	await expect(
+		t.mutation(internal.persistence.persistResolvedClick, args),
+	).rejects.toThrow();
+	expect(await snapshot(t)).toEqual(before);
 });
 
 test("subject es materializes its exact Reading and Knowledge while retaining one verbal occurrence", async () => {
@@ -760,25 +725,21 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 			voice: null,
 		},
 	} as const;
-	const verbKey = makeSurfaceId("de", verbSurface);
-	const seed = sourceSeed();
-	seed.segments = ["Es", "gibt"].map((text, index) => ({
-		_id: `verb-member-${index}`,
-		sentenceId: "sentence-1",
-		index,
-		kind: "ResolvableText",
-		text,
-	}));
-	const db = new TransactionalDb(seed);
-	const args = clickArgs("New");
-	await runTransaction(db, {
-		...args,
+	const t = createTestConvex();
+	const { selection, guard, segmentIds } = await selectIn(t, [
+		"Es",
+		" ",
+		"gibt",
+	]);
+
+	const result = await t.mutation(internal.persistence.persistResolvedClick, {
+		...bankOccurrenceCommit(selection, guard, "New"),
 		reading: verbReading,
 		readingKey: readingFingerprint(verbReading),
 		occurrence: {
-			surfaceKey: verbKey,
+			surfaceKey: makeSurfaceId("de", verbSurface),
 			lemmaKey: lemmaIdentityKey(verbLemma),
-			memberSegmentIndices: [0, 1],
+			memberSegmentIndices: [0, 2],
 			attestation: {
 				unitKind: "Attestation",
 				surface: verbSurface,
@@ -792,30 +753,31 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 			},
 		},
 	});
-	expect(db.rows("attestations")).toHaveLength(1);
-	expect(db.rows("attestations")[0]).toMatchObject({
+
+	if (result.status !== "Committed") throw new Error("Expected a commit.");
+	const attestations = await rows(t, "attestations");
+	expect(attestations).toHaveLength(1);
+	expect(attestations[0]).toMatchObject({
 		expletiveEvidence: { attested: "Es", orthography: "Standard" },
 		governedPrepositionEvidence: null,
 	});
-	const componentLemma = db.rows("lemmas").find((row) => row.kind === "PRON");
-	const componentReading = db
-		.rows("readings")
-		.find((row) => row.lemmaId === componentLemma?._id);
+	const componentLemma = (await rows(t, "lemmas")).find(
+		(row) => row.kind === "PRON",
+	);
+	const componentReading = (await rows(t, "readings")).find(
+		(row) => row.lemmaId === componentLemma?._id,
+	);
 	expect(componentReading?.emojiDescription).toBe("⚪");
 	expect(
-		db
-			.rows("accumulatedKnowledge")
-			.some(
-				(row) => row.ownerReadingKey === componentReading?.readingKey,
-			),
+		(await rows(t, "accumulatedKnowledge")).some(
+			(row) => row.ownerReadingKey === componentReading?.readingKey,
+		),
 	).toBe(true);
+	const members = (await rows(t, "segments")).filter(({ _id }) =>
+		[segmentIds[0], segmentIds[2]].includes(_id),
+	);
 	expect(
-		db
-			.rows("segments")
-			.every(
-				(row) =>
-					(row.attestationMembership as { attestationId: string })
-						.attestationId === db.rows("attestations")[0]?._id,
-			),
-	).toBe(true);
+		members.map((row) => row.attestationMembership?.attestationId),
+	).toEqual([result.attestationId, result.attestationId]);
+	await expectCompleted(t, "request-1", result.attestationId);
 });

@@ -14,7 +14,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { finishDeletedSessionsResolution } from "./model/segmentResolutionState";
+import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
@@ -186,12 +186,7 @@ export const clearVisitorDataBatch = internalMutation({
 						q.eq("visitorId", visitorId),
 					)
 					.take(BATCH_SIZE);
-				await finishDeletedSessionsResolution(
-					ctx,
-					rows,
-					"PermanentFailure",
-				);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
+				await deleteResolutionSessions(ctx, rows);
 				deleted = rows.length;
 				nextPhase =
 					rows.length === BATCH_SIZE
@@ -468,14 +463,7 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 			return { deleted: next.analyses.length, hasMore: true };
 		}
 		if (next.sessions.length > 0) {
-			await finishDeletedSessionsResolution(
-				ctx,
-				next.sessions,
-				"PermanentFailure",
-			);
-			await Promise.all(
-				next.sessions.map((session) => ctx.db.delete(session._id)),
-			);
+			await deleteResolutionSessions(ctx, next.sessions);
 			return { deleted: next.sessions.length, hasMore: true };
 		}
 		const segment = next.segments[0];

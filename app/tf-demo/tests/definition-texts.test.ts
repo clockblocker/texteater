@@ -1,32 +1,35 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 
-import {
-	deleteTextRows,
-	loadSync,
-	persistSegmented,
-	settle,
-} from "../convex/definitionTexts";
+import { api, internal } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import {
 	definitionOf,
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
-import { get as getReadingNote } from "../convex/readingNotes";
-import { list as listTexts } from "../convex/texts";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
-import { load } from "../tooling/playground-fixtures";
 import {
-	IndexedTestDb,
-	runTestMutation,
-	runTestQuery,
-	type TestRow,
-} from "./support/indexed-db";
+	createPlaygroundConvex,
+	createTestConvex,
+	PLAYGROUND_FIXTURE_TIMEOUT_MS,
+	playgroundFixtures,
+	type TestConvexDb,
+} from "./support/convex";
 
 const READING_KEY = "reading:haus";
 
-function seedReading(db: IndexedTestDb) {
-	return (async () => {
-		const lemmaId = await db.insert("lemmas", {
+beforeEach(() => {
+	// A synced definition schedules its materializer; nothing here runs it.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
+async function seedReading(t: TestConvexDb) {
+	await t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
 			lemmaKey: "lemma:haus",
 			language: "de",
 			family: "Lexeme",
@@ -34,123 +37,140 @@ function seedReading(db: IndexedTestDb) {
 			canonicalForm: "Haus",
 			coreFeatures: { gender: "Neut", hyph: null },
 		});
-		await db.insert("readings", {
+		await ctx.db.insert("readings", {
 			readingKey: READING_KEY,
 			lemmaId,
 			emojiDescription: "🏠",
 		});
-	})();
+	});
 }
 
-function mutationCtx(db: IndexedTestDb) {
-	const scheduled: unknown[] = [];
-	const ctx = {
-		db,
-		scheduler: {
-			async runAfter(_delay: number, _fn: unknown, args: unknown) {
-				scheduled.push(args);
-			},
-		},
-	};
-	return { ctx: ctx as never, scheduled };
+function sync(t: TestConvexDb, knowledge: unknown) {
+	return t.run((ctx) => syncDefinitionText(ctx, READING_KEY, knowledge));
+}
+
+/** The materializer runs that are waiting to fire. */
+async function scheduledRuns(t: TestConvexDb) {
+	return (
+		await t.run((ctx) =>
+			ctx.db.system.query("_scheduled_functions").collect(),
+		)
+	).map(({ args }) => args[0]);
+}
+
+async function tableRows<Table extends "definitionTexts" | "texts">(
+	t: TestConvexDb,
+	table: Table,
+) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+async function sentenceAndSegmentCounts(t: TestConvexDb) {
+	return t.run(async (ctx) => ({
+		sentences: (await ctx.db.query("sentences").collect()).length,
+		segments: (await ctx.db.query("segments").collect()).length,
+	}));
 }
 
 test("definitionOf normalizes the definition aspect and ignores everything else", () => {
-	expect(definitionOf({ definition: "  Ein Haus.Å " })).toBe("Ein Haus.Å");
+	expect(definitionOf({ definition: "  Ein Haus.Å " })).toBe("Ein Haus.Å");
 	expect(definitionOf({ definition: "   " })).toBeNull();
 	expect(definitionOf({ transcription: "haʊs" })).toBeNull();
 	expect(definitionOf(null)).toBeNull();
 });
 
 test("a new definition schedules one materialization and repeats do not reschedule", async () => {
-	const db = new IndexedTestDb();
-	await seedReading(db);
-	const { ctx, scheduled } = mutationCtx(db);
+	const t = createTestConvex();
+	await seedReading(t);
 
-	await syncDefinitionText(ctx, READING_KEY, {});
-	expect(db.rows("definitionTexts")).toHaveLength(0);
+	await sync(t, {});
+	expect(await tableRows(t, "definitionTexts")).toHaveLength(0);
 
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Gebäude." });
-	expect(scheduled).toEqual([{ ownerReadingKey: READING_KEY }]);
-	expect(db.rows("definitionTexts")[0]).toMatchObject({
+	await sync(t, { definition: "Ein Gebäude." });
+	expect(await scheduledRuns(t)).toEqual([{ ownerReadingKey: READING_KEY }]);
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
 		ownerReadingKey: READING_KEY,
 		definition: "Ein Gebäude.",
 		state: "Scheduled",
 	});
 
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Gebäude." });
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Bauwerk." });
-	expect(scheduled).toHaveLength(1);
-	expect(db.rows("definitionTexts")[0]?.definition).toBe("Ein Bauwerk.");
+	await sync(t, { definition: "Ein Gebäude." });
+	await sync(t, { definition: "Ein Bauwerk." });
+	expect(await scheduledRuns(t)).toHaveLength(1);
+	expect((await tableRows(t, "definitionTexts"))[0]?.definition).toBe(
+		"Ein Bauwerk.",
+	);
 });
 
 test("materialization writes a hidden Definition Text, then a changed or retracted definition replaces it", async () => {
-	const db = new IndexedTestDb();
-	await seedReading(db);
-	const { ctx, scheduled } = mutationCtx(db);
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Gebäude." });
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Ein Gebäude." });
 
-	const sync = await runTestQuery(db, loadSync, {
-		ownerReadingKey: READING_KEY,
-	});
-	expect(sync).toMatchObject({
+	expect(
+		await t.query(internal.definitionTexts.loadSync, {
+			ownerReadingKey: READING_KEY,
+		}),
+	).toMatchObject({
 		state: "Scheduled",
 		definition: "Ein Gebäude.",
 		language: "de",
 	});
 
-	const persisted = await runTestMutation(db, persistSegmented, {
-		ownerReadingKey: READING_KEY,
-		definition: "Ein Gebäude.",
-		language: "de",
-		segmentedSentenceId: "definition:test",
-		segments: proseSegments("Ein Gebäude."),
-	});
-	expect(persisted).toBe("Ready");
-	const text = db.rows("texts")[0];
+	expect(
+		await t.mutation(internal.definitionTexts.persistSegmented, {
+			ownerReadingKey: READING_KEY,
+			definition: "Ein Gebäude.",
+			language: "de",
+			segmentedSentenceId: "definition:test",
+			segments: proseSegments("Ein Gebäude."),
+		}),
+	).toBe("Ready");
+	const [text] = await tableRows(t, "texts");
 	expect(text).toMatchObject({
 		sourceText: "Ein Gebäude.",
 		origin: { kind: "Definition", readingKey: READING_KEY },
 	});
-	expect(db.rows("sentences")).toHaveLength(1);
-	expect(db.rows("segments").map(({ text: value }) => value)).toEqual([
-		"Ein",
-		" ",
-		"Gebäude",
-		".",
-	]);
-	const row = db.rows("definitionTexts")[0] as TestRow;
-	expect(row).toMatchObject({
+	if (!text) throw new Error("Expected a Definition Text.");
+	expect((await sentenceAndSegmentCounts(t)).sentences).toBe(1);
+	expect(
+		(await t.run((ctx) => ctx.db.query("segments").collect())).map(
+			({ text: value }) => value,
+		),
+	).toEqual(["Ein", " ", "Gebäude", "."]);
+	expect((await tableRows(t, "definitionTexts"))[0]).toMatchObject({
 		state: "Ready",
 		materializedDefinition: "Ein Gebäude.",
-		textId: text?._id,
+		textId: text._id,
 	});
 	expect(
-		await runTestMutation(db, settle, {
+		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
 			outcome: { kind: "Ready" },
 		}),
 	).toBe("Settled");
 
 	// The library never lists a Definition Text.
-	expect(await runTestQuery(db, listTexts, {})).toEqual([]);
+	expect(await t.query(api.texts.list, {})).toEqual([]);
 
 	// Same definition again: nothing to do.
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Gebäude." });
-	expect(scheduled).toHaveLength(1);
+	await sync(t, { definition: "Ein Gebäude." });
+	expect(await scheduledRuns(t)).toHaveLength(1);
 
 	// A corrected definition: the old Text goes, the new one is written.
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Ein Bauwerk." });
-	expect(scheduled).toHaveLength(2);
-	await runTestMutation(db, deleteTextRows, {
+	await sync(t, { definition: "Ein Bauwerk." });
+	expect(await scheduledRuns(t)).toHaveLength(2);
+	await t.mutation(internal.definitionTexts.deleteTextRows, {
 		ownerReadingKey: READING_KEY,
-		textId: text?._id,
+		textId: text._id,
 	});
-	expect(db.rows("texts")).toHaveLength(0);
-	expect(db.rows("sentences")).toHaveLength(0);
-	expect(db.rows("segments")).toHaveLength(0);
+	expect(await tableRows(t, "texts")).toHaveLength(0);
+	expect(await sentenceAndSegmentCounts(t)).toEqual({
+		sentences: 0,
+		segments: 0,
+	});
 	expect(
-		await runTestMutation(db, persistSegmented, {
+		await t.mutation(internal.definitionTexts.persistSegmented, {
 			ownerReadingKey: READING_KEY,
 			definition: "Ein Gebäude.",
 			language: "de",
@@ -158,180 +178,208 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 			segments: proseSegments("Ein Gebäude."),
 		}),
 	).toBe("Stale");
-	await runTestMutation(db, persistSegmented, {
+	await t.mutation(internal.definitionTexts.persistSegmented, {
 		ownerReadingKey: READING_KEY,
 		definition: "Ein Bauwerk.",
 		language: "de",
 		segmentedSentenceId: "definition:test-2",
 		segments: proseSegments("Ein Bauwerk."),
 	});
-	expect(db.rows("texts")[0]?.sourceText).toBe("Ein Bauwerk.");
+	const [replacement] = await tableRows(t, "texts");
+	expect(replacement?.sourceText).toBe("Ein Bauwerk.");
+	if (!replacement) throw new Error("Expected a replacement Text.");
 
 	// Retracted: the pointer clears and settling removes the state row.
-	await syncDefinitionText(ctx, READING_KEY, {});
-	expect(scheduled).toHaveLength(3);
-	await runTestMutation(db, deleteTextRows, {
+	await sync(t, {});
+	expect(await scheduledRuns(t)).toHaveLength(3);
+	await t.mutation(internal.definitionTexts.deleteTextRows, {
 		ownerReadingKey: READING_KEY,
-		textId: db.rows("texts")[0]?._id,
+		textId: replacement._id,
 	});
 	expect(
-		await runTestMutation(db, settle, {
+		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
 			outcome: { kind: "Retracted" },
 		}),
 	).toBe("Settled");
-	expect(db.rows("definitionTexts")).toHaveLength(0);
-	expect(db.rows("texts")).toHaveLength(0);
+	expect(await tableRows(t, "definitionTexts")).toHaveLength(0);
+	expect(await tableRows(t, "texts")).toHaveLength(0);
 });
 
 test("a definition that changed mid-run is rescheduled when the run settles", async () => {
-	const db = new IndexedTestDb();
-	await seedReading(db);
-	const { ctx } = mutationCtx(db);
-	await syncDefinitionText(ctx, READING_KEY, { definition: "Alt." });
-	await runTestMutation(db, persistSegmented, {
+	const t = createTestConvex();
+	await seedReading(t);
+	await sync(t, { definition: "Alt." });
+	await t.mutation(internal.definitionTexts.persistSegmented, {
 		ownerReadingKey: READING_KEY,
 		definition: "Alt.",
 		language: "de",
 		segmentedSentenceId: "definition:alt",
 		segments: proseSegments("Alt."),
 	});
-	await db.patch(db.rows("definitionTexts")[0]?._id ?? "", {
-		definition: "Neu.",
-		state: "Running",
+	await t.run(async (ctx) => {
+		const [row] = await ctx.db.query("definitionTexts").collect();
+		if (!row) throw new Error("Expected a Definition Text row.");
+		await ctx.db.patch(row._id, { definition: "Neu.", state: "Running" });
 	});
 	expect(
-		await runTestMutation(db, settle, {
+		await t.mutation(internal.definitionTexts.settle, {
 			ownerReadingKey: READING_KEY,
 			outcome: { kind: "Ready" },
 		}),
 	).toBe("Reschedule");
-	expect(db.rows("definitionTexts")[0]?.state).toBe("Scheduled");
+	expect((await tableRows(t, "definitionTexts"))[0]?.state).toBe("Scheduled");
 });
 
-test("the Reading Note carries its Definition Text as a Sentence and excludes self-referencing Source Contexts", async () => {
-	const db = new IndexedTestDb();
-	await runTestMutation(db, load, {});
-	const [defined, cited] = NOTE_STUDY_DATABASE;
-	if (!defined || !cited) throw new Error("Fixtures need two units.");
-	const readingOf = (readingKey: string) => {
-		const reading = db
-			.rows("readings")
-			.find((row) => row.readingKey === readingKey);
-		if (!reading) throw new Error(`Missing Reading ${readingKey}`);
-		return reading;
-	};
-	const definedReading = readingOf(defined.readingKey);
-	const citedReading = readingOf(cited.readingKey);
-	const definitionRow = db
-		.rows("definitionTexts")
-		.find((row) => row.ownerReadingKey === defined.readingKey);
-	if (!definitionRow?.sentenceId) throw new Error("No Definition Text.");
-	const segments = db
-		.rows("segments")
-		.filter(
-			(row) =>
-				row.sentenceId === definitionRow.sentenceId &&
-				row.kind === "ResolvableText",
-		);
-	const [citedSegment, selfSegment] = segments;
-	if (!citedSegment || !selfSegment) throw new Error("Need two words.");
+test(
+	"the Reading Note carries its Definition Text as a Sentence and excludes self-referencing Source Contexts",
+	async () => {
+		const t = createPlaygroundConvex();
+		await t.mutation(playgroundFixtures.load, {});
+		const [defined, cited] = NOTE_STUDY_DATABASE;
+		if (!defined || !cited) throw new Error("Fixtures need two units.");
 
-	// The Visitor clicked one word of the definition; it resolved to another unit.
-	const citedAttestation = await db.insert("attestations", {
-		surfaceId: "surfaces-cited",
-		readingId: citedReading._id,
-		realizationCoverage: "Full",
-	});
-	await db.patch(citedSegment._id, {
-		attestationMembership: {
-			attestationId: citedAttestation,
-			orthography: "Standard",
-		},
-	});
-	// Another word resolved to the defined Reading itself.
-	const selfAttestation = await db.insert("attestations", {
-		surfaceId: "surfaces-self",
-		readingId: definedReading._id,
-		realizationCoverage: "Full",
-	});
-	await db.patch(selfSegment._id, {
-		attestationMembership: {
-			attestationId: selfAttestation,
-			orthography: "Standard",
-		},
-	});
-	for (const [segmentId, attestationId] of [
-		[citedSegment._id, citedAttestation],
-		[selfSegment._id, selfAttestation],
-	] as const) {
-		await db.insert("visitorClicks", {
-			requestId: `request:${segmentId}`,
-			visitorId: "visitor-1",
-			textId: definitionRow.textId,
-			sentenceId: definitionRow.sentenceId,
-			segmentId,
-			attestationId,
-			clickedAt: 1,
+		const seeded = await t.run(async (ctx) => {
+			const readingOf = async (readingKey: string) => {
+				const reading = await ctx.db
+					.query("readings")
+					.withIndex("by_reading_key", (q) =>
+						q.eq("readingKey", readingKey),
+					)
+					.unique();
+				if (!reading) throw new Error(`Missing Reading ${readingKey}`);
+				return reading;
+			};
+			const definedReading = await readingOf(defined.readingKey);
+			const citedReading = await readingOf(cited.readingKey);
+			const definitionRow = await ctx.db
+				.query("definitionTexts")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", defined.readingKey),
+				)
+				.unique();
+			const sentenceId = definitionRow?.sentenceId;
+			if (!sentenceId) throw new Error("No Definition Text.");
+			const segments = (
+				await ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q.eq("sentenceId", sentenceId),
+					)
+					.collect()
+			).filter(({ kind }) => kind === "ResolvableText");
+			const [citedSegment, selfSegment] = segments;
+			if (!citedSegment || !selfSegment)
+				throw new Error("Need two words.");
+
+			const attest = async (
+				readingId: Id<"readings">,
+				lemmaId: Id<"lemmas">,
+				segment: typeof citedSegment,
+			) => {
+				const surfaceId = await ctx.db.insert("surfaces", {
+					surfaceKey: `surface:${segment._id}`,
+					lemmaId,
+					language: "de",
+					normalizedSurface: segment.text.toLowerCase(),
+					spelling: "Canonical",
+					surfaceFeatures: {},
+				});
+				const attestationId = await ctx.db.insert("attestations", {
+					surfaceId,
+					readingId,
+					realizationCoverage: "Full",
+				});
+				await ctx.db.patch(segment._id, {
+					attestationMembership: {
+						attestationId,
+						orthography: "Standard",
+					},
+				});
+				await ctx.db.insert("visitorClicks", {
+					requestId: `request:${segment._id}`,
+					visitorId: "visitor-1",
+					textId: definitionRow.textId,
+					sentenceId,
+					segmentId: segment._id,
+					attestationId,
+					clickedAt: 1,
+				});
+				return attestationId;
+			};
+			// The Visitor clicked one word of the definition; it resolved to another unit.
+			const citedAttestation = await attest(
+				citedReading._id,
+				citedReading.lemmaId,
+				citedSegment,
+			);
+			// Another word resolved to the defined Reading itself.
+			const selfAttestation = await attest(
+				definedReading._id,
+				definedReading.lemmaId,
+				selfSegment,
+			);
+			return {
+				definedReadingId: definedReading._id,
+				citedReadingId: citedReading._id,
+				citedAttestation,
+				selfAttestation,
+				citedSegment,
+			};
 		});
-	}
 
-	const definedNote = (await runTestQuery(db, getReadingNote, {
-		readingId: definedReading._id,
-		visitorId: "visitor-1",
-	})) as {
-		definitionText: {
-			state: string;
-			sentence?: { segments: { text: string; attestationId?: string }[] };
-		};
-		sourceContexts: { page: { attestationId: string }[] };
-	};
-	expect(definedNote.definitionText.state).toBe("Ready");
-	expect(
-		definedNote.definitionText.sentence?.segments
-			.map(({ text }) => text)
-			.join(""),
-	).toBe(defined.knowledge.definition);
-	expect(
-		definedNote.definitionText.sentence?.segments.find(
-			(segment) => segment.attestationId === citedAttestation,
-		)?.text,
-	).toBe(citedSegment.text);
-	// A Reading's own definition never cites itself.
-	expect(
-		definedNote.sourceContexts.page.map(
-			({ attestationId }) => attestationId,
-		),
-	).not.toContain(selfAttestation);
+		const definedNote = await t.query(api.readingNotes.get, {
+			readingId: seeded.definedReadingId,
+			visitorId: "visitor-1",
+		});
+		if (!definedNote) throw new Error("Expected the defined Reading Note.");
+		expect(definedNote.definitionText.state).toBe("Ready");
+		const definitionSentence =
+			"sentence" in definedNote.definitionText
+				? definedNote.definitionText.sentence
+				: undefined;
+		expect(
+			definitionSentence?.segments.map(({ text }) => text).join(""),
+		).toBe(defined.knowledge.definition);
+		expect(
+			definitionSentence?.segments.find(
+				(segment) =>
+					"attestationId" in segment &&
+					segment.attestationId === seeded.citedAttestation,
+			)?.text,
+		).toBe(seeded.citedSegment.text);
+		// A Reading's own definition never cites itself.
+		expect(
+			definedNote.sourceContexts.page.map(
+				({ attestationId }) => attestationId,
+			),
+		).not.toContain(seeded.selfAttestation);
 
-	const citedNote = (await runTestQuery(db, getReadingNote, {
-		readingId: citedReading._id,
-		visitorId: "visitor-1",
-	})) as {
-		sourceContexts: {
-			page: {
-				attestationId: string;
-				origin: unknown;
-				target: unknown;
-				segments: unknown[];
-				memberSegmentIndices: number[];
-			}[];
-		};
-	};
-	const context = citedNote.sourceContexts.page.find(
-		({ attestationId }) => attestationId === citedAttestation,
-	);
-	expect(context?.origin).toEqual({
-		kind: "Definition",
-		readingId: definedReading._id,
-		emojiDescription: defined.reading.emojiDescription,
-		canonicalForm: defined.reading.lemma.canonicalForm,
-	});
-	expect(context?.target).toEqual({
-		kind: "Reading",
-		readingId: definedReading._id,
-		focus: { kind: "Definition", attestationId: citedAttestation },
-	});
-	expect(context?.segments.length).toBeGreaterThan(0);
-	expect(context?.memberSegmentIndices).toEqual([Number(citedSegment.index)]);
-});
+		const citedNote = await t.query(api.readingNotes.get, {
+			readingId: seeded.citedReadingId,
+			visitorId: "visitor-1",
+		});
+		const context = citedNote?.sourceContexts.page.find(
+			({ attestationId }) => attestationId === seeded.citedAttestation,
+		);
+		expect(context?.origin).toEqual({
+			kind: "Definition",
+			readingId: seeded.definedReadingId,
+			emojiDescription: defined.reading.emojiDescription,
+			canonicalForm: defined.reading.lemma.canonicalForm,
+		});
+		expect(context?.target).toEqual({
+			kind: "Reading",
+			readingId: seeded.definedReadingId,
+			focus: {
+				kind: "Definition",
+				attestationId: seeded.citedAttestation,
+			},
+		});
+		expect(context?.segments.length).toBeGreaterThan(0);
+		expect(context?.memberSegmentIndices).toEqual([
+			seeded.citedSegment.index,
+		]);
+	},
+	PLAYGROUND_FIXTURE_TIMEOUT_MS,
+);

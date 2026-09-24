@@ -1,28 +1,14 @@
 import { afterEach, beforeEach, expect, test } from "bun:test";
-import { getFunctionName } from "convex/server";
-import { submitText } from "../convex/orchestration";
+import { api } from "../convex/_generated/api";
+import { createTestConvex, type TestConvexDb } from "./support/convex";
 
-type SubmitTextArgs = { submissionKey: string; sourceText: string };
-
-const submitTextHandler = (
-	submitText as unknown as {
-		_handler: (ctx: unknown, args: SubmitTextArgs) => Promise<unknown>;
-	}
-)._handler;
-
-const unexpectedWork = {
-	calls: [] as string[],
-	runQuery(reference: unknown) {
-		const name = getFunctionName(reference as never);
-		unexpectedWork.calls.push(name);
-		throw new Error(`Unexpected query ${name}`);
-	},
-	runMutation(reference: unknown) {
-		const name = getFunctionName(reference as never);
-		unexpectedWork.calls.push(name);
-		throw new Error(`Unexpected mutation ${name}`);
-	},
-};
+/** Rows the submission wrote; a Rejected or failed one writes none. */
+async function storedTexts(t: TestConvexDb) {
+	return t.run(async (ctx) => [
+		...(await ctx.db.query("texts").collect()),
+		...(await ctx.db.query("sentences").collect()),
+	]);
+}
 
 const previousFetch = globalThis.fetch;
 const previousKeys = {
@@ -32,7 +18,6 @@ const previousKeys = {
 let providerRequests: string[] = [];
 
 beforeEach(() => {
-	unexpectedWork.calls = [];
 	providerRequests = [];
 	process.env.OPENAI_API_KEY = "fixture";
 	process.env.TYPESAFE_API_KEY = "fixture";
@@ -57,8 +42,9 @@ test("a text over the sentence limit is Rejected with its reason before any work
 		(_, index) => `Satz ${index + 1} ist hier.`,
 	).join(" ");
 
+	const t = createTestConvex();
 	await expect(
-		submitTextHandler(unexpectedWork, {
+		t.action(api.orchestration.submitText, {
 			submissionKey: "too-many-sentences",
 			sourceText,
 		}),
@@ -66,21 +52,24 @@ test("a text over the sentence limit is Rejected with its reason before any work
 		status: "Rejected",
 		message: "At most 25 sentences are allowed.",
 	});
-	expect(unexpectedWork.calls).toEqual([]);
+	expect(await storedTexts(t)).toEqual([]);
 	expect(providerRequests).toEqual([]);
 });
 
 test("a provider failure still throws instead of becoming Rejected", async () => {
-	const error = await submitTextHandler(unexpectedWork, {
-		submissionKey: "provider-failure",
-		sourceText: "Die Banken sind geschlossen.",
-	}).then(
-		() => undefined,
-		(failure: unknown) => failure,
-	);
+	const t = createTestConvex();
+	const error = await t
+		.action(api.orchestration.submitText, {
+			submissionKey: "provider-failure",
+			sourceText: "Die Banken sind geschlossen.",
+		})
+		.then(
+			() => undefined,
+			(failure: unknown) => failure,
+		);
 
 	expect(error).toBeInstanceOf(Error);
 	expect(String(error)).toContain("ProviderFailure");
 	expect(providerRequests.length).toBeGreaterThan(0);
-	expect(unexpectedWork.calls).toEqual([]);
+	expect(await storedTexts(t)).toEqual([]);
 });

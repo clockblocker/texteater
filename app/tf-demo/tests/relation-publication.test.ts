@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import esbuild from "esbuild";
+import { internal } from "../convex/_generated/api";
 import { COMPILED_RELATION_VERDICT } from "../convex/model/compiledRelationVerdict";
 import {
 	effectiveRelationPublicationPolicy,
@@ -9,25 +10,16 @@ import {
 	type ReviewedRelationVerdictArtifact,
 } from "../convex/model/generatedKnowledgeContainment";
 import {
-	getAuthorization,
-	listAttemptProvenance,
-	monitorKind,
 	type RelationPublicationAuthorization,
 	recordCommittedRelationRun,
-	recordRejectedOutput,
 	relationPublicationRunAllowed,
-	setRollback,
 } from "../convex/relationPublication";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
 	compileReviewedVerdict,
 	currentRelationFingerprints,
 } from "../tooling/compile-relation-verdict";
-import {
-	IndexedTestDb,
-	runTestMutation,
-	runTestQuery,
-} from "./support/indexed-db";
+import { createTestConvex } from "./support/convex";
 
 test("the isolate publication policy does not bundle Dumling's schema graph", async () => {
 	const entryPoint = new URL(
@@ -367,36 +359,72 @@ test("rollback denies a previously authorized relation run without changing its 
 });
 
 test("rollback persistence and proposal monitoring are queryable through internal Convex seams", async () => {
-	const db = new IndexedTestDb({
-		knowledgeGenerationAttempts: [
-			{
-				_id: "attempt-row",
-				attemptKey: "attempt-1",
-				readingId: "reading-1",
-				ownerReadingKey: "reading-key",
-				attestationId: "attestation-1",
-			},
-		],
-		pendingSemanticRelations: [
-			{
-				_id: "pending-1",
-				locatorKey: JSON.stringify([
-					"reading-key",
-					"synonym",
-					"pending-entry:v2:de:Lexeme:NOUN:Geldinstitut",
-				]),
-			},
-		],
+	const t = createTestConvex();
+	const attempt = await t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: "lemma-key",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Bank",
+			coreFeatures: {},
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey: "reading-key",
+			lemmaId,
+			emojiDescription: "🏦",
+		});
+		const surfaceId = await ctx.db.insert("surfaces", {
+			surfaceKey: "surface-key",
+			lemmaId,
+			language: "de",
+			normalizedSurface: "Bank",
+			spelling: "Canonical",
+			surfaceFeatures: {},
+		});
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId,
+			readingId,
+			realizationCoverage: "Full",
+		});
+		const row = {
+			attemptKey: "attempt-1",
+			readingId,
+			ownerReadingKey: "reading-key",
+			attestationId,
+		};
+		await ctx.db.insert("knowledgeGenerationAttempts", {
+			...row,
+			visitorId: "visitor-1",
+			state: "Running",
+			createdAt: 1,
+			updatedAt: 1,
+		});
+		await ctx.db.insert("pendingSemanticRelations", {
+			locatorKey: JSON.stringify([
+				"reading-key",
+				"synonym",
+				"pending-entry:v2:de:Lexeme:NOUN:Geldinstitut",
+			]),
+			sourceReadingKey: "reading-key",
+			targetCanonicalForm: "Geldinstitut",
+			record: {},
+		});
+		return row;
 	});
-	expect(await runTestQuery(db, getAuthorization, {})).toMatchObject({
+	expect(
+		await t.query(internal.relationPublication.getAuthorization, {}),
+	).toMatchObject({
 		rollbackStopped: false,
 		qualifiedKinds: [],
 	});
-	await runTestMutation(db, setRollback, {
+	await t.mutation(internal.relationPublication.setRollback, {
 		stopped: true,
 		reason: "sampled semantic regression",
 	});
-	expect(await runTestQuery(db, getAuthorization, {})).toMatchObject({
+	expect(
+		await t.query(internal.relationPublication.getAuthorization, {}),
+	).toMatchObject({
 		rollbackStopped: true,
 		rollbackReason: "sampled semantic regression",
 		qualifiedKinds: [],
@@ -408,48 +436,47 @@ test("rollback persistence and proposal monitoring are queryable through interna
 		kind: "NOUN",
 		canonicalForm: "Geldinstitut",
 	} as const;
-	await recordCommittedRelationRun(
-		{ db } as never,
-		{
-			attemptKey: "attempt-1",
-			readingId: "reading-1" as never,
-			ownerReadingKey: "reading-key",
-			attestationId: "attestation-1" as never,
-		},
-		{
-			runNumber: 1,
-			requestedKinds: ["synonym"],
-			artifactPath: reviewedArtifact.artifactPath,
-			fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
-			proposals: [{ relation: "synonym", targetShadow }],
-		},
-		false,
+	await t.run((ctx) =>
+		recordCommittedRelationRun(
+			ctx,
+			attempt,
+			{
+				runNumber: 1,
+				requestedKinds: ["synonym"],
+				artifactPath: reviewedArtifact.artifactPath,
+				fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
+				proposals: [{ relation: "synonym", targetShadow }],
+			},
+			false,
+		),
 	);
-	const provenance = await runTestQuery(db, listAttemptProvenance, {
-		attemptKey: "attempt-1",
-		runNumber: 1,
-	});
+	const provenance = await t.query(
+		internal.relationPublication.listAttemptProvenance,
+		{ attemptKey: "attempt-1", runNumber: 1 },
+	);
 	expect(provenance).toEqual([
 		expect.objectContaining({
 			attemptKey: "attempt-1",
 			runNumber: 1,
 			relation: "synonym",
-			sourceReadingId: "reading-1",
+			sourceReadingId: attempt.readingId,
 			sourceReadingKey: "reading-key",
-			contextAttestationId: "attestation-1",
+			contextAttestationId: attempt.attestationId,
 			targetShadow,
 			verdictArtifactPath: reviewedArtifact.artifactPath,
 			fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
 			outcome: "PendingShadow",
 		}),
 	]);
-	expect(
-		await runTestQuery(db, monitorKind, {
-			relation: "synonym",
+	const monitor = (
+		relation: "synonym" | "antonym" | "nearSynonym" | "hypernym",
+	) =>
+		t.query(internal.relationPublication.monitorKind, {
+			relation,
 			from: 0,
 			to: Date.now() + 1_000,
-		}),
-	).toMatchObject({
+		});
+	expect(await monitor("synonym")).toMatchObject({
 		generatedTargets: 1,
 		nulls: 0,
 		pendingShadows: 1,
@@ -459,59 +486,47 @@ test("rollback persistence and proposal monitoring are queryable through interna
 		rows: 1,
 		truncated: false,
 	});
-	await recordCommittedRelationRun(
-		{ db } as never,
-		{
-			attemptKey: "attempt-1",
-			readingId: "reading-1" as never,
-			ownerReadingKey: "reading-key",
-			attestationId: "attestation-1" as never,
-		},
-		{
-			runNumber: 2,
-			requestedKinds: ["antonym", "nearSynonym"],
-			artifactPath: reviewedArtifact.artifactPath,
-			fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
-			proposals: [
-				{
-					relation: "nearSynonym",
-					targetShadow: {
-						...targetShadow,
-						canonicalForm: "Kreditinstitut",
+	await t.run((ctx) =>
+		recordCommittedRelationRun(
+			ctx,
+			attempt,
+			{
+				runNumber: 2,
+				requestedKinds: ["antonym", "nearSynonym"],
+				artifactPath: reviewedArtifact.artifactPath,
+				fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
+				proposals: [
+					{
+						relation: "nearSynonym",
+						targetShadow: {
+							...targetShadow,
+							canonicalForm: "Kreditinstitut",
+						},
 					},
-				},
-			],
-		},
-		false,
+				],
+			},
+			false,
+		),
 	);
-	expect(
-		await runTestQuery(db, monitorKind, {
-			relation: "antonym",
-			from: 0,
-			to: Date.now() + 1_000,
-		}),
-	).toMatchObject({ generatedTargets: 0, nulls: 1 });
-	expect(
-		await runTestQuery(db, monitorKind, {
-			relation: "nearSynonym",
-			from: 0,
-			to: Date.now() + 1_000,
-		}),
-	).toMatchObject({ generatedTargets: 1, directMatches: 1 });
-	await runTestMutation(db, recordRejectedOutput, {
+	expect(await monitor("antonym")).toMatchObject({
+		generatedTargets: 0,
+		nulls: 1,
+	});
+	expect(await monitor("nearSynonym")).toMatchObject({
+		generatedTargets: 1,
+		directMatches: 1,
+	});
+	await t.mutation(internal.relationPublication.recordRejectedOutput, {
 		attemptKey: "attempt-1",
 		runNumber: 3,
 		requestedKinds: ["hypernym"],
 		artifactPath: reviewedArtifact.artifactPath,
 		fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
 	});
-	expect(
-		await runTestQuery(db, monitorKind, {
-			relation: "hypernym",
-			from: 0,
-			to: Date.now() + 1_000,
-		}),
-	).toMatchObject({ rejectedOutputs: 1, nulls: 0 });
+	expect(await monitor("hypernym")).toMatchObject({
+		rejectedOutputs: 1,
+		nulls: 0,
+	});
 });
 
 test("commit-time rollback keeps base Knowledge changes and drops relation changes", () => {

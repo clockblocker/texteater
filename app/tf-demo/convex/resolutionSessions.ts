@@ -1,26 +1,20 @@
-import { type Infer, v } from "convex/values";
-import { restoreStoredGrammar } from "../server/resolutionGrammar";
-import { internal } from "./_generated/api";
+import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
-import { inspectionJson, inspectionRequested } from "./model/inspection";
+import { inspectionJson } from "./model/inspection";
 import {
-	assertResolutionProgressTransition,
+	advanceResolutionSession,
+	claimResolutionRun,
+	deleteResolutionSessions,
+	failResolutionRun,
 	loadResolutionNote,
-	type ResolutionLifecycleSource,
-	type ResolutionProgress,
-	requireActiveResolutionSession,
+	recordResolutionRunSuccess,
+	recoverStaleResolutionRun,
 	resolutionNoteValidator,
-	resolutionProgressHasReached,
-	settleComplete,
-	settleFailed,
-	settleUnresolved,
+	retryResolutionSession,
+	settleResolutionRun,
+	startResolutionSession,
 } from "./model/resolutionSessions";
-import {
-	beginSegmentResolution,
-	finishDeletedSessionsResolution,
-	finishSegmentResolution,
-} from "./model/segmentResolutionState";
 import {
 	readingValueValidator,
 	resolutionActivityValidator,
@@ -33,10 +27,7 @@ import {
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
 } from "./model/validators";
-import {
-	ensureVisitorEncounter,
-	findVisitorEncounter,
-} from "./model/visitorClicks";
+import { ensureVisitorEncounter } from "./model/visitorClicks";
 import {
 	loadResolutionContext,
 	resolutionContextValidator,
@@ -45,11 +36,14 @@ import { saveInspectionStep } from "./resolutionInspection";
 
 const MAX_IDENTIFIER_LENGTH = 200;
 const CLEANUP_BATCH_SIZE = 200;
-export const STALE_RUN_AFTER_MS = 11 * 60 * 1_000;
-export const DURABLE_RETRY_DEADLINE_MS = 15 * 60 * 1_000;
-export const MAX_RESOLUTION_RUNS = 3;
-const DURABLE_RETRY_BASE_DELAY_MS = 5_000;
-const RESOLUTION_RUN_RETENTION_MS = 24 * 60 * 60 * 1_000;
+
+const readingCheckpointValidator = v.object({
+	resolution: v.object({
+		decision: v.union(v.literal("Reuse"), v.literal("New")),
+		emojiDescription: v.string(),
+	}),
+	reading: readingValueValidator,
+});
 
 export const selectSegment = mutation({
 	args: {
@@ -212,8 +206,6 @@ export const selectSegment = mutation({
 				};
 			}
 
-			const now = Date.now();
-			const runToken = crypto.randomUUID();
 			await ensureVisitorEncounter(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
@@ -221,47 +213,14 @@ export const selectSegment = mutation({
 				sentenceId: sentence._id,
 				segmentId: segment._id,
 			});
-			await beginSegmentResolution(ctx, segment._id);
-			await ctx.db.insert("resolutionSessions", {
+			await startResolutionSession(ctx, {
 				requestId: args.requestId,
 				visitorId: args.visitorId,
-				sentenceId: args.sentenceId,
-				segmentId: segment._id,
-				clickedSegmentIndex: args.clickedSegmentIndex,
+				sentence,
+				segment,
 				routeNoteRequested: args.routeNoteRequested,
-				runToken,
-				lifecycle: {
-					state: "Active",
-					progress: "Starting",
-					activity: "Scheduled",
-				},
-				runNumber: 1,
-				retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
-				route: {
-					textId: sentence.textId,
-					sentenceId: sentence._id,
-					stitchedText: sentence.stitchedText,
-					clickedSegmentIndex: args.clickedSegmentIndex,
-					selectedSegment: segment.text,
-				},
-				createdAt: now,
-				updatedAt: now,
+				inspect: args.inspect === true,
 			});
-			await ctx.scheduler.runAfter(
-				0,
-				internal.orchestration.runResolutionSession,
-				{
-					requestId: args.requestId,
-					runToken,
-					segmentId: segment._id,
-					...(args.inspect ? { inspect: true } : {}),
-				},
-			);
-			await ctx.scheduler.runAfter(
-				STALE_RUN_AFTER_MS,
-				internal.resolutionSessions.recoverStaleRun,
-				{ requestId: args.requestId, runToken },
-			);
 			return {
 				kind: "Resolving" as const,
 				requestId: args.requestId,
@@ -333,63 +292,7 @@ export const retryResolution = mutation({
 	handler: async (ctx, args) => {
 		assertIdentifier(args.requestId, "requestId");
 		assertIdentifier(args.visitorId, "visitorId");
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		if (!session || session.visitorId !== args.visitorId) {
-			return { retried: false };
-		}
-		const { lifecycle } = session;
-		if (
-			lifecycle.state !== "Terminal" ||
-			lifecycle.outcome !== "PermanentFailure"
-		) {
-			return { retried: false };
-		}
-		// Manual retry intentionally resets every permanent failure category.
-		// Unlike automatic retry, it represents an operator/learner decision made
-		// after provider configuration, model policy, or catalog data may change.
-
-		const now = Date.now();
-		const runToken = crypto.randomUUID();
-		if (!(await beginSegmentResolution(ctx, session.segmentId))) {
-			return { retried: false };
-		}
-		await ctx.db.patch(session._id, {
-			runToken,
-			runNumber: 1,
-			lifecycle: {
-				state: "Active",
-				progress: lifecycle.progress,
-				activity: "Scheduled",
-			},
-			retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
-			nextRetryAt: undefined,
-			failureCode: undefined,
-			diagnosticId: undefined,
-			failureMessage: undefined,
-			updatedAt: now,
-		});
-		const inspect = await inspectionRequested(ctx, session.requestId);
-		await ctx.scheduler.runAfter(
-			0,
-			internal.orchestration.runResolutionSession,
-			{
-				requestId: session.requestId,
-				runToken,
-				segmentId: session.segmentId,
-				...(inspect ? { inspect } : {}),
-			},
-		);
-		await ctx.scheduler.runAfter(
-			STALE_RUN_AFTER_MS,
-			internal.resolutionSessions.recoverStaleRun,
-			{ requestId: session.requestId, runToken },
-		);
-		return { retried: true };
+		return { retried: await retryResolutionSession(ctx, args) };
 	},
 });
 
@@ -407,102 +310,27 @@ export const beginRun = internalMutation({
 			}),
 			checkpoints: v.object({
 				grammatical: v.optional(resolvedGrammaticalValidator),
-				reading: v.optional(
-					v.object({
-						resolution: v.object({
-							decision: v.union(
-								v.literal("Reuse"),
-								v.literal("New"),
-							),
-							emojiDescription: v.string(),
-						}),
-						reading: readingValueValidator,
-					}),
-				),
+				reading: v.optional(readingCheckpointValidator),
 			}),
 		}),
 	),
 	handler: async (ctx, { guard }) => {
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", guard.requestId),
-			)
-			.unique();
-		if (
-			!session ||
-			session.runToken !== guard.runToken ||
-			session.segmentId !== guard.segmentId ||
-			session.lifecycle.state === "Terminal" ||
-			session.lifecycle.activity === "Running"
-		) {
-			return null;
-		}
-		const segment = await ctx.db.get(guard.segmentId);
-		if (
-			!segment ||
-			segment.sentenceId !== session.sentenceId ||
-			segment.index !== session.clickedSegmentIndex ||
-			segment.kind !== "ResolvableText"
-		) {
-			return null;
-		}
-		await upsertResolutionRun(ctx, session, {
-			phase: phaseForProgress(session.lifecycle.progress),
-			state: "Running",
-		});
-		await ctx.db.patch(session._id, {
-			lifecycle: {
-				state: "Active",
-				progress:
-					session.lifecycle.progress === "Starting"
-						? "RouteAvailable"
-						: session.lifecycle.progress,
-				activity: "Running",
-			},
-			updatedAt: Date.now(),
-		});
-
-		const restored = session.grammaticalCheckpoint
-			? restoreStoredGrammar(session.grammaticalCheckpoint)
-			: undefined;
-		const context = await loadResolutionContext(ctx, session, !restored);
-		const grammaticalCheckpoint = restored
-			? {
-					...restored,
-					encounter: {
-						sentence: {
-							...restored.encounter.sentence,
-							segments: restored.encounter.sentence.segments.map(
-								(segment) => ({ ...segment }),
-							),
-						},
-						target: {
-							...restored.encounter.target,
-							memberSegmentIndices: [
-								...restored.encounter.target
-									.memberSegmentIndices,
-							],
-						},
-					},
-				}
-			: undefined;
+		const claimed = await claimResolutionRun(ctx, guard);
+		if (!claimed) return null;
+		const { session, checkpoints } = claimed;
 		return {
-			context,
+			context: await loadResolutionContext(
+				ctx,
+				session,
+				!checkpoints.grammatical,
+			),
 			selection: {
 				requestId: session.requestId,
 				visitorId: session.visitorId,
 				sentenceId: session.sentenceId,
 				clickedSegmentIndex: session.clickedSegmentIndex,
 			},
-			checkpoints: {
-				...(grammaticalCheckpoint
-					? { grammatical: grammaticalCheckpoint }
-					: {}),
-				...(grammaticalCheckpoint && session.readingCheckpoint
-					? { reading: session.readingCheckpoint }
-					: {}),
-			},
+			checkpoints,
 		};
 	},
 });
@@ -519,233 +347,16 @@ export const advance = internalMutation({
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
 		grammaticalCheckpoint: v.optional(resolvedGrammaticalValidator),
-		readingCheckpoint: v.optional(
-			v.object({
-				resolution: v.object({
-					decision: v.union(v.literal("Reuse"), v.literal("New")),
-					emojiDescription: v.string(),
-				}),
-				reading: readingValueValidator,
-			}),
-		),
+		readingCheckpoint: v.optional(readingCheckpointValidator),
 	},
 	returns: v.boolean(),
-	handler: async (ctx, args) => {
-		const session = await requireActiveResolutionSession(ctx, args.guard);
-		const { lifecycle } = session;
-		if (lifecycle.progress === args.progress) return false;
-		if (resolutionProgressHasReached(lifecycle.progress, args.progress)) {
-			return false;
-		}
-		assertResolutionProgressTransition(lifecycle.progress, args.progress);
-		if (args.progress === "GrammarAvailable" && !args.grammar) {
-			throw new Error("GrammarAvailable requires a Grammar projection.");
-		}
-		if (args.progress === "ReadingAvailable" && !args.reading) {
-			throw new Error("ReadingAvailable requires a Reading projection.");
-		}
-		await ctx.db.patch(session._id, {
-			lifecycle: {
-				state: "Active",
-				progress: args.progress,
-				activity: "Running",
-			},
-			...(args.grammar ? { grammar: args.grammar } : {}),
-			...(args.reading ? { reading: args.reading } : {}),
-			...(args.grammaticalCheckpoint
-				? { grammaticalCheckpoint: args.grammaticalCheckpoint }
-				: {}),
-			...(args.readingCheckpoint
-				? { readingCheckpoint: args.readingCheckpoint }
-				: {}),
-			updatedAt: Date.now(),
-		});
-		return true;
-	},
+	handler: (ctx, args) => advanceResolutionSession(ctx, args),
 });
 
 export const recoverStaleRun = internalMutation({
 	args: { requestId: v.string(), runToken: v.string() },
 	returns: v.boolean(),
-	handler: async (ctx, args) => {
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", args.requestId),
-			)
-			.unique();
-		if (
-			!session ||
-			session.runToken !== args.runToken ||
-			session.lifecycle.state === "Terminal"
-		) {
-			return false;
-		}
-
-		const now = Date.now();
-		const age = now - session.updatedAt;
-		if (age < STALE_RUN_AFTER_MS) {
-			await ctx.scheduler.runAfter(
-				STALE_RUN_AFTER_MS - age,
-				internal.resolutionSessions.recoverStaleRun,
-				args,
-			);
-			return false;
-		}
-
-		const runNumber = session.runNumber ?? 1;
-		const diagnosticId = crypto.randomUUID();
-		const progress = session.lifecycle.progress;
-		await upsertResolutionRun(ctx, session, {
-			phase: phaseForProgress(progress),
-			state: "Failed",
-			failureCode: "Internal",
-			diagnosticId,
-			errorName: "StaleResolutionRun",
-			errorFingerprint: "stale-run-timeout",
-		});
-		if (
-			runNumber >= MAX_RESOLUTION_RUNS ||
-			now >= (session.retryDeadlineAt ?? now + DURABLE_RETRY_DEADLINE_MS)
-		) {
-			await settleFailed(
-				ctx,
-				session,
-				"Resolution could not be completed.",
-				"Internal",
-				diagnosticId,
-			);
-			return true;
-		}
-
-		const runToken = crypto.randomUUID();
-		await ctx.db.patch(session._id, {
-			runToken,
-			runNumber: runNumber + 1,
-			lifecycle: {
-				state: "Active",
-				progress,
-				activity: "Scheduled",
-			},
-			readingId: undefined,
-			attestationId: undefined,
-			failureCode: undefined,
-			diagnosticId: undefined,
-			failureMessage: undefined,
-			nextRetryAt: undefined,
-			updatedAt: Date.now(),
-		});
-		const inspect = await inspectionRequested(ctx, session.requestId);
-		await ctx.scheduler.runAfter(
-			0,
-			internal.orchestration.runResolutionSession,
-			{
-				requestId: session.requestId,
-				runToken,
-				segmentId: session.segmentId,
-				...(inspect ? { inspect } : {}),
-			},
-		);
-		await ctx.scheduler.runAfter(
-			STALE_RUN_AFTER_MS,
-			internal.resolutionSessions.recoverStaleRun,
-			{ requestId: session.requestId, runToken },
-		);
-		return true;
-	},
-});
-
-export const recordRunFailure = internalMutation({
-	args: {
-		guard: resolutionSessionGuardValidator,
-		phase: resolutionPhaseValidator,
-		failure: safeGenerationFailureValidator,
-		generationEvents: v.optional(
-			v.array(resolutionGenerationEventValidator),
-		),
-	},
-	returns: v.object({ scheduled: v.boolean() }),
-	handler: async (ctx, { guard, phase, failure, generationEvents }) => {
-		assertSafeGenerationFailure(failure);
-		const session = await requireActiveResolutionSession(ctx, guard);
-		const { lifecycle } = session;
-		const now = Date.now();
-		const runNumber = session.runNumber ?? 1;
-		const diagnosticId = crypto.randomUUID();
-		const retryDeadlineAt =
-			session.retryDeadlineAt ?? now + DURABLE_RETRY_DEADLINE_MS;
-		const delayMs = Math.max(
-			Math.min(
-				60_000,
-				DURABLE_RETRY_BASE_DELAY_MS * 2 ** (runNumber - 1),
-			),
-			failure.retryAfterMs ?? 0,
-		);
-		const canRetry =
-			failure.retryable &&
-			runNumber < MAX_RESOLUTION_RUNS &&
-			now + delayMs <= retryDeadlineAt;
-		await upsertResolutionRun(ctx, session, {
-			phase,
-			state: "Failed",
-			failure,
-			failureCode: failure.category,
-			diagnosticId,
-			...(canRetry ? { delayMs } : {}),
-			...(generationEvents ? { generationEvents } : {}),
-		});
-		if (!canRetry) {
-			await ctx.db.patch(session._id, {
-				lifecycle: {
-					state: "Terminal",
-					progress: lifecycle.progress,
-					outcome: "PermanentFailure",
-				},
-				failureCode: failure.category,
-				diagnosticId,
-				failureMessage: publicFailureMessage(phase, failure.category),
-				nextRetryAt: undefined,
-				updatedAt: now,
-			});
-			await finishSegmentResolution(
-				ctx,
-				session.segmentId,
-				"PermanentFailure",
-			);
-			return { scheduled: false };
-		}
-
-		const runToken = crypto.randomUUID();
-		await ctx.db.patch(session._id, {
-			runToken,
-			runNumber: runNumber + 1,
-			lifecycle: {
-				state: "Active",
-				progress: lifecycle.progress,
-				activity: "WaitingForRetry",
-			},
-			failureCode: failure.category,
-			diagnosticId,
-			failureMessage: publicFailureMessage(phase, failure.category),
-			nextRetryAt: now + delayMs,
-			updatedAt: now,
-		});
-		await ctx.scheduler.runAfter(
-			delayMs,
-			internal.orchestration.runResolutionSession,
-			{
-				requestId: session.requestId,
-				runToken,
-				segmentId: session.segmentId,
-			},
-		);
-		await ctx.scheduler.runAfter(
-			delayMs + STALE_RUN_AFTER_MS,
-			internal.resolutionSessions.recoverStaleRun,
-			{ requestId: session.requestId, runToken },
-		);
-		return { scheduled: true };
-	},
+	handler: (ctx, args) => recoverStaleResolutionRun(ctx, args),
 });
 
 export const recordRunSuccess = internalMutation({
@@ -757,65 +368,37 @@ export const recordRunSuccess = internalMutation({
 		),
 	},
 	returns: v.boolean(),
-	handler: async (ctx, { guard, phase, generationEvents }) => {
-		const session = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_request_id", (q) =>
-				q.eq("requestId", guard.requestId),
-			)
-			.unique();
-		if (
-			!session ||
-			session.runToken !== guard.runToken ||
-			session.segmentId !== guard.segmentId
-		) {
-			return false;
-		}
-		await upsertResolutionRun(ctx, session, {
-			phase,
-			state: "Succeeded",
-			...(generationEvents ? { generationEvents } : {}),
-		});
-		return true;
-	},
+	handler: (ctx, args) => recordResolutionRunSuccess(ctx, args),
 });
 
-export const recordInternalRunFailure = internalMutation({
+export const recordRunFailure = internalMutation({
 	args: {
 		guard: resolutionSessionGuardValidator,
-		phase: resolutionPhaseValidator,
-		diagnosticId: v.string(),
-		errorName: v.string(),
-		errorFingerprint: v.string(),
-		generationEvents: v.optional(
-			v.array(resolutionGenerationEventValidator),
+		failure: v.union(
+			v.object({
+				kind: v.literal("Generation"),
+				phase: resolutionPhaseValidator,
+				failure: safeGenerationFailureValidator,
+				generationEvents: v.optional(
+					v.array(resolutionGenerationEventValidator),
+				),
+			}),
+			v.object({
+				kind: v.literal("Internal"),
+				phase: resolutionPhaseValidator,
+				diagnosticId: v.string(),
+				errorName: v.string(),
+				errorFingerprint: v.string(),
+				generationEvents: v.optional(
+					v.array(resolutionGenerationEventValidator),
+				),
+			}),
 		),
 	},
-	returns: v.boolean(),
-	handler: async (ctx, args) => {
-		assertIdentifier(args.diagnosticId, "diagnosticId");
-		assertSafeOperationalString(args.errorName, "errorName");
-		assertSafeOperationalString(args.errorFingerprint, "errorFingerprint");
-		const session = await requireActiveResolutionSession(ctx, args.guard);
-		await upsertResolutionRun(ctx, session, {
-			phase: args.phase,
-			state: "Failed",
-			failureCode: "Internal",
-			diagnosticId: args.diagnosticId,
-			errorName: args.errorName,
-			errorFingerprint: args.errorFingerprint,
-			...(args.generationEvents
-				? { generationEvents: args.generationEvents }
-				: {}),
-		});
-		await settleFailed(
-			ctx,
-			session,
-			"Resolution could not be completed.",
-			"Internal",
-			args.diagnosticId,
-		);
-		return true;
+	returns: v.null(),
+	handler: async (ctx, { guard, failure }) => {
+		await failResolutionRun(ctx, guard, failure);
+		return null;
 	},
 });
 
@@ -839,44 +422,15 @@ export const settleAfterRun = internalMutation({
 	},
 	returns: v.boolean(),
 	handler: async (ctx, { guard, result }) => {
-		const session = await requireActiveResolutionSession(ctx, guard);
-		if (session.lifecycle.state === "Terminal") return false;
+		const session = await settleResolutionRun(ctx, guard, result);
 		if (result.kind === "Complete") {
-			const [reading, attestation, encounter] = await Promise.all([
-				ctx.db.get(result.readingId),
-				ctx.db.get(result.attestationId),
-				findVisitorEncounter(ctx, {
-					visitorId: session.visitorId,
-					segmentId: session.segmentId,
-				}),
-			]);
-			if (
-				!reading ||
-				!attestation ||
-				attestation.readingId !== reading._id ||
-				encounter?.attestationId !== attestation._id
-			) {
-				throw new Error(
-					"The completed Resolution Session has no matching Visitor Encounter.",
-				);
-			}
-			await settleComplete(ctx, session, result);
-			await markRunSucceeded(ctx, session);
 			await scheduleKnowledgeGeneration(ctx, {
 				attemptKey: session.requestId,
 				visitorId: session.visitorId,
 				readingId: result.readingId,
 				attestationId: result.attestationId,
 			});
-			return true;
 		}
-		if (result.kind === "Unresolved") {
-			await settleUnresolved(ctx, session);
-			await markRunSucceeded(ctx, session);
-			return true;
-		}
-		const diagnosticId = await settleFailed(ctx, session, result.message);
-		await markRunFailed(ctx, session, diagnosticId);
 		return true;
 	},
 });
@@ -929,32 +483,22 @@ export const cleanup = mutation({
 					: Promise.resolve(true),
 			),
 		);
-		const deletableTerminalRows = terminalRows.filter(
-			(_row, index) => terminalReadingExists[index],
-		);
-		await finishDeletedSessionsResolution(
-			ctx,
-			activeRows,
-			"PermanentFailure",
-		);
-		const rowsToDelete = [...activeRows, ...deletableTerminalRows];
-		await Promise.all(rowsToDelete.map((row) => ctx.db.delete(row._id)));
-		const deleted = rowsToDelete.length;
+		const rowsToDelete = [
+			...activeRows,
+			...terminalRows.filter(
+				(_row, index) => terminalReadingExists[index],
+			),
+		];
+		await deleteResolutionSessions(ctx, rowsToDelete);
 		return {
-			deleted,
-			hasMore: deleted === CLEANUP_BATCH_SIZE,
+			deleted: rowsToDelete.length,
+			hasMore: rowsToDelete.length === CLEANUP_BATCH_SIZE,
 		};
 	},
 });
 
 function assertIdentifier(value: string, name: string): void {
 	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
-}
-
-function assertSafeOperationalString(value: string, name: string): void {
-	if (value.length === 0 || value.length > 200) {
 		throw new Error(`${name} must contain 1 to 200 characters.`);
 	}
 }
@@ -971,151 +515,4 @@ function assertCleanupCutoff(value: number, name: string): void {
 	if (!Number.isFinite(value) || value < 0 || value > Date.now()) {
 		throw new Error(`${name} must be a finite past timestamp.`);
 	}
-}
-
-async function markRunSucceeded(
-	ctx: Parameters<typeof requireActiveResolutionSession>[0],
-	session: ResolutionRunIdentity,
-): Promise<void> {
-	await upsertResolutionRun(ctx, session, {
-		phase: "Commit",
-		state: "Succeeded",
-	});
-}
-
-async function markRunFailed(
-	ctx: Parameters<typeof requireActiveResolutionSession>[0],
-	session: ResolutionRunIdentity,
-	diagnosticId: string,
-): Promise<void> {
-	await upsertResolutionRun(ctx, session, {
-		phase: phaseForProgress(session.lifecycle.progress),
-		state: "Failed",
-		failureCode: "Internal",
-		diagnosticId,
-	});
-}
-
-type SafeGenerationFailure = Infer<typeof safeGenerationFailureValidator>;
-type ResolutionGenerationEvent = Infer<
-	typeof resolutionGenerationEventValidator
->;
-
-type ResolutionRunIdentity = ResolutionLifecycleSource & {
-	readonly requestId: string;
-	readonly runToken: string;
-	readonly runNumber?: number;
-};
-
-type ResolutionRunUpdate = {
-	readonly phase: Infer<typeof resolutionPhaseValidator>;
-	readonly state: "Running" | "Failed" | "Succeeded";
-	readonly failure?: SafeGenerationFailure;
-	readonly failureCode?:
-		| SafeGenerationFailure["category"]
-		| "CatalogMiss"
-		| "Internal";
-	readonly diagnosticId?: string;
-	readonly errorName?: string;
-	readonly errorFingerprint?: string;
-	readonly generationEvents?: readonly ResolutionGenerationEvent[];
-	readonly delayMs?: number;
-};
-
-async function upsertResolutionRun(
-	ctx: Parameters<typeof requireActiveResolutionSession>[0],
-	session: ResolutionRunIdentity,
-	update: ResolutionRunUpdate,
-): Promise<void> {
-	const now = Date.now();
-	const run = await ctx.db
-		.query("resolutionRuns")
-		.withIndex("by_request_id_and_run_token", (q) =>
-			q
-				.eq("requestId", session.requestId)
-				.eq("runToken", session.runToken),
-		)
-		.unique();
-	const values = {
-		phase: update.phase,
-		state: update.state,
-		...(update.failure ? { failure: update.failure } : {}),
-		...(update.failureCode ? { failureCode: update.failureCode } : {}),
-		...(update.diagnosticId ? { diagnosticId: update.diagnosticId } : {}),
-		...(update.errorName ? { errorName: update.errorName } : {}),
-		...(update.errorFingerprint
-			? { errorFingerprint: update.errorFingerprint }
-			: {}),
-		...(update.generationEvents
-			? { generationEvents: [...update.generationEvents] }
-			: {}),
-		...(update.delayMs === undefined ? {} : { delayMs: update.delayMs }),
-		...(update.state === "Running" ? {} : { finishedAt: now }),
-		expiresAt: now + RESOLUTION_RUN_RETENTION_MS,
-	};
-	if (run) {
-		await ctx.db.patch(run._id, values);
-		return;
-	}
-	await ctx.db.insert("resolutionRuns", {
-		requestId: session.requestId,
-		runToken: session.runToken,
-		runNumber: session.runNumber ?? 1,
-		startedAt: now,
-		...values,
-	});
-}
-
-function phaseForProgress(
-	progress: ResolutionProgress,
-): Infer<typeof resolutionPhaseValidator> {
-	return progress === "Starting"
-		? "Route"
-		: progress === "RouteAvailable"
-			? "Grammar"
-			: progress === "GrammarAvailable"
-				? "Reading"
-				: "Commit";
-}
-
-function assertSafeGenerationFailure(failure: SafeGenerationFailure): void {
-	if (
-		!Number.isSafeInteger(failure.attempts) ||
-		failure.attempts < 0 ||
-		failure.attempts > 10
-	) {
-		throw new Error("Generation failure attempts are invalid.");
-	}
-	if (
-		failure.status !== undefined &&
-		(!Number.isSafeInteger(failure.status) ||
-			failure.status < 100 ||
-			failure.status > 599)
-	) {
-		throw new Error("Generation failure status is invalid.");
-	}
-	if (
-		failure.retryAfterMs !== undefined &&
-		(!Number.isSafeInteger(failure.retryAfterMs) ||
-			failure.retryAfterMs < 0)
-	) {
-		throw new Error("Generation failure Retry-After is invalid.");
-	}
-	for (const value of [failure.providerCode, failure.providerRequestId]) {
-		if (value !== undefined && (value.length === 0 || value.length > 200)) {
-			throw new Error("Generation failure metadata is invalid.");
-		}
-	}
-}
-
-function publicFailureMessage(
-	phase: Infer<typeof resolutionPhaseValidator>,
-	category: SafeGenerationFailure["category"],
-): string {
-	const subject = phase === "Reading" ? "Reading generation" : "Resolution";
-	return category === "Network" ||
-		category === "RateLimited" ||
-		category === "ProviderUnavailable"
-		? `${subject} is temporarily unavailable.`
-		: `${subject} could not be completed.`;
 }

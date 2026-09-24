@@ -1,27 +1,31 @@
 import { describe, expect, test } from "bun:test";
-import { getFunctionName } from "convex/server";
+import {
+	type DefaultFunctionArgs,
+	type FunctionReference,
+	getFunctionName,
+} from "convex/server";
 import {
 	createDumdictService,
 	type DumdictPlan,
-	type DumdictStoragePort,
 	makeSurfaceId,
 	type StoreRevision,
 } from "dumdict";
 import { createDumgen } from "dumgen";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
 	executeOutput,
 	rejectJudgment,
 } from "../../../battery/dumgen/tests/execution-fixture.js";
-import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import { internal } from "../convex/_generated/api";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
-	commitDumdictChanges,
-	loadDumdictCleanupRelationsContext,
-	loadDumdictReadingEntryContext,
-	loadDumdictReadingForPatch,
-} from "../convex/dumdictStorage";
+	createConvexDumdictStorage,
+	dictionaryPlanResult,
+} from "../convex/dumdictActionStorage";
 import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
+import schema from "../convex/schema";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
@@ -30,157 +34,11 @@ import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 } from "../server/linguisticOrchestration";
-import { createTestConvexDumdictStorage } from "./support/dumdict-storage";
-
-type Row = Record<string, unknown> & { _id: string };
-
-function nestedValue(row: Row, path: string): unknown {
-	return path.split(".").reduce<unknown>((value, key) => {
-		if (value === null || typeof value !== "object") return undefined;
-		return (value as Record<string, unknown>)[key];
-	}, row);
-}
-
-class IndexedDb {
-	private tables = new Map<string, Map<string, Row>>();
-	private nextId = 1;
-
-	constructor(seed: Record<string, readonly Row[]> = {}) {
-		for (const [table, rows] of Object.entries(seed)) {
-			this.tables.set(
-				table,
-				new Map(rows.map((row) => [row._id, structuredClone(row)])),
-			);
-		}
-	}
-
-	fork(): IndexedDb {
-		const copy = new IndexedDb(this.snapshot());
-		copy.nextId = this.nextId;
-		return copy;
-	}
-
-	adopt(committed: IndexedDb): void {
-		this.tables = committed.tables;
-		this.nextId = committed.nextId;
-	}
-
-	snapshot(): Record<string, Row[]> {
-		return Object.fromEntries(
-			[...this.tables].map(([table, rows]) => [
-				table,
-				[...rows.values()].map((row) => structuredClone(row)),
-			]),
-		);
-	}
-
-	rows(table: string): Row[] {
-		return [...(this.tables.get(table)?.values() ?? [])];
-	}
-
-	async get(id: string): Promise<Row | null> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (row) return structuredClone(row);
-		}
-		return null;
-	}
-
-	query(table: string) {
-		const conditions: Array<[string, unknown]> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				conditions.push([field, value]);
-				return range;
-			},
-		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
-				conditions.every(
-					([field, value]) => nestedValue(row, field) === value,
-				),
-			);
-		return {
-			async take(limit: number) {
-				return matches().slice(0, limit);
-			},
-			withIndex(_name: string, build: (value: typeof range) => unknown) {
-				build(range);
-				return {
-					async unique() {
-						const rows = matches();
-						if (rows.length > 1)
-							throw new Error("Expected a unique row.");
-						return rows[0] ?? null;
-					},
-					async take(limit: number) {
-						return matches().slice(0, limit);
-					},
-				};
-			},
-		};
-	}
-
-	async insert(
-		table: string,
-		value: Record<string, unknown>,
-	): Promise<string> {
-		const id = `${table}-${this.nextId++}`;
-		const rows = this.tables.get(table) ?? new Map<string, Row>();
-		rows.set(id, { _id: id, ...structuredClone(value) });
-		this.tables.set(table, rows);
-		return id;
-	}
-
-	async patch(id: string, value: Record<string, unknown>): Promise<void> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (!row) continue;
-			rows.set(id, { ...row, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Cannot patch missing row ${id}.`);
-	}
-
-	async replace(id: string, value: Record<string, unknown>): Promise<void> {
-		for (const rows of this.tables.values()) {
-			if (!rows.has(id)) continue;
-			rows.set(id, { _id: id, ...structuredClone(value) });
-			return;
-		}
-		throw new Error(`Cannot replace missing row ${id}.`);
-	}
-
-	async delete(id: string): Promise<void> {
-		for (const rows of this.tables.values()) {
-			if (rows.delete(id)) return;
-		}
-		throw new Error(`Cannot delete missing row ${id}.`);
-	}
-}
-
-function registeredHandler(value: unknown) {
-	return (
-		value as {
-			_handler: (ctx: unknown, args: unknown) => Promise<unknown>;
-		}
-	)._handler;
-}
-
-async function runQuery(db: IndexedDb, fn: unknown, args: unknown) {
-	return registeredHandler(fn)({ db }, args);
-}
-
-async function runReadingEntryContextQuery(db: IndexedDb, request: unknown) {
-	return runQuery(db, loadDumdictReadingEntryContext, { request });
-}
-
-async function runMutation(db: IndexedDb, fn: unknown, args: unknown) {
-	const draft = db.fork();
-	const result = await registeredHandler(fn)({ db: draft }, args);
-	db.adopt(draft);
-	return result;
-}
+import {
+	actionContext,
+	createTestConvex,
+	type TestConvexDb,
+} from "./support/convex";
 
 const verbFeatures = {
 	verbType: null,
@@ -221,7 +79,7 @@ const note = {
 
 function surface(normalizedSurface: string) {
 	return {
-		unitKind: "Surface",
+		unitKind: "Surface" as const,
 		inflectionalFeatures: null,
 		language: "de" as const,
 		normalizedSurface,
@@ -232,62 +90,69 @@ function surface(normalizedSurface: string) {
 	};
 }
 
-function initialSeed(): Record<string, readonly Row[]> {
-	const citation = surface("gehen");
-	const variant = surface("ging");
-	return {
-		lemmas: [
-			{
-				_id: "lemma-gehen",
-				lemmaKey: lemmaIdentityKey(gehenLemma),
-				...gehenLemma,
-			},
-		],
-		dictionaryLemmas: [
-			{ _id: "dictionary-lemma-gehen", lemmaId: "lemma-gehen" },
-		],
-		readings: [
-			{
-				_id: "reading-gehen",
-				readingKey: readingFingerprint(gehenReading),
-				lemmaId: "lemma-gehen",
-				emojiDescription: gehenReading.emojiDescription,
-			},
-		],
-		readingEntries: [
-			{
-				_id: "reading-entry-gehen",
-				readingId: "reading-gehen",
-				record: note,
-			},
-		],
-		surfaces: [
-			{
-				_id: "surface-gehen",
-				surfaceKey: makeSurfaceId("de", citation),
-				lemmaId: "lemma-gehen",
-				...citation,
-			},
-			{
-				_id: "surface-ging",
-				surfaceKey: makeSurfaceId("de", variant),
-				lemmaId: "lemma-gehen",
-				...variant,
-			},
-		],
-		ownedSurfaces: [
-			{
-				_id: "owned-surface-gehen",
-				surfaceId: "surface-gehen",
-				record: note,
-			},
-			{
-				_id: "owned-surface-ging",
-				surfaceId: "surface-ging",
-				record: note,
-			},
-		],
-	};
+/** Stores a Lemma and its dictionary membership as the dictionary does. */
+async function insertDictionaryLemma(
+	t: TestConvexDb,
+	lemma: Dumling.Lemma<"de">,
+): Promise<Id<"lemmas">> {
+	const { unitKind: _, ...stored } = lemma;
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: lemmaIdentityKey(lemma),
+			...stored,
+		});
+		await ctx.db.insert("dictionaryLemmas", { lemmaId });
+		return lemmaId;
+	});
+}
+
+/** Stores a Reading and its empty Reading Entry as the dictionary does. */
+async function insertReading(
+	t: TestConvexDb,
+	lemmaId: Id<"lemmas">,
+	reading: Dumling.Reading<"de">,
+	record: Record<string, unknown> = note,
+): Promise<Id<"readings">> {
+	return t.run(async (ctx) => {
+		const readingId = await ctx.db.insert("readings", {
+			readingKey: readingFingerprint(reading),
+			lemmaId,
+			emojiDescription: reading.emojiDescription,
+		});
+		await ctx.db.insert("readingEntries", { readingId, record });
+		return readingId;
+	});
+}
+
+/** The `gehen` Reading with two owned Surfaces, at dictionary revision 0. */
+async function seededDictionary(
+	options: { readonly gehenRecord?: Record<string, unknown> } = {},
+) {
+	const t = createTestConvex();
+	const gehenLemmaId = await insertDictionaryLemma(t, gehenLemma);
+	const gehenReadingId = await insertReading(
+		t,
+		gehenLemmaId,
+		gehenReading,
+		options.gehenRecord,
+	);
+	await t.run(async (ctx) => {
+		for (const { unitKind: _, lemma: __, ...stored } of [
+			surface("gehen"),
+			surface("ging"),
+		]) {
+			const surfaceId = await ctx.db.insert("surfaces", {
+				surfaceKey: makeSurfaceId(
+					"de",
+					surface(stored.normalizedSurface),
+				),
+				lemmaId: gehenLemmaId,
+				...stored,
+			});
+			await ctx.db.insert("ownedSurfaces", { surfaceId, record: note });
+		}
+	});
+	return { t, gehenLemmaId, gehenReadingId };
 }
 
 function locatorKey(locator: {
@@ -302,57 +167,144 @@ function locatorKey(locator: {
 	]);
 }
 
-function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
-	return createTestConvexDumdictStorage({
-		runQuery: (implementation, args) => runQuery(db, implementation, args),
-		runMutation: (implementation, args) =>
-			runMutation(db, implementation, args),
+function dictionaryFor(t: TestConvexDb) {
+	return createDumdictService({
+		language: "de",
+		storage: createConvexDumdictStorage(actionContext(t) as never),
 	});
 }
 
-function transactionFor(db: IndexedDb) {
-	return createDumdictTransaction({ db } as never);
+function readingEntryContext(
+	t: TestConvexDb,
+	request: Parameters<
+		typeof t.query<
+			typeof internal.dumdictStorage.loadDumdictReadingEntryContext
+		>
+	>[1]["request"],
+) {
+	return t.query(internal.dumdictStorage.loadDumdictReadingEntryContext, {
+		request,
+	});
 }
 
-function readingKnowledge(db: IndexedDb, key: string) {
-	const accumulated = db
-		.rows("accumulatedKnowledge")
-		.find((row) => row.ownerReadingKey === key)?.knowledge as
-		| Record<string, unknown>
-		| undefined;
-	const reading = db.rows("readings").find((row) => row.readingKey === key);
-	if (!reading) return accumulated;
-	const semanticRelations: Record<string, unknown[]> = {};
-	for (const edge of db
-		.rows("semanticRelationEdges")
-		.filter((row) => row.sourceReadingId === reading._id)) {
-		if (typeof edge.relation !== "string") continue;
-		const lemma = db
-			.rows("lemmas")
-			.find((row) => row._id === edge.targetLemmaId);
-		if (!lemma) continue;
-		const targets = semanticRelations[edge.relation] ?? [];
-		targets.push({
-			unitKind: "Lemma",
-			language: lemma.language,
-			family: lemma.family,
-			kind: lemma.kind,
-			canonicalForm: lemma.canonicalForm,
-			coreFeatures: lemma.coreFeatures,
-		});
-		semanticRelations[edge.relation] = targets;
-	}
-	return {
-		...(accumulated ?? {}),
-		...(Object.keys(semanticRelations).length > 0
-			? { semanticRelations }
-			: {}),
-	};
+/** Commits a plan through the mutation-side dictionary in one transaction. */
+function commitInTransaction(t: TestConvexDb, plan: DumdictPlan<"de">) {
+	return t.run((ctx) =>
+		createDumdictTransaction(ctx).commit(dictionaryPlanResult(plan)),
+	);
+}
+
+function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+/** Every stored row, by table, so a failed write can be shown to leave no trace. */
+function snapshot(t: TestConvexDb) {
+	return t.run(async (ctx) =>
+		Object.fromEntries(
+			await Promise.all(
+				(Object.keys(schema.tables) as TableNames[]).map(
+					async (table) =>
+						[table, await ctx.db.query(table).collect()] as const,
+				),
+			),
+		),
+	);
+}
+
+async function revision(t: TestConvexDb) {
+	return (await rows(t, "dictionaryState"))[0]?.revision;
+}
+
+async function readingIdFor(
+	t: TestConvexDb,
+	reading: Parameters<typeof readingFingerprint>[0],
+): Promise<Id<"readings">> {
+	const row = await t.run((ctx) =>
+		ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) =>
+				q.eq("readingKey", readingFingerprint(reading)),
+			)
+			.unique(),
+	);
+	if (!row) throw new Error("Expected a stored Reading.");
+	return row._id;
+}
+
+async function accumulatedKnowledgeFor(
+	t: TestConvexDb,
+	reading: Parameters<typeof readingFingerprint>[0],
+) {
+	return t.run((ctx) =>
+		ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", readingFingerprint(reading)),
+			)
+			.unique(),
+	);
+}
+
+/** A Reading's stored Knowledge with its direct Lemma-target edges folded in. */
+async function readingKnowledge(
+	t: TestConvexDb,
+	reading: Parameters<typeof readingFingerprint>[0],
+): Promise<
+	| (Record<string, unknown> & {
+			semanticRelations?: Record<string, unknown[]>;
+	  })
+	| undefined
+> {
+	const key = readingFingerprint(reading);
+	return t.run(async (ctx) => {
+		const accumulated = (
+			await ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", key),
+				)
+				.unique()
+		)?.knowledge as Record<string, unknown> | undefined;
+		const row = await ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) => q.eq("readingKey", key))
+			.unique();
+		if (!row) return accumulated;
+		const semanticRelations: Record<string, unknown[]> = {};
+		for (const edge of await ctx.db
+			.query("semanticRelationEdges")
+			.withIndex("by_source_reading_id", (q) =>
+				q.eq("sourceReadingId", row._id),
+			)
+			.collect()) {
+			const lemma = edge.targetLemmaId
+				? await ctx.db.get(edge.targetLemmaId)
+				: null;
+			if (!lemma) continue;
+			const targets = semanticRelations[edge.relation] ?? [];
+			targets.push({
+				unitKind: "Lemma",
+				language: lemma.language,
+				family: lemma.family,
+				kind: lemma.kind,
+				canonicalForm: lemma.canonicalForm,
+				coreFeatures: lemma.coreFeatures,
+			});
+			semanticRelations[edge.relation] = targets;
+		}
+		return {
+			...(accumulated ?? {}),
+			...(Object.keys(semanticRelations).length > 0
+				? { semanticRelations }
+				: {}),
+		};
+	});
 }
 
 describe("tf-demo Dumdict relation storage", () => {
 	test("rejects over-budget and duplicate-heavy slices before planning while admitting the exact transaction boundary", async () => {
-		const db = new IndexedDb(initialSeed());
+		const { t } = await seededDictionary();
 		const newNoteArgs = {
 			intent: "addNewNote" as const,
 			lemmaKey: lemmaIdentityKey(gehenLemma),
@@ -372,10 +324,10 @@ describe("tf-demo Dumdict relation storage", () => {
 			),
 		};
 		await expect(
-			runReadingEntryContextQuery(db, newNoteArgs),
+			readingEntryContext(t, newNoteArgs),
 		).resolves.toMatchObject({ revision: "convex-0" });
 		await expect(
-			runReadingEntryContextQuery(db, {
+			readingEntryContext(t, {
 				...newNoteArgs,
 				pendingLocatorKeys: [
 					...newNoteArgs.pendingLocatorKeys,
@@ -386,7 +338,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			"New-note context can produce at most 50 planned changes",
 		);
 		await expect(
-			runReadingEntryContextQuery(db, {
+			readingEntryContext(t, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(gehenLemma),
 				proposedLemma: gehenLemma,
@@ -402,29 +354,32 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 
 		await expect(
-			runQuery(db, loadDumdictCleanupRelationsContext, {
-				locatorKeys: Array.from(
-					{ length: 16 },
-					(_, index) => `locator-${index}`,
-				),
-			}),
+			t.query(
+				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
+				{
+					locatorKeys: Array.from(
+						{ length: 16 },
+						(_, index) => `locator-${index}`,
+					),
+				},
+			),
 		).resolves.toMatchObject({ revision: "convex-0" });
 		await expect(
-			runQuery(db, loadDumdictCleanupRelationsContext, {
-				locatorKeys: Array.from(
-					{ length: 51 },
-					(_, index) => `locator-${index}`,
-				),
-			}),
+			t.query(
+				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
+				{
+					locatorKeys: Array.from(
+						{ length: 51 },
+						(_, index) => `locator-${index}`,
+					),
+				},
+			),
 		).rejects.toThrow(
 			"Relations-cleanup context can produce at most 50 planned changes",
 		);
 
-		const boundaryDb = new IndexedDb(initialSeed());
-		const boundaryDict = createDumdictService({
-			language: "de",
-			storage: storageFor(boundaryDb),
-		});
+		const { t: boundary } = await seededDictionary();
+		const boundaryDict = dictionaryFor(boundary);
 		const duplicateDirectRelation = {
 			relation: "nearSynonym" as const,
 			target: { kind: "existing" as const, lemma: gehenLemma },
@@ -443,16 +398,16 @@ describe("tf-demo Dumdict relation storage", () => {
 				}),
 			),
 		).toMatchObject({ status: "applied", nextRevision: "convex-1" });
-		expect(boundaryDb.rows("dictionaryState")[0]?.revision).toBe(1);
+		expect(await revision(boundary)).toBe(1);
 		expect(
-			readingKnowledge(boundaryDb, readingFingerprint(gehenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(boundary, gehenReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
 	});
 
 	test("loads every requested owned Surface and explicit existing Lemma target", async () => {
-		const db = new IndexedDb(initialSeed());
-		const result = (await runReadingEntryContextQuery(db, {
+		const { t } = await seededDictionary();
+		const result = (await readingEntryContext(t, {
 			intent: "addNewNote",
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
@@ -479,15 +434,15 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("loads every Reading Entry intent through one discriminated Convex query", async () => {
-		const db = new IndexedDb(initialSeed());
-		const queryInputs: unknown[] = [];
+		const { t } = await seededDictionary();
+		const queried: string[] = [];
 		const storage = createConvexDumdictStorage({
-			async runQuery(reference: unknown, args: unknown) {
-				expect(getFunctionName(reference as never)).toBe(
-					"dumdictStorage:loadDumdictReadingEntryContext",
-				);
-				queryInputs.push(args);
-				return runQuery(db, loadDumdictReadingEntryContext, args);
+			runQuery(
+				reference: FunctionReference<"query", "internal">,
+				args: DefaultFunctionArgs,
+			) {
+				queried.push(getFunctionName(reference));
+				return t.query(reference, args);
 			},
 			async runMutation() {
 				throw new Error("Unexpected Convex mutation.");
@@ -519,7 +474,13 @@ describe("tf-demo Dumdict relation storage", () => {
 			]),
 		);
 
-		expect(queryInputs).toHaveLength(4);
+		expect(queried).toEqual(
+			Array.from({ length: 4 }, () =>
+				getFunctionName(
+					internal.dumdictStorage.loadDumdictReadingEntryContext,
+				),
+			),
+		);
 		expect(
 			contexts.map(({ intent, revision }) => ({ intent, revision })),
 		).toEqual([
@@ -537,11 +498,8 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("authors only direct Knowledge, deduplicates pending proposals, and survives a repeated encounter", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 
 		expect(
 			await Effect.runPromise(
@@ -565,24 +523,16 @@ describe("tf-demo Dumdict relation storage", () => {
 			),
 		).toMatchObject({ status: "applied" });
 		expect(
-			readingKnowledge(db, readingFingerprint(laufenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, laufenReading))?.semanticRelations
+				?.nearSynonym,
 		).toEqual([gehenLemma]);
 		expect(
-			readingKnowledge(db, readingFingerprint(gehenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, gehenReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
-		const gehenReadingId = db
-			.rows("readings")
-			.find(
-				(row) => row.readingKey === readingFingerprint(gehenReading),
-			)?._id;
-		if (!gehenReadingId) throw new Error("Expected gehen Reading.");
+		const gehenReadingId = await readingIdFor(t, gehenReading);
 		expect(
-			await loadRelationProjections(
-				{ db } as never,
-				gehenReadingId as never,
-			),
+			await t.run((ctx) => loadRelationProjections(ctx, gehenReadingId)),
 		).toMatchObject({
 			fingerprints: [
 				{
@@ -593,8 +543,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			],
 		});
 		expect(
-			db
-				.rows("accumulatedKnowledge")
+			(await rows(t, "accumulatedKnowledge"))
 				.filter(({ ownerReadingKey }) =>
 					[
 						readingFingerprint(laufenReading),
@@ -639,15 +588,10 @@ describe("tf-demo Dumdict relation storage", () => {
 				}),
 			),
 		).toMatchObject({ status: "applied" });
-		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
-		expect(
-			db
-				.rows("accumulatedKnowledge")
-				.find(
-					({ ownerReadingKey }) =>
-						ownerReadingKey === readingFingerprint(springenReading),
-				),
-		).toMatchObject({ status: "Partial", knowledge: {} });
+		expect(await rows(t, "pendingSemanticRelations")).toHaveLength(1);
+		expect(await accumulatedKnowledgeFor(t, springenReading)).toMatchObject(
+			{ status: "Partial", knowledge: {} },
+		);
 		expect(
 			await Effect.runPromise(
 				dict
@@ -664,16 +608,13 @@ describe("tf-demo Dumdict relation storage", () => {
 			_tag: "DumdictRejection",
 			code: "readingAlreadyExists",
 		});
-		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
-		expect(db.rows("dictionaryState")[0]?.revision).toBe(2);
+		expect(await rows(t, "pendingSemanticRelations")).toHaveLength(1);
+		expect(await revision(t)).toBe(2);
 	});
 
 	test("persists exact Reading targets and navigates to the target Reading Note", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		expect(
 			await Effect.runPromise(
 				dict.addNewNote({
@@ -682,7 +623,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			),
 		).toMatchObject({ status: "applied" });
 		expect(
-			await transactionFor(db).commit({
+			await commitInTransaction(t, {
 				baseRevision: "convex-1" as StoreRevision,
 				changes: [
 					{
@@ -718,25 +659,18 @@ describe("tf-demo Dumdict relation storage", () => {
 			} satisfies DumdictPlan<"de">),
 		).toMatchObject({ status: "committed" });
 
-		const source = db
-			.rows("readings")
-			.find(
-				(row) => row.readingKey === readingFingerprint(laufenReading),
-			);
-		const target = db
-			.rows("readings")
-			.find((row) => row.readingKey === readingFingerprint(gehenReading));
-		if (!source || !target) throw new Error("Expected exact Reading rows.");
-		expect(db.rows("semanticRelationEdges")).toContainEqual(
+		const sourceId = await readingIdFor(t, laufenReading);
+		const targetId = await readingIdFor(t, gehenReading);
+		expect(await rows(t, "semanticRelationEdges")).toContainEqual(
 			expect.objectContaining({
-				sourceReadingId: source._id,
+				sourceReadingId: sourceId,
 				targetKind: "reading",
-				targetReadingId: target._id,
+				targetReadingId: targetId,
 				relation: "synonym",
 			}),
 		);
 		expect(
-			await runQuery(db, loadDumdictReadingForPatch, {
+			await t.query(internal.dumdictStorage.loadDumdictReadingForPatch, {
 				readingKey: readingFingerprint(laufenReading),
 			}),
 		).toMatchObject({
@@ -750,14 +684,14 @@ describe("tf-demo Dumdict relation storage", () => {
 			},
 		});
 		expect(
-			await loadRelationProjections({ db } as never, source._id as never),
+			await t.run((ctx) => loadRelationProjections(ctx, sourceId)),
 		).toMatchObject({
 			resolved: [
 				{
 					relation: "synonym",
 					target: {
 						kind: "Reading",
-						readingId: target._id,
+						readingId: targetId,
 					},
 				},
 			],
@@ -765,11 +699,8 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("removing the last exact target preserves the Reading relation mode in storage", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		await Effect.runPromise(
 			dict.addNewNote({ draft: { reading: laufenReading, note } }),
 		);
@@ -802,9 +733,9 @@ describe("tf-demo Dumdict relation storage", () => {
 				pendingRelations: [],
 			}),
 		);
-		expect(db.rows("semanticRelationEdges")).toHaveLength(0);
+		expect(await rows(t, "semanticRelationEdges")).toHaveLength(0);
 		expect(
-			await runQuery(db, loadDumdictReadingForPatch, {
+			await t.query(internal.dumdictStorage.loadDumdictReadingForPatch, {
 				readingKey: readingFingerprint(laufenReading),
 			}),
 		).toMatchObject({
@@ -812,7 +743,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				knowledge: { semanticRelations: { targetKind: "reading" } },
 			},
 		});
-		const snapshot = db.snapshot();
+		const before = await snapshot(t);
 		await expect(
 			Effect.runPromise(
 				dict.applyGeneratedKnowledge({
@@ -829,15 +760,12 @@ describe("tf-demo Dumdict relation storage", () => {
 				}),
 			),
 		).rejects.toThrow();
-		expect(db.snapshot()).toEqual(snapshot);
+		expect(await snapshot(t)).toEqual(before);
 	});
 
 	test("applies graph-wide direct target conflicts atomically at the Convex seam", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		await Effect.runPromise(
 			dict.addNewNote({
 				draft: {
@@ -873,14 +801,9 @@ describe("tf-demo Dumdict relation storage", () => {
 					.pipe(Effect.catchAll(Effect.succeed)),
 			),
 		).toMatchObject({ status: "applied" });
-		const sourceId = db
-			.rows("readings")
-			.find(
-				(row) => row.readingKey === readingFingerprint(laufenReading),
-			)?._id;
+		const sourceId = await readingIdFor(t, laufenReading);
 		expect(
-			db
-				.rows("semanticRelationEdges")
+			(await rows(t, "semanticRelationEdges"))
 				.filter((edge) => edge.sourceReadingId === sourceId)
 				.map(({ relation }) => relation),
 		).toEqual(["synonym"]);
@@ -913,22 +836,13 @@ describe("tf-demo Dumdict relation storage", () => {
 			),
 		).toMatchObject({ _tag: "DumdictRejection", code: "relationConflict" });
 		expect(
-			db
-				.rows("accumulatedKnowledge")
-				.find(
-					(row) =>
-						row.ownerReadingKey ===
-						readingFingerprint(laufenReading),
-				)?.knowledge,
+			(await accumulatedKnowledgeFor(t, laufenReading))?.knowledge,
 		).not.toMatchObject({ definition: "sich gehend fortbewegen" });
 	});
 
 	test("loads cleanup context and atomically resolves only the exact pending locator", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		await Effect.runPromise(
 			dict.addNewNote({
 				draft: {
@@ -967,20 +881,13 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			}),
 		);
-		const targetLemmaId = await db.insert("lemmas", {
-			lemmaKey: lemmaIdentityKey(laufenLemma),
-			...laufenLemma,
-		});
-		await db.insert("dictionaryLemmas", { lemmaId: targetLemmaId });
-		const targetReadingId = await db.insert("readings", {
-			readingKey: readingFingerprint(laufenReading),
-			lemmaId: targetLemmaId,
-			emojiDescription: laufenReading.emojiDescription,
-		});
-		await db.insert("readingEntries", {
-			readingId: targetReadingId,
-			record: note,
-		});
+		// The target Lemma appears outside the dictionary workflow, leaving the
+		// pending relations for cleanup to resolve.
+		await insertReading(
+			t,
+			await insertDictionaryLemma(t, laufenLemma),
+			laufenReading,
+		);
 
 		const info = await Effect.runPromise(
 			dict.getInfoForRelationsCleanup({
@@ -1005,7 +912,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					.pipe(Effect.catchAll(Effect.succeed)),
 			),
 		).toMatchObject({ status: "applied" });
-		expect(db.rows("pendingSemanticRelations")).toEqual([
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([
 			expect.objectContaining({
 				record: expect.objectContaining({
 					pending: expect.objectContaining({ relation: "antonym" }),
@@ -1013,12 +920,12 @@ describe("tf-demo Dumdict relation storage", () => {
 			}),
 		]);
 		expect(
-			readingKnowledge(db, readingFingerprint(springenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, springenReading))?.semanticRelations
+				?.nearSynonym,
 		).toEqual([laufenLemma]);
 		expect(
-			readingKnowledge(db, readingFingerprint(laufenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, laufenReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
 
 		expect(
@@ -1051,11 +958,8 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("resolves pending Shadows automatically when their exact Lemma appears", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		const relation = {
 			target: {
 				kind: "pending" as const,
@@ -1079,7 +983,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			}),
 		);
-		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
+		expect(await rows(t, "pendingSemanticRelations")).toHaveLength(1);
 		expect(
 			await Effect.runPromise(
 				dict.addNewNote({ draft: { reading: laufenReading, note } }),
@@ -1087,23 +991,20 @@ describe("tf-demo Dumdict relation storage", () => {
 		).toMatchObject({
 			status: "applied",
 		});
-		expect(db.rows("pendingSemanticRelations")).toEqual([]);
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
 		expect(
-			readingKnowledge(db, readingFingerprint(springenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, springenReading))?.semanticRelations
+				?.nearSynonym,
 		).toEqual([laufenLemma]);
 		expect(
-			readingKnowledge(db, readingFingerprint(laufenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, laufenReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
 	});
 
 	test("keeps an ambiguous multi-Lemma Shadow pending and inert", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		const alternativeLemma = {
 			...laufenLemma,
 			coreFeatures: { ...verbFeatures, hasSepPrefix: "mit" },
@@ -1145,28 +1046,23 @@ describe("tf-demo Dumdict relation storage", () => {
 			}),
 		);
 		expect(result).toMatchObject({ status: "applied" });
-		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
-		const forward = readingKnowledge(
-			db,
-			readingFingerprint(springenReading),
-		)?.semanticRelations?.nearSynonym as unknown[];
+		expect(await rows(t, "pendingSemanticRelations")).toHaveLength(1);
+		const forward = (await readingKnowledge(t, springenReading))
+			?.semanticRelations?.nearSynonym as unknown[];
 		expect(forward).toBeUndefined();
 		expect(
-			readingKnowledge(db, readingFingerprint(laufenReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, laufenReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
 		expect(
-			readingKnowledge(db, readingFingerprint(alternativeReading))
-				?.semanticRelations?.nearSynonym,
+			(await readingKnowledge(t, alternativeReading))?.semanticRelations
+				?.nearSynonym,
 		).toBeUndefined();
 	});
 
 	test("does not backfill an inverse edge when a later Reading joins the target Lemma", async () => {
-		const db = new IndexedDb(initialSeed());
-		const dict = createDumdictService({
-			language: "de",
-			storage: storageFor(db),
-		});
+		const { t } = await seededDictionary();
+		const dict = dictionaryFor(t);
 		await Effect.runPromise(
 			dict.addNewNote({ draft: { reading: laufenReading, note } }),
 		);
@@ -1196,14 +1092,14 @@ describe("tf-demo Dumdict relation storage", () => {
 			status: "applied",
 		});
 		expect(
-			readingKnowledge(db, readingFingerprint(laterReading))
-				?.semanticRelations?.hyponym,
+			(await readingKnowledge(t, laterReading))?.semanticRelations
+				?.hyponym,
 		).toBeUndefined();
 	});
 
 	test("rolls relation-edge writes back when a later planned change fails", async () => {
-		const db = new IndexedDb(initialSeed());
-		const before = db.snapshot();
+		const { t } = await seededDictionary();
+		const before = await snapshot(t);
 		const missingLemma = {
 			...laufenLemma,
 			canonicalForm: "fehlen",
@@ -1237,26 +1133,27 @@ describe("tf-demo Dumdict relation storage", () => {
 					],
 				},
 			],
-			affected: {},
-			summary: { message: "must roll back" },
 		};
 		await expect(
-			runMutation(db, commitDumdictChanges, plan),
+			t.mutation(
+				internal.dumdictStorage.commitDumdictChanges,
+				dictionaryPlanResult(plan),
+			),
 		).rejects.toThrow("target Lemma is missing");
-		expect(db.snapshot()).toEqual(before);
+		expect(await snapshot(t)).toEqual(before);
 	});
 
 	test("fails relation planning explicitly when the complete Lemma inventory overflows", async () => {
-		const dictionaryRows = Array.from({ length: 101 }, (_, index) => ({
-			_id: `dictionary-overflow-${index}`,
-			lemmaId: `lemma-overflow-${index}`,
-		}));
-		const db = new IndexedDb({
-			...initialSeed(),
-			dictionaryLemmas: dictionaryRows,
+		const { t, gehenLemmaId } = await seededDictionary();
+		await t.run(async (ctx) => {
+			// The inventory counts membership rows, so 100 more make 101.
+			for (let index = 0; index < 100; index += 1)
+				await ctx.db.insert("dictionaryLemmas", {
+					lemmaId: gehenLemmaId,
+				});
 		});
 		await expect(
-			runReadingEntryContextQuery(db, {
+			readingEntryContext(t, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
@@ -1269,16 +1166,18 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("fails relation planning explicitly when the complete Reading inventory overflows", async () => {
-		const seed = initialSeed();
-		seed.readings = Array.from({ length: 201 }, (_, index) => ({
-			_id: `reading-overflow-${index}`,
-			readingKey: `reading-key-overflow-${index}`,
-			lemmaId: "lemma-gehen",
-			emojiDescription: "overflow",
-		}));
-		const db = new IndexedDb(seed);
+		const { t, gehenLemmaId } = await seededDictionary();
+		await t.run(async (ctx) => {
+			// With the seeded gehen Reading, 200 more make 201.
+			for (let index = 0; index < 200; index += 1)
+				await ctx.db.insert("readings", {
+					readingKey: `reading-key-overflow-${index}`,
+					lemmaId: gehenLemmaId,
+					emojiDescription: "overflow",
+				});
+		});
 		await expect(
-			runReadingEntryContextQuery(db, {
+			readingEntryContext(t, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
@@ -1291,19 +1190,17 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("fails relation planning explicitly when one Reading's edge inventory overflows", async () => {
-		const seed = initialSeed();
-		seed.semanticRelationEdges = Array.from(
-			{ length: 201 },
-			(_, index) => ({
-				_id: `edge-overflow-${index}`,
-				sourceReadingId: "reading-gehen",
-				targetLemmaId: "lemma-gehen",
-				relation: "synonym",
-			}),
-		);
-		const db = new IndexedDb(seed);
+		const { t, gehenLemmaId, gehenReadingId } = await seededDictionary();
+		await t.run(async (ctx) => {
+			for (let index = 0; index < 201; index += 1)
+				await ctx.db.insert("semanticRelationEdges", {
+					sourceReadingId: gehenReadingId,
+					targetLemmaId: gehenLemmaId,
+					relation: "synonym",
+				});
+		});
 		await expect(
-			runReadingEntryContextQuery(db, {
+			readingEntryContext(t, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
@@ -1316,8 +1213,8 @@ describe("tf-demo Dumdict relation storage", () => {
 	});
 
 	test("preflights every Knowledge patch before writes and reports semantic conflicts without partial state", async () => {
-		const db = new IndexedDb(initialSeed());
-		const before = db.snapshot();
+		const { t } = await seededDictionary();
+		const before = await snapshot(t);
 		const revision = "convex-0" as StoreRevision;
 		const badPlan: DumdictPlan<"de"> = {
 			baseRevision: revision,
@@ -1367,10 +1264,10 @@ describe("tf-demo Dumdict relation storage", () => {
 			],
 		};
 
-		await expect(transactionFor(db).commit(badPlan)).rejects.toThrow(
+		await expect(commitInTransaction(t, badPlan)).rejects.toThrow(
 			"Reading does not match",
 		);
-		expect(db.snapshot()).toEqual(before);
+		expect(await snapshot(t)).toEqual(before);
 
 		const conflictPlan: DumdictPlan<"de"> = {
 			baseRevision: revision,
@@ -1386,11 +1283,11 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			],
 		};
-		expect(await transactionFor(db).commit(conflictPlan)).toMatchObject({
+		expect(await commitInTransaction(t, conflictPlan)).toMatchObject({
 			status: "conflict",
 			code: "semanticPreconditionFailed",
 		});
-		expect(db.snapshot()).toEqual(before);
+		expect(await snapshot(t)).toEqual(before);
 
 		const forgedRecord = {
 			sourceReading: gehenReading,
@@ -1426,32 +1323,19 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			],
 		};
-		await expect(transactionFor(db).commit(forgedPlan)).rejects.toThrow(
+		await expect(commitInTransaction(t, forgedPlan)).rejects.toThrow(
 			"wrong target Pending Entry ID",
 		);
-		expect(db.snapshot()).toEqual(before);
+		expect(await snapshot(t)).toEqual(before);
 	});
 
 	test("repeated orchestration encounters through the real Convex adapter preserve direct and pending relations", async () => {
-		const seed = initialSeed();
 		const directKnowledge = {
 			semanticRelations: { nearSynonym: [laufenReading.lemma] },
 		};
-		seed.readingEntries = [
-			{
-				_id: "reading-entry-gehen",
-				readingId: "reading-gehen",
-				record: { ...note, knowledge: directKnowledge },
-			},
-		];
-		seed.accumulatedKnowledge = [
-			{
-				_id: "knowledge-gehen",
-				ownerReadingKey: readingFingerprint(gehenReading),
-				knowledge: directKnowledge,
-				updatedAt: 1,
-			},
-		];
+		const { t, gehenReadingId } = await seededDictionary({
+			gehenRecord: { ...note, knowledge: directKnowledge },
+		});
 		const pendingRecord = {
 			sourceReading: gehenReading,
 			pending: {
@@ -1469,16 +1353,20 @@ describe("tf-demo Dumdict relation storage", () => {
 				targetPendingId: "pending-entry:v2:de:Lexeme:VERB:laufen",
 			},
 		} as const;
-		seed.pendingSemanticRelations = [
-			{
-				_id: "pending-gehen-laufen",
+		await t.run(async (ctx) => {
+			await ctx.db.insert("accumulatedKnowledge", {
+				ownerReadingKey: readingFingerprint(gehenReading),
+				knowledge: directKnowledge,
+				status: "Partial",
+				updatedAt: 1,
+			});
+			await ctx.db.insert("pendingSemanticRelations", {
 				locatorKey: locatorKey(pendingRecord.locator),
 				sourceReadingKey: readingFingerprint(gehenReading),
 				targetCanonicalForm: "laufen",
 				record: pendingRecord,
-			},
-		];
-		const db = new IndexedDb(seed);
+			});
+		});
 		const decisions: ("New" | "Reuse")[] = [];
 		const citation = surface("gehen");
 		const grammatical = {
@@ -1538,7 +1426,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					status: "Committed",
 					clickId: `click-${decisions.length}`,
 					attestationId: `attestation-${decisions.length}`,
-					readingId: "reading-gehen",
+					readingId: gehenReadingId,
 					deduplicated: false,
 					occurrence: {
 						attestationId: `attestation-${decisions.length}`,
@@ -1571,10 +1459,7 @@ describe("tf-demo Dumdict relation storage", () => {
 						emojiDescription: gehenReading.emojiDescription,
 					}),
 			},
-			dictionary: createDumdictService({
-				language: "de",
-				storage: storageFor(db),
-			}),
+			dictionary: dictionaryFor(t),
 			persistence,
 		});
 
@@ -1590,10 +1475,10 @@ describe("tf-demo Dumdict relation storage", () => {
 		}
 
 		expect(decisions).toEqual(["Reuse", "Reuse"]);
-		expect(db.rows("readingEntries")[0]?.record).toMatchObject({
+		expect((await rows(t, "readingEntries"))[0]?.record).toMatchObject({
 			knowledge: directKnowledge,
 		});
-		expect(db.rows("pendingSemanticRelations")).toEqual([
+		expect(await rows(t, "pendingSemanticRelations")).toEqual([
 			expect.objectContaining({ record: pendingRecord }),
 		]);
 	});

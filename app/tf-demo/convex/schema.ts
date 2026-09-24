@@ -469,7 +469,6 @@ export default defineSchema({
 		lifecycle: resolutionLifecycleValidator,
 		runNumber: v.optional(v.number()),
 		retryDeadlineAt: v.optional(v.number()),
-		nextRetryAt: v.optional(v.number()),
 		route: resolutionRouteProjectionValidator,
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
@@ -519,7 +518,6 @@ export default defineSchema({
 		generationEvents: v.optional(
 			v.array(resolutionGenerationEventValidator),
 		),
-		delayMs: v.optional(v.number()),
 		startedAt: v.number(),
 		finishedAt: v.optional(v.number()),
 		expiresAt: v.number(),

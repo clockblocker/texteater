@@ -186,23 +186,32 @@ export function createResolutionSessionLifecycle(
 							internal.resolutionSessions.recordRunFailure,
 							{
 								guard,
-								phase: record.phase,
-								failure: record.failure,
-								generationEvents: [...record.generationEvents],
+								failure: {
+									kind: "Generation",
+									phase: record.phase,
+									failure: record.failure,
+									generationEvents: [
+										...record.generationEvents,
+									],
+								},
 							},
 						);
 						return;
 					case "InternalFailed":
 						await ctx.runMutation(
-							internal.resolutionSessions
-								.recordInternalRunFailure,
+							internal.resolutionSessions.recordRunFailure,
 							{
 								guard,
-								phase: record.phase,
-								diagnosticId: record.diagnosticId,
-								errorName: record.errorName,
-								errorFingerprint: record.errorFingerprint,
-								generationEvents: [...record.generationEvents],
+								failure: {
+									kind: "Internal",
+									phase: record.phase,
+									diagnosticId: record.diagnosticId,
+									errorName: record.errorName,
+									errorFingerprint: record.errorFingerprint,
+									generationEvents: [
+										...record.generationEvents,
+									],
+								},
 							},
 						);
 				}

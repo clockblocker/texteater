@@ -30,8 +30,7 @@ import {
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
-	type ResolutionSessionGuard,
-	requireActiveResolutionSession,
+	requireCommittingSession,
 	settleComplete,
 	settleFailed,
 	settleUnresolved,
@@ -59,32 +58,9 @@ async function findClickByRequestId(
 		.unique();
 }
 
-async function requireMatchingActiveSession(
-	ctx: MutationCtx,
-	input: {
-		requestId: string;
-		visitorId: string;
-		sentenceId: Id<"sentences">;
-		clickedSegmentIndex: number;
-	},
-	guard?: ResolutionSessionGuard,
-) {
-	if (!guard) return null;
-	const session = await requireActiveResolutionSession(ctx, guard);
-	if (
-		session.requestId !== input.requestId ||
-		session.visitorId !== input.visitorId ||
-		session.sentenceId !== input.sentenceId ||
-		session.clickedSegmentIndex !== input.clickedSegmentIndex
-	) {
-		throw new Error("Resolution Session does not match the Click commit.");
-	}
-	return session;
-}
-
 async function settleResolvedSession(
 	ctx: MutationCtx,
-	session: Awaited<ReturnType<typeof requireMatchingActiveSession>>,
+	session: Awaited<ReturnType<typeof requireCommittingSession>>,
 	result: {
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
@@ -94,7 +70,6 @@ async function settleResolvedSession(
 		};
 	},
 ): Promise<void> {
-	if (!session) return;
 	await settleComplete(ctx, session, {
 		readingId: result.readingId,
 		attestationId: result.attestationId,
@@ -201,13 +176,13 @@ export const persistUnresolvedClick = internalMutation({
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
-		sessionGuard: v.optional(resolutionSessionGuardValidator),
+		sessionGuard: resolutionSessionGuardValidator,
 	},
 	returns: unresolvedClickPersistenceResultValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
 		const [session, { sentence, segment }, existing] = await Promise.all([
-			requireMatchingActiveSession(ctx, args, args.sessionGuard),
+			requireCommittingSession(ctx, args.sessionGuard, args),
 			requireClickableSegment(
 				ctx,
 				args.sentenceId,
@@ -220,16 +195,11 @@ export const persistUnresolvedClick = internalMutation({
 				visitorId: args.visitorId,
 				segmentId: segment._id,
 			});
-			if (existing.attestationId) {
-				throw new Error("requestId already records a resolved click.");
-			}
-			if (session) await settleUnresolved(ctx, session);
-			return {
-				status: "Unresolved" as const,
-				clickId: existing._id,
-				deduplicated: true,
-			};
 		}
+		// A committed occurrence outranks this session's Unresolved outcome:
+		// the Visitor Encounter advances to it and the session completes
+		// (ADR-0002, ADR-0004). Segment Selection recorded the encounter under
+		// this requestId, so finding it is not yet a retry.
 		const committedAttestationId =
 			segment.attestationMembership?.attestationId;
 		if (committedAttestationId) {
@@ -240,20 +210,26 @@ export const persistUnresolvedClick = internalMutation({
 				attestationId: committedAttestationId,
 			});
 			await settleResolvedSession(ctx, session, result);
-			return result;
+			return {
+				...result,
+				deduplicated:
+					existing?.attestationId === committedAttestationId,
+			};
 		}
-		const { clickId } = await ensureVisitorEncounter(ctx, {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			textId: sentence.textId,
-			sentenceId: sentence._id,
-			segmentId: segment._id,
-		});
-		if (session) await settleUnresolved(ctx, session);
+		const { clickId } = existing
+			? { clickId: existing._id }
+			: await ensureVisitorEncounter(ctx, {
+					requestId: args.requestId,
+					visitorId: args.visitorId,
+					textId: sentence.textId,
+					sentenceId: sentence._id,
+					segmentId: segment._id,
+				});
+		await settleUnresolved(ctx, session);
 		return {
 			status: "Unresolved" as const,
 			clickId,
-			deduplicated: false,
+			deduplicated: existing !== null,
 		};
 	},
 });
@@ -265,15 +241,15 @@ export const persistReusedResolvedClick = internalMutation({
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 		attestationId: v.id("attestations"),
-		sessionGuard: v.optional(resolutionSessionGuardValidator),
+		sessionGuard: resolutionSessionGuardValidator,
 	},
 	returns: reusedResolvedClickCommitValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
-		const session = await requireMatchingActiveSession(
+		const session = await requireCommittingSession(
 			ctx,
-			args,
 			args.sessionGuard,
+			args,
 		);
 		const { sentence, segment } = await requireClickableSegment(
 			ctx,
@@ -369,15 +345,15 @@ export const persistResolvedClick = internalMutation({
 		reading: readingValueValidator,
 		readingKey: v.string(),
 		readingDecision: readingDecisionValidator,
-		sessionGuard: v.optional(resolutionSessionGuardValidator),
+		sessionGuard: resolutionSessionGuardValidator,
 	},
 	returns: resolvedClickCommitValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
-		const session = await requireMatchingActiveSession(
+		const session = await requireCommittingSession(
 			ctx,
-			args,
 			args.sessionGuard,
+			args,
 		);
 		assertNonEmpty(args.readingKey, "readingKey");
 		const { sentence, segment: clickedSegment } =
@@ -392,15 +368,9 @@ export const persistResolvedClick = internalMutation({
 				visitorId: args.visitorId,
 				segmentId: clickedSegment._id,
 			});
-			if (!existingClick.attestationId) {
-				// Segment Selection creates the Visitor Encounter before its
-				// Resolution Session runs. Only that active session may advance it.
-				if (!session) {
-					throw new Error(
-						"requestId already records an unresolved click.",
-					);
-				}
-			} else {
+			// Segment Selection creates the Visitor Encounter before its
+			// Resolution Session runs, so an unresolved one is this session's own.
+			if (existingClick.attestationId) {
 				const { value: occurrence } =
 					await reconstructReusableAttestation(
 						ctx,
@@ -524,13 +494,11 @@ export const persistResolvedClick = internalMutation({
 			),
 		];
 		if (conflictingAttestationIds.length > 0) {
-			if (session) {
-				await settleFailed(
-					ctx,
-					session,
-					"This occurrence overlaps a different saved occurrence.",
-				);
-			}
+			await settleFailed(
+				ctx,
+				session,
+				"This occurrence overlaps a different saved occurrence.",
+			);
 			return {
 				status: "MembershipConflict" as const,
 				code: "partialOverlap" as const,
@@ -544,13 +512,11 @@ export const persistResolvedClick = internalMutation({
 		// transaction reads, so the occurrence never carries a stale plan.
 		const dictionaryCommit = await planAndCommitDictionary(ctx, args);
 		if (dictionaryCommit.status !== "committed") {
-			if (session) {
-				await settleFailed(
-					ctx,
-					session,
-					"The shared dictionary rejected this resolution before it could be saved.",
-				);
-			}
+			await settleFailed(
+				ctx,
+				session,
+				"The shared dictionary rejected this resolution before it could be saved.",
+			);
 			return {
 				status: "DictionaryConflict" as const,
 				code:

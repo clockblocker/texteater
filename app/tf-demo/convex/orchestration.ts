@@ -13,8 +13,6 @@ import {
 	type ResolutionProgressObserver,
 	type ResolvedClickCommit,
 	type ResolveSegmentInput,
-	type ResolveSegmentResult,
-	type ReusableAttestation,
 	type ReusedResolvedClickCommit,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
@@ -38,14 +36,8 @@ import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
 import { createConvexDumdictStorage } from "./dumdictActionStorage";
 import { inspectionFor } from "./inspectionAction";
-import { resolvedGrammaticalActionResult } from "./model/grammarCheckpoint";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
-import {
-	type nonResolvedGrammaticalValidator,
-	resolutionSessionGuardValidator,
-	resolveSegmentResultValidator,
-	type reusableAttestationValidator,
-} from "./model/validators";
+import { resolutionSessionGuardValidator } from "./model/validators";
 import { createResolutionSessionLifecycle } from "./resolutionSessionLifecycle";
 
 const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
@@ -63,178 +55,8 @@ const submitTextResultValidator = v.union(
 
 type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
 
-type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
-type NonResolvedGrammaticalActionResult = Infer<
-	typeof nonResolvedGrammaticalValidator
->;
-type ReusableAttestationResult = Infer<typeof reusableAttestationValidator>;
-type GrammaticalResolveSegmentResult = Extract<
-	ResolveSegmentResult,
-	{ grammatical: unknown }
->["grammatical"];
-
 function convexId<TableName extends TableNames>(value: string): Id<TableName> {
 	return value as Id<TableName>;
-}
-
-function nonResolvedGrammaticalActionResult(
-	input: Extract<
-		GrammaticalResolveSegmentResult,
-		{ decision: "Unresolved" | "NotImplemented" }
-	>,
-): NonResolvedGrammaticalActionResult {
-	return input;
-}
-
-function reusableAttestationResult(
-	input: ReusableAttestation,
-): ReusableAttestationResult {
-	return {
-		attestationId: convexId<"attestations">(input.attestationId),
-		grammatical: resolvedGrammaticalActionResult(input.grammatical),
-		reading: {
-			...input.reading,
-			lemma: { ...input.reading.lemma },
-		},
-	};
-}
-
-function committedOccurrenceResult(
-	input:
-		| Extract<ResolvedClickCommit, { status: "Committed" | "Reused" }>
-		| LateResolvedClickCommit,
-) {
-	return {
-		...input,
-		clickId: convexId<"visitorClicks">(input.clickId),
-		readingId: convexId<"readings">(input.readingId),
-		attestationId: convexId<"attestations">(input.attestationId),
-		occurrence: reusableAttestationResult(input.occurrence),
-	};
-}
-
-function reusedClickResult(input: ReusedResolvedClickCommit) {
-	return {
-		...input,
-		clickId: convexId<"visitorClicks">(input.clickId),
-		readingId: convexId<"readings">(input.readingId),
-		attestationId: convexId<"attestations">(input.attestationId),
-	};
-}
-
-function lateResolvedClickResult(input: LateResolvedClickCommit) {
-	return {
-		...input,
-		status: "Reused" as const,
-		clickId: convexId<"visitorClicks">(input.clickId),
-		readingId: convexId<"readings">(input.readingId),
-		attestationId: convexId<"attestations">(input.attestationId),
-		occurrence: reusableAttestationResult(input.occurrence),
-	};
-}
-
-function resolveSegmentActionResult(
-	result: ResolveSegmentResult,
-): ResolveSegmentActionResult {
-	if ("catalogMiss" in result) {
-		return { catalogMiss: result.catalogMiss };
-	}
-	if ("readingResolution" in result) {
-		const grammatical = resolvedGrammaticalActionResult(result.grammatical);
-		const reading = {
-			...result.reading,
-			lemma: { ...result.reading.lemma },
-		};
-		if (!("reused" in result)) {
-			return {
-				grammatical,
-				readingResolution: { ...result.readingResolution },
-				reading,
-				persisted:
-					result.persisted.status === "MembershipConflict"
-						? {
-								...result.persisted,
-								conflictingAttestationIds:
-									result.persisted.conflictingAttestationIds.map(
-										(id) => convexId<"attestations">(id),
-									),
-							}
-						: { ...result.persisted },
-			};
-		}
-		return {
-			grammatical,
-			readingResolution: { ...result.readingResolution },
-			reading,
-			reused: result.reused,
-			persisted: committedOccurrenceResult(result.persisted),
-		};
-	}
-	if ("deduplicated" in result) {
-		return "reading" in result
-			? {
-					grammatical: resolvedGrammaticalActionResult(
-						result.grammatical,
-					),
-					reading: {
-						...result.reading,
-						lemma: { ...result.reading.lemma },
-					},
-					reused: true,
-					deduplicated: true,
-					persisted: {
-						...result.persisted,
-						clickId: convexId<"visitorClicks">(
-							result.persisted.clickId,
-						),
-						readingId: convexId<"readings">(
-							result.persisted.readingId,
-						),
-						occurrence: reusableAttestationResult(
-							result.persisted.occurrence,
-						),
-					},
-				}
-			: {
-					grammatical: {
-						decision: "Unresolved",
-						language: result.grammatical.language,
-					},
-					deduplicated: true,
-					persisted: {
-						...result.persisted,
-						clickId: convexId<"visitorClicks">(
-							result.persisted.clickId,
-						),
-					},
-				};
-	}
-	return "reading" in result
-		? {
-				grammatical: resolvedGrammaticalActionResult(
-					result.grammatical,
-				),
-				reading: {
-					...result.reading,
-					lemma: { ...result.reading.lemma },
-				},
-				reused: true,
-				persisted:
-					"occurrence" in result.persisted
-						? lateResolvedClickResult(result.persisted)
-						: reusedClickResult(result.persisted),
-			}
-		: {
-				grammatical: nonResolvedGrammaticalActionResult(
-					result.grammatical,
-				),
-				persisted: {
-					...result.persisted,
-					clickId: convexId<"visitorClicks">(
-						result.persisted.clickId,
-					),
-				},
-			};
 }
 
 export const submitText = action({
@@ -272,7 +94,7 @@ export const submitText = action({
 				Effect.runPromise(
 					orchestratorFor(
 						ctx,
-						undefined,
+						null,
 						undefined,
 						inspection,
 					).submitText(args),
@@ -301,25 +123,6 @@ export const submitText = action({
 			}
 		}
 	},
-});
-
-export const resolveSegment = action({
-	args: {
-		requestId: v.string(),
-		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-	},
-	returns: resolveSegmentResultValidator,
-	handler: async (ctx, args): Promise<ResolveSegmentActionResult> =>
-		resolveSegmentActionResult(
-			await Effect.runPromise(
-				orchestratorFor(ctx).resolveSegment({
-					...args,
-					sentenceId: args.sentenceId,
-				}),
-			),
-		),
 });
 
 export const runResolutionSession = internalAction({
@@ -380,7 +183,7 @@ export const runResolutionSession = internalAction({
 
 function orchestratorFor(
 	ctx: ActionCtx,
-	sessionGuard?: ResolutionSessionGuard,
+	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
 	inspection?: InspectionCapture,
 ) {
@@ -488,9 +291,23 @@ function orchestratorFor(
 	});
 }
 
+/**
+ * Every Occurrence commit runs under the Resolution Session that asked for it
+ * and settles that session in its own transaction (ADR-0004). Text submission
+ * has no session and makes no commit.
+ */
+function sessionCommitGuard(
+	sessionGuard: ResolutionSessionGuard | null,
+): ResolutionSessionGuard {
+	if (!sessionGuard) {
+		throw new Error("An Occurrence commit needs its Resolution Session.");
+	}
+	return sessionGuard;
+}
+
 function createConvexPersistence(
 	ctx: ActionCtx,
-	sessionGuard?: ResolutionSessionGuard,
+	sessionGuard: ResolutionSessionGuard | null,
 ): OrchestrationPersistence {
 	return {
 		async persistSubmittedText(input) {
@@ -549,7 +366,7 @@ function createConvexPersistence(
 						...input.occurrence.memberSegmentIndices,
 					],
 				},
-				...(sessionGuard ? { sessionGuard } : {}),
+				sessionGuard: sessionCommitGuard(sessionGuard),
 			}) as Promise<ResolvedClickCommit>;
 		},
 		async persistReusedResolvedClick(input) {
@@ -558,7 +375,7 @@ function createConvexPersistence(
 				{
 					...convexSegmentSelectionArgs(input),
 					attestationId: input.attestationId as Id<"attestations">,
-					...(sessionGuard ? { sessionGuard } : {}),
+					sessionGuard: sessionCommitGuard(sessionGuard),
 				},
 			) as Promise<ReusedResolvedClickCommit>;
 		},
@@ -567,7 +384,7 @@ function createConvexPersistence(
 				internal.persistence.persistUnresolvedClick,
 				{
 					...convexSegmentSelectionArgs(input),
-					...(sessionGuard ? { sessionGuard } : {}),
+					sessionGuard: sessionCommitGuard(sessionGuard),
 				},
 			) as Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 		},

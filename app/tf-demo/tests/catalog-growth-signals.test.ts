@@ -1,10 +1,12 @@
-import { describe, expect, test } from "bun:test";
-import {
-	recordAndSettleCatalogMiss,
-	recordKnowledgeCatalogMiss,
-} from "../convex/catalogGrowthSignals";
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import { api, internal } from "../convex/_generated/api";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
-import { IndexedTestDb, runTestMutation } from "./support/indexed-db";
+import {
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
 
 const miss = {
 	decision: "CatalogMiss",
@@ -13,68 +15,85 @@ const miss = {
 	message: "No reviewed member matches",
 } as const satisfies CatalogMissSignal;
 
-function seedSession(requestId: string, runToken: string, suffix: string) {
+/**
+ * Clicks the only Segment of a fresh Text, advances its session to where
+ * grammar resolution runs, and returns the session guard.
+ */
+async function startSession(t: TestConvexDb, requestId: string) {
+	const { sentenceIds } = await submitText(t, [[requestId]], {
+		submissionKey: requestId,
+	});
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a stored Sentence.");
+	await t.mutation(api.resolutionSessions.selectSegment, {
+		requestId,
+		visitorId: `visitor-${requestId}`,
+		sentenceId,
+		clickedSegmentIndex: 0,
+		routeNoteRequested: false,
+	});
+	const session = await t.run(async (ctx) => {
+		const row = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+			.unique();
+		if (!row) throw new Error("Expected an active session.");
+		await ctx.db.patch(row._id, {
+			lifecycle: {
+				state: "Active",
+				progress: "RouteAvailable",
+				activity: "Running",
+			},
+		});
+		return row;
+	});
 	return {
-		segments: [
-			{
-				_id: `segment-${suffix}`,
-				sentenceId: `sentence-${suffix}`,
-				index: 0,
-				kind: "ResolvableText",
-			},
-		],
-		resolutionSessions: [
-			{
-				_id: `session-${suffix}`,
-				requestId,
-				runToken,
-				visitorId: `visitor-${suffix}`,
-				sentenceId: `sentence-${suffix}`,
-				segmentId: `segment-${suffix}`,
-				clickedSegmentIndex: 0,
-				lifecycle: {
-					state: "Active",
-					progress: "RouteAvailable",
-					activity: "Running",
-				},
-				createdAt: 1,
-				updatedAt: 1,
-			},
-		],
+		requestId,
+		runToken: session.runToken,
+		segmentId: session.segmentId,
 	};
 }
 
+function tableRows<Table extends TableNames>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+beforeEach(() => {
+	// A Segment Selection schedules its Resolution Session; nothing here runs it.
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
 describe("Catalog Growth Signals", () => {
 	test("aggregates equal misses and atomically fails each active session", async () => {
-		const first = seedSession("request-1", "run-1", "1");
-		const second = seedSession("request-2", "run-2", "2");
-		const db = new IndexedTestDb({
-			segments: [...first.segments, ...second.segments],
-			resolutionSessions: [
-				...first.resolutionSessions,
-				...second.resolutionSessions,
-			],
-		});
+		const t = createTestConvex();
+		const guards = [
+			await startSession(t, "request-1"),
+			await startSession(t, "request-2"),
+		];
 
-		for (const [requestId, runToken, suffix] of [
-			["request-1", "run-1", "1"],
-			["request-2", "run-2", "2"],
-		] as const) {
-			await runTestMutation(db, recordAndSettleCatalogMiss, {
-				guard: { requestId, runToken, segmentId: `segment-${suffix}` },
-				miss,
-			});
+		for (const guard of guards) {
+			await t.mutation(
+				internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+				{ guard, miss },
+			);
 		}
 
-		expect(db.rows("catalogGrowthSignals")).toHaveLength(1);
-		expect(db.rows("catalogGrowthSignals")[0]).toMatchObject({
+		const signals = await tableRows(t, "catalogGrowthSignals");
+		expect(signals).toHaveLength(1);
+		expect(signals[0]).toMatchObject({
 			route: miss.route,
 			stage: miss.stage,
 			occurrences: 2,
 			lastRequestId: "request-2",
 		});
 		expect(
-			db.rows("resolutionSessions").map(({ lifecycle }) => lifecycle),
+			(await tableRows(t, "resolutionSessions")).map(
+				({ lifecycle }) => lifecycle,
+			),
 		).toEqual([
 			{
 				state: "Terminal",
@@ -90,63 +109,94 @@ describe("Catalog Growth Signals", () => {
 	});
 
 	test("a retry against the terminal session cannot double count", async () => {
-		const db = new IndexedTestDb(seedSession("request-1", "run-1", "1"));
-		const args = {
-			guard: {
-				requestId: "request-1",
-				runToken: "run-1",
-				segmentId: "segment-1",
-			},
-			miss,
-		};
-		await runTestMutation(db, recordAndSettleCatalogMiss, args);
+		const t = createTestConvex();
+		const args = { guard: await startSession(t, "request-1"), miss };
+		await t.mutation(
+			internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+			args,
+		);
 
-		expect(
-			runTestMutation(db, recordAndSettleCatalogMiss, args),
+		await expect(
+			t.mutation(
+				internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+				args,
+			),
 		).rejects.toThrow("no longer active");
-		expect(db.rows("catalogGrowthSignals")[0]?.occurrences).toBe(1);
+		expect(
+			(await tableRows(t, "catalogGrowthSignals"))[0]?.occurrences,
+		).toBe(1);
 	});
 
 	test("rejects oversized catalog diagnostics without changing the session", async () => {
-		const db = new IndexedTestDb(seedSession("request-1", "run-1", "1"));
+		const t = createTestConvex();
+		const guard = await startSession(t, "request-1");
+		const [before] = await tableRows(t, "resolutionSessions");
 		await expect(
-			runTestMutation(db, recordAndSettleCatalogMiss, {
-				guard: {
-					requestId: "request-1",
-					runToken: "run-1",
-					segmentId: "segment-1",
-				},
-				miss: { ...miss, message: "x".repeat(2001) },
-			}),
+			t.mutation(
+				internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+				{ guard, miss: { ...miss, message: "x".repeat(2001) } },
+			),
 		).rejects.toThrow("too long");
-		expect(db.rows("catalogGrowthSignals")).toHaveLength(0);
+		expect(await tableRows(t, "catalogGrowthSignals")).toHaveLength(0);
+		expect(await tableRows(t, "resolutionSessions")).toEqual([before]);
 	});
 
 	test("records a Knowledge catalog miss and fails its attempt exactly once", async () => {
+		const t = createTestConvex();
 		const withoutCandidate = { ...miss, stage: "produceKnowledge" };
-		const db = new IndexedTestDb({
-			knowledgeGenerationAttempts: [
-				{
-					_id: "attempt-1",
-					attemptKey: "attempt-key",
-					state: "Running",
-				},
-			],
+		await t.run(async (ctx) => {
+			const lemmaId = await ctx.db.insert("lemmas", {
+				lemmaKey: "lemma-key",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Bank",
+				coreFeatures: {},
+			});
+			const readingId: Id<"readings"> = await ctx.db.insert("readings", {
+				readingKey: "reading-key",
+				lemmaId,
+				emojiDescription: "🏦",
+			});
+			const surfaceId = await ctx.db.insert("surfaces", {
+				surfaceKey: "surface-key",
+				lemmaId,
+				language: "de",
+				normalizedSurface: "Bank",
+				spelling: "Canonical",
+				surfaceFeatures: {},
+			});
+			const attestationId = await ctx.db.insert("attestations", {
+				surfaceId,
+				readingId,
+				realizationCoverage: "Full",
+			});
+			await ctx.db.insert("knowledgeGenerationAttempts", {
+				attemptKey: "attempt-key",
+				visitorId: "visitor-1",
+				ownerReadingKey: "reading-key",
+				readingId,
+				attestationId,
+				state: "Running",
+				createdAt: 1,
+				updatedAt: 1,
+			});
 		});
 
-		await runTestMutation(db, recordKnowledgeCatalogMiss, {
-			attemptKey: "attempt-key",
-			miss: withoutCandidate,
-		});
-		await runTestMutation(db, recordKnowledgeCatalogMiss, {
-			attemptKey: "attempt-key",
-			miss: withoutCandidate,
-		});
+		for (let call = 0; call < 2; call += 1) {
+			await t.mutation(
+				internal.catalogGrowthSignals.recordKnowledgeCatalogMiss,
+				{ attemptKey: "attempt-key", miss: withoutCandidate },
+			);
+		}
 
-		expect(db.rows("catalogGrowthSignals")[0]?.occurrences).toBe(1);
-		expect(db.rows("knowledgeGenerationAttempts")[0]).toMatchObject({
-			state: "Failed",
-			failureCode: "catalogMiss",
-		});
+		expect(
+			(await tableRows(t, "catalogGrowthSignals"))[0]?.occurrences,
+		).toBe(1);
+		expect(
+			await t.run((ctx) =>
+				ctx.db.query("knowledgeGenerationAttempts").first(),
+			),
+		).toMatchObject({ state: "Failed", failureCode: "catalogMiss" });
 	});
 });

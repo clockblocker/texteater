@@ -1,3 +1,6 @@
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { makeFunctionReference } from "convex/server";
 import { convexTest, type TestConvex } from "convex-test";
 import { internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -11,19 +14,44 @@ import schema from "../../convex/schema";
  */
 export type TestConvexDb = TestConvex<typeof schema>;
 
-const convexRoot = `${import.meta.dir}/../../convex`;
+const convexRoot = fileURLToPath(new URL("../../convex", import.meta.url));
 
 /** Bun has no `import.meta.glob`, so the module map is built from disk. */
 const modules: Record<string, () => Promise<unknown>> = Object.fromEntries(
-	[...new Bun.Glob("**/*.ts").scanSync(convexRoot)].map((path) => [
-		`../../convex/${path}`,
-		() => import(`../../convex/${path}`),
-	]),
+	readdirSync(convexRoot, { recursive: true, encoding: "utf8" })
+		.filter((path) => path.endsWith(".ts"))
+		.map((path) => [
+			`../../convex/${path}`,
+			() => import(`../../convex/${path}`),
+		]),
 );
 
 export function createTestConvex(): TestConvexDb {
 	return convexTest(schema, modules);
 }
+
+/**
+ * The stand-in with the playground fixtures from tooling/ registered as the
+ * `playgroundFixtures` module, reachable through `playgroundFixtures`.
+ */
+export function createPlaygroundConvex(): TestConvexDb {
+	return convexTest(schema, {
+		...modules,
+		"../../convex/playgroundFixtures.ts": () =>
+			import("../../tooling/playground-fixtures"),
+	});
+}
+
+export const playgroundFixtures = {
+	load: makeFunctionReference<"mutation">("playgroundFixtures:load"),
+	consolidateExamples: makeFunctionReference<"mutation">(
+		"playgroundFixtures:consolidateExamples",
+	),
+	playground: makeFunctionReference<"query">("playgroundFixtures:playground"),
+};
+
+/** Loading the ~3,500 playground fixture rows takes a few seconds. */
+export const PLAYGROUND_FIXTURE_TIMEOUT_MS = 30_000;
 
 /**
  * An action context whose hops run the real registered functions. It replaces

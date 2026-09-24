@@ -3,7 +3,7 @@ import type { ResolutionLifecycle } from "../../convex/model/resolutionSessions"
 const active: ResolutionLifecycle = {
 	state: "Active",
 	progress: "GrammarAvailable",
-	activity: "WaitingForRetry",
+	activity: "Scheduled",
 };
 void active;
 

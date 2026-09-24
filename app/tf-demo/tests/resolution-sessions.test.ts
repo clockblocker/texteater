@@ -1,315 +1,203 @@
-import { describe, expect, test } from "bun:test";
-import { type FunctionReference, getFunctionName } from "convex/server";
-import {
-	clearVisitorDataBatch,
-	resetDemoDataBatch,
-	stripTextAnalysisGraphBatch,
-} from "../convex/demoReset";
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import type { WithoutSystemFields } from "convex/server";
+import { api, internal } from "../convex/_generated/api";
+import type { Doc, Id } from "../convex/_generated/dataModel";
 import {
 	assertResolutionLifecycle,
 	assertResolutionProgressTransition,
-	loadResolutionNote,
+	MAX_RESOLUTION_RUNS,
 	projectResolutionGrammar,
 	projectResolutionReading,
-	settleComplete,
-} from "../convex/model/resolutionSessions";
-import { runResolutionSession } from "../convex/orchestration";
-import {
-	persistSubmittedText,
-	persistUnresolvedClick,
-} from "../convex/persistence";
-import {
-	beginAnalysis,
-	detail,
-	finishAnalysis,
-	recordSelectionTiming,
-	recordSteps,
-} from "../convex/resolutionInspection";
-import {
-	advance,
-	beginRun,
-	cleanup,
-	MAX_RESOLUTION_RUNS,
-	recordRunFailure,
-	recoverStaleRun,
-	retryResolution,
 	STALE_RUN_AFTER_MS,
-	selectSegment,
-	settleAfterRun,
-} from "../convex/resolutionSessions";
+} from "../convex/model/resolutionSessions";
+import {
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
+import {
+	bankOccurrenceCommit,
+	commitBankOccurrence,
+	type Selection,
+	type SessionGuard,
+	startSession,
+} from "./support/occurrences";
 
-type Row = Record<string, unknown> & { _id: string };
+beforeEach(() => {
+	// Sessions schedule their runs; each test drives the run itself.
+	jest.useFakeTimers();
+});
 
-class SessionDb {
-	private readonly tables = new Map<string, Map<string, Row>>();
-	private nextId = 1;
-	readonly queriedIndexes: string[] = [];
+afterEach(() => {
+	jest.useRealTimers();
+});
 
-	constructor(seed: Record<string, readonly Row[]> = {}) {
-		for (const [table, rows] of Object.entries(seed)) {
-			this.tables.set(
-				table,
-				new Map(rows.map((row) => [row._id, structuredClone(row)])),
-			);
-		}
-	}
-
-	rows(table: string): Row[] {
-		return [...(this.tables.get(table)?.values() ?? [])];
-	}
-
-	async get(id: string): Promise<Row | null> {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (row) return row;
-		}
-		return null;
-	}
-
-	query(table: string) {
-		const queriedIndexes = this.queriedIndexes;
-		const predicates: Array<(row: Row) => boolean> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				predicates.push((row) => nestedValue(row, field) === value);
-				return range;
-			},
-			lte(field: string, value: number) {
-				predicates.push(
-					(row) => Number(nestedValue(row, field)) <= value,
-				);
-				return range;
-			},
-		};
-		const matches = () =>
-			this.rows(table).filter((row) =>
-				predicates.every((predicate) => predicate(row)),
-			);
-		return {
-			withIndex(name: string, build: (range: typeof range) => unknown) {
-				queriedIndexes.push(name);
-				build(range);
-				return queryResult(matches);
-			},
-			take: async (limit: number) => this.rows(table).slice(0, limit),
-		};
-	}
-
-	async insert(table: string, value: Record<string, unknown>) {
-		const id = `${table}-${this.nextId++}`;
-		const rows = this.tables.get(table) ?? new Map<string, Row>();
-		rows.set(id, { _id: id, ...structuredClone(value) });
-		this.tables.set(table, rows);
-		return id;
-	}
-
-	async patch(id: string, value: Record<string, unknown>) {
-		for (const rows of this.tables.values()) {
-			const row = rows.get(id);
-			if (!row) continue;
-			const next = { ...row, ...structuredClone(value) };
-			for (const [key, member] of Object.entries(next)) {
-				if (member === undefined) delete next[key];
-			}
-			rows.set(id, next);
-			return;
-		}
-		throw new Error(`Missing row ${id}.`);
-	}
-
-	async delete(id: string) {
-		for (const rows of this.tables.values()) {
-			if (rows.delete(id)) return;
-		}
-	}
+/** A stored "Die Banken." whose `Banken` Segment sits at index 2. */
+async function bankenSource(t: TestConvexDb) {
+	const { textId, sentenceIds, segmentIds } = await submitText(t, [
+		["Die", " ", "Banken", "."],
+	]);
+	const sentenceId = sentenceIds[0];
+	const segmentId = segmentIds[0]?.[2];
+	if (!sentenceId || !segmentId) throw new Error("Expected a Sentence.");
+	const select = (requestId: string, visitorId = "visitor-1"): Selection => ({
+		requestId,
+		visitorId,
+		sentenceId,
+		clickedSegmentIndex: 2,
+	});
+	return { textId, sentenceId, segmentId, select };
 }
 
-function queryResult(matches: () => Row[]) {
+function session(t: TestConvexDb, requestId: string) {
+	return t.run(async (ctx) => {
+		const row = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+			.unique();
+		if (!row) throw new Error(`No Resolution Session for ${requestId}.`);
+		return row;
+	});
+}
+
+/** The Segment's Resolution State; null once membership clears it. */
+function segmentState(t: TestConvexDb, segmentId: Id<"segments">) {
+	return t.run(
+		async (ctx) => (await ctx.db.get(segmentId))?.resolutionState ?? null,
+	);
+}
+
+function rows<
+	Table extends
+		| "resolutionRuns"
+		| "resolutionSessions"
+		| "visitorClicks"
+		| "knowledgeGenerationAttempts"
+		| "inspectionClicks"
+		| "inspectionSteps"
+		| "inspectionPayloads",
+>(t: TestConvexDb, table: Table) {
+	return t.run((ctx) => ctx.db.query(table).collect());
+}
+
+/** Scheduled functions not yet run, by name. */
+async function pendingScheduled(t: TestConvexDb) {
+	const jobs = await t.run((ctx) =>
+		ctx.db.system.query("_scheduled_functions").collect(),
+	);
+	return jobs
+		.filter((job) => job.state.kind === "pending")
+		.map((job) => ({ name: job.name, args: job.args[0] }));
+}
+
+/** Moves a live session to a state a test starts from. */
+async function patchSession(
+	t: TestConvexDb,
+	requestId: string,
+	values: Partial<WithoutSystemFields<Doc<"resolutionSessions">>>,
+) {
+	const row = await session(t, requestId);
+	await t.run((ctx) => ctx.db.patch(row._id, values));
+}
+
+/** A Resolved Grammar checkpoint for `Banken` in "Die Banken.". */
+function bankGrammar(sentenceId: Id<"sentences">) {
 	return {
-		async unique() {
-			const rows = matches();
-			if (rows.length > 1) throw new Error("Expected unique row.");
-			return rows[0] ?? null;
-		},
-		async take(limit: number) {
-			return matches().slice(0, limit);
-		},
-	};
-}
-
-function nestedValue(row: Row, path: string): unknown {
-	return path.split(".").reduce<unknown>((value, key) => {
-		if (!value || typeof value !== "object") return undefined;
-		return (value as Record<string, unknown>)[key];
-	}, row);
-}
-
-function handler<TArgs, TResult>(value: unknown) {
-	return (
-		value as {
-			_handler: (ctx: unknown, args: TArgs) => Promise<TResult>;
-		}
-	)._handler;
-}
-
-function ordinaryDbContext(db: SessionDb) {
-	return { db } as never;
-}
-
-function sourceSeed(): Record<string, readonly Row[]> {
-	return {
-		texts: [{ _id: "text-1", sourceText: "Die Banken." }],
-		sentences: [
-			{
-				_id: "sentence-1",
-				language: "de",
-				segmentedSentenceId: "fixture-sentence",
-				textId: "text-1",
-				stitchedText: "Die Banken.",
+		decision: "Resolved" as const,
+		language: "de" as const,
+		encounter: {
+			sentence: {
+				id: sentenceId,
+				language: "de" as const,
+				segments: [
+					{ kind: "ResolvableText" as const, text: "Die" },
+					{ kind: "Whitespace" as const, text: " " },
+					{ kind: "ResolvableText" as const, text: "Banken" },
+					{ kind: "Punctuation" as const, text: "." },
+				],
 			},
-		],
-		segments: [
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 2,
-				kind: "ResolvableText",
-				text: "Banken",
-			},
-		],
-	};
-}
-
-function resolvedSourceSeed(): Record<string, readonly Row[]> {
-	const seed = sourceSeed();
-	return {
-		...seed,
-		segments: [
-			{
-				_id: "segment-0",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "ResolvableText",
-				text: "Die",
-			},
-			{
-				_id: "segment-space",
-				sentenceId: "sentence-1",
-				index: 1,
-				kind: "Whitespace",
-				text: " ",
-			},
-			...(seed.segments ?? []).map((segment) => ({
-				...segment,
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Standard",
-				},
-			})),
-		],
-		attestations: [
-			{
-				_id: "attestation-1",
-				readingId: "reading-1",
-				surfaceId: "surface-1",
-				realizationCoverage: "Full",
-				articleEvidence: null,
-			},
-		],
-		readings: [
-			{
-				_id: "reading-1",
-				readingKey: "reading-1-key",
-				lemmaId: "lemma-1",
-				emojiDescription: "🏦",
-			},
-		],
-		lemmas: [
-			{
-				unitKind: "Lemma",
-				_id: "lemma-1",
-				language: "de",
+			target: {
 				family: "Lexeme",
 				kind: "NOUN",
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
+				memberSegmentIndices: [2],
 			},
-		],
-		surfaces: [
+		},
+		attestation: bankOccurrenceCommit(
 			{
-				_id: "surface-1",
-				lemmaId: "lemma-1",
-				language: "de",
-				normalizedSurface: "Banken",
-				spelling: "Canonical",
-
-				surfaceFeatures: null,
-				inflectionalFeatures: null,
+				requestId: "grammar",
+				visitorId: "grammar",
+				sentenceId,
+				clickedSegmentIndex: 2,
 			},
-		],
+			{
+				requestId: "grammar",
+				runToken: "grammar",
+				segmentId: "" as never,
+			},
+		).occurrence.attestation,
 	};
 }
-
-const beginArgs = {
-	requestId: "request-1",
-	visitorId: "visitor-1",
-	sentenceId: "sentence-1",
-	clickedSegmentIndex: 2,
-	routeNoteRequested: false,
-};
 
 describe("Resolution Session", () => {
 	test("a committed occurrence opens its canonical Note directly and records only the first Visitor Encounter", async () => {
-		const db = new SessionDb(resolvedSourceSeed());
-		const scheduled: unknown[] = [];
-		const ctx = {
-			db,
-			scheduler: {
-				async runAfter(...args: unknown[]) {
-					scheduled.push(args);
-				},
-			},
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const committed = await commitBankOccurrence(
+			t,
+			select("request-0", "visitor-0"),
+		);
+		// Start from a Reading with no Knowledge demand yet.
+		await t.run(async (ctx) => {
+			for (const attempt of await ctx.db
+				.query("knowledgeGenerationAttempts")
+				.collect())
+				await ctx.db.delete(attempt._id);
+		});
+		const scheduledBefore = (await pendingScheduled(t)).length;
+		const canonical = {
+			readingId: committed.readingId,
+			lemmaId: expect.any(String),
+			surfaceLanguage: "de",
+			normalizedSurface: "Banken",
+			surfaceId: expect.any(String),
+			attestationId: committed.attestationId,
 		};
-		const run = handler<typeof beginArgs, unknown>(selectSegment);
 
-		expect(await run(ctx, beginArgs)).toEqual({
+		expect(
+			await t.mutation(api.resolutionSessions.selectSegment, {
+				...select("request-1"),
+				routeNoteRequested: false,
+			}),
+		).toEqual({
 			kind: "Available",
-			canonical: {
-				readingId: "reading-1",
-				lemmaId: "lemma-1",
-				surfaceLanguage: "de",
-				normalizedSurface: "Banken",
-				surfaceId: "surface-1",
-				attestationId: "attestation-1",
-			},
-			target: {
-				kind: "Reading",
-				readingId: "reading-1",
-			},
+			canonical,
+			target: { kind: "Reading", readingId: committed.readingId },
 		});
 		expect(
-			await run(ctx, {
-				...beginArgs,
-				requestId: "request-2",
+			await t.mutation(api.resolutionSessions.selectSegment, {
+				...select("request-2"),
 				routeNoteRequested: true,
 			}),
 		).toEqual({
 			kind: "Available",
-			canonical: {
-				readingId: "reading-1",
-				lemmaId: "lemma-1",
-				surfaceLanguage: "de",
-				normalizedSurface: "Banken",
-				surfaceId: "surface-1",
-				attestationId: "attestation-1",
-			},
+			canonical,
 			target: {
 				kind: "Attestation",
-				attestationId: "attestation-1",
+				attestationId: committed.attestationId,
 			},
 		});
-		expect(db.rows("visitorClicks")).toHaveLength(1);
-		expect(db.rows("knowledgeGenerationAttempts")).toEqual([
+
+		const encounters = (await rows(t, "visitorClicks")).filter(
+			({ visitorId }) => visitorId === "visitor-1",
+		);
+		expect(encounters).toEqual([
+			expect.objectContaining({
+				requestId: "request-1",
+				segmentId,
+				attestationId: committed.attestationId,
+			}),
+		]);
+		expect(await rows(t, "knowledgeGenerationAttempts")).toEqual([
 			expect.objectContaining({
 				attemptKey: "request-1",
 				state: "Scheduled",
@@ -319,106 +207,125 @@ describe("Resolution Session", () => {
 				state: "Waiting",
 			}),
 		]);
-		expect(db.rows("resolutionSessions")).toEqual([]);
-		expect(scheduled).toHaveLength(1);
+		expect(
+			(await rows(t, "resolutionSessions")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["request-0"]);
+		expect((await pendingScheduled(t)).length - scheduledBefore).toBe(1);
 	});
 
 	test("inspection records repeat selections separately while encounters stay deduplicated", async () => {
-		const db = new SessionDb(resolvedSourceSeed());
-		const ctx = { db };
-		const args = { ...beginArgs, inspect: true };
-		const run = handler<typeof args, unknown>(selectSegment);
-		await run(ctx, args);
-		await run(ctx, args);
-		await run(ctx, { ...args, requestId: "second-inspected-click" });
-		expect(db.rows("visitorClicks")).toHaveLength(1);
-		expect(db.rows("inspectionClicks")).toHaveLength(2);
-		expect(db.rows("inspectionSteps")).toHaveLength(2);
-		expect(db.rows("inspectionPayloads")).toHaveLength(2);
-		expect(db.rows("inspectionClicks")[0]).toMatchObject({
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		await commitBankOccurrence(t, select("request-0", "visitor-0"));
+		const args = {
+			...select("request-1"),
+			routeNoteRequested: false,
+			inspect: true,
+		};
+
+		await t.mutation(api.resolutionSessions.selectSegment, args);
+		await t.mutation(api.resolutionSessions.selectSegment, args);
+		await t.mutation(api.resolutionSessions.selectSegment, {
+			...args,
+			requestId: "second-inspected-click",
+		});
+
+		expect(
+			(await rows(t, "visitorClicks")).filter(
+				({ visitorId }) => visitorId === "visitor-1",
+			),
+		).toHaveLength(1);
+		const clicks = await rows(t, "inspectionClicks");
+		expect(clicks).toHaveLength(2);
+		expect(await rows(t, "inspectionSteps")).toHaveLength(2);
+		const payloads = await rows(t, "inspectionPayloads");
+		expect(payloads).toHaveLength(2);
+		expect(clicks[0]).toMatchObject({
 			selectedSegment: "Banken",
 			sentence: "Die Banken.",
 			selectionKind: "Available",
 		});
-		expect(
-			JSON.parse(String(db.rows("inspectionPayloads")[0]?.text)).output
-				.kind,
-		).toBe("Available");
+		expect(JSON.parse(String(payloads[0]?.text)).output.kind).toBe(
+			"Available",
+		);
 	});
 
 	test("inspection retains terminal status and failure payloads independently of session cleanup", async () => {
-		const db = new SessionDb({
-			inspectionClicks: [
-				{
-					_id: "inspection-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					startedAt: 1,
-				},
-			],
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					updatedAt: 50,
-					lifecycle: { state: "Terminal", outcome: "Complete" },
-				},
-			],
-			knowledgeGenerationAttempts: [
-				{
-					_id: "knowledge-1",
-					attemptKey: "request-1",
-					state: "Failed",
-				},
-			],
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		await commitBankOccurrence(t, select("request-1"));
+		const completed = await session(t, "request-1");
+		await t.run(async (ctx) => {
+			await ctx.db.insert("inspectionClicks", {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				selectedSegment: "Banken",
+				sentence: "Die Banken.",
+				startedAt: 1,
+				selectionKind: "Resolving",
+			});
+			const attempt = await ctx.db
+				.query("knowledgeGenerationAttempts")
+				.withIndex("by_attempt_key", (q) =>
+					q.eq("attemptKey", "request-1"),
+				)
+				.unique();
+			if (attempt) await ctx.db.patch(attempt._id, { state: "Failed" });
 		});
 		const step = {
 			id: "knowledge-run",
 			name: "Knowledge",
-			kind: "Code",
+			kind: "Code" as const,
 			owner: "app/tf-demo",
 			startedAt: 10,
 			durationMs: 40,
-			status: "Success",
+			status: "Success" as const,
 			payloadJson: JSON.stringify({ error: "Invalid plan" }),
 		};
-		const args = {
+
+		await t.mutation(internal.resolutionInspection.recordSteps, {
 			requestId: "request-1",
 			scope: "Knowledge",
 			steps: [step],
-		};
-		await handler<typeof args, unknown>(recordSteps)({ db }, args);
-		expect(db.rows("inspectionSteps")[0]).toMatchObject({
+		});
+
+		expect((await rows(t, "inspectionSteps"))[0]).toMatchObject({
 			status: "Failure",
 		});
-		expect(db.rows("inspectionClicks")[0]).toMatchObject({
+		expect((await rows(t, "inspectionClicks"))[0]).toMatchObject({
 			resolutionState: "Complete",
-			finishedAt: 50,
+			finishedAt: completed.updatedAt,
 			knowledgeState: "Failed",
 		});
-		expect(db.rows("inspectionPayloads")[0]?.text).toBe(step.payloadJson);
+		expect((await rows(t, "inspectionPayloads"))[0]?.text).toBe(
+			step.payloadJson,
+		);
 	});
 
 	test("selection timing records the browser round trip once and rejects another visitor", async () => {
-		const db = new SessionDb({
-			inspectionClicks: [
-				{
-					_id: "inspection-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					startedAt: 100,
-					selectionKind: "Available",
-				},
-			],
-			inspectionSteps: [
-				{
-					_id: "step-1",
-					requestId: "request-1",
-					id: "request-1:selection",
-					timing: "Unmeasured",
-					durationMs: 0,
-				},
-			],
+		const t = createTestConvex();
+		await t.run(async (ctx) => {
+			await ctx.db.insert("inspectionClicks", {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				selectedSegment: "Banken",
+				sentence: "Die Banken.",
+				startedAt: 100,
+				selectionKind: "Available",
+			});
+			await ctx.db.insert("inspectionSteps", {
+				requestId: "request-1",
+				id: "request-1:selection",
+				name: "Reuse stored Attestation",
+				kind: "Code",
+				owner: "app/tf-demo",
+				startedAt: 100,
+				durationMs: 0,
+				timing: "Unmeasured",
+				status: "Success",
+			});
 		});
 		const args = {
 			requestId: "request-1",
@@ -426,207 +333,182 @@ describe("Resolution Session", () => {
 			startedAt: 90,
 			durationMs: 25,
 		};
-		const run = handler<typeof args, unknown>(recordSelectionTiming);
-		await run({ db }, args);
-		expect(db.rows("inspectionSteps")[0]?.durationMs).toBe(0);
-		await run({ db }, { ...args, visitorId: "visitor-1" });
-		await run({ db }, { ...args, visitorId: "visitor-1", durationMs: 90 });
-		expect(db.rows("inspectionSteps")[0]).toMatchObject({
+
+		await t.mutation(api.resolutionInspection.recordSelectionTiming, args);
+		expect((await rows(t, "inspectionSteps"))[0]?.durationMs).toBe(0);
+		await t.mutation(api.resolutionInspection.recordSelectionTiming, {
+			...args,
+			visitorId: "visitor-1",
+		});
+		await t.mutation(api.resolutionInspection.recordSelectionTiming, {
+			...args,
+			visitorId: "visitor-1",
+			durationMs: 90,
+		});
+		expect((await rows(t, "inspectionSteps"))[0]).toMatchObject({
 			durationMs: 25,
 			startedAt: 90,
 		});
 	});
 
-	test("begin captures one exact Segment and schedules orchestration once", async () => {
-		const db = new SessionDb(sourceSeed());
-		const scheduled: unknown[] = [];
-		const ctx = {
-			db,
-			scheduler: {
-				async runAfter(...args: unknown[]) {
-					scheduled.push(args);
-				},
-			},
-		};
-		const run = handler<typeof beginArgs, unknown>(selectSegment);
+	test("selection starts one session on the exact Segment and schedules its run once", async () => {
+		const t = createTestConvex();
+		const { select, segmentId, textId } = await bankenSource(t);
+		const args = { ...select("request-1"), routeNoteRequested: false };
 
-		expect(await run(ctx, beginArgs)).toMatchObject({
+		expect(
+			await t.mutation(api.resolutionSessions.selectSegment, args),
+		).toMatchObject({
 			kind: "Resolving",
 			progress: "Starting",
 			deduplicated: false,
 		});
-		expect(await run(ctx, beginArgs)).toMatchObject({
+		expect(
+			await t.mutation(api.resolutionSessions.selectSegment, args),
+		).toMatchObject({
 			kind: "Resolving",
 			progress: "Starting",
 			deduplicated: true,
 		});
-		expect(db.rows("resolutionSessions")).toHaveLength(1);
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			segmentId: "segment-1",
-			route: {
-				textId: "text-1",
-				selectedSegment: "Banken",
-			},
+
+		expect(await rows(t, "resolutionSessions")).toEqual([
+			expect.objectContaining({
+				segmentId,
+				route: expect.objectContaining({
+					textId,
+					selectedSegment: "Banken",
+				}),
+			}),
+		]);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
 		});
-		expect(scheduled).toHaveLength(2);
+		const { runToken } = await session(t, "request-1");
+		expect(await pendingScheduled(t)).toEqual([
+			{
+				name: "orchestration:runResolutionSession",
+				args: { requestId: "request-1", runToken, segmentId },
+			},
+			{
+				name: "resolutionSessions:recoverStaleRun",
+				args: { requestId: "request-1", runToken },
+			},
+		]);
 	});
 
 	test("same request with a different click is rejected", async () => {
-		const db = new SessionDb(sourceSeed());
-		const ctx = {
-			db,
-			scheduler: { async runAfter() {} },
-		};
-		const run = handler<typeof beginArgs, unknown>(selectSegment);
-		await run(ctx, beginArgs);
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const args = { ...select("request-1"), routeNoteRequested: false };
+		await t.mutation(api.resolutionSessions.selectSegment, args);
 
 		await expect(
-			run(ctx, { ...beginArgs, visitorId: "visitor-2" }),
+			t.mutation(api.resolutionSessions.selectSegment, {
+				...args,
+				visitorId: "visitor-2",
+			}),
 		).rejects.toThrow("different click");
 		await expect(
-			run(ctx, { ...beginArgs, routeNoteRequested: true }),
+			t.mutation(api.resolutionSessions.selectSegment, {
+				...args,
+				routeNoteRequested: true,
+			}),
 		).rejects.toThrow("different click");
 	});
 
 	test("terminal navigation preserves ordinary and one-shot Route Note intent", async () => {
-		const common = {
-			requestId: "request-1",
-			visitorId: "visitor-1",
-			sentenceId: "sentence-1",
-			segmentId: "segment-1",
-			clickedSegmentIndex: 2,
-			runToken: "run-1",
-			lifecycle: {
-				state: "Terminal",
-				progress: "Committing",
-				outcome: "Complete",
-			},
-			route: {
-				textId: "text-1",
-				sentenceId: "sentence-1",
-				stitchedText: "Die Banken.",
-				clickedSegmentIndex: 2,
-				selectedSegment: "Banken",
-			},
-			readingId: "reading-1",
-			attestationId: "attestation-1",
-			createdAt: 1,
-			updatedAt: 2,
-		};
-		const ordinaryDb = new SessionDb({
-			resolutionSessions: [{ _id: "session-1", ...common }],
-			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
-			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
-			surfaces: [
-				{
-					_id: "surface-1",
-					lemmaId: "lemma-1",
-					language: "de",
-					normalizedSurface: "Banken",
-				},
-			],
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const ordinary = select("request-1");
+		const guard = await startSession(t, ordinary);
+		const committed = await t.mutation(
+			internal.persistence.persistResolvedClick,
+			bankOccurrenceCommit(ordinary, guard),
+		);
+		if (committed.status !== "Committed")
+			throw new Error("Expected a committed occurrence.");
+		const surfaceId = (
+			await t.run((ctx) => ctx.db.get(committed.attestationId))
+		)?.surfaceId;
+		await t.run(async (ctx) => {
+			const row = await ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_request_id", (q) =>
+					q.eq("requestId", "request-1"),
+				)
+				.unique();
+			if (!row) throw new Error("Expected a session.");
+			const { _id, _creationTime, ...copy } = row;
+			await ctx.db.insert("resolutionSessions", {
+				...copy,
+				requestId: "request-route",
+				routeNoteRequested: true,
+			});
 		});
-		const routeDb = new SessionDb({
-			resolutionSessions: [
-				{ _id: "session-2", ...common, routeNoteRequested: true },
-			],
-			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
-			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
-			surfaces: [
-				{
-					_id: "surface-1",
-					lemmaId: "lemma-1",
-					language: "de",
-					normalizedSurface: "Banken",
-				},
-			],
-		});
+
 		expect(
 			(
-				await loadResolutionNote(
-					ordinaryDbContext(ordinaryDb),
-					"request-1",
-				)
+				await t.query(api.resolutionSessions.getResolutionNote, {
+					requestId: "request-1",
+				})
 			)?.terminal,
 		).toMatchObject({
 			kind: "Complete",
-			target: { kind: "Reading", readingId: "reading-1" },
+			target: { kind: "Reading", readingId: committed.readingId },
 			canonical: {
-				readingId: "reading-1",
-				lemmaId: "lemma-1",
+				readingId: committed.readingId,
 				surfaceLanguage: "de",
 				normalizedSurface: "Banken",
-				surfaceId: "surface-1",
-				attestationId: "attestation-1",
+				surfaceId,
+				attestationId: committed.attestationId,
 			},
 		});
 		expect(
-			(await loadResolutionNote(ordinaryDbContext(routeDb), "request-1"))
-				?.terminal,
+			(
+				await t.query(api.resolutionSessions.getResolutionNote, {
+					requestId: "request-route",
+				})
+			)?.terminal,
 		).toMatchObject({
 			kind: "Complete",
 			target: {
 				kind: "Attestation",
-				attestationId: "attestation-1",
+				attestationId: committed.attestationId,
 			},
 		});
 	});
 
 	test("progress is ordered and duplicate or regressive runner updates are harmless", async () => {
-		const db = new SessionDb(sourceSeed());
-		const scheduled: unknown[] = [];
-		const ctx = {
-			db,
-			scheduler: {
-				async runAfter(...args: unknown[]) {
-					scheduled.push(args);
-				},
-			},
-		};
-		await handler<typeof beginArgs, unknown>(selectSegment)(ctx, beginArgs);
-		const session = db.rows("resolutionSessions")[0];
-		if (!session) throw new Error("Expected a Resolution Session.");
-		const guard = {
-			requestId: "request-1",
-			runToken: String(session.runToken),
-			segmentId: "segment-1",
-		};
-		const run = handler<
-			{
-				guard: typeof guard;
-				progress:
-					| "RouteAvailable"
-					| "GrammarAvailable"
-					| "ReadingAvailable"
-					| "Committing";
-				grammar?: ReturnType<typeof grammarProjection>;
-				reading?: ReturnType<typeof readingProjection>;
-			},
-			boolean
-		>(advance);
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		const advance = (args: {
+			guard: SessionGuard;
+			progress: "RouteAvailable" | "GrammarAvailable" | "Committing";
+			grammar?: ReturnType<typeof grammarProjection>;
+		}) => t.mutation(internal.resolutionSessions.advance, args);
 
-		expect(await run(ctx, { guard, progress: "RouteAvailable" })).toBe(
-			true,
-		);
+		expect(await advance({ guard, progress: "RouteAvailable" })).toBe(true);
 		expect(
-			await run(ctx, {
+			await advance({
 				guard,
 				progress: "GrammarAvailable",
 				grammar: grammarProjection(),
 			}),
 		).toBe(true);
-		expect(await run(ctx, { guard, progress: "RouteAvailable" })).toBe(
+		expect(await advance({ guard, progress: "RouteAvailable" })).toBe(
 			false,
 		);
 		expect(
-			await run(ctx, {
+			await advance({
 				guard,
 				progress: "GrammarAvailable",
 				grammar: grammarProjection(),
 			}),
 		).toBe(false);
-		expect(
-			run(ctx, {
+		await expect(
+			advance({
 				guard: { ...guard, runToken: "old" },
 				progress: "Committing",
 			}),
@@ -634,484 +516,193 @@ describe("Resolution Session", () => {
 	});
 
 	test("completion accepts an Encounter first recorded by an earlier request", async () => {
-		const db = new SessionDb({
-			...resolvedSourceSeed(),
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-later",
-					runToken: "run-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					lifecycle: {
-						state: "Active",
-						progress: "RouteAvailable",
-						activity: "Running",
-					},
-					createdAt: 1,
-					updatedAt: 1,
-				},
-			],
-			visitorClicks: [
-				{
-					_id: "click-1",
-					requestId: "request-earlier",
-					visitorId: "visitor-1",
-					segmentId: "segment-1",
-					attestationId: "attestation-1",
-					clickedAt: 1,
-				},
-			],
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		// Both selections share one Visitor Encounter, recorded by the first (ADR-0002).
+		const earlier = await startSession(t, select("request-earlier"));
+		const later = await startSession(t, select("request-later"));
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
+		const committed = await t.mutation(
+			internal.persistence.persistResolvedClick,
+			bankOccurrenceCommit(select("request-earlier"), earlier),
+		);
+		if (committed.status !== "Committed")
+			throw new Error("Expected a committed occurrence.");
+		await t.mutation(internal.resolutionSessions.beginRun, {
+			guard: later,
+		});
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard: later,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection("loser"),
 		});
 
 		expect(
-			await handler<
-				{
-					guard: {
-						requestId: string;
-						runToken: string;
-						segmentId: string;
-					};
-					result: {
-						kind: "Complete";
-						readingId: string;
-						attestationId: string;
-						grammar: ReturnType<typeof grammarProjection>;
-						reading: ReturnType<typeof readingProjection>;
-					};
+			await t.mutation(internal.resolutionSessions.settleAfterRun, {
+				guard: later,
+				result: {
+					kind: "Complete",
+					readingId: committed.readingId,
+					attestationId: committed.attestationId,
+					grammar: grammarProjection("Bank"),
+					reading: readingProjection("🏦", "Bank"),
 				},
-				boolean
-			>(settleAfterRun)(
-				{ db },
-				{
-					guard: {
-						requestId: "request-later",
-						runToken: "run-1",
-						segmentId: "segment-1",
-					},
-					result: {
-						kind: "Complete",
-						readingId: "reading-1",
-						attestationId: "attestation-1",
-						grammar: grammarProjection("Bank"),
-						reading: readingProjection("🏦", "Bank"),
-					},
-				},
-			),
+			}),
 		).toBe(true);
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+		// Terminal convergence replaces the loser's provisional projections.
+		expect(await session(t, "request-later")).toMatchObject({
 			lifecycle: {
 				state: "Terminal",
 				progress: "Committing",
 				outcome: "Complete",
 			},
-			readingId: "reading-1",
-			attestationId: "attestation-1",
-		});
-	});
-
-	test("terminal convergence replaces provisional projections with the canonical winner", async () => {
-		const db = new SessionDb({
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					lifecycle: {
-						state: "Active",
-						progress: "Committing",
-						activity: "Running",
-					},
-					grammar: grammarProjection("loser"),
-					reading: readingProjection("🧪", "loser"),
-				},
-			],
-		});
-		await settleComplete(
-			{ db } as never,
-			{ _id: "session-1" as never },
-			{
-				readingId: "reading-winner" as never,
-				attestationId: "attestation-winner" as never,
-				grammar: grammarProjection("Bank"),
-				reading: readingProjection("🏦", "Bank"),
-			},
-		);
-
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			lifecycle: {
-				state: "Terminal",
-				progress: "Committing",
-				outcome: "Complete",
-			},
-			readingId: "reading-winner",
-			attestationId: "attestation-winner",
+			readingId: committed.readingId,
+			attestationId: committed.attestationId,
 			grammar: { canonicalForm: "Bank" },
 			reading: { emojiDescription: "🏦", canonicalForm: "Bank" },
 		});
+		expect(await segmentState(t, segmentId)).toBeNull();
 	});
 
 	test("a stale run rotates its token and is rescheduled", async () => {
-		const db = new SessionDb({
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					runToken: "old-token",
-					segmentId: "segment-1",
-					lifecycle: {
-						state: "Active",
-						progress: "ReadingAvailable",
-						activity: "Running",
-					},
-					updatedAt: Date.now() - STALE_RUN_AFTER_MS - 1,
-				},
-			],
-		});
-		const scheduled: unknown[] = [];
-		const result = await handler<
-			{ requestId: string; runToken: string },
-			boolean
-		>(recoverStaleRun)(
-			{
-				db,
-				scheduler: {
-					async runAfter(...args: unknown[]) {
-						scheduled.push(args);
-					},
-				},
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await patchSession(t, "request-1", {
+			lifecycle: {
+				state: "Active",
+				progress: "ReadingAvailable",
+				activity: "Running",
 			},
-			{ requestId: "request-1", runToken: "old-token" },
-		);
+			updatedAt: Date.now() - STALE_RUN_AFTER_MS - 1,
+		});
 
-		expect(result).toBe(true);
-		expect(db.rows("resolutionSessions")[0]?.runToken).not.toBe(
-			"old-token",
-		);
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+		expect(
+			await t.mutation(internal.resolutionSessions.recoverStaleRun, {
+				requestId: "request-1",
+				runToken: guard.runToken,
+			}),
+		).toBe(true);
+
+		const recovered = await session(t, "request-1");
+		expect(recovered.runToken).not.toBe(guard.runToken);
+		expect(recovered).toMatchObject({
+			runNumber: 2,
 			lifecycle: {
 				state: "Active",
 				activity: "Scheduled",
 				progress: "ReadingAvailable",
 			},
 		});
-		expect(scheduled).toHaveLength(2);
+		expect(await pendingScheduled(t)).toEqual(
+			expect.arrayContaining([
+				{
+					name: "orchestration:runResolutionSession",
+					args: {
+						requestId: "request-1",
+						runToken: recovered.runToken,
+						segmentId,
+					},
+				},
+			]),
+		);
 	});
 
 	for (const budgetCase of ["run limit", "deadline"] as const) {
 		test(`a stale run becomes permanent when its ${budgetCase} is exhausted`, async () => {
+			const t = createTestConvex();
+			const { select, segmentId } = await bankenSource(t);
+			const guard = await startSession(t, select("request-1"));
+			await t.mutation(internal.resolutionSessions.beginRun, { guard });
 			const now = Date.now();
-			const runNumber =
-				budgetCase === "run limit" ? MAX_RESOLUTION_RUNS : 1;
-			const db = new SessionDb({
-				resolutionSessions: [
-					{
-						_id: "session-1",
-						requestId: "request-1",
-						runToken: "stale-token",
-						runNumber,
-						retryDeadlineAt:
-							budgetCase === "deadline" ? now - 1 : now + 60_000,
-						segmentId: "segment-1",
-						lifecycle: {
-							state: "Active",
-							progress: "GrammarAvailable",
-							activity: "Running",
-						},
-						updatedAt: now - STALE_RUN_AFTER_MS - 1,
-					},
-				],
-				resolutionRuns: [
-					{
-						_id: "run-1",
-						requestId: "request-1",
-						runToken: "stale-token",
-						runNumber,
-						phase: "Reading",
-						state: "Running",
-						startedAt: 1,
-						expiresAt: now + 60_000,
-					},
-				],
+			await patchSession(t, "request-1", {
+				runNumber: budgetCase === "run limit" ? MAX_RESOLUTION_RUNS : 1,
+				retryDeadlineAt:
+					budgetCase === "deadline" ? now - 1 : now + 60_000,
+				lifecycle: {
+					state: "Active",
+					progress: "GrammarAvailable",
+					activity: "Running",
+				},
+				updatedAt: now - STALE_RUN_AFTER_MS - 1,
 			});
-			const scheduled: unknown[] = [];
+			const scheduledBefore = await pendingScheduled(t);
 
 			expect(
-				await handler<{ requestId: string; runToken: string }, boolean>(
-					recoverStaleRun,
-				)(
-					{
-						db,
-						scheduler: {
-							async runAfter(...args: unknown[]) {
-								scheduled.push(args);
-							},
-						},
-					},
-					{ requestId: "request-1", runToken: "stale-token" },
-				),
+				await t.mutation(internal.resolutionSessions.recoverStaleRun, {
+					requestId: "request-1",
+					runToken: guard.runToken,
+				}),
 			).toBe(true);
-			expect(scheduled).toEqual([]);
-			expect(db.rows("resolutionSessions")[0]).toMatchObject({
+
+			expect(await pendingScheduled(t)).toEqual(scheduledBefore);
+			const failed = await session(t, "request-1");
+			expect(failed).toMatchObject({
 				lifecycle: {
 					state: "Terminal",
 					outcome: "PermanentFailure",
 					progress: "GrammarAvailable",
 				},
 				failureCode: "Internal",
+				diagnosticId: expect.any(String),
 			});
-			expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
-			expect(db.rows("resolutionRuns")[0]).toMatchObject({
-				failureCode: "Internal",
-				state: "Failed",
+			expect(await rows(t, "resolutionRuns")).toEqual([
+				expect.objectContaining({
+					failureCode: "Internal",
+					state: "Failed",
+					diagnosticId: failed.diagnosticId,
+				}),
+			]);
+			expect(await segmentState(t, segmentId)).toEqual({
+				kind: "PermanentFailure",
 			});
-			expect(db.rows("resolutionRuns")[0]?.diagnosticId).toBe(
-				db.rows("resolutionSessions")[0]?.diagnosticId,
-			);
 		});
 	}
 
-	test("a retryable Reading failure preserves Grammar and schedules a durable retry", async () => {
-		const db = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					runToken: "run-1",
-					runNumber: 1,
-					lifecycle: {
-						state: "Active",
-						progress: "GrammarAvailable",
-						activity: "Running",
-					},
-					grammar: grammarProjection(),
-					grammaticalCheckpoint: grammaticalInput(),
-					readingCheckpoint: readingCheckpoint(),
-					retryDeadlineAt: Date.now() + 60_000,
-					createdAt: 1,
-					updatedAt: 1,
-				},
-			],
-			resolutionRuns: [
-				{
-					_id: "resolution-run-1",
-					requestId: "request-1",
-					runToken: "run-1",
-					runNumber: 1,
-					phase: "Reading",
-					state: "Running",
-					startedAt: 1,
-				},
-			],
+	test("a generation failure ends the session at once, even one the provider calls retryable", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection(),
 		});
-		const scheduled: unknown[] = [];
+		const scheduledBefore = await pendingScheduled(t);
+		const failure = {
+			attempts: 3,
+			category: "ProviderUnavailable" as const,
+			providerRequestId: "provider-request-1",
+			retryable: true,
+			retryAfterMs: 120_000,
+			status: 500,
+		};
 
-		const result = await handler<
-			{
-				guard: {
-					requestId: string;
-					runToken: string;
-					segmentId: string;
-				};
-				failure: {
-					attempts: number;
-					category: "ProviderUnavailable";
-					providerRequestId: string;
-					retryable: true;
-					status: number;
-				};
-				generationEvents?: readonly Record<string, unknown>[];
-				phase: "Reading";
-			},
-			{ scheduled: boolean }
-		>(recordRunFailure)(
-			{
-				db,
-				scheduler: {
-					async runAfter(...args: unknown[]) {
-						scheduled.push(args);
-					},
-				},
-			},
-			{
-				guard: {
-					requestId: "request-1",
-					runToken: "run-1",
-					segmentId: "segment-1",
-				},
-				failure: {
-					attempts: 3,
-					category: "ProviderUnavailable",
-					providerRequestId: "provider-request-1",
-					retryable: true,
-					status: 500,
-				},
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard,
+			failure: {
+				kind: "Generation",
+				phase: "Reading",
+				failure,
 				generationEvents: [
 					{
 						kind: "AttemptFailed",
 						requestId: "request-1",
-						runToken: "run-1",
+						runToken: guard.runToken,
 						phase: "Reading",
-						failure: {
-							attempts: 3,
-							category: "ProviderUnavailable",
-							providerRequestId: "provider-request-1",
-							retryable: true,
-							status: 500,
-						},
+						failure,
 					},
 				],
-				phase: "Reading",
 			},
-		);
-
-		expect(result).toMatchObject({ scheduled: true });
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			lifecycle: {
-				state: "Active",
-				activity: "WaitingForRetry",
-				progress: "GrammarAvailable",
-			},
-			failureCode: "ProviderUnavailable",
-			grammar: grammarProjection(),
-			grammaticalCheckpoint: grammaticalInput(),
-			readingCheckpoint: readingCheckpoint(),
-			runNumber: 2,
-		});
-		expect(db.rows("resolutionSessions")[0]?.runToken).not.toBe("run-1");
-		expect(db.rows("resolutionRuns")[0]).toMatchObject({
-			failure: {
-				category: "ProviderUnavailable",
-				providerRequestId: "provider-request-1",
-				status: 500,
-			},
-			generationEvents: [
-				{
-					kind: "AttemptFailed",
-					requestId: "request-1",
-					runToken: "run-1",
-				},
-			],
-			state: "Failed",
-		});
-		expect(scheduled).toHaveLength(2);
-	});
-
-	test("durable retry preserves a provider Retry-After beyond the local window", async () => {
-		const db = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					runToken: "run-1",
-					runNumber: 1,
-					lifecycle: {
-						state: "Active",
-						progress: "GrammarAvailable",
-						activity: "Running",
-					},
-					retryDeadlineAt: Date.now() + 5 * 60_000,
-					createdAt: 1,
-					updatedAt: 1,
-				},
-			],
-		});
-		const scheduled: unknown[][] = [];
-
-		expect(
-			await handler<Record<string, unknown>, { scheduled: boolean }>(
-				recordRunFailure,
-			)(
-				{
-					db,
-					scheduler: {
-						async runAfter(...args: unknown[]) {
-							scheduled.push(args);
-						},
-					},
-				},
-				{
-					guard: {
-						requestId: "request-1",
-						runToken: "run-1",
-						segmentId: "segment-1",
-					},
-					failure: {
-						attempts: 1,
-						category: "RateLimited",
-						retryAfterMs: 120_000,
-						retryable: true,
-						status: 429,
-					},
-					phase: "Reading",
-				},
-			),
-		).toEqual({ scheduled: true });
-		expect(scheduled[0]?.[0]).toBe(120_000);
-		expect(db.rows("resolutionRuns")[0]).toMatchObject({
-			delayMs: 120_000,
-			failure: { retryAfterMs: 120_000 },
-		});
-	});
-
-	test("an exhausted retryable failure becomes a safe PermanentFailure", async () => {
-		const db = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					runToken: "run-3",
-					runNumber: 3,
-					lifecycle: {
-						state: "Active",
-						progress: "GrammarAvailable",
-						activity: "Running",
-					},
-					retryDeadlineAt: Date.now() + 60_000,
-					createdAt: 1,
-					updatedAt: 1,
-				},
-			],
 		});
 
-		const result = await handler<
-			Record<string, unknown>,
-			{ scheduled: boolean }
-		>(recordRunFailure)(
-			{ db, scheduler: { async runAfter() {} } },
-			{
-				guard: {
-					requestId: "request-1",
-					runToken: "run-3",
-					segmentId: "segment-1",
-				},
-				failure: {
-					attempts: 3,
-					category: "ProviderUnavailable",
-					retryable: true,
-					status: 500,
-				},
-				phase: "Reading",
-			},
-		);
-
-		expect(result).toEqual({ scheduled: false });
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+		const failed = await session(t, "request-1");
+		expect(failed).toMatchObject({
+			runToken: guard.runToken,
 			lifecycle: {
 				state: "Terminal",
 				outcome: "PermanentFailure",
@@ -1119,213 +710,268 @@ describe("Resolution Session", () => {
 			},
 			failureCode: "ProviderUnavailable",
 			failureMessage: "Reading generation is temporarily unavailable.",
+			grammar: grammarProjection(),
+			diagnosticId: expect.any(String),
 		});
-		expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				state: "Failed",
+				failure: expect.objectContaining({
+					category: "ProviderUnavailable",
+					providerRequestId: "provider-request-1",
+				}),
+				generationEvents: [
+					expect.objectContaining({
+						kind: "AttemptFailed",
+						runToken: guard.runToken,
+					}),
+				],
+			}),
+		]);
+		expect(await pendingScheduled(t)).toEqual(scheduledBefore);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
+	});
+
+	test("an internal run failure ends the session with its diagnostic", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard,
+			failure: {
+				kind: "Internal",
+				phase: "Grammar",
+				diagnosticId: "diagnostic-1",
+				errorName: "TypeError",
+				errorFingerprint: "fnv1a-1",
+			},
+		});
+
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			failureCode: "Internal",
+			diagnosticId: "diagnostic-1",
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				state: "Failed",
+				errorName: "TypeError",
+				diagnosticId: "diagnostic-1",
+			}),
+		]);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "PermanentFailure",
+		});
+		await expect(
+			t.mutation(internal.resolutionSessions.recordRunFailure, {
+				guard,
+				failure: {
+					kind: "Internal",
+					phase: "Grammar",
+					diagnosticId: "diagnostic-2",
+					errorName: "TypeError",
+					errorFingerprint: "fnv1a-1",
+				},
+			}),
+		).rejects.toThrow("no longer active");
 	});
 
 	test("public failure projection omits operational provider diagnostics", async () => {
-		const db = new SessionDb({
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					runToken: "run-3",
-					lifecycle: {
-						state: "Terminal",
-						progress: "GrammarAvailable",
-						outcome: "PermanentFailure",
-					},
-					failureCode: "ProviderUnavailable",
-					diagnosticId: "diagnostic-1",
-					failureMessage:
-						"Reading generation is temporarily unavailable.",
-					route: {
-						textId: "text-1",
-						sentenceId: "sentence-1",
-						stitchedText: "Die Banken.",
-						clickedSegmentIndex: 2,
-						selectedSegment: "Banken",
-					},
-					createdAt: 1,
-					updatedAt: 2,
-				},
-			],
-			resolutionRuns: [
-				{
-					_id: "resolution-run-1",
-					requestId: "request-1",
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard,
+			failure: {
+				kind: "Generation",
+				phase: "Reading",
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
 					providerRequestId: "provider-secret-reference",
+					retryable: false,
 				},
-			],
+			},
 		});
+		const { diagnosticId } = await session(t, "request-1");
 
-		const note = await loadResolutionNote(
-			ordinaryDbContext(db),
-			"request-1",
-		);
+		const note = await t.query(api.resolutionSessions.getResolutionNote, {
+			requestId: "request-1",
+		});
 		expect(note?.terminal).toEqual({
 			kind: "PermanentFailure",
 			failureCode: "ProviderUnavailable",
-			diagnosticId: "diagnostic-1",
+			diagnosticId,
 			message: "Reading generation is temporarily unavailable.",
 		});
 		expect(JSON.stringify(note)).not.toContain("provider-secret-reference");
 	});
 
-	test("an explicit retry reactivates an exhausted session without losing Grammar", async () => {
-		const db = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [
-				{
-					_id: "session-1",
-					requestId: "request-1",
-					visitorId: "visitor-1",
-					sentenceId: "sentence-1",
-					segmentId: "segment-1",
-					clickedSegmentIndex: 2,
-					runToken: "run-3",
-					lifecycle: {
-						state: "Terminal",
-						progress: "GrammarAvailable",
-						outcome: "PermanentFailure",
-					},
-					grammar: grammarProjection(),
-					grammaticalCheckpoint: grammaticalInput(),
-					failureCode: "ProviderUnavailable",
-					diagnosticId: "diagnostic-1",
-					failureMessage:
-						"Reading generation is temporarily unavailable.",
-					createdAt: 1,
-					updatedAt: 2,
-				},
-			],
+	test("an explicit retry reactivates a failed session through the one scheduling path", async () => {
+		const t = createTestConvex();
+		const { select, segmentId, sentenceId } = await bankenSource(t);
+		await t.mutation(api.resolutionSessions.selectSegment, {
+			...select("request-1"),
+			routeNoteRequested: false,
+			inspect: true,
 		});
-		const scheduled: unknown[] = [];
+		const guard = await startSessionGuard(t, "request-1");
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: bankGrammar(sentenceId),
+		});
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard,
+			failure: {
+				kind: "Generation",
+				phase: "Reading",
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
+					retryable: false,
+				},
+			},
+		});
+		const failed = await session(t, "request-1");
 
 		expect(
-			await handler<
-				{ requestId: string; visitorId: string },
-				{ retried: boolean }
-			>(retryResolution)(
-				{
-					db,
-					scheduler: {
-						async runAfter(...args: unknown[]) {
-							scheduled.push(args);
-						},
-					},
-				},
-				{ requestId: "request-1", visitorId: "visitor-1" },
-			),
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-1",
+				visitorId: "visitor-2",
+			}),
+		).toEqual({ retried: false });
+		expect(
+			await t.mutation(api.resolutionSessions.retryResolution, {
+				requestId: "request-1",
+				visitorId: "visitor-1",
+			}),
 		).toEqual({ retried: true });
-		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+
+		const retried = await session(t, "request-1");
+		expect(retried).toMatchObject({
 			lifecycle: {
 				state: "Active",
 				activity: "Scheduled",
 				progress: "GrammarAvailable",
 			},
 			grammar: grammarProjection(),
-			grammaticalCheckpoint: grammaticalInput(),
+			grammaticalCheckpoint: failed.grammaticalCheckpoint,
 			runNumber: 1,
 		});
-		expect(db.rows("resolutionSessions")[0]?.lifecycle).not.toHaveProperty(
-			"outcome",
+		expect(retried.lifecycle).not.toHaveProperty("outcome");
+		expect(retried).not.toHaveProperty("failureCode");
+		expect(retried.runToken).not.toBe(guard.runToken);
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
+		});
+		// A restart keeps the inspection the Visitor asked for.
+		expect(await pendingScheduled(t)).toEqual(
+			expect.arrayContaining([
+				{
+					name: "orchestration:runResolutionSession",
+					args: {
+						requestId: "request-1",
+						runToken: retried.runToken,
+						segmentId,
+						inspect: true,
+					},
+				},
+			]),
 		);
-		expect(scheduled).toHaveLength(2);
 	});
 
 	test("cleanup removes stale active and old terminal sessions but keeps a completed target that vanished", async () => {
-		const old = Date.now() - 10_000;
-		const db = new SessionDb({
-			resolutionSessions: [
-				{
-					_id: "stale",
-					lifecycle: {
-						state: "Active",
-						progress: "Starting",
-						activity: "Scheduled",
-					},
-					updatedAt: old,
-				},
-				{
-					_id: "failed",
-					lifecycle: {
-						state: "Terminal",
-						progress: "Starting",
-						outcome: "PermanentFailure",
-					},
-					updatedAt: old,
-				},
-				{
-					_id: "complete-missing",
-					lifecycle: {
-						state: "Terminal",
-						progress: "Committing",
-						outcome: "Complete",
-					},
-					updatedAt: old,
-					readingId: "reading-missing",
-				},
-			],
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		await startSession(t, select("stale"));
+		const failed = await startSession(t, select("failed", "visitor-2"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failed,
+			failure: {
+				kind: "Internal",
+				phase: "Route",
+				diagnosticId: "diagnostic-1",
+				errorName: "Error",
+				errorFingerprint: "fnv1a-1",
+			},
 		});
-		const result = await handler<
-			{ staleBefore: number; terminalBefore: number },
-			{ deleted: number; hasMore: boolean }
-		>(cleanup)(
-			{ db },
-			{ staleBefore: Date.now() - 1, terminalBefore: Date.now() - 1 },
-		);
+		await commitBankOccurrence(t, select("complete-missing", "visitor-3"));
+		const { readingId } = await session(t, "complete-missing");
+		await t.run(async (ctx) => {
+			if (readingId) await ctx.db.delete(readingId);
+		});
+		const old = Date.now() - 10_000;
+		for (const requestId of ["stale", "failed", "complete-missing"])
+			await patchSession(t, requestId, { updatedAt: old });
 
-		expect(result.deleted).toBe(2);
-		expect(db.rows("resolutionSessions").map(({ _id }) => _id)).toEqual([
-			"complete-missing",
-		]);
-		expect(db.queriedIndexes).toContain(
-			"by_lifecycle_state_and_updated_at",
-		);
-		expect(db.queriedIndexes).not.toContain("by_stage_and_updated_at");
+		const result = await t.mutation(api.resolutionSessions.cleanup, {
+			staleBefore: Date.now() - 1,
+			terminalBefore: Date.now() - 1,
+		});
+
+		expect(result).toEqual({ deleted: 2, hasMore: false });
+		expect(
+			(await rows(t, "resolutionSessions")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["complete-missing"]);
 	});
 
 	test("cleanup ends Segment Resolution State once per deleted session", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		await startSession(t, select("stale-1"));
+		await startSession(t, select("stale-2", "visitor-2"));
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 2,
+		});
 		const old = Date.now() - 10_000;
-		const staleSession = (id: string) => ({
-			_id: id,
-			segmentId: "segment-1",
-			lifecycle: {
-				state: "Active",
-				progress: "Starting",
-				activity: "Scheduled",
-			},
-			updatedAt: old,
-		});
-		const db = new SessionDb({
-			segments: [
-				{
-					_id: "segment-1",
-					kind: "ResolvableText",
-					resolutionState: { kind: "Active", activeSessionCount: 2 },
-				},
-			],
-			resolutionSessions: [
-				staleSession("stale-1"),
-				staleSession("stale-2"),
-			],
-		});
-		await handler<
-			{ staleBefore: number; terminalBefore: number },
-			{ deleted: number; hasMore: boolean }
-		>(cleanup)(
-			{ db },
-			{ staleBefore: Date.now() - 1, terminalBefore: Date.now() - 1 },
-		);
+		for (const requestId of ["stale-1", "stale-2"])
+			await patchSession(t, requestId, { updatedAt: old });
 
-		expect(db.rows("resolutionSessions")).toEqual([]);
-		expect(db.rows("segments")[0]?.resolutionState).toEqual({
+		await t.mutation(api.resolutionSessions.cleanup, {
+			staleBefore: Date.now() - 1,
+			terminalBefore: Date.now() - 1,
+		});
+
+		expect(await rows(t, "resolutionSessions")).toEqual([]);
+		expect(await segmentState(t, segmentId)).toEqual({
 			kind: "PermanentFailure",
+		});
+	});
+
+	test("concurrent sessions keep the Segment Active until the last one settles", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		const first = await startSession(t, select("request-1"));
+		const second = await startSession(t, select("request-2", "visitor-2"));
+
+		await t.mutation(internal.persistence.persistUnresolvedClick, {
+			...select("request-1"),
+			sessionGuard: first,
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Active",
+			activeSessionCount: 1,
+		});
+		await t.mutation(internal.persistence.persistUnresolvedClick, {
+			...select("request-2", "visitor-2"),
+			sessionGuard: second,
+		});
+		expect(await segmentState(t, segmentId)).toEqual({
+			kind: "Unresolved",
+		});
+		expect(await session(t, "request-2")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Unresolved" },
 		});
 	});
 
@@ -1339,347 +985,161 @@ describe("Resolution Session", () => {
 	});
 
 	test("an invalidated session cannot write even an Unresolved Click", async () => {
-		const db = new SessionDb(sourceSeed());
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+
 		await expect(
-			handler<
-				typeof beginArgs & {
-					sessionGuard: {
-						requestId: string;
-						runToken: string;
-						segmentId: string;
-					};
+			t.mutation(internal.persistence.persistUnresolvedClick, {
+				...select("request-1"),
+				sessionGuard: {
+					requestId: "request-1",
+					runToken: "deleted-run",
+					segmentId,
 				},
-				unknown
-			>(persistUnresolvedClick)(
-				{ db },
-				{
-					...beginArgs,
-					sessionGuard: {
-						requestId: "request-1",
-						runToken: "deleted-run",
-						segmentId: "segment-1",
-					},
-				},
-			),
+			}),
 		).rejects.toThrow("no longer active");
-		expect(db.rows("visitorClicks")).toEqual([]);
+		expect(await rows(t, "visitorClicks")).toEqual([]);
 	});
 
 	test("strip, visitor clear, and full reset invalidate sessions before source writes", async () => {
-		const seededSession = {
-			_id: "session-1",
-			requestId: "request-1",
-			visitorId: "visitor-1",
-			sentenceId: "sentence-1",
-			segmentId: "segment-1",
-			lifecycle: {
-				state: "Active",
-				progress: "Starting",
-				activity: "Scheduled",
-			},
-			updatedAt: 1,
-		};
-		const stripDb = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [seededSession],
-		});
-		const stripped = await handler<
-			{ textId: string },
-			{ deleted: number; hasMore: boolean }
-		>(stripTextAnalysisGraphBatch)({ db: stripDb }, { textId: "text-1" });
-		expect(stripped).toEqual({ deleted: 1, hasMore: true });
-		expect(stripDb.rows("resolutionSessions")).toEqual([]);
-		expect(stripDb.rows("segments")).toEqual([
-			expect.objectContaining({
-				resolutionState: { kind: "PermanentFailure" },
-			}),
-		]);
-
-		const visitorDb = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [seededSession],
-			visitorClicks: [
-				{
-					_id: "click-1",
-					visitorId: "visitor-1",
-					clickedAt: 1,
-				},
-			],
-		});
-		let phase:
-			| "ResolutionSessions"
-			| "GenerationAttempts"
-			| "KnowledgeSettings"
-			| "VisitorClicks"
-			| "Done" = "ResolutionSessions";
-		for (let batch = 0; batch < 8 && phase !== "Done"; batch += 1) {
-			const result = await handler<
-				{ visitorId: string; phase: typeof phase },
-				{
-					deleted: number;
-					hasMore: boolean;
-					nextPhase: typeof phase;
-				}
-			>(clearVisitorDataBatch)(
-				{ db: visitorDb },
-				{ visitorId: "visitor-1", phase },
+		const stripped = createTestConvex();
+		{
+			const { select, segmentId, textId } = await bankenSource(stripped);
+			await startSession(stripped, select("request-1"));
+			const first = await stripped.mutation(
+				internal.demoReset.stripTextAnalysisGraphBatch,
+				{ textId },
 			);
-			phase = result.nextPhase;
+			expect(first).toEqual({ deleted: 1, hasMore: true });
+			expect(await rows(stripped, "resolutionSessions")).toEqual([]);
+			expect(await segmentState(stripped, segmentId)).toEqual({
+				kind: "PermanentFailure",
+			});
 		}
-		expect(visitorDb.rows("resolutionSessions")).toEqual([]);
-		expect(visitorDb.rows("visitorClicks")).toEqual([]);
-		expect(visitorDb.rows("segments")).toEqual([
-			expect.objectContaining({
-				resolutionState: { kind: "PermanentFailure" },
-			}),
-		]);
 
-		const resetDb = new SessionDb({
-			...sourceSeed(),
-			resolutionSessions: [seededSession],
-		});
-		const reset = await handler<
-			{ tableIndex?: number },
-			{ deleted: number; hasMore: boolean; nextTableIndex: number }
-		>(resetDemoDataBatch)({ db: resetDb }, { tableIndex: 0 });
-		expect(reset).toEqual({
-			deleted: 1,
-			hasMore: true,
-			nextTableIndex: 1,
-		});
-		expect(resetDb.rows("resolutionSessions")).toEqual([]);
-		expect(resetDb.rows("segments")).toHaveLength(1);
+		const cleared = createTestConvex();
+		{
+			const { select, segmentId } = await bankenSource(cleared);
+			await startSession(cleared, select("request-1"));
+			await cleared.action(api.demoReset.clearVisitorData, {
+				visitorId: "visitor-1",
+			});
+			expect(await rows(cleared, "resolutionSessions")).toEqual([]);
+			expect(await rows(cleared, "visitorClicks")).toEqual([]);
+			expect(await segmentState(cleared, segmentId)).toEqual({
+				kind: "PermanentFailure",
+			});
+		}
+
+		const reset = createTestConvex();
+		{
+			const { select } = await bankenSource(reset);
+			await startSession(reset, select("request-1"));
+			expect(
+				await reset.mutation(internal.demoReset.resetDemoDataBatch, {
+					tableIndex: 0,
+				}),
+			).toEqual({ deleted: 1, hasMore: true, nextTableIndex: 1 });
+			expect(await rows(reset, "resolutionSessions")).toEqual([]);
+		}
 	});
 
 	test("a partial analysis cannot masquerade as a deduplicated reanalysis", async () => {
-		const db = new SessionDb({
-			texts: [
-				{
-					_id: "text-1",
-					submissionKey: "submission-1",
-					sourceText: "Die Banken.",
-				},
-			],
-			sentences: [
-				{
-					_id: "sentence-1",
-					textId: "text-1",
-					position: 0,
-					segmentedSentenceId: "segmented-1",
-					language: "de",
-					stitchedText: "Die Banken.",
-				},
-			],
-			segments: [
-				{
-					_id: "segment-1",
-					sentenceId: "sentence-1",
-					index: 0,
-					kind: "ResolvableText",
-					text: "Die",
-				},
-			],
+		const t = createTestConvex();
+		// A Sentence whose stored Segments stop short of its text.
+		await t.run(async (ctx) => {
+			const textId = await ctx.db.insert("texts", {
+				submissionKey: "submission-1",
+				sourceText: "Die Banken.",
+			});
+			const sentenceId = await ctx.db.insert("sentences", {
+				segmentedSentenceId: "submission-1:0",
+				textId,
+				position: 0,
+				language: "de",
+				stitchedText: "Die Banken.",
+			});
+			await ctx.db.insert("segments", {
+				sentenceId,
+				index: 0,
+				kind: "ResolvableText",
+				text: "Die",
+			});
 		});
 		await expect(
-			handler<
-				{
-					submissionKey: string;
-					sourceText: string;
-					sentences: Array<{
-						segmentedSentenceId: string;
-						position: number;
-						language: "de";
-						stitchedText: string;
-						segments: Array<{
-							kind:
-								| "ResolvableText"
-								| "Whitespace"
-								| "Punctuation";
-							text: string;
-						}>;
-					}>;
-				},
-				unknown
-			>(persistSubmittedText)(
-				{ db },
-				{
-					submissionKey: "submission-1",
-					sourceText: "Die Banken.",
-					sentences: [
-						{
-							segmentedSentenceId: "segmented-1",
-							position: 0,
-							paragraph: 0,
-							language: "de",
-							stitchedText: "Die Banken.",
-							segments: [
-								{ kind: "ResolvableText", text: "Die" },
-								{ kind: "Whitespace", text: " " },
-								{ kind: "ResolvableText", text: "Banken" },
-								{ kind: "Punctuation", text: "." },
-							],
-						},
-					],
-				},
-			),
+			t.mutation(internal.persistence.persistSubmittedText, {
+				submissionKey: "submission-1",
+				sourceText: "Die Banken.",
+				sentences: [
+					{
+						segmentedSentenceId: "submission-1:0",
+						position: 0,
+						paragraph: 0,
+						language: "de",
+						stitchedText: "Die Banken.",
+						segments: [
+							{ kind: "ResolvableText", text: "Die" },
+							{ kind: "Whitespace", text: " " },
+							{ kind: "ResolvableText", text: "Banken" },
+							{ kind: "Punctuation", text: "." },
+						],
+					},
+				],
+			}),
 		).rejects.toThrow("analysis is incomplete");
 	});
 
-	test("the scheduled action completes cached resolved and unresolved Clicks without model work", async () => {
-		for (const recorded of [
-			{
-				status: "Resolved",
-				clickId: "click-1",
-				readingId: "reading-1",
-				occurrence: {
-					attestationId: "attestation-1",
-					grammatical: grammaticalInput("Bank"),
-					reading: readingInput("🏦", "Bank"),
-				},
-			},
-			{ status: "Unresolved", clickId: "click-2" },
-		] as const) {
-			const mutationArgs: unknown[] = [];
-			const calls: string[] = [];
-			await handler<
-				{ requestId: string; runToken: string; segmentId: string },
-				null
-			>(runResolutionSession)(
-				{
-					async runQuery(reference: FunctionReference<"query">) {
-						const name = getFunctionName(reference);
-						expect(name).toBe("resolutionInspection:enabled");
-						return false;
-					},
-					async runMutation(
-						reference: FunctionReference<"mutation">,
-						args: unknown,
-					) {
-						const name = getFunctionName(reference);
-						calls.push(name);
-						mutationArgs.push(args);
-						if (name === "resolutionSessions:beginRun")
-							return {
-								selection: {
-									requestId: "request-1",
-									visitorId: "visitor-1",
-									sentenceId: "sentence-1",
-									clickedSegmentIndex: 2,
-								},
-								checkpoints: {},
-								context: {
-									recorded,
-									reusable: null,
-									sentence: null,
-									lemmaCandidates: [],
-								},
-							};
-						return true;
-					},
-				},
-				{
-					requestId: "request-1",
-					runToken: "run-1",
-					segmentId: "segment-1",
-				},
-			);
-			expect(calls).toEqual([
-				"resolutionSessions:beginRun",
-				"resolutionSessions:settleAfterRun",
-				"resolutionSessions:recordRunSuccess",
-			]);
-
-			if (recorded.status === "Resolved") {
-				expect(
-					mutationArgs.flatMap((args) =>
-						"progress" in (args as object)
-							? [(args as { progress: string }).progress]
-							: [],
-					),
-				).toEqual([]);
-				expect(
-					mutationArgs.find(
-						(args) => "result" in (args as Record<string, unknown>),
-					),
-				).toMatchObject({
-					result: {
-						kind: "Complete",
-						readingId: "reading-1",
-						attestationId: "attestation-1",
-					},
-				});
-			} else {
-				expect(mutationArgs).toHaveLength(3);
-				expect(
-					mutationArgs.find(
-						(args) => "result" in (args as Record<string, unknown>),
-					),
-				).toMatchObject({
-					result: { kind: "Unresolved" },
-				});
-			}
-		}
-	});
-
-	test("the scheduled action records unexpected failures without leaking their message", async () => {
-		const mutationArgs: unknown[] = [];
-		const errorLogs: string[] = [];
-		const originalConsoleError = console.error;
-		console.error = (...values: unknown[]) => {
-			errorLogs.push(values.map(String).join(" "));
-		};
+	test("the scheduled run completes an occurrence another session committed, without model work", async () => {
+		const t = createTestConvex();
+		const { select, segmentId } = await bankenSource(t);
+		// One Visitor selects twice; the second session commits first.
+		const running = await startSession(t, select("request-1"));
+		const winner = await startSession(t, select("request-2"));
+		const committed = await t.mutation(
+			internal.persistence.persistResolvedClick,
+			bankOccurrenceCommit(select("request-2"), winner),
+		);
+		if (committed.status !== "Committed")
+			throw new Error("Expected a committed occurrence.");
+		const providerRequests: string[] = [];
+		const previousFetch = globalThis.fetch;
+		globalThis.fetch = (async (url: string | URL | Request) => {
+			providerRequests.push(String(url));
+			throw new Error("No model call is expected.");
+		}) as typeof fetch;
 		try {
-			await handler<
-				{ requestId: string; runToken: string; segmentId: string },
-				null
-			>(runResolutionSession)(
-				{
-					async runQuery(reference: FunctionReference<"query">) {
-						if (
-							getFunctionName(reference) ===
-							"resolutionInspection:enabled"
-						)
-							return false;
-						throw new Error("Unexpected query");
-					},
-					async runMutation(
-						reference: FunctionReference<"mutation">,
-						args: unknown,
-					) {
-						if (
-							getFunctionName(reference) ===
-							"resolutionSessions:beginRun"
-						)
-							throw new TypeError("secret checkpoint payload");
-						mutationArgs.push(args);
-						return true;
-					},
-				},
-				{
-					requestId: "request-1",
-					runToken: "run-1",
-					segmentId: "segment-1",
-				},
+			await t.action(
+				internal.orchestration.runResolutionSession,
+				running,
 			);
 		} finally {
-			console.error = originalConsoleError;
+			globalThis.fetch = previousFetch;
 		}
 
-		expect(mutationArgs.at(-1)).toMatchObject({
-			diagnosticId: expect.any(String),
-			errorFingerprint: expect.stringContaining("fnv1a-"),
-			errorName: "UnknownException",
-			generationEvents: [],
-			guard: {
-				requestId: "request-1",
-				runToken: "run-1",
-			},
-			phase: "Route",
+		expect(providerRequests).toEqual([]);
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			readingId: committed.readingId,
+			attestationId: committed.attestationId,
 		});
-		expect(errorLogs.join("\n")).toContain("ResolutionRunInternalFailure");
-		expect(errorLogs.join("\n")).not.toContain("secret checkpoint payload");
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				runToken: running.runToken,
+				state: "Succeeded",
+				generationEvents: [],
+			}),
+		]);
+		expect(await segmentState(t, segmentId)).toBeNull();
 	});
 });
+
+async function startSessionGuard(
+	t: TestConvexDb,
+	requestId: string,
+): Promise<SessionGuard> {
+	const row = await session(t, requestId);
+	return { requestId, runToken: row.runToken, segmentId: row.segmentId };
+}
 
 test("progress cannot skip", () => {
 	expect(() =>
@@ -1705,11 +1165,7 @@ test("every legal Resolution lifecycle variant is accepted", () => {
 		"Committing",
 	] as const;
 	for (const progress of progresses) {
-		for (const activity of [
-			"Scheduled",
-			"Running",
-			"WaitingForRetry",
-		] as const) {
+		for (const activity of ["Scheduled", "Running"] as const) {
 			expect(() =>
 				assertResolutionLifecycle({
 					state: "Active",
@@ -1746,6 +1202,11 @@ test("impossible active and terminal lifecycle combinations are rejected", () =>
 			outcome: "Complete",
 		},
 		{
+			state: "Active",
+			progress: "Starting",
+			activity: "WaitingForRetry",
+		},
+		{
 			state: "Terminal",
 			progress: "Starting",
 			activity: "Running",
@@ -1755,6 +1216,131 @@ test("impossible active and terminal lifecycle combinations are rejected", () =>
 	] as const) {
 		expect(() => assertResolutionLifecycle(impossible)).toThrow();
 	}
+});
+
+test("analysis history survives without a resolution session and is scoped to its visitor", async () => {
+	const t = createTestConvex();
+	await t.mutation(internal.resolutionInspection.beginAnalysis, {
+		requestId: "analysis-1",
+		visitorId: "visitor-1",
+		sourceText: "Hallo. Welt!",
+	});
+
+	expect(
+		await t.query(api.resolutionInspection.detail, {
+			requestId: "analysis-1",
+			visitorId: "visitor-2",
+		}),
+	).toBeNull();
+	expect(
+		await t.query(api.resolutionInspection.detail, {
+			requestId: "analysis-1",
+			visitorId: "visitor-1",
+		}),
+	).toMatchObject({ state: "Running", finishedAt: null });
+	await t.mutation(internal.resolutionInspection.finishAnalysis, {
+		requestId: "analysis-1",
+		state: "PermanentFailure",
+	});
+	expect(
+		await t.query(api.resolutionInspection.detail, {
+			requestId: "analysis-1",
+			visitorId: "visitor-1",
+		}),
+	).toMatchObject({
+		state: "PermanentFailure",
+		finishedAt: expect.any(Number),
+	});
+});
+
+test("beginRun atomically claims work, loads sentence and stored Surface candidates, and rejects duplicate runners", async () => {
+	const t = createTestConvex();
+	const other = await submitText(t, [["Banken"]], {
+		submissionKey: "earlier",
+	});
+	const otherSentenceId = other.sentenceIds[0];
+	if (!otherSentenceId) throw new Error("Expected a Sentence.");
+	// An earlier occurrence stores the Bank Lemma and its Banken Surface.
+	await commitBankOccurrence(t, {
+		requestId: "request-0",
+		visitorId: "visitor-0",
+		sentenceId: otherSentenceId,
+		clickedSegmentIndex: 0,
+	});
+	await t.run(async (ctx) => {
+		for (const run of await ctx.db.query("resolutionRuns").collect())
+			await ctx.db.delete(run._id);
+	});
+	const { select } = await bankenSource(t);
+	const guard = await startSession(t, select("request-1"));
+
+	expect(
+		await t.mutation(internal.resolutionSessions.beginRun, {
+			guard: { ...guard, runToken: "stale" },
+		}),
+	).toBeNull();
+	expect(await rows(t, "resolutionRuns")).toHaveLength(0);
+	expect(
+		await t.mutation(internal.resolutionSessions.beginRun, { guard }),
+	).toMatchObject({
+		selection: { requestId: "request-1" },
+		checkpoints: {},
+		context: {
+			recorded: null,
+			reusable: null,
+			sentence: { stitchedText: "Die Banken." },
+			lemmaCandidates: [
+				{
+					lemma: expect.objectContaining({ canonicalForm: "Bank" }),
+					foundUnder: ["Banken"],
+				},
+			],
+		},
+	});
+	expect(await session(t, "request-1")).toMatchObject({
+		lifecycle: {
+			state: "Active",
+			progress: "RouteAvailable",
+			activity: "Running",
+		},
+	});
+	expect(await rows(t, "resolutionRuns")).toHaveLength(1);
+	expect(
+		await t.mutation(internal.resolutionSessions.beginRun, { guard }),
+	).toBeNull();
+	expect(await rows(t, "resolutionRuns")).toHaveLength(1);
+});
+
+test("a stored Grammar checkpoint is restored when a run resumes", async () => {
+	const t = createTestConvex();
+	const { select, sentenceId } = await bankenSource(t);
+	const guard = await startSession(t, select("request-1"));
+	await t.mutation(internal.resolutionSessions.beginRun, { guard });
+	await t.mutation(internal.resolutionSessions.advance, {
+		guard,
+		progress: "GrammarAvailable",
+		grammar: grammarProjection(),
+		grammaticalCheckpoint: bankGrammar(sentenceId),
+	});
+	const stored = await session(t, "request-1");
+	await patchSession(t, "request-1", {
+		lifecycle: {
+			state: "Active",
+			progress: "GrammarAvailable",
+			activity: "Scheduled",
+		},
+	});
+
+	const claimed = await t.mutation(internal.resolutionSessions.beginRun, {
+		guard,
+	});
+
+	expect(stored.grammaticalCheckpoint).toBeDefined();
+	expect(claimed?.checkpoints.grammatical).toMatchObject({
+		decision: "Resolved",
+		attestation: { members: [{ attested: "Banken" }] },
+	});
+	expect(claimed?.context.lemmaCandidates).toEqual([]);
 });
 
 function grammaticalInput(canonicalForm = "Bank") {
@@ -1785,13 +1371,6 @@ function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 	};
 }
 
-function readingCheckpoint() {
-	return {
-		resolution: { decision: "New" as const, emojiDescription: "🏦" },
-		reading: readingInput(),
-	};
-}
-
 function grammarProjection(canonicalForm = "Bank") {
 	return {
 		members: [{ attested: "Banken", orthography: "Standard" as const }],
@@ -1813,88 +1392,3 @@ function readingProjection(emojiDescription = "🏦", canonicalForm = "Bank") {
 		kind: "NOUN",
 	};
 }
-
-test("analysis history survives without a resolution session and is scoped to its visitor", async () => {
-	const db = new SessionDb();
-	await handler<
-		{ requestId: string; visitorId: string; sourceText: string },
-		null
-	>(beginAnalysis)(
-		{ db },
-		{
-			requestId: "analysis-1",
-			visitorId: "visitor-1",
-			sourceText: "Hallo. Welt!",
-		},
-	);
-	const read = handler<{ requestId: string; visitorId: string }, unknown>(
-		detail,
-	);
-	expect(
-		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-2" }),
-	).toBeNull();
-	expect(
-		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-1" }),
-	).toMatchObject({ state: "Running", finishedAt: null });
-	await handler<{ requestId: string; state: string }, null>(finishAnalysis)(
-		{ db },
-		{ requestId: "analysis-1", state: "PermanentFailure" },
-	);
-	expect(
-		await read({ db }, { requestId: "analysis-1", visitorId: "visitor-1" }),
-	).toMatchObject({
-		state: "PermanentFailure",
-		finishedAt: expect.any(Number),
-	});
-});
-
-test("beginRun atomically claims work, loads sentence and stored Surface candidates, and rejects duplicate runners", async () => {
-	const source = sourceSeed();
-	const stored = resolvedSourceSeed();
-	const db = new SessionDb({
-		...source,
-		lemmas: stored.lemmas ?? [],
-		surfaces: stored.surfaces ?? [],
-	});
-	const ctx = { db, scheduler: { async runAfter() {} } };
-	await handler<typeof beginArgs, unknown>(selectSegment)(ctx, beginArgs);
-	const session = db.rows("resolutionSessions")[0];
-	if (!session) throw Error("Missing session");
-	const guard = {
-		requestId: beginArgs.requestId,
-		runToken: String(session.runToken),
-		segmentId: String(session.segmentId),
-	};
-	const run = handler<{ guard: typeof guard }, unknown>(beginRun);
-	expect(
-		await run(ctx, { guard: { ...guard, runToken: "stale" } }),
-	).toBeNull();
-	expect(db.rows("resolutionRuns")).toHaveLength(0);
-	const result = await run(ctx, { guard });
-	expect(result).toMatchObject({
-		selection: { requestId: beginArgs.requestId },
-		checkpoints: {},
-		context: {
-			recorded: null,
-			reusable: null,
-			sentence: { stitchedText: "Die Banken." },
-			lemmaCandidates: [
-				{
-					lemma: expect.objectContaining({ canonicalForm: "Bank" }),
-					foundUnder: ["Banken"],
-				},
-			],
-		},
-	});
-	expect(db.rows("resolutionSessions")[0]).toMatchObject({
-		lifecycle: {
-			state: "Active",
-			progress: "RouteAvailable",
-			activity: "Running",
-		},
-	});
-	expect(db.rows("resolutionRuns")).toHaveLength(1);
-	expect(await run(ctx, { guard })).toBeNull();
-	expect(db.rows("resolutionRuns")).toHaveLength(1);
-	expect(db.queriedIndexes).toContain("by_language_and_normalized_surface");
-});

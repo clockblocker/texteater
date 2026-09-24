@@ -1,262 +1,235 @@
 import { expect, test } from "bun:test";
+import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { makeSurfaceId } from "dumdict";
 import { nounArticleReference } from "dumgen";
+import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
+import {
+	createTestConvex,
+	submitText,
+	type TestConvexDb,
+} from "./support/convex";
 
-import { get } from "../convex/routeNotes";
+type RouteNoteTarget = FunctionArgs<typeof api.routeNotes.get>["target"];
+type RouteNote = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;
 
-type Row = Record<string, unknown> & { _id: string };
-
-class RouteDb {
-	readonly indexedQueries: string[] = [];
-	readonly paginations: { cursor: string | null; numItems: number }[] = [];
-	documentReads = 0;
-
-	constructor(private readonly tables: Record<string, readonly Row[]>) {}
-
-	normalizeId(table: string, id: string) {
-		const prefix: Record<string, string> = {
-			attestations: "attestation-",
-			surfaces: "surface-",
-			lemmas: "lemma-",
-			readings: "reading-",
-		};
-		return id.startsWith(prefix[table] ?? `${table}-`) ? id : null;
-	}
-
-	async get(id: string) {
-		this.documentReads += 1;
-		for (const rows of Object.values(this.tables)) {
-			const row = rows.find((candidate) => candidate._id === id);
-			if (row) return row;
-		}
-		return null;
-	}
-
-	query(table: string) {
-		const predicates: Array<(row: Row) => boolean> = [];
-		const range = {
-			eq(field: string, value: unknown) {
-				predicates.push((row) => nestedValue(row, field) === value);
-				return range;
-			},
-		};
-		const matches = () =>
-			(this.tables[table] ?? []).filter((row) =>
-				predicates.every((predicate) => predicate(row)),
-			);
-		const result = {
-			withIndex: (
-				index: string,
-				build: (value: typeof range) => unknown,
-			) => {
-				this.indexedQueries.push(`${table}.${index}`);
-				build(range);
-				return result;
-			},
-			async unique() {
-				return matches()[0] ?? null;
-			},
-			async first() {
-				return matches()[0] ?? null;
-			},
-			async take(limit: number) {
-				return matches().slice(0, limit);
-			},
-			paginate: async ({
-				cursor,
-				numItems,
-			}: {
-				cursor: string | null;
-				numItems: number;
-			}) => {
-				this.paginations.push({ cursor, numItems });
-				const offset = cursor ? Number(cursor) : 0;
-				const rows = matches();
-				const page = rows.slice(offset, offset + numItems);
-				const next = offset + page.length;
-				return {
-					page,
-					continueCursor: String(next),
-					isDone: next >= rows.length,
-				};
-			},
-		};
-		return result;
-	}
+function routeNote(t: TestConvexDb, target: RouteNoteTarget) {
+	return t.query(api.routeNotes.get, { target });
 }
 
-const routeNoteHandler = (
-	get as unknown as {
-		_handler: (
-			ctx: unknown,
-			args: Record<string, unknown>,
-		) => Promise<unknown>;
-	}
-)._handler;
+function noteOfKind<Kind extends RouteNote["kind"]>(
+	note: RouteNote | null,
+	kind: Kind,
+): Extract<RouteNote, { kind: Kind }> {
+	if (note?.kind !== kind) throw new Error(`Expected a ${kind} Route Note.`);
+	return note as Extract<RouteNote, { kind: Kind }>;
+}
 
-type NoteTarget =
-	| { kind: "Attestation"; attestationId: string }
-	| { kind: "Surface"; language: "de"; normalizedSurface: string }
-	| { kind: "Lemma"; lemmaId: string };
+type LemmaSeed = {
+	readonly language: "de" | "he";
+	readonly canonicalForm: string;
+	readonly family: string;
+	readonly kind: string;
+	readonly pronType?: "Dem" | "Rel";
+};
 
-const routeNote = (
-	ctx: unknown,
-	{
-		target,
-		contextCursor,
-		activeAnalysisKey,
-	}: {
-		target: NoteTarget;
-		contextCursor?: string;
-		activeAnalysisKey?: string;
+let seedCounter = 0;
+
+/** Stored keys only need to be unique here; nothing looks them up. */
+function nextKey(prefix: string) {
+	seedCounter += 1;
+	return `${prefix}-${seedCounter}`;
+}
+
+function insertLemma(t: TestConvexDb, seed: LemmaSeed) {
+	const key = nextKey("lemma");
+	return t.run((ctx) =>
+		ctx.db.insert("lemmas", {
+			lemmaKey: key,
+			language: seed.language,
+			family: seed.family,
+			kind: seed.kind,
+			canonicalForm: seed.canonicalForm,
+			coreFeatures: lemmaCoreFeatures(seed),
+		}),
+	);
+}
+
+function insertLemmas(t: TestConvexDb, seeds: readonly LemmaSeed[]) {
+	return Promise.all(seeds.map((seed) => insertLemma(t, seed)));
+}
+
+function insertSurface(
+	t: TestConvexDb,
+	lemmaId: Id<"lemmas">,
+	normalizedSurface: string,
+	language: "de" | "he" = "de",
+) {
+	const key = nextKey("surface");
+	return t.run((ctx) =>
+		ctx.db.insert("surfaces", {
+			surfaceKey: key,
+			lemmaId,
+			language,
+			normalizedSurface,
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: null,
+		}),
+	);
+}
+
+function insertReading(
+	t: TestConvexDb,
+	lemmaId: Id<"lemmas">,
+	emojiDescription: string,
+) {
+	const key = nextKey("reading");
+	return t.run((ctx) =>
+		ctx.db.insert("readings", {
+			readingKey: key,
+			lemmaId,
+			emojiDescription,
+		}),
+	);
+}
+
+/** Commits one occurrence: an Attestation owning the given member Segments. */
+function attest(
+	t: TestConvexDb,
+	owner: {
+		readonly readingId: Id<"readings">;
+		readonly surfaceId: Id<"surfaces">;
 	},
-) =>
-	routeNoteHandler(ctx, {
-		target: {
-			...target,
-			...(contextCursor ? { contextCursor } : {}),
-			...(activeAnalysisKey ? { activeAnalysisKey } : {}),
-		},
+	memberSegmentIds: readonly (Id<"segments"> | undefined)[],
+) {
+	return t.run(async (ctx) => {
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId: owner.surfaceId,
+			readingId: owner.readingId,
+			realizationCoverage: "Full",
+		});
+		for (const segmentId of memberSegmentIds) {
+			if (!segmentId) throw new Error("Expected a member Segment.");
+			await ctx.db.patch(segmentId, {
+				attestationMembership: {
+					attestationId,
+					orthography: "Standard",
+				},
+			});
+		}
+		return attestationId;
 	});
+}
 
 test("Note locators are strict across Attestation, Surface, and Lemma kinds", async () => {
-	const db = new RouteDb({});
-	for (const target of [
-		{ kind: "Attestation", attestationId: "surface-1" } as const,
-		{
+	const t = createTestConvex();
+	const lemmaId = await insertLemma(t, {
+		language: "de",
+		canonicalForm: "Bank",
+		family: "Lexeme",
+		kind: "NOUN",
+	});
+	const surfaceId = await insertSurface(t, lemmaId, "Bank");
+
+	// An ID of the wrong kind never reaches a loader: the locator rejects it.
+	await expect(
+		routeNote(t, {
+			kind: "Attestation",
+			attestationId: surfaceId as unknown as Id<"attestations">,
+		}),
+	).rejects.toThrow("Validator error");
+	await expect(
+		routeNote(t, {
+			kind: "Lemma",
+			lemmaId: surfaceId as unknown as Id<"lemmas">,
+		}),
+	).rejects.toThrow("Validator error");
+	expect(
+		await routeNote(t, {
 			kind: "Surface",
 			language: "de",
 			normalizedSurface: "missing",
-		} as const,
-		{ kind: "Lemma", lemmaId: "attestation-1" } as const,
-	]) {
-		expect(await routeNote({ db }, { target })).toBeNull();
-	}
-	expect(db.documentReads).toBe(2);
+		}),
+	).toBeNull();
+
+	await t.run((ctx) => ctx.db.delete(lemmaId));
+	expect(await routeNote(t, { kind: "Lemma", lemmaId })).toBeNull();
 });
 
 test("Attestation Route Note preserves ordered members and reaches Surface and Reading", async () => {
-	const db = new RouteDb({
-		texts: [{ _id: "text-1", sourceText: "Er steht früh auf." }],
-		sentences: [
-			{
-				_id: "sentence-1",
-				language: "de",
-				segmentedSentenceId: "fixture-sentence",
-				textId: "text-1",
-				position: 0,
-				stitchedText: "Er steht früh auf.",
-			},
-		],
-		segments: [
-			{
-				_id: "segment-0",
-				sentenceId: "sentence-1",
-				index: 0,
-				kind: "Other",
-				text: "Er ",
-			},
-			{
-				_id: "segment-1",
-				sentenceId: "sentence-1",
-				index: 1,
-				kind: "ResolvableText",
-				text: "steht",
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Standard",
-				},
-			},
-			{
-				_id: "segment-2",
-				sentenceId: "sentence-1",
-				index: 2,
-				kind: "Other",
-				text: " früh ",
-			},
-			{
-				_id: "segment-3",
-				sentenceId: "sentence-1",
-				index: 3,
-				kind: "ResolvableText",
-				text: "auf",
-				attestationMembership: {
-					attestationId: "attestation-1",
-					orthography: "Standard",
-				},
-			},
-		],
-		lemmas: [lemma("lemma-1", "de", "aufstehen", "Lexeme", "VERB")],
-		surfaces: [surface("surface-1", "lemma-1", "de", "steht auf")],
-		readings: [
-			{ _id: "reading-1", lemmaId: "lemma-1", emojiDescription: "🧍" },
-		],
-		attestations: [
-			{
-				_id: "attestation-1",
-				surfaceId: "surface-1",
-				readingId: "reading-1",
-				realizationCoverage: "Full",
-			},
-		],
+	const t = createTestConvex();
+	const { segmentIds } = await submitText(t, [
+		["Er", " ", "steht", " ", "früh", " ", "auf", "."],
+	]);
+	const [segments] = segmentIds;
+	const lemmaId = await insertLemma(t, {
+		language: "de",
+		canonicalForm: "aufstehen",
+		family: "Lexeme",
+		kind: "VERB",
 	});
-	const note = (await routeNote(
-		{ db },
-		{
-			target: {
-				kind: "Attestation",
-				attestationId: "attestation-1",
-			},
-		},
-	)) as {
-		presented: { members: { attested: string }[] };
-		source: { memberSegmentIndices: number[] };
-		surfaceTarget: Record<string, string>;
-		reading: { target: Record<string, string> };
-	};
+	const surfaceId = await insertSurface(t, lemmaId, "steht auf");
+	const readingId = await insertReading(t, lemmaId, "🧍");
+	const attestationId = await attest(t, { readingId, surfaceId }, [
+		segments?.[6],
+		segments?.[2],
+	]);
+
+	const note = noteOfKind(
+		await routeNote(t, { kind: "Attestation", attestationId }),
+		"Attestation",
+	);
 	expect(note.presented.members.map((member) => member.attested)).toEqual([
 		"steht",
 		"auf",
 	]);
-	expect(note.source.memberSegmentIndices).toEqual([1, 3]);
+	expect(note.source.memberSegmentIndices).toEqual([2, 6]);
 	expect(note.surfaceTarget).toEqual({
 		kind: "Surface",
 		language: "de",
 		normalizedSurface: "steht auf",
 	});
-	expect(note.reading.target).toEqual({
-		kind: "Reading",
-		readingId: "reading-1",
-	});
+	expect(note.reading.target).toEqual({ kind: "Reading", readingId });
 });
 
 test("Lemma pages expose all polysemous Readings and exact-language same-form peers", async () => {
-	const readings = Array.from({ length: 101 }, (_, index) => ({
-		_id: `reading-${index}`,
-		lemmaId: "lemma-1",
-		emojiDescription: `emoji-${index}`,
-	}));
-	const lemmaSurfaces = Array.from({ length: 51 }, (_, index) =>
-		surface(`surface-${index}`, "lemma-1", "de", `Bank-${index}`),
-	);
-	const unitPeers = Array.from({ length: 51 }, (_, index) =>
-		lemma(`lemma-peer-${index}`, "de", "Bank", "Lexeme", `KIND-${index}`),
-	);
-	const db = new RouteDb({
-		lemmas: [
-			lemma("lemma-1", "de", "Bank", "Lexeme", "NOUN"),
-			lemma("lemma-morpheme", "de", "Bank", "Morpheme", "Prefix"),
-			...unitPeers,
-			lemma("lemma-he", "he", "Bank", "Lexeme", "NOUN"),
-		],
-		surfaces: lemmaSurfaces,
-		readings,
+	const t = createTestConvex();
+	const lemmaId = await insertLemma(t, {
+		language: "de",
+		canonicalForm: "Bank",
+		family: "Lexeme",
+		kind: "NOUN",
 	});
-	const pages = await exhaustRoutePages(db, {
-		kind: "Lemma",
-		lemmaId: "lemma-1",
-	});
+	const [morphemeId] = await insertLemmas(t, [
+		{
+			language: "de",
+			canonicalForm: "Bank",
+			family: "Morpheme",
+			kind: "Prefix",
+		},
+		...Array.from({ length: 51 }, (_, index) => ({
+			language: "de" as const,
+			canonicalForm: "Bank",
+			family: "Lexeme",
+			kind: `KIND-${index}`,
+		})),
+		{
+			language: "he",
+			canonicalForm: "Bank",
+			family: "Lexeme",
+			kind: "NOUN",
+		},
+	]);
+	for (let index = 0; index < 51; index += 1) {
+		await insertSurface(t, lemmaId, `Bank-${index}`);
+	}
+	for (let index = 0; index < 101; index += 1) {
+		await insertReading(t, lemmaId, `emoji-${index}`);
+	}
+
+	const pages = await exhaustRoutePages(t, { kind: "Lemma", lemmaId });
 	const projectedReadings = pages.flatMap(
 		(page) => page.connections.readings,
 	);
@@ -267,56 +240,52 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 	).toBe(101);
 	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(51);
 	expect(peers).toHaveLength(52);
-	expect(peers.map((peer) => peer.lemmaId)).toContain("lemma-morpheme");
-	expect(db.indexedQueries).toContain(
-		"lemmas.by_language_and_canonical_form",
-	);
-	expect(db.paginations.every(({ numItems }) => numItems === 25)).toBe(true);
+	expect(peers.map((peer) => peer.lemmaId)).toContain(morphemeId);
+	for (const { connections } of pages) {
+		expect(
+			connections.readings.length +
+				connections.surfaces.length +
+				connections.sameWrittenForm.length,
+		).toBeLessThanOrEqual(25);
+	}
 });
 
 test("Surface Note aggregates heterogeneous typed analyses of one written form", async () => {
-	const db = new RouteDb({
-		lemmas: [
-			lemma("lemma-noun", "de", "Bank", "Lexeme", "NOUN"),
-			lemma("lemma-verb", "de", "banken", "Lexeme", "VERB"),
-		],
-		surfaces: [
-			surface("surface-noun", "lemma-noun", "de", "Bank"),
-			surface("surface-verb", "lemma-verb", "de", "Bank"),
-		],
-	});
-	const note = (await routeNote(
-		{ db },
+	const t = createTestConvex();
+	const [nounId, verbId] = await insertLemmas(t, [
 		{
-			target: {
-				kind: "Surface",
-				language: "de",
-				normalizedSurface: "Bank",
-			},
+			language: "de",
+			canonicalForm: "Bank",
+			family: "Lexeme",
+			kind: "NOUN",
 		},
-	)) as {
-		kind: "Surface";
-		target: { kind: "Surface"; language: "de"; normalizedSurface: string };
-		analyses: Array<{
-			analysisKey: string;
-			surfaceId: string;
-			lemmaId: string;
-			presented: {
-				lemma: { family: string; kind: string; canonicalForm: string };
-				surfaceFeatures: unknown;
-				inflectionalFeatures: unknown;
-			};
-			lemmaTarget: { kind: "Lemma"; lemmaId: string };
-		}>;
-	};
+		{
+			language: "de",
+			canonicalForm: "banken",
+			family: "Lexeme",
+			kind: "VERB",
+		},
+	]);
+	if (!nounId || !verbId) throw new Error("Expected stored Lemmas.");
+	const nounSurfaceId = await insertSurface(t, nounId, "Bank");
+	const verbSurfaceId = await insertSurface(t, verbId, "Bank");
+
+	const note = noteOfKind(
+		await routeNote(t, {
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: "Bank",
+		}),
+		"Surface",
+	);
 	expect(note.target).toEqual({
 		kind: "Surface",
 		language: "de",
 		normalizedSurface: "Bank",
 	});
 	expect(note.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
-		"surface-noun",
-		"surface-verb",
+		nounSurfaceId,
+		verbSurfaceId,
 	]);
 	expect(note.analyses.map(({ presented }) => presented.lemma.kind)).toEqual([
 		"NOUN",
@@ -335,35 +304,40 @@ test("Surface Note aggregates heterogeneous typed analyses of one written form",
 			Object.keys(analysis.presented.inflectionalFeatures as object),
 		).toEqual([]);
 	}
-	expect(db.indexedQueries).toContain(
-		"surfaces.by_language_and_normalized_surface",
-	);
 });
 
+async function insertBankHomographs(t: TestConvexDb, count: number) {
+	const surfaceIds: Id<"surfaces">[] = [];
+	for (let index = 0; index < count; index += 1) {
+		const lemmaId = await insertLemma(t, {
+			language: "de",
+			canonicalForm: `Bank-${index}`,
+			family: "Lexeme",
+			kind: "NOUN",
+		});
+		surfaceIds.push(await insertSurface(t, lemmaId, "Bank"));
+	}
+	return surfaceIds;
+}
+
+const bankSurface = {
+	kind: "Surface",
+	language: "de",
+	normalizedSurface: "Bank",
+} as const;
+
 test("Surface Note paginates every analysis beyond one query transaction", async () => {
-	const lemmas = Array.from({ length: 101 }, (_, index) =>
-		lemma(`lemma-${index}`, "de", `Bank-${index}`, "Lexeme", "NOUN"),
+	const t = createTestConvex();
+	const surfaceIds = await insertBankHomographs(t, 101);
+
+	const first = noteOfKind(await routeNote(t, bankSurface), "Surface");
+	const second = noteOfKind(
+		await routeNote(t, {
+			...bankSurface,
+			contextCursor: first.continueCursor,
+		}),
+		"Surface",
 	);
-	const db = new RouteDb({
-		lemmas,
-		surfaces: lemmas.map((entry, index) =>
-			surface(`surface-${index}`, entry._id, "de", "Bank"),
-		),
-	});
-	const target = {
-		kind: "Surface",
-		language: "de",
-		normalizedSurface: "Bank",
-	} as const;
-	const first = (await routeNote({ db }, { target })) as {
-		analyses: Array<{ analysisKey: string }>;
-		continueCursor: string;
-		isDone: boolean;
-	};
-	const second = (await routeNote(
-		{ db },
-		{ target, contextCursor: first.continueCursor },
-	)) as typeof first;
 	expect(first.analyses).toHaveLength(100);
 	expect(first.isDone).toBe(false);
 	expect(second.analyses).toHaveLength(1);
@@ -374,201 +348,130 @@ test("Surface Note paginates every analysis beyond one query transaction", async
 				({ analysisKey }) => analysisKey,
 			),
 		),
-	).toEqual(new Set(lemmas.map((_, index) => `surface-${index}`)));
+	).toEqual(new Set(surfaceIds));
 });
 
 test("Surface Note includes an active analysis beyond the initial page", async () => {
-	const lemmas = Array.from({ length: 101 }, (_, index) =>
-		lemma(`lemma-${index}`, "de", `Bank-${index}`, "Lexeme", "NOUN"),
+	const t = createTestConvex();
+	const surfaceIds = await insertBankHomographs(t, 101);
+	const beyondFirstPage = surfaceIds[100];
+	if (!beyondFirstPage) throw new Error("Expected 101 Surfaces.");
+
+	const first = noteOfKind(
+		await routeNote(t, {
+			...bankSurface,
+			activeAnalysisKey: beyondFirstPage,
+		}),
+		"Surface",
 	);
-	const db = new RouteDb({
-		lemmas,
-		surfaces: lemmas.map((entry, index) =>
-			surface(`surface-${index}`, entry._id, "de", "Bank"),
-		),
-	});
-	const target = {
-		kind: "Surface",
-		language: "de",
-		normalizedSurface: "Bank",
-	} as const;
-	const first = (await routeNote(
-		{ db },
-		{ target, activeAnalysisKey: "surface-100" },
-	)) as {
-		analyses: Array<{ analysisKey: string }>;
-		continueCursor: string;
-		isDone: boolean;
-	};
-	const second = (await routeNote(
-		{ db },
-		{ target, contextCursor: first.continueCursor },
-	)) as typeof first;
+	const second = noteOfKind(
+		await routeNote(t, {
+			...bankSurface,
+			contextCursor: first.continueCursor,
+		}),
+		"Surface",
+	);
 
 	expect(first.analyses).toHaveLength(101);
 	expect(
-		first.analyses.some(({ analysisKey }) => analysisKey === "surface-100"),
+		first.analyses.some(
+			({ analysisKey }) => analysisKey === beyondFirstPage,
+		),
 	).toBe(true);
 	expect(first.isDone).toBe(false);
 	expect(second.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
-		"surface-100",
+		beyondFirstPage,
 	]);
 });
 
 test("Surface Note does not inject an active analysis from another aggregate", async () => {
-	const db = new RouteDb({
-		lemmas: [
-			lemma("lemma-bank", "de", "Bank", "Lexeme", "NOUN"),
-			lemma("lemma-banken", "de", "banken", "Lexeme", "VERB"),
-		],
-		surfaces: [
-			surface("surface-bank", "lemma-bank", "de", "Bank"),
-			surface("surface-banken", "lemma-banken", "de", "banken"),
-		],
-	});
-	const note = (await routeNote(
-		{ db },
+	const t = createTestConvex();
+	const [bankId, bankenId] = await insertLemmas(t, [
 		{
-			target: {
-				kind: "Surface",
-				language: "de",
-				normalizedSurface: "Bank",
-			},
-			activeAnalysisKey: "surface-banken",
+			language: "de",
+			canonicalForm: "Bank",
+			family: "Lexeme",
+			kind: "NOUN",
 		},
-	)) as { analyses: Array<{ analysisKey: string }> };
+		{
+			language: "de",
+			canonicalForm: "banken",
+			family: "Lexeme",
+			kind: "VERB",
+		},
+	]);
+	if (!bankId || !bankenId) throw new Error("Expected stored Lemmas.");
+	const bankSurfaceId = await insertSurface(t, bankId, "Bank");
+	const bankenSurfaceId = await insertSurface(t, bankenId, "banken");
+
+	const note = noteOfKind(
+		await routeNote(t, {
+			...bankSurface,
+			activeAnalysisKey: bankenSurfaceId,
+		}),
+		"Surface",
+	);
 
 	expect(note.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
-		"surface-bank",
+		bankSurfaceId,
 	]);
 });
 
 test("homographic demonstrative and relative Lemma navigation keeps exact Readings separate", async () => {
-	const db = new RouteDb({
-		lemmas: [
-			lemma("lemma-dem-der", "de", "der", "Lexeme", "PRON"),
-			lemma("lemma-rel-der", "de", "der", "Lexeme", "PRON"),
-		],
-		surfaces: [
-			surface("surface-dem-der", "lemma-dem-der", "de", "der"),
-			surface("surface-rel-der", "lemma-rel-der", "de", "der"),
-		],
-		readings: [
-			{
-				_id: "reading-dem-der",
-				lemmaId: "lemma-dem-der",
-				emojiDescription: "👤",
-			},
-			{
-				_id: "reading-rel-der",
-				lemmaId: "lemma-rel-der",
-				emojiDescription: "👤",
-			},
-		],
-	});
-
-	for (const pronType of ["dem", "rel"] as const) {
-		const pages = await exhaustRoutePages(db, {
-			kind: "Lemma",
-			lemmaId: `lemma-${pronType}-der`,
+	const t = createTestConvex();
+	const exact = [];
+	for (const pronType of ["Dem", "Rel"] as const) {
+		const lemmaId = await insertLemma(t, {
+			language: "de",
+			canonicalForm: "der",
+			family: "Lexeme",
+			kind: "PRON",
+			pronType,
 		});
+		exact.push({
+			lemmaId,
+			surfaceId: await insertSurface(t, lemmaId, "der"),
+			readingId: await insertReading(t, lemmaId, "👤"),
+		});
+	}
+
+	for (const { lemmaId, surfaceId, readingId } of exact) {
+		const pages = await exhaustRoutePages(t, { kind: "Lemma", lemmaId });
 		expect(
 			pages
 				.flatMap((page) => page.connections.surfaces)
 				.map(({ surfaceId }) => surfaceId),
-		).toEqual([`surface-${pronType}-der`]);
+		).toEqual([surfaceId]);
 		expect(
 			pages
 				.flatMap((page) => page.connections.readings)
 				.map(({ readingId }) => readingId),
-		).toEqual([`reading-${pronType}-der`]);
+		).toEqual([readingId]);
 	}
 });
 
-async function exhaustRoutePages(db: RouteDb, target: NoteTarget) {
-	const pages: CollectedRoutePage[] = [];
+async function exhaustRoutePages(
+	t: TestConvexDb,
+	target: Extract<RouteNoteTarget, { kind: "Lemma" }>,
+) {
+	const pages: Extract<RouteNote, { kind: "Lemma" }>[] = [];
 	let cursor: string | undefined;
 	for (let pageNumber = 0; pageNumber < 30; pageNumber += 1) {
-		const page = (await routeNote(
-			{ db },
-			{ target, ...(cursor ? { contextCursor: cursor } : {}) },
-		)) as {
-			connections: {
-				occurrences?: { attestationId: string }[];
-				surfaces?: { surfaceId: string }[];
-				readings?: { readingId: string }[];
-				sameWrittenForm?: { lemmaId?: string; surfaceId?: string }[];
-				continueCursor: string;
-				isDone: boolean;
-			};
-		};
-		if (!page) throw new Error("Expected a Route Note page.");
-		pages.push({
-			connections: {
-				occurrences: page.connections.occurrences ?? [],
-				surfaces: page.connections.surfaces ?? [],
-				readings: page.connections.readings ?? [],
-				sameWrittenForm: page.connections.sameWrittenForm ?? [],
-				continueCursor: page.connections.continueCursor,
-				isDone: page.connections.isDone,
-			},
-		});
+		const page = noteOfKind(
+			await routeNote(t, {
+				...target,
+				...(cursor ? { contextCursor: cursor } : {}),
+			}),
+			"Lemma",
+		);
+		pages.push(page);
 		if (page.connections.isDone) return pages;
 		cursor = page.connections.continueCursor;
 	}
 	throw new Error("Route Note pagination did not terminate.");
 }
 
-type CollectedRoutePage = {
-	connections: {
-		occurrences: { attestationId: string }[];
-		surfaces: { surfaceId: string }[];
-		readings: { readingId: string }[];
-		sameWrittenForm: { lemmaId?: string; surfaceId?: string }[];
-		continueCursor: string;
-		isDone: boolean;
-	};
-};
-
-function lemma(
-	_id: string,
-	language: "de" | "he",
-	canonicalForm: string,
-	family: string,
-	kind: string,
-) {
-	return {
-		unitKind: "Lemma",
-		_id,
-		lemmaKey: `${_id}-key`,
-		language,
-		canonicalForm,
-		family,
-		kind,
-		coreFeatures: lemmaCoreFeatures(_id, canonicalForm, kind),
-	};
-}
-
-function surface(
-	_id: string,
-	lemmaId: string,
-	language: "de" | "he",
-	normalizedSurface: string,
-) {
-	return {
-		_id,
-		surfaceKey: `${_id}-key`,
-		lemmaId,
-		language,
-		normalizedSurface,
-		spelling: "Canonical",
-
-		surfaceFeatures: null,
-		inflectionalFeatures: null,
-	};
-}
-
-function lemmaCoreFeatures(_id: string, canonicalForm: string, kind: string) {
+function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 	if (kind === "NOUN") return { gender: null, hyph: null };
 	if (kind === "VERB") {
 		return {
@@ -578,19 +481,16 @@ function lemmaCoreFeatures(_id: string, canonicalForm: string, kind: string) {
 		};
 	}
 	if (kind !== "PRON") return {};
-	const pronType = _id.includes("rel-")
-		? "Rel"
-		: _id.includes("dem-")
-			? "Dem"
-			: ["niemand", "nichts", "keiner"].includes(canonicalForm)
+	return {
+		pronType:
+			pronType ??
+			(["niemand", "nichts", "keiner"].includes(canonicalForm)
 				? "Neg"
 				: ["alles", "alle", "jeder", "jedweder", "jeglicher"].includes(
 							canonicalForm,
 						)
 					? "Tot"
-					: "Ind";
-	return {
-		pronType,
+					: "Ind"),
 		extPos: null,
 		foreign: null,
 		person: null,
@@ -604,14 +504,8 @@ function lemmaCoreFeatures(_id: string, canonicalForm: string, kind: string) {
 	};
 }
 
-function nestedValue(row: Row, path: string): unknown {
-	return path.split(".").reduce<unknown>((value, key) => {
-		if (!value || typeof value !== "object") return undefined;
-		return (value as Record<string, unknown>)[key];
-	}, row);
-}
-
 test("noun Surface article opens the exact DET analysis, including feminine der", async () => {
+	const t = createTestConvex();
 	const reference = nounArticleReference({
 		article: "Definite",
 		case: "Dat",
@@ -619,48 +513,49 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 		gender: "Fem",
 		spelled: "der",
 	});
-	const noun = {
-		_id: "lemma-frau",
-		language: "de",
-		family: "Lexeme",
-		kind: "NOUN",
-		canonicalForm: "Frau",
-		coreFeatures: { gender: "Fem", hyph: null },
-	};
-	const db = new RouteDb({
-		lemmas: [noun, { ...reference.reading.lemma, _id: "lemma-die" }],
-		surfaces: [
-			{
-				_id: "surface-noun",
-				language: "de",
-				lemmaId: noun._id,
-				normalizedSurface: "der Frau",
-				spelling: "Canonical",
-				surfaceFeatures: null,
-				inflectionalFeatures: {
-					article: "Definite",
-					case: "Dat",
-					number: "Sing",
-				},
+	const { unitKind: _lemmaUnit, ...articleLemma } = reference.reading.lemma;
+	const articleSurfaceId = await t.run(async (ctx) => {
+		const nounId = await ctx.db.insert("lemmas", {
+			lemmaKey: "lemma-frau",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Frau",
+			coreFeatures: { gender: "Fem", hyph: null },
+		});
+		const articleLemmaId = await ctx.db.insert("lemmas", {
+			...articleLemma,
+			lemmaKey: "lemma-die",
+		});
+		await ctx.db.insert("surfaces", {
+			surfaceKey: "surface-der-frau",
+			language: "de",
+			lemmaId: nounId,
+			normalizedSurface: "der Frau",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				article: "Definite",
+				case: "Dat",
+				number: "Sing",
 			},
-			{
-				...reference.surface,
-				_id: "surface-det",
-				lemmaId: "lemma-die",
-				surfaceKey: makeSurfaceId("de", reference.surface),
-			},
-		],
+		});
+		return ctx.db.insert("surfaces", {
+			surfaceKey: makeSurfaceId("de", reference.surface),
+			language: reference.surface.language,
+			lemmaId: articleLemmaId,
+			normalizedSurface: reference.surface.normalizedSurface,
+			spelling: reference.surface.spelling,
+			surfaceFeatures: reference.surface.surfaceFeatures,
+			inflectionalFeatures: reference.surface.inflectionalFeatures,
+		});
 	});
-	const note = await routeNote(
-		{ db },
-		{
-			target: {
-				kind: "Surface",
-				language: "de",
-				normalizedSurface: "der Frau",
-			},
-		},
-	);
+
+	const note = await routeNote(t, {
+		kind: "Surface",
+		language: "de",
+		normalizedSurface: "der Frau",
+	});
 	expect(note).toMatchObject({
 		analyses: [
 			{
@@ -670,7 +565,9 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 						language: "de",
 						normalizedSurface: "der",
 					},
-					presentationContext: { activeAnalysisKey: "surface-det" },
+					presentationContext: {
+						activeAnalysisKey: articleSurfaceId,
+					},
 					presented: {
 						lemma: { canonicalForm: "die" },
 						inflectionalFeatures: { gender: "Fem", case: "Dat" },
@@ -682,66 +579,49 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 });
 
 test("sentence gender belongs to the visitor's encountered occurrence, including its article", async () => {
-	const sentence = {
-		_id: "sentence-1",
-		position: 0,
-		language: "de",
-		stitchedText: "der Frau",
-		textId: "text-1",
-	};
-	const db = new RouteDb({
-		segments: [
-			{
-				_id: "segment-article",
-				sentenceId: sentence._id,
-				index: 0,
-				kind: "ResolvableText",
-				text: "der",
-				attestationMembership: { attestationId: "attestation-1" },
-			},
-			{
-				_id: "segment-space",
-				sentenceId: sentence._id,
-				index: 1,
-				kind: "Whitespace",
-				text: " ",
-			},
-			{
-				_id: "segment-noun",
-				sentenceId: sentence._id,
-				index: 2,
-				kind: "ResolvableText",
-				text: "Frau",
-				attestationMembership: { attestationId: "attestation-1" },
-			},
-		],
-		visitorClicks: [
-			{
-				_id: "click-1",
-				visitorId: "alice",
-				segmentId: "segment-article",
-			},
-		],
-		attestations: [{ _id: "attestation-1", readingId: "reading-1" }],
-		readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
-		lemmas: [
-			{
-				_id: "lemma-1",
-				family: "Lexeme",
-				kind: "NOUN",
-				coreFeatures: { gender: "Fem" },
-			},
-		],
-	});
-	const project = projectSentenceView as unknown as (
-		ctx: unknown,
-		sentence: unknown,
-		visitor: string,
-	) => Promise<{
-		segments: { text: string; gender?: string; encountered: boolean }[];
-	}>;
-	const alice = await project({ db }, sentence, "alice");
-	const bob = await project({ db }, sentence, "bob");
+	const t = createTestConvex();
+	const { sentenceIds, segmentIds } = await submitText(t, [
+		["der", " ", "Frau"],
+	]);
+	const [sentenceId] = sentenceIds;
+	const [segments] = segmentIds;
+	const article = segments?.[0];
+	if (!sentenceId || !article) throw new Error("Expected a stored Sentence.");
+	const lemmaId = await t.run((ctx) =>
+		ctx.db.insert("lemmas", {
+			lemmaKey: "lemma-frau",
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Frau",
+			coreFeatures: { gender: "Fem", hyph: null },
+		}),
+	);
+	await attest(
+		t,
+		{
+			readingId: await insertReading(t, lemmaId, "👩"),
+			surfaceId: await insertSurface(t, lemmaId, "der Frau"),
+		},
+		[article, segments?.[2]],
+	);
+	await t.run((ctx) =>
+		ctx.db.insert("visitorClicks", {
+			requestId: "click-1",
+			visitorId: "alice",
+			segmentId: article,
+			clickedAt: 1,
+		}),
+	);
+	const project = (visitorId: string) =>
+		t.run(async (ctx) => {
+			const sentence = await ctx.db.get(sentenceId);
+			if (!sentence) throw new Error("Expected a stored Sentence.");
+			return projectSentenceView(ctx, sentence, visitorId);
+		});
+
+	const alice = await project("alice");
+	const bob = await project("bob");
 	expect(alice.segments.filter(({ gender }) => gender)).toEqual([
 		expect.objectContaining({
 			text: "der",

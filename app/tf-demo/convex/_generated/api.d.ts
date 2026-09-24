@@ -42,7 +42,6 @@ import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_resolutionLookup from "../model/resolutionLookup.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
-import type * as model_segmentResolutionState from "../model/segmentResolutionState.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_textAnalysisStripping from "../model/textAnalysisStripping.js";
 import type * as model_validators from "../model/validators.js";
@@ -117,7 +116,6 @@ declare const fullApi: ApiFromModules<{
   "model/readingKnowledge": typeof model_readingKnowledge;
   "model/resolutionLookup": typeof model_resolutionLookup;
   "model/resolutionSessions": typeof model_resolutionSessions;
-  "model/segmentResolutionState": typeof model_segmentResolutionState;
   "model/shadows": typeof model_shadows;
   "model/textAnalysisStripping": typeof model_textAnalysisStripping;
   "model/validators": typeof model_validators;
