@@ -223,12 +223,8 @@ export async function loadResolutionNote(
 	const outcome =
 		lifecycle.state === "Terminal" ? lifecycle.outcome : undefined;
 	const canonical =
-		outcome === "Complete" && session.readingId && session.attestationId
-			? await loadCanonicalResolution(
-					ctx,
-					session.readingId,
-					session.attestationId,
-				)
+		outcome === "Complete" && session.attestationId
+			? await loadCanonicalOccurrence(ctx, session.attestationId)
 			: null;
 	return {
 		kind: "ResolutionNote",
@@ -245,15 +241,11 @@ export async function loadResolutionNote(
 						kind: "Complete" as const,
 						attestationId: session.attestationId,
 						...(canonical ? { canonical } : {}),
-						target: session.routeNoteRequested
-							? {
-									kind: "Attestation" as const,
-									attestationId: session.attestationId,
-								}
-							: {
-									kind: "Reading" as const,
-									readingId: session.readingId,
-								},
+						target: occurrenceNoteTarget(
+							Boolean(session.routeNoteRequested),
+							session.readingId,
+							session.attestationId,
+						),
 					},
 				}
 			: outcome === "Unresolved"
@@ -275,31 +267,47 @@ export async function loadResolutionNote(
 	};
 }
 
-async function loadCanonicalResolution(
+/**
+ * The canonical Reading, Lemma and Surface a committed occurrence opens, or
+ * null when its rows are missing or disagree. Segment Selection's fast path
+ * and the Resolution Note both read it.
+ */
+export async function loadCanonicalOccurrence(
 	ctx: QueryCtx,
-	readingId: Id<"readings">,
 	attestationId: Id<"attestations">,
 ) {
-	const [reading, attestation] = await Promise.all([
-		ctx.db.get(readingId),
-		ctx.db.get(attestationId),
+	const attestation = await ctx.db.get(attestationId);
+	if (!attestation) return null;
+	const [reading, surface] = await Promise.all([
+		ctx.db.get(attestation.readingId),
+		ctx.db.get(attestation.surfaceId),
 	]);
-	if (!reading || !attestation) return null;
-	const surface = await ctx.db.get(attestation.surfaceId);
 	if (
+		!reading ||
 		!surface ||
 		surface.lemmaId !== reading.lemmaId ||
 		surface.language !== "de"
 	)
 		return null;
 	return {
-		readingId,
+		readingId: reading._id,
 		lemmaId: reading.lemmaId,
 		surfaceId: surface._id,
 		surfaceLanguage: surface.language,
 		normalizedSurface: surface.normalizedSurface,
 		attestationId,
 	};
+}
+
+/** The Note a committed occurrence opens: its Attestation when a route Note was requested. */
+export function occurrenceNoteTarget(
+	routeNoteRequested: boolean,
+	readingId: Id<"readings">,
+	attestationId: Id<"attestations">,
+) {
+	return routeNoteRequested
+		? { kind: "Attestation" as const, attestationId }
+		: { kind: "Reading" as const, readingId };
 }
 
 async function findSession(ctx: QueryCtx, requestId: string) {

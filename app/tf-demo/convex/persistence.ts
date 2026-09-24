@@ -9,11 +9,7 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import type { Id } from "./_generated/dataModel";
-import {
-	internalMutation,
-	type MutationCtx,
-	type QueryCtx,
-} from "./_generated/server";
+import { internalMutation, type MutationCtx } from "./_generated/server";
 import {
 	createDumdictTransaction,
 	type DumdictTransactionOutcome,
@@ -28,6 +24,7 @@ import {
 import {
 	type CommittedOccurrence,
 	completeResolutionSession,
+	type ResolutionSessionGuard,
 	requireCommittingSession,
 	settleResolutionSession,
 } from "./model/resolutionSessions";
@@ -45,14 +42,48 @@ import {
 import { ensureVisitorEncounter } from "./model/visitorClicks";
 import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
 
-async function findClickByRequestId(
-	ctx: MutationCtx | QueryCtx,
-	requestId: string,
+/** What every Occurrence commit names: the click and the session committing it. */
+const occurrenceCommitArgs = {
+	requestId: v.string(),
+	visitorId: v.string(),
+	sentenceId: v.id("sentences"),
+	clickedSegmentIndex: v.number(),
+	sessionGuard: resolutionSessionGuardValidator,
+};
+
+/**
+ * The rules every Occurrence commit starts with: the session must still be
+ * committing, the clicked Segment must be clickable, and a requestId already
+ * recorded must be this Visitor's retry on the same Segment.
+ */
+async function openOccurrenceCommit(
+	ctx: MutationCtx,
+	args: {
+		readonly requestId: string;
+		readonly visitorId: string;
+		readonly sentenceId: Id<"sentences">;
+		readonly clickedSegmentIndex: number;
+		readonly sessionGuard: ResolutionSessionGuard;
+	},
 ) {
-	return ctx.db
-		.query("visitorClicks")
-		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
-		.unique();
+	assertVisitorInput(args.visitorId, args.requestId);
+	const [session, { sentence, segment }, existing] = await Promise.all([
+		requireCommittingSession(ctx, args.sessionGuard, args),
+		requireClickableSegment(ctx, args.sentenceId, args.clickedSegmentIndex),
+		ctx.db
+			.query("visitorClicks")
+			.withIndex("by_request_id", (q) =>
+				q.eq("requestId", args.requestId),
+			)
+			.unique(),
+	]);
+	if (existing) {
+		assertMatchingRetry(existing, {
+			visitorId: args.visitorId,
+			segmentId: segment._id,
+		});
+	}
+	return { session, sentence, segment, existing };
 }
 
 /** The commit result for a Segment another occurrence already owns. */
@@ -123,31 +154,11 @@ export const persistSubmittedText = internalMutation({
 });
 
 export const persistUnresolvedClick = internalMutation({
-	args: {
-		requestId: v.string(),
-		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-		sessionGuard: resolutionSessionGuardValidator,
-	},
+	args: occurrenceCommitArgs,
 	returns: unresolvedClickPersistenceResultValidator,
 	handler: async (ctx, args) => {
-		assertVisitorInput(args.visitorId, args.requestId);
-		const [session, { sentence, segment }, existing] = await Promise.all([
-			requireCommittingSession(ctx, args.sessionGuard, args),
-			requireClickableSegment(
-				ctx,
-				args.sentenceId,
-				args.clickedSegmentIndex,
-			),
-			findClickByRequestId(ctx, args.requestId),
-		]);
-		if (existing) {
-			assertMatchingRetry(existing, {
-				visitorId: args.visitorId,
-				segmentId: segment._id,
-			});
-		}
+		const { session, sentence, segment, existing } =
+			await openOccurrenceCommit(ctx, args);
 		// Segment Selection recorded the Visitor Encounter under this
 		// requestId, so finding it is not yet a retry.
 		const clickId = existing
@@ -175,26 +186,12 @@ export const persistUnresolvedClick = internalMutation({
 });
 
 export const persistReusedResolvedClick = internalMutation({
-	args: {
-		requestId: v.string(),
-		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-		attestationId: v.id("attestations"),
-		sessionGuard: resolutionSessionGuardValidator,
-	},
+	args: { ...occurrenceCommitArgs, attestationId: v.id("attestations") },
 	returns: reusedResolvedClickCommitValidator,
 	handler: async (ctx, args) => {
-		assertVisitorInput(args.visitorId, args.requestId);
-		const session = await requireCommittingSession(
+		const { session, segment, existing } = await openOccurrenceCommit(
 			ctx,
-			args.sessionGuard,
 			args,
-		);
-		const { segment } = await requireClickableSegment(
-			ctx,
-			args.sentenceId,
-			args.clickedSegmentIndex,
 		);
 		if (
 			segment.attestationMembership?.attestationId !== args.attestationId
@@ -203,70 +200,37 @@ export const persistReusedResolvedClick = internalMutation({
 				"Clicked Segment is not a member of the Attestation.",
 			);
 		}
-		const existing = await findClickByRequestId(ctx, args.requestId);
-		if (existing) {
-			assertMatchingRetry(existing, {
-				visitorId: args.visitorId,
-				segmentId: segment._id,
-			});
-			if (
-				existing.attestationId &&
-				existing.attestationId !== args.attestationId
-			) {
-				throw new Error(
-					"requestId already records a different result.",
-				);
-			}
+		if (
+			existing?.attestationId &&
+			existing.attestationId !== args.attestationId
+		) {
+			throw new Error("requestId already records a different result.");
 		}
-		const committed = await completeResolutionSession(
-			ctx,
-			session,
-			args.attestationId,
+		const { occurrence: _occurrence, ...commit } = reusedCommit(
+			await completeResolutionSession(ctx, session, args.attestationId),
+			existing,
 		);
-		return {
-			status: "Reused" as const,
-			clickId: committed.clickId,
-			readingId: committed.readingId,
-			attestationId: committed.attestationId,
-			deduplicated: existing?.attestationId === args.attestationId,
-		};
+		return commit;
 	},
 });
 
 export const persistResolvedClick = internalMutation({
 	args: {
+		...occurrenceCommitArgs,
 		knowledgeDraftJson: v.optional(v.string()),
-		requestId: v.string(),
-		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
 		occurrence: occurrenceAttestationInputValidator,
 		reading: readingValueValidator,
 		readingKey: v.string(),
 		readingDecision: readingDecisionValidator,
-		sessionGuard: resolutionSessionGuardValidator,
 	},
 	returns: resolvedClickCommitValidator,
 	handler: async (ctx, args) => {
-		assertVisitorInput(args.visitorId, args.requestId);
-		const session = await requireCommittingSession(
-			ctx,
-			args.sessionGuard,
-			args,
-		);
 		assertNonEmpty(args.readingKey, "readingKey");
-		const { segment: clickedSegment } = await requireClickableSegment(
-			ctx,
-			args.sentenceId,
-			args.clickedSegmentIndex,
-		);
-		const existingClick = await findClickByRequestId(ctx, args.requestId);
-		if (existingClick) {
-			assertMatchingRetry(existingClick, {
-				visitorId: args.visitorId,
-				segmentId: clickedSegment._id,
-			});
-		}
+		const {
+			session,
+			segment: clickedSegment,
+			existing: existingClick,
+		} = await openOccurrenceCommit(ctx, args);
 		// Segment Selection recorded the Visitor Encounter before the run, so
 		// an unresolved one is this session's own. A committed occurrence on
 		// the clicked Segment wins over this proposal (ADR-0004).

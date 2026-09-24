@@ -2,12 +2,15 @@ import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import { inspectionJson } from "./model/inspection";
+import { requireClickableSegment } from "./model/resolutionLookup";
 import {
 	advanceResolutionSession,
 	claimResolutionRun,
 	deleteResolutionSessions,
 	failResolutionRun,
+	loadCanonicalOccurrence,
 	loadResolutionNote,
+	occurrenceNoteTarget,
 	recordResolutionRunSuccess,
 	recoverStaleResolutionRun,
 	resolutionNoteValidator,
@@ -89,23 +92,11 @@ export const selectSegment = mutation({
 		const select = async () => {
 			assertIdentifier(args.requestId, "requestId");
 			assertIdentifier(args.visitorId, "visitorId");
-			assertSegmentIndex(args.clickedSegmentIndex);
-
-			const sentence = await ctx.db.get(args.sentenceId);
-			if (!sentence) throw new Error("Sentence does not exist.");
-			const segment = await ctx.db
-				.query("segments")
-				.withIndex("by_sentence_id_and_index", (q) =>
-					q
-						.eq("sentenceId", args.sentenceId)
-						.eq("index", args.clickedSegmentIndex),
-				)
-				.unique();
-			if (segment?.kind !== "ResolvableText") {
-				throw new Error(
-					"Only a ResolvableText Segment can be clicked.",
-				);
-			}
+			const { sentence, segment } = await requireClickableSegment(
+				ctx,
+				args.sentenceId,
+				args.clickedSegmentIndex,
+			);
 
 			const existing = await ctx.db
 				.query("resolutionSessions")
@@ -154,22 +145,14 @@ export const selectSegment = mutation({
 
 			const attestationId = segment.attestationMembership?.attestationId;
 			if (attestationId) {
-				const attestation = await ctx.db.get(attestationId);
-				if (!attestation)
-					throw new Error("Attestation does not exist.");
-				const reading = await ctx.db.get(attestation.readingId);
-				if (!reading) throw new Error("Reading does not exist.");
-				const surface = await ctx.db.get(attestation.surfaceId);
-				if (surface?.language !== "de") {
+				const canonical = await loadCanonicalOccurrence(
+					ctx,
+					attestationId,
+				);
+				if (!canonical)
 					throw new Error(
-						"Surface does not exist or is unsupported.",
+						"The committed occurrence's Reading and Surface disagree.",
 					);
-				}
-				if (surface.lemmaId !== reading.lemmaId) {
-					throw new Error(
-						"Surface and Reading must share one Lemma.",
-					);
-				}
 				await ensureVisitorEncounter(ctx, {
 					requestId: args.requestId,
 					visitorId: args.visitorId,
@@ -181,28 +164,17 @@ export const selectSegment = mutation({
 				await scheduleKnowledgeGeneration(ctx, {
 					attemptKey: args.requestId,
 					visitorId: args.visitorId,
-					readingId: reading._id,
+					readingId: canonical.readingId,
 					attestationId,
 				});
 				return {
 					kind: "Available" as const,
-					canonical: {
-						readingId: reading._id,
-						lemmaId: reading.lemmaId,
-						surfaceId: surface._id,
-						surfaceLanguage: surface.language,
-						normalizedSurface: surface.normalizedSurface,
+					canonical,
+					target: occurrenceNoteTarget(
+						args.routeNoteRequested,
+						canonical.readingId,
 						attestationId,
-					},
-					target: args.routeNoteRequested
-						? {
-								kind: "Attestation" as const,
-								attestationId,
-							}
-						: {
-								kind: "Reading" as const,
-								readingId: reading._id,
-							},
+					),
 				};
 			}
 
@@ -483,14 +455,6 @@ export const cleanup = internalMutation({
 function assertIdentifier(value: string, name: string): void {
 	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
 		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
-}
-
-function assertSegmentIndex(value: number): void {
-	if (!Number.isSafeInteger(value) || value < 0) {
-		throw new Error(
-			"clickedSegmentIndex must be a non-negative safe integer.",
-		);
 	}
 }
 
