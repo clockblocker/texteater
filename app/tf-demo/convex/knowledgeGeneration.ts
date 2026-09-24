@@ -18,6 +18,7 @@ import {
 	failKnowledgeRun,
 	findKnowledgeAttempt,
 	ownsKnowledgeRun,
+	promoteNextWaiting,
 	recordKnowledgePublication,
 	recoverStaleKnowledgeRun,
 } from "./model/knowledgeAttempts";
@@ -248,6 +249,16 @@ export const recoverStaleRun = internalMutation({
 	args: { attemptKey: v.string(), runNumber: v.number() },
 	returns: v.boolean(),
 	handler: (ctx, args) => recoverStaleKnowledgeRun(ctx, args),
+});
+
+/** Starts a Reading's next Waiting demand when its cooldown ends. */
+export const promoteWaiting = internalMutation({
+	args: { ownerReadingKey: v.string() },
+	returns: v.null(),
+	handler: async (ctx, { ownerReadingKey }) => {
+		await promoteNextWaiting(ctx, ownerReadingKey);
+		return null;
+	},
 });
 
 const BASE_TEXT_ASPECTS = new Set([

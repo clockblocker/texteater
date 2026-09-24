@@ -319,7 +319,11 @@ export default defineSchema({
 			"ownerReadingKey",
 			"updatedAt",
 		])
-		.index("by_owner_reading_key_and_state", ["ownerReadingKey", "state"]),
+		.index("by_owner_reading_key_and_state_and_updated_at", [
+			"ownerReadingKey",
+			"state",
+			"updatedAt",
+		]),
 
 	relationPublicationControls: defineTable({
 		key: v.literal("global"),

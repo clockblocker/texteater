@@ -1010,23 +1010,29 @@ test("a second Knowledge demand for the same Reading waits for the active attemp
 });
 
 test("settling an active Knowledge attempt schedules the next waiting demand", async () => {
-	const t = createTestConvex();
-	const occurrence = await seedOccurrence(t);
-	await insertAttempt(t, occurrence, "resolution-request");
-	await insertAttempt(t, occurrence, "coverage-request", {
-		state: "Waiting",
-		createdAt: 2,
-	});
+	const settle = async (failureCode: string) => {
+		const t = createTestConvex();
+		const occurrence = await seedOccurrence(t);
+		await insertAttempt(t, occurrence, "resolution-request");
+		await insertAttempt(t, occurrence, "coverage-request", {
+			state: "Waiting",
+			createdAt: 2,
+		});
+		await t.mutation(internal.knowledgeGeneration.fail, {
+			attemptKey: "resolution-request",
+			runNumber: 1,
+			failureCode,
+			failureMessage: "failed",
+		});
+		return t;
+	};
 
-	await t.mutation(internal.knowledgeGeneration.fail, {
-		attemptKey: "resolution-request",
-		runNumber: 1,
-		failureCode: "generationFailed",
-		failureMessage: "failed",
-	});
-
-	expect(await scheduledAttempts(t)).toEqual(queued("coverage-request"));
-	expect(await attempts(t)).toEqual([
+	// An interrupted run never reached the model, so the next demand starts.
+	const interrupted = await settle("interrupted");
+	expect(await scheduledAttempts(interrupted)).toEqual(
+		queued("coverage-request"),
+	);
+	expect(await attempts(interrupted)).toEqual([
 		expect.objectContaining({
 			attemptKey: "resolution-request",
 			state: "Failed",
@@ -1036,6 +1042,59 @@ test("settling an active Knowledge attempt schedules the next waiting demand", a
 			state: "Scheduled",
 		}),
 	]);
+
+	// Any other failure holds the next demand until the cooldown ends.
+	const failed = await settle("generationFailed");
+	expect(await scheduledAttempts(failed)).toEqual([]);
+	expect((await attempts(failed))[1]).toMatchObject({ state: "Waiting" });
+	const promotions = (
+		await failed.run((ctx) =>
+			ctx.db.system.query("_scheduled_functions").collect(),
+		)
+	).filter(({ name }) => name === "knowledgeGeneration:promoteWaiting");
+	expect(promotions).toEqual([
+		expect.objectContaining({
+			args: [{ ownerReadingKey: BANK_READING_KEY }],
+			scheduledTime: Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS,
+		}),
+	]);
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	await failed.mutation(internal.knowledgeGeneration.promoteWaiting, {
+		ownerReadingKey: BANK_READING_KEY,
+	});
+	expect(await scheduledAttempts(failed)).toEqual(queued("coverage-request"));
+	expect((await attempts(failed))[1]).toMatchObject({ state: "Scheduled" });
+});
+
+test("a Reading cooling down after a failure starts no run for a demand under any attemptKey", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t);
+	await insertAttempt(t, occurrence, "first-click", {
+		state: "Failed",
+		failureCode: "generationFailed",
+		failureMessage: "Knowledge generation failed. Please retry.",
+		createdAt: Date.now(),
+	});
+	const demand = (attemptKey: string) =>
+		schedule(t, {
+			attemptKey,
+			visitorId: "visitor-2",
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+		});
+
+	// A new click and a changed language set each bring a fresh key.
+	await demand("second-click");
+	await demand("coverage:click:en,ru");
+	expect(await scheduledAttempts(t)).toEqual([]);
+	expect((await attempts(t)).map(({ attemptKey }) => attemptKey)).toEqual([
+		"first-click",
+	]);
+
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
+	await demand("third-click");
+	expect(await scheduledAttempts(t)).toEqual(queued("third-click"));
 });
 
 test("a late action cannot end the run that replaced it", async () => {
@@ -1349,6 +1408,7 @@ test("a top-up that partly fails keeps a Full Reading Full for the next top-up",
 		failureCode: "partialKnowledge",
 	});
 
+	jest.setSystemTime(Date.now() + KNOWLEDGE_RETRY_COOLDOWN_MS);
 	await schedule(t, {
 		attemptKey: "next-demand",
 		visitorId: "visitor-1",
