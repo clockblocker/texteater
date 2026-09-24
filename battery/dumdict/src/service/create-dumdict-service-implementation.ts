@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -26,102 +25,104 @@ export function createDumdictServiceImplementation<L extends Dumling.Language>(
 ): DumdictService<L> {
 	return {
 		findStoredReadings: (request) =>
-			traceStage(
-				"dumdict.findStoredReadings",
-				Effect.suspend(() => findStoredReadings(options, request)),
-				request,
+			Effect.suspend(() => findStoredReadings(options, request)).pipe(
+				Effect.withSpan("dumdict.findStoredReadings", {
+					attributes: { request },
+				}),
 			),
 		prepare: {
 			addAttestation: (request) =>
-				traceStage(
-					"dumdict.addAttestation",
-					Effect.suspend(() =>
-						prepareAddAttestation(options, request),
-					),
-					request,
+				Effect.suspend(() =>
+					prepareAddAttestation(options, request),
+				).pipe(
+					Effect.withSpan("dumdict.addAttestation", {
+						attributes: { request },
+					}),
 				),
 			addNewNote: (request) =>
-				traceStage(
-					"dumdict.addNewNote",
-					Effect.suspend(() => prepareAddNewNote(options, request)),
-					request,
+				Effect.suspend(() => prepareAddNewNote(options, request)).pipe(
+					Effect.withSpan("dumdict.addNewNote", {
+						attributes: { request },
+					}),
 				),
 			applyGeneratedKnowledge: (request) =>
-				traceStage(
-					"dumdict.applyGeneratedKnowledge",
-					Effect.suspend(() =>
-						prepareApplyGeneratedKnowledge(options, request),
-					),
-					request,
+				Effect.suspend(() =>
+					prepareApplyGeneratedKnowledge(options, request),
+				).pipe(
+					Effect.withSpan("dumdict.applyGeneratedKnowledge", {
+						attributes: { request },
+					}),
 				),
 			ensureOwnedSurface: (request) =>
-				traceStage(
-					"dumdict.ensureOwnedSurface",
-					Effect.suspend(() =>
-						prepareEnsureOwnedSurface(options, request),
-					),
-					request,
+				Effect.suspend(() =>
+					prepareEnsureOwnedSurface(options, request),
+				).pipe(
+					Effect.withSpan("dumdict.ensureOwnedSurface", {
+						attributes: { request },
+					}),
 				),
 			ensureReadingEntry: (request) =>
-				traceStage(
-					"dumdict.ensureReadingEntry",
-					Effect.suspend(() =>
-						prepareEnsureReadingEntry(options, request),
-					),
-					request,
+				Effect.suspend(() =>
+					prepareEnsureReadingEntry(options, request),
+				).pipe(
+					Effect.withSpan("dumdict.ensureReadingEntry", {
+						attributes: { request },
+					}),
 				),
 			cleanupRelations: (request) =>
-				traceStage(
-					"dumdict.cleanupRelations",
-					Effect.suspend(() =>
-						prepareCleanupRelations(options, request),
-					),
-					request,
+				Effect.suspend(() =>
+					prepareCleanupRelations(options, request),
+				).pipe(
+					Effect.withSpan("dumdict.cleanupRelations", {
+						attributes: { request },
+					}),
 				),
 		},
 		addAttestation: (request) =>
-			traceStage(
-				"dumdict.addAttestation",
-				Effect.suspend(() => addAttestation(options, request)),
-				request,
+			Effect.suspend(() => addAttestation(options, request)).pipe(
+				Effect.withSpan("dumdict.addAttestation", {
+					attributes: { request },
+				}),
 			),
 		addNewNote: (request) =>
-			traceStage(
-				"dumdict.addNewNote",
-				Effect.suspend(() => addNewNote(options, request)),
-				request,
+			Effect.suspend(() => addNewNote(options, request)).pipe(
+				Effect.withSpan("dumdict.addNewNote", {
+					attributes: { request },
+				}),
 			),
 		applyGeneratedKnowledge: (request) =>
-			traceStage(
-				"dumdict.applyGeneratedKnowledge",
-				Effect.suspend(() => applyGeneratedKnowledge(options, request)),
-				request,
+			Effect.suspend(() =>
+				applyGeneratedKnowledge(options, request),
+			).pipe(
+				Effect.withSpan("dumdict.applyGeneratedKnowledge", {
+					attributes: { request },
+				}),
 			),
 		ensureOwnedSurface: (request) =>
-			traceStage(
-				"dumdict.ensureOwnedSurface",
-				Effect.suspend(() => ensureOwnedSurface(options, request)),
-				request,
+			Effect.suspend(() => ensureOwnedSurface(options, request)).pipe(
+				Effect.withSpan("dumdict.ensureOwnedSurface", {
+					attributes: { request },
+				}),
 			),
 		ensureReadingEntry: (request) =>
-			traceStage(
-				"dumdict.ensureReadingEntry",
-				Effect.suspend(() => ensureReadingEntry(options, request)),
-				request,
+			Effect.suspend(() => ensureReadingEntry(options, request)).pipe(
+				Effect.withSpan("dumdict.ensureReadingEntry", {
+					attributes: { request },
+				}),
 			),
 		getInfoForRelationsCleanup: (request) =>
-			traceStage(
-				"dumdict.getInfoForRelationsCleanup",
-				Effect.suspend(() =>
-					getInfoForRelationsCleanup(options, request),
-				),
-				request,
+			Effect.suspend(() =>
+				getInfoForRelationsCleanup(options, request),
+			).pipe(
+				Effect.withSpan("dumdict.getInfoForRelationsCleanup", {
+					attributes: { request },
+				}),
 			),
 		cleanupRelations: (request) =>
-			traceStage(
-				"dumdict.cleanupRelations",
-				Effect.suspend(() => cleanupRelations(options, request)),
-				request,
+			Effect.suspend(() => cleanupRelations(options, request)).pipe(
+				Effect.withSpan("dumdict.cleanupRelations", {
+					attributes: { request },
+				}),
 			),
 	};
 }

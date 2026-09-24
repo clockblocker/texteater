@@ -24,7 +24,11 @@ import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
 import type { StoredSegment } from "../convex/model/storedSegments";
 import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
-import { createInspectionCapture } from "../server/inspectionCapture";
+import {
+	createInspectionCapture,
+	type InspectionCapture,
+	inspected,
+} from "../server/inspectionCapture";
 import {
 	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
@@ -176,8 +180,9 @@ function setup(
 	candidates: Dumling.Reading<"de">[] = [],
 	hooks: Pick<
 		Parameters<typeof createTfDemoOrchestrator>[0],
-		"draftKnowledge" | "draftGraceMs" | "observer" | "inspection"
+		"draftKnowledge" | "draftGraceMs" | "observer"
 	> & {
+		inspection?: InspectionCapture;
 		execute?: DumgenOptions["execute"];
 		analyzeSentence?: Dumgen["analyzeSentence"];
 		resolveGrammar?: Dumgen["resolveGrammar"];
@@ -299,16 +304,28 @@ function setup(
 			? { resolveGrammar: hooks.resolveGrammar }
 			: {}),
 	};
+	const orchestrator = createTfDemoOrchestrator({
+		draftKnowledge: hooks.draftKnowledge,
+		draftGraceMs: hooks.draftGraceMs,
+		observer: hooks.observer,
+		dumgen,
+		dictionary: createDumdictService({ language: "de", storage }),
+		persistence,
+	});
 	return {
-		orchestrator: createTfDemoOrchestrator({
-			draftKnowledge: hooks.draftKnowledge,
-			draftGraceMs: hooks.draftGraceMs,
-			observer: hooks.observer,
-			inspection: hooks.inspection,
-			dumgen,
-			dictionary: createDumdictService({ language: "de", storage }),
-			persistence,
-		}),
+		// Inspection is a Tracer the action installs around its run.
+		orchestrator: {
+			submitText: (
+				...input: Parameters<typeof orchestrator.submitText>
+			) => inspected(orchestrator.submitText(...input), hooks.inspection),
+			resolveSegment: (
+				...input: Parameters<typeof orchestrator.resolveSegment>
+			) =>
+				inspected(
+					orchestrator.resolveSegment(...input),
+					hooks.inspection,
+				),
+		},
 		storage,
 		requests,
 		judgments,

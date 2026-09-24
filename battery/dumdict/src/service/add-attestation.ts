@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -33,9 +32,9 @@ export function prepareAddAttestation<L extends Dumling.Language>(
 		return Effect.fail(
 			languageFailure(options.language, request.reading.lemma.language),
 		);
-	return traceStage(
-		"dumdict.prepareAddAttestation",
-		options.storage.loadReadingForPatch({ reading: request.reading }).pipe(
+	return options.storage
+		.loadReadingForPatch({ reading: request.reading })
+		.pipe(
 			Effect.flatMap((slice) =>
 				Effect.sync(() => {
 					options.sliceValidation.readingPatch(
@@ -46,9 +45,10 @@ export function prepareAddAttestation<L extends Dumling.Language>(
 				}),
 			),
 			Effect.flatMap((plan) => prepared(options, plan)),
-		),
-		request,
-	);
+			Effect.withSpan("dumdict.prepareAddAttestation", {
+				attributes: { request },
+			}),
+		);
 }
 
 export function addAttestation<L extends Dumling.Language>(

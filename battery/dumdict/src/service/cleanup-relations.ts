@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import { directSemanticRelationValues } from "dumrel";
@@ -36,45 +35,42 @@ export function prepareCleanupRelations<L extends Dumling.Language>(
 			message: "Cleanup resolution is invalid or duplicated.",
 		});
 	}
-	return traceStage(
-		"dumdict.prepareCleanupRelations",
-		Effect.gen(function* () {
-			const slice = yield* options.storage.loadCleanupRelationsContext({
-				resolutions: request.resolutions,
-			});
-			options.sliceValidation.cleanupRelations(slice);
-			if (slice.revision !== request.baseRevision)
-				yield* Effect.fail({
-					_tag: "DumdictRevisionConflict",
-					baseRevision: request.baseRevision,
-					latestRevision: slice.revision,
-					message: "Cleanup workset is stale.",
-				} satisfies DumdictRevisionConflict);
-			const pendingKeys = new Set(
-				slice.pendingRelations.map(({ locator }) =>
-					pendingSemanticRelationLocatorKey(locator),
-				),
-			);
-			if (
-				request.resolutions.some(
-					({ locator }) =>
-						!pendingKeys.has(
-							pendingSemanticRelationLocatorKey(locator),
-						),
-				)
+	return Effect.gen(function* () {
+		const slice = yield* options.storage.loadCleanupRelationsContext({
+			resolutions: request.resolutions,
+		});
+		options.sliceValidation.cleanupRelations(slice);
+		if (slice.revision !== request.baseRevision)
+			yield* Effect.fail({
+				_tag: "DumdictRevisionConflict",
+				baseRevision: request.baseRevision,
+				latestRevision: slice.revision,
+				message: "Cleanup workset is stale.",
+			} satisfies DumdictRevisionConflict);
+		const pendingKeys = new Set(
+			slice.pendingRelations.map(({ locator }) =>
+				pendingSemanticRelationLocatorKey(locator),
+			),
+		);
+		if (
+			request.resolutions.some(
+				({ locator }) =>
+					!pendingKeys.has(
+						pendingSemanticRelationLocatorKey(locator),
+					),
 			)
-				yield* Effect.fail({
-					_tag: "DumdictSemanticPreconditionFailure",
-					baseRevision: request.baseRevision,
-					latestRevision: slice.revision,
-					message: "Cleanup pending relation no longer exists.",
-				} satisfies DumdictSemanticPreconditionFailure);
-			return yield* prepared(
-				options,
-				planCleanupRelations(slice, request),
-			);
+		)
+			yield* Effect.fail({
+				_tag: "DumdictSemanticPreconditionFailure",
+				baseRevision: request.baseRevision,
+				latestRevision: slice.revision,
+				message: "Cleanup pending relation no longer exists.",
+			} satisfies DumdictSemanticPreconditionFailure);
+		return yield* prepared(options, planCleanupRelations(slice, request));
+	}).pipe(
+		Effect.withSpan("dumdict.prepareCleanupRelations", {
+			attributes: { request },
 		}),
-		request,
 	);
 }
 

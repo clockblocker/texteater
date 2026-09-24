@@ -1,7 +1,9 @@
 import * as Cause from "effect/Cause";
 import * as Chunk from "effect/Chunk";
+import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import * as FiberId from "effect/FiberId";
 import * as Option from "effect/Option";
 import type {
 	CallTrace,
@@ -90,6 +92,49 @@ export async function fingerprint(value: unknown): Promise<string> {
 	).join("");
 }
 
+/** Emits a settled call's span from its CallTrace. */
+export type CallSpan = (trace: CallTrace) => void;
+
+/**
+ * A `dumgen.call` span under the calling fiber's span. It is emitted from the
+ * recorded CallTrace, so both share the call ID and timing; like every Dumgen
+ * span it carries no payloads.
+ */
+const callSpan: Effect.Effect<CallSpan> = Effect.map(
+	Effect.all([Effect.tracer, Effect.option(Effect.currentParentSpan)]),
+	([tracer, parent]) =>
+		(trace) => {
+			if (trace.startedAt === undefined) return;
+			const startTime = BigInt(trace.startedAt) * 1_000_000n;
+			const span = tracer.span(
+				"dumgen.call",
+				parent,
+				Context.empty(),
+				[],
+				startTime,
+				"client",
+			);
+			for (const [key, value] of Object.entries({
+				"dumgen.call.id": trace.id,
+				"dumgen.operation.id": trace.operationId,
+				"dumgen.stage": trace.request.stage,
+				"dumgen.route": trace.request.route,
+				"dumgen.executor": trace.executor,
+				"dumgen.transport": trace.transport,
+				"dumgen.validation": trace.validation,
+			}))
+				span.attribute(key, value);
+			span.end(
+				startTime + BigInt(Math.round(trace.durationMs * 1_000_000)),
+				trace.transport === "Interrupted"
+					? Exit.interrupt(FiberId.none)
+					: trace.failure === undefined
+						? Exit.void
+						: Exit.fail(trace.failure),
+			);
+		},
+);
+
 /** One model or judgment request, as its call sends and records it. */
 export type Exchange<Request extends CallTrace["request"], Response, T> = {
 	readonly executor: CallTrace["executor"];
@@ -114,8 +159,9 @@ const messageOf = (error: unknown) =>
  * request that waited records RequestQueued. Interruption while queued
  * starts nothing and records nothing. Interruption in flight aborts the
  * transport's signal and waits until it settles, so every started call
- * records its CallTrace before its operation's trace is emitted. Anything
- * the executor throws is a ProviderFailure.
+ * records its CallTrace, and the `dumgen.call` span built from it, before
+ * its operation's trace is emitted. Anything the executor throws is a
+ * ProviderFailure.
  */
 export function call<Request extends CallTrace["request"], Response, T>(
 	options: DumgenOptions,
@@ -125,6 +171,7 @@ export function call<Request extends CallTrace["request"], Response, T>(
 	const { budget } = scope;
 	return Effect.uninterruptibleMask((restore) =>
 		Effect.gen(function* () {
+			const span = yield* callSpan;
 			// Hashing runs alongside the queue: taking the permit is the call's
 			// first wait, so requests queue in the order they were issued.
 			const hashing = fingerprint(exchange.fingerprinted);
@@ -244,6 +291,7 @@ export function call<Request extends CallTrace["request"], Response, T>(
 			};
 			scope.calls.push(trace);
 			options.onModelExchange?.(trace);
+			span(trace);
 			return yield* result;
 		}),
 	);
@@ -289,8 +337,9 @@ export function failureOf(
 }
 
 /**
- * Each run of the returned Effect gets its own scope. Its OperationTrace is
- * emitted once the run has ended and every call it started has settled.
+ * Each run of the returned Effect gets its own scope and a `dumgen.operation`
+ * span carrying the operation ID. Its OperationTrace is emitted inside that
+ * span, once the run has ended and every call it started has settled.
  */
 export function operation(
 	options: DumgenOptions,
@@ -349,6 +398,12 @@ export function operation(
 						});
 					}),
 				),
+				Effect.withSpan("dumgen.operation", {
+					attributes: {
+						"dumgen.operation.id": scope.id,
+						"dumgen.operation": stage,
+					},
+				}),
 			);
 		});
 }

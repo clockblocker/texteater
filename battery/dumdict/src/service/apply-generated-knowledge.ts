@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { planApplyGeneratedKnowledge } from "../core/plan-mutation";
@@ -29,52 +28,50 @@ export function prepareApplyGeneratedKnowledge<L extends Dumling.Language>(
 			actualLanguage: request.reading.lemma.language,
 			message: "Reading language does not match the dictionary.",
 		} satisfies DumdictInvalidInput);
-	return traceStage(
-		"dumdict.prepareApplyGeneratedKnowledge",
-		Effect.gen(function* () {
-			const changes = yield* Effect.sync(() =>
-				request.changes.map((change) =>
-					unwrapDumdictParse(
-						parseKnowledgeChangeForDumdictRuntime(change),
-					),
+	return Effect.gen(function* () {
+		const changes = yield* Effect.sync(() =>
+			request.changes.map((change) =>
+				unwrapDumdictParse(
+					parseKnowledgeChangeForDumdictRuntime(change),
 				),
-			);
-			const pendingRelations = yield* Effect.sync(
-				() =>
-					request.pendingRelations.map((pending) =>
-						unwrapDumdictParse(
-							parsePendingSemanticRelationForDumdictRuntime(
-								pending,
-							),
-						),
-					) as unknown as ApplyGeneratedKnowledgeRequest<L>["pendingRelations"],
-			);
-			if (
-				pendingRelations.some(
-					(pending) => pending.target.language !== options.language,
-				)
+			),
+		);
+		const pendingRelations = yield* Effect.sync(
+			() =>
+				request.pendingRelations.map((pending) =>
+					unwrapDumdictParse(
+						parsePendingSemanticRelationForDumdictRuntime(pending),
+					),
+				) as unknown as ApplyGeneratedKnowledgeRequest<L>["pendingRelations"],
+		);
+		if (
+			pendingRelations.some(
+				(pending) => pending.target.language !== options.language,
 			)
-				yield* Effect.fail({
-					_tag: "DumdictInvalidInput",
-					expectedLanguage: options.language,
-					message:
-						"Pending Relation target language does not match the dictionary.",
-				} satisfies DumdictInvalidInput);
-			const normalizedRequest = {
-				reading: request.reading,
-				changes,
-				pendingRelations,
-			} as ApplyGeneratedKnowledgeRequest<L>;
-			const slice = yield* loadReadingEntryContext(options, {
-				intent: "applyGeneratedKnowledge",
-				request: normalizedRequest,
-			});
-			return yield* prepared(
-				options,
-				planApplyGeneratedKnowledge(slice, normalizedRequest),
-			);
+		)
+			yield* Effect.fail({
+				_tag: "DumdictInvalidInput",
+				expectedLanguage: options.language,
+				message:
+					"Pending Relation target language does not match the dictionary.",
+			} satisfies DumdictInvalidInput);
+		const normalizedRequest = {
+			reading: request.reading,
+			changes,
+			pendingRelations,
+		} as ApplyGeneratedKnowledgeRequest<L>;
+		const slice = yield* loadReadingEntryContext(options, {
+			intent: "applyGeneratedKnowledge",
+			request: normalizedRequest,
+		});
+		return yield* prepared(
+			options,
+			planApplyGeneratedKnowledge(slice, normalizedRequest),
+		);
+	}).pipe(
+		Effect.withSpan("dumdict.prepareApplyGeneratedKnowledge", {
+			attributes: { request },
 		}),
-		request,
 	);
 }
 

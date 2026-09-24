@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -24,14 +23,13 @@ export function findStoredReadings<L extends Dumling.Language>(
 			actualLanguage: request.lemma.language,
 			message: `Expected dumdict language ${options.language}, got ${request.lemma.language}`,
 		});
-	return traceStage(
-		"dumdict.findStoredReadings",
-		options.storage.findStoredReadings(request).pipe(
-			Effect.map((slice) => {
-				options.sliceValidation.storedReadings(slice, request.lemma);
-				return lookupStoredReadings(slice);
-			}),
-		),
-		request,
+	return options.storage.findStoredReadings(request).pipe(
+		Effect.map((slice) => {
+			options.sliceValidation.storedReadings(slice, request.lemma);
+			return lookupStoredReadings(slice);
+		}),
+		Effect.withSpan("dumdict.findStoredReadings", {
+			attributes: { request },
+		}),
 	);
 }

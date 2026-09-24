@@ -1,5 +1,5 @@
 import type { SentenceAnalysis } from "dumgen/types";
-import type { InspectionCapture } from "../server/inspectionCapture";
+import type { SpanHops } from "../server/inspectionCapture";
 import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {
 	parseGermanLemma,
@@ -35,20 +35,20 @@ function convexId<TableName extends TableNames>(value: string): Id<TableName> {
  * Every lifecycle event maps to at most one mutation hop. Route availability
  * is published when the run is claimed and terminal progress is published by
  * the commit itself, so those two events are free and are neither sent nor
- * traced. When an inspection capture is supplied, each real hop is timed
- * where it is made, under a label derived from the event.
+ * traced. With `spans`, each real hop is a span where it is made, under a
+ * label derived from the event.
  */
 export function createResolutionSessionLifecycle(
 	ctx: ActionCtx,
 	guard: ResolutionSessionGuard,
-	inspection?: InspectionCapture,
+	spans?: SpanHops,
 ): ResolutionSessionLifecyclePort {
 	function hop<T>(
 		name: string,
 		input: unknown,
 		run: () => Promise<T>,
 	): Promise<T> {
-		return inspection ? inspection.promise(name, OWNER, input, run) : run();
+		return spans ? spans.hop(name, OWNER, input, run) : run();
 	}
 	return {
 		begin: () =>
@@ -164,7 +164,7 @@ export function createResolutionSessionLifecycle(
 				);
 			}),
 		record: (record) => {
-			if (record.kind !== "Succeeded") inspection?.markFailed();
+			if (record.kind !== "Succeeded") spans?.markFailed();
 			return hop(`Record ${record.kind}`, record, async () => {
 				switch (record.kind) {
 					case "Succeeded":

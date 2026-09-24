@@ -5,7 +5,12 @@ import { createDumdictService } from "dumdict/runtime";
 import { directSemanticRelationValues } from "dumrel";
 import * as Effect from "effect/Effect";
 import * as Either from "effect/Either";
-import type { InspectionCapture } from "../server/inspectionCapture";
+import {
+	type InspectionCapture,
+	inspected,
+	inspectionStep,
+	spanHops,
+} from "../server/inspectionCapture";
 import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
@@ -91,24 +96,22 @@ export const submitText = action({
 		);
 		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
 		try {
-			const run = () =>
-				Effect.runPromise(
-					orchestratorFor(
-						ctx,
-						null,
-						undefined,
-						inspection,
-					).submitText(args),
-				);
-			const result = inspection
-				? await inspection.promise(
-						"Analyze submitted text",
-						"app/tf-demo · linguisticOrchestration",
-						{ sourceText: args.sourceText },
-						run,
-						true,
-					)
-				: await run();
+			const result = await Effect.runPromise(
+				inspected(
+					orchestratorFor(ctx, null, undefined, inspection)
+						.submitText(args)
+						.pipe(
+							Effect.withSpan("Analyze submitted text", {
+								...inspectionStep(
+									"app/tf-demo · linguisticOrchestration",
+									{ sourceText: args.sourceText },
+								),
+								root: true,
+							}),
+						),
+					inspection,
+				),
+			);
 			state = "Complete";
 			return {
 				status: "Accepted",
@@ -138,43 +141,40 @@ export const runResolutionSession = internalAction({
 			guard.requestId,
 			inspect === true,
 		);
-		const run = () =>
-			Effect.runPromise(
-				executeResolutionSession({
-					identity: guard,
-					lifecycle: createResolutionSessionLifecycle(
-						ctx,
-						guard,
-						inspection,
-					),
-					resolve: (selection, checkpoints, observer, context) => {
-						const resolution = orchestratorFor(
-							ctx,
-							guard,
-							observer,
-							inspection,
-						).resolveSegment(selection, checkpoints, context);
-						return inspection
-							? inspection.effect(
-									"Resolve selected segment",
+		// Lifecycle hops are promises; they run in the session's runtime so
+		// their spans sit under the session's.
+		const session = Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+			executeResolutionSession({
+				identity: guard,
+				lifecycle: createResolutionSessionLifecycle(
+					ctx,
+					guard,
+					spanHops(runtime),
+				),
+				resolve: (selection, checkpoints, observer, context) =>
+					orchestratorFor(ctx, guard, observer, inspection)
+						.resolveSegment(selection, checkpoints, context)
+						.pipe(
+							Effect.withSpan(
+								"Resolve selected segment",
+								inspectionStep(
 									"app/tf-demo · linguisticOrchestration",
 									{ selection, checkpoints },
-									resolution,
-								)
-							: resolution;
-					},
-				}),
-			);
-		try {
-			if (inspection)
-				await inspection.promise(
-					"Resolution session",
+								),
+							),
+						),
+			}),
+		).pipe(
+			Effect.withSpan("Resolution session", {
+				...inspectionStep(
 					"app/tf-demo · orchestration.runResolutionSession",
 					guard,
-					run,
-					true,
-				);
-			else await run();
+				),
+				root: true,
+			}),
+		);
+		try {
+			await Effect.runPromise(inspected(session, inspection));
 		} finally {
 			await inspection?.flush();
 		}
@@ -193,45 +193,6 @@ function orchestratorFor(
 		storage: createConvexDumdictStorage(ctx),
 	});
 	const persistence = createConvexPersistence(ctx, sessionGuard);
-	const tracedPersistence: OrchestrationPersistence = inspection
-		? {
-				persistSubmittedText: (input) =>
-					inspection.promise(
-						"Persist submitted text",
-						"app/tf-demo",
-						input,
-						() => persistence.persistSubmittedText(input),
-					),
-				loadResolutionContext: (input) =>
-					inspection.promise(
-						"Load resolution context",
-						"app/tf-demo",
-						input,
-						() => persistence.loadResolutionContext(input),
-					),
-				persistResolvedClick: (input) =>
-					inspection.promise(
-						"Commit resolved occurrence",
-						"app/tf-demo · persistence",
-						input,
-						() => persistence.persistResolvedClick(input),
-					),
-				persistReusedResolvedClick: (input) =>
-					inspection.promise(
-						"Commit reused occurrence",
-						"app/tf-demo · persistence",
-						input,
-						() => persistence.persistReusedResolvedClick(input),
-					),
-				persistUnresolvedClick: (input) =>
-					inspection.promise(
-						"Commit unresolved encounter",
-						"app/tf-demo · persistence",
-						input,
-						() => persistence.persistUnresolvedClick(input),
-					),
-			}
-		: persistence;
 	return createTfDemoOrchestrator({
 		draftKnowledge: ({ encounter, lemma, visitorId, settle }) =>
 			Effect.gen(function* () {
@@ -275,19 +236,8 @@ function orchestratorFor(
 			{},
 			inspection,
 		),
-		dictionary: inspection
-			? {
-					findStoredReadings: (input) =>
-						inspection.effect(
-							"Find stored Readings",
-							"battery/dumdict",
-							input,
-							dictionary.findStoredReadings(input),
-						),
-				}
-			: dictionary,
-		persistence: tracedPersistence,
-		inspection,
+		dictionary,
+		persistence,
 		...(observer ? { observer } : {}),
 	});
 }

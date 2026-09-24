@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -39,17 +38,16 @@ export function prepareAddNewNote<L extends Dumling.Language>(
 					"Owned Surfaces must belong to the draft Reading's Lemma and dictionary language.",
 			} satisfies DumdictInvalidInput);
 	}
-	return traceStage(
-		"dumdict.prepareAddNewNote",
-		loadReadingEntryContext(options, {
-			intent: "addNewNote",
-			request,
-		}).pipe(
-			Effect.flatMap((slice) =>
-				prepared(options, planAddNewNote(slice, request)),
-			),
-		),
+	return loadReadingEntryContext(options, {
+		intent: "addNewNote",
 		request,
+	}).pipe(
+		Effect.flatMap((slice) =>
+			prepared(options, planAddNewNote(slice, request)),
+		),
+		Effect.withSpan("dumdict.prepareAddNewNote", {
+			attributes: { request },
+		}),
 	);
 }
 

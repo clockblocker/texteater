@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -40,17 +39,16 @@ export function prepareEnsureOwnedSurface<L extends Dumling.Language>(
 			message: "The owned Surface must realize the Reading's Lemma.",
 		});
 	}
-	return traceStage(
-		"dumdict.prepareEnsureOwnedSurface",
-		loadReadingEntryContext(options, {
-			intent: "ensureOwnedSurface",
-			request,
-		}).pipe(
-			Effect.flatMap((slice) =>
-				prepared(options, planEnsureOwnedSurface(slice, request)),
-			),
-		),
+	return loadReadingEntryContext(options, {
+		intent: "ensureOwnedSurface",
 		request,
+	}).pipe(
+		Effect.flatMap((slice) =>
+			prepared(options, planEnsureOwnedSurface(slice, request)),
+		),
+		Effect.withSpan("dumdict.prepareEnsureOwnedSurface", {
+			attributes: { request },
+		}),
 	);
 }
 

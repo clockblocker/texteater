@@ -3,6 +3,12 @@
 import { v } from "convex/values";
 import type { KnowledgeInput, KnowledgeProduction } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import {
+	inspected,
+	inspectionStep,
+	type SpanHops,
+	spanHops,
+} from "../server/inspectionCapture";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import { createProductionDumgen } from "../server/modelExecution";
 import { parseGermanReading } from "../server/operationalParsing";
@@ -42,9 +48,12 @@ export const runKnowledgeGeneration = internalAction({
 			inspect === true,
 			"Knowledge",
 		);
-		const hop = <T>(name: string, input: unknown, run: () => Promise<T>) =>
-			inspection ? inspection.promise(name, OWNER, input, run) : run();
-		const run = async () => {
+		const run = async (spans: SpanHops) => {
+			const hop = <T>(
+				name: string,
+				input: unknown,
+				work: () => Promise<T>,
+			) => spans.hop(name, OWNER, input, work);
 			let rejectedRun:
 				| {
 						runNumber: number;
@@ -183,7 +192,7 @@ export const runKnowledgeGeneration = internalAction({
 				};
 				publishContribution = (changes) =>
 					publish(false, { changes, pendingRelations: [] }, []);
-				const generated = await Effect.runPromise(
+				const generated = await spans.run(
 					knowledgeDumgen
 						.produceKnowledge({
 							encounter: parseResolvedGrammar({
@@ -248,7 +257,7 @@ export const runKnowledgeGeneration = internalAction({
 				return null;
 			} catch (error) {
 				await publicationQueue;
-				inspection?.failure(
+				spans.failure(
 					"Knowledge generation failed",
 					OWNER,
 					requested,
@@ -276,15 +285,24 @@ export const runKnowledgeGeneration = internalAction({
 			}
 		};
 		try {
-			return inspection
-				? await inspection.promise(
-						"Generate and publish Knowledge",
-						OWNER,
-						{ attemptKey },
-						run,
-						true,
-					)
-				: await run();
+			// Publication hops and generation run in the root's runtime, so
+			// their spans sit under the root's.
+			return await Effect.runPromise(
+				inspected(
+					Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+						Effect.tryPromise({
+							try: () => run(spanHops(runtime)),
+							catch: (error) => error,
+						}),
+					).pipe(
+						Effect.withSpan("Generate and publish Knowledge", {
+							...inspectionStep(OWNER, { attemptKey }),
+							root: true,
+						}),
+					),
+					inspection,
+				),
+			);
 		} finally {
 			await inspection?.flush();
 		}

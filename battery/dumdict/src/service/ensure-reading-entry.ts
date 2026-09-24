@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -33,17 +32,16 @@ export function prepareEnsureReadingEntry<L extends Dumling.Language>(
 				"ensureReadingEntry does not accept Semantic Relations; use a relation-aware Dumdict workflow.",
 		});
 	}
-	return traceStage(
-		"dumdict.prepareEnsureReadingEntry",
-		loadReadingEntryContext(options, {
-			intent: "ensureReadingEntry",
-			request,
-		}).pipe(
-			Effect.flatMap((slice) =>
-				prepared(options, planEnsureReadingEntry(slice, request)),
-			),
-		),
+	return loadReadingEntryContext(options, {
+		intent: "ensureReadingEntry",
 		request,
+	}).pipe(
+		Effect.flatMap((slice) =>
+			prepared(options, planEnsureReadingEntry(slice, request)),
+		),
+		Effect.withSpan("dumdict.prepareEnsureReadingEntry", {
+			attributes: { request },
+		}),
 	);
 }
 

@@ -28,7 +28,7 @@ import {
 	type StoredSegmentValue,
 	storedSegmentsOf,
 } from "../convex/model/storedSegments";
-import type { InspectionCapture } from "./inspectionCapture";
+import { inspectionStep } from "./inspectionCapture";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
@@ -314,7 +314,6 @@ export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
  */
 export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
-	readonly inspection?: InspectionCapture;
 	readonly dictionary: Pick<DumdictService<"de">, "findStoredReadings">;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
@@ -361,17 +360,17 @@ export function createTfDemoOrchestrator(options: {
 			assertNonEmpty(input.submissionKey, "submissionKey");
 			assertNonEmpty(input.sourceText, "sourceText");
 
-			const split = Effect.sync(() =>
+			const paragraphs = yield* Effect.sync(() =>
 				splitInParagraphs(input.sourceText),
-			);
-			const paragraphs = yield* options.inspection
-				? options.inspection.effect(
-						"Split text into sentences",
+			).pipe(
+				Effect.withSpan(
+					"Split text into sentences",
+					inspectionStep(
 						"app/tf-demo · Intl.Segmenter (de, sentence)",
 						{ sourceText: input.sourceText },
-						split,
-					)
-				: split;
+					),
+				),
+			);
 			const sourceSentences = paragraphs.flat();
 			const paragraphOf = paragraphs.flatMap((sentences, paragraph) =>
 				sentences.map(() => paragraph),
@@ -425,12 +424,18 @@ export function createTfDemoOrchestrator(options: {
 						SENTENCE_ANALYSIS_CONCURRENCY,
 				},
 			);
+			const submission = {
+				submissionKey: input.submissionKey,
+				sourceText: input.sourceText,
+				sentences,
+			};
 			const persisted = yield* Effect.tryPromise(() =>
-				options.persistence.persistSubmittedText({
-					submissionKey: input.submissionKey,
-					sourceText: input.sourceText,
-					sentences,
-				}),
+				options.persistence.persistSubmittedText(submission),
+			).pipe(
+				Effect.withSpan(
+					"Persist submitted text",
+					inspectionStep("app/tf-demo", submission),
+				),
 			);
 
 			return { decisions: segmentation, persisted };
@@ -442,17 +447,13 @@ export function createTfDemoOrchestrator(options: {
 	): Effect.Effect<SentenceAnalysis | null> {
 		if (sentence.language !== "de") return Effect.succeed(null);
 		const german: SegmentedSentence<"de"> = { ...sentence, language: "de" };
-		const analysis = options.dumgen.analyzeSentence({ sentence: german });
-		return (
-			options.inspection
-				? options.inspection.effect(
-						"Analyze sentence",
-						"app/tf-demo · linguisticOrchestration",
-						{ sentenceId: sentence.id },
-						analysis,
-					)
-				: analysis
-		).pipe(
+		return options.dumgen.analyzeSentence({ sentence: german }).pipe(
+			Effect.withSpan(
+				"Analyze sentence",
+				inspectionStep("app/tf-demo · linguisticOrchestration", {
+					sentenceId: sentence.id,
+				}),
+			),
 			withoutFailedWork(
 				`Sentence Analysis for ${sentence.id}`,
 				"the sentence is stored without one",
@@ -482,6 +483,11 @@ export function createTfDemoOrchestrator(options: {
 				initialContext ??
 				(yield* Effect.tryPromise(() =>
 					options.persistence.loadResolutionContext(input),
+				).pipe(
+					Effect.withSpan(
+						"Load resolution context",
+						inspectionStep("app/tf-demo", input),
+					),
 				));
 			const recorded = context.recorded;
 			if (recorded) {
@@ -504,11 +510,17 @@ export function createTfDemoOrchestrator(options: {
 			}
 			const reusable = context.reusable;
 			if (reusable) {
+				const reuse = {
+					...input,
+					attestationId: reusable.attestationId,
+				};
 				const persisted = yield* Effect.tryPromise(() =>
-					options.persistence.persistReusedResolvedClick({
-						...input,
-						attestationId: reusable.attestationId,
-					}),
+					options.persistence.persistReusedResolvedClick(reuse),
+				).pipe(
+					Effect.withSpan(
+						"Commit reused occurrence",
+						inspectionStep("app/tf-demo · persistence", reuse),
+					),
 				);
 				return {
 					grammatical: reusable.grammatical,
@@ -528,6 +540,11 @@ export function createTfDemoOrchestrator(options: {
 			if (grammatical.decision !== "Resolved") {
 				const persisted = yield* Effect.tryPromise(() =>
 					options.persistence.persistUnresolvedClick(input),
+				).pipe(
+					Effect.withSpan(
+						"Commit unresolved encounter",
+						inspectionStep("app/tf-demo · persistence", input),
+					),
 				);
 				if (persisted.status === "Reused") {
 					return {
@@ -580,6 +597,13 @@ export function createTfDemoOrchestrator(options: {
 									options.dictionary.findStoredReadings({
 										lemma,
 									}),
+								).pipe(
+									Effect.withSpan(
+										"Find stored Readings",
+										inspectionStep("battery/dumdict", {
+											lemma,
+										}),
+									),
 								),
 					),
 				],
@@ -646,8 +670,8 @@ export function createTfDemoOrchestrator(options: {
 				grammatical.attestation.surface,
 			);
 			const readingKey = readingIdentityKey(reading);
-			const persisted = yield* Effect.tryPromise(() =>
-				options.persistence.persistResolvedClick({
+			const commit = yield* Effect.try(
+				(): ResolvedClickPersistence => ({
 					...input,
 					...(draft && (draft.texts.length || draft.relations)
 						? { knowledgeDraftJson: JSON.stringify(draft) }
@@ -665,6 +689,14 @@ export function createTfDemoOrchestrator(options: {
 					readingKey,
 					readingDecision: readingResolution.decision,
 				}),
+			);
+			const persisted = yield* Effect.tryPromise(() =>
+				options.persistence.persistResolvedClick(commit),
+			).pipe(
+				Effect.withSpan(
+					"Commit resolved occurrence",
+					inspectionStep("app/tf-demo · persistence", commit),
+				),
 			);
 			if (
 				persisted.status === "MembershipConflict" ||
@@ -800,16 +832,9 @@ export function createTfDemoOrchestrator(options: {
 				const name = fromAnalysis
 					? "Select target · analysis"
 					: "Select target · classified";
-				return Effect.map(
-					options.inspection
-						? options.inspection.effect(
-								name,
-								owner,
-								input,
-								selected,
-							)
-						: selected,
-					({ target }) => target,
+				return selected.pipe(
+					Effect.withSpan(name, inspectionStep(owner, input)),
+					Effect.map(({ target }) => target),
 				);
 			}
 
@@ -829,23 +854,21 @@ export function createTfDemoOrchestrator(options: {
 					"word",
 				);
 				if (!selection.target) return null;
-				const selected = Effect.succeed({
+				return Effect.succeed({
 					path: "analysis" as const,
 					target: selection.target,
-				});
-				return Effect.map(
-					options.inspection
-						? options.inspection.effect(
-								"Select target · analysis word",
-								"app/tf-demo · linguisticOrchestration",
-								{
-									clickedSegmentIndex,
-									reason: "phrasemeRefused",
-								},
-								selected,
-							)
-						: selected,
-					({ target }) => target,
+				}).pipe(
+					Effect.withSpan(
+						"Select target · analysis word",
+						inspectionStep(
+							"app/tf-demo · linguisticOrchestration",
+							{
+								clickedSegmentIndex,
+								reason: "phrasemeRefused",
+							},
+						),
+					),
+					Effect.map(({ target }) => target),
 				);
 			}
 

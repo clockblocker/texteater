@@ -1,4 +1,3 @@
-import { traceStage } from "common-utils/workflow";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
@@ -23,17 +22,13 @@ export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 			_tag: "DumdictInvalidInput",
 			message: "canonicalForm is required.",
 		});
-	return traceStage(
-		"dumdict.getInfoForRelationsCleanup",
-		options.storage.getInfoForRelationsCleanup({ canonicalForm }).pipe(
-			Effect.map((slice) => {
-				options.sliceValidation.relationsCleanupInfo(
-					slice,
-					canonicalForm,
-				);
-				return lookupRelationsCleanupInfo(slice);
-			}),
-		),
-		{ canonicalForm },
+	return options.storage.getInfoForRelationsCleanup({ canonicalForm }).pipe(
+		Effect.map((slice) => {
+			options.sliceValidation.relationsCleanupInfo(slice, canonicalForm);
+			return lookupRelationsCleanupInfo(slice);
+		}),
+		Effect.withSpan("dumdict.getInfoForRelationsCleanup", {
+			attributes: { canonicalForm },
+		}),
 	);
 }

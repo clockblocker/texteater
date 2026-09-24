@@ -138,7 +138,6 @@
       "version": "0.1.0",
       "dependencies": {
         "dumval": "workspace:^",
-        "effect": "3.22.1",
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.13",
