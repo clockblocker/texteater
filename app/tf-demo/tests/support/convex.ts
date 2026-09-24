@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { makeFunctionReference } from "convex/server";
+import { makeFunctionReference, type TransactionLimits } from "convex/server";
 import { convexTest, type TestConvex } from "convex-test";
 import { internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -26,8 +26,21 @@ const modules: Record<string, () => Promise<unknown>> = Object.fromEntries(
 		]),
 );
 
-export function createTestConvex(): TestConvexDb {
-	return convexTest(schema, modules);
+/**
+ * With `transactionLimits`, every transaction is held to Convex's
+ * per-transaction limits: `true` for the defaults, or the defaults with the
+ * given limits tightened.
+ */
+export function createTestConvex(
+	options: { readonly transactionLimits?: true | TransactionLimits } = {},
+): TestConvexDb {
+	return options.transactionLimits === undefined
+		? convexTest(schema, modules)
+		: convexTest({
+				schema,
+				modules,
+				transactionLimits: options.transactionLimits,
+			});
 }
 
 /** The stand-in with some Convex modules replaced, keyed by their path under convex/. */

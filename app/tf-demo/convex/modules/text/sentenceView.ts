@@ -8,7 +8,7 @@ import {
 	languageValidator,
 	storedSegmentValidator,
 } from "../../model/validators";
-import { findVisitorEncounter } from "../../model/visitorClicks";
+import { loadEncounteredSegmentIds } from "../../model/visitorClicks";
 
 export const grammaticalGenderValidator = v.union(
 	v.literal("Fem"),
@@ -50,16 +50,17 @@ export async function projectSentenceView(
 	sentence: Doc<"sentences">,
 	visitorId: string,
 ) {
-	const segments = await loadStoredSegments(ctx, sentence._id);
-	const encounters = await Promise.all(
-		segments.map((segment) =>
-			findVisitorEncounter(ctx, { visitorId, segmentId: segment._id }),
-		),
-	);
+	const [segments, encounteredSegmentIds] = await Promise.all([
+		loadStoredSegments(ctx, sentence._id),
+		loadEncounteredSegmentIds(ctx, {
+			visitorId,
+			sentenceId: sentence._id,
+		}),
+	]);
 	const encounteredAttestationIds = new Set<Id<"attestations">>();
-	for (const [index, segment] of segments.entries()) {
+	for (const segment of segments) {
 		const attestationId = segment.attestationMembership?.attestationId;
-		if (encounters[index] && attestationId) {
+		if (encounteredSegmentIds.has(segment._id) && attestationId) {
 			encounteredAttestationIds.add(attestationId);
 		}
 	}
@@ -86,10 +87,10 @@ export async function projectSentenceView(
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
 		...(sentence.heading ? { heading: sentence.heading } : {}),
-		segments: segments.map((segment, position) => {
+		segments: segments.map((segment) => {
 			const attestationId = segment.attestationMembership?.attestationId;
 			const encountered = Boolean(
-				encounters[position] ||
+				encounteredSegmentIds.has(segment._id) ||
 					(attestationId &&
 						encounteredAttestationIds.has(attestationId)),
 			);

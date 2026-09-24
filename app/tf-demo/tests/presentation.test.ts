@@ -19,6 +19,10 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
+import {
+	MAX_SOURCE_SENTENCES,
+	MAX_SOURCE_TEXT_CHARACTERS,
+} from "../server/textSubmissionLimits";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import {
 	createTestConvex,
@@ -124,14 +128,19 @@ function encounter(
 	segmentId: Id<"segments"> | undefined,
 ) {
 	if (!segmentId) throw new Error("Expected an encountered Segment.");
-	return t.run((ctx) =>
-		ctx.db.insert("visitorClicks", {
+	return t.run(async (ctx) => {
+		const segment = await ctx.db.get(segmentId);
+		const sentence = segment ? await ctx.db.get(segment.sentenceId) : null;
+		if (!sentence) throw new Error("Expected a stored Sentence.");
+		return ctx.db.insert("visitorClicks", {
 			requestId: `click:${visitorId}:${segmentId}`,
 			visitorId,
+			textId: sentence.textId,
+			sentenceId: sentence._id,
 			segmentId,
 			clickedAt: 1,
-		}),
-	);
+		});
+	});
 }
 
 test("a Text view preserves the stored submission identity for re-segmentation", async () => {
@@ -439,6 +448,48 @@ test("Text projection shares current truth through Visitor Encounter history", a
 		text: "aktiv",
 		encountered: false,
 	});
+});
+
+test("a maximum-length Text view reads Visitor Encounters once per Sentence, not once per Segment", async () => {
+	// A Text at the submission limits: 25 Sentences of about 400 characters,
+	// short words that make close to 4,000 Segments. Reading it may use 8
+	// index ranges per Sentence, far below one per Segment.
+	const t = createTestConvex({
+		transactionLimits: { databaseQueries: 8 * MAX_SOURCE_SENTENCES },
+	});
+	const words = ["Haus", "Baum", "Tier", "Wege"];
+	const sentences = Array.from({ length: MAX_SOURCE_SENTENCES }, () => [
+		...Array.from({ length: 79 }, (_, index) => [
+			...(index === 0 ? [] : [" "]),
+			words[index % words.length] ?? "",
+		]).flat(),
+		".",
+	]);
+	const { textId, segmentIds } = await submitText(t, sentences);
+	const sourceText = sentences.map((segments) => segments.join("")).join(" ");
+	expect(sourceText.length).toBeLessThanOrEqual(MAX_SOURCE_TEXT_CHARACTERS);
+	expect(segmentIds.flat().length).toBeGreaterThan(3_900);
+
+	const haus = await insertReading(t, {
+		unitKind: "Reading",
+		lemma: { ...bankLemma, canonicalForm: "Haus" },
+		emojiDescription: "🏠",
+	});
+	for (const segments of segmentIds) {
+		await attest(t, haus, [segments[0]]);
+		await encounter(t, "visitor-1", segments[0]);
+	}
+
+	const view = await t.query(api.textViews.get, {
+		textId,
+		visitorId: "visitor-1",
+	});
+	expect(view?.sentences).toHaveLength(MAX_SOURCE_SENTENCES);
+	for (const sentence of view?.sentences ?? []) {
+		expect(
+			sentence.segments.filter(({ encountered }) => encountered),
+		).toEqual([expect.objectContaining({ text: "Haus", gender: "Fem" })]);
+	}
 });
 
 test("only learner-facing Unit families can open Unit Reading Notes", () => {

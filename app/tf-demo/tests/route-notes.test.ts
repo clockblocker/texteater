@@ -589,7 +589,7 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 
 test("sentence gender belongs to the visitor's encountered occurrence, including its article", async () => {
 	const t = createTestConvex();
-	const { sentenceIds, segmentIds } = await submitText(t, [
+	const { textId, sentenceIds, segmentIds } = await submitText(t, [
 		["der", " ", "Frau"],
 	]);
 	const [sentenceId] = sentenceIds;
@@ -618,6 +618,8 @@ test("sentence gender belongs to the visitor's encountered occurrence, including
 		ctx.db.insert("visitorClicks", {
 			requestId: "click-1",
 			visitorId: "alice",
+			textId,
+			sentenceId,
 			segmentId: article,
 			clickedAt: 1,
 		}),

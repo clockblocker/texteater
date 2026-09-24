@@ -19,6 +19,29 @@ export async function findVisitorEncounter(
 	return click ?? null;
 }
 
+/**
+ * The Segments of one Sentence this Visitor has encountered, read as one
+ * index range. A Visitor holds at most one Visitor Encounter per Segment, so
+ * the range is bounded by the Sentence's Segments.
+ */
+export async function loadEncounteredSegmentIds(
+	ctx: VisitorEncounterContext,
+	input: {
+		visitorId: string;
+		sentenceId: Id<"sentences">;
+	},
+) {
+	const encounters = await ctx.db
+		.query("visitorClicks")
+		.withIndex("by_visitor_id_and_sentence_id", (q) =>
+			q
+				.eq("visitorId", input.visitorId)
+				.eq("sentenceId", input.sentenceId),
+		)
+		.collect();
+	return new Set(encounters.map(({ segmentId }) => segmentId));
+}
+
 export async function ensureVisitorEncounter(
 	ctx: MutationCtx,
 	input: {
@@ -41,15 +64,10 @@ export async function ensureVisitorEncounter(
 				"Visitor Encounter refers to a different committed Attestation.",
 			);
 		}
-		const patch = {
-			...(existing.textId ? {} : { textId: input.textId }),
-			...(existing.sentenceId ? {} : { sentenceId: input.sentenceId }),
-			...(input.attestationId && !existing.attestationId
-				? { attestationId: input.attestationId }
-				: {}),
-		};
-		if (Object.keys(patch).length > 0) {
-			await ctx.db.patch(existing._id, patch);
+		if (input.attestationId && !existing.attestationId) {
+			await ctx.db.patch(existing._id, {
+				attestationId: input.attestationId,
+			});
 		}
 		return { clickId: existing._id, created: false as const };
 	}

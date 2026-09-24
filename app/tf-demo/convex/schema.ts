@@ -450,8 +450,8 @@ export default defineSchema({
 	visitorClicks: defineTable({
 		requestId: v.string(),
 		visitorId: v.string(),
-		textId: v.optional(v.id("texts")),
-		sentenceId: v.optional(v.id("sentences")),
+		textId: v.id("texts"),
+		sentenceId: v.id("sentences"),
 		segmentId: v.id("segments"),
 		attestationId: v.optional(v.id("attestations")),
 		clickedAt: v.number(),
@@ -464,7 +464,8 @@ export default defineSchema({
 			"attestationId",
 		])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
-		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"]),
+		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"])
+		.index("by_visitor_id_and_sentence_id", ["visitorId", "sentenceId"]),
 
 	resolutionSessions: defineTable({
 		requestId: v.string(),

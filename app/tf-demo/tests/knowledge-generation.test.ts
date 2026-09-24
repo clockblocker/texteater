@@ -101,6 +101,8 @@ type Occurrence = {
 	readonly readingId: Id<"readings">;
 	readonly lemmaId: Id<"lemmas">;
 	readonly attestationId: Id<"attestations">;
+	readonly textId: Id<"texts">;
+	readonly sentenceId: Id<"sentences">;
 	readonly segmentId: Id<"segments">;
 	readonly readingKey: string;
 };
@@ -157,7 +159,7 @@ async function seedOccurrence(
 	reading: SeededReading = BANK_READING,
 ): Promise<Occurrence> {
 	const governed = reading.lemma.canonicalForm === "Angst";
-	const { sentenceIds, segmentIds } = await submitText(t, [
+	const { textId, sentenceIds, segmentIds } = await submitText(t, [
 		[
 			{ kind: "ResolvableText", text: reading.lemma.canonicalForm },
 			{
@@ -210,7 +212,15 @@ async function seedOccurrence(
 				analysis: governedAnalysis(sentence.segmentedSentenceId),
 			});
 		}
-		return { readingId, lemmaId, attestationId, segmentId, readingKey };
+		return {
+			readingId,
+			lemmaId,
+			attestationId,
+			textId,
+			sentenceId,
+			segmentId,
+			readingKey,
+		};
 	});
 }
 
@@ -902,6 +912,8 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 		ctx.db.insert("visitorClicks", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
+			textId: retryOccurrence.textId,
+			sentenceId: retryOccurrence.sentenceId,
 			segmentId: retryOccurrence.segmentId,
 			attestationId: retryOccurrence.attestationId,
 			clickedAt: 1,
@@ -1043,6 +1055,8 @@ test("a run whose action died fails as interrupted, starts the next demand, and 
 		ctx.db.insert("visitorClicks", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
+			textId: occurrence.textId,
+			sentenceId: occurrence.sentenceId,
 			segmentId: occurrence.segmentId,
 			attestationId: occurrence.attestationId,
 			clickedAt: 1,
