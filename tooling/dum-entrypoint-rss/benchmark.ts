@@ -94,7 +94,7 @@ export async function buildPackages(root: string): Promise<void> {
 		[
 			join(root, "node_modules/.bin/turbo"),
 			"run",
-			"build",
+			"build:package",
 			...packages.map((name) => `--filter=${name}`),
 		],
 		root,
