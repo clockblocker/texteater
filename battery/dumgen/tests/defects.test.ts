@@ -224,7 +224,8 @@ test("a defect after a delivered contribution fails the operation and delivers n
 				return { output: { text: "Ein Geldinstitut." } };
 			if (language === "en") {
 				// Fails only once the definition has been delivered.
-				while (!delivered.length) await Promise.resolve();
+				while (!delivered.length)
+					await new Promise((resolve) => setTimeout(resolve, 1));
 				return { output: unreadableText };
 			}
 			await late;
