@@ -55,7 +55,8 @@ export const RECOVERY_DEADLINE_MS = 15 * 60 * 1_000;
  * (15 minutes). So only 2 runs fit.
  */
 export const MAX_RESOLUTION_RUNS = 2;
-const RESOLUTION_RUN_RETENTION_MS = 24 * 60 * 60 * 1_000;
+/** Sessions and their runs are kept this long after their last write. */
+export const RESOLUTION_RETENTION_MS = 24 * 60 * 60 * 1_000;
 
 export type ResolutionProgress = Infer<typeof resolutionProgressValidator>;
 export type ResolutionActivity = Infer<typeof resolutionActivityValidator>;
@@ -1116,7 +1117,7 @@ async function upsertResolutionRun(
 			? { generationEvents: [...update.generationEvents] }
 			: {}),
 		...(update.state === "Running" ? {} : { finishedAt: now }),
-		expiresAt: now + RESOLUTION_RUN_RETENTION_MS,
+		expiresAt: now + RESOLUTION_RETENTION_MS,
 	};
 	if (run) {
 		await ctx.db.patch(run._id, values);

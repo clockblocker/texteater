@@ -2,12 +2,14 @@ import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import type { WithoutSystemFields } from "convex/server";
 import { api, internal } from "../convex/_generated/api";
 import type { Doc, Id } from "../convex/_generated/dataModel";
+import crons from "../convex/crons";
 import {
 	assertResolutionLifecycle,
 	assertResolutionProgressTransition,
 	MAX_RESOLUTION_RUNS,
 	projectResolutionGrammar,
 	projectResolutionReading,
+	RESOLUTION_RETENTION_MS,
 	STALE_RUN_AFTER_MS,
 } from "../convex/model/resolutionSessions";
 import {
@@ -1068,7 +1070,7 @@ describe("Resolution Session", () => {
 		expect(claimed?.checkpoints).toEqual({});
 	});
 
-	test("cleanup removes stale active and old terminal sessions but keeps a completed target that vanished", async () => {
+	test("cleanup removes stale active and old terminal sessions, even a completed one whose Reading vanished", async () => {
 		const t = createTestConvex();
 		const { select } = await bankenSource(t);
 		await startSession(t, select("stale"));
@@ -1097,12 +1099,107 @@ describe("Resolution Session", () => {
 			terminalBefore: Date.now() - 1,
 		});
 
-		expect(result).toEqual({ deleted: 2, hasMore: false });
+		expect(result).toEqual({ deleted: 3, hasMore: false });
+		expect(await rows(t, "resolutionSessions")).toEqual([]);
+	});
+
+	test("repeated cleanup removes every expired row, even past a batch of vanished Readings", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		await commitBankOccurrence(t, select("complete-missing"));
+		// `Banken` is committed now, so the other sessions select `Die`.
+		const onDie = (requestId: string, visitorId: string) => ({
+			...select(requestId, visitorId),
+			clickedSegmentIndex: 0,
+		});
+		await startSession(t, onDie("recent", "visitor-2"));
+		const missing = await session(t, "complete-missing");
+		const old = Date.now() - 10_000;
+		await t.run(async (ctx) => {
+			if (missing.readingId) await ctx.db.delete(missing.readingId);
+			const { _id, _creationTime, ...row } = missing;
+			for (let index = 0; index < 250; index += 1)
+				await ctx.db.insert("resolutionSessions", {
+					...row,
+					requestId: `missing-${index}`,
+					updatedAt: old - 1,
+				});
+			await ctx.db.patch(_id, { updatedAt: old });
+		});
+		const failed = await startSession(t, onDie("failed", "visitor-3"));
+		await t.mutation(internal.resolutionSessions.recordRunFailure, {
+			guard: failed,
+			failure: {
+				kind: "Internal",
+				phase: "Route",
+				diagnosticId: "diagnostic-1",
+				errorName: "Error",
+				errorFingerprint: "fnv1a-1",
+			},
+		});
+		await patchSession(t, "failed", { updatedAt: old });
+		await t.run(async (ctx) => {
+			for (const run of await ctx.db.query("resolutionRuns").collect())
+				await ctx.db.patch(run._id, { expiresAt: old });
+		});
+
+		const cutoffs = {
+			staleBefore: Date.now() - 5_000,
+			terminalBefore: Date.now() - 5_000,
+		};
+		let batches = 0;
+		while (
+			(await t.mutation(internal.resolutionSessions.cleanup, cutoffs))
+				.hasMore
+		)
+			if (++batches > 5) throw new Error("Cleanup made no progress.");
+
+		expect(await rows(t, "resolutionRuns")).toEqual([]);
 		expect(
 			(await rows(t, "resolutionSessions")).map(
 				({ requestId }) => requestId,
 			),
-		).toEqual(["complete-missing"]);
+		).toEqual(["recent"]);
+	});
+
+	test("scheduled cleanup continues until nothing expired is left", async () => {
+		const t = createTestConvex();
+		const { select } = await bankenSource(t);
+		await startSession(t, select("recent"));
+		const recent = await session(t, "recent");
+		await t.run(async (ctx) => {
+			const { _id, _creationTime, ...row } = recent;
+			for (let index = 0; index < 201; index += 1)
+				await ctx.db.insert("resolutionSessions", {
+					...row,
+					requestId: `expired-${index}`,
+					lifecycle: {
+						state: "Terminal",
+						progress: "Starting",
+						outcome: "Unresolved",
+					},
+					updatedAt: Date.now() - RESOLUTION_RETENTION_MS - 1,
+				});
+		});
+
+		await t.mutation(internal.resolutionSessions.cleanupExpired, {});
+		expect(await rows(t, "resolutionSessions")).toHaveLength(2);
+		expect(
+			(await pendingScheduled(t)).filter(
+				({ name }) => name === "resolutionSessions:cleanupExpired",
+			),
+		).toHaveLength(1);
+		await t.mutation(internal.resolutionSessions.cleanupExpired, {});
+		expect(
+			(await rows(t, "resolutionSessions")).map(
+				({ requestId }) => requestId,
+			),
+		).toEqual(["recent"]);
+		expect(crons.crons).toEqual({
+			"clean up expired Resolution Sessions": expect.objectContaining({
+				name: "resolutionSessions:cleanupExpired",
+			}),
+		});
 	});
 
 	test("cleanup ends Segment Resolution State once per deleted session", async () => {

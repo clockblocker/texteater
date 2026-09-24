@@ -9,6 +9,7 @@
  */
 
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
+import type * as crons from "../crons.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
 import type * as definitionTexts from "../definitionTexts.js";
 import type * as demoReset from "../demoReset.js";
@@ -86,6 +87,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   catalogGrowthSignals: typeof catalogGrowthSignals;
+  crons: typeof crons;
   definitionTextActions: typeof definitionTextActions;
   definitionTexts: typeof definitionTexts;
   demoReset: typeof demoReset;

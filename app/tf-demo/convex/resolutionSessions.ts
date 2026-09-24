@@ -1,5 +1,11 @@
 import { v } from "convex/values";
-import { internalMutation, mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
+import {
+	internalMutation,
+	type MutationCtx,
+	mutation,
+	query,
+} from "./_generated/server";
 import { inspectionJson } from "./model/inspection";
 import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { requireClickableSegment } from "./model/resolutionLookup";
@@ -12,6 +18,7 @@ import {
 	loadCanonicalOccurrence,
 	loadResolutionNote,
 	occurrenceNoteTarget,
+	RESOLUTION_RETENTION_MS,
 	recordResolutionRunSuccess,
 	recoverStaleResolutionRun,
 	resolutionNoteValidator,
@@ -413,58 +420,78 @@ export const cleanup = internalMutation({
 	handler: async (ctx, args) => {
 		assertCleanupCutoff(args.staleBefore, "staleBefore");
 		assertCleanupCutoff(args.terminalBefore, "terminalBefore");
-		const expiredRuns = await ctx.db
-			.query("resolutionRuns")
-			.withIndex("by_expires_at", (q) => q.lte("expiresAt", Date.now()))
-			.take(CLEANUP_BATCH_SIZE);
-		if (expiredRuns.length > 0) {
-			await Promise.all(expiredRuns.map((run) => ctx.db.delete(run._id)));
-			return {
-				deleted: expiredRuns.length,
-				hasMore: expiredRuns.length === CLEANUP_BATCH_SIZE,
-			};
-		}
-		const activeRows = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_lifecycle_state_and_updated_at", (q) =>
-				q
-					.eq("lifecycle.state", "Active")
-					.lte("updatedAt", args.staleBefore),
-			)
-			.take(CLEANUP_BATCH_SIZE);
-		const terminalRows =
-			activeRows.length === CLEANUP_BATCH_SIZE
-				? []
-				: await ctx.db
-						.query("resolutionSessions")
-						.withIndex("by_lifecycle_state_and_updated_at", (q) =>
-							q
-								.eq("lifecycle.state", "Terminal")
-								.lte("updatedAt", args.terminalBefore),
-						)
-						.take(CLEANUP_BATCH_SIZE - activeRows.length);
-		const terminalReadingExists = await Promise.all(
-			terminalRows.map((row) =>
-				row.lifecycle.state === "Terminal" &&
-				row.lifecycle.outcome === "Complete" &&
-				row.readingId
-					? ctx.db.get(row.readingId).then(Boolean)
-					: Promise.resolve(true),
-			),
-		);
-		const rowsToDelete = [
-			...activeRows,
-			...terminalRows.filter(
-				(_row, index) => terminalReadingExists[index],
-			),
-		];
-		await deleteResolutionSessions(ctx, rowsToDelete);
-		return {
-			deleted: rowsToDelete.length,
-			hasMore: rowsToDelete.length === CLEANUP_BATCH_SIZE,
-		};
+		return cleanupBatch(ctx, args);
 	},
 });
+
+/**
+ * The scheduled cleanup: deletes what outlived `RESOLUTION_RETENTION_MS`, one
+ * batch per transaction, until nothing expired is left.
+ */
+export const cleanupExpired = internalMutation({
+	args: {},
+	returns: v.null(),
+	handler: async (ctx) => {
+		const cutoff = Date.now() - RESOLUTION_RETENTION_MS;
+		const { hasMore } = await cleanupBatch(ctx, {
+			staleBefore: cutoff,
+			terminalBefore: cutoff,
+		});
+		if (hasMore) {
+			await ctx.scheduler.runAfter(
+				0,
+				internal.resolutionSessions.cleanupExpired,
+				{},
+			);
+		}
+		return null;
+	},
+});
+
+/**
+ * Deletes one batch of expired runs, else of Active sessions untouched since
+ * `staleBefore` and Terminal ones since `terminalBefore`. Every row it reads
+ * is deleted, so repeated batches always make progress.
+ */
+async function cleanupBatch(
+	ctx: MutationCtx,
+	cutoffs: { readonly staleBefore: number; readonly terminalBefore: number },
+): Promise<{ deleted: number; hasMore: boolean }> {
+	const expiredRuns = await ctx.db
+		.query("resolutionRuns")
+		.withIndex("by_expires_at", (q) => q.lte("expiresAt", Date.now()))
+		.take(CLEANUP_BATCH_SIZE);
+	if (expiredRuns.length > 0) {
+		await Promise.all(expiredRuns.map((run) => ctx.db.delete(run._id)));
+		// Sessions come after the runs, so there may be more.
+		return { deleted: expiredRuns.length, hasMore: true };
+	}
+	const activeRows = await ctx.db
+		.query("resolutionSessions")
+		.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+			q
+				.eq("lifecycle.state", "Active")
+				.lte("updatedAt", cutoffs.staleBefore),
+		)
+		.take(CLEANUP_BATCH_SIZE);
+	const terminalRows =
+		activeRows.length === CLEANUP_BATCH_SIZE
+			? []
+			: await ctx.db
+					.query("resolutionSessions")
+					.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+						q
+							.eq("lifecycle.state", "Terminal")
+							.lte("updatedAt", cutoffs.terminalBefore),
+					)
+					.take(CLEANUP_BATCH_SIZE - activeRows.length);
+	const rowsToDelete = [...activeRows, ...terminalRows];
+	await deleteResolutionSessions(ctx, rowsToDelete);
+	return {
+		deleted: rowsToDelete.length,
+		hasMore: rowsToDelete.length === CLEANUP_BATCH_SIZE,
+	};
+}
 
 function assertIdentifier(value: string, name: string): void {
 	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
