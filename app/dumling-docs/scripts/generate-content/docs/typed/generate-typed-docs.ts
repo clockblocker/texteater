@@ -1,3 +1,6 @@
+import { fileURLToPath } from "node:url";
+import { rules } from "dumspec";
+import { specRecords } from "../../../../src/lib/docs/spec-examples.ts";
 import { pathRelativeToSiteRoot } from "../../shared/paths";
 import { frontmatterForDocMeta } from "../metadata";
 import {
@@ -5,6 +8,9 @@ import {
 	publicHrefForRouteId,
 	publicMarkdownPathForRouteId,
 } from "../routes";
+import { checkRoutePages } from "../spec/route-page-check";
+import { loadSchemaRoutes } from "../spec/schema-routes";
+import { buildSpecPages, type SpecPage } from "../spec/spec-pages";
 import type { DocsOutput } from "../types";
 import type { TypedDocsGenerationConfig } from "./config";
 import { listTypedDocEntrypoints } from "./list-typed-doc-entrypoints";
@@ -19,7 +25,6 @@ import { loadTypedDocSource } from "./load-typed-doc-source";
 import {
 	type RenderedChildPage,
 	renderChildPages,
-	renderRuleDocument,
 	renderRuleDocumentBody,
 } from "./render-rule-document";
 
@@ -30,10 +35,14 @@ type RenderPart = {
 
 type EmittedDocDraft = {
 	description?: string;
+	/** A generated opening paragraph that precedes the parts. */
+	lead?: string;
 	navTitle?: string;
 	order: number;
 	parts: readonly RenderPart[];
 	routeId: string;
+	/** Generated Markdown sections that follow the parts. */
+	sections: readonly string[];
 	sourcePath: string;
 	title: string;
 };
@@ -78,6 +87,7 @@ function emitSingleDocumentDraft(
 		order: frontmatter.order,
 		parts: [{ document: source.document, includeExamples: true }],
 		routeId,
+		sections: [],
 		sourcePath: source.sourcePath,
 		title: frontmatter.title,
 	};
@@ -190,15 +200,10 @@ function renderDraftBody(
 	config: TypedDocsGenerationConfig,
 	childPages: readonly RenderedChildPage[],
 ): string {
-	const onlyPart = draft.parts.length === 1 ? draft.parts[0] : undefined;
-	if (onlyPart !== undefined) {
-		return renderRuleDocument(onlyPart.document, config, {
-			childPages,
-			titleOverride: draft.title,
-		});
-	}
-
 	const sections = [`# ${draft.title}`];
+	if (draft.lead !== undefined) {
+		sections.push(draft.lead);
+	}
 	for (const part of draft.parts) {
 		const body = renderRuleDocumentBody(part.document, config, {
 			includeExamples: part.includeExamples,
@@ -207,6 +212,7 @@ function renderDraftBody(
 			sections.push(body);
 		}
 	}
+	sections.push(...draft.sections);
 	if (childPages.length > 0) {
 		sections.push(renderChildPages(childPages));
 	}
@@ -214,77 +220,104 @@ function renderDraftBody(
 	return `${sections.join("\n\n").trim()}\n`;
 }
 
+/**
+ * Mirrors each language overlay onto its universal page, and fills in the
+ * ancestors of overlays and of generated language pages the same way.
+ */
 function buildMirroredLanguageDrafts(
 	overlaySources: readonly LanguageOverlaySource[],
 	universalsByRouteId: Map<string, UniversalConceptSource>,
+	generatedRouteIds: ReadonlySet<string>,
 ): EmittedDocDraft[] {
-	const overlaysByLang = new Map<string, LanguageOverlaySource[]>();
-	for (const source of overlaySources) {
-		const list = overlaysByLang.get(source.lang) ?? [];
-		list.push(source);
-		overlaysByLang.set(source.lang, list);
-	}
-
-	const drafts: EmittedDocDraft[] = [];
-
-	for (const [lang, sources] of overlaysByLang) {
-		const explicitByRouteId = new Map<string, LanguageOverlaySource>();
-		const mirroredRouteIds = new Set<string>();
-
-		for (const source of sources) {
-			explicitByRouteId.set(source.routeId, source);
-			mirroredRouteIds.add(source.routeId);
-			for (const ancestorRouteId of ancestorRouteIds(source.routeId)) {
+	const explicitByRouteId = new Map(
+		overlaySources.map((source) => [source.routeId, source] as const),
+	);
+	const mirroredRouteIds = new Set<string>();
+	for (const routeId of [
+		...explicitByRouteId.keys(),
+		...[...generatedRouteIds].filter(
+			(routeId) => !routeId.startsWith("u/"),
+		),
+	]) {
+		if (explicitByRouteId.has(routeId)) {
+			mirroredRouteIds.add(routeId);
+		}
+		for (const ancestorRouteId of ancestorRouteIds(routeId)) {
+			if (!generatedRouteIds.has(ancestorRouteId)) {
 				mirroredRouteIds.add(ancestorRouteId);
 			}
 		}
-
-		for (const routeId of [...mirroredRouteIds].toSorted()) {
-			const explicitOverlay = explicitByRouteId.get(routeId);
-
-			const universalRouteId = universalRouteIdForLanguageRoute(
-				routeId,
-				lang,
-			);
-			const universalSource = universalsByRouteId.get(universalRouteId);
-			if (universalSource === undefined) {
-				throw new Error(
-					`Cannot emit ${routeId}: missing universal counterpart ${universalRouteId}.`,
-				);
-			}
-
-			const mergedMeta = mergeMirroredMeta(
-				universalSource.document.meta,
-				explicitOverlay?.document.meta,
-			);
-
-			drafts.push({
-				description: mergedMeta.description,
-				navTitle: mergedMeta.navTitle,
-				order: mergedMeta.order,
-				parts: [
-					{
-						document: universalSource.document,
-						includeExamples: false,
-					},
-					...(explicitOverlay === undefined
-						? []
-						: [
-								{
-									document: explicitOverlay.document,
-									includeExamples: true,
-								},
-							]),
-				],
-				routeId,
-				sourcePath:
-					explicitOverlay?.sourcePath ?? universalSource.sourcePath,
-				title: mergedMeta.title,
-			});
-		}
 	}
 
-	return drafts;
+	return [...mirroredRouteIds].toSorted().map((routeId) => {
+		const explicitOverlay = explicitByRouteId.get(routeId);
+		const lang = routeId.split("/")[0] ?? routeId;
+		const universalRouteId = universalRouteIdForLanguageRoute(
+			routeId,
+			lang,
+		);
+		const universalSource = universalsByRouteId.get(universalRouteId);
+		if (universalSource === undefined) {
+			throw new Error(
+				`Cannot emit ${routeId}: missing universal counterpart ${universalRouteId}.`,
+			);
+		}
+
+		const mergedMeta = mergeMirroredMeta(
+			universalSource.document.meta,
+			explicitOverlay?.document.meta,
+		);
+
+		return {
+			description: mergedMeta.description,
+			navTitle: mergedMeta.navTitle,
+			order: mergedMeta.order,
+			parts: [
+				{
+					document: universalSource.document,
+					includeExamples: false,
+				},
+				...(explicitOverlay === undefined
+					? []
+					: [
+							{
+								document: explicitOverlay.document,
+								includeExamples: true,
+							},
+						]),
+			],
+			routeId,
+			sections: [],
+			sourcePath:
+				explicitOverlay?.sourcePath ?? universalSource.sourcePath,
+			title: mergedMeta.title,
+		};
+	});
+}
+
+const specPagesSourcePath = fileURLToPath(
+	new URL("../spec/spec-pages.ts", import.meta.url),
+);
+
+/** A generated spec page, introduced by the hand-written page at its route. */
+function specPageDraft(
+	page: SpecPage,
+	intro: UniversalConceptSource | LanguageOverlaySource | undefined,
+): EmittedDocDraft {
+	return {
+		description: page.description,
+		lead: page.lead,
+		navTitle: page.navTitle,
+		order: page.order,
+		parts:
+			intro === undefined
+				? []
+				: [{ document: intro.document, includeExamples: true }],
+		routeId: page.routeId,
+		sections: page.sections,
+		sourcePath: intro?.sourcePath ?? specPagesSourcePath,
+		title: page.title,
+	};
 }
 
 export async function discoverTypedDocs(
@@ -300,6 +333,30 @@ export async function discoverTypedDocs(
 	validateUniqueSourceRoutes(sources, "universal-concept-page");
 	validateUniqueSourceRoutes(sources, "language-overlay-page");
 
+	const routes = await loadSchemaRoutes();
+	const spec = buildSpecPages({
+		handWrittenRouteIds: new Set(sources.map((source) => source.routeId)),
+		records: specRecords(),
+		routes,
+		rules,
+	});
+	const specRouteIds = new Set(spec.pages.map((page) => page.routeId));
+	const routeProblems = checkRoutePages(
+		[...specRouteIds, ...sources.map((source) => source.routeId)],
+		routes,
+	);
+	if (routeProblems.length > 0) {
+		throw new Error(
+			`Docs pages and Dumling schema routes disagree:\n- ${routeProblems.join("\n- ")}`,
+		);
+	}
+	const appendices = new Map(
+		spec.appendices.map((appendix) => [
+			appendix.routeId,
+			appendix.sections,
+		]),
+	);
+
 	const generatedSources = sources.filter(
 		(source): source is GeneratedDocSource =>
 			source.kind === "generated-page",
@@ -312,12 +369,20 @@ export async function discoverTypedDocs(
 		(source): source is LanguageOverlaySource =>
 			source.kind === "language-overlay-page",
 	);
+	const introsByRouteId = new Map(
+		[...universalSources, ...overlaySources]
+			.filter((source) => specRouteIds.has(source.routeId))
+			.map((source) => [source.routeId, source] as const),
+	);
+	const mirroredOverlaySources = overlaySources.filter(
+		(source) => !specRouteIds.has(source.routeId),
+	);
 
 	const universalsByRouteId = new Map(
 		universalSources.map((source) => [source.routeId, source] as const),
 	);
 
-	for (const source of overlaySources) {
+	for (const source of mirroredOverlaySources) {
 		validateLanguageOverlaySource(source, universalsByRouteId);
 	}
 
@@ -325,10 +390,20 @@ export async function discoverTypedDocs(
 		...generatedSources.map((source) =>
 			emitSingleDocumentDraft(source, source.routeId),
 		),
-		...universalSources.map((source) =>
-			emitSingleDocumentDraft(source, source.routeId),
+		...universalSources
+			.filter((source) => !specRouteIds.has(source.routeId))
+			.map((source) => ({
+				...emitSingleDocumentDraft(source, source.routeId),
+				sections: appendices.get(source.routeId) ?? [],
+			})),
+		...spec.pages.map((page) =>
+			specPageDraft(page, introsByRouteId.get(page.routeId)),
 		),
-		...buildMirroredLanguageDrafts(overlaySources, universalsByRouteId),
+		...buildMirroredLanguageDrafts(
+			mirroredOverlaySources,
+			universalsByRouteId,
+			specRouteIds,
+		),
 	];
 
 	const pagesByRouteId = new Map<string, EmittedDocDraft>();

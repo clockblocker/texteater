@@ -5,7 +5,8 @@ import type { AttestedAttestation } from "./document-shapes.ts";
 
 let records: readonly Dumspec.SpecRecord[] | undefined;
 
-function specRecords(): readonly Dumspec.SpecRecord[] {
+/** Every dumspec Spec Record, loaded once per process. */
+export function specRecords(): readonly Dumspec.SpecRecord[] {
 	records ??= loadSpecRecords();
 	return records;
 }
@@ -40,7 +41,8 @@ function markedSentence(
 		.join("");
 }
 
-function exampleFor(
+/** One target of a loaded Spec Record, as a page example. */
+export function exampleFor(
 	record: Dumspec.SpecRecord,
 	target: number,
 ): AttestedAttestation {

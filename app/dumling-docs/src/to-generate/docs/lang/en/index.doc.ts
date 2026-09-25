@@ -13,6 +13,8 @@ const document = defineGeneratedDocPage({
 English units use \`language: "en"\`. Validate them with \`parseUnit\`
 and import concrete schemas from \`dumling/schema/en/<family>/<kind-name>\`.
 
+The English route and feature pages live under [/en/](/en/).
+
 ## Supported Lemma Families
 
 English supports the same public Lemma families as the other implemented language packs:

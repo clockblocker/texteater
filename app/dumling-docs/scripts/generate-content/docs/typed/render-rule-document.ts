@@ -8,13 +8,6 @@ export type RenderedChildPage = {
 	title: string;
 };
 
-export type RenderRuleDocumentOptions = {
-	childPages?: readonly RenderedChildPage[];
-	includeExamples?: boolean;
-	includeTitle?: boolean;
-	titleOverride?: string;
-};
-
 function renderRuleExample(
 	example: AttestedAttestation,
 	config: TypedDocsGenerationConfig,
@@ -67,10 +60,7 @@ function renderRuleBlock(
 export function renderRuleDocumentBody(
 	document: RuleDocument,
 	config: TypedDocsGenerationConfig,
-	options: Omit<
-		RenderRuleDocumentOptions,
-		"childPages" | "includeTitle"
-	> = {},
+	options: { includeExamples?: boolean } = {},
 ): string {
 	const includeExamples = options.includeExamples ?? true;
 	const sections: string[] = [];
@@ -124,23 +114,4 @@ export function renderChildPages(
 				: `- [${page.title}](${page.href}): ${page.description.trim()}`,
 		),
 	].join("\n");
-}
-
-export function renderRuleDocument(
-	document: RuleDocument,
-	config: TypedDocsGenerationConfig,
-	options: RenderRuleDocumentOptions = {},
-): string {
-	const sections = [`# ${options.titleOverride ?? document.meta.title}`];
-	const body = renderRuleDocumentBody(document, config, options);
-	if (body.length > 0) {
-		sections.push(body);
-	}
-
-	const childPages = options.childPages ?? [];
-	if (childPages.length > 0) {
-		sections.push(renderChildPages(childPages));
-	}
-
-	return `${sections.join("\n\n").trim()}\n`;
 }

@@ -8,6 +8,8 @@ const document = defineGeneratedDocPage({
 Hebrew units use \`language: "he"\`. Validate them with \`parseUnit\`
 and import concrete schemas from \`dumling/schema/he/<family>/<kind-name>\`.
 
+The Hebrew route and feature pages live under [/he/](/he/).
+
 ## Supported Lemma Families
 
 | \`family\` | \`kind\` values |
