@@ -847,6 +847,154 @@
 			"explanation": "Clicking either fixed anchor returns the same source-ordered um zu Lexeme/SCONJ membership. Source: https://universaldependencies.org/u/pos/SCONJ.html",
 			"contaminationKeys": ["target-lexeme:sconj:um-zu"]
 		},
+		"target-de-route-lexeme-part-infinitive-zu-click-zu": {
+			"input": {
+				"clickedSegmentIndex": 11,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Tom"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "beschloss"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brief"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schreiben"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "PART",
+				"memberSegmentIndices": [11]
+			},
+			"explanation": "A zu before an infinitive without um, ohne or statt is the infinitive marker: a singleton PART, not an SCONJ and not a member of the infinitive's verb.",
+			"contaminationKeys": ["target-lexeme:part:infinitive-zu"]
+		},
+		"target-de-route-lexeme-part-infinitive-zu-click-schreiben": {
+			"input": {
+				"clickedSegmentIndex": 13,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Tom"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "beschloss"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brief"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schreiben"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [13]
+			},
+			"explanation": "The infinitive is its own VERB; the infinitive marker zu before it stays a separate PART.",
+			"contaminationKeys": ["target-lexeme:part:infinitive-zu"]
+		},
 		"target-de-route-lexeme-adv-teils-teils-click-first": {
 			"input": {
 				"clickedSegmentIndex": 6,

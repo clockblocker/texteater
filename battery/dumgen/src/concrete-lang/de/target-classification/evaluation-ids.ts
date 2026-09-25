@@ -205,6 +205,8 @@ export const evaluationCaseIds = [
 	"target-de-route-lexeme-sconj",
 	"target-de-route-lexeme-sconj-um-zu-click-um",
 	"target-de-route-lexeme-sconj-um-zu-click-zu",
+	"target-de-route-lexeme-part-infinitive-zu-click-zu",
+	"target-de-route-lexeme-part-infinitive-zu-click-schreiben",
 	"target-de-route-lexeme-adv-teils-teils-click-first",
 	"target-de-route-lexeme-adv-teils-teils-click-second",
 	"target-de-route-lexeme-sym",

@@ -25,6 +25,12 @@ export const realizationEdits: readonly (readonly [string | RegExp, string])[] =
 			/ A Funktionsverbgefüge, a support verb with its predicate noun \([^)]*\), is one Collocation target[^.]*\.(?: [^.]*\.)?/u,
 			"",
 		],
+		// Intake has no measured wording for a bare infinitive zu; its PART
+		// route option carries it instead.
+		[
+			" A zu before an infinitive without um, ohne or statt is a singleton PART that never joins its infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
+			"",
+		],
 		[
 			/An established noncompositional expression is an Idiom;[^\n]*?only a support-verb predicate is a Collocation\.\n/u,
 			"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",

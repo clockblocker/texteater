@@ -24,29 +24,31 @@ export const routes = {
 		"Adverb that cannot inflect as an adjective (heute, dort, gern), including a whole adverbial correlator; never an adjective used adverbially",
 	"Lexeme/CCONJ":
 		"Coordinating conjunction, including a complete fixed correlator",
-	"Lexeme/DET": "Determiner modifying a noun",
+	"Lexeme/DET":
+		"A determiner directly modifying a noun (mein, dieser, kein, welcher, jeder), never the absorbed article der/die/das/ein of a noun",
 	"Lexeme/INTJ": "Interjection",
 	"Lexeme/NOUN":
 		"Common noun, including substantivized participles and a noun with the preposition it governs (Angst vor)",
 	"Lexeme/NUM": "Numeral",
-	"Lexeme/PART": "Particle",
+	"Lexeme/PART":
+		"Particle, including negation, modal and focus particles and the infinitive marker zu before an infinitive (schwer zu erklären, versucht zu schlafen)",
 	"Lexeme/PRON":
 		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
 	"Lexeme/PROPN": "Proper noun",
 	"Lexeme/SCONJ":
-		"Subordinating conjunction, including fixed multi-member conjunctions",
+		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
 		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal or copula",
 	"Phraseme/Aphorism": "Established concise attributed maxim",
 	"Phraseme/Collocation":
-		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning, including Funktionsverbgefüge (eine Entscheidung treffen, zur Verfügung stellen)",
+		"Funktionsverbgefüge: a support verb with its predicate noun, restricted in wording and compositional in meaning; wording without a predicate noun, such as a copula with a predicative adjective, is never one",
 	"Phraseme/DiscourseFormula": "Established fixed discourse formula",
 	"Phraseme/Idiom":
 		"Established noncompositional expression in this contextual meaning",
 	"Phraseme/Proverb": "Established traditional saying",
 	Unresolved:
-		"The exact assembled group is invalid, incomplete, includes free material, or has no defensible allowed route",
+		"No defensible complete fixed unit contains this occurrence: its exact members or its Family/Kind cannot be decided",
 };
 
 /** Definite/indefinite article forms a German NOUN target may absorb. */
