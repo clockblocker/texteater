@@ -689,7 +689,7 @@ for (const [id, example, rejected] of [
 		const output = await Effect.runPromise(
 			createDumgen({
 				...grammarFixture(example.idealOutput, {
-					canonical: "candidate_1",
+					canonical: "candidate_0",
 				}),
 				onOperation: (trace) => traces.push(trace),
 			}).resolveGrammar({
@@ -703,16 +703,18 @@ for (const [id, example, rejected] of [
 		const request = traces[0]?.calls[0]?.request;
 		if (!request || !("questions" in request))
 			throw Error("Expected feature judgment");
-		expect(request.questions.canonical?.criteria).toHaveProperty(
-			"candidate_1",
-			rejected,
-		);
+		// The owned article is never offered as the noun's headword.
+		expect(
+			Object.entries(request.questions.canonical?.criteria ?? {}).filter(
+				([key]) => key.startsWith("candidate_"),
+			),
+		).toEqual([["candidate_0", rejected]]);
 		const generation = traces[0]?.calls[1]?.request;
 		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
 		expect(generation).toHaveProperty("outputFormat", "text");
 		expect(traces[0]?.events).toContainEqual({
 			kind: "InflectedNounCanonicalForm",
-			data: { rejected, answer: "candidate_1" },
+			data: { rejected, answer: "candidate_0" },
 		});
 	});
 

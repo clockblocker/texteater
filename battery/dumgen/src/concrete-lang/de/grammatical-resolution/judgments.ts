@@ -321,9 +321,17 @@ export function resolveGrammarJudgments(
 						),
 					)
 				: undefined;
+		// A noun owns the article that is its first member (ADR 0035). A proper
+		// noun owns one only when cited with it, which stays a judgment.
+		const ownedArticle =
+			encounter.target.kind === "NOUN" && articleCandidates
+				? [...articleCandidates.values()].find(
+						(candidate) => candidate.realization === "Owned",
+					)
+				: undefined;
 		// Every source here sets Lemma precision. A preposition is never a
-		// noun's headword, so a governed one is not offered, nor is a fused or
-		// shortened article.
+		// noun's headword, so a governed one is not offered, nor is an owned
+		// article, standalone, fused or shortened.
 		const canonicalFormAlternatives = [
 			...new Set([
 				...storedLemmas.map((lemma) => lemma.canonicalForm),
@@ -332,6 +340,7 @@ export function resolveGrammarJudgments(
 					? input.members.filter(
 							(text, position) =>
 								!spellings[position] &&
+								!(position === 0 && ownedArticle) &&
 								!isGovernablePreposition(
 									text.toLocaleLowerCase("de"),
 								),
@@ -416,14 +425,6 @@ export function resolveGrammarJudgments(
 		)
 			? "Yes"
 			: null;
-		// A noun owns the article that is its first member (ADR 0035). A proper
-		// noun owns one only when cited with it, which stays a judgment.
-		const ownedArticle =
-			encounter.target.kind === "NOUN" && articleCandidates
-				? [...articleCandidates.values()].find(
-						(candidate) => candidate.realization === "Owned",
-					)
-				: undefined;
 		// What a member stands for when code knows it: a table spelling's
 		// texts, an owned standalone article's form, a VERB's subject es.
 		const memberSurfaces = input.members.map(
