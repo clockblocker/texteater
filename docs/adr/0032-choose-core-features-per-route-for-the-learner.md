@@ -11,19 +11,34 @@ route decides, and it decides by what is best for the learner. The textbook
 test, constant across the paradigm means lexical, is one input to that
 choice, not the rule.
 
-Closed, authored inventories are pillars of reading a language. A learner
-meets `mich` and `mir`, `dem` and `den`, as separate words to learn, so every
-Paradigm Cell of a pronoun or determiner is its own Lemma with one authored
-Reading and its own Knowledge. Open classes keep paradigm-varying features
-inflectional: a German NOUN's case and number stay on its Surface.
+Some closed, authored inventories are pillars of reading a language: their
+forms have to be memorized one by one, and the route's features name each cell
+uniquely. A learner meets `mich` and `mir`, `dem` and `den`, as separate words
+to learn, so every Paradigm Cell of a pillar is its own Lemma with one authored
+Reading and its own Knowledge. A word made of a stem and borrowed article
+endings (`dieser`, `mein`, `kein`) is learned once. It is one Lemma, and its
+forms are Surfaces. Open classes keep paradigm-varying features inflectional:
+a German NOUN's case and number stay on its Surface.
 
-- German PRON keeps case, number and gender in Core
-  ([ADR 0018](./0018-promote-german-personal-case-forms-to-lemmas.md)).
-- German DET moves case, number and agreement gender into Core for its whole
-  authored inventory: articles, demonstratives, possessives, `kein`,
-  interrogatives and quantifiers. `der` Nom.Masc.Sg and `der` Dat.Fem.Sg are
-  two Lemmas. A determiner without varying cells (`derlei`, `manch`) stays one
-  Lemma with unmarked coordinates. Possessor gender stays on the Surface.
+The route decides which features may be Core; a closed-class word fixes its
+cell coordinates in Core only if it is a pillar. A stem Lemma leaves them null
+in Core and marks them on each Surface, and Dumling rejects a coordinate marked
+in both. Among Lemmas authored per cell, no two of one Kind share all Core
+Features.
+
+- German PRON pillars keep case, number and gender in Core
+  ([ADR 0018](./0018-promote-german-personal-case-forms-to-lemmas.md)): the
+  personal pronouns with reflexive and formal `Sie`, the `der`-series
+  demonstratives and relatives, `wer`/`wen`/`wem`/`wessen`, and `jemand` and
+  `niemand`.
+- German DET pillars are the `der` and `ein` article tables. `der` Nom.Masc.Sg
+  and `der` Dat.Fem.Sg are two Lemmas. `ein` stays per cell as the reference
+  table for the `ein`-words.
+- German stems are one Lemma in both DET and PRON: the `der`-words (`dieser`,
+  `jener`, `welcher`, `jeder`, `derselbe`), the `ein`-words (`kein`, the
+  possessives, `irgendein`) and the quantifiers. They cite their Nom.Masc.Sg
+  form, or the plural when plural-cited (`einige`, `beide`). Possessor gender
+  stays where it was: PRON Core, DET Surface.
 - English PRON moves case, number, gender and reflexivity into Core: `I`,
   `me`, `my`, `mine` and `myself` are five Lemmas. Reflexivity is Core because
   `myself` is its own spelled word; German free `sich` stays one form whose
@@ -41,9 +56,10 @@ never through semantic relation claims.
   from the noun's case, number, gender and article. `der` in `der Frau` is the
   Lemma `der` Dat.Fem.Sg. This supersedes the agreement-based headword choice
   of [ADR 0024](./0024-select-noun-article-identities-by-agreement.md).
-- A cell's Canonical Form is its own spelling. No value records that `diesem`
-  belongs to `dieser`, so navigation that varies case also reaches cells of
-  other paradigms with the same type and coordinates (`diesem` to `jenem`,
-  `meinem` to `unserem`).
-- A German determiner Surface in context has no inflectional bag unless it
-  marks degree or possessor features. English PRON has no Surface inflection.
+- A pillar cell's Canonical Form is its own spelling. Navigation between
+  cells stays among pillars; a stem's forms are its own Surfaces, so `diesem`
+  never reaches `jenem`.
+- German article Surfaces have no inflectional bag; a stem's Surface marks its
+  cell. English PRON has no Surface inflection.
+
+Amended on 2026-09-25 to confine per-cell identity to pillars.

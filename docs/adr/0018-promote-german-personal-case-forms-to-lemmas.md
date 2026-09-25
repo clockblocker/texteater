@@ -32,5 +32,6 @@ not this project's choice of Lemma granularity:
 [possessor gender](https://universaldependencies.org/u/feat/Gender-psor.html).
 
 Amended by [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
-on 2026-09-25: German DET and English PRON take the same per-cell identity,
-so the German DET feature split above no longer holds.
+on 2026-09-25: per-cell identity holds for pillars only, now including the
+German articles and English PRON. Stem words such as `dieser`, `keiner` and the
+possessives are one Lemma whose Surfaces carry case, number and gender.
