@@ -16,8 +16,28 @@ const occurrenceAttestation = {
 			orthography: "Standard",
 		},
 		{
-			attested: "השמש",
-			orthography: "Standard",
+			attested: "ה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "השמש",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "שמש", surface: "שמש" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "שמש",
+			orthography: "Fused",
+			fusion: {
+				spelling: "השמש",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "שמש", surface: "שמש" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",

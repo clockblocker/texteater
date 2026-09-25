@@ -5,7 +5,15 @@ const occurrenceAttestation = {
 	members: [
 		{
 			attested: "ש",
-			orthography: "Standard",
+			orthography: "Fused",
+			fusion: {
+				spelling: "שתבוא",
+				components: [
+					{ span: "ש", surface: "ש" },
+					{ span: "תבוא", surface: "תבוא" },
+				],
+			},
+			component: 0,
 		},
 	],
 	realizationCoverage: "Full",
@@ -14,22 +22,23 @@ const occurrenceAttestation = {
 		language: "he",
 		normalizedSurface: "ש",
 		spelling: "Canonical",
-
 		lemma: {
 			unitKind: "Lemma",
 			language: "he",
 			canonicalForm: "ש",
-			family: "Morpheme",
-			kind: "Prefix",
-			coreFeatures: {},
+			family: "Lexeme",
+			kind: "SCONJ",
+			coreFeatures: {
+				case: null,
+			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"he", "Morpheme", "Prefix">;
+} satisfies Dumling.Attestation<"he", "Lexeme", "SCONJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "אמרת [ש]תבוא.",
 	classifierNotes:
-		"ש is modeled as the bound complementizer or relative-marker prefix morpheme.",
+		"ש is the SCONJ that introducing the complement clause, its own Lexeme and the Fused first piece of שתבוא.",
 } as const;

@@ -4,14 +4,22 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
+			attested: "the",
+			orthography: "Standard",
+		},
+		{
 			attested: "e-mail",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			article: "Definite",
+			number: "Sing",
+		},
 		language: "en",
 		normalizedSurface: "e-mail",
 		spelling: "Variant",

@@ -15,6 +15,23 @@ and import concrete schemas from \`dumling/schema/he/<family>/<kind-name>\`.
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
+
+## Prefixed Function Words
+
+The one-letter words written onto the next word are syntactic words, never
+Morphemes. \`ב\`, \`ל\`, \`כ\` and \`מ\` are \`ADP\`, \`ו\` is \`CCONJ\`, and \`ש\` is
+\`SCONJ\`. Each is its own Lexeme, and its Attestation member is \`Fused\`: it
+names the Fusion of the written word and the component it realizes.
+
+\`ה\` is the article of the noun or adjective it prefixes, and that word owns
+it. \`הבית\` is the noun \`בית\` with \`definite: Def\`, members \`[ה, בית]\`
+(both \`Fused\`) and \`articleEvidence: { kind: "Owned", member: 0 }\`;
+\`normalizedSurface\` is \`בית\`. After \`ב\`, \`כ\` or \`ל\` the article has no
+letters of its own: in \`לבית\` (*la-bayit*) the Fusion lists an empty \`ה\`
+component, the noun points at it with \`articleEvidence: { kind: "Hidden",
+fusion, component }\`, and its coverage is Partial. Where \`ה\` introduces a
+relative participle (\`האיש הנמצא בבית\`), it is \`SCONJ\`.
+
 ## Common Feature Areas
 
 Hebrew schemas include language-specific morphology alongside shared feature names.

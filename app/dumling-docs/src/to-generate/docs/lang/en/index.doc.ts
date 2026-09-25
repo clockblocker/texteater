@@ -23,11 +23,13 @@ English feature schemas are intentionally narrower than the abstract ontology.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\`, \`style\` | \`number\` |
+| \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\`, \`style\` | \`article\`, \`number\` |
 | \`VERB\` | \`phrasal\`, \`style\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\`, \`style\` | \`degree\` |
 
-English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. English verb \`tense\` supports \`Past\` and \`Pres\`, and \`verbForm\` supports \`Fin\`, \`Ger\`, \`Inf\`, and \`Part\`.
+English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. A noun owns its article: \`the big house\` is the Surface \`house\` with \`article: "Definite"\`, members \`[the, house]\` and \`articleEvidence: { kind: "Owned", member: 0 }\`. A noun without an article marks \`article: "None"\` and has \`articleEvidence: null\`.
+
+Pieces split off a contracted word are syntactic words with \`Fused\` members: \`'ll\` in \`I'll\` is AUX \`will\`, \`n't\` in \`don't\` is PART \`not\`, and possessive \`'s\` is its own PART Lemma, which attaches to a whole phrase (\`the king of England's hat\`). English verb \`tense\` supports \`Past\` and \`Pres\`, and \`verbForm\` supports \`Fin\`, \`Ger\`, \`Inf\`, and \`Part\`.
 
 ## Attestation Files
 
@@ -37,10 +39,10 @@ Lemma and Surface attestations are generated from files under
 \`lemma/\` and \`surface/\`. Occurrence evidence lives under
 \`attestation/{sentence}/\`; its bracketed sentence is docs-only review context.
 
-- [run](/en/lemma/sha256-kkB6900_KQWDVnZoQxymIMdBg_TZzPHLJCzUDb8ow2c/)
+- [run](/en/lemma/sha256-EBnGb-QwAVzocWLldMImNQdOZntjQLjtUjL3DNCJdT4/)
 - [book](/en/lemma/sha256-peGvpmPHvQCiqFBFNZbi36hUDI0f8IJAoerjb926bKI/)
-- [books](/en/surface/sha256-8jDh8y4Qj8_7roYVkECdSfRIIvJEb0rnUemOhPMh84U/)
-- [ran](/en/surface/sha256-jo34mLdUJMakhkq3JxExLTwq4CxSIJH4Hr86SrcAXuU/)
+- [books](/en/surface/sha256-U6ImMkSY3MiZvE4wAU1T7OCbSjmixPHD4xjmFwqjsmE/)
+- [ran](/en/surface/sha256-GYKeCGoC5m4E11-NDgmpLjL2snGBdW17AnplC5xWrEo/)
 
 ## Example
 

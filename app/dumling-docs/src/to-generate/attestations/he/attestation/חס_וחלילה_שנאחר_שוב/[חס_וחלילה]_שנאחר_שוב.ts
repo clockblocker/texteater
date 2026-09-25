@@ -8,8 +8,28 @@ const occurrenceAttestation = {
 			orthography: "Standard",
 		},
 		{
-			attested: "וחלילה",
-			orthography: "Standard",
+			attested: "ו",
+			orthography: "Fused",
+			fusion: {
+				spelling: "וחלילה",
+				components: [
+					{ span: "ו", surface: "ו" },
+					{ span: "חלילה", surface: "חלילה" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "חלילה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "וחלילה",
+				components: [
+					{ span: "ו", surface: "ו" },
+					{ span: "חלילה", surface: "חלילה" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",

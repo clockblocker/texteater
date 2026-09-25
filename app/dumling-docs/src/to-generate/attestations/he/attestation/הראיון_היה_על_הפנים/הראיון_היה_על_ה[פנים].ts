@@ -4,15 +4,39 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "פנים",
+			attested: "על",
 			orthography: "Standard",
+		},
+		{
+			attested: "ה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הפנים",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "פנים", surface: "פנים" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "פנים",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הפנים",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "פנים", surface: "פנים" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
 		language: "he",
-		normalizedSurface: "פנים",
+		normalizedSurface: "על הפנים",
 		spelling: "Canonical",
 
 		lemma: {
@@ -31,5 +55,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "הראיון היה על ה[פנים].",
 	classifierNotes:
-		"The Full Attestation preserves the complete normalized Surface פנים, which resolves to the idiom Lemma על הפנים rather than a noun Lemma.",
+		"The idiom על הפנים owns every piece of its occurrence, including ה and פנים, the Fused pieces of הפנים. The review span on פנים does not make it a noun Attestation.",
 } as const;

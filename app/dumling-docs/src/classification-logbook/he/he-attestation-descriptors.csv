@@ -4,15 +4,16 @@ sentence_markdown,normalizedSurface,grundform,family,kind
 [אין] מקום פנוי.,אין,Grundform,Lexeme,VERB
 אל [תלך] לבד.,תלך,Not Grundform,Lexeme,VERB
 [אמא] התקשרה.,אמא,Undetermined,Lexeme,NOUN
-אמרת [ש]תבוא.,ש,Grundform,Morpheme,Prefix
+אמרת [ש]תבוא.,ש,Grundform,Lexeme,SCONJ
 אנחנו [הולכים] עכשיו.,הולכים,Not Grundform,Lexeme,VERB
 [אני] לא בטוחה.,אני,Undetermined,Lexeme,PRON
 "אפשר מים, [בבקשה]?",בבקשה,Grundform,Phraseme,DiscourseFormula
 [בואו] לכאן.,בואו,Not Grundform,Lexeme,VERB
 [בתי] הספר נסגרו מוקדם.,בתי,Not Grundform,Lexeme,NOUN
-ה[אוכל] כבר מוכן.,אוכל,Undetermined,Lexeme,NOUN
+ה[אוכל] כבר מוכן.,אוכל,Grundform,Lexeme,NOUN
+האיש [ה]נמצא בבית.,ה,Grundform,Lexeme,SCONJ
 "הבטיחו דרמה, אבל [לא דובים ולא יער].",לא דובים ולא יער,Grundform,Phraseme,Idiom
-[ה]בית פתוח.,ה,Undetermined,Lexeme,DET
+[ה]בית פתוח.,בית,Grundform,Lexeme,NOUN
 "הדו""ח [נכתב] אתמול.",נכתב,Not Grundform,Lexeme,VERB
 הוא [התכתב] עם המרצה.,התכתב,Not Grundform,Lexeme,VERB
 הוא [כתב] מהר.,כתב,Grundform,Lexeme,VERB
@@ -20,16 +21,16 @@ sentence_markdown,normalizedSurface,grundform,family,kind
 החדרים [גדולים].,גדולים,Not Grundform,Lexeme,ADJ
 היא [כתבה] מכתב קצר.,כתבה,Not Grundform,Lexeme,VERB
 [הם] הגיעו בזמן.,הם,Undetermined,Lexeme,PRON
-הם נפגשו [ב]בית.,ב,Grundform,Morpheme,Prefix
+הם נפגשו [ב]בית.,ב,Grundform,Lexeme,ADP
 הספר [של] נועה נשאר כאן.,של,Grundform,Lexeme,ADP
-[הספרים] על השולחן.,הספרים,Not Grundform,Lexeme,NOUN
-הראיון היה על ה[פנים].,פנים,Not Grundform,Phraseme,Idiom
-השאלות [הטובות] נשארו לסוף.,הטובות,Not Grundform,Lexeme,ADJ
-[ו]דנה כבר חיכתה בחוץ.,ו,Grundform,Morpheme,Clitic
+[הספרים] על השולחן.,ספרים,Not Grundform,Lexeme,NOUN
+הראיון היה על ה[פנים].,על הפנים,Grundform,Phraseme,Idiom
+השאלות [הטובות] נשארו לסוף.,טובות,Not Grundform,Lexeme,ADJ
+[ו]דנה כבר חיכתה בחוץ.,ו,Grundform,Lexeme,CCONJ
 זו טעות [גדולה].,גדולה,Not Grundform,Lexeme,ADJ
-חזרתי ל[בית].,בית,Not Grundform,Lexeme,NOUN
+חזרתי ל[בית].,בית,Grundform,Lexeme,NOUN
 [חס וחלילה] שנאחר שוב.,חס וחלילה,Grundform,Phraseme,Idiom
-יצאתי [ל]עבודה מוקדם.,ל,Grundform,Morpheme,Prefix
+יצאתי [ל]עבודה מוקדם.,ל,Grundform,Lexeme,ADP
 [ירושלים] יפה בלילה.,ירושלים,Grundform,Lexeme,PROPN
 [יש] קפה במטבח.,יש,Grundform,Lexeme,VERB
 [מה נשמע] אצלכם?,מה נשמע,Grundform,Phraseme,DiscourseFormula

@@ -28,7 +28,7 @@ Start with:
 | \`Morpheme\` | \`Circumfix\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 
-Fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\` are not Lemmas; each piece stands for its own word and its Attestation member carries the orthography \`Fused\`. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.
+Fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\` are not Lemmas; each piece stands for its own word and its Attestation member carries the orthography \`Fused\`. In \`Ich bin im Wald\`, ADP \`in\` has the member \`i\`, and the noun \`Wald\` owns the article piece \`m\`: its members are \`[m, Wald]\`. A shortened standalone article such as \`'ne\` is a \`Shorthand\` member of its noun. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.
 
 ## Common Feature Areas
 
@@ -36,11 +36,27 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`gender\`, \`hyph\` | \`case\`, \`number\` |
+| \`NOUN\` | \`gender\`, \`hyph\` | \`article\`, \`case\`, \`number\` |
 | \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\`, \`verbType\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`foreign\`, \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
+
+## Nouns and Their Articles
+
+A German noun owns its article. The article is a member of the noun's
+Attestation, even across an adjective (\`das rote Band\`), so clicking it opens
+the noun. Every noun Surface marks \`article\` as \`Definite\`, \`Indefinite\` or
+\`None\`; a bare noun or one after a possessive or numeral (\`meine Mutter\`,
+\`drei Seen\`) is \`None\`. \`normalizedSurface\` is the noun's own letters,
+without the article. A host adds the article when it displays the noun, from
+the Lemma's gender and the Surface's case, number and article.
+
+\`articleEvidence\` says where the article is attested:
+
+- \`{ kind: "Owned", member }\`: the index of the article member, in \`[Die, Mutter]\` or \`[m, Wald]\`; coverage is Full
+- \`{ kind: "Shared", article }\`: an article the noun does not own, such as the shared \`der\` of \`der Aufstieg und Abstieg\`; coverage is Partial
+- \`null\`: the noun has no article, and \`article\` is \`None\`
 
 ## Example
 
@@ -67,9 +83,9 @@ const seenSurface = {
 \tnormalizedSurface: "Seen",
 \tspelling: "Canonical",
 \tinflectionalFeatures: {
+\t\tarticle: "None",
 \t\tcase: "Nom",
 \t\tnumber: "Plur",
-\t\tarticle: null,
 \t},
 \tsurfaceFeatures: null,
 } satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;

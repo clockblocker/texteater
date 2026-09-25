@@ -18,7 +18,7 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			article: null,
+			article: "None",
 			case: "Dat",
 			number: "Sing",
 		},

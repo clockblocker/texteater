@@ -16,8 +16,28 @@ const occurrenceAttestation = {
 			orthography: "Standard",
 		},
 		{
-			attested: "im",
-			orthography: "Standard",
+			attested: "i",
+			orthography: "Fused",
+			fusion: {
+				spelling: "im",
+				components: [
+					{ span: "i", surface: "in" },
+					{ span: "m", surface: "dem" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "m",
+			orthography: "Fused",
+			fusion: {
+				spelling: "im",
+				components: [
+					{ span: "i", surface: "in" },
+					{ span: "m", surface: "dem" },
+				],
+			},
+			component: 1,
 		},
 		{
 			attested: "Mund",

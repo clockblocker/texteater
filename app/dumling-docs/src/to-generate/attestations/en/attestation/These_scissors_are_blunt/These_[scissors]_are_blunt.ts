@@ -9,6 +9,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "en",
@@ -16,6 +17,7 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
+			article: "None",
 			number: "Ptan",
 		},
 		lemma: {

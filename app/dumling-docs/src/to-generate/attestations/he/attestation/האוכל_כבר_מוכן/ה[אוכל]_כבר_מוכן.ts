@@ -4,14 +4,38 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
+			attested: "ה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "האוכל",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "אוכל", surface: "אוכל" },
+				],
+			},
+			component: 0,
+		},
+		{
 			attested: "אוכל",
-			orthography: "Standard",
+			orthography: "Fused",
+			fusion: {
+				spelling: "האוכל",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "אוכל", surface: "אוכל" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			definite: "Def",
+			number: "Sing",
+		},
 		language: "he",
 		normalizedSurface: "אוכל",
 		spelling: "Canonical",
@@ -35,5 +59,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "ה[אוכל] כבר מוכן.",
 	classifierNotes:
-		"אוכל is the noun food here, separated from the future-verb homograph by lemma and POS.",
+		"אוכל is the noun food here, separated from the future-verb homograph by lemma and POS. It owns the article ה, so the Surface records Def.",
 } as const;

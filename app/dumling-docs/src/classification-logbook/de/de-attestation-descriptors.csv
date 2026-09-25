@@ -10,12 +10,12 @@ Das ist [nicht] mein Problem.,nicht,Grundform,Lexeme,PART
 Das ist schwer [zu] erklären.,zu,Grundform,Lexeme,PART
 Das [muss] heute noch raus.,muss,Not Grundform,Lexeme,VERB
 Das muss heute noch [raus].,raus,Undetermined,Lexeme,ADV
-Das [Rennen] hat Spaß gemacht.,Rennen,Undetermined,Lexeme,NOUN
-Das rote [Band] lag auf dem Geschenk.,Band,Undetermined,Lexeme,NOUN
+Das [Rennen] hat Spaß gemacht.,Rennen,Grundform,Lexeme,NOUN
+Das rote [Band] lag auf dem Geschenk.,Band,Grundform,Lexeme,NOUN
 Das rote Band [lag] auf dem Geschenk.,lag,Not Grundform,Lexeme,VERB
 Das rote Band lag [auf] dem Geschenk.,auf,Grundform,Lexeme,ADP
-Das [Schloss] an der Tür klemmt.,Schloss,Undetermined,Lexeme,NOUN
-Das [Schloss] über dem Fluss wurde renoviert.,Schloss,Undetermined,Lexeme,NOUN
+Das [Schloss] an der Tür klemmt.,Schloss,Grundform,Lexeme,NOUN
+Das [Schloss] über dem Fluss wurde renoviert.,Schloss,Grundform,Lexeme,NOUN
 Das [Un]- in Unkosten wirkt historisch irritierend.,Un,Grundform,Morpheme,Prefix
 Das [wäre] fast schief gewesen.,wäre,Not Grundform,Lexeme,AUX
 Das wäre [fast] schief gewesen.,fast,Undetermined,Lexeme,ADV
@@ -23,32 +23,31 @@ Das wäre fast schief [gewesen].,gewesen,Not Grundform,Lexeme,AUX
 Das wäre schön [gewesen].,gewesen,Not Grundform,Lexeme,AUX
 "Der Autor, [dessen] Buch fehlt, wartet draußen.",dessen,Grundform,Lexeme,PRON
 Der Brief ist schon [geschrieben].,geschrieben,Grundform,Lexeme,ADJ
-Der dritte [Band] ist längst vergriffen.,Band,Undetermined,Lexeme,NOUN
+Der dritte [Band] ist längst vergriffen.,Band,Grundform,Lexeme,NOUN
 Der Fährmann hat uns [übergesetzt].,übergesetzt,Not Grundform,Lexeme,VERB
 Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
 Der hockte da im grünen Gras; dem [floß] der Kaffee auf die Nas.,floß,Not Grundform,Lexeme,VERB
 Der hockte da im grünen Gras; dem floß der Kaffee [auf] die Nas.,auf,Grundform,Lexeme,ADP
-Der [Kiefer] schmerzte nach der Operation.,Kiefer,Undetermined,Lexeme,NOUN
+Der [Kiefer] schmerzte nach der Operation.,Kiefer,Grundform,Lexeme,NOUN
 Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,ADJ
 Der Laster [fuhr] das Schild um.,fuhr um,Not Grundform,Lexeme,VERB
-Der [Leiter] der Werkstatt kam später.,Leiter,Undetermined,Lexeme,NOUN
+Der [Leiter] der Werkstatt kam später.,Leiter,Grundform,Lexeme,NOUN
 Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,ADJ
-Der [Reisende] wartete draußen.,Reisende,Undetermined,Lexeme,NOUN
+Der [Reisende] wartete draußen.,Reisende,Grundform,Lexeme,NOUN
 Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,ADJ
-Die alte [Kiefer] steht am Hang.,Kiefer,Undetermined,Lexeme,NOUN
+Die alte [Kiefer] steht am Hang.,Kiefer,Grundform,Lexeme,NOUN
 Die [Angestellten] streikten gestern.,Angestellten,Not Grundform,Lexeme,NOUN
 Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,ADJ
 Die Aufgabe bleibt [ungelöst].,ungelöst,Grundform,Lexeme,ADJ
-Die [Band] spielt heute im Kellerclub.,Band,Undetermined,Lexeme,NOUN
+Die [Band] spielt heute im Kellerclub.,Band,Grundform,Lexeme,NOUN
 Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,ADJ
 Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,ADJ
 Die Kartoffeln sind bereits [gekocht].,gekocht,Grundform,Lexeme,ADJ
-Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Undetermined,Lexeme,NOUN
+Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Grundform,Lexeme,NOUN
 Die [linke] Hand zitterte.,linke,Not Grundform,Lexeme,ADJ
 Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
-Die [Mutter] passt nicht auf diese Schraube.,Mutter,Undetermined,Lexeme,NOUN
-[Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Grundform,Lexeme,DET
-Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Undetermined,Lexeme,NOUN
+Die [Mutter] passt nicht auf diese Schraube.,Mutter,Grundform,Lexeme,NOUN
+Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Not Grundform,Lexeme,NOUN
 Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat mitgebracht,Not Grundform,Lexeme,VERB
 Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Grundform,Lexeme,PRON
 Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,hat mitgebracht,Not Grundform,Lexeme,VERB
@@ -66,7 +65,7 @@ Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o we
 Die Tür ist [geschlossen].,geschlossen,Grundform,Lexeme,ADJ
 "Die Zeugin, [deren] Aussage zählt, bleibt anonym.",deren,Grundform,Lexeme,PRON
 Ein [interessierter] Leser fragte nach.,interessierter,Not Grundform,Lexeme,ADJ
-Ein [Verletzter] lag am Straßenrand.,Verletzter,Undetermined,Lexeme,NOUN
+Ein [Verletzter] lag am Straßenrand.,Verletzter,Grundform,Lexeme,NOUN
 [Einst] ging er an Ufers Rand mit der Mappe in der Hand.,einst,Undetermined,Lexeme,ADV
 Einst [ging] er an Ufers Rand mit der Mappe in der Hand.,ging,Not Grundform,Lexeme,VERB
 Einst ging er [an] Ufers Rand mit der Mappe in der Hand.,an,Grundform,Lexeme,ADP
@@ -104,7 +103,7 @@ In Berlin betreibt die [BVG] die U-Bahn.,BVG,Undetermined,Lexeme,PROPN
 In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge t,Grundform,Morpheme,Circumfix
 "Jetzt schien die Sonne gar zu sehr, [da] ward ihm sein Gewehr zu schwer.",da,Undetermined,Lexeme,ADV
 "Jetzt schien die Sonne gar zu sehr, da [ward] ihm sein Gewehr zu schwer.",ward,Not Grundform,Lexeme,VERB
-Meine [Mutter] ruft jeden Sonntag an.,Mutter,Undetermined,Lexeme,NOUN
+Meine [Mutter] ruft jeden Sonntag an.,Mutter,Grundform,Lexeme,NOUN
 Mit den [Kindern] ist es nie langweilig.,Kindern,Not Grundform,Lexeme,NOUN
 Mit [keinem] Wort erwähnte sie den Plan.,keinem,Not Grundform,Lexeme,DET
 "[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",morgenstund hat gold im mund,Not Grundform,Phraseme,Proverb
@@ -118,8 +117,8 @@ Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
 Pass [auf] dich auf!,pass auf,Not Grundform,Lexeme,VERB
 Pass auf [dich] auf!,dich,Grundform,Lexeme,PRON
 Pass auf dich [auf]!,pass auf,Not Grundform,Lexeme,VERB
-[Schwimmen] ist gesund.,Schwimmen,Undetermined,Lexeme,NOUN
-Sein ständiges [Meckern] nervt.,Meckern,Undetermined,Lexeme,NOUN
+[Schwimmen] ist gesund.,Schwimmen,Grundform,Lexeme,NOUN
+Sein ständiges [Meckern] nervt.,Meckern,Grundform,Lexeme,NOUN
 Sie [erinnert] sich an den Geruch.,erinnert sich,Not Grundform,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ

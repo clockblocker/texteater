@@ -5,34 +5,58 @@ const occurrenceAttestation = {
 	members: [
 		{
 			attested: "ה",
-			orthography: "Standard",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הבית",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "בית", surface: "בית" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "בית",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הבית",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "בית", surface: "בית" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
 		language: "he",
-		normalizedSurface: "ה",
+		normalizedSurface: "בית",
 		spelling: "Canonical",
-
+		inflectionalFeatures: {
+			definite: "Def",
+			number: "Sing",
+		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "he",
-			canonicalForm: "ה",
+			canonicalForm: "בית",
 			family: "Lexeme",
-			kind: "DET",
+			kind: "NOUN",
 			coreFeatures: {
-				pronType: "Art",
+				gender: "Masc",
+				abbr: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"he", "Lexeme", "DET">;
+} satisfies Dumling.Attestation<"he", "Lexeme", "NOUN">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[ה]בית פתוח.",
 	classifierNotes:
-		"The standalone article is modeled as DET with pronType Art, not as a noun definiteness feature.",
+		"The article ה is owned by its noun: clicking it opens בית (Def), whose members are the Fused pieces ה and בית. normalizedSurface is the noun's own letters.",
 } as const;

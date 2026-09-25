@@ -4,16 +4,24 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
+			attested: "Das",
+			orthography: "Standard",
+		},
+		{
 			attested: "Schloss",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
-	articleEvidence: null,
+	articleEvidence: { kind: "Owned", member: 0 },
 	valencyEvidence: [],
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			article: "Definite",
+			case: "Nom",
+			number: "Sing",
+		},
 		language: "de",
 		normalizedSurface: "Schloss",
 		spelling: "Canonical",

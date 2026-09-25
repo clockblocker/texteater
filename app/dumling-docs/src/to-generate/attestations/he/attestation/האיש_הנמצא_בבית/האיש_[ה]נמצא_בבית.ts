@@ -4,44 +4,41 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: 'צה"ל',
+			attested: "ה",
 			orthography: "Fused",
 			fusion: {
-				spelling: 'בצה"ל',
+				spelling: "הנמצא",
 				components: [
-					{ span: "ב", surface: "ב" },
-					{ span: 'צה"ל', surface: 'צה"ל' },
+					{ span: "ה", surface: "ה" },
+					{ span: "נמצא", surface: "נמצא" },
 				],
 			},
-			component: 1,
+			component: 0,
 		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
 		language: "he",
-		normalizedSurface: 'צה"ל',
+		normalizedSurface: "ה",
 		spelling: "Canonical",
-
 		lemma: {
 			unitKind: "Lemma",
 			language: "he",
-			canonicalForm: 'צה"ל',
+			canonicalForm: "ה",
 			family: "Lexeme",
-			kind: "PROPN",
+			kind: "SCONJ",
 			coreFeatures: {
-				abbr: "Yes",
-				gender: "Masc",
+				case: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"he", "Lexeme", "PROPN">;
+} satisfies Dumling.Attestation<"he", "Lexeme", "SCONJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
-	sentenceMarkdown: 'הוא שירת ב[צה"ל].',
+	sentenceMarkdown: "האיש [ה]נמצא בבית.",
 	classifierNotes:
-		'צה"ל is an abbreviated proper noun with the quote mark retained and abbr Yes.',
+		"ה introduces the relative participle נמצא, so it is the SCONJ that, not the article; the article ה of האיש belongs to the noun איש.",
 } as const;

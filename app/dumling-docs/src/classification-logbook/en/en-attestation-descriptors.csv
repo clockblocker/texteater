@@ -4,14 +4,15 @@ Abso-[bloody]-lutely not.,bloody,Grundform,Morpheme,Infix
 Could you [wind] the old clock?,wind,Undetermined,Lexeme,VERB
 Do it [like] I showed you.,like,Grundform,Lexeme,SCONJ
 [Does] this key open the archive?,does,Not Grundform,Lexeme,AUX
-"During my [walk] in a park, I saw a squirrel.",walk,Undetermined,Lexeme,NOUN
+"During my [walk] in a park, I saw a squirrel.",walk,Grundform,Lexeme,NOUN
 "For this layout, [less is more].",less is more,Grundform,Phraseme,Aphorism
 I [definately] saved the file.,definitely,Undetermined,Lexeme,ADV
+I do[n't] know yet.,not,Grundform,Lexeme,PART
 I emailed [them] yesterday.,them,Grundform,Lexeme,PRON
 I know [that] you tried.,that,Grundform,Lexeme,SCONJ
 I [saw] the comet through binoculars.,saw,Not Grundform,Lexeme,VERB
 "If I [were] you, I would wait.",were,Not Grundform,Lexeme,AUX
-I'[ll] call when I arrive.,ll,Grundform,Morpheme,Clitic
+I['ll] call when I arrive.,will,Grundform,Lexeme,AUX
 Is [OK] still acceptable here?,OK,Grundform,Lexeme,INTJ
 Mira finally [spilled] the beans.,spilled the beans,Not Grundform,Phraseme,Idiom
 "Move [that] chair, please.",that,Undetermined,Lexeme,DET
@@ -22,7 +23,7 @@ Please [look] it up before replying.,look up,Undetermined,Lexeme,VERB
 "Remember, the [early bird] catches the worm.",the early bird catches the worm,Grundform,Phraseme,Proverb
 [Running] before breakfast clears my head.,running,Not Grundform,Lexeme,VERB
 [See] you later at the station.,see you later,Grundform,Phraseme,DiscourseFormula
-Send the [e-mail] before noon.,e-mail,Undetermined,Lexeme,NOUN
+Send the [e-mail] before noon.,e-mail,Grundform,Lexeme,NOUN
 She gave [up] after midnight.,gave up,Not Grundform,Lexeme,VERB
 She performed [best] under pressure.,best,Not Grundform,Lexeme,ADV
 Tag the issue with [#] before the number.,#,Not Grundform,Lexeme,SYM
@@ -31,16 +32,17 @@ That answer was [un]believable.,un,Grundform,Morpheme,Prefix
 The [bio]reactor failed overnight.,bio,Grundform,Morpheme,Root
 The [data] are still inconsistent.,data,Not Grundform,Lexeme,NOUN
 The estimate was thirty[ish] minutes.,ish,Grundform,Morpheme,Suffix
+The king of England['s] hat blew off.,'s,Grundform,Lexeme,PART
 The note was [written] in pencil.,written,Not Grundform,Lexeme,VERB
 The old laptop finally [kicked] the bucket.,kicked the bucket,Not Grundform,Phraseme,Idiom
-The pipe contained traces of [lead].,lead,Undetermined,Lexeme,NOUN
+The pipe contained traces of [lead].,lead,Grundform,Lexeme,NOUN
 The plane will [take] off at dawn.,take off,Undetermined,Lexeme,VERB
 The report says [COVID-ish] twice.,COVID-ish,Grundform,Lexeme,X
-The [saw] needs a new blade.,saw,Undetermined,Lexeme,NOUN
-The sign advertised [acommodation] nearby.,accommodation,Undetermined,Lexeme,NOUN
+The [saw] needs a new blade.,saw,Grundform,Lexeme,NOUN
+The sign advertised [acommodation] nearby.,accommodation,Grundform,Lexeme,NOUN
 The [Smiths] invited everyone over.,Smiths,Not Grundform,Lexeme,PROPN
 The [twenty-first] attempt finally passed.,twenty-first,Undetermined,Lexeme,ADJ
-The [wind] shifted before dawn.,wind,Undetermined,Lexeme,NOUN
+The [wind] shifted before dawn.,wind,Grundform,Lexeme,NOUN
 These [scissors] are blunt.,scissors,Grundform,Lexeme,NOUN
 [They] left their umbrella here.,they,Grundform,Lexeme,PRON
 This exam was a [walk] in the park.,walk in the park,Grundform,Phraseme,Idiom

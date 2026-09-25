@@ -4,11 +4,16 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
+			attested: "The",
+			orthography: "Standard",
+		},
+		{
 			attested: "data",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
 		language: "en",
@@ -16,6 +21,7 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
+			article: "Definite",
 			number: "Plur",
 		},
 		lemma: {

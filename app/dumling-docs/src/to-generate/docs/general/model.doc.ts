@@ -55,8 +55,13 @@ belong to consumers.
 
 An Attestation has \`unitKind: "Attestation"\`, a Surface, a non-empty ordered
 \`members\` tuple, and \`realizationCoverage: "Full" | "Partial"\`. Each member
-records exact \`attested\` text and \`orthography: "Standard" | "Typo"\`.
-Sentences and clicks belong to the consuming application.
+records exact \`attested\` text and \`orthography: "Standard" | "Typo" |
+"Shorthand" | "Fused"\`. A \`Fused\` member is one piece of a fused word; it
+also carries the \`fusion\` it belongs to and the index of the \`component\` it
+realizes. German, English and Hebrew noun Attestations, and Hebrew adjective
+Attestations, carry \`articleEvidence\`: an \`Owned\` article member, a
+\`Shared\` article, a \`Hidden\` Fusion component, or \`null\` when the noun has
+no article. Sentences and clicks belong to the consuming application.
 
 ## Validation and routing
 

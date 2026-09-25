@@ -7,6 +7,7 @@ export const booksSurface = {
 	spelling: "Canonical",
 
 	inflectionalFeatures: {
+		article: "Definite",
 		number: "Plur",
 	},
 	surfaceFeatures: null,

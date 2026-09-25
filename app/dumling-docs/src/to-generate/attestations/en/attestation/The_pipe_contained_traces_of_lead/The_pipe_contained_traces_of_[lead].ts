@@ -9,9 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			article: "None",
+			number: "Sing",
+		},
 		language: "en",
 		normalizedSurface: "lead",
 		spelling: "Canonical",

@@ -5,7 +5,15 @@ const occurrenceAttestation = {
 	members: [
 		{
 			attested: "תל",
-			orthography: "Standard",
+			orthography: "Fused",
+			fusion: {
+				spelling: "לתל",
+				components: [
+					{ span: "ל", surface: "ל" },
+					{ span: "תל", surface: "תל" },
+				],
+			},
+			component: 1,
 		},
 		{
 			attested: "אביב",

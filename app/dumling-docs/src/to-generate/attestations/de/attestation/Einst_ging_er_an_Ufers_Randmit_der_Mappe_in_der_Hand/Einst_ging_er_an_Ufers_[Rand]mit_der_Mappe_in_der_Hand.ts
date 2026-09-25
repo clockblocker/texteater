@@ -13,7 +13,11 @@ const occurrenceAttestation = {
 	valencyEvidence: [],
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			article: "None",
+			case: null,
+			number: "Sing",
+		},
 		language: "de",
 		normalizedSurface: "Rand",
 		spelling: "Canonical",

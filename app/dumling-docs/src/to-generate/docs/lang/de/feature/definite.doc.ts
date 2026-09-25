@@ -1,9 +1,9 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as dieArticle } from "../../../../attestations/de/attestation/Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht/[Die]_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht.ts";
+import { attestation as derArticle } from "../../../../attestations/de/attestation/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
 
 const document = defineLanguageOverlayPage({
 	description: "German Definite.",
-	examples: [dieArticle],
+	examples: [derArticle],
 	family: "feature",
 	leaf: "Definite",
 	order: 8014,

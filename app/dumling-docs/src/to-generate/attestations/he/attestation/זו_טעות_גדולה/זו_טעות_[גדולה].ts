@@ -9,6 +9,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "he",

@@ -4,32 +4,49 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "ll",
-			orthography: "Standard",
+			attested: "'ll",
+			orthography: "Fused",
+			fusion: {
+				spelling: "I'll",
+				components: [
+					{ span: "I", surface: "I" },
+					{ span: "'ll", surface: "will" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
 		language: "en",
-		normalizedSurface: "ll",
-		spelling: "Variant",
-
+		normalizedSurface: "will",
+		spelling: "Canonical",
+		inflectionalFeatures: {
+			verbForm: "Fin",
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
-			canonicalForm: "'ll",
-			family: "Morpheme",
-			kind: "Clitic",
-			coreFeatures: {},
+			canonicalForm: "will",
+			family: "Lexeme",
+			kind: "AUX",
+			coreFeatures: {
+				abbr: null,
+				style: null,
+			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"en", "Morpheme", "Clitic">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "AUX">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
-	sentenceMarkdown: "I'[ll] call when I arrive.",
+	sentenceMarkdown: "I['ll] call when I arrive.",
 	classifierNotes:
-		'The apostrophe is outside the selected substring, so `surface.spelling: "Variant"` marks the mismatch against the clitic lemma.',
+		"'ll is the AUX will, attested as the second piece of the fused word I'll. The member is Fused and names its Fusion, so the Surface stays will; the shortening is a fact about the written occurrence, not a Variant Surface.",
 } as const;

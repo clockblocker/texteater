@@ -4,15 +4,36 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "הטובות",
-			orthography: "Standard",
+			attested: "ה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הטובות",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "טובות", surface: "טובות" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "טובות",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הטובות",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "טובות", surface: "טובות" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
 		language: "he",
-		normalizedSurface: "הטובות",
+		normalizedSurface: "טובות",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
@@ -38,5 +59,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "השאלות [הטובות] נשארו לסוף.",
 	classifierNotes:
-		"הטובות is a definite feminine plural adjective surface that preserves article agreement.",
+		"הטובות is a definite feminine plural adjective agreeing with השאלות. The adjective owns its own article ה as a Fused member; normalizedSurface is טובות.",
 } as const;

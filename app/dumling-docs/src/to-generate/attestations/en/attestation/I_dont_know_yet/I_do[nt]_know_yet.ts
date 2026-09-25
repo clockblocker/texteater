@@ -4,13 +4,13 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: 'צה"ל',
+			attested: "n't",
 			orthography: "Fused",
 			fusion: {
-				spelling: 'בצה"ל',
+				spelling: "don't",
 				components: [
-					{ span: "ב", surface: "ב" },
-					{ span: 'צה"ל', surface: 'צה"ל' },
+					{ span: "do", surface: "do" },
+					{ span: "n't", surface: "not" },
 				],
 			},
 			component: 1,
@@ -19,29 +19,28 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
-		language: "he",
-		normalizedSurface: 'צה"ל',
+		language: "en",
+		normalizedSurface: "not",
 		spelling: "Canonical",
-
 		lemma: {
 			unitKind: "Lemma",
-			language: "he",
-			canonicalForm: 'צה"ל',
+			language: "en",
+			canonicalForm: "not",
 			family: "Lexeme",
-			kind: "PROPN",
+			kind: "PART",
 			coreFeatures: {
-				abbr: "Yes",
-				gender: "Masc",
+				abbr: null,
+				extPos: null,
+				polarity: "Neg",
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"he", "Lexeme", "PROPN">;
+} satisfies Dumling.Attestation<"en", "Lexeme", "PART">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
-	sentenceMarkdown: 'הוא שירת ב[צה"ל].',
+	sentenceMarkdown: "I do[n't] know yet.",
 	classifierNotes:
-		'צה"ל is an abbreviated proper noun with the quote mark retained and abbr Yes.',
+		"n't is the negative PART not, the same Lemma as a written-out not. It is the Fused second piece of don't; do is the AUX piece.",
 } as const;

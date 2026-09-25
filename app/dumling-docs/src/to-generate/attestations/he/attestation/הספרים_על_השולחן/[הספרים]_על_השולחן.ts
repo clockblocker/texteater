@@ -4,15 +4,36 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "הספרים",
-			orthography: "Standard",
+			attested: "ה",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הספרים",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "ספרים", surface: "ספרים" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "ספרים",
+			orthography: "Fused",
+			fusion: {
+				spelling: "הספרים",
+				components: [
+					{ span: "ה", surface: "ה" },
+					{ span: "ספרים", surface: "ספרים" },
+				],
+			},
+			component: 1,
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
 		language: "he",
-		normalizedSurface: "הספרים",
+		normalizedSurface: "ספרים",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
@@ -38,5 +59,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[הספרים] על השולחן.",
 	classifierNotes:
-		"This is a full attestation of a definite plural noun surface.",
+		"The definite plural noun owns its article: members are the Fused pieces ה and ספרים, and normalizedSurface is ספרים without the article.",
 } as const;

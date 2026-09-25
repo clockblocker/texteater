@@ -35,6 +35,13 @@ export function isSurface(
 	);
 }
 
+const memberOrthographies = new Set<unknown>([
+	"Standard",
+	"Typo",
+	"Shorthand",
+	"Fused",
+] satisfies Dumling.Attestation["members"][number]["orthography"][]);
+
 export function isAttestation(
 	value: unknown,
 ): value is Dumling.Attestation<Dumling.Language> {
@@ -48,8 +55,7 @@ export function isAttestation(
 				isRecord(member) &&
 				typeof member.attested === "string" &&
 				member.attested.length > 0 &&
-				(member.orthography === "Standard" ||
-					member.orthography === "Typo"),
+				memberOrthographies.has(member.orthography),
 		) &&
 		(value.realizationCoverage === "Full" ||
 			value.realizationCoverage === "Partial") &&

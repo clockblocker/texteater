@@ -78,7 +78,7 @@ their Attestations can have \`realizationCoverage: "Partial"\`.
 | Field | Meaning |
 | --- | --- |
 | \`members\` | non-empty tuple of exact attested strings in source order |
-| \`member.orthography\` | \`Standard\` or \`Typo\` for that member |
+| \`member.orthography\` | \`Standard\`, \`Typo\`, \`Shorthand\` (\`'ne\`), or \`Fused\` (\`m\` in \`im\`, with its \`fusion\` and \`component\`) for that member |
 | \`realizationCoverage\` | whether the members fully or partially realize the linked Surface |
 | \`surface\` | the reusable normalized grammatical form |
 
@@ -112,6 +112,8 @@ The German pack does not try to encode every imaginable grammatical distinction.
 ### Nominal Features
 
 German noun-like Lemmas use \`gender\` as a core grammatical feature and commonly use \`case\` and \`number\` as inflectional features.
+
+A noun owns its article, so a German noun Surface always marks \`article\`: \`Definite\`, \`Indefinite\`, or \`None\` for a bare noun or one after a possessive, demonstrative or numeral. Put the article in the noun's \`members\` (across an adjective too: \`[Das, Band]\` in \`Das rote Band\`), set \`articleEvidence: { kind: "Owned", member }\`, and keep \`normalizedSurface\` to the noun's own letters. A fused article such as \`m\` in \`im Wald\` is an owned \`Fused\` member. Do not classify an owned article as its own \`DET\` Attestation.
 
 \`ADJ\` and attributive participles carry inflectional \`case\`, \`number\`, and \`gender\`. \`DET\` and \`PRON\` are closed, authored inventories. Their pillars, whose forms a learner memorizes one by one, make \`case\`, \`number\`, and \`gender\` Core Features, so each Paradigm Cell is its own Lemma: the personal pronouns, the \`der\` and \`ein\` articles, the \`der\`-series demonstrative and relative pronouns, \`wer\`, and \`jemand\`/\`niemand\` (\`dem\` and \`den\`, \`mich\` and \`mir\`). A word made of a stem and borrowed article endings is one Lemma and carries \`case\`, \`number\`, and \`gender\` on its Surface: \`diesem\`, \`meinem\` and \`keinem\` are Surfaces of \`dieser\`, \`mein\` and \`kein\`. Plural agreement has no gender.
 

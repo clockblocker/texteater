@@ -12,8 +12,28 @@ const occurrenceAttestation = {
 			orthography: "Standard",
 		},
 		{
-			attested: "ולא",
-			orthography: "Standard",
+			attested: "ו",
+			orthography: "Fused",
+			fusion: {
+				spelling: "ולא",
+				components: [
+					{ span: "ו", surface: "ו" },
+					{ span: "לא", surface: "לא" },
+				],
+			},
+			component: 0,
+		},
+		{
+			attested: "לא",
+			orthography: "Fused",
+			fusion: {
+				spelling: "ולא",
+				components: [
+					{ span: "ו", surface: "ו" },
+					{ span: "לא", surface: "לא" },
+				],
+			},
+			component: 1,
 		},
 		{
 			attested: "יער",

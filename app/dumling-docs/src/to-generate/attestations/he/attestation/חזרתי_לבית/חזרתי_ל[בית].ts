@@ -5,10 +5,31 @@ const occurrenceAttestation = {
 	members: [
 		{
 			attested: "בית",
-			orthography: "Standard",
+			orthography: "Fused",
+			fusion: {
+				spelling: "לבית",
+				components: [
+					{ span: "ל", surface: "ל" },
+					{ span: "", surface: "ה" },
+					{ span: "בית", surface: "בית" },
+				],
+			},
+			component: 2,
 		},
 	],
-	realizationCoverage: "Full",
+	realizationCoverage: "Partial",
+	articleEvidence: {
+		kind: "Hidden",
+		fusion: {
+			spelling: "לבית",
+			components: [
+				{ span: "ל", surface: "ל" },
+				{ span: "", surface: "ה" },
+				{ span: "בית", surface: "בית" },
+			],
+		},
+		component: 1,
+	},
 	surface: {
 		unitKind: "Surface",
 		language: "he",
@@ -17,7 +38,7 @@ const occurrenceAttestation = {
 
 		inflectionalFeatures: {
 			definite: "Def",
-			number: null,
+			number: "Sing",
 		},
 		lemma: {
 			unitKind: "Lemma",
@@ -38,5 +59,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "חזרתי ל[בית].",
 	classifierNotes:
-		"The Full Attestation preserves the complete normalized Surface בית; the fused prefix outside the member still supplies the contextual definite Def feature.",
+		"לבית is la-bayit: ל, a hidden article ה with no letters of its own, and בית. The noun owns that hidden component, so it records Def and its coverage is Partial, pointing at component 1 of the Fusion.",
 } as const;

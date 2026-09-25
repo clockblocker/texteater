@@ -25,7 +25,7 @@ Together these fields are Lemma identity. Grammatically indistinguishable
 homonyms share one Lemma. Homographs with different grammatical analyses—for
 example a noun and verb with the same spelling—are different Lemmas.
 
-A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\` is not a Lemma: each of its pieces stands for its own word, and an Attestation member realized by such a piece carries the orthography \`Fused\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
+A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, English \`I'll\` or \`don't\`, or Hebrew \`בבית\` is not a Lemma. Each of its pieces is a syntactic word of its own Lexeme Kind, never a Morpheme: \`'ll\` is AUX \`will\`, \`n't\` is PART \`not\`, Hebrew \`ב\` is ADP. The Attestation member realized by such a piece carries the orthography \`Fused\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
 
 ## Surface
 
@@ -49,9 +49,29 @@ A \`Attestation\` is fleeting, click-independent occurrence evidence linked to
 one Surface.
 
 Its non-empty \`members\` tuple preserves source order. Each member pairs its
-exact \`attested\` string with \`Standard\` or \`Typo\` orthography evidence.
+exact \`attested\` string with its orthography:
+
+- \`Standard\`: an ordinary spelling
+- \`Typo\`: a misspelling of the Surface
+- \`Shorthand\`: a standalone shortened spelling of one word, such as \`'ne\` or \`z.B.\`
+- \`Fused\`: one piece of a written word that holds several words, such as \`m\` in \`im\` or \`'ll\` in \`I'll\`
+
+A \`Fused\` member also carries its \`fusion\` (the written word's \`spelling\`
+and its ordered \`components\`, each a \`span\` of letters and the \`surface\` it
+stands for) and the index of the \`component\` it realizes. From any piece, a
+learner can open the Fusion and see how the word breaks down.
+
 \`realizationCoverage\` is \`Full\` or \`Partial\`; for example, \`heulte mit\`
 can partially realize \`mit den Wölfen heulen\`.
+
+A noun owns its article: the article is a member of the noun's Attestation, and
+\`normalizedSurface\` is the noun's own letters. German and English record it
+with the inflectional feature \`article: Definite | Indefinite | None\`, Hebrew
+with \`definite: Def\`. \`articleEvidence\` says where the article is attested:
+an \`Owned\` member (Full coverage), a \`Shared\` article the noun does not own,
+as in \`der Aufstieg und Abstieg\` (Partial), or a \`Hidden\` Fusion component
+with no letters, such as the article in Hebrew \`בבית\` (Partial). A noun without
+an article has \`articleEvidence: null\`.
 
 The full chain is:
 

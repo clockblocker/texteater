@@ -13,7 +13,11 @@ export function classificationLinesForEntity(
 			`- \`${entity.realizationCoverage}\` **Attestation**`,
 			...entity.members.map(
 				(member) =>
-					`- \`${member.orthography}\` member _"${member.attested}"_`,
+					`- \`${member.orthography}\` member _"${member.attested}"_${
+						member.orthography === "Fused"
+							? ` of _"${member.fusion.spelling}"_`
+							: ""
+					}`,
 			),
 			`- \`${entity.surface.spelling}\` **Surface**`,
 			`- \`${lemma.kind}\` **${lemma.family}**`,
