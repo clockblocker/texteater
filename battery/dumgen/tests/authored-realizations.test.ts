@@ -392,10 +392,10 @@ test("Open PRON population misses copy exact headwords and generate changed text
 				(event) => event.kind === "AuthoredPopulationMiss",
 			),
 		).toBe(true);
+		// An uninflected one-word miss copies its normalized member, casing
+		// included; only a typo needs Luna.
 		expect(traces[0]?.calls.map((call) => call.executor)).toEqual(
-			attested === "meinesgleichen"
-				? ["TypeSafe", "TypeSafe"]
-				: ["TypeSafe", "TypeSafe", "Luna"],
+			typo ? ["TypeSafe", "TypeSafe", "Luna"] : ["TypeSafe", "TypeSafe"],
 		);
 	}
 });

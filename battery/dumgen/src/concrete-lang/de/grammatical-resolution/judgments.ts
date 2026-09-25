@@ -15,6 +15,7 @@ import { effectiveConfiguration } from "../../../universal/model-configuration.j
 import { choice } from "../../../universal/questions.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
+import { closedParadigmVerb } from "../authored-closed-sets/closed-verb-paradigms.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
 import {
@@ -1035,12 +1036,22 @@ export function resolveGrammarJudgments(
 			let coverage = partial
 				? (selected("coverage") as "Full" | "Partial")
 				: "Full";
+			// One canonically spelled, uninflected word is its own headword
+			// (#442): sentence-initial Anstatt is anstatt, not a Luna call.
+			const bareWord =
+				encounter.target.family === "Lexeme" &&
+				!auxiliary &&
+				input.members.length === 1 &&
+				memberOrthographies[0] === "Standard" &&
+				normalizationModes[0] !== "Generate" &&
+				!surface.inflectionalFeatures;
 			const mechanicalCanonical =
 				coverage === "Full" &&
 				surface.spelling === "Canonical" &&
-				["DiscourseFormula", "Proverb", "Aphorism"].includes(
-					encounter.target.kind,
-				);
+				(bareWord ||
+					["DiscourseFormula", "Proverb", "Aphorism"].includes(
+						encounter.target.kind,
+					));
 			const copiedCanonical = () =>
 				encounter.target.kind === "DiscourseFormula"
 					? joinMembers(
@@ -1049,6 +1060,8 @@ export function resolveGrammarJudgments(
 						).toLocaleLowerCase("de")
 					: joinMembers(normalizedMembers, gluedMembers);
 			let lemma: GrammarOutput["lemma"];
+			// An authored identity keeps its own headword over a copy.
+			let copiesHeadword = false;
 			if (auxiliary) {
 				const identity = selected("identity");
 				if (identity === "NoMatch")
@@ -1096,6 +1109,7 @@ export function resolveGrammarJudgments(
 						lemma: member.lemma,
 					});
 				} else if (mechanicalCanonical) {
+					copiesHeadword = true;
 					lemma = {
 						canonicalForm: copiedCanonical(),
 						coreFeatures: core,
@@ -1228,6 +1242,19 @@ export function resolveGrammarJudgments(
 				return fail(
 					"Applicable grammatical answers do not compose into a legal analysis",
 				);
+			}
+			// sein, haben, werden and the modals have closed paradigms, so their
+			// forms name the Lemma without a Luna call (#442): mag is mögen.
+			const closedVerb =
+				encounter.target.kind === "VERB" && needed.canonicalForm
+					? closedParadigmVerb(normalizedMembers)
+					: undefined;
+			if (closedVerb !== undefined) {
+				lemma.canonicalForm = closedVerb;
+				delete needed.canonicalForm;
+				recordEvent(scope, "ClosedParadigmCanonicalForm", {
+					canonicalForm: closedVerb,
+				});
 			}
 			if (Object.keys(needed).length === 1 && needed.canonicalForm) {
 				// The route already fixes the Kind, so the headword needs only
@@ -1374,7 +1401,7 @@ export function resolveGrammarJudgments(
 						normalizedMembers[index] =
 							generated[`member_${index}`]!;
 			}
-			if (mechanicalCanonical) lemma.canonicalForm = copiedCanonical();
+			if (copiesHeadword) lemma.canonicalForm = copiedCanonical();
 			// Speculative lexical strings answered in the first round trip settle
 			// the open feature; only unresolved ones need the follow-up.
 			const pendingFeatures = openFeatures.filter((key) => {

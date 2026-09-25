@@ -23,7 +23,7 @@ const determinerAliases: Readonly<Record<string, readonly string[]>> = {
 	wenig: ["weniger"],
 };
 /** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
-const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
+export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
 	sein: [
 		"sein",
 		"bin",

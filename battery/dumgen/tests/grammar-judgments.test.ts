@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { closedParadigmVerb } from "../src/concrete-lang/de/authored-closed-sets/closed-verb-paradigms.js";
 import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution/infinitive-shape.js";
 import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resolution/inflected-noun.js";
@@ -590,6 +591,87 @@ for (const [id, rejected] of [
 			data: { rejected, answer: "CandidateIsCanonical" },
 		});
 	});
+
+for (const [id, canonicalForm] of [
+	["grammar-de-verb-full-modal-mag", "mögen"],
+	["grammar-de-verb-modal-moechte-bleiben", "mögen"],
+	["grammar-de-verb-copula-perfect-ist-gewesen", "sein"],
+	["grammar-de-verb-full-hat", "haben"],
+] as const)
+	test(`a closed paradigm names ${canonicalForm} without a Luna call: ${id}`, async () => {
+		const example = verbCases[id];
+		const traces: OperationTrace[] = [];
+		const output = await Effect.runPromise(
+			createDumgen({
+				...grammarFixture(example.idealOutput),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar({
+				...markedEncounter(id, example.input.markedContext),
+				contextAvailable: false,
+			}),
+		);
+		expect(output.surface.lemma.canonicalForm).toBe(canonicalForm);
+		expect(traces[0]?.calls.map((call) => call.executor)).toEqual([
+			"TypeSafe",
+		]);
+	});
+
+test("a closed paradigm names one Lemma or none", () => {
+	expect(closedParadigmVerb(["muß"])).toBe("müssen");
+	expect(closedParadigmVerb(["ist", "geworden"])).toBeUndefined();
+	expect(closedParadigmVerb(["hat", "vor"])).toBeUndefined();
+	// Recipient-passive verbs stay open as VERBs: kriegt is kriegen.
+	expect(closedParadigmVerb(["kriegt"])).toBeUndefined();
+	expect(closedParadigmVerb(["bekommt"])).toBeUndefined();
+});
+
+test("a canonically spelled, uninflected word is its own headword without Luna", async () => {
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...grammarFixture(
+				{
+					lemma: {
+						canonicalForm: "anstatt",
+						coreFeatures: { conjType: null },
+					},
+					surface: {
+						spelling: "Canonical",
+						surfaceFeatures: null,
+					},
+					normalizedMembers: ["anstatt"],
+					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
+				},
+				// jev misses the lowercase headword of a sentence-initial word.
+				{ canonical: "CandidateIsNotCanonical" },
+			),
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar({
+			...validateEncounter({
+				sentence: {
+					id: "bare-word",
+					language: "de",
+					segments: [
+						{ kind: "ResolvableText", text: "Anstatt" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "zu" },
+						{ kind: "Whitespace", text: " " },
+						{ kind: "ResolvableText", text: "arbeiten" },
+					],
+				},
+				target: {
+					family: "Lexeme",
+					kind: "SCONJ",
+					memberSegmentIndices: [0],
+				},
+			}),
+			contextAvailable: false,
+		}),
+	);
+	expect(output.surface.lemma.canonicalForm).toBe("anstatt");
+	expect(traces[0]?.calls.map((call) => call.executor)).toEqual(["TypeSafe"]);
+});
 
 for (const id of [
 	"grammar-de-verb-subject-reflexive",
