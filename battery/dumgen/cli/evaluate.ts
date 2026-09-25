@@ -1,8 +1,11 @@
+import { join } from "node:path";
 import { parseArgs } from "node:util";
 import {
 	defaultRunOutputDirectory,
+	disagreementsFileName,
 	evaluateExperiment,
 	listExperiments,
+	reviewEvaluationRun,
 } from "dumgen/development";
 import type { EvaluationExecutor } from "promptsmith/evaluation";
 import { createOpenAIExecutor } from "promptsmith/openai";
@@ -86,7 +89,22 @@ export async function runEvaluationCli(
 			execute: dependencies.execute ?? createOpenAIExecutor(),
 			signal: controller.signal,
 		});
-		write({ manifest: run.manifest, summary: run.summary });
+		const review = reviewEvaluationRun(run);
+		write({
+			manifest: run.manifest,
+			summary: run.summary,
+			...(review && {
+				review: {
+					scores: review.scores,
+					disagreements: review.disagreements.length,
+					disagreementsFile: join(
+						outputDirectory,
+						run.manifest.runId,
+						disagreementsFileName,
+					),
+				},
+			}),
+		});
 		return run;
 	} finally {
 		process.removeListener("SIGINT", interrupt);

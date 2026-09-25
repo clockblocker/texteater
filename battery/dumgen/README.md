@@ -36,7 +36,9 @@ and session-scoped Dumdict storage.
 Routine output belongs in the untracked `.runs/` directory, or the directory
 selected by `DUMGEN_RUN_DIRECTORY`. Current experiments use the migrated corpora
 and evaluators through `dumgen/development` and produce new Promptsmith
-Evaluation Runs.
+Evaluation Runs. Runs of experiments projected from dumspec also split their
+scores by Review Status and write a disagreement list; see
+[the evaluation reference](./docs/reference/evaluation.md).
 
 Historical run artifacts were removed in the commit titled
 `chore: archive historical Dumgen run artifacts in git history`.

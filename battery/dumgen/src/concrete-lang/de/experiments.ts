@@ -1,105 +1,127 @@
+import type { CaseOrigin } from "../../evaluation/spec-review.js";
 import {
 	evaluationCaseIds as e1,
+	origins as o1,
 	corpusSource as p1,
 	slices as s1,
 } from "./grammatical-resolution/lexeme/adjective/corpus.js";
 import {
 	evaluationCaseIds as e2,
+	origins as o2,
 	corpusSource as p2,
 	slices as s2,
 } from "./grammatical-resolution/lexeme/adposition/corpus.js";
 import {
 	evaluationCaseIds as e3,
+	origins as o3,
 	corpusSource as p3,
 	slices as s3,
 } from "./grammatical-resolution/lexeme/adverb/corpus.js";
 import {
 	evaluationCaseIds as e4,
+	origins as o4,
 	corpusSource as p4,
 	slices as s4,
 } from "./grammatical-resolution/lexeme/auxiliary/corpus.js";
 import {
 	evaluationCaseIds as e5,
+	origins as o5,
 	corpusSource as p5,
 	slices as s5,
 } from "./grammatical-resolution/lexeme/coordinating-conjunction/corpus.js";
 import {
 	evaluationCaseIds as e6,
+	origins as o6,
 	corpusSource as p6,
 	slices as s6,
 } from "./grammatical-resolution/lexeme/determiner/corpus.js";
 import {
 	evaluationCaseIds as e7,
+	origins as o7,
 	corpusSource as p7,
 	slices as s7,
 } from "./grammatical-resolution/lexeme/interjection/corpus.js";
 import {
 	evaluationCaseIds as e8,
+	origins as o8,
 	corpusSource as p8,
 	slices as s8,
 } from "./grammatical-resolution/lexeme/noun/corpus.js";
 import {
 	evaluationCaseIds as e9,
+	origins as o9,
 	corpusSource as p9,
 	slices as s9,
 } from "./grammatical-resolution/lexeme/numeral/corpus.js";
 import {
 	evaluationCaseIds as e10,
+	origins as o10,
 	corpusSource as p10,
 	slices as s10,
 } from "./grammatical-resolution/lexeme/other/corpus.js";
 import {
 	evaluationCaseIds as e11,
+	origins as o11,
 	corpusSource as p11,
 	slices as s11,
 } from "./grammatical-resolution/lexeme/particle/corpus.js";
 import {
 	evaluationCaseIds as e12,
+	origins as o12,
 	corpusSource as p12,
 	slices as s12,
 } from "./grammatical-resolution/lexeme/pronoun/corpus.js";
 import {
 	evaluationCaseIds as e13,
+	origins as o13,
 	corpusSource as p13,
 	slices as s13,
 } from "./grammatical-resolution/lexeme/proper-noun/corpus.js";
 import {
 	evaluationCaseIds as e14,
+	origins as o14,
 	corpusSource as p14,
 	slices as s14,
 } from "./grammatical-resolution/lexeme/subordinating-conjunction/corpus.js";
 import {
 	evaluationCaseIds as e15,
+	origins as o15,
 	corpusSource as p15,
 	slices as s15,
 } from "./grammatical-resolution/lexeme/symbol/corpus.js";
 import {
 	evaluationCaseIds as e16,
+	origins as o16,
 	corpusSource as p16,
 	slices as s16,
 } from "./grammatical-resolution/lexeme/verb/corpus.js";
 import {
 	evaluationCaseIds as e17,
+	origins as o17,
 	corpusSource as p17,
 	slices as s17,
 } from "./grammatical-resolution/phraseme/aphorism/corpus.js";
 import {
 	evaluationCaseIds as e18,
+	origins as o18,
 	corpusSource as p18,
 	slices as s18,
 } from "./grammatical-resolution/phraseme/collocation/corpus.js";
 import {
 	evaluationCaseIds as e19,
+	origins as o19,
 	corpusSource as p19,
 	slices as s19,
 } from "./grammatical-resolution/phraseme/discourse-formula/corpus.js";
 import {
 	evaluationCaseIds as e20,
+	origins as o20,
 	corpusSource as p20,
 	slices as s20,
 } from "./grammatical-resolution/phraseme/idiom/corpus.js";
 import {
 	evaluationCaseIds as e21,
+	origins as o21,
 	corpusSource as p21,
 	slices as s21,
 } from "./grammatical-resolution/phraseme/proverb/corpus.js";
@@ -202,3 +224,33 @@ const grammarRouteSlices: readonly (readonly [
 export const grammarSlices = Object.fromEntries(
 	grammarRouteSlices.filter(([, slices]) => Object.keys(slices).length > 0),
 );
+
+/**
+ * Each grammar route's case origins: the Spec Record target of every case
+ * projected from one, keyed by case id.
+ */
+export const grammarCaseOrigins: Readonly<
+	Record<string, Readonly<Record<string, CaseOrigin>>>
+> = Object.fromEntries([
+	[p1.route, o1],
+	[p2.route, o2],
+	[p3.route, o3],
+	[p4.route, o4],
+	[p5.route, o5],
+	[p6.route, o6],
+	[p7.route, o7],
+	[p8.route, o8],
+	[p9.route, o9],
+	[p10.route, o10],
+	[p11.route, o11],
+	[p12.route, o12],
+	[p13.route, o13],
+	[p14.route, o14],
+	[p15.route, o15],
+	[p16.route, o16],
+	[p17.route, o17],
+	[p18.route, o18],
+	[p19.route, o19],
+	[p20.route, o20],
+	[p21.route, o21],
+]);

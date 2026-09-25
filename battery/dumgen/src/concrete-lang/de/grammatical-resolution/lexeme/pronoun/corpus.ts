@@ -19,4 +19,4 @@ export const corpusSource = defineLinguisticCorpus({
 	demonstrationIds: projected.demonstrationIds,
 	source: import.meta.url,
 });
-export const { evaluationCaseIds, slices } = projected;
+export const { evaluationCaseIds, slices, origins } = projected;

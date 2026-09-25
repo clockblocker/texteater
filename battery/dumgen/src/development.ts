@@ -2,6 +2,7 @@ import type { LinguisticCorpus } from "./concrete-lang/de/authoring.js";
 import { knowledgeOperationExperiment } from "./evaluation/knowledge-operation.js";
 
 export { resolveOrGenerateTranslation } from "./concrete-lang/de/knowledge-production/translation/operation.js";
+export { disagreementsFileName } from "./evaluation/spec-review.js";
 
 import { fileURLToPath } from "node:url";
 import { defineExperiment, type PromptSource, stableJson } from "promptsmith";
@@ -14,6 +15,7 @@ import {
 import { saveRun } from "promptsmith/storage";
 import {
 	corpusRegistrations,
+	grammarCaseOrigins,
 	grammarSlices,
 } from "./concrete-lang/de/experiments.js";
 import {
@@ -40,6 +42,11 @@ import {
 } from "./concrete-lang/de/target-classification/evaluation-ids.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
+import {
+	type CaseOrigin,
+	reviewRun,
+	writeDisagreements,
+} from "./evaluation/spec-review.js";
 import type { DumgenOptions } from "./types.js";
 import {
 	defaultModelConfiguration,
@@ -73,6 +80,22 @@ const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
 );
 const routeOf = (id: string) =>
 	phaseEntries.find((entry) => entry.id === id)?.route ?? id;
+/** The case origins of every route whose cases project from Spec Records. */
+const caseOrigins: Readonly<
+	Record<string, Readonly<Record<string, CaseOrigin>>>
+> = { ...grammarCaseOrigins };
+
+/**
+ * A spec-backed run's scores by Review Status and its Reviewed disagreements
+ * (ADR 0037, guard 3); undefined for a run whose cases no Spec Record backs.
+ */
+export function reviewEvaluationRun(run: {
+	readonly manifest: { readonly experimentId: string };
+	readonly cases: Parameters<typeof reviewRun>[0]["cases"];
+}) {
+	const origins = caseOrigins[routeOf(run.manifest.experimentId)];
+	return origins ? reviewRun(run, origins) : undefined;
+}
 export function listExperiments() {
 	const metadataOnly: DumgenOptions = {
 		execute: async () => {
@@ -261,7 +284,12 @@ export async function evaluateExperiment(args: {
 			},
 			signal: args.signal,
 		});
-		if (args.outputDirectory) await saveRun(args.outputDirectory, run);
+		if (args.outputDirectory) {
+			const directory = await saveRun(args.outputDirectory, run);
+			const review = reviewEvaluationRun(run);
+			if (review)
+				await writeDisagreements(directory, review.disagreements);
+		}
 		return run;
 	}
 	const configuration =

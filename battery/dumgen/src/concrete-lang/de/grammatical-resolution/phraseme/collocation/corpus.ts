@@ -20,4 +20,4 @@ export const corpusSource = defineLinguisticCorpus({
 });
 // Alternants share a Lemma contamination key with the production demonstration.
 // They remain canonical regression cases, but cannot be scored as held-out evidence.
-export const { evaluationCaseIds, slices } = projected;
+export const { evaluationCaseIds, slices, origins } = projected;
