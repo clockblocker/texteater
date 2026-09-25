@@ -38,6 +38,11 @@ function prepositionPiece(placement: Placement, index: number) {
 const label = (sentence: SegmentedSentence<"de">, index: number) =>
 	`<s${index}> "${sentence.segments[index]?.text ?? ""}"`;
 
+/**
+ * Intake asks only about prepositions; bare-case slots come from the Knowledge
+ * call's frame (ADR 0034). Widening to bare Dat/Gen objects is tracked in
+ * https://github.com/clockblocker/texteater/issues/609.
+ */
 export function governmentQuestions(
 	sentence: SegmentedSentence<"de">,
 	placement: Placement,
