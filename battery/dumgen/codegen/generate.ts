@@ -138,6 +138,22 @@ for (const route of routes.filter(({ language }) => language === "de")) {
 console.log(
 	`${check ? "Verified" : "Projected"} the grammar cases of ${projectedRoutes} routes from ${specRecords.length} Spec Records`,
 );
+const { projectTargetCases, readTargetSidecar } = await import(
+	"./project-target-cases.js"
+);
+const targetCases = projectTargetCases(
+	readTargetSidecar(
+		new URL(
+			"../src/concrete-lang/de/target-classification/",
+			import.meta.url,
+		),
+	),
+	specRecords,
+);
+await emit("target-cases.json", JSON.stringify(targetCases));
+console.log(
+	`${check ? "Verified" : "Projected"} ${Object.keys(targetCases.cases).length} of ${targetCases.caseIds.length} target-classification cases from Spec Records`,
+);
 
 const { assembleSystemPrompt } = await import("promptsmith");
 const { corpusRegistrations } = await import(

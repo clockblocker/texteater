@@ -6,7 +6,7 @@ import type {
 	SystemOneResult,
 	TypeSafeExecutor,
 } from "promptsmith/typesafe";
-import subjectCases from "../src/concrete-lang/de/target-classification/source-data.json";
+import { targetCases } from "../src/concrete-lang/de/target-classification/cases.js";
 import review from "../src/evaluation/redesign/review-cases.json";
 import type { OperationTrace, SegmentedSentence } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
@@ -220,17 +220,12 @@ test("canonical classification evaluation calls the production operation and pre
 		"../src/concrete-lang/de/target-classification/experiment.js"
 	);
 	const { runOperationExperiment } = await import("promptsmith/evaluation");
-	const data = (
-		await import(
-			"../src/concrete-lang/de/target-classification/source-data.json"
-		)
-	).default;
 	const judge: TypeSafeExecutor = async (request) => {
 		const state = request.state as {
 			sentence: string;
 			clickedSegmentIndex: number;
 		};
-		const golden = Object.values(data.cases).find(
+		const golden = Object.values(targetCases).find(
 			(value) =>
 				value.input.clickedSegmentIndex === state.clickedSegmentIndex &&
 				indexedContext({
@@ -428,7 +423,7 @@ for (const scenario of [
 	});
 }
 
-for (const [id, scenario] of Object.entries(subjectCases.cases).filter(([id]) =>
+for (const [id, scenario] of Object.entries(targetCases).filter(([id]) =>
 	/target-de-(subject-|demo-exists|demo-weather|referential-es|positional-es|anticipatory-es|object-es)/u.test(
 		id,
 	),

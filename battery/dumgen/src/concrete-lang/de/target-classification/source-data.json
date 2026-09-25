@@ -41764,41 +41764,5 @@
 			"explanation": "s in aufs stands for das and is the owned article of Ende, while auf is the preposition wartet governs (ADR 0035).",
 			"contaminationKeys": ["target-fusion:aufs-ende"]
 		}
-	},
-	"demonstrationIds": [
-		"target-de-demo-perfect-arbeiten-click-habe",
-		"target-de-demo-governed-rechnen-click-rechnet",
-		"target-de-demo-adjunct-rechnen-click-mit",
-		"target-de-demo-idiom-faden-click-den",
-		"target-de-demo-aphorism-zeit-click-ist",
-		"target-de-demo-literal-gras-click-biss",
-		"target-de-demo-idiom-katze-click-dem",
-		"target-de-demo-paired-einerseits-click-lokal",
-		"target-de-demo-inherent-reflexive-click-beeile",
-		"target-de-demo-optional-reflexive-click-dich",
-		"target-de-demo-modal-arbeiten-click-kann",
-		"target-de-demo-passive-briefe-click-werden",
-		"target-de-demo-state-passive-banken-click-sind",
-		"target-de-demo-state-passive-banken-click-geoeffnet",
-		"target-de-demo-state-passive-bauplan-click-freigegeben",
-		"target-de-demo-state-passive-absperrung-click-versetzt",
-		"target-de-demo-participial-adjective-brief-click-ist",
-		"target-de-demo-participial-adjective-brief-click-ungelesen",
-		"target-de-demo-repeated-anfangen-click-first-an",
-		"target-de-diagnostic-repeated-click-final-an",
-		"target-de-demo-typo-mitmachen-click-mit",
-		"target-de-demo-predicative-cringe-click-cringe",
-		"target-de-demo-discourse-herzliche-gruesse-click-herzliche",
-		"target-de-demo-paired-sowohl-click-robust",
-		"target-de-demo-idiom-kragen-click-der",
-		"target-de-demo-symbol-percent",
-		"target-de-core-unresolved-qzxv",
-		"target-de-diagnostic-idiom-oel-click-ins",
-		"target-de-noun-article-owner-article",
-		"target-de-noun-article-shared-first",
-		"target-de-demo-exists-0",
-		"target-de-demo-exists-2",
-		"target-de-demo-weather-0",
-		"target-de-demo-weather-2"
-	]
+	}
 }

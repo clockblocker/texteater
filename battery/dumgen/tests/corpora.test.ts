@@ -6,9 +6,8 @@ import { Effect } from "effect";
 import { assembleSystemPrompt } from "promptsmith";
 import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { targetInputSchema } from "../src/concrete-lang/de/model-schemas.js";
-import type { GermanHighLevelTargetClassificationTarget } from "../src/concrete-lang/de/target-classification/projection.js";
+import { targetCases } from "../src/concrete-lang/de/target-classification/cases.js";
 import { createGermanHighLevelTargetClassificationProjection } from "../src/concrete-lang/de/target-classification/projection.js";
-import targetData from "../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
 import { grammarFixture } from "../src/testing.js";
@@ -69,13 +68,11 @@ test("all development selections are disjoint and production assembly uses only 
 	).toBe(false);
 });
 test("canonical target corpus survives compact representation round-trips", () => {
-	for (const golden of Object.values(targetData.cases)) {
+	for (const golden of Object.values(targetCases)) {
 		const projection = createGermanHighLevelTargetClassificationProjection(
 			targetInputSchema.parse(golden.input),
 		);
-		const target = golden.idealOutput as
-			| GermanHighLevelTargetClassificationTarget
-			| { decision: "Unresolved" };
+		const target = golden.idealOutput;
 		expect(projection.canonicalize(projection.materialize(target))).toEqual(
 			target,
 		);

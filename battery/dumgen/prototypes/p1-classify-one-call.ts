@@ -7,9 +7,12 @@
  * route policies can be scored from one run.
  */
 import { choice } from "promptsmith/typesafe";
-import { evaluationCaseIds } from "../src/concrete-lang/de/target-classification/evaluation-ids.js";
+import {
+	demonstrationIds,
+	evaluationCaseIds,
+	targetCases,
+} from "../src/concrete-lang/de/target-classification/cases.js";
 import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
-import data from "../src/concrete-lang/de/target-classification/source-data.json";
 import { indexedContext } from "../src/universal/validation.js";
 import {
 	ask,
@@ -20,6 +23,8 @@ import {
 	stable,
 	summarize,
 } from "./harness.js";
+
+const data = { cases: targetCases, demonstrationIds };
 
 const routes = {
 	"Lexeme/ADJ":

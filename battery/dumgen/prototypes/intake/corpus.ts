@@ -11,10 +11,15 @@
  * which is reported alongside.
  */
 
-import { evaluationCaseIds } from "../../src/concrete-lang/de/target-classification/evaluation-ids.js";
-import data from "../../src/concrete-lang/de/target-classification/source-data.json";
+import {
+	demonstrationIds,
+	evaluationCaseIds,
+	targetCases,
+} from "../../src/concrete-lang/de/target-classification/cases.js";
 import type { Call } from "../harness.js";
 import { stable } from "../harness.js";
+
+const data = { cases: targetCases, demonstrationIds };
 
 export type Segment = { readonly kind: string; readonly text: string };
 

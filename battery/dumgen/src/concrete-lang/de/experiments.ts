@@ -153,8 +153,8 @@ import { corpusSource as p28 } from "./segmentation/corpus.js";
 import { evaluationCaseIds as e28 } from "./segmentation/evaluation-ids.js";
 import { corpusSource as p35 } from "./sentence-analysis/corpus.js";
 import { evaluationCaseIds as e35 } from "./sentence-analysis/evaluation-ids.js";
+import { evaluationCaseIds as e29 } from "./target-classification/cases.js";
 import { corpusSource as p29 } from "./target-classification/corpus.js";
-import { evaluationCaseIds as e29 } from "./target-classification/evaluation-ids.js";
 export const corpusRegistrations = [
 	{ source: p1, evaluationCaseIds: e1 },
 	{ source: p2, evaluationCaseIds: e2 },

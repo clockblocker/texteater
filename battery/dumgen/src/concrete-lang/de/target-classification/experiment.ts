@@ -10,21 +10,25 @@ import { targetsByLanguage } from "../../../generated/schemas.js";
 import type { DumgenOptions } from "../../../types.js";
 import { createDumgen } from "../../../universal/dumgen.js";
 import { targetInputSchema } from "../model-schemas.js";
-import { evaluationCaseIds } from "./evaluation-ids.js";
-import data from "./source-data.json";
+import {
+	demonstrationIds,
+	evaluationCaseIds,
+	targetCases,
+	targetRoute,
+} from "./cases.js";
 
 const outputSchema = z.union([
 	targetsByLanguage.de,
 	z.strictObject({ decision: z.literal("Unresolved") }),
 ]);
 const corpus = defineGoldenCorpus({
-	route: data.route,
+	route: targetRoute,
 	inputSchema: targetInputSchema,
 	outputSchema,
 	collections: {
 		canonical: defineGoldenCaseCollection(import.meta.url, {
 			cases: Object.fromEntries(
-				Object.entries(data.cases).map(([id, value]) => [
+				Object.entries(targetCases).map(([id, value]) => [
 					id,
 					{
 						input: targetInputSchema.parse(value.input),
@@ -43,7 +47,7 @@ export function targetOperationExperiment(
 	typeof outputSchema,
 	{ contractPass: boolean }
 > {
-	const demonstrations = corpus.select(data.demonstrationIds);
+	const demonstrations = corpus.select(demonstrationIds);
 	return {
 		corpus,
 		demonstrations,

@@ -21,9 +21,12 @@ import {
 	membershipQuestions,
 	routeQuestion,
 } from "../src/concrete-lang/de/target-classification/assembly.js";
-import { evaluationCaseIds } from "../src/concrete-lang/de/target-classification/evaluation-ids.js";
+import {
+	demonstrationIds,
+	evaluationCaseIds,
+	targetCases,
+} from "../src/concrete-lang/de/target-classification/cases.js";
 import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
-import data from "../src/concrete-lang/de/target-classification/source-data.json";
 import type { SegmentedSentence } from "../src/types.js";
 import { choice } from "../src/universal/questions.js";
 import {
@@ -35,6 +38,8 @@ import {
 	stable,
 	summarize,
 } from "./harness.js";
+
+const data = { cases: targetCases, demonstrationIds };
 
 const tightened =
 	"A noun absorbs at most one article, the one opening its own nominal phrase; an article separated from the clicked noun by a verb, a clause boundary or another noun belongs to that other noun and never joins: clicking Weg in Der Weg ist das Ziel gives [Der,Weg], never das. ";

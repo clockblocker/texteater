@@ -33,8 +33,8 @@ import {
 import { candidatesFor } from "../../src/concrete-lang/de/sentence-analysis/identity.js";
 import sentenceData from "../../src/concrete-lang/de/sentence-analysis/source-data.json";
 import { routes as classificationRoutes } from "../../src/concrete-lang/de/target-classification/assembly.js";
+import { targetCases } from "../../src/concrete-lang/de/target-classification/cases.js";
 import { targetCriteria } from "../../src/concrete-lang/de/target-classification/judgments.js";
-import targetData from "../../src/concrete-lang/de/target-classification/source-data.json";
 import { prompts } from "../../src/generated/prompts.js";
 import { createDumgen, draftKnowledge } from "../../src/index.js";
 import { grammarFixture } from "../../src/testing.js";
@@ -366,7 +366,7 @@ async function measureIntake() {
 	const seen = new Set(
 		[...sentences.values()].map((sentence) => plain(sentence.segments)),
 	);
-	for (const [id, golden] of Object.entries(targetData.cases)) {
+	for (const [id, golden] of Object.entries(targetCases)) {
 		const text = plain(golden.input.segments);
 		if (seen.has(text)) continue;
 		seen.add(text);
@@ -383,7 +383,7 @@ async function measureIntake() {
 }
 
 async function measureClassification() {
-	for (const [id, golden] of Object.entries(targetData.cases)) {
+	for (const [id, golden] of Object.entries(targetCases)) {
 		const ideal = golden.idealOutput as {
 			family?: string;
 			kind?: string;

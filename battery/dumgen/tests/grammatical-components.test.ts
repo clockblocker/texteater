@@ -3,7 +3,7 @@ import { checkIfGrundform, parseUnit } from "dumling";
 import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import { member as subjectEs } from "../src/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/es-subject-expletive.js";
-import targetCases from "../src/concrete-lang/de/target-classification/source-data.json";
+import { targetCases } from "../src/concrete-lang/de/target-classification/cases.js";
 import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
 import {
 	createDumgen,
@@ -31,7 +31,7 @@ for (const name of [
 			verbProjection.cases[
 				`grammar-de-verb-${name}` as keyof typeof verbProjection.cases
 			];
-		const source = Object.entries(targetCases.cases).find(
+		const source = Object.entries(targetCases).find(
 			([id, value]) =>
 				id.startsWith(`target-de-${name}-`) &&
 				"kind" in value.idealOutput &&

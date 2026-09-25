@@ -36,10 +36,7 @@ import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-des
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
 import { governedSentenceCaseIds } from "./concrete-lang/de/sentence-analysis/evaluation-ids.js";
 import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
-import {
-	governedPrepositionCaseIds,
-	participleBoundaryCaseIds,
-} from "./concrete-lang/de/target-classification/evaluation-ids.js";
+import { targetSlices } from "./concrete-lang/de/target-classification/cases.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import {
@@ -65,10 +62,7 @@ const sentenceRoute = "sentence-analysis/de";
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
 	[sentenceRoute]: { governed: governedSentenceCaseIds },
-	[targetRoute]: {
-		"participle-boundary": participleBoundaryCaseIds,
-		"governed-preposition": governedPrepositionCaseIds,
-	},
+	[targetRoute]: targetSlices,
 	...grammarSlices,
 };
 const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
