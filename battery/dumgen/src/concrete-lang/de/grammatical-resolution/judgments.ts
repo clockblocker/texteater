@@ -154,7 +154,7 @@ const sharedPolicy = {
 	inflection:
 		"Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Structural null is not uncertainty.",
 };
-/** The shared policy for the AUX route, which has no `canonical` question. */
+/** The shared policy for a verbal route with no `canonical` question. */
 const nonCanonicalPolicy = {
 	target: sharedPolicy.target,
 	identity: sharedPolicy.identity,
@@ -354,6 +354,13 @@ export function resolveGrammarJudgments(
 			: undefined;
 		const citedWithArticle =
 			encounter.target.kind === "PROPN" && ownedArticle !== undefined;
+		// A VERB Canonical Form is infinitive-shaped, so a finite or imperative
+		// text (erholt sich, Lauf) is never offered as one (#442). With nothing
+		// left to offer, the `canonical` question is not asked and the
+		// Canonical Form is missing text.
+		const offeredAsHeadword = (text: string) =>
+			encounter.target.kind !== "VERB" || infinitiveShaped(text);
+		const offersCandidate = offeredAsHeadword(canonicalFormCandidate);
 		// Every source here sets Lemma precision. A preposition is never a
 		// noun's headword, so a governed one is not offered, nor is an owned
 		// article, standalone, fused or shortened.
@@ -373,7 +380,10 @@ export function resolveGrammarJudgments(
 					: []),
 			]),
 		]
-			.filter((text) => text !== canonicalFormCandidate)
+			.filter(
+				(text) =>
+					text !== canonicalFormCandidate && offeredAsHeadword(text),
+			)
 			.slice(0, 64);
 		const schema = modelSchemas[`grammar/${route}`];
 		if (!schema)
@@ -627,7 +637,10 @@ export function resolveGrammarJudgments(
 					Unresolved: "Cannot choose a defensible identity",
 				},
 			);
-		else if (encounter.target.kind !== "DET")
+		else if (
+			encounter.target.kind !== "DET" &&
+			(offersCandidate || canonicalFormAlternatives.length > 0)
+		)
 			questions.canonical = choice(
 				`Under \`policy.canonicalForm\`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in \`markedContext\`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.${encounter.target.kind === "PROPN" ? " A name's headword excludes the article it is cited with (Schweiz for die Schweiz), a title's included (Blechtrommel for Die Blechtrommel)." : ""}`,
 				{
@@ -637,8 +650,12 @@ export function resolveGrammarJudgments(
 							text,
 						]),
 					),
-					CandidateIsCanonical:
-						"`canonicalFormCandidate` is already the exact dictionary headword",
+					...(offersCandidate
+						? {
+								CandidateIsCanonical:
+									"`canonicalFormCandidate` is already the exact dictionary headword",
+							}
+						: {}),
 					CandidateIsNotCanonical:
 						"The dictionary headword is absent from both `canonicalFormCandidate` and every `canonicalFormAlternatives` value",
 					Unresolved:
@@ -741,30 +758,33 @@ export function resolveGrammarJudgments(
 			);
 		if (referent) questions.referent = referent.question;
 		const judge = judgmentCaller(options);
-		// The AUX identity question reads no canonical-form text.
+		// A verbal route sends canonical-form text only with the `canonical`
+		// question that reads it: never for AUX, nor for a VERB with no
+		// infinitive-shaped text to offer.
+		const canonicalText = !verbal || questions.canonical !== undefined;
 		const state = {
 			...input,
 			...(memberSpellings.length ? { memberSpellings } : {}),
 			route,
-			...(auxiliary
-				? {}
-				: {
+			...(canonicalText
+				? {
 						canonicalFormCandidate,
 						canonicalFormAlternatives,
 						storedLemmas,
-					}),
+					}
+				: {}),
 			...(questions.attachment ? nounArticleState(encounter) : {}),
 			...(Object.keys(lexicalStringCandidates).length
 				? { lexicalStringCandidates }
 				: {}),
 			policy: {
-				...(auxiliary ? nonCanonicalPolicy : sharedPolicy),
+				...(canonicalText ? sharedPolicy : nonCanonicalPolicy),
 				// An Idiom or Collocation reads verbalIdentity for its governed
 				// preposition; the AUX route has no question that reads it.
 				...(verbal && !auxiliary
 					? { verbalIdentity: verbalIdentityPolicy }
 					: {}),
-				...(verbal && !auxiliary
+				...(verbal && questions.canonical
 					? {
 							canonicalExample:
 								"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
@@ -1179,7 +1199,11 @@ export function resolveGrammarJudgments(
 						coreFeatures: core,
 					};
 				} else {
-					const canonical = selected("canonical");
+					// With no `canonical` question, no offered text can be the
+					// headword, so the Canonical Form is missing text.
+					const canonical = questions.canonical
+						? selected("canonical")
+						: "CandidateIsNotCanonical";
 					const chosen =
 						canonical === "CandidateIsCanonical"
 							? canonicalFormCandidate
@@ -1192,10 +1216,9 @@ export function resolveGrammarJudgments(
 										)
 									]
 								: undefined;
-					// A VERB Canonical Form is infinitive-shaped. A NOUN member
-					// copied under a Surface that can inflect it is no headword
-					// evidence: jev copies Bücher for Buch. Either rejected text
-					// means no exact text is available, so Luna supplies the
+					// A NOUN member copied under a Surface that can inflect it is
+					// no headword evidence: jev copies Bücher for Buch. Rejected
+					// text means no exact text is available, so Luna supplies the
 					// required missing text (#442 Canonical Form row, #445); code
 					// enforcing a domain invariant is not a review judge (ADR
 					// 0023). A stored Lemma keeps its headword; generated text is

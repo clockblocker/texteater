@@ -467,28 +467,17 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 
 test("uncertain headword judgment stops without copying or generating", async () => {
 	const traces: OperationTrace[] = [];
+	const id = "grammar-de-noun-dev-acc-plur-buecher";
+	const example = nounProjection.cases[id];
 	const result = await Effect.runPromise(
 		Effect.either(
 			createDumgen({
-				...grammarFixture(
-					verbProjection.cases["grammar-de-verb-finite-liest"]
-						.idealOutput,
-					{ canonical: "Unresolved" },
-				),
+				...grammarFixture(example.idealOutput, {
+					canonical: "Unresolved",
+				}),
 				onOperation: (trace) => traces.push(trace),
 			}).resolveGrammar({
-				...validateEncounter({
-					sentence: {
-						id: "uncertain-headword",
-						language: "de",
-						segments: [{ kind: "ResolvableText", text: "liest" }],
-					},
-					target: {
-						family: "Lexeme",
-						kind: "VERB",
-						memberSegmentIndices: [0],
-					},
-				}),
+				...markedEncounter(id, example.input.markedContext, "NOUN"),
 				contextAvailable: false,
 			}),
 		),
@@ -562,14 +551,12 @@ for (const [id, rejected] of [
 	// Offered in lexical casing: the sentence-initial capital is position.
 	["grammar-de-verb-imperative-lauf", "lauf"],
 ] as const)
-	test(`CandidateIsCanonical for finite ${rejected} generates the Canonical Form`, async () => {
+	test(`finite ${rejected} is never offered as the headword, so Luna generates it`, async () => {
 		const example = verbProjection.cases[id];
 		const traces: OperationTrace[] = [];
 		const output = await Effect.runPromise(
 			createDumgen({
-				...grammarFixture(example.idealOutput, {
-					canonical: "CandidateIsCanonical",
-				}),
+				...grammarFixture(example.idealOutput),
 				onOperation: (trace) => traces.push(trace),
 			}).resolveGrammar({
 				...markedEncounter(id, example.input.markedContext),
@@ -582,17 +569,14 @@ for (const [id, rejected] of [
 		const request = traces[0]?.calls[0]?.request;
 		if (!request || !("questions" in request))
 			throw Error("Expected feature judgment");
-		expect(request.input).toHaveProperty(
-			"canonicalFormCandidate",
-			rejected,
-		);
+		expect(Object.keys(request.questions)).not.toContain("canonical");
+		expect(request.input).not.toHaveProperty("canonicalFormCandidate");
 		const generation = traces[0]?.calls[1]?.request;
 		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
-		expect(generation).toHaveProperty("outputFormat", "text");
-		expect(traces[0]?.events).toContainEqual({
-			kind: "NonInfinitiveCanonicalForm",
-			data: { rejected, answer: "CandidateIsCanonical" },
-		});
+		expect(generation).toHaveProperty(
+			"input",
+			example.idealOutput.normalizedMembers.join(" "),
+		);
 	});
 
 for (const [id, canonicalForm] of [
