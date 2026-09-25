@@ -11,7 +11,8 @@ import type {
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
 import { judgmentCaller } from "./judgment.js";
-import { effectiveConfiguration, executeGeneration } from "./model.js";
+import { executeGeneration } from "./model.js";
+import { effectiveConfiguration } from "./model-configuration.js";
 import { choice } from "./questions.js";
 import { isStitchedText } from "./segmentation.js";
 import {

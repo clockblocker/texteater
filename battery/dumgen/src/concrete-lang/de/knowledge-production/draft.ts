@@ -6,10 +6,8 @@ import type {
 	KnowledgeRequest,
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
-import {
-	effectiveConfiguration,
-	executeGeneration,
-} from "../../../universal/model.js";
+import { executeGeneration } from "../../../universal/model.js";
+import { effectiveConfiguration } from "../../../universal/model-configuration.js";
 import {
 	fingerprint,
 	type OperationScope,

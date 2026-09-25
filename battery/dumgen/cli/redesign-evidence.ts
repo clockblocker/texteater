@@ -20,15 +20,12 @@ import {
 } from "../src/generated/schemas.js";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
+import { effectiveConfiguration } from "../src/universal/model-configuration.js";
 import {
 	segmentedSentenceSchema,
 	segmentInputSchema,
 } from "../src/universal/schemas.js";
-import {
-	fingerprint,
-	generationConfiguration,
-	judgmentConfiguration,
-} from "../src/universal/trace.js";
+import { fingerprint, judgmentConfiguration } from "../src/universal/trace.js";
 
 const directory = new URL("../evidence/typesafe-redesign/", import.meta.url);
 const entrySchema = z.object({
@@ -231,7 +228,7 @@ async function prepare() {
 			],
 		},
 		configurations: {
-			generation: generationConfiguration(options),
+			generation: effectiveConfiguration(options),
 			judgment: judgmentConfiguration(options),
 		},
 		entries,

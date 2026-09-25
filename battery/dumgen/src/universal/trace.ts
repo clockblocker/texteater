@@ -12,6 +12,7 @@ import type {
 	Task,
 } from "../types.js";
 import { DumgenFailure } from "./failure.js";
+import { effectiveConfiguration } from "./model-configuration.js";
 
 /**
  * The requests one Dumgen instance may have in flight. A request holds one
@@ -63,17 +64,6 @@ export function judgmentConfiguration(options: DumgenOptions) {
 		},
 	};
 }
-export function generationConfiguration(options: DumgenOptions) {
-	return {
-		model: options.configuration?.model ?? "gpt-5.6-luna",
-		settings: {
-			reasoning: { effort: "none" },
-			...options.configuration?.settings,
-			maxRetries: 0,
-		},
-	};
-}
-
 export async function fingerprint(value: unknown): Promise<string> {
 	function canonical(input: unknown): unknown {
 		if (Array.isArray(input)) return input.map(canonical);
@@ -375,7 +365,7 @@ export function operation(
 							operation: stage,
 							input,
 							generationConfiguration:
-								generationConfiguration(options),
+								effectiveConfiguration(options),
 							judgmentConfiguration:
 								judgmentConfiguration(options),
 							calls: scope.calls,

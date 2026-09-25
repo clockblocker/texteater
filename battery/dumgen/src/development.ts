@@ -28,11 +28,11 @@ import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysi
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
-import { defaultModelConfiguration } from "./universal/model.js";
 import {
-	generationConfiguration,
-	judgmentConfiguration,
-} from "./universal/trace.js";
+	defaultModelConfiguration,
+	effectiveConfiguration,
+} from "./universal/model-configuration.js";
+import { judgmentConfiguration } from "./universal/trace.js";
 
 type Registration = {
 	readonly source: LinguisticCorpus | PromptSource;
@@ -214,7 +214,7 @@ export async function evaluateExperiment(args: {
 					: "canonical-operation-2",
 			sourceRevision: args.sourceRevision,
 			configurations: {
-				generation: generationConfiguration(
+				generation: effectiveConfiguration(
 					options,
 				) as ModelConfiguration,
 				judgment: judgmentConfiguration(options),

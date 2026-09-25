@@ -174,6 +174,34 @@ test("intake judges every sentence at once and links stitching to its own judgme
 		sourceText: sourceSentences[0],
 	});
 });
+test("an operation trace records the generation configuration its calls executed with", async () => {
+	const traces: OperationTrace[] = [];
+	const dumgen = createDumgen({
+		judge: async ({ questions }) =>
+			choiceAnswers(questions, (id) =>
+				id === "language"
+					? "de"
+					: id === "validity"
+						? "Accepted"
+						: "Needed",
+			),
+		execute: async () => ({ output: { stitchedText: "Hallo Welt." } }),
+		configuration: { settings: { reasoning: { effort: "low" } } },
+		onOperation: (trace) => traces.push(trace),
+	});
+	await Effect.runPromise(
+		dumgen.segment({ sourceSentences: ["Hal lo Welt."] }),
+	);
+	const trace = traces[0];
+	const sent = trace?.calls.find((call) => call.executor === "Luna")?.request
+		.configuration;
+	expect(sent).toEqual({
+		model: "gpt-5.6-luna",
+		settings: { reasoning: { effort: "low" }, service_tier: "fast" },
+	});
+	expect(trace?.generationConfiguration).toEqual(sent);
+});
+
 test("English contractions and abbreviations remain lossless local source units", async () => {
 	const dumgen = createDumgen({
 		judge: async () => {

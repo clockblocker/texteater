@@ -1,35 +1,11 @@
 import * as Effect from "effect/Effect";
 import { prompts } from "../generated/prompts.js";
-import type {
-	DumgenOptions,
-	ModelConfiguration,
-	ModelRequest,
-} from "../types.js";
+import type { DumgenOptions, ModelRequest } from "../types.js";
 import { DumgenFailure } from "./failure.js";
+import { effectiveConfiguration } from "./model-configuration.js";
 import { type Called, call, type OperationScope } from "./trace.js";
 import { parse } from "./validation.js";
 
-export const defaultModelConfiguration: ModelConfiguration = {
-	model: "gpt-5.6-luna",
-	settings: { reasoning: { effort: "none" }, service_tier: "fast" },
-};
-export function effectiveConfiguration(
-	options: DumgenOptions,
-	route: string,
-): ModelConfiguration {
-	const overrides = options.routeOverrides?.[route];
-	return {
-		model:
-			overrides?.model ??
-			options.configuration?.model ??
-			defaultModelConfiguration.model,
-		settings: {
-			...defaultModelConfiguration.settings,
-			...options.configuration?.settings,
-			...overrides?.settings,
-		},
-	};
-}
 export function textModelCaller(options: DumgenOptions) {
 	return <T>(
 		scope: OperationScope,

@@ -8,10 +8,8 @@ import type {
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
-import {
-	effectiveConfiguration,
-	executeGeneration,
-} from "../../../universal/model.js";
+import { executeGeneration } from "../../../universal/model.js";
+import { effectiveConfiguration } from "../../../universal/model-configuration.js";
 import { choice } from "../../../universal/questions.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";

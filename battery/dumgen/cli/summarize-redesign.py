@@ -38,8 +38,8 @@ for record in records:
         for call in trace['calls']:
             if not set(call['dependsOn']) <= seen: trace_issues.append(f"{record['caseId']}: dependency outside prior calls")
             seen.add(call['id'])
-        for key in ['generationConfiguration', 'judgmentConfiguration']:
-            if trace[key]['settings'].get('maxRetries') != 0: trace_issues.append(f"{record['caseId']}: retries not disabled")
+        # Judgments send maxRetries; the generation transport makes one request per call.
+        if trace['judgmentConfiguration']['settings'].get('maxRetries') != 0: trace_issues.append(f"{record['caseId']}: retries not disabled")
         for event in trace['events']:
             if event['kind'] == 'JudgmentApplicability': ignored_questions += len(event['data'].get('ignored', []))
 assert not trace_issues, trace_issues
