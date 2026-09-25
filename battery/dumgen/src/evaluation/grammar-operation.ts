@@ -141,60 +141,64 @@ export function grammarOperationExperiment(
 			if (result._tag === "Left") throw result.left;
 			const attestation = result.right;
 			if ("decision" in attestation) return attestation;
-			const {
-				lemma,
-				normalizedSurface,
-				unitKind: _unit,
-				language: _language,
-				...surface
-			} = attestation.surface;
-			return {
-				lemma: {
-					canonicalForm: lemma.canonicalForm,
-					coreFeatures: lemma.coreFeatures,
-				},
-				surface,
-				normalizedMembers: withValencyMembers(
-					attestation,
-					normalizedSurface,
-				),
-				memberOrthographies: attestation.members.map(
-					(member) => member.orthography,
-				),
-				realizationCoverage: attestation.realizationCoverage,
-				...("articleEvidence" in attestation
-					? { articleEvidence: attestation.articleEvidence }
-					: {}),
-				...("expletiveEvidence" in attestation
-					? { expletiveEvidence: attestation.expletiveEvidence }
-					: {}),
-				...("valencyEvidence" in attestation
-					? { valencyEvidence: attestation.valencyEvidence }
-					: {}),
-				...(attestation.surface.lemma.kind === "ADP" &&
-				"valencyEvidence" in attestation
-					? { valencyEvidence: attestation.valencyEvidence }
-					: {}),
-			};
+			return grammarOutputOf(attestation);
 		},
+	};
+}
+
+/**
+ * The compact grammar answer an Attestation stands for: what the evaluation
+ * compares, and what the retained cases project from Spec Records.
+ */
+export function grammarOutputOf(attestation: Dumling.Attestation) {
+	const {
+		lemma,
+		normalizedSurface,
+		unitKind: _unit,
+		language: _language,
+		...surface
+	} = attestation.surface;
+	return {
+		lemma: {
+			canonicalForm: lemma.canonicalForm,
+			coreFeatures: lemma.coreFeatures,
+		},
+		surface,
+		normalizedMembers: withValencyMembers(attestation, normalizedSurface),
+		memberOrthographies: attestation.members.map(
+			(member) => member.orthography,
+		),
+		realizationCoverage: attestation.realizationCoverage,
+		...("articleEvidence" in attestation
+			? { articleEvidence: attestation.articleEvidence }
+			: {}),
+		...("expletiveEvidence" in attestation
+			? { expletiveEvidence: attestation.expletiveEvidence }
+			: {}),
+		...("valencyEvidence" in attestation
+			? { valencyEvidence: attestation.valencyEvidence }
+			: {}),
 	};
 }
 
 /**
  * The normalized members behind a Surface that projects only Fixed members:
  * a member realizing a preposition slot is normalized to its preposition, and
- * a noun's owned article to the article form it stands for (ADR 0035).
+ * a noun's owned article to the article form it stands for (ADR 0035). The
+ * pieces of one fused word share a Surface word and split it by their letters
+ * (`zu`, `m` in `zum`); an abbreviation takes its whole expansion
+ * (`zum Beispiel` for `z.B.`).
  */
 function withValencyMembers(
 	attestation: Dumling.Attestation,
 	normalizedSurface: string,
 ): string[] {
-	const fixed = normalizedSurface.split(" ");
-	const outside = new Map<number, string>();
+	const words = normalizedSurface.split(" ");
+	const normalized = new Map<number, string>();
 	if ("valencyEvidence" in attestation)
 		for (const slot of attestation.valencyEvidence)
 			if (slot.member !== null && slot.complement.kind === "Preposition")
-				outside.set(
+				normalized.set(
 					slot.member,
 					slot.complement.preposition.canonicalForm,
 				);
@@ -204,12 +208,50 @@ function withValencyMembers(
 		attestation.articleEvidence?.kind === "Owned" &&
 		article
 	)
-		outside.set(
+		normalized.set(
 			attestation.articleEvidence.member,
 			article.surface.normalizedSurface,
 		);
-	if (!outside.size) return fixed;
-	return attestation.members.map(
-		(_, position) => outside.get(position) ?? fixed.shift() ?? "",
-	);
+	const members: readonly Member[] = attestation.members;
+	const groups: number[][] = [];
+	for (const [position, member] of members.entries()) {
+		if (normalized.has(position)) continue;
+		const group = groups.at(-1);
+		const previous = members[position - 1];
+		if (
+			group?.at(-1) === position - 1 &&
+			previous?.orthography === "Fused" &&
+			member.orthography === "Fused" &&
+			previous.fusion.spelling === member.fusion.spelling &&
+			previous.component + 1 === member.component
+		)
+			group.push(position);
+		else groups.push([position]);
+	}
+	const surplus = words.length - groups.length;
+	const expanded =
+		surplus > 0
+			? groups.findIndex((group) =>
+					group.some(
+						(position) =>
+							members[position]?.orthography === "Shorthand",
+					),
+				)
+			: -1;
+	let next = 0;
+	for (const [index, group] of groups.entries()) {
+		const width = index === expanded ? surplus + 1 : 1;
+		const word = Array.from(words.slice(next, next + width).join(" "));
+		next += width;
+		for (const [piece, position] of group.entries()) {
+			const length =
+				piece === group.length - 1
+					? word.length
+					: Array.from(members[position]?.attested ?? "").length;
+			normalized.set(position, word.splice(0, length).join(""));
+		}
+	}
+	return members.map((_, position) => normalized.get(position) ?? "");
 }
+
+type Member = Dumling.Attestation["members"][number];
