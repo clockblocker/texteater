@@ -11,7 +11,7 @@ neither are patterns whose marker is free (`wohnen in`, `wohnen bei`,
 used. Recording free valency as well was rejected because it heads into full
 syntactic analysis to produce a copy of Source Contexts.
 
-## The Valency Frame
+**The Valency Frame.**
 
 Each Reading owns one Valency Frame, modelled on E-VALBU, the IDS Mannheim
 valency dictionary, where each Lesart has one Satzbauplan and optional
@@ -47,7 +47,7 @@ A Required slot is how an expression states the valency it demands:
 `jemandem auf den Keks gehen` has a Required Dat slot, which is exactly what
 the learner error *Du gehst mich auf den Keks* gets wrong.
 
-## Where a frame comes from
+**Where a frame comes from.**
 
 The Knowledge call proposes the whole frame, statuses included, when it
 creates a Reading. Later sentences add slots it missed, and mistakes go
@@ -59,7 +59,7 @@ first click on a word would show half its frame. Frames authored only by hand
 were rejected as well, since a Reading created at intake would have no frame
 until someone wrote one.
 
-## An occurrence
+**An occurrence.**
 
 The Attestation replaces `governedPrepositionEvidence` with
 `valencyEvidence: { member: index | null, complement, realizedCase }[]`. The
@@ -96,7 +96,7 @@ as the complement. German pronominal adverbs stay ADV Lexemes
 How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 [#595](https://github.com/clockblocker/texteater/issues/595).
 
-## Rendering
+**Rendering.**
 
 A Valency Block shows the learner the Lemma with its frame. Optional slots
 are in parentheses. `jN` is an Acc person, `jM` a Dat person and `etw`
