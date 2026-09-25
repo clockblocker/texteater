@@ -17,15 +17,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -49,15 +47,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -81,15 +77,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -115,15 +109,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -147,15 +139,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Masc",
-					"referenceNumber": "Sing"
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -179,15 +169,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Masc",
-					"referenceNumber": "Sing"
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -213,15 +201,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Masc",
-					"referenceNumber": "Sing"
+					"gender": ["Masc", "Neut"]
 				}
 			},
 			"realizationCoverage": "Full"
@@ -245,15 +231,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Fem",
-					"referenceNumber": "Sing"
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -279,15 +263,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Fem",
-					"referenceNumber": "Sing"
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -311,15 +293,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Neut",
-					"referenceNumber": "Sing"
+					"gender": ["Masc", "Neut"]
 				}
 			},
 			"realizationCoverage": "Full"
@@ -345,15 +325,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Neut",
-					"referenceNumber": "Sing"
+					"gender": ["Masc", "Neut"]
 				}
 			},
 			"realizationCoverage": "Full"
@@ -377,15 +355,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -411,15 +387,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -443,15 +417,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -475,15 +447,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -509,15 +479,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -541,15 +509,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -573,15 +539,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -607,15 +571,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -639,15 +601,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -671,15 +631,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -705,15 +663,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -734,6 +690,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": "Sing",
 					"reflex": null
 				}
 			},
@@ -742,15 +700,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -771,6 +727,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": ["Masc", "Neut"],
+					"number[psor]": "Sing",
 					"reflex": null
 				}
 			},
@@ -779,15 +737,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": "Masc",
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -808,6 +764,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": ["Masc", "Neut"],
+					"number[psor]": "Sing",
 					"reflex": null
 				}
 			},
@@ -816,15 +774,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": "Neut",
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -845,6 +801,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -853,15 +811,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": "Fem",
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -882,6 +838,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -890,15 +848,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -919,6 +875,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": "Plur",
 					"reflex": null
 				}
 			},
@@ -927,15 +885,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -956,6 +912,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": "Plur",
 					"reflex": null
 				}
 			},
@@ -964,15 +922,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -993,6 +949,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1001,15 +959,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1033,15 +989,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1066,15 +1020,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1099,15 +1051,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1132,15 +1082,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1165,15 +1113,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1198,15 +1144,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1231,15 +1175,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1264,15 +1206,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1297,15 +1237,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1330,15 +1268,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1363,15 +1299,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1396,15 +1330,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1426,6 +1358,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1434,15 +1368,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1464,6 +1396,8 @@
 					"case": "Nom",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1472,15 +1406,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1502,6 +1434,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1510,15 +1444,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1540,6 +1472,8 @@
 					"case": "Acc",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1548,15 +1482,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1578,6 +1510,8 @@
 					"case": "Acc",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1586,15 +1520,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1616,6 +1548,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1624,15 +1558,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1654,6 +1586,8 @@
 					"case": "Dat",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1662,15 +1596,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1692,6 +1624,8 @@
 					"case": "Dat",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1700,15 +1634,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1730,6 +1662,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1738,15 +1672,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1768,6 +1700,8 @@
 					"case": "Gen",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1776,15 +1710,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1806,6 +1738,8 @@
 					"case": "Gen",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1814,15 +1748,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1844,6 +1776,8 @@
 					"case": "Gen",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1852,15 +1786,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1882,6 +1814,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1890,15 +1824,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1920,6 +1852,8 @@
 					"case": "Acc",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1928,15 +1862,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1958,6 +1890,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -1966,15 +1900,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -1996,6 +1928,8 @@
 					"case": "Gen",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2004,15 +1938,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2034,6 +1966,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2042,15 +1976,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2072,6 +2004,8 @@
 					"case": "Nom",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2080,15 +2014,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2110,6 +2042,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2118,15 +2052,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2148,6 +2080,8 @@
 					"case": "Acc",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2156,15 +2090,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2186,6 +2118,8 @@
 					"case": "Acc",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2194,15 +2128,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2224,6 +2156,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2232,15 +2166,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2262,6 +2194,8 @@
 					"case": "Dat",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2270,15 +2204,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2300,6 +2232,8 @@
 					"case": "Dat",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2308,15 +2242,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2338,6 +2270,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2346,15 +2280,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2376,6 +2308,8 @@
 					"case": "Gen",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2384,15 +2318,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2414,6 +2346,8 @@
 					"case": "Gen",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2422,15 +2356,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2452,6 +2384,8 @@
 					"case": "Gen",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2460,15 +2394,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2490,6 +2422,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2498,15 +2432,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2528,6 +2460,8 @@
 					"case": "Acc",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2536,15 +2470,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2566,6 +2498,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2574,15 +2508,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2604,6 +2536,8 @@
 					"case": "Gen",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2612,15 +2546,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2645,15 +2577,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2678,15 +2608,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2711,15 +2639,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2744,15 +2670,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2774,6 +2698,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2782,15 +2708,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2812,6 +2736,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2820,15 +2746,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2850,6 +2774,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2858,15 +2784,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2888,6 +2812,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2896,15 +2822,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2926,6 +2850,8 @@
 					"case": "Acc",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2934,15 +2860,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -2964,6 +2888,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -2972,15 +2898,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3002,6 +2926,8 @@
 					"case": "Gen",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3010,15 +2936,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3040,6 +2964,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3048,15 +2974,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3078,6 +3002,8 @@
 					"case": "Acc",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3086,15 +3012,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3116,6 +3040,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3124,15 +3050,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3154,6 +3078,8 @@
 					"case": "Gen",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3162,15 +3088,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3192,6 +3116,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3200,15 +3126,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3230,6 +3154,8 @@
 					"case": "Nom",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3238,15 +3164,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3268,6 +3192,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3276,15 +3202,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3306,6 +3230,8 @@
 					"case": "Acc",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3314,15 +3240,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3344,6 +3268,8 @@
 					"case": "Acc",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3352,15 +3278,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3382,6 +3306,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3390,15 +3316,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3420,6 +3344,8 @@
 					"case": "Dat",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3428,15 +3354,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3458,6 +3382,8 @@
 					"case": "Dat",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3466,15 +3392,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3496,6 +3420,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3504,15 +3430,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3544,6 +3468,8 @@
 					"case": "Gen",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3552,15 +3478,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3592,6 +3516,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3600,15 +3526,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3630,6 +3554,8 @@
 					"case": "Nom",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3638,15 +3564,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3668,6 +3592,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3676,15 +3602,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3706,6 +3630,8 @@
 					"case": "Acc",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3714,15 +3640,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3744,6 +3668,8 @@
 					"case": "Acc",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3752,15 +3678,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3782,6 +3706,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3790,15 +3716,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3820,6 +3744,8 @@
 					"case": "Dat",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3828,15 +3754,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3858,6 +3782,8 @@
 					"case": "Dat",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3866,15 +3792,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3896,6 +3820,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3904,15 +3830,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3944,6 +3868,8 @@
 					"case": "Gen",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -3952,15 +3878,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -3992,6 +3916,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4000,15 +3926,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4030,6 +3954,8 @@
 					"case": "Nom",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4038,15 +3964,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4068,6 +3992,8 @@
 					"case": "Nom",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4076,15 +4002,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4106,6 +4030,8 @@
 					"case": "Acc",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4114,15 +4040,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4144,6 +4068,8 @@
 					"case": "Acc",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4152,15 +4078,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4182,6 +4106,8 @@
 					"case": "Acc",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4190,15 +4116,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4220,6 +4144,8 @@
 					"case": "Dat",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4228,15 +4154,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4258,6 +4182,8 @@
 					"case": "Dat",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4266,15 +4192,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4296,6 +4220,8 @@
 					"case": "Dat",
 					"gender": "Neut",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4304,15 +4230,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4344,6 +4268,8 @@
 					"case": "Gen",
 					"gender": "Fem",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4352,15 +4278,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4392,6 +4316,8 @@
 					"case": "Nom",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4400,15 +4326,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4430,6 +4354,8 @@
 					"case": "Acc",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4438,15 +4364,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4468,6 +4392,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4476,15 +4402,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4506,6 +4430,8 @@
 					"case": "Gen",
 					"gender": null,
 					"number": "Plur",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -4514,15 +4440,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4547,15 +4471,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4580,15 +4502,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4613,15 +4533,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4646,15 +4564,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4679,15 +4595,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4712,15 +4626,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4745,15 +4657,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4778,15 +4688,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4811,15 +4719,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4844,15 +4750,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4877,15 +4781,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4910,15 +4812,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4943,15 +4843,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -4976,15 +4874,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5009,15 +4905,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5042,15 +4936,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5075,15 +4967,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5108,15 +4998,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5141,15 +5029,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5174,15 +5060,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5207,15 +5091,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5240,15 +5122,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5273,15 +5153,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5306,15 +5184,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5339,15 +5215,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5372,15 +5246,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5405,15 +5277,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5438,15 +5308,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5471,15 +5339,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5504,15 +5370,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5537,15 +5401,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5570,15 +5432,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": "DET",
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5603,20 +5463,18 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Masc",
-					"referenceNumber": "Sing"
+					"gender": ["Masc", "Neut"]
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Dative masculine singular fixed form identity."
+		"explanation": "ihm is the dative of both er and es, so its gender is Masc,Neut whatever it refers to."
 	},
 	"grammar-de-pron-demo-formal-ihnen": {
 		"input": {
@@ -5636,15 +5494,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5669,15 +5525,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5701,15 +5555,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Fem",
-					"referenceNumber": "Sing"
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5733,15 +5585,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5765,15 +5615,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5797,15 +5645,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5829,15 +5675,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5861,15 +5705,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5893,15 +5735,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5925,15 +5765,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5955,6 +5793,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5963,15 +5803,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5993,6 +5831,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6001,15 +5841,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6033,15 +5871,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6062,6 +5898,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6070,15 +5908,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6099,6 +5935,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6107,15 +5945,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6139,15 +5975,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rcp",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6169,6 +6003,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6177,15 +6013,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6207,6 +6041,8 @@
 					"case": null,
 					"gender": null,
 					"number": null,
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6215,15 +6051,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6247,15 +6081,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6280,15 +6112,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6313,15 +6143,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6345,15 +6173,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6377,15 +6203,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6410,15 +6234,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6442,15 +6264,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6471,6 +6291,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -6479,15 +6301,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6519,6 +6339,8 @@
 					"case": "Nom",
 					"gender": "Masc",
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": "Sing",
 					"reflex": null
 				}
 			},
@@ -6527,15 +6349,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6560,15 +6380,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6592,15 +6410,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6624,15 +6440,13 @@
 				"coreFeatures": {
 					"case": "Dat",
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": "Masc",
-					"referenceNumber": null
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6653,6 +6467,8 @@
 					"case": "Dat",
 					"gender": null,
 					"number": "Sing",
+					"gender[psor]": null,
+					"number[psor]": null,
 					"reflex": null
 				}
 			},
@@ -6661,15 +6477,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6693,15 +6507,13 @@
 				"coreFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6725,15 +6537,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rcp",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6757,15 +6567,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6789,15 +6597,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6822,15 +6628,13 @@
 				"coreFeatures": {
 					"case": null,
 					"number": null,
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6855,15 +6659,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "3",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": "Neut",
-					"referenceNumber": "Sing"
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6888,15 +6690,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6922,15 +6722,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Infm",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Plur"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6957,15 +6755,13 @@
 				"coreFeatures": {
 					"case": "Gen",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "1",
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": "Sing"
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"
@@ -6990,15 +6786,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": "2",
 					"polite": "Form",
 					"poss": null,
 					"pronType": "Prs",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"realizationCoverage": "Full"

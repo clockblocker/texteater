@@ -2330,15 +2330,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Neut",
-					"referenceNumber": null
+					"gender": "Neut"
 				}
 			},
 			"candidates": []
@@ -2436,15 +2434,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Rel",
-					"gender": "Fem",
-					"referenceNumber": null
+					"gender": "Fem"
 				}
 			},
 			"candidates": []
@@ -2815,15 +2811,13 @@
 				"coreFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
 					"person": null,
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": null,
-					"referenceNumber": null
+					"gender": null
 				}
 			},
 			"candidates": ["👤"]

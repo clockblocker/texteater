@@ -2505,15 +2505,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
-									"gender[psor]": {
-										anyOf: [
-											{
-												type: "string",
-												enum: ["Fem", "Masc", "Neut"],
-											},
-											{ type: "null" },
-										],
-									},
 									extPos: {
 										anyOf: [
 											{ type: "string", enum: ["DET"] },
@@ -2571,17 +2562,37 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									gender: {
 										anyOf: [
 											{
-												type: "string",
-												enum: ["Fem", "Masc", "Neut"],
-											},
-											{ type: "null" },
-										],
-									},
-									referenceNumber: {
-										anyOf: [
-											{
-												type: "string",
-												enum: ["Plur", "Sing"],
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Fem",
+															"Masc",
+															"Neut",
+														],
+													},
+													{
+														type: "array",
+														prefixItems: [
+															{
+																type: "string",
+																enum: [
+																	"Fem",
+																	"Masc",
+																	"Neut",
+																],
+															},
+														],
+														items: {
+															type: "string",
+															enum: [
+																"Fem",
+																"Masc",
+																"Neut",
+															],
+														},
+													},
+												],
 											},
 											{ type: "null" },
 										],
@@ -2590,7 +2601,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 								required: [
 									"case",
 									"number",
-									"gender[psor]",
 									"extPos",
 									"foreign",
 									"person",
@@ -2598,7 +2608,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									"poss",
 									"pronType",
 									"gender",
-									"referenceNumber",
 								],
 								additionalProperties: false,
 							},
@@ -2675,6 +2684,53 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													{ type: "null" },
 												],
 											},
+											"gender[psor]": {
+												anyOf: [
+													{
+														anyOf: [
+															{
+																type: "string",
+																enum: [
+																	"Fem",
+																	"Masc",
+																	"Neut",
+																],
+															},
+															{
+																type: "array",
+																prefixItems: [
+																	{
+																		type: "string",
+																		enum: [
+																			"Fem",
+																			"Masc",
+																			"Neut",
+																		],
+																	},
+																],
+																items: {
+																	type: "string",
+																	enum: [
+																		"Fem",
+																		"Masc",
+																		"Neut",
+																	],
+																},
+															},
+														],
+													},
+													{ type: "null" },
+												],
+											},
+											"number[psor]": {
+												anyOf: [
+													{
+														type: "string",
+														enum: ["Plur", "Sing"],
+													},
+													{ type: "null" },
+												],
+											},
 											reflex: {
 												anyOf: [
 													{
@@ -2689,6 +2745,8 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											"case",
 											"gender",
 											"number",
+											"gender[psor]",
+											"number[psor]",
 											"reflex",
 										],
 										additionalProperties: false,

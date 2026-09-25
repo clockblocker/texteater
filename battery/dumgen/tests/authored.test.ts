@@ -98,6 +98,7 @@ test("reviewed member bundles have distinct Readings and valid semantic endpoint
 			}).success,
 		).toBe(true);
 		expect(member.lemma.coreFeatures).not.toHaveProperty("referenceGender");
+		expect(member.lemma.coreFeatures).not.toHaveProperty("referenceNumber");
 	}
 });
 test("same-spelling personal and possessive identities remain distinct", () => {
@@ -114,27 +115,29 @@ test("same-spelling personal and possessive identities remain distinct", () => {
 			.map((lemma) => lemma.coreFeatures.case)
 			.sort(),
 	).toEqual(["Acc", "Nom"]);
-	// Possessive seiner is a stem: one Lemma per possessor gender, and
-	// possessed-item gender is on its Surfaces.
-	for (const possessor of ["Masc", "Neut"])
-		expect(
-			pronouns.filter(
-				(lemma) =>
-					lemma.canonicalForm === "seiner" &&
-					lemma.coreFeatures.poss === "Yes" &&
-					lemma.coreFeatures.gender === null &&
-					lemma.coreFeatures["gender[psor]"] === possessor,
-			),
-		).toHaveLength(1);
-	// Personal seiner (genitive of er and es) is a pillar cell.
+	// Possessive seiner is a stem: one Lemma for a masculine or neuter
+	// possessor (his, its); possessor and possessed-item gender are on its
+	// Surfaces.
 	expect(
 		pronouns.filter(
 			(lemma) =>
 				lemma.canonicalForm === "seiner" &&
-				lemma.coreFeatures.poss === null &&
-				lemma.coreFeatures.case === "Gen",
+				lemma.coreFeatures.poss === "Yes" &&
+				lemma.coreFeatures.gender === null,
 		),
-	).toHaveLength(2);
+	).toHaveLength(1);
+	// Personal seiner (genitive of er and es) is one pillar cell whose gender
+	// is the set Masc, Neut.
+	expect(
+		pronouns
+			.filter(
+				(lemma) =>
+					lemma.canonicalForm === "seiner" &&
+					lemma.coreFeatures.poss === null &&
+					lemma.coreFeatures.case === "Gen",
+			)
+			.map((lemma) => lemma.coreFeatures.gender),
+	).toEqual([["Masc", "Neut"]]);
 	const demonstrative = pronouns.find(
 		(lemma) =>
 			lemma.canonicalForm === "der" &&

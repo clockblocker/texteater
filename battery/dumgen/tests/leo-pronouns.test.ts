@@ -15,23 +15,24 @@ const core = (features: Partial<Core>): Core => ({
 	case: null,
 	number: null,
 	gender: null,
-	"gender[psor]": null,
 	extPos: null,
 	foreign: null,
 	person: null,
 	polite: null,
 	poss: null,
 	pronType: null,
-	referenceNumber: null,
 	...features,
 });
 const possessive: Partial<Core> = {
 	pronType: "Prs",
 	poss: "Yes",
 	person: "1",
-	referenceNumber: "Sing",
 };
-type Cell = Pick<Core, "case" | "number" | "gender">;
+type Cell = Pick<Core, "case" | "number"> & {
+	gender: "Masc" | "Neut" | "Fem" | null;
+	"gender[psor]": readonly string[] | null;
+	"number[psor]": "Sing" | "Plur" | null;
+};
 const lookup = (spelled: string, features: Partial<Core>) =>
 	locateAuthoredIdentity({
 		kind: "PRON",
@@ -44,6 +45,8 @@ const surfaceBag = (cell: Partial<Cell>) => ({
 	case: null,
 	gender: null,
 	number: null,
+	"gender[psor]": null,
+	"number[psor]": null,
 	reflex: null,
 	...cell,
 });
@@ -272,7 +275,12 @@ const examples: readonly {
 		features: {
 			...possessive,
 		},
-		cell: { case: "Nom", number: "Sing", gender: "Neut" },
+		cell: {
+			case: "Nom",
+			number: "Sing",
+			gender: "Neut",
+			"number[psor]": "Sing",
+		},
 		variant: true,
 	},
 	{
@@ -282,7 +290,12 @@ const examples: readonly {
 		features: {
 			...possessive,
 		},
-		cell: { case: "Nom", number: "Sing", gender: "Masc" },
+		cell: {
+			case: "Nom",
+			number: "Sing",
+			gender: "Masc",
+			"number[psor]": "Sing",
+		},
 	},
 	{
 		text: "meinige",
@@ -291,7 +304,12 @@ const examples: readonly {
 		features: {
 			...possessive,
 		},
-		cell: { case: "Nom", number: "Sing", gender: "Masc" },
+		cell: {
+			case: "Nom",
+			number: "Sing",
+			gender: "Masc",
+			"number[psor]": "Sing",
+		},
 	},
 	{
 		text: "unsrem",
@@ -299,9 +317,13 @@ const examples: readonly {
 		context: "Du fährst mit deinem Wagen, ich mit unsrem.",
 		features: {
 			...possessive,
-			referenceNumber: "Plur",
 		},
-		cell: { case: "Dat", number: "Sing", gender: "Masc" },
+		cell: {
+			case: "Dat",
+			number: "Sing",
+			gender: "Masc",
+			"number[psor]": "Plur",
+		},
 		variant: true,
 	},
 	{
@@ -313,9 +335,13 @@ const examples: readonly {
 			poss: "Yes",
 			person: "2",
 			polite: "Infm",
-			referenceNumber: "Plur",
 		},
-		cell: { case: "Dat", number: "Sing", gender: "Masc" },
+		cell: {
+			case: "Dat",
+			number: "Sing",
+			gender: "Masc",
+			"number[psor]": "Plur",
+		},
 		variant: true,
 	},
 	{
@@ -327,7 +353,6 @@ const examples: readonly {
 			poss: "Yes",
 			person: "2",
 			polite: "Form",
-			referenceNumber: null,
 		},
 		cell: { case: "Nom", number: "Sing", gender: "Neut" },
 	},
@@ -473,33 +498,46 @@ test("unlicensed cells and shortened genitives are absent", () => {
 		expect(lookup(text, features).matches, text).toEqual([]);
 });
 
-test("same-spelling forms preserve case, possessor gender and article function", () => {
+test("a judged er or es gender finds the one ihm and seiner Lemma", () => {
+	for (const [spelled, grammaticalCase] of [
+		["ihm", "Dat"],
+		["seiner", "Gen"],
+	] as const)
+		for (const gender of [
+			"Masc",
+			"Neut",
+			["Masc", "Neut"],
+		] satisfies Core["gender"][]) {
+			const located = lookup(spelled, {
+				pronType: "Prs",
+				person: "3",
+				number: "Sing",
+				case: grammaticalCase,
+				gender,
+			});
+			expect(located.status, `${spelled} ${String(gender)}`).toBe("Hit");
+			const [hit] = located.matches;
+			if (!hit) throw Error("Expected the merged Lemma");
+			expect((hit.lemma.coreFeatures as Partial<Core>).gender).toEqual([
+				"Masc",
+				"Neut",
+			]);
+		}
+});
+
+test("same-spelling forms preserve case and article function, not the possessor", () => {
+	// seiner serves a masculine or neuter possessor (his, its) and ihrer a
+	// feminine or plural one (hers, theirs): one Lemma each.
 	const nominative = { gender: "Masc", number: "Sing", case: "Nom" } as const;
-	const first = lookupStem(
-		"seiner",
-		{
-			pronType: "Prs",
-			poss: "Yes",
-			person: "3",
-			referenceNumber: "Sing",
-			"gender[psor]": "Masc",
-		},
-		nominative,
-	);
-	const second = lookupStem(
-		"seiner",
-		{
-			pronType: "Prs",
-			poss: "Yes",
-			person: "3",
-			referenceNumber: "Sing",
-			"gender[psor]": "Neut",
-		},
-		nominative,
-	);
-	expect(first.matches).toHaveLength(1);
-	expect(second.matches).toHaveLength(1);
-	expect(first.matches[0]?.lemma).not.toEqual(second.matches[0]?.lemma);
+	for (const spelled of ["seiner", "ihrer"])
+		expect(
+			lookupStem(
+				spelled,
+				{ pronType: "Prs", poss: "Yes", person: "3" },
+				nominative,
+			).matches,
+			spelled,
+		).toHaveLength(1);
 	for (const grammaticalCase of ["Nom", "Acc"] as const)
 		expect(
 			lookupStem("meins", possessive, {
@@ -524,7 +562,6 @@ test("same-spelling forms preserve case, possessor gender and article function",
 		number: "Sing",
 		gender: "Fem",
 		poss: null,
-		"gender[psor]": null,
 	});
 	// Boundary guidance must reach the production classifier, not only the catalog.
 	expect(targetCriteria).toContain(

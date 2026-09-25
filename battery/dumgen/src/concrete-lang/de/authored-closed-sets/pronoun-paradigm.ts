@@ -40,14 +40,12 @@ const emptyCore: Core = {
 	case: null,
 	gender: null,
 	number: null,
-	"gender[psor]": null,
 	extPos: null,
 	foreign: null,
 	person: null,
 	polite: null,
 	poss: null,
 	pronType: null,
-	referenceNumber: null,
 };
 const caseNames = {
 	Nom: "Nominativ",
@@ -66,7 +64,10 @@ export function cellCoordinates(core: Partial<PronounCell>): string {
 			: core.number === "Plur"
 				? "Plural"
 				: null,
-		core.gender && genderNames[core.gender],
+		core.gender &&
+			(typeof core.gender === "string" ? [core.gender] : core.gender)
+				.map((gender) => genderNames[gender])
+				.join(" oder "),
 	]
 		.filter(Boolean)
 		.join(", ");

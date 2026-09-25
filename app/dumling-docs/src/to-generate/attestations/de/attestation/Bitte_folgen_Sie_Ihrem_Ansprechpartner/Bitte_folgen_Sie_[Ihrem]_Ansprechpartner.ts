@@ -52,6 +52,6 @@ export const attestation = {
 	classifierNotes:
 		"The capitalized polite possessive is encoded as DET with person 2, polite Form, and poss Yes.",
 	classificationMistakes:
-		"Do not add gender[psor] or number[psor] unless the attested form or context actually disambiguates them. For polite Ihrem here, the earlier mistake was adding possessor features that are not recoverable from the attestation.",
+		"Do not add gender[psor] or number[psor] unless the attested form shows them. For polite Ihrem here, the earlier mistake was adding possessor features that are not recoverable from the attestation.",
 	isVerified: true,
 } as const;

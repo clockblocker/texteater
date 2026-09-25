@@ -5,7 +5,7 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "ihr",
+	canonicalForm: "ihn",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
@@ -13,11 +13,9 @@ const lemma = {
 		polite: null,
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
-		case: "Dat",
+		case: "Acc",
 		number: "Sing",
-		gender: "Fem",
-		"gender[psor]": null,
+		gender: "Masc",
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,9 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „ihr“ verweist auf die weibliche dritte Person Einzahl.",
-		transcription: "iːɐ̯",
-		translations: { en: ["her"], ru: ["ей"] },
+			"Die Personalpronomenform „ihn“ verweist auf die männliche dritte Person Einzahl.",
+		transcription: "iːn",
+		translations: { en: ["him"], ru: ["его"] },
 	},
 	coverage: {
 		transcription: "Authored",

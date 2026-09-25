@@ -5,19 +5,17 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "dir",
+	canonicalForm: "seiner",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
-		person: "2",
-		polite: "Infm",
+		person: "3",
+		polite: null,
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
-		case: "Dat",
+		case: "Gen",
 		number: "Sing",
-		gender: null,
-		"gender[psor]": null,
+		gender: ["Masc", "Neut"],
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,9 +24,12 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „dir“ verweist auf die angesprochene Einzahl.",
-		transcription: "diːɐ̯",
-		translations: { en: ["you"], ru: ["тебе"] },
+			"Die Personalpronomenform „seiner“ ist der Genitiv von „er“ und „es“ und verweist auf die männliche oder sächliche dritte Person Einzahl.",
+		transcription: "ˈzaɪ̯nɐ",
+		translations: {
+			en: ["of him, of it (genitive of er/es)"],
+			ru: ["его"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

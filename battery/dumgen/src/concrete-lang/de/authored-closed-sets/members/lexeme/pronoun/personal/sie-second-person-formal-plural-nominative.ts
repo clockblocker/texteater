@@ -13,11 +13,9 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: null,
 		case: "Nom",
 		number: "Plur",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -29,8 +27,8 @@ export const member = defineAuthoredMember({
 			"Die Personalpronomenform „Sie“ verweist auf eine oder mehrere höflich angesprochene Personen.",
 		transcription: "ziː",
 		translations: {
-			en: ["you (formal singular)"],
-			ru: ["Вы (вежл., ед. ч.)"],
+			en: ["you (formal)"],
+			ru: ["Вы"],
 		},
 	},
 	coverage: {

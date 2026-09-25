@@ -708,85 +708,32 @@ reviewed.push(
 	),
 );
 
-// Possessor coordinates and possessed-item agreement are independent.
+// Possessor gender and number describe the Surface, as on the possessive
+// articles: seiner serves a masculine or neuter possessor (his, its) and ihrer
+// a feminine or plural one (hers, theirs), so each is one Lemma. Only the word
+// and its sentence's grammar decide a Lemma, never what it refers to.
 // Strong standalone, weak after an article, and article-bound -ig forms:
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/Pron-Poss-ig1.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
-for (const [
-	stem,
-	ipa,
-	person,
-	referenceNumber,
-	possessorGender,
-	polite,
-	en,
-	ru,
-] of [
-	["mein", "ˈmaɪ̯n", "1", "Sing", null, null, "mine", "мой"],
-	[
-		"dein",
-		"ˈdaɪ̯n",
-		"2",
-		"Sing",
-		null,
-		"Infm",
-		"yours (singular informal)",
-		"твой",
-	],
-	[
-		"sein",
-		"ˈzaɪ̯n",
-		"3",
-		"Sing",
-		"Masc",
-		null,
-		"his",
-		"его (обладатель — муж. род)",
-	],
-	[
-		"sein",
-		"ˈzaɪ̯n",
-		"3",
-		"Sing",
-		"Neut",
-		null,
-		"its",
-		"его (обладатель — ср. род)",
-	],
-	["ihr", "ˈiːʁ", "3", "Sing", "Fem", null, "hers", "её"],
-	["ihr", "ˈiːʁ", "3", "Plur", null, null, "theirs", "их"],
-	["unser", "ˈʊnzəʁ", "1", "Plur", null, null, "ours", "наш"],
+for (const [stem, ipa, person, polite, en, ru] of [
+	["mein", "ˈmaɪ̯n", "1", null, "mine", "мой"],
+	["dein", "ˈdaɪ̯n", "2", "Infm", "yours (singular informal)", "твой"],
+	["sein", "ˈzaɪ̯n", "3", null, "his, its", "его"],
+	["ihr", "ˈiːʁ", "3", null, "hers, theirs", "её; их"],
+	["unser", "ˈʊnzəʁ", "1", null, "ours", "наш"],
 	[
 		"eur",
 		"ˈɔɪ̯ʁ",
 		"2",
-		"Plur",
-		null,
 		"Infm",
 		"yours (plural informal)",
 		"ваш (несколько адресатов)",
 	],
-	[
-		"Ihr",
-		"ˈiːʁ",
-		"2",
-		null,
-		null,
-		"Form",
-		"yours (formal)",
-		"Ваш (вежливое обращение)",
-	],
+	["Ihr", "ˈiːʁ", "2", "Form", "yours (formal)", "Ваш (вежливое обращение)"],
 ] as const) {
 	const meaning: PronounDescription = {
-		core: {
-			pronType: "Prs",
-			poss: "Yes",
-			person,
-			referenceNumber,
-			"gender[psor]": possessorGender,
-			polite,
-		},
+		core: { pronType: "Prs", poss: "Yes", person, polite },
 		emoji: "🔐",
 		definition: `Bezeichnet eine dem Besitzer zugeordnete Person oder Sache (${en}).`,
 		en: [en],

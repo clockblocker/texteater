@@ -873,7 +873,7 @@
 					"case": "Acc",
 					"degree": null,
 					"gender": "Masc",
-					"gender[psor]": "Masc",
+					"gender[psor]": ["Masc", "Neut"],
 					"number": "Sing",
 					"number[psor]": "Sing"
 				}
@@ -912,7 +912,7 @@
 					"case": "Acc",
 					"degree": null,
 					"gender": "Neut",
-					"gender[psor]": "Neut",
+					"gender[psor]": ["Masc", "Neut"],
 					"number": "Sing",
 					"number[psor]": "Sing"
 				}
@@ -951,9 +951,9 @@
 					"case": "Acc",
 					"degree": null,
 					"gender": "Neut",
-					"gender[psor]": "Fem",
+					"gender[psor]": null,
 					"number": "Sing",
-					"number[psor]": "Sing"
+					"number[psor]": null
 				}
 			},
 			"lemma": {
@@ -1340,7 +1340,7 @@
 					"gender": "Neut",
 					"gender[psor]": null,
 					"number": "Sing",
-					"number[psor]": "Sing"
+					"number[psor]": null
 				}
 			},
 			"lemma": {

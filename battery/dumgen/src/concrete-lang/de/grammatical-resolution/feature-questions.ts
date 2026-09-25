@@ -8,6 +8,8 @@ type Meaning = {
 	unmarked: string;
 	byKind?: Readonly<Record<string, string>>;
 	unmarkedByKind?: Readonly<Record<string, string>>;
+	/** Value sets offered per Kind where the schema accepts one, labeled "Masc,Neut". */
+	setsByKind?: Readonly<Record<string, Readonly<Record<string, string>>>>;
 };
 
 const gender = {
@@ -100,12 +102,18 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			"The lexical identity has no marked grammatical gender, for example a plural-only identity; not missing evidence for an otherwise gendered noun",
 		byKind: {
 			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Plural-only names have unmarked gender.",
-			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? For a nonpossessive personal pronoun, mark gender only with third-person singular reference. Plural agreement has no marked gender. Never infer gender from a name alone. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
+			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? A personal pronoun marks gender only in a third-person singular cell, and only as far as its form shows: er/ihn are Masc, es Neut, sie/ihr/ihrer Fem, while ihm and genitive seiner serve er and es alike and are Masc,Neut whatever they refer to. wer-forms are Masc and was-forms Neut. Plural agreement has no marked gender. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
 			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), what grammatical gender belongs to its Paradigm Cell? It is the lexical gender of the noun the article modifies. Plural agreement has no marked gender. Every other determiner keeps gender on its Surface, not in Core.",
 		},
 		unmarkedByKind: {
 			PRON: "Gender is inapplicable in Core: a stem pronoun whose gender is on its Surface, a first/second-person nonpossessive identity, plural agreement, or an invariant identity without gender",
 			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose gender is on its Surface, an invariant determiner such as derlei, or plural agreement",
+		},
+		setsByKind: {
+			PRON: {
+				"Masc,Neut":
+					"Masculine or neuter: a third-person singular form er and es share, ihm or genitive seiner",
+			},
 		},
 	},
 	"lemma.coreFeatures.hyph": {
@@ -292,20 +300,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose Number is on its Surface, or an invariant determiner such as derlei",
 		},
 	},
-	"lemma.coreFeatures.gender[psor]": {
-		question:
-			"If this is a personal possessive pronoun with third-person singular reference, what gender is established for its possessor? This is independent of the possessed item's gender. Otherwise the feature is unmarked; do not guess from a name.",
-		values: gender,
-		unmarked:
-			"The personal-possessive third-person singular premise does not apply",
-	},
-	"lemma.coreFeatures.referenceNumber": {
-		question:
-			"What reference Number belongs to this personal or possessive pronoun (the possessor for a possessive)? Ordinary ich/du/er forms have singular reference and wir/ihr/sie-plural plural reference. Formal Sie may refer to one or several addressees: only formal-address count needs explicit context; without it use Unmarked. Keep this separate from agreement Number.",
-		values: number,
-		unmarked:
-			"Reference count is unmarked under the route policy; formal address without explicit addressee-count evidence stays unmarked",
-	},
 	"lemma.coreFeatures.polarity": {
 		question:
 			"Does this particle itself express positive or negative polarity? A negative sentence does not make an unrelated particle negative.",
@@ -381,17 +375,27 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"surface.inflectionalFeatures.gender[psor]": {
 		question:
-			"If this is an inflected possessive determiner, what grammatical gender is established for the possessor? Keep it separate from the modified noun's gender. If applicable but not defensibly recoverable, return Unresolved.",
+			"If this is an inflected possessive determiner or possessive pronoun, which possessor gender does its form show? It is separate from the possessed item's gender. sein- (seinem, seiner) serves a masculine or neuter possessor: Masc,Neut. Never narrow it from what the possessor is.",
 		values: gender,
 		unmarked:
-			"Possessor gender is inapplicable, such as nonpossessive, first/second-person or plural-possessor use",
+			"The form shows no possessor gender: nonpossessive use, first/second person, or ihr-, which serves a feminine singular or a plural possessor",
+		setsByKind: {
+			DET: {
+				"Masc,Neut":
+					"Masculine or neuter possessor, as every sein- form shows",
+			},
+			PRON: {
+				"Masc,Neut":
+					"Masculine or neuter possessor, as every sein- form shows",
+			},
+		},
 	},
 	"surface.inflectionalFeatures.number[psor]": {
 		question:
-			"If this is an inflected possessive determiner, what is the possessor's Number? mein/dein/sein has singular possessor, unser/euer plural. Formal Ihr marks count only with explicit addressee evidence.",
+			"If this is an inflected possessive determiner or possessive pronoun, which possessor Number does its form show? mein/dein/sein have singular possessor, unser/euer plural.",
 		values: number,
 		unmarked:
-			"No applicable marked possessor Number; formal Ihr without explicit count stays unmarked",
+			"The form shows no possessor Number: nonpossessive use, ihr- (a feminine singular or a plural possessor) or formal Ihr (one or several addressees)",
 	},
 	"surface.inflectionalFeatures.degree": {
 		question:
@@ -533,6 +537,10 @@ export function featureQuestion(
 		// lets bare, mass and plural-only nouns (Obst, Holz) lose the click.
 		const numberAlwaysMarked =
 			kind === "NOUN" && path === "surface.inflectionalFeatures.number";
+		for (const [label, description] of Object.entries(
+			field.sets ? (meaning.setsByKind?.[kind] ?? {}) : {},
+		))
+			criteria[label] = description;
 		for (const value of field.values) {
 			if (value === null && numberAlwaysMarked) continue;
 			const label = value === null ? "Unmarked" : String(value);
@@ -579,7 +587,7 @@ const inflectionPolicies: Readonly<
 			"Every definite or indefinite article, whose cell is Core; an invariant or uninflected determiner (derlei, viel Geld, all die Jahre) without comparison; or a dictionary mention",
 	},
 	PRON: {
-		marked: "A stem pronoun in context (diesem, keinen, meiner, allen) with its Case, Number and Gender, or a reflexive occurrence: the pronoun refers to its clause subject acting on or for itself",
+		marked: "A stem pronoun in context (diesem, keinen, meiner, allen) with its Case, Number and Gender and, for a possessive, its possessor features, or a reflexive occurrence: the pronoun refers to its clause subject acting on or for itself",
 		citation:
 			"A nonreflexive pillar pronoun (personal, der/die/das, wer/was, jemand, einer), whose cell is Core; an invariant pronoun (etwas, einander); or a dictionary mention",
 	},

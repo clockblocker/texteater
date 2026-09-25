@@ -5,19 +5,17 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "seiner",
+	canonicalForm: "mir",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
-		person: "3",
+		person: "1",
 		polite: null,
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
-		case: "Gen",
+		case: "Dat",
 		number: "Sing",
-		gender: "Masc",
-		"gender[psor]": null,
+		gender: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,9 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „seiner“ verweist auf die männliche dritte Person Einzahl.",
-		transcription: "ˈzaɪ̯nɐ",
-		translations: { en: ["him"], ru: ["его"] },
+			"Die Personalpronomenform „mir“ verweist auf die sprechende Einzahl.",
+		transcription: "miːɐ̯",
+		translations: { en: ["me"], ru: ["мне"] },
 	},
 	coverage: {
 		transcription: "Authored",

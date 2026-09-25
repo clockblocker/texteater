@@ -1381,7 +1381,6 @@ export interface UnitMap {
 			coreFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
-				"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 				extPos: "DET" | null;
 				foreign: "Yes" | null;
 				person: ("1" | "2" | "3") | null;
@@ -1399,8 +1398,15 @@ export interface UnitMap {
 							| "Tot"
 					  )
 					| null;
-				gender: ("Fem" | "Masc" | "Neut") | null;
-				referenceNumber: ("Plur" | "Sing") | null;
+				gender:
+					| (
+							| ("Fem" | "Masc" | "Neut")
+							| [
+									"Fem" | "Masc" | "Neut",
+									...Array<"Fem" | "Masc" | "Neut">,
+							  ]
+					  )
+					| null;
 			};
 		};
 		Surface: {
@@ -1415,7 +1421,6 @@ export interface UnitMap {
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
-					"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 					extPos: "DET" | null;
 					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
@@ -1433,8 +1438,15 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					referenceNumber: ("Plur" | "Sing") | null;
+					gender:
+						| (
+								| ("Fem" | "Masc" | "Neut")
+								| [
+										"Fem" | "Masc" | "Neut",
+										...Array<"Fem" | "Masc" | "Neut">,
+								  ]
+						  )
+						| null;
 				};
 			};
 			normalizedSurface: string;
@@ -1444,6 +1456,16 @@ export interface UnitMap {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
+				"gender[psor]":
+					| (
+							| ("Fem" | "Masc" | "Neut")
+							| [
+									"Fem" | "Masc" | "Neut",
+									...Array<"Fem" | "Masc" | "Neut">,
+							  ]
+					  )
+					| null;
+				"number[psor]": ("Plur" | "Sing") | null;
 				reflex: "Yes" | null;
 			} | null;
 		};
@@ -1458,7 +1480,6 @@ export interface UnitMap {
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
-					"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 					extPos: "DET" | null;
 					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
@@ -1476,8 +1497,15 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					referenceNumber: ("Plur" | "Sing") | null;
+					gender:
+						| (
+								| ("Fem" | "Masc" | "Neut")
+								| [
+										"Fem" | "Masc" | "Neut",
+										...Array<"Fem" | "Masc" | "Neut">,
+								  ]
+						  )
+						| null;
 				};
 			};
 			emojiDescription: string;
@@ -1496,7 +1524,6 @@ export interface UnitMap {
 					coreFeatures: {
 						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 						number: ("Plur" | "Sing") | null;
-						"gender[psor]": ("Fem" | "Masc" | "Neut") | null;
 						extPos: "DET" | null;
 						foreign: "Yes" | null;
 						person: ("1" | "2" | "3") | null;
@@ -1514,8 +1541,15 @@ export interface UnitMap {
 									| "Tot"
 							  )
 							| null;
-						gender: ("Fem" | "Masc" | "Neut") | null;
-						referenceNumber: ("Plur" | "Sing") | null;
+						gender:
+							| (
+									| ("Fem" | "Masc" | "Neut")
+									| [
+											"Fem" | "Masc" | "Neut",
+											...Array<"Fem" | "Masc" | "Neut">,
+									  ]
+							  )
+							| null;
 					};
 				};
 				normalizedSurface: string;
@@ -1525,6 +1559,16 @@ export interface UnitMap {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
+					"gender[psor]":
+						| (
+								| ("Fem" | "Masc" | "Neut")
+								| [
+										"Fem" | "Masc" | "Neut",
+										...Array<"Fem" | "Masc" | "Neut">,
+								  ]
+						  )
+						| null;
+					"number[psor]": ("Plur" | "Sing") | null;
 					reflex: "Yes" | null;
 				} | null;
 			};

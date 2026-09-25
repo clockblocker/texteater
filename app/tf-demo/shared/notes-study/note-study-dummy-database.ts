@@ -96,8 +96,6 @@ const NULL_CORE_FEATURES_BY_KIND = {
 		case: null,
 		number: null,
 		gender: null,
-		"gender[psor]": null,
-		referenceNumber: null,
 	},
 	PROPN: { abbr: null, foreign: null, gender: null },
 	PUNCT: { punctType: null },

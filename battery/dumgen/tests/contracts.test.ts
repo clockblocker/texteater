@@ -11,29 +11,29 @@ import { grammarFixture } from "../src/testing.js";
 // Expected identities come from the reviewed catalog, independently of each
 // corpus answer. Replaying an answer alone only proves schema compatibility.
 const reviewedCases = [
-	["fixed-jemand-jemand", "jemand", "Nom", "Ind", null, null],
-	["fixed-jemand-jemanden", "jemanden", "Acc", "Ind", null, null],
-	["fixed-jemand-jemandem", "jemandem", "Dat", "Ind", null, null],
-	["fixed-niemand-niemand", "niemand", "Nom", "Neg", null, null],
-	["fixed-niemand-niemanden", "niemanden", "Acc", "Neg", null, null],
-	["fixed-niemand-niemandem", "niemandem", "Dat", "Neg", null, null],
-	["dev-indefinite-jemandem", "jemandem", "Dat", "Ind", null, null],
-	["dev-negative-niemanden", "niemanden", "Acc", "Neg", null, null],
-	["accept-v4-negative-niemanden-acc", "niemanden", "Acc", "Neg", null, null],
-	["dev-demonstrative-das-nom", "das", "Nom", "Dem", "Neut", null],
-	["dev-relative-die-nom", "die", "Nom", "Rel", "Fem", null],
-	["accept-v4-demonstrative-die-nom-plur", "die", "Nom", "Dem", null, null],
-	["accept-v4-relative-dem-dat-neut", "dem", "Dat", "Rel", "Neut", null],
-	// Possessives are stems: one Lemma whose Surfaces mark the cell.
-	["fixed-sein-masc", "seiner", null, "Prs", null, "Masc"],
-	["fixed-sein-neut", "seiner", null, "Prs", null, "Neut"],
-	["fixed-wer", "wer", "Nom", "Int", "Masc", null],
-	["fixed-wen", "wen", "Acc", "Int", "Masc", null],
-	["fixed-wem", "wem", "Dat", "Int", "Masc", null],
+	["fixed-jemand-jemand", "jemand", "Nom", "Ind", null],
+	["fixed-jemand-jemanden", "jemanden", "Acc", "Ind", null],
+	["fixed-jemand-jemandem", "jemandem", "Dat", "Ind", null],
+	["fixed-niemand-niemand", "niemand", "Nom", "Neg", null],
+	["fixed-niemand-niemanden", "niemanden", "Acc", "Neg", null],
+	["fixed-niemand-niemandem", "niemandem", "Dat", "Neg", null],
+	["dev-indefinite-jemandem", "jemandem", "Dat", "Ind", null],
+	["dev-negative-niemanden", "niemanden", "Acc", "Neg", null],
+	["accept-v4-negative-niemanden-acc", "niemanden", "Acc", "Neg", null],
+	["dev-demonstrative-das-nom", "das", "Nom", "Dem", "Neut"],
+	["dev-relative-die-nom", "die", "Nom", "Rel", "Fem"],
+	["accept-v4-demonstrative-die-nom-plur", "die", "Nom", "Dem", null],
+	["accept-v4-relative-dem-dat-neut", "dem", "Dat", "Rel", "Neut"],
+	// Possessives are stems: one Lemma whose Surfaces mark the cell and possessor.
+	["fixed-sein-masc", "seiner", null, "Prs", null],
+	["fixed-sein-neut", "seiner", null, "Prs", null],
+	["fixed-wer", "wer", "Nom", "Int", "Masc"],
+	["fixed-wen", "wen", "Acc", "Int", "Masc"],
+	["fixed-wem", "wem", "Dat", "Int", "Masc"],
 	// wer is masculine and was neuter; this wessen asks for a thing.
-	["fixed-wessen", "wessen", "Gen", "Int", "Neut", null],
-	["dev-interrogative-wer-nom", "wer", "Nom", "Int", "Masc", null],
-	["accept-v4-interrogative-wem-dat", "wem", "Dat", "Int", "Masc", null],
+	["fixed-wessen", "wessen", "Gen", "Int", "Neut"],
+	["dev-interrogative-wer-nom", "wer", "Nom", "Int", "Masc"],
+	["accept-v4-interrogative-wem-dat", "wem", "Dat", "Int", "Masc"],
 ] as const;
 
 test("pronoun grammar answers hand off to the exact reviewed Reading without generation", async () => {
@@ -50,7 +50,6 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 		grammaticalCase,
 		pronType,
 		gender,
-		possessorGender,
 	] of reviewedCases) {
 		const id = `grammar-de-pron-${suffix}` as keyof typeof pronounCases;
 		const golden = pronounCases[id];
@@ -61,8 +60,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 				lemma.coreFeatures.extPos === null &&
 				lemma.coreFeatures.case === grammaticalCase &&
 				lemma.coreFeatures.pronType === pronType &&
-				lemma.coreFeatures.gender === gender &&
-				lemma.coreFeatures["gender[psor]"] === possessorGender,
+				lemma.coreFeatures.gender === gender,
 		);
 		expect(matches, id).toHaveLength(1);
 		const expected = matches[0];

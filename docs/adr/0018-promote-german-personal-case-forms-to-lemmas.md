@@ -40,3 +40,17 @@ Amended by ADR 0032 on 2026-09-25: Int and Rel `wer` and `was` mark gender,
 Masc and Neut. This is the agreement each form takes, not a guess about a
 person's sex, and it extends marked gender to these two paradigms only.
 Dumling's gender check still binds only personal pronouns.
+
+Amended on 2026-09-25 (#595): a Lemma must be decidable from the word and the
+grammar of its sentence, never from what a pronoun refers to. This supersedes
+possessor gender and Reference Number in Core:
+
+- Possessive `seiner`/`seinige` (his, its) and `ihrer`/`ihrige` (hers, theirs)
+  are one Lemma each. Possessor gender and number describe the Surface, as on
+  the possessive articles, and mark only what the form shows: `sein-` has
+  gender[psor] Masc, Neut; `ihr-` marks neither. Formal `Ihrer` stays apart.
+- Personal `ihm` and genitive `seiner` serve `er` and `es` alike, so each is
+  one Lemma whose gender is the set Masc, Neut. `er`, `ihn`, `es`, `sie` and
+  `ihr` keep the gender their form shows.
+- `referenceNumber` is removed. It repeated `number` on personal pronouns, was
+  null on formal `Sie`, and stood in for possessor number on possessives.

@@ -5,7 +5,7 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "deiner",
+	canonicalForm: "dich",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
@@ -13,11 +13,9 @@ const lemma = {
 		polite: "Infm",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
-		case: "Gen",
+		case: "Acc",
 		number: "Sing",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,8 +24,8 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „deiner“ verweist auf die angesprochene Einzahl.",
-		transcription: "ˈdaɪ̯nɐ",
+			"Die Personalpronomenform „dich“ verweist auf die angesprochene Einzahl.",
+		transcription: "dɪç",
 		translations: { en: ["you"], ru: ["тебя"] },
 	},
 	coverage: {

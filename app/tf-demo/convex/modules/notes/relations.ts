@@ -529,10 +529,7 @@ export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
 			return (["case", "person", "number"] as const).flatMap((feature) =>
 				selectGrammaticalAlternatives({
 					source: lemma,
-					vary:
-						feature === "number"
-							? ["number", "referenceNumber"]
-							: [feature],
+					vary: [feature],
 				}).map((reading) => ({ feature, reading })),
 			);
 		if (lemma.kind === "DET")

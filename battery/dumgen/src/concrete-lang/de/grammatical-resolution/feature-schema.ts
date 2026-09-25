@@ -1,7 +1,8 @@
 import { modelSchemas } from "../../../generated/model-schemas.js";
 
 type Scalar = string | number | boolean | null;
-export type FeatureField = { values: Scalar[]; open: boolean };
+/** A field's legal scalar values; `sets` when the schema also accepts a value set. */
+export type FeatureField = { values: Scalar[]; open: boolean; sets?: true };
 type Schema = {
 	type?: string;
 	const?: Scalar;
@@ -20,6 +21,11 @@ function fields(
 		fields(branch, path, output);
 	for (const [key, value] of Object.entries(schema.properties ?? {}))
 		fields(value, path ? `${path}.${key}` : key, output);
+	if (schema.type === "array")
+		output.set(path, {
+			...(output.get(path) ?? { values: [], open: false }),
+			sets: true,
+		});
 	if (
 		Object.hasOwn(schema, "const") ||
 		schema.enum ||

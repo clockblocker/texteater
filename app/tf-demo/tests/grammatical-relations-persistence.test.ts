@@ -40,11 +40,9 @@ const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
 		polite: null,
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Sing",
 		case: "Acc",
 		number: "Sing",
 		gender: null,
-		"gender[psor]": null,
 	},
 };
 const reading: Dumling.Reading<"de", "Lexeme", "PRON"> = {

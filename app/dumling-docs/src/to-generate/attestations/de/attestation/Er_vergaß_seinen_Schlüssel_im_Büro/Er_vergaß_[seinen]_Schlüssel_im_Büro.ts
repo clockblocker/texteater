@@ -18,7 +18,7 @@ const occurrenceAttestation = {
 			case: "Acc",
 			gender: "Masc",
 			number: "Sing",
-			"gender[psor]": "Masc",
+			"gender[psor]": ["Masc", "Neut"],
 			"number[psor]": "Sing",
 			degree: null,
 		},
@@ -50,7 +50,7 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er vergaß [seinen] Schlüssel im Büro.",
 	classifierNotes:
-		"`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Here the subject `Er` makes the possessor reading specifically 3rd-person masculine singular, so the separate possessor features are justified.",
+		"`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Its possessor features record what the form shows: sein- serves a masculine or neuter singular possessor, so gender[psor] is the set Masc, Neut even though the subject `Er` is masculine.",
 	classificationMistakes:
 		"Reading belongs to a later layer; Dumling records `seinen` as a Surface of the possessive determiner Lemma sein.",
 	isVerified: true,

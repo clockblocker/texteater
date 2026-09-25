@@ -81,3 +81,10 @@ Amended on 2026-09-25 to settle the pillar collisions (#595):
 - Grammatical navigation reaches a cell only when both ends mark every varied
   feature; a plural cell's unmarked gender counts as marked. Varying case from
   `jemand` never reaches `man`.
+
+Amended on 2026-09-25 with [ADR 0018](./0018-promote-german-personal-case-forms-to-lemmas.md):
+a Lemma follows from the word and its sentence's grammar, never from what a
+pronoun refers to. Possessor gender and number are Surface features for German
+PRON as for DET, so each possessive stem is one Lemma. Personal `ihm` and
+genitive `seiner` mark gender as the set Masc, Neut, and navigation matches a
+set against any value it contains: `er` and `es` both reach them.

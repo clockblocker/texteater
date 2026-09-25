@@ -44,9 +44,15 @@ test("every enabled German grammatical feature has explicit meanings for all sch
 			const nounNumber =
 				kind === "NOUN" &&
 				path === "surface.inflectionalFeatures.number";
+			// A value set is offered first, labeled like "Masc,Neut".
+			const sets = Object.keys(question.criteria).filter((label) =>
+				label.includes(","),
+			);
+			if (!field.sets) expect(sets).toEqual([]);
 			const expected = field.open
 				? ["Present", "Absent", "Unresolved"]
 				: [
+						...sets,
 						...field.values
 							.filter((value) => !(nounNumber && value === null))
 							.map((value) =>

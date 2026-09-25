@@ -152,7 +152,7 @@ Some distinctions are German-specific or model-specific rather than plain UD inv
 
 - \`governedCase\` on adpositions
 - \`discourseFormulaRole\` on discourse formulas
-- \`gender[psor]\` and \`number[psor]\` on possessive determiners when the possessor features are actually disambiguated
+- \`gender[psor]\` and \`number[psor]\` on possessive determiner and pronoun Surfaces, as far as the form shows them: \`sein\` marks the set Masc, Neut, and \`ihr\` marks neither
 - \`historicalStatus: "Archaic"\` on surfaces when that status is explicitly modeled
 
 These should not be sprayed onto Lemmas by default. They exist to record real learner-facing distinctions, not to make the payload look complete.

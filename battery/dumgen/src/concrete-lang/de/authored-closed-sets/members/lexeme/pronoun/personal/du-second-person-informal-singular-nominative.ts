@@ -5,19 +5,17 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "wir",
+	canonicalForm: "du",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
-		person: "1",
-		polite: null,
+		person: "2",
+		polite: "Infm",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Plur",
 		case: "Nom",
-		number: "Plur",
+		number: "Sing",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,9 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „wir“ verweist auf die sprechende Mehrzahl.",
-		transcription: "viːɐ̯",
-		translations: { en: ["we"], ru: ["мы"] },
+			"Die Personalpronomenform „du“ verweist auf die angesprochene Einzahl.",
+		transcription: "duː",
+		translations: { en: ["you"], ru: ["ты"] },
 	},
 	coverage: {
 		transcription: "Authored",

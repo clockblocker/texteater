@@ -5,7 +5,7 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "sie",
+	canonicalForm: "ihm",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
@@ -13,11 +13,9 @@ const lemma = {
 		polite: null,
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Plur",
-		case: "Acc",
-		number: "Plur",
-		gender: null,
-		"gender[psor]": null,
+		case: "Dat",
+		number: "Sing",
+		gender: ["Masc", "Neut"],
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -26,9 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „sie“ verweist auf die dritte Person Mehrzahl.",
-		transcription: "ziː",
-		translations: { en: ["they", "them"], ru: ["их"] },
+			"Die Personalpronomenform „ihm“ ist der Dativ von „er“ und „es“ und verweist auf die männliche oder sächliche dritte Person Einzahl.",
+		transcription: "iːm",
+		translations: { en: ["him, it (dative of er/es)"], ru: ["ему"] },
 	},
 	coverage: {
 		transcription: "Authored",

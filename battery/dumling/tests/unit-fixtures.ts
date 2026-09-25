@@ -52,6 +52,12 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			gender: null,
 			number: null,
 		});
+	// The PRON sample Core is unmarked, so it is no possessive.
+	if (route.key === "de/Lexeme/PRON" && bag.inflectional)
+		Object.assign(bag.inflectional, {
+			"gender[psor]": null,
+			"number[psor]": null,
+		});
 	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
 		Object.assign(bag.inflectional, { article: null });
 	const verbal =

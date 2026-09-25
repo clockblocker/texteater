@@ -41,6 +41,11 @@ import {
 import { verbalCompositionGuidance } from "./verbal-guidance.js";
 
 const unmarked = "Unmarked";
+/** A feature answer's domain value: Unmarked is null and "Masc,Neut" a value set. */
+function featureValue(answer: string): unknown {
+	if (answer === unmarked) return null;
+	return answer.includes(",") ? answer.split(",") : answer;
+}
 const normalizations = {
 	Keep: "Copy the attested member exactly, preserving licensed variants and required capitals",
 	LowerInitial:
@@ -428,7 +433,7 @@ export function resolveGrammarJudgments(
 					if (field.open) {
 						core[key] = null;
 						if (answer === "Present") openFeatures.push(key);
-					} else core[key] = answer === unmarked ? null : answer;
+					} else core[key] = featureValue(answer);
 				}
 			const surface: Record<string, unknown> = {
 				spelling: selected("spelling"),
@@ -493,7 +498,7 @@ export function resolveGrammarJudgments(
 								continue;
 							}
 							const answer = selected(path);
-							bag[key] = answer === unmarked ? null : answer;
+							bag[key] = featureValue(answer);
 						}
 					if (verbal)
 						bag.voice = bag.passive === null ? null : "Pass";

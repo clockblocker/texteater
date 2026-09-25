@@ -13,11 +13,9 @@ const lemma = {
 		polite: "Infm",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: "Plur",
 		case: "Dat",
 		number: "Plur",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;

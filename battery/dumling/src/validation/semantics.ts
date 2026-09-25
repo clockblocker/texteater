@@ -29,29 +29,28 @@ export function emojiDescriptionError(): string {
 	return "Emoji Description must contain one to four emoji graphemes";
 }
 
-/** Null records no marked distinction; it never substitutes for a known gender. */
+/**
+ * Null records no marked distinction; it never substitutes for a known gender.
+ * A gender set records a form that serves several genders: third-person
+ * singular ihm and seiner serve er and es, so their gender is Masc, Neut.
+ */
 export function isGermanPronounCore(core: Record<string, unknown>): boolean {
-	const possessive = core.poss === "Yes";
-	if (
-		core["gender[psor]"] !== null &&
-		(!possessive ||
-			core.pronType !== "Prs" ||
-			core.person !== "3" ||
-			core.referenceNumber !== "Sing")
-	)
+	const gender = core.gender ?? null;
+	if (gender === null) return true;
+	if (core.number === "Plur") return false;
+	const personal = core.pronType === "Prs";
+	if (personal && (core.person !== "3" || core.number !== "Sing"))
 		return false;
-	if (core.gender !== null && core.number === "Plur") return false;
-	if (
-		!possessive &&
-		core.pronType === "Prs" &&
-		core.gender !== null &&
-		(core.person !== "3" || core.referenceNumber !== "Sing")
-	)
-		return false;
-	return true;
+	if (!Array.isArray(gender)) return true;
+	return (
+		personal &&
+		gender.length === 2 &&
+		gender[0] === "Masc" &&
+		gender[1] === "Neut"
+	);
 }
 export function germanPronounCoreError(): string {
-	return "German pronoun gender must agree with its subtype, person and number; possessor gender requires a third-person singular personal possessive";
+	return "German pronoun gender must agree with its subtype, person and number; a gender set is Masc, Neut on a third-person singular personal pronoun";
 }
 
 /** Plural agreement has no marked gender; a cell never guesses one. */
@@ -84,10 +83,16 @@ export function isGermanClosedClassSurface(input: unknown): boolean {
 		)
 	)
 		return false;
+	if (
+		core.poss !== "Yes" &&
+		((bag["gender[psor]"] ?? null) !== null ||
+			(bag["number[psor]"] ?? null) !== null)
+	)
+		return false;
 	return !(bag.number === "Plur" && (bag.gender ?? null) !== null);
 }
 export function germanClosedClassSurfaceError(): string {
-	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender";
+	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender; only a possessive marks possessor features";
 }
 
 /** Composition is reusable grammar; both component values must identify the same article. */

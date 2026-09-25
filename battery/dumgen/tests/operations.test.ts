@@ -374,7 +374,7 @@ test("feature navigation preserves Case and compares unmarked values literally",
 	expect(
 		selectGrammaticalAlternatives({
 			source: mich,
-			vary: ["referenceNumber", "number"],
+			vary: ["number"],
 		}).some((reading) => reading.lemma.canonicalForm === "uns"),
 	).toBe(true);
 	expect(
@@ -391,6 +391,41 @@ test("feature navigation preserves Case and compares unmarked values literally",
 	expect(selectGrammaticalAlternatives({ source: mich, vary: [] })).toEqual(
 		[],
 	);
+});
+test("feature navigation reaches the cells er and es share through a gender set", () => {
+	const cells = (form: string, grammaticalCase: string) =>
+		selectGrammaticalAlternatives({
+			source: required(
+				authoredMembers.find(
+					(member) =>
+						member.lemma.kind === "PRON" &&
+						member.lemma.canonicalForm === form &&
+						member.lemma.coreFeatures.case === grammaticalCase &&
+						member.lemma.coreFeatures.pronType === "Prs",
+				),
+				`Expected authored pronoun ${form}/${grammaticalCase}`,
+			).lemma as Dumling.Lemma<"de", "Lexeme", "PRON">,
+			vary: ["case"],
+		})
+			.map((reading) => {
+				const core = (
+					reading.lemma as Dumling.Lemma<"de", "Lexeme", "PRON">
+				).coreFeatures;
+				return `${reading.lemma.canonicalForm}/${core.case}`;
+			})
+			.sort();
+	expect(cells("er", "Nom")).toEqual(["ihm/Dat", "ihn/Acc", "seiner/Gen"]);
+	expect(cells("es", "Nom")).toEqual(["es/Acc", "ihm/Dat", "seiner/Gen"]);
+	// From the shared cell, both genders' own cells are reachable; es/Nom has
+	// a referential and an expletive Reading.
+	expect(cells("ihm", "Dat")).toEqual([
+		"er/Nom",
+		"es/Acc",
+		"es/Nom",
+		"es/Nom",
+		"ihn/Acc",
+		"seiner/Gen",
+	]);
 });
 test("feature navigation walks German article cells like pronoun cells", () => {
 	const dem = required(

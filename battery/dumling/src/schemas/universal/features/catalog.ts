@@ -82,7 +82,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	numForm: NumFormSchema,
 	number: GrammaticalNumberSchema,
 	"number[psor]": GrammaticalNumberSchema,
-	referenceNumber: GrammaticalNumberSchema,
 	numType: NumTypeSchema,
 	partType: PartTypeSchema,
 	participleForm: ParticipleFormSchema,

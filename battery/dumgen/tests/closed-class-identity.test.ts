@@ -79,7 +79,12 @@ test("a stem Lemma leaves its cell to the Surface and cites a Grundform", () => 
 								"number[psor]": null,
 								...inflection,
 							}
-						: { reflex: null, ...inflection }
+						: {
+								"gender[psor]": null,
+								"number[psor]": null,
+								reflex: null,
+								...inflection,
+							}
 					: null,
 			};
 			const parsed = parseUnit(surface);

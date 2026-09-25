@@ -165,10 +165,10 @@ function describeCell(features: Record<string, unknown>): string {
 			: features.number === "Plur"
 				? "plural"
 				: null;
-	const gender =
-		typeof features.gender === "string"
-			? genderNames[features.gender]
-			: null;
+	const genders = [features.gender].flat().filter(Boolean).map(String);
+	const gender = genders.length
+		? genders.map((value) => genderNames[value] ?? value).join(" or ")
+		: null;
 	if (number || gender)
 		parts.push(
 			`agreement ${[number, gender].filter(Boolean).join(" ")}${
@@ -184,10 +184,6 @@ function describeCell(features: Record<string, unknown>): string {
 			"formal address (Sie), one identity whether one or several people are addressed",
 		);
 	if (features.polite === "Infm") parts.push("informal address");
-	if (features.referenceNumber === "Sing")
-		parts.push("refers to one person or thing");
-	if (features.referenceNumber === "Plur")
-		parts.push("refers to several people or things");
 	if (features.poss === "Yes") parts.push("possessive");
 	if (features.extPos === "DET")
 		parts.push(
@@ -195,10 +191,6 @@ function describeCell(features: Record<string, unknown>): string {
 		);
 	if (features.definite === "Def") parts.push("definite article");
 	if (features.definite === "Ind") parts.push("indefinite article");
-	if (features["gender[psor]"])
-		parts.push(
-			`possessor is ${genderNames[String(features["gender[psor]"])] ?? features["gender[psor]"]}`,
-		);
 	return parts.length ? parts.join("; ") : "invariant, no cell to decide";
 }
 

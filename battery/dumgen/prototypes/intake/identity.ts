@@ -124,10 +124,6 @@ function describeCell(member: AuthoredMember): string {
 			"formal address (Sie), one identity whether one or several people are addressed",
 		);
 	if (core.polite === "Infm") parts.push("informal address");
-	if (core.referenceNumber === "Sing")
-		parts.push("refers to one person or thing");
-	if (core.referenceNumber === "Plur")
-		parts.push("refers to several people or things");
 	if (core.poss === "Yes") parts.push("possessive");
 	if (core.extPos === "DET")
 		parts.push(
@@ -135,10 +131,6 @@ function describeCell(member: AuthoredMember): string {
 		);
 	if (core.definite === "Def") parts.push("definite article");
 	if (core.definite === "Ind") parts.push("indefinite article");
-	if (core["gender[psor]"])
-		parts.push(
-			`possessor is ${genderNames[String(core["gender[psor]"])] ?? core["gender[psor]"]}`,
-		);
 	return parts.length ? parts.join("; ") : "invariant, no cell to decide";
 }
 

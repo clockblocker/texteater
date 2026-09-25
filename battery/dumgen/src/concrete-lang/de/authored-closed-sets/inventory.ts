@@ -70,43 +70,41 @@ import { member as m126 } from "./members/lexeme/pronoun/negative/nichts.js";
 import { member as m123 } from "./members/lexeme/pronoun/negative/niemand-singular-nominative.js";
 import { member as m125 } from "./members/lexeme/pronoun/negative/niemandem-singular-dative.js";
 import { member as m124 } from "./members/lexeme/pronoun/negative/niemanden-singular-accusative.js";
-import { member as m64 } from "./members/lexeme/pronoun/personal/deiner-second-person-informal-singular-reference-singular-genitive.js";
-import { member as m62 } from "./members/lexeme/pronoun/personal/dich-second-person-informal-singular-reference-singular-accusative.js";
-import { member as m63 } from "./members/lexeme/pronoun/personal/dir-second-person-informal-singular-reference-singular-dative.js";
-import { member as m61 } from "./members/lexeme/pronoun/personal/du-second-person-informal-singular-reference-singular-nominative.js";
-import { member as m65 } from "./members/lexeme/pronoun/personal/er-third-person-singular-reference-masculine-singular-nominative.js";
+import { member as m64 } from "./members/lexeme/pronoun/personal/deiner-second-person-informal-singular-genitive.js";
+import { member as m62 } from "./members/lexeme/pronoun/personal/dich-second-person-informal-singular-accusative.js";
+import { member as m63 } from "./members/lexeme/pronoun/personal/dir-second-person-informal-singular-dative.js";
+import { member as m61 } from "./members/lexeme/pronoun/personal/du-second-person-informal-singular-nominative.js";
+import { member as m65 } from "./members/lexeme/pronoun/personal/er-third-person-masculine-singular-nominative.js";
 import { member as subjectEs } from "./members/lexeme/pronoun/personal/es-subject-expletive.js";
-import { member as m75 } from "./members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-accusative.js";
-import { member as m74 } from "./members/lexeme/pronoun/personal/es-third-person-singular-reference-neuter-singular-nominative.js";
-import { member as m84 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-reference-plural-accusative.js";
-import { member as m85 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-reference-plural-dative.js";
-import { member as m86 } from "./members/lexeme/pronoun/personal/euer-second-person-informal-plural-reference-plural-genitive.js";
-import { member as m57 } from "./members/lexeme/pronoun/personal/ich-first-person-singular-reference-singular-nominative.js";
-import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-singular-reference-masculine-singular-dative.js";
-import { member as m76 } from "./members/lexeme/pronoun/personal/ihm-third-person-singular-reference-neuter-singular-dative.js";
-import { member as m66 } from "./members/lexeme/pronoun/personal/ihn-third-person-singular-reference-masculine-singular-accusative.js";
+import { member as m75 } from "./members/lexeme/pronoun/personal/es-third-person-neuter-singular-accusative.js";
+import { member as m74 } from "./members/lexeme/pronoun/personal/es-third-person-neuter-singular-nominative.js";
+import { member as m84 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-accusative.js";
+import { member as m85 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-dative.js";
+import { member as m86 } from "./members/lexeme/pronoun/personal/euer-second-person-informal-plural-genitive.js";
+import { member as m57 } from "./members/lexeme/pronoun/personal/ich-first-person-singular-nominative.js";
+import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-masculine-neuter-singular-dative.js";
+import { member as m66 } from "./members/lexeme/pronoun/personal/ihn-third-person-masculine-singular-accusative.js";
 import { member as m93 } from "./members/lexeme/pronoun/personal/ihnen-second-person-formal-plural-dative.js";
-import { member as m89 } from "./members/lexeme/pronoun/personal/ihnen-third-person-plural-reference-plural-dative.js";
-import { member as m82 } from "./members/lexeme/pronoun/personal/ihr-second-person-informal-plural-reference-plural-nominative.js";
-import { member as m72 } from "./members/lexeme/pronoun/personal/ihr-third-person-singular-reference-feminine-singular-dative.js";
+import { member as m89 } from "./members/lexeme/pronoun/personal/ihnen-third-person-plural-dative.js";
+import { member as m82 } from "./members/lexeme/pronoun/personal/ihr-second-person-informal-plural-nominative.js";
+import { member as m72 } from "./members/lexeme/pronoun/personal/ihr-third-person-feminine-singular-dative.js";
 import { member as m94 } from "./members/lexeme/pronoun/personal/ihrer-second-person-formal-plural-genitive.js";
-import { member as m90 } from "./members/lexeme/pronoun/personal/ihrer-third-person-plural-reference-plural-genitive.js";
-import { member as m73 } from "./members/lexeme/pronoun/personal/ihrer-third-person-singular-reference-feminine-singular-genitive.js";
-import { member as m60 } from "./members/lexeme/pronoun/personal/meiner-first-person-singular-reference-singular-genitive.js";
-import { member as m58 } from "./members/lexeme/pronoun/personal/mich-first-person-singular-reference-singular-accusative.js";
-import { member as m59 } from "./members/lexeme/pronoun/personal/mir-first-person-singular-reference-singular-dative.js";
-import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-singular-reference-masculine-singular-genitive.js";
-import { member as m77 } from "./members/lexeme/pronoun/personal/seiner-third-person-singular-reference-neuter-singular-genitive.js";
+import { member as m73 } from "./members/lexeme/pronoun/personal/ihrer-third-person-feminine-singular-genitive.js";
+import { member as m90 } from "./members/lexeme/pronoun/personal/ihrer-third-person-plural-genitive.js";
+import { member as m60 } from "./members/lexeme/pronoun/personal/meiner-first-person-singular-genitive.js";
+import { member as m58 } from "./members/lexeme/pronoun/personal/mich-first-person-singular-accusative.js";
+import { member as m59 } from "./members/lexeme/pronoun/personal/mir-first-person-singular-dative.js";
+import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-masculine-neuter-singular-genitive.js";
 import { member as m92 } from "./members/lexeme/pronoun/personal/sie-second-person-formal-plural-accusative.js";
 import { member as m91 } from "./members/lexeme/pronoun/personal/sie-second-person-formal-plural-nominative.js";
-import { member as m88 } from "./members/lexeme/pronoun/personal/sie-third-person-plural-reference-plural-accusative.js";
-import { member as m87 } from "./members/lexeme/pronoun/personal/sie-third-person-plural-reference-plural-nominative.js";
-import { member as m70 } from "./members/lexeme/pronoun/personal/sie-third-person-singular-reference-feminine-singular-accusative.js";
-import { member as m69 } from "./members/lexeme/pronoun/personal/sie-third-person-singular-reference-feminine-singular-nominative.js";
-import { member as m79 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-reference-plural-accusative.js";
-import { member as m80 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-reference-plural-dative.js";
-import { member as m81 } from "./members/lexeme/pronoun/personal/unser-first-person-plural-reference-plural-genitive.js";
-import { member as m78 } from "./members/lexeme/pronoun/personal/wir-first-person-plural-reference-plural-nominative.js";
+import { member as m70 } from "./members/lexeme/pronoun/personal/sie-third-person-feminine-singular-accusative.js";
+import { member as m69 } from "./members/lexeme/pronoun/personal/sie-third-person-feminine-singular-nominative.js";
+import { member as m88 } from "./members/lexeme/pronoun/personal/sie-third-person-plural-accusative.js";
+import { member as m87 } from "./members/lexeme/pronoun/personal/sie-third-person-plural-nominative.js";
+import { member as m79 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-accusative.js";
+import { member as m80 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-dative.js";
+import { member as m81 } from "./members/lexeme/pronoun/personal/unser-first-person-plural-genitive.js";
+import { member as m78 } from "./members/lexeme/pronoun/personal/wir-first-person-plural-nominative.js";
 import { member as m99 } from "./members/lexeme/pronoun/reflexive/sich-third-person-accusative.js";
 import { member as m100 } from "./members/lexeme/pronoun/reflexive/sich-third-person-dative.js";
 import { member as m161 } from "./members/lexeme/pronoun/relative/das-neuter-singular-accusative.js";
@@ -190,8 +188,6 @@ export const authoredMembers = [
 	m73,
 	m74,
 	m75,
-	m76,
-	m77,
 	m78,
 	m79,
 	m80,

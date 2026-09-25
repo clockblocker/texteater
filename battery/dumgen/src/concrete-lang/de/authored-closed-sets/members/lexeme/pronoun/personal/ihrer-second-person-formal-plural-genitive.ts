@@ -13,11 +13,9 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: null,
 		case: "Gen",
 		number: "Plur",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -29,8 +27,8 @@ export const member = defineAuthoredMember({
 			"Die Personalpronomenform „Ihrer“ verweist auf eine oder mehrere höflich angesprochene Personen.",
 		transcription: "ˈiːʁɐ",
 		translations: {
-			en: ["you (formal singular)"],
-			ru: ["Вас (вежл., ед. ч.)"],
+			en: ["you (formal)"],
+			ru: ["Вас"],
 		},
 	},
 	coverage: {

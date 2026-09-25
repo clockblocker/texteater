@@ -1,5 +1,5 @@
 import { defineAuthoredMember } from "../../../../member.js";
-import { member as referential } from "./es-third-person-singular-reference-neuter-singular-nominative.js";
+import { member as referential } from "./es-third-person-neuter-singular-nominative.js";
 
 export const member = defineAuthoredMember({
 	lemma: referential.lemma,

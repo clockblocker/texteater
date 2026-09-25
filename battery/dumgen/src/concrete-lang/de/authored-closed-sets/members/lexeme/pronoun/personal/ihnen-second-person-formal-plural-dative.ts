@@ -13,11 +13,9 @@ const lemma = {
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		referenceNumber: null,
 		case: "Dat",
 		number: "Plur",
 		gender: null,
-		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -29,8 +27,8 @@ export const member = defineAuthoredMember({
 			"Die Personalpronomenform „Ihnen“ verweist auf eine oder mehrere höflich angesprochene Personen.",
 		transcription: "ˈiːnən",
 		translations: {
-			en: ["you (formal singular)"],
-			ru: ["Вам (вежл., ед. ч.)"],
+			en: ["you (formal)"],
+			ru: ["Вам"],
 		},
 	},
 	coverage: {

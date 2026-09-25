@@ -332,7 +332,6 @@ test("Open PRON population misses copy exact headwords and generate changed text
 		const core = {
 			case: null,
 			number: null,
-			"gender[psor]": null,
 			extPos: null,
 			foreign: null,
 			person: null,
@@ -340,7 +339,6 @@ test("Open PRON population misses copy exact headwords and generate changed text
 			poss: null,
 			pronType: "Ind",
 			gender: null,
-			referenceNumber: null,
 		};
 		const expected = {
 			lemma: { canonicalForm: "meinesgleichen", coreFeatures: core },

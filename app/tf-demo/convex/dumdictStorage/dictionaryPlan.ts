@@ -1,13 +1,28 @@
 import type { Infer } from "convex/values";
 import type { DumdictPlan } from "dumdict/planning";
-import type * as Dumling from "dumling/types";
 
 import type { dictionaryPlanValidator } from "../model/validators";
 
 export type DictionaryPlanResult = Infer<typeof dictionaryPlanValidator>;
 
-function mutableReading(input: Dumling.Reading<"de">) {
-	return { ...input, lemma: { ...input.lemma } };
+/** Copies a plan Reading; a Core value set (ihm's gender Masc, Neut) arrives readonly. */
+function mutableReading<
+	Reading extends { readonly lemma: { readonly coreFeatures: object } },
+>(input: Reading) {
+	return {
+		...input,
+		lemma: {
+			...input.lemma,
+			coreFeatures: Object.fromEntries(
+				Object.entries(input.lemma.coreFeatures).map(
+					([name, value]) => [
+						name,
+						Array.isArray(value) ? [...value] : value,
+					],
+				),
+			),
+		},
+	};
 }
 
 function mutablePendingRecord(

@@ -12,12 +12,10 @@ const core = {
 	poss: null,
 	pronType: null,
 	gender: null,
-	"gender[psor]": null,
-	referenceNumber: null,
 };
 function lemma(
 	canonicalForm: string,
-	features: Partial<Record<keyof typeof core, string | null>>,
+	features: Partial<Record<keyof typeof core, unknown>>,
 ) {
 	return {
 		unitKind: "Lemma",
@@ -32,44 +30,97 @@ function accepts(value: unknown, expected: boolean) {
 	expect(lemmaSchema.safeParse(value).success).toBe(expected);
 	expect(parseUnit(value).success).toBe(expected);
 }
-test("personal and possessive genders stay independent", () => {
+const bag = {
+	case: null,
+	gender: null,
+	number: null,
+	"gender[psor]": null,
+	"number[psor]": null,
+	reflex: null,
+};
+function surface(
+	lemmaValue: ReturnType<typeof lemma>,
+	features: Partial<Record<keyof typeof bag, unknown>>,
+) {
+	return {
+		unitKind: "Surface",
+		language: "de",
+		lemma: lemmaValue,
+		normalizedSurface: lemmaValue.canonicalForm,
+		spelling: "Canonical",
+		surfaceFeatures: null,
+		inflectionalFeatures: { ...bag, ...features },
+	};
+}
+function acceptsSurface(value: unknown, expected: boolean) {
+	expect(surfaceSchema.safeParse(value).success).toBe(expected);
+	expect(parseUnit(value).success).toBe(expected);
+}
+const thirdSingular = {
+	pronType: "Prs",
+	person: "3",
+	number: "Sing",
+} as const;
+
+test("a personal cell shared by er and es marks the gender set Masc, Neut", () => {
 	accepts(
-		lemma("sie", {
-			pronType: "Prs",
-			person: "3",
-			referenceNumber: "Sing",
-			number: "Sing",
-			gender: "Fem",
-			case: "Nom",
-		}),
+		lemma("sie", { ...thirdSingular, gender: "Fem", case: "Nom" }),
 		true,
 	);
-	for (const gender of ["Masc", "Neut"])
+	for (const [form, grammaticalCase] of [
+		["ihm", "Dat"],
+		["seiner", "Gen"],
+	] as const)
 		accepts(
-			lemma(gender === "Masc" ? "seiner" : "seines", {
-				pronType: "Prs",
-				person: "3",
-				referenceNumber: "Sing",
-				number: "Sing",
-				poss: "Yes",
-				gender,
-				"gender[psor]": "Masc",
-				case: "Nom",
+			lemma(form, {
+				...thirdSingular,
+				gender: ["Masc", "Neut"],
+				case: grammaticalCase,
 			}),
 			true,
 		);
+	// A set is exactly Masc, Neut, and only on a third-person singular personal pronoun.
+	for (const gender of [["Neut", "Masc"], ["Fem", "Masc"], ["Masc"]])
+		accepts(lemma("ihm", { ...thirdSingular, gender, case: "Dat" }), false);
 	accepts(
-		lemma("ihres", {
-			pronType: "Prs",
-			person: "3",
-			referenceNumber: "Sing",
+		lemma("dem", {
+			pronType: "Dem",
 			number: "Sing",
-			poss: "Yes",
-			gender: "Neut",
-			"gender[psor]": "Fem",
+			gender: ["Masc", "Neut"],
+			case: "Dat",
+		}),
+		false,
+	);
+});
+test("possessor features describe a possessive's Surface, not its Lemma", () => {
+	const seiner = lemma("seiner", {
+		pronType: "Prs",
+		poss: "Yes",
+		person: "3",
+	});
+	accepts(seiner, true);
+	acceptsSurface(
+		surface(seiner, {
 			case: "Nom",
+			gender: "Masc",
+			number: "Sing",
+			"gender[psor]": ["Masc", "Neut"],
+			"number[psor]": "Sing",
 		}),
 		true,
+	);
+	acceptsSurface(
+		surface(lemma("mir", { ...thirdSingular, person: "1", case: "Dat" }), {
+			"number[psor]": "Sing",
+		}),
+		false,
+	);
+	accepts(
+		{
+			...seiner,
+			coreFeatures: { ...seiner.coreFeatures, "gender[psor]": "Masc" },
+		},
+		false,
 	);
 });
 test("unmarked and inapplicable features have explicit behavior", () => {
@@ -77,7 +128,7 @@ test("unmarked and inapplicable features have explicit behavior", () => {
 		lemma("ich", {
 			pronType: "Prs",
 			person: "1",
-			referenceNumber: "Sing",
+			number: "Sing",
 			case: "Nom",
 		}),
 		true,
@@ -86,19 +137,8 @@ test("unmarked and inapplicable features have explicit behavior", () => {
 		lemma("ich", {
 			pronType: "Prs",
 			person: "1",
-			referenceNumber: "Sing",
+			number: "Sing",
 			gender: "Fem",
-		}),
-		false,
-	);
-	accepts(lemma("wer", { pronType: "Int", "gender[psor]": "Fem" }), false);
-	accepts(
-		lemma("unsere", {
-			pronType: "Prs",
-			poss: "Yes",
-			person: "1",
-			referenceNumber: "Plur",
-			"gender[psor]": "Masc",
 		}),
 		false,
 	);
@@ -131,13 +171,13 @@ test("same spelling preserves Case and subtype identity", () => {
 	const acc = lemma("uns", {
 		pronType: "Prs",
 		person: "1",
-		referenceNumber: "Plur",
+		number: "Plur",
 		case: "Acc",
 	});
 	const dat = lemma("uns", {
 		pronType: "Prs",
 		person: "1",
-		referenceNumber: "Plur",
+		number: "Plur",
 		case: "Dat",
 	});
 	accepts(acc, true);
@@ -154,22 +194,23 @@ test("same spelling preserves Case and subtype identity", () => {
 	);
 });
 test("retired fields are rejected", () => {
-	accepts(
+	for (const retired of ["referenceGender", "referenceNumber"])
+		accepts(
+			{
+				...lemma("sie", {}),
+				coreFeatures: { ...core, [retired]: "Sing" },
+			},
+			false,
+		);
+	acceptsSurface(
 		{
-			...lemma("sie", {}),
-			coreFeatures: { ...core, referenceGender: "Fem" },
+			...surface(lemma("mir", { case: "Dat" }), { reflex: "Yes" }),
+			inflectionalFeatures: {
+				...bag,
+				reflex: "Yes",
+				referenceNumber: "Sing",
+			},
 		},
 		false,
 	);
-	const value = {
-		unitKind: "Surface",
-		language: "de",
-		lemma: lemmaSchema.parse(lemma("mir", { case: "Dat" })),
-		normalizedSurface: "mir",
-		spelling: "Canonical",
-		surfaceFeatures: null,
-		inflectionalFeatures: { reflex: null, gender: "Fem" },
-	};
-	expect(surfaceSchema.safeParse(value).success).toBe(false);
-	expect(parseUnit(value).success).toBe(false);
 });

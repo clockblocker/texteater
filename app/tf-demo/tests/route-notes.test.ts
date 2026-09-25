@@ -544,8 +544,6 @@ function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 		case: "Nom",
 		number: "Sing",
 		gender: "Masc",
-		"gender[psor]": null,
-		referenceNumber: null,
 	};
 }
 
