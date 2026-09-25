@@ -80,43 +80,25 @@ export function resolvingReadingNoteData(
 }
 
 /**
- * The clicked sentence as the Reading's first Source Context. The Session
- * carries the stitched sentence and the attested members, not the Segments,
- * so the quote splits the sentence around the first run of the members.
+ * The clicked sentence as the Reading's first Source Context, quoted from the
+ * stored Segments and members the server projects for the Session.
  */
 function resolvingSourceContext(
 	note: ResolutionNote,
 	attestationId: Id<"attestations">,
 ): SourceContext {
-	const sentence = note.route.stitchedText;
-	const memberTexts = note.grammar?.members.map(
-		({ attested }) => attested,
-	) ?? [note.route.selectedSegment];
-	const segments: SourceContext["segments"] = [];
-	const memberSegmentIndices: number[] = [];
-	let cursor = 0;
-	for (const text of memberTexts) {
-		const at = sentence.indexOf(text, cursor);
-		if (at < 0) continue;
-		if (at > cursor)
-			segments.push({
-				kind: "OpaqueText",
-				text: sentence.slice(cursor, at),
-			});
-		memberSegmentIndices.push(segments.length);
-		segments.push({ kind: "ResolvableText", text });
-		cursor = at + text.length;
-	}
-	if (cursor < sentence.length)
-		segments.push({ kind: "OpaqueText", text: sentence.slice(cursor) });
+	const { segments, memberSegmentIndices } = note.source;
 	return {
 		attestationId,
 		textId: note.route.textId,
 		sentencePosition: 0,
-		sentenceSnippet: sentence,
+		sentenceSnippet: note.route.stitchedText,
 		segments,
 		memberSegmentIndices,
-		memberTexts,
+		memberTexts: memberSegmentIndices.flatMap((index) => {
+			const segment = segments[index];
+			return segment ? [segment.text] : [];
+		}),
 		origin: { kind: "Text" },
 		target: {
 			kind: "Text",

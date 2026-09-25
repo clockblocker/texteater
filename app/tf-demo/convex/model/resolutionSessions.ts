@@ -6,13 +6,15 @@ import {
 	type ResolutionGrammarProjection,
 	type ResolutionReadingProjection,
 } from "../../server/resolutionSessionProjection";
+import { encounterSentenceOf } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { inspectionRequested } from "./inspection";
 import { scheduleKnowledgeGeneration } from "./knowledgeScheduling";
-
+import { loadCompleteOccurrenceMembers } from "./occurrenceAttestations";
 import { reconstructReusableAttestation } from "./resolutionLookup";
+import { loadStoredSegments } from "./storedSegments";
 import {
 	activeResolutionActivityValidator,
 	type readingCheckpointValidator,
@@ -28,6 +30,7 @@ import {
 	type resolutionSessionGuardValidator,
 	type resolvedGrammaticalValidator,
 	type safeGenerationFailureValidator,
+	segmentKindValidator,
 } from "./validators";
 import { ensureVisitorEncounter } from "./visitorClicks";
 
@@ -197,6 +200,18 @@ const resolutionRouteValidator = v.object({
 	selectedSegment: v.string(),
 });
 
+/**
+ * The clicked Sentence's stored Segments and the stored indices of the
+ * occurrence's members, so the pending Note quotes what the stored Note will.
+ */
+const resolutionSourceValidator = v.object({
+	segments: v.array(
+		v.object({ kind: segmentKindValidator, text: v.string() }),
+	),
+	memberSegmentIndices: v.array(v.number()),
+});
+type ResolutionSource = Infer<typeof resolutionSourceValidator>;
+
 export const resolutionNoteValidator = v.object({
 	kind: v.literal("ResolutionNote"),
 	target: v.object({
@@ -205,6 +220,7 @@ export const resolutionNoteValidator = v.object({
 	}),
 	lifecycle: resolutionNoteLifecycleValidator,
 	route: resolutionRouteValidator,
+	source: resolutionSourceValidator,
 	grammar: v.optional(resolutionGrammarProjectionValidator),
 	reading: v.optional(resolutionReadingProjectionValidator),
 	updatedAt: v.number(),
@@ -261,6 +277,7 @@ export async function loadResolutionNote(
 		target: { kind: "Resolution", requestId },
 		lifecycle: await resolutionNoteLifecycle(ctx, session),
 		route: session.route,
+		source: await resolutionSource(ctx, session),
 		// The Session stores what projectResolutionGrammar and
 		// projectResolutionReading produced.
 		...(session.grammar
@@ -270,6 +287,43 @@ export async function loadResolutionNote(
 			? { reading: session.reading as ResolutionReadingProjection }
 			: {}),
 		updatedAt: session.updatedAt,
+	};
+}
+
+/**
+ * The members are the committed ones once the occurrence exists, the ones
+ * Grammar chose while the run is pending, and the clicked Segment before that.
+ */
+async function resolutionSource(
+	ctx: QueryCtx,
+	session: ResolutionSession,
+): Promise<ResolutionSource> {
+	const [sentence, segments, committed] = await Promise.all([
+		ctx.db.get(session.sentenceId),
+		loadStoredSegments(ctx, session.sentenceId),
+		session.attestationId
+			? loadCompleteOccurrenceMembers(ctx, session.attestationId)
+			: null,
+	]);
+	const encounterMembers =
+		session.grammaticalCheckpoint?.encounter.target.memberSegmentIndices;
+	let memberSegmentIndices = [session.clickedSegmentIndex];
+	if (committed) {
+		memberSegmentIndices = committed.memberSegmentIndices;
+	} else if (sentence && encounterMembers) {
+		// Grammar reads fused words apart, so its indices are Encounter indices.
+		const view = encounterSentenceOf({
+			segmentedSentenceId: sentence.segmentedSentenceId,
+			segments,
+		});
+		memberSegmentIndices = encounterMembers.flatMap((index) => {
+			const stored = view.storedIndex(index);
+			return stored === undefined ? [] : [stored];
+		});
+	}
+	return {
+		segments: segments.map(({ kind, text }) => ({ kind, text })),
+		memberSegmentIndices,
 	};
 }
 

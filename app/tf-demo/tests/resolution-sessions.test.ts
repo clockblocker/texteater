@@ -2103,3 +2103,74 @@ function readingProjection(emojiDescription = "🏦", canonicalForm = "Bank") {
 		kind: "NOUN" as const,
 	};
 }
+
+test("the Resolution Note quotes the clicked occurrence of a repeated phrase at every stage", async () => {
+	const t = createTestConvex();
+	const words = [
+		"Die",
+		" ",
+		"Banken",
+		" ",
+		"und",
+		" ",
+		"die",
+		" ",
+		"Banken",
+		".",
+	];
+	const { sentenceIds } = await submitText(t, [words]);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a Sentence.");
+	const selection: Selection = {
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId,
+		clickedSegmentIndex: 8,
+	};
+	const members = async () =>
+		(
+			await t.query(api.resolutionSessions.getResolutionNote, {
+				requestId: "request-1",
+			})
+		)?.source.memberSegmentIndices;
+
+	// Before Grammar the clicked Segment is the only member.
+	const guard = await startSession(t, selection);
+	expect(await members()).toEqual([8]);
+
+	// Grammar joins the second `die` to the clicked `Banken`.
+	const commit = dieBankenOccurrenceCommit(selection, guard, [6, 8]);
+	const grammar = bankGrammar(sentenceId);
+	await t.mutation(internal.resolutionSessions.beginRun, { guard });
+	await t.mutation(internal.resolutionSessions.advance, {
+		guard,
+		progress: "GrammarAvailable",
+		grammar: grammarProjection(),
+		grammaticalCheckpoint: {
+			...grammar,
+			encounter: {
+				sentence: {
+					...grammar.encounter.sentence,
+					segments: words.map((text) => ({
+						kind:
+							text === " "
+								? ("Whitespace" as const)
+								: text === "."
+									? ("Punctuation" as const)
+									: ("ResolvableText" as const),
+						text,
+					})),
+				},
+				target: {
+					...grammar.encounter.target,
+					memberSegmentIndices: [6, 8],
+				},
+			},
+			attestation: commit.occurrence.attestation,
+		},
+	});
+	expect(await members()).toEqual([6, 8]);
+
+	await t.mutation(internal.persistence.persistResolvedClick, commit);
+	expect(await members()).toEqual([6, 8]);
+});

@@ -20,6 +20,16 @@ const route = {
 	selectedSegment: "Banken",
 };
 
+const source = {
+	segments: [
+		{ kind: "ResolvableText" as const, text: "Die" },
+		{ kind: "Whitespace" as const, text: " " },
+		{ kind: "ResolvableText" as const, text: "Banken" },
+		{ kind: "Punctuation" as const, text: "." },
+	],
+	memberSegmentIndices: [2],
+};
+
 const grammar = {
 	members: [{ attested: "Banken", orthography: "Standard" as const }],
 	realizationCoverage: "Full" as const,
@@ -51,6 +61,7 @@ test("active Resolution presentations use final-Note skeletons instead of WIP co
 					activity: "Running",
 				},
 				route,
+				source,
 				grammar,
 				reading,
 				updatedAt: 1,
@@ -97,6 +108,7 @@ test("projects each available Resolution step onto the front of one deck", () =>
 			activity: "Running",
 		},
 		route,
+		source,
 		updatedAt: 1,
 	});
 	const routed = resolutionDeckCards({
@@ -108,6 +120,7 @@ test("projects each available Resolution step onto the front of one deck", () =>
 			activity: "Running",
 		},
 		route,
+		source,
 		updatedAt: 2,
 	});
 	const grammatical = resolutionDeckCards({
@@ -119,6 +132,7 @@ test("projects each available Resolution step onto the front of one deck", () =>
 			activity: "Running",
 		},
 		route,
+		source,
 		grammar,
 		updatedAt: 3,
 	});
@@ -131,6 +145,7 @@ test("projects each available Resolution step onto the front of one deck", () =>
 			activity: "Running",
 		},
 		route,
+		source,
 		grammar,
 		reading,
 		updatedAt: 4,
@@ -175,6 +190,7 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 			},
 		},
 		route,
+		source,
 		grammar,
 		reading,
 		updatedAt: 5,
@@ -271,6 +287,7 @@ test("a terminal failure keeps Resolution foremost without discarding reached st
 			message: "Reading is temporarily unavailable.",
 		},
 		route,
+		source,
 		grammar,
 		updatedAt: 5,
 	});
@@ -350,6 +367,7 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 		kind: "ResolutionNote" as const,
 		target: { kind: "Resolution" as const, requestId: "request-1" },
 		route,
+		source,
 		grammar,
 	};
 	expect(
@@ -405,6 +423,39 @@ test("the resolving Reading Note is the real Reading Note with bones for what ha
 	expect(readable).not.toContain("open its Lemma");
 });
 
+test("the resolving Reading Note quotes the clicked occurrence of a repeated word", () => {
+	const markup = renderResolving({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		lifecycle: {
+			state: "Active",
+			progress: "GrammarAvailable",
+			activity: "Running",
+		},
+		route: {
+			...route,
+			stitchedText: "Banken und Banken.",
+			clickedSegmentIndex: 4,
+		},
+		source: {
+			segments: [
+				{ kind: "ResolvableText", text: "Banken" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "und" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "Banken" },
+				{ kind: "Punctuation", text: "." },
+			],
+			memberSegmentIndices: [4],
+		},
+		grammar,
+		updatedAt: 1,
+	});
+	expect(markup).toMatch(
+		/<span data-slot="reader-plain-segment"[^>]*>Banken und <\/span><button data-slot="reader-segment"[^>]*>Banken<\/button>/,
+	);
+});
+
 test("the Reading step renders the resolving Note once Grammar is known and a skeleton before", () => {
 	const before = renderToStaticMarkup(
 		createElement(ResolutionStepNoteFrame, {
@@ -419,6 +470,7 @@ test("the Reading step renders the resolving Note once Grammar is known and a sk
 					activity: "Running",
 				},
 				route,
+				source,
 				updatedAt: 1,
 			},
 		}),
@@ -439,6 +491,7 @@ test("a failed Session keeps its Grammar steps but drops the Reading step", () =
 			message: "Reading is temporarily unavailable.",
 		},
 		route,
+		source,
 		grammar,
 		updatedAt: 5,
 	});
@@ -465,6 +518,7 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 			},
 		},
 		route,
+		source,
 		grammar,
 		reading,
 		updatedAt: 5,
