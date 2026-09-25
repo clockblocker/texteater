@@ -20,11 +20,11 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🫵🔐" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔐" }, lemma },
 	knowledge: {
 		transcription: "daɪn",
 		definition:
-			"Der Possessivartikel „dein“ ordnet den bezeichneten Gegenstand einer Person oder Gruppe zu.",
+			"Der Possessivartikel „dein“ ordnet den bezeichneten Gegenstand der vertraut angesprochenen Person zu.",
 		translations: { en: ["your"], ru: ["твой"] },
 	},
 	coverage: {

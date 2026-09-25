@@ -23,7 +23,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
 	knowledge: {
 		definition:
 			"Das Relativpronomen „die“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
@@ -57,7 +57,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -81,7 +81,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -105,7 +105,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -129,7 +129,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -153,7 +153,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -177,7 +177,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -201,7 +201,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -225,7 +225,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -249,7 +249,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -273,7 +273,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -297,7 +297,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -321,7 +321,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -345,7 +345,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 				{
 					unitKind: "Reading",
@@ -369,7 +369,7 @@ export const member = defineAuthoredMember({
 						},
 						unitKind: "Lemma",
 					},
-					emojiDescription: "👤",
+					emojiDescription: "🔗",
 				},
 			],
 		},

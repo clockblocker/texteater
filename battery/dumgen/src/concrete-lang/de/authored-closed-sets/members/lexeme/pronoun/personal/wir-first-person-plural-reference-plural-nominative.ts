@@ -23,7 +23,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „wir“ verweist auf die sprechende Mehrzahl.",

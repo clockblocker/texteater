@@ -55,5 +55,7 @@ refuses and resolution runs the judge again over the current candidates.
 - A description that depicts the sentence's scene instead of the target, such
   as `öffnen` 🪟, stays the key, and later occurrences without that scene
   likely get a second Reading. The generation eval guards against this.
-- A Fixed Catalog description is judged only on whether it separates the
-  Readings of its own Lemma, not on what a learner might read into it.
+- A Fixed Catalog description names the Reading's function and repeats
+  nothing its Lemma already carries. Person, number, gender and case stay Core
+  Features, so every possessive is 🔐 and every personal pronoun is 👈; `sein`
+  is not 👨🔐, because a picture standing in for grammatical gender claims sex.

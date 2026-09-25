@@ -20,11 +20,11 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👨🔐" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔐" }, lemma },
 	knowledge: {
 		transcription: "zaɪn",
 		definition:
-			"Der Possessivartikel „sein“ ordnet den bezeichneten Gegenstand einer Person oder Gruppe zu.",
+			"Der Possessivartikel „sein“ ordnet den bezeichneten Gegenstand einem maskulinen oder neutralen Bezug im Singular zu.",
 		translations: { en: ["his", "its"], ru: ["его"] },
 	},
 	coverage: {

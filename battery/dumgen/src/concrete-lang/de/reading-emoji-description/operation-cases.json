@@ -2342,7 +2342,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "👤"
+			"emojiDescription": "🔗"
 		},
 		"explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The house is its antecedent, not the pronoun's meaning."
 	},
@@ -2445,7 +2445,7 @@
 		},
 		"idealOutput": {
 			"decision": "New",
-			"emojiDescription": "👤"
+			"emojiDescription": "🔗"
 		},
 		"explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning."
 	},

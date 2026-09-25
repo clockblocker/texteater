@@ -23,7 +23,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👤" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
 			"Die Personalpronomenform „Ihrer“ verweist auf eine oder mehrere höflich angesprochene Personen.",

@@ -457,7 +457,7 @@ for (const [stem, ipa, pronType, definition, en, ru] of [
 		},
 		description(
 			pronType,
-			pronType === "Neg" ? "🚫" : "👤",
+			stem === "kein" ? "🚫" : stem === "ein" ? "1️⃣" : "❔",
 			definition,
 			[en],
 			[ru],
@@ -732,7 +732,7 @@ for (const [
 			"gender[psor]": possessorGender,
 			polite,
 		},
-		emoji: "🔑",
+		emoji: "🔐",
 		definition: `Bezeichnet eine dem Besitzer zugeordnete Person oder Sache (${en}).`,
 		en: [en],
 		ru: [ru],

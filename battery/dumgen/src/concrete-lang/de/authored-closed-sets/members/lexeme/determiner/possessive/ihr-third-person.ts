@@ -20,11 +20,11 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👩🔐" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔐" }, lemma },
 	knowledge: {
 		transcription: "iːɐ̯",
 		definition:
-			"Der Possessivartikel „ihr“ ordnet den bezeichneten Gegenstand einer Person oder Gruppe zu.",
+			"Der Possessivartikel „ihr“ ordnet den bezeichneten Gegenstand einem femininen Bezug im Singular oder einem Bezug im Plural zu.",
 		translations: { en: ["her", "their"], ru: ["её", "их"] },
 	},
 	coverage: {
