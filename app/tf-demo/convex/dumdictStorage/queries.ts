@@ -1,23 +1,21 @@
 import { v } from "convex/values";
 
 import { internalQuery } from "../_generated/server";
-import { lemmaValue } from "../model/occurrenceAttestations";
+import { lemmaValue, readingValue } from "../model/occurrenceAttestations";
 import {
 	type AnyRecord,
 	requireRecord,
 	requireString,
 } from "../model/readingKnowledge";
 import { pendingShadowDescriptor } from "../model/shadows";
-import { lemmaValueValidator } from "../model/validators";
+import { readingValueValidator } from "../model/validators";
 import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
 	assertPlanBudget,
 	DICTIONARY_REVISION,
-	dictionaryLemmasWithCanonicalForm,
 	findLemmaByKey,
 	findReadingByKey,
 	findSurface,
-	loadReading,
 	loadRelationNeighbourhood,
 	MAX_PENDING_RELATIONS_PER_SLICE,
 	MAX_READING_CANDIDATES,
@@ -26,15 +24,19 @@ import {
 	uniqueBoundedKeys,
 } from "./storage";
 
-export const findDumdictStoredReadings = internalQuery({
+/**
+ * The Readings the Shared Demo Dictionary stores for a Lemma: the one
+ * dictionary read a click makes outside the commit transaction.
+ */
+export const findStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
-	returns: v.object({ revision: v.string(), candidates: v.array(v.any()) }),
+	returns: v.array(readingValueValidator),
 	handler: async (ctx, { lemmaKey }) => {
 		const lemma = await ctx.db
 			.query("lemmas")
 			.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
 			.unique();
-		if (!lemma) return { revision: DICTIONARY_REVISION, candidates: [] };
+		if (!lemma) return [];
 		const [dictionaryLemma, readings] = await Promise.all([
 			ctx.db
 				.query("dictionaryLemmas")
@@ -45,64 +47,27 @@ export const findDumdictStoredReadings = internalQuery({
 				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 				.take(MAX_READING_CANDIDATES + 1),
 		]);
-		if (!dictionaryLemma)
-			return { revision: DICTIONARY_REVISION, candidates: [] };
+		if (!dictionaryLemma) return [];
 		if (readings.length > MAX_READING_CANDIDATES) {
 			throw new Error(
 				`Stored Reading lookup supports at most ${MAX_READING_CANDIDATES} candidates.`,
 			);
 		}
 		const entries = await Promise.all(
-			readings.map((reading) => loadReading(ctx, reading)),
+			readings.map((reading) =>
+				ctx.db
+					.query("readingEntries")
+					.withIndex("by_reading_id", (q) =>
+						q.eq("readingId", reading._id),
+					)
+					.unique(),
+			),
 		);
-		return {
-			revision: DICTIONARY_REVISION,
-			candidates: readings.flatMap((_reading, index) => {
-				const entry = entries[index];
-				return entry
-					? [
-							{
-								reading: entry.entry,
-								lemma: { lemma: lemmaValue(lemma) },
-							},
-						]
-					: [];
-			}),
-		};
+		return readings.flatMap((reading, index) =>
+			entries[index] ? [readingValue(reading, lemma)] : [],
+		);
 	},
 });
-
-const readingEntryContextArgsValidator = v.union(
-	v.object({
-		intent: v.literal("addNewNote"),
-		lemmaKey: v.string(),
-		proposedLemma: lemmaValueValidator,
-		readingKey: v.string(),
-		surfaceKeys: v.array(v.string()),
-		explicitLemmaTargetKeys: v.array(v.string()),
-		pendingLocatorKeys: v.array(v.string()),
-		pendingTargetCanonicalForms: v.array(v.string()),
-	}),
-	v.object({
-		intent: v.literal("applyGeneratedKnowledge"),
-		readingKey: v.string(),
-		pendingLocatorKeys: v.array(v.string()),
-		pendingTargetCanonicalForms: v.array(v.string()),
-		relationTargetLemmaKeys: v.array(v.string()),
-		relationTargetReadingKeys: v.array(v.string()),
-	}),
-	v.object({
-		intent: v.literal("ensureOwnedSurface"),
-		lemmaKey: v.string(),
-		readingKey: v.string(),
-		surfaceKey: v.string(),
-	}),
-	v.object({
-		intent: v.literal("ensureReadingEntry"),
-		lemmaKey: v.string(),
-		readingKey: v.string(),
-	}),
-);
 
 /** The Readings pending relations start from and the Shadow forms they target. */
 function pendingRelationSeeds(records: readonly AnyRecord[]) {
@@ -352,46 +317,6 @@ export async function loadReadingEntryContextSlice(
 	}
 }
 
-export const loadDumdictReadingEntryContext = internalQuery({
-	args: { request: readingEntryContextArgsValidator },
-	returns: v.any(),
-	handler: (ctx, { request }) => loadReadingEntryContextSlice(ctx, request),
-});
-
-export const getDumdictRelationsCleanupInfo = internalQuery({
-	args: { canonicalForm: v.string() },
-	returns: v.any(),
-	handler: async (ctx, { canonicalForm }) => {
-		const [lemmas, pending] = await Promise.all([
-			dictionaryLemmasWithCanonicalForm(ctx, canonicalForm),
-			ctx.db
-				.query("pendingSemanticRelations")
-				.withIndex("by_target_canonical_form", (q) =>
-					q.eq("targetCanonicalForm", canonicalForm),
-				)
-				.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
-		]);
-		if (pending.length > MAX_PENDING_RELATIONS_PER_SLICE) {
-			throw new Error(
-				`Relations cleanup supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} pending records.`,
-			);
-		}
-		return {
-			revision: DICTIONARY_REVISION,
-			canonicalForm,
-			candidateLemmas: lemmas.map((lemma) => ({
-				lemma: lemmaValue(lemma),
-			})),
-			pendingRelations: pending.map((record) =>
-				requireRecord(
-					record.record,
-					"Pending Semantic Relation record",
-				),
-			),
-		};
-	},
-});
-
 /** Loads the exact pending relations one cleanup resolves and their neighbourhood. */
 export async function loadCleanupRelationsSlice(
 	ctx: ServerCtx,
@@ -428,22 +353,3 @@ export async function loadCleanupRelationsSlice(
 		relationReadings: inventory.readings,
 	};
 }
-
-export const loadDumdictCleanupRelationsContext = internalQuery({
-	args: { locatorKeys: v.array(v.string()) },
-	returns: v.any(),
-	handler: (ctx, { locatorKeys }) =>
-		loadCleanupRelationsSlice(ctx, locatorKeys),
-});
-
-export const loadDumdictReadingForPatch = internalQuery({
-	args: { readingKey: v.string() },
-	returns: v.any(),
-	handler: async (ctx, { readingKey }) => {
-		const reading = await findReadingByKey(ctx, readingKey);
-		return {
-			revision: DICTIONARY_REVISION,
-			...(reading ? { reading: reading.entry } : {}),
-		};
-	},
-});

@@ -1,4 +1,3 @@
-import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/planning";
 import {
 	deriveGrammaticalComponent,
@@ -13,7 +12,7 @@ import {
 	stableFingerprint,
 } from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
-import { internalMutation, type MutationCtx } from "../_generated/server";
+import type { MutationCtx } from "../_generated/server";
 import {
 	type AnyRecord,
 	requireArray,
@@ -28,11 +27,7 @@ import {
 	pendingShadowDescriptor,
 	replaceAccumulatedKnowledge,
 } from "../model/shadows";
-import {
-	dumdictPlannedChangeValidator,
-	isFamily,
-	isKind,
-} from "../model/validators";
+import { isFamily, isKind } from "../model/validators";
 import {
 	applyReadingKnowledgeChange,
 	assertLemmaRecordHasNoKnowledge,
@@ -809,14 +804,6 @@ async function applyChange(
 	}
 }
 
-const commitResultValidator = v.union(
-	v.object({ status: v.literal("committed"), nextRevision: v.string() }),
-	v.object({
-		status: v.literal("conflict"),
-		code: v.literal("semanticPreconditionFailed"),
-	}),
-);
-
 export async function applyDumdictPlanInTransaction(
 	ctx: MutationCtx,
 	args: { changes: readonly unknown[] },
@@ -854,13 +841,6 @@ export async function applyDumdictPlanInTransaction(
 
 	return { status: "committed" as const, nextRevision: DICTIONARY_REVISION };
 }
-
-/** The action-side adapter's commit, kept for Dumdict's storage contract. */
-export const commitDumdictChanges = internalMutation({
-	args: { changes: v.array(dumdictPlannedChangeValidator) },
-	returns: commitResultValidator,
-	handler: applyDumdictPlanInTransaction,
-});
 
 /** Materializes the grammatical component without creating another occurrence. */
 export async function materializeGrammaticalComponent(

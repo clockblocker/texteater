@@ -1,4 +1,3 @@
-import type { DumdictService } from "dumdict";
 import { makeSurfaceId } from "dumdict/runtime";
 import { validateEncounter } from "dumgen";
 import type {
@@ -281,7 +280,12 @@ export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
  */
 export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
-	readonly dictionary: Pick<DumdictService<"de">, "findStoredReadings">;
+	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
+	readonly findStoredReadings: (
+		lemma: Dumling.Lemma<"de">,
+	) =>
+		| Effect.Effect<readonly Dumling.Reading<"de">[], unknown>
+		| Promise<readonly Dumling.Reading<"de">[]>;
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 	/**
@@ -550,9 +554,7 @@ export function createTfDemoOrchestrator(options: {
 						checkpoints.reading
 							? Effect.succeed(null)
 							: effectFrom(
-									options.dictionary.findStoredReadings({
-										lemma,
-									}),
+									options.findStoredReadings(lemma),
 								).pipe(
 									Effect.withSpan(
 										"Find stored Readings",
@@ -883,8 +885,8 @@ export function createTfDemoOrchestrator(options: {
 						throw new Error(
 							"Reading route does not match the Encounter.",
 						);
-					const candidates = storedReadings.candidates.map(
-						({ reading }) => reading.emojiDescription,
+					const candidates = storedReadings.map(
+						(reading) => reading.emojiDescription,
 					);
 					const operation =
 						options.dumgen.resolveOrGenerateReadingEmojiDescription(

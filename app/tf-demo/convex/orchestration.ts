@@ -1,7 +1,6 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
-import { createDumdictService } from "dumdict/runtime";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Runtime from "effect/Runtime";
@@ -18,6 +17,7 @@ import {
 	type IntakeRunRecorder,
 	recordIntakeRun,
 } from "../server/intakeRun";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
@@ -33,7 +33,10 @@ import {
 	createProductionDumgen,
 	createProductionKnowledgeDraft,
 } from "../server/modelExecution";
-import { parseGermanLemma } from "../server/operationalParsing";
+import {
+	parseGermanLemma,
+	parseGermanReading,
+} from "../server/operationalParsing";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import {
 	fromStoredSentenceAnalysis,
@@ -45,7 +48,6 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
-import { createConvexDumdictStorage } from "./dumdictActionStorage";
 import { inspectionFor } from "./inspectionAction";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import { resolutionSessionGuardValidator } from "./model/validators";
@@ -244,10 +246,6 @@ function orchestratorFor(
 	inspection?: InspectionCapture,
 	intake?: IntakeRunRecorder,
 ) {
-	const dictionary = createDumdictService({
-		language: "de",
-		storage: createConvexDumdictStorage(ctx),
-	});
 	const persistence = createConvexPersistence(ctx, sessionGuard);
 	return createTfDemoOrchestrator({
 		draftKnowledge: ({ encounter, lemma, visitorId, settle }) =>
@@ -292,7 +290,13 @@ function orchestratorFor(
 			intake ? { onOperation: intake.operation } : {},
 			inspection,
 		),
-		dictionary,
+		findStoredReadings: async (lemma) =>
+			(
+				await ctx.runQuery(
+					internal.dumdictStorage.queries.findStoredReadings,
+					{ lemmaKey: lemmaIdentityKey(lemma) },
+				)
+			).map(parseGermanReading),
 		persistence,
 		...(observer ? { observer } : {}),
 		...(intake ? { intake } : {}),

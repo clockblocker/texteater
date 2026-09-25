@@ -3,11 +3,12 @@ import {
 	assertPendingSemanticRelationRecordIdentity,
 	type PendingSemanticRelationRecord,
 } from "dumdict/pending";
-import { createDumdictService } from "dumdict/runtime";
-import * as Effect from "effect/Effect";
 import { api } from "../convex/_generated/api";
 import type { TableNames } from "../convex/_generated/dataModel";
-import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import {
+	createDumdictTransaction,
+	type DumdictTransaction,
+} from "../convex/dumdictTransaction";
 import schema from "../convex/schema";
 import {
 	NOTE_STUDY_DATABASE,
@@ -15,7 +16,6 @@ import {
 	NOTE_STUDY_VISITOR_ID,
 } from "../shared/notes-study/note-study-dummy-database";
 import {
-	actionContext,
 	createPlaygroundConvex,
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,
 	playgroundFixtures,
@@ -28,11 +28,12 @@ async function loadedFixtures() {
 	return t;
 }
 
-function dictionaryFor(t: TestConvexDb) {
-	return createDumdictService({
-		language: "de",
-		storage: createConvexDumdictStorage(actionContext(t) as never),
-	});
+/** Runs one Dictionary workflow the way a host mutation does. */
+function inTransaction<Result>(
+	t: TestConvexDb,
+	run: (dictionary: DumdictTransaction) => Promise<Result>,
+) {
+	return t.run((ctx) => run(createDumdictTransaction(ctx)));
 }
 
 async function tableCounts(t: TestConvexDb) {
@@ -61,11 +62,11 @@ afterEach(() => {
 });
 
 test(
-	"seeded fixtures allow an unrelated new Reading to be planned through the Convex adapter",
+	"seeded fixtures allow an unrelated new Reading to be committed through the Dictionary transaction",
 	async () => {
 		const t = await loadedFixtures();
-		const prepared = await Effect.runPromise(
-			dictionaryFor(t).prepare.addNewNote({
+		const outcome = await inTransaction(t, (dictionary) =>
+			dictionary.addNewNote({
 				draft: {
 					reading: {
 						unitKind: "Reading",
@@ -87,8 +88,12 @@ test(
 				},
 			}),
 		);
+		if (outcome.status !== "committed")
+			throw new Error(
+				`Expected a committed plan, got ${outcome.status}.`,
+			);
 		expect(
-			prepared.plan.changes.some(
+			outcome.plan.changes.some(
 				(change) => change.type === "createReading",
 			),
 		).toBe(true);
@@ -184,13 +189,12 @@ test(
 		expect(await t.run((ctx) => ctx.db.get(entryId))).toMatchObject({
 			record: editedRecord,
 		});
-		const dictionary = dictionaryFor(t);
 		for (const unit of [
 			...NOTE_STUDY_DATABASE,
 			...NOTE_STUDY_RELATED_DATABASE,
 		]) {
-			const prepared = await Effect.runPromise(
-				dictionary.prepare.ensureOwnedSurface({
+			const outcome = await inTransaction(t, (dictionary) =>
+				dictionary.ensureOwnedSurface({
 					reading: unit.reading,
 					ownedSurface: {
 						surface: unit.citationSurface,
@@ -202,7 +206,10 @@ test(
 					},
 				}),
 			);
-			expect(prepared.plan.changes).toEqual([]);
+			expect(outcome).toMatchObject({
+				status: "committed",
+				plan: { changes: [] },
+			});
 		}
 	},
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,

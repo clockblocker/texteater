@@ -1,10 +1,4 @@
 import { expect, jest, test } from "bun:test";
-import {
-	type CommitChangesRequest,
-	createDumdictService,
-	type DumdictStoragePort,
-	type StoreRevision,
-} from "dumdict";
 import { createDumgen, DumgenFailure } from "dumgen";
 import { pipelineFixture } from "dumgen/testing";
 import type {
@@ -44,75 +38,6 @@ import {
 } from "../server/textSubmissionLimits";
 import { actionContext, createTestConvex } from "./support/convex";
 import { startSession } from "./support/occurrences";
-
-const revision = "revision-0" as StoreRevision;
-function createPlanningStorage(candidates: Dumling.Reading<"de">[]) {
-	const commits: CommitChangesRequest<"de">[] = [];
-	const storage: DumdictStoragePort<"de"> = {
-		findStoredReadings() {
-			return Effect.succeed({ revision, candidates: [] });
-		},
-		loadReadingEntryContext(request) {
-			switch (request.intent) {
-				case "addNewNote":
-					return Effect.succeed({
-						intent: request.intent,
-						revision,
-						existingOwnedSurfaces: [],
-						explicitExistingLemmaTargets: [],
-						exactPendingRelations: [],
-						pendingRelationsMatchingProposedLemma: [],
-						relationLemmas: [],
-						relationReadings: [],
-					});
-				case "applyGeneratedKnowledge":
-					return Effect.succeed({
-						intent: request.intent,
-						revision,
-						exactPendingRelations: [],
-						relationLemmas: [],
-						relationReadings: [],
-					});
-				case "ensureOwnedSurface":
-					return Effect.succeed({
-						intent: request.intent,
-						revision,
-						existingLemma: candidates[0]
-							? { lemma: candidates[0].lemma }
-							: undefined,
-						existingReading: candidates[0]
-							? {
-									reading: candidates[0],
-									attestedTranslations: [],
-									attestations: [],
-									notes: "",
-								}
-							: undefined,
-						existingOwnedSurfaces: [],
-					});
-				case "ensureReadingEntry":
-					return Effect.succeed({ intent: request.intent, revision });
-			}
-		},
-		commitChanges(request) {
-			commits.push(request);
-			return Effect.succeed({
-				status: "committed",
-				nextRevision: "revision-1" as StoreRevision,
-			});
-		},
-		loadReadingForPatch() {
-			return Effect.die("Unexpected Reading patch.");
-		},
-		getInfoForRelationsCleanup() {
-			return Effect.die("Unexpected relation cleanup lookup.");
-		},
-		loadCleanupRelationsContext() {
-			return Effect.die("Unexpected relation cleanup load.");
-		},
-	};
-	return { commits, storage };
-}
 
 const lemma: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
@@ -188,20 +113,6 @@ function setup(
 	} = {},
 ) {
 	const requests: ModelExchange["request"][] = [];
-	const { storage, commits } = createPlanningStorage(candidates);
-	storage.findStoredReadings = () =>
-		Effect.succeed({
-			revision,
-			candidates: candidates.map((reading) => ({
-				reading: {
-					reading,
-					attestedTranslations: [],
-					attestations: [],
-					notes: "",
-				},
-				lemma: { lemma: reading.lemma },
-			})),
-		});
 	const submitted: Parameters<
 		OrchestrationPersistence["persistSubmittedText"]
 	>[0][] = [];
@@ -303,7 +214,7 @@ function setup(
 		draftGraceMs: hooks.draftGraceMs,
 		observer: hooks.observer,
 		dumgen,
-		dictionary: createDumdictService({ language: "de", storage }),
+		findStoredReadings: () => Effect.succeed(candidates),
 		persistence,
 	});
 	return {
@@ -320,12 +231,10 @@ function setup(
 					hooks.inspection,
 				),
 		},
-		storage,
 		requests,
 		judgments,
 		writes,
 		submitted,
-		commits,
 	};
 }
 
@@ -360,7 +269,6 @@ test("real segmentation, classification, grammar and emoji production reach an a
 	expect(run.writes[0]?.reading).toEqual(reading);
 	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
 	expect(run.writes[0]?.readingDecision).toBe("New");
-	expect(run.commits).toHaveLength(0); // The host transaction plans and commits the dictionary itself.
 	expect(result).toMatchObject({
 		grammatical: { encounter },
 		persisted: { status: "Committed" },
@@ -480,7 +388,6 @@ test("invalid model output and provider failures leave no partial dictionary rec
 		);
 		expect(result._tag).toBe("Left");
 		expect(run.writes).toHaveLength(0);
-		expect(run.commits).toHaveLength(0);
 	}
 });
 
@@ -611,7 +518,6 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 	});
 	expect(run.requests).toHaveLength(3);
 	expect(run.writes).toHaveLength(0);
-	expect(run.commits).toHaveLength(0);
 });
 
 test("mixed German, English and Hebrew intake persists ordered sentences without recognition", async () => {

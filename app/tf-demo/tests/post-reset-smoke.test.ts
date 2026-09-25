@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { getFunctionName } from "convex/server";
-import { createDumdictService } from "dumdict";
-import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
-import { createConvexDumdictStorage } from "../convex/dumdictActionStorage";
+import {
+	createDumdictTransaction,
+	type DumdictTransaction,
+} from "../convex/dumdictTransaction";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
@@ -71,11 +72,12 @@ const emptyNote = {
 	notes: "",
 };
 
-function dictionaryFor(t: TestConvexDb) {
-	return createDumdictService({
-		language: "de",
-		storage: createConvexDumdictStorage(actionContext(t) as never),
-	});
+/** Runs one Dictionary workflow the way a host mutation does. */
+function inTransaction<Result>(
+	t: TestConvexDb,
+	run: (dictionary: DumdictTransaction) => Promise<Result>,
+) {
+	return t.run((ctx) => run(createDumdictTransaction(ctx)));
 }
 
 async function readingIdFor(
@@ -978,7 +980,6 @@ describe("tf-demo post-reset contract", () => {
 
 	test("a clean database stores base Knowledge and direct claims while projecting only valid inferred views", async () => {
 		const t = createTestConvex();
-		const dictionary = dictionaryFor(t);
 
 		for (const reading of [
 			gehenReading,
@@ -986,16 +987,16 @@ describe("tf-demo post-reset contract", () => {
 			prefixedFahrenReading,
 		] as const) {
 			expect(
-				await Effect.runPromise(
+				await inTransaction(t, (dictionary) =>
 					dictionary.addNewNote({
 						draft: { reading, note: emptyNote },
 					}),
 				),
-			).toMatchObject({ status: "applied" });
+			).toMatchObject({ status: "committed" });
 		}
 
 		expect(
-			await Effect.runPromise(
+			await inTransaction(t, (dictionary) =>
 				dictionary.addNewNote({
 					draft: {
 						reading: laufenReading,
@@ -1023,9 +1024,9 @@ describe("tf-demo post-reset contract", () => {
 					},
 				}),
 			),
-		).toMatchObject({ status: "applied" });
+		).toMatchObject({ status: "committed" });
 		expect(
-			await Effect.runPromise(
+			await inTransaction(t, (dictionary) =>
 				dictionary.applyGeneratedKnowledge({
 					reading: laufenReading,
 					changes: [
@@ -1038,7 +1039,7 @@ describe("tf-demo post-reset contract", () => {
 					pendingRelations: [],
 				}),
 			),
-		).toMatchObject({ status: "applied" });
+		).toMatchObject({ status: "committed" });
 
 		const sourceReadingId = await readingIdFor(t, laufenReading);
 		const targetReadingId = await readingIdFor(t, gehenReading);
