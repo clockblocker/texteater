@@ -32,7 +32,6 @@ import {
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
-	type RecordedClick,
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
@@ -210,7 +209,6 @@ function setup(
 		OrchestrationPersistence["persistResolvedClick"]
 	>[0][] = [];
 	let occurrence: ReusableAttestation | null = null;
-	let recorded: RecordedClick | null = null;
 	const persistence: OrchestrationPersistence = {
 		async persistSubmittedText(input) {
 			submitted.push(input);
@@ -218,7 +216,6 @@ function setup(
 		},
 		async loadResolutionContext() {
 			return {
-				recorded,
 				reusable: occurrence,
 				lemmaCandidates: [],
 				sentence: {
@@ -243,12 +240,6 @@ function setup(
 				}),
 				reading: input.reading,
 			};
-			recorded = {
-				status: "Resolved",
-				clickId: "click-1",
-				readingId: "reading-1",
-				occurrence,
-			};
 			return {
 				status: "Committed",
 				clickId: "click-1",
@@ -268,8 +259,11 @@ function setup(
 			};
 		},
 		async persistUnresolvedClick() {
-			recorded = { status: "Unresolved", clickId: "click-1" };
-			return { ...recorded, deduplicated: false };
+			return {
+				status: "Unresolved",
+				clickId: "click-1",
+				deduplicated: false,
+			};
 		},
 		...overrides,
 	};
@@ -413,7 +407,6 @@ test("a globally resolved occurrence is reused without generation", async () => 
 	const run = setup([], {
 		async loadResolutionContext() {
 			return {
-				recorded: null,
 				sentence: null,
 				lemmaCandidates: [],
 				reusable: {
@@ -435,14 +428,14 @@ test("a globally resolved occurrence is reused without generation", async () => 
 	expect(run.writes).toHaveLength(0);
 });
 
-test("Unresolved is durable and replayed; a late committed occurrence still wins", async () => {
+test("Unresolved is durable; a late committed occurrence still wins", async () => {
 	const run = setup([{ decision: "Unresolved" }]);
 	expect(
 		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
-	).toMatchObject({ grammatical: { decision: "Unresolved" } });
-	expect(
-		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
-	).toMatchObject({ deduplicated: true });
+	).toMatchObject({
+		grammatical: { decision: "Unresolved" },
+		persisted: { status: "Unresolved" },
+	});
 	expect(run.requests).toHaveLength(1);
 	expect(run.writes).toHaveLength(0);
 	const late = setup(
@@ -948,7 +941,6 @@ test("stored Lemma candidates reach grammar before headword generation, while Re
 		{
 			async loadResolutionContext() {
 				return {
-					recorded: null,
 					reusable: null,
 					lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
 					sentence: {
@@ -1172,7 +1164,6 @@ function setupWithAnalysis(
 		{
 			async loadResolutionContext() {
 				return {
-					recorded: null,
 					reusable: null,
 					lemmaCandidates: [],
 					analysis: hooks.analysis ?? null,

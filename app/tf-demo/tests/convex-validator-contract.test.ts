@@ -33,12 +33,12 @@ import {
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
-	recordedClickValidator,
 	reusableAttestationValidator,
 	segmentInputValidator,
 	segmentKindValidator,
 	semanticRelationValidator,
 	surfaceSpellingValidator,
+	unresolvedClickCommitValidator,
 } from "../convex/model/validators";
 import { readingNoteValidator } from "../convex/modules/notes/readingNote";
 import { routeNoteValidator } from "../convex/modules/notes/routeNotes";
@@ -278,11 +278,10 @@ test("persistence result validators retain table-specific Convex IDs", () => {
 		type: "id",
 		tableName: "attestations",
 	});
-	const recordedJson = JSON.stringify(recordedClickValidator.json);
-	expect(recordedJson).toContain('"tableName":"visitorClicks"');
-	expect(recordedJson).not.toContain(
-		'"clickId":{"fieldType":{"type":"string"',
-	);
+	expect(fieldType(unresolvedClickCommitValidator, "clickId")).toEqual({
+		type: "id",
+		tableName: "visitorClicks",
+	});
 });
 
 test("the current Dumgen factory executes without package-relative file I/O", async () => {

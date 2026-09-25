@@ -18,7 +18,7 @@ const selection = {
 };
 
 describe("Resolution Session execution", () => {
-	test("a guarded cached result crosses one lifecycle seam from route to settlement", async () => {
+	test("a reused occurrence crosses one lifecycle seam and settles in its own commit", async () => {
 		const advances: ResolutionSessionAdvance[] = [];
 		const settlements: ResolutionSessionSettlement[] = [];
 		const records: ResolutionSessionRunRecord[] = [];
@@ -46,16 +46,12 @@ describe("Resolution Session execution", () => {
 							grammatical: grammaticalInput(),
 							reading: readingInput(),
 							reused: true,
-							deduplicated: true,
 							persisted: {
-								status: "Resolved",
+								status: "Reused",
 								clickId: "click-1",
+								attestationId: "attestation-1",
 								readingId: "reading-1",
-								occurrence: {
-									attestationId: "attestation-1",
-									grammatical: grammaticalInput(),
-									reading: readingInput(),
-								},
+								deduplicated: false,
 							},
 						};
 					}),
@@ -64,51 +60,13 @@ describe("Resolution Session execution", () => {
 		);
 
 		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
-		expect(settlements).toEqual([
-			{ kind: "Complete", attestationId: "attestation-1" },
-		]);
+		expect(settlements).toEqual([]);
 		expect(records).toEqual([
 			{
 				kind: "Succeeded",
 				phase: "Grammar",
 				generationEvents: [],
 			},
-		]);
-	});
-
-	test("a replayed unresolved result settles Unresolved without progress", async () => {
-		const advances: ResolutionSessionAdvance[] = [];
-		const settlements: ResolutionSessionSettlement[] = [];
-		const records: ResolutionSessionRunRecord[] = [];
-		await Effect.runPromise(
-			executeResolutionSession({
-				identity,
-				lifecycle: {
-					begin: async () => ({ selection, checkpoints: {} }),
-					advance: async (event) => {
-						advances.push(event);
-					},
-					settle: async (result) => {
-						settlements.push(result);
-					},
-					record: async (record) => {
-						records.push(record);
-					},
-				},
-				resolve: () =>
-					Effect.succeed({
-						grammatical: { decision: "Unresolved", language: "de" },
-						deduplicated: true,
-						persisted: { status: "Unresolved", clickId: "click-1" },
-					} as never),
-				diagnostics: { info: () => {}, error: () => {} },
-			}),
-		);
-
-		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
-		expect(settlements).toEqual([{ kind: "Unresolved" }]);
-		expect(records).toEqual([
-			{ kind: "Succeeded", phase: "Grammar", generationEvents: [] },
 		]);
 	});
 

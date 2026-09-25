@@ -49,10 +49,14 @@ export type ResolutionSessionAdvance =
 			>[0]["readingResolution"];
 	  };
 
-export type ResolutionSessionSettlement =
-	| { readonly kind: "CatalogMiss"; readonly miss: ResolutionCatalogMiss }
-	| { readonly kind: "Complete"; readonly attestationId: string }
-	| { readonly kind: "Unresolved" };
+/**
+ * A catalog miss is the one outcome no commit settles; every other outcome
+ * settles the session inside its own persistence mutation.
+ */
+export type ResolutionSessionSettlement = {
+	readonly kind: "CatalogMiss";
+	readonly miss: ResolutionCatalogMiss;
+};
 
 export type ResolutionSessionRunRecord =
 	| {
@@ -181,21 +185,6 @@ export function executeResolutionSession({
 				}),
 			);
 			return;
-		}
-		if ("deduplicated" in result && result.deduplicated) {
-			const persisted = result.persisted;
-			if (persisted.status === "Resolved") {
-				yield* Effect.tryPromise(() =>
-					lifecycle.settle({
-						kind: "Complete",
-						attestationId: persisted.occurrence.attestationId,
-					}),
-				);
-			} else {
-				yield* Effect.tryPromise(() =>
-					lifecycle.settle({ kind: "Unresolved" }),
-				);
-			}
 		}
 		yield* Effect.tryPromise(() =>
 			lifecycle.record({

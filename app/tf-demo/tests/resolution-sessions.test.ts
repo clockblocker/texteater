@@ -688,15 +688,17 @@ describe("Resolution Session", () => {
 			grammar: grammarProjection("loser"),
 		});
 
+		// The later run finds the committed membership and reuses it.
 		expect(
-			await t.mutation(internal.resolutionSessions.settleAfterRun, {
-				guard: later,
-				result: {
-					kind: "Complete",
-					attestationId: committed.attestationId,
-				},
+			await t.mutation(internal.persistence.persistReusedResolvedClick, {
+				...select("request-later"),
+				sessionGuard: later,
+				attestationId: committed.attestationId,
 			}),
-		).toBeNull();
+		).toMatchObject({
+			status: "Reused",
+			attestationId: committed.attestationId,
+		});
 		// Terminal convergence replaces the loser's provisional projections.
 		expect(await session(t, "request-later")).toMatchObject({
 			lifecycle: {
@@ -1991,7 +1993,6 @@ test("beginRun atomically claims work, loads sentence and stored Surface candida
 		selection: { requestId: "request-1" },
 		checkpoints: {},
 		context: {
-			recorded: null,
 			reusable: null,
 			sentence: { stitchedText: "Die Banken." },
 			lemmaCandidates: [

@@ -1494,7 +1494,6 @@ describe("tf-demo Dumdict relation storage", () => {
 			},
 			async loadResolutionContext() {
 				return {
-					recorded: null,
 					reusable: null,
 					lemmaCandidates: [],
 					sentence: {

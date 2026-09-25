@@ -5,21 +5,18 @@ import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
 import {
 	findAttestationForSegmentValue,
-	findClickResult,
 	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
 import {
 	languageValidator,
 	lemmaValueValidator,
-	recordedClickValidator,
 	reusableAttestationValidator,
 	storedSegmentValidator,
 	storedSentenceAnalysisValidator,
 } from "./model/validators";
 
 export const resolutionContextValidator = v.object({
-	recorded: v.union(v.null(), recordedClickValidator),
 	reusable: v.union(v.null(), reusableAttestationValidator),
 	sentence: v.union(
 		v.null(),
@@ -56,19 +53,9 @@ export async function loadResolutionContext(
 	},
 	loadGrammar = true,
 ) {
-	const recorded = await findClickResult(ctx, input);
-	if (recorded)
-		return {
-			recorded,
-			reusable: null,
-			sentence: null,
-			lemmaCandidates: [],
-			analysis: null,
-		};
 	const reusable = await findAttestationForSegmentValue(ctx, input);
 	if (reusable)
 		return {
-			recorded: null,
 			reusable,
 			sentence: null,
 			lemmaCandidates: [],
@@ -78,7 +65,6 @@ export async function loadResolutionContext(
 	const sentence = await loadSentenceForResolution(ctx, input);
 	if (!loadGrammar || sentence?.language !== "de")
 		return {
-			recorded: null,
 			reusable: null,
 			sentence,
 			lemmaCandidates: [],
@@ -169,7 +155,6 @@ export async function loadResolutionContext(
 		candidates.set(lemma._id, candidate);
 	}
 	return {
-		recorded: null,
 		reusable: null,
 		sentence,
 		lemmaCandidates: [...candidates.values()]

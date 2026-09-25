@@ -102,18 +102,6 @@ export type ReusableAttestation = {
 	readonly reading: Dumling.Reading<"de">;
 };
 
-export type RecordedClick =
-	| {
-			readonly status: "Unresolved";
-			readonly clickId: string;
-	  }
-	| {
-			readonly status: "Resolved";
-			readonly clickId: string;
-			readonly readingId: string;
-			readonly occurrence: ReusableAttestation;
-	  };
-
 export type UnresolvedClickCommit = {
 	readonly status: "Unresolved";
 	readonly clickId: string;
@@ -173,24 +161,6 @@ type ReadingResolution = {
 export type ResolveSegmentResult =
 	| {
 			readonly catalogMiss: CatalogMissSignal;
-	  }
-	| {
-			readonly grammatical: ResolvedGrammatical;
-			readonly reading: Dumling.Reading<"de">;
-			readonly reused: true;
-			readonly deduplicated: true;
-			readonly persisted: Extract<RecordedClick, { status: "Resolved" }>;
-	  }
-	| {
-			readonly grammatical: {
-				readonly decision: "Unresolved";
-				readonly language: "de";
-			};
-			readonly deduplicated: true;
-			readonly persisted: Extract<
-				RecordedClick,
-				{ status: "Unresolved" }
-			>;
 	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
@@ -285,7 +255,6 @@ export type ResolutionProgressObserver = {
 };
 
 export type ResolutionContext = {
-	readonly recorded: RecordedClick | null;
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
 	readonly lemmaCandidates: readonly LemmaCandidate<"de">[];
@@ -495,25 +464,6 @@ export function createTfDemoOrchestrator(options: {
 						inspectionStep("app/tf-demo", input),
 					),
 				));
-			const recorded = context.recorded;
-			if (recorded) {
-				return recorded.status === "Resolved"
-					? {
-							grammatical: recorded.occurrence.grammatical,
-							reading: recorded.occurrence.reading,
-							reused: true as const,
-							deduplicated: true as const,
-							persisted: recorded,
-						}
-					: {
-							grammatical: {
-								decision: "Unresolved" as const,
-								language: "de" as const,
-							},
-							deduplicated: true as const,
-							persisted: recorded,
-						};
-			}
 			const reusable = context.reusable;
 			if (reusable) {
 				const reuse = {

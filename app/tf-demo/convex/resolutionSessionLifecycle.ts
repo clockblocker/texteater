@@ -61,7 +61,7 @@ export function createResolutionSessionLifecycle(
 					{ guard },
 				);
 				if (!input) return null;
-				const { recorded, reusable, sentence } = input.context;
+				const { reusable, sentence } = input.context;
 				// Convex stores masses as `[{key, share}]`; the selector reads records.
 				const analysis: SentenceAnalysis | null = input.context.analysis
 					? fromStoredSentenceAnalysis(input.context.analysis)
@@ -69,12 +69,9 @@ export function createResolutionSessionLifecycle(
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
-						// Recorded and reusable Readings are loosely typed at the
-						// Convex boundary; parsing them is separate work.
-						...({ recorded, reusable } as Pick<
-							ResolutionContext,
-							"recorded" | "reusable"
-						>),
+						// Reusable Readings are loosely typed at the Convex
+						// boundary; parsing them is separate work.
+						reusable: reusable as ResolutionContext["reusable"],
 						sentence,
 						lemmaCandidates: input.context.lemmaCandidates.map(
 							({ lemma, foundUnder }) => ({
@@ -143,27 +140,9 @@ export function createResolutionSessionLifecycle(
 		},
 		settle: (result) =>
 			hop(`Settle ${result.kind}`, result, async () => {
-				if (result.kind === "CatalogMiss") {
-					await ctx.runMutation(
-						internal.catalogGrowthSignals
-							.recordAndSettleCatalogMiss,
-						{ guard, miss: result.miss },
-					);
-					return;
-				}
 				await ctx.runMutation(
-					internal.resolutionSessions.settleAfterRun,
-					result.kind === "Complete"
-						? {
-								guard,
-								result: {
-									kind: "Complete",
-									attestationId: convexId<"attestations">(
-										result.attestationId,
-									),
-								},
-							}
-						: { guard, result },
+					internal.catalogGrowthSignals.recordAndSettleCatalogMiss,
+					{ guard, miss: result.miss },
 				);
 			}),
 		record: (record) => {

@@ -26,7 +26,6 @@ import {
 	recoverStaleResolutionRun,
 	resolutionNoteValidator,
 	retryResolutionSession,
-	settleResolutionRun,
 	startResolutionSession,
 } from "./model/resolutionSessions";
 import {
@@ -406,24 +405,6 @@ export const recordRunFailure = internalMutation({
 	returns: v.boolean(),
 	handler: (ctx, { guard, failure }) =>
 		failResolutionRun(ctx, guard, failure),
-});
-
-export const settleAfterRun = internalMutation({
-	args: {
-		guard: resolutionSessionGuardValidator,
-		result: v.union(
-			v.object({
-				kind: v.literal("Complete"),
-				attestationId: v.id("attestations"),
-			}),
-			v.object({ kind: v.literal("Unresolved") }),
-		),
-	},
-	returns: v.null(),
-	handler: async (ctx, { guard, result }) => {
-		await settleResolutionRun(ctx, guard, result);
-		return null;
-	},
 });
 
 export const cleanup = internalMutation({

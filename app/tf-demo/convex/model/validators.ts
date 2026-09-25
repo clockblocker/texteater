@@ -684,19 +684,6 @@ export const reusableAttestationValidator = v.object({
 	reading: readingValueValidator,
 });
 
-export const recordedClickValidator = v.union(
-	v.object({
-		status: v.literal("Unresolved"),
-		clickId: v.id("visitorClicks"),
-	}),
-	v.object({
-		status: v.literal("Resolved"),
-		clickId: v.id("visitorClicks"),
-		readingId: v.id("readings"),
-		occurrence: reusableAttestationValidator,
-	}),
-);
-
 export const unresolvedClickCommitValidator = v.object({
 	status: v.literal("Unresolved"),
 	clickId: v.id("visitorClicks"),

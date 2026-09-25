@@ -1021,32 +1021,6 @@ export async function failResolutionRun(
 	return true;
 }
 
-/**
- * Settles a run whose result was already recorded, so no Occurrence commit
- * settled it: a replayed resolved or unresolved Visitor Encounter.
- */
-export async function settleResolutionRun(
-	ctx: MutationCtx,
-	guard: ResolutionSessionGuard,
-	result:
-		| {
-				readonly kind: "Complete";
-				readonly attestationId: Id<"attestations">;
-		  }
-		| { readonly kind: "Unresolved" },
-): Promise<void> {
-	const session = await requireActiveResolutionSession(ctx, guard);
-	if (result.kind === "Complete") {
-		await completeResolutionSession(ctx, session, result.attestationId);
-	} else {
-		await settleResolutionSession(ctx, session, { kind: "Unresolved" });
-	}
-	await upsertResolutionRun(ctx, session, {
-		phase: "Commit",
-		state: "Succeeded",
-	});
-}
-
 export type CommittedOccurrence = Awaited<
 	ReturnType<typeof completeResolutionSession>
 >;
