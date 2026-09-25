@@ -1,3 +1,8 @@
+/** A Collocation takes in the preposition only it governs (ADR 0034). */
+export const governedCaseIds = [
+	"grammar-de-coll-governed-bescheid-ueber",
+] as const;
+
 // Alternants share a Lemma contamination key with the production demonstration.
 // They remain canonical regression cases, but cannot be scored as held-out evidence.
 export const evaluationCaseIds = [
@@ -21,5 +26,5 @@ export const evaluationCaseIds = [
 	"grammar-de-coll-unresolved-marked-dependent",
 	"grammar-de-coll-unresolved-elliptic-kenntnis",
 	"grammar-de-coll-unresolved-present-member-unmarked",
-	"grammar-de-coll-governed-bescheid-ueber",
+	...governedCaseIds,
 ] as const;

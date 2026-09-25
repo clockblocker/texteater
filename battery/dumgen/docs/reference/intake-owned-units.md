@@ -230,6 +230,13 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
   `an` with an accusative complement (`erinnert sich an seinen Bruder` read
   as dative, 0.54 to 0.68). Membership matched a run without the government
   questions: 74 to 75 of 80 members against 75, route and roles equal.
+- Governed prepositions (ADR 0034), 2026-09-25, one run each: the
+  `sentence-analysis/de:governed` slice passes 5 of 6 (`stolz` takes `auf`
+  beside a separate `ist`, `vor` stays in `Angst` inside `Angst haben`,
+  `über` is the governed preposition of `Bescheid wissen`); the miss adds
+  `gut` as a fixed word of `weiß … gut Bescheid`. The click slice
+  `target-classification/de/high-level-whole-unit:governed-preposition`
+  passes 5 of 7; the misses add free material (`aus … Hunden`, `die`).
 
 ## The host
 

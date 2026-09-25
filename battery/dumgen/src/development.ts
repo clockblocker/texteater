@@ -14,14 +14,16 @@ import {
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
 import {
-	governedCaseIds,
+	governedCaseIds as governedAdjectiveCaseIds,
 	participleCaseIds,
 } from "./concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.js";
+import { governedCaseIds as governedNounCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/noun/evaluation-ids.js";
 import {
 	openReferentCaseIds,
 	referentContextCaseIds,
 } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.js";
 import { evaluateOpenReferent } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluator.js";
+import { governedCaseIds as governedCollocationCaseIds } from "./concrete-lang/de/grammatical-resolution/phraseme/collocation/evaluation-ids.js";
 import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -34,6 +36,7 @@ import {
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
 import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
+import { governedSentenceCaseIds } from "./concrete-lang/de/sentence-analysis/evaluation-ids.js";
 import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
 import {
 	governedPrepositionCaseIds,
@@ -54,16 +57,22 @@ type Registration = {
 };
 const registrations: readonly Registration[] = corpusRegistrations;
 const targetRoute = "target-classification/de/high-level-whole-unit";
+const sentenceRoute = "sentence-analysis/de";
 /** Named slices of one corpus, run as their own experiments as `route:slice`. */
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
+	[sentenceRoute]: { governed: governedSentenceCaseIds },
 	[targetRoute]: {
 		"participle-boundary": participleBoundaryCaseIds,
 		"governed-preposition": governedPrepositionCaseIds,
 	},
 	"grammatical-resolution/de/lexeme/adjective": {
 		participles: participleCaseIds,
-		governed: governedCaseIds,
+		governed: governedAdjectiveCaseIds,
+	},
+	"grammatical-resolution/de/lexeme/noun": { governed: governedNounCaseIds },
+	"grammatical-resolution/de/phraseme/collocation": {
+		governed: governedCollocationCaseIds,
 	},
 	"grammatical-resolution/de/lexeme/pronoun": {
 		"referent-context": referentContextCaseIds,
@@ -203,8 +212,11 @@ export function operationExperiment(id: string, options: DumgenOptions) {
 			options,
 			phaseEntries.find((entry) => entry.id === id)?.ids,
 		);
-	if (id === "sentence-analysis/de")
-		return sentenceOperationExperiment(options);
+	if (routeOf(id) === sentenceRoute)
+		return sentenceOperationExperiment(
+			options,
+			phaseEntries.find((entry) => entry.id === id)?.ids,
+		);
 	throw Error(`No production operation for ${id}`);
 }
 
@@ -220,7 +232,7 @@ export async function evaluateExperiment(args: {
 }) {
 	if (
 		routeOf(args.experimentId) === targetRoute ||
-		args.experimentId === "sentence-analysis/de" ||
+		routeOf(args.experimentId) === sentenceRoute ||
 		args.experimentId.startsWith("grammatical-resolution/") ||
 		args.experimentId.startsWith("reading-") ||
 		args.experimentId === "intake" ||

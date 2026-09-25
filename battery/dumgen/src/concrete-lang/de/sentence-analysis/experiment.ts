@@ -304,13 +304,14 @@ const corpus = defineGoldenCorpus({
  */
 export function sentenceOperationExperiment(
 	options: DumgenOptions,
+	caseIds: readonly string[] = evaluationCaseIds,
 ): OperationExperiment<typeof inputSchema, typeof goldSchema, SentenceScore> {
 	const demonstrations = corpus.select(data.demonstrationIds);
 	const analyses = new Map<string, SentenceAnalysis>();
 	return {
 		corpus,
 		demonstrations,
-		evaluation: corpus.select(evaluationCaseIds).difference(demonstrations),
+		evaluation: corpus.select(caseIds).difference(demonstrations),
 		run: async (input, { signal, recordTrace }) => {
 			const dumgen = createDumgen({
 				...options,

@@ -1,3 +1,13 @@
+/** Every governor takes in its governed preposition (ADR 0034). */
+export const governedSentenceCaseIds = [
+	"sentence-de-government-stolz-auf",
+	"sentence-de-copula-stolz-auf",
+	"sentence-de-government-angst-vor",
+	"sentence-de-government-interesse-an",
+	"sentence-de-government-bescheid-wissen",
+	"sentence-de-government-warten-auf",
+] as const;
+
 export const evaluationCaseIds = [
 	"sentence-de-kakao",
 	"sentence-de-kino",

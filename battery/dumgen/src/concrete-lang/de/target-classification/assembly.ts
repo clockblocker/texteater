@@ -12,7 +12,7 @@ import { indexedContext } from "../../../universal/validation.js";
 
 export const routes = {
 	"Lexeme/ADJ":
-		"Adjective, including adverbial adjective uses and every participle outside a perfect or passive: attributive, adverbial, or predicative after sein or another verb, whatever its sense and dependents (der zweimal verschobene Termin, den Koffer ziehend)",
+		"Adjective, including adverbial adjective uses, an adjective with the preposition it governs (stolz auf), and every participle outside a perfect or passive: attributive, adverbial, or predicative after sein or another verb, whatever its sense and dependents (der zweimal verschobene Termin, den Koffer ziehend)",
 	"Lexeme/ADP":
 		"Adposition (preposition, postposition or fixed circumposition)",
 	"Lexeme/ADV":
@@ -21,7 +21,8 @@ export const routes = {
 		"Coordinating conjunction, including a complete fixed correlator",
 	"Lexeme/DET": "Determiner modifying a noun",
 	"Lexeme/INTJ": "Interjection",
-	"Lexeme/NOUN": "Common noun, including substantivized participles",
+	"Lexeme/NOUN":
+		"Common noun, including substantivized participles and a noun with the preposition it governs (Angst vor)",
 	"Lexeme/NUM": "Numeral",
 	"Lexeme/PART": "Particle",
 	"Lexeme/PRON":

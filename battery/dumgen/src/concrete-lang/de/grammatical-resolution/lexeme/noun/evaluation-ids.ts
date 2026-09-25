@@ -1,3 +1,9 @@
+/** A noun takes in its governed preposition as a member (ADR 0034). */
+export const governedCaseIds = [
+	"grammar-de-noun-governed-angst-vor",
+	"grammar-de-noun-governed-article-angst-vor",
+] as const;
+
 export const evaluationCaseIds = [
 	"grammar-de-noun-dev-shared-long",
 	"grammar-de-noun-dev-repeated",
@@ -45,6 +51,5 @@ export const evaluationCaseIds = [
 	"grammar-de-noun-regression-fusion-shared-feld",
 	"grammar-de-noun-regression-fusion-zur-schule",
 	"grammar-de-noun-dev-abbreviation-dipl-ing",
-	"grammar-de-noun-governed-angst-vor",
-	"grammar-de-noun-governed-article-angst-vor",
+	...governedCaseIds,
 ] as const;

@@ -211,7 +211,8 @@ export function resolveGrammarJudgments(
 					lemma.family === encounter.target.family &&
 					lemma.kind === encounter.target.kind,
 			);
-		// Every source here sets Lemma precision.
+		// Every source here sets Lemma precision. A preposition is never a
+		// noun's headword, so a governed one is not offered.
 		const canonicalFormAlternatives = [
 			...new Set([
 				...storedLemmas.map((lemma) => lemma.canonicalForm),
@@ -410,6 +411,20 @@ export function resolveGrammarJudgments(
 					})
 				: [];
 		const governedPreposition = governable.length > 0;
+		// An adjective, a noun or a Phraseme beside a preposition reads as
+		// incomplete unless the question says the governed one belongs to it
+		// (ADR 0034); a verb's governed preposition needs no such note.
+		if (
+			(adnominal || encounter.target.family === "Phraseme") &&
+			governedPreposition
+		)
+			questions.support = choice(
+				`Under \`policy\`, can the fixed target in \`markedContext\` support a coherent analysis on \`route\`? Under \`${governor.policy}\`, a supplied member that is the preposition this ${governor.name} lexically governs belongs to the target, wherever it stands.`,
+				{
+					Supported: "Yes, keep route and membership unchanged",
+					Unresolved: "No defensible analysis on the supplied target",
+				},
+			);
 		if (governedPreposition) {
 			questions.governedPreposition = choice(
 				`Under \`${governor.policy}\`, which supplied member is the preposition this ${governor.name} lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.`,
@@ -794,6 +809,20 @@ export function resolveGrammarJudgments(
 								"surface.inflectionalFeatures.case",
 							),
 						});
+					// A governed preposition never belongs to an adjective's or a
+					// noun's headword: stolz auf is stolz (ADR 0034).
+					const governedWord =
+						adnominal && governedPrepositionPosition !== undefined
+							? input.members[
+									governedPrepositionPosition
+								]?.toLocaleLowerCase("de")
+							: undefined;
+					const withGovernedPreposition = (text: string) =>
+						governedWord !== undefined &&
+						text
+							.toLocaleLowerCase("de")
+							.split(/\s+/u)
+							.includes(governedWord);
 					const rejection =
 						chosen === undefined
 							? undefined
@@ -802,7 +831,9 @@ export function resolveGrammarJudgments(
 								? "NonInfinitiveCanonicalForm"
 								: copiedInflectedNoun(chosen)
 									? "InflectedNounCanonicalForm"
-									: undefined;
+									: withGovernedPreposition(chosen)
+										? "GovernedPrepositionCanonicalForm"
+										: undefined;
 					const rejected = rejection !== undefined;
 					if (rejection)
 						recordEvent(scope, rejection, {
