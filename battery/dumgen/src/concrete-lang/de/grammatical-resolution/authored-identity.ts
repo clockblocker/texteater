@@ -89,18 +89,17 @@ export function resolveAuthoredGrammarIdentity(
 				judgedCore: JSON.stringify(input.core),
 				judgedInflection: JSON.stringify(input.inflection),
 				lookupStatus: located.status,
-				reviewedIdentities: located.compatible.map(
-					(member) => member.lemma,
-				),
 			},
+			// Every compatible Lemma has exactly the judged Core, so an option
+			// names only its Canonical Form and the Core is stated once.
 			{
 				identity: choice(
-					"Select the required reviewed Lemma from these candidates compatible with the already-judged features. Do not revise any feature, collapse same-spelling identities, or treat a spelling-map gap as catalog absence. NoMatch means no reviewed compatible identity fits this occurrence; Unresolved means uncertain. Domain null is literal, not a wildcard.",
+					"Select the required reviewed Lemma from these candidates compatible with the already-judged features: each has the Core in `judgedCore` and the Canonical Form it names. Do not revise any feature, collapse same-spelling identities, or treat a spelling-map gap as catalog absence. NoMatch means no reviewed compatible identity fits this occurrence; Unresolved means uncertain. Domain null is literal, not a wildcard.",
 					{
 						...Object.fromEntries(
 							located.compatible.map((member, index) => [
 								`identity_${index}`,
-								JSON.stringify(member.lemma),
+								member.lemma.canonicalForm,
 							]),
 						),
 						NoMatch:

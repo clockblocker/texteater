@@ -12,6 +12,22 @@ import { choiceAnswers } from "../src/testing.js";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { operation } from "../src/universal/trace.js";
 
+/** The identity option that names this Canonical Form. */
+function identityOption(
+	questions: Parameters<typeof choiceAnswers>[0],
+	canonicalForm: string,
+): string {
+	const question = questions.identity;
+	if (question?.type !== "choice") throw Error("Expected identity choice");
+	const [key] =
+		Object.entries(question.criteria).find(
+			([key, option]) =>
+				key.startsWith("identity_") && option === canonicalForm,
+		) ?? [];
+	if (!key) throw Error(`No identity option ${canonicalForm}`);
+	return key;
+}
+
 const member = (form: string, kind: string, grammaticalCase?: string) => {
 	const result = authoredMembers.find(
 		(value) =>
@@ -88,20 +104,14 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 				throw Error("No generation");
 			},
 			judge: async (request) => {
-				const state = request.state as {
-					reviewedIdentities: (typeof der.lemma)[];
-				};
-				expect(
-					state.reviewedIdentities.every(
-						(lemma) =>
-							JSON.stringify(lemma.coreFeatures) ===
-							JSON.stringify(der.lemma.coreFeatures),
-					),
-				).toBe(true);
-				return choiceAnswers(
-					request.questions,
-					() =>
-						`identity_${state.reviewedIdentities.findIndex((lemma) => lemma.canonicalForm === "dieser")}`,
+				// The Core is stated once; each option names a Canonical Form.
+				expect(request.state).toHaveProperty(
+					"judgedCore",
+					JSON.stringify(der.lemma.coreFeatures),
+				);
+				expect(request.state).not.toHaveProperty("reviewedIdentities");
+				return choiceAnswers(request.questions, () =>
+					identityOption(request.questions, "dieser"),
 				);
 			},
 			onOperation: (trace) => traces.push(trace),
@@ -188,13 +198,11 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 			judge: async (request) => {
 				if (lookup === "Hit")
 					throw Error(`Judge called for ${spelled}`);
-				const state = request.state as {
-					reviewedIdentities: (typeof expected.lemma)[];
-				};
-				return choiceAnswers(
-					request.questions,
-					() =>
-						`identity_${state.reviewedIdentities.indexOf(expected.lemma)}`,
+				return choiceAnswers(request.questions, () =>
+					identityOption(
+						request.questions,
+						expected.lemma.canonicalForm,
+					),
 				);
 			},
 		};

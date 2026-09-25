@@ -30,10 +30,7 @@ export function grammarFixture(
 				canonicalFormAlternatives?: string[];
 				sentence?: string;
 				target?: { memberSegmentIndices: number[] };
-				reviewedIdentities: {
-					canonicalForm: string;
-					coreFeatures: unknown;
-				}[];
+				judgedCore?: string;
 				candidates?: Record<string, string[]>;
 				lexicalStringCandidates?: Record<string, string[]>;
 				referentCells?: Record<string, Record<string, unknown>>;
@@ -147,14 +144,36 @@ export function grammarFixture(
 						? "Unresolved"
 						: (governed?.complement.referent ?? "Unresolved");
 				if (id === "identity") {
-					const index = state.reviewedIdentities.findIndex(
-						(lemma) =>
-							lemma.canonicalForm ===
-								output.lemma.canonicalForm &&
-							stableJson(lemma.coreFeatures) ===
-								stableJson(output.lemma.coreFeatures),
-					);
-					return index === -1 ? "NoMatch" : `identity_${index}`;
+					const question = request.questions[id];
+					if (question?.type !== "choice")
+						throw Error("Expected identity choice");
+					// An AUX option states its whole Lemma; an authored-identity
+					// option names its Canonical Form under `judgedCore`.
+					const expectedCore = stableJson(output.lemma.coreFeatures);
+					const [key] =
+						Object.entries(question.criteria).find(
+							([key, option]) => {
+								if (!key.startsWith("identity_")) return false;
+								if (state.judgedCore !== undefined)
+									return (
+										option === output.lemma.canonicalForm &&
+										stableJson(
+											JSON.parse(state.judgedCore),
+										) === expectedCore
+									);
+								const lemma = JSON.parse(String(option)) as {
+									canonicalForm: string;
+									coreFeatures: unknown;
+								};
+								return (
+									lemma.canonicalForm ===
+										output.lemma.canonicalForm &&
+									stableJson(lemma.coreFeatures) ===
+										expectedCore
+								);
+							},
+						) ?? [];
+					return key ?? "NoMatch";
 				}
 				if (
 					id === "canonical" &&

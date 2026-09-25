@@ -1427,11 +1427,14 @@ export function resolveGrammarJudgments(
 						},
 					);
 				}
+				// The follow-up reads the occurrence, the judged Lemma and its
+				// candidates, not the features call's policies.
 				const lexicalStrings = yield* judge(
 					"resolveGrammar",
 					`${route}/lexical-strings`,
 					{
-						...state,
+						...input,
+						route,
 						lemma: JSON.stringify(lemma),
 						normalizedMembers,
 						candidates,
