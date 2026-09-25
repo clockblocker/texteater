@@ -41,16 +41,27 @@ Masc and Neut. This is the agreement each form takes, not a guess about a
 person's sex, and it extends marked gender to these two paradigms only.
 Dumling's gender check still binds only personal pronouns.
 
-Amended on 2026-09-25 (#595): a Lemma must be decidable from the word and the
-grammar of its sentence, never from what a pronoun refers to. This supersedes
-possessor gender and Reference Number in Core:
+Amended on 2026-09-25 (#595): possessor gender and Reference Number leave
+Core:
 
 - Possessive `seiner`/`seinige` (his, its) and `ihrer`/`ihrige` (hers, theirs)
   are one Lemma each. Possessor gender and number describe the Surface, as on
   the possessive articles, and mark only what the form shows: `sein-` has
   gender[psor] Masc, Neut; `ihr-` marks neither. Formal `Ihrer` stays apart.
-- Personal `ihm` and genitive `seiner` serve `er` and `es` alike, so each is
-  one Lemma whose gender is the set Masc, Neut. `er`, `ihn`, `es`, `sie` and
-  `ihr` keep the gender their form shows.
+  This is the stem's own grammar, not a split by referent.
 - `referenceNumber` is removed. It repeated `number` on personal pronouns, was
   null on formal `Sie`, and stood in for possessor number on possessives.
+
+Amended on 2026-09-25 (#606): a pillar form can fit several cells that differ
+only in what it refers to. Those cells stay separate Lemmas, and the referent
+decides between them. This replaces an earlier rule of the same day that no
+Lemma may depend on its referent.
+
+- Accusative `sie` is 3sg Fem or 3pl, genitive `ihrer` 3sg Fem or 3pl,
+  demonstrative `dem` and `dessen` Masc or Neut, and sentence-initial `Sie`
+  formal or 3pl.
+- Personal `ihm` and genitive `seiner` are two Lemmas each, the cells of `er`
+  (Masc) and `es` (Neut). No Core gender is a value set.
+- Dumgen reads the referent from the sentence. When the sentence cannot settle
+  it, Dumgen reads the sentence before and the sentence after. If those don't
+  settle it either, the most probable cell wins.

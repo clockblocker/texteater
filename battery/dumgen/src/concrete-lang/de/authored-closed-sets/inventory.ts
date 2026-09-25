@@ -82,7 +82,8 @@ import { member as m84 } from "./members/lexeme/pronoun/personal/euch-second-per
 import { member as m85 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-dative.js";
 import { member as m86 } from "./members/lexeme/pronoun/personal/euer-second-person-informal-plural-genitive.js";
 import { member as m57 } from "./members/lexeme/pronoun/personal/ich-first-person-singular-nominative.js";
-import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-masculine-neuter-singular-dative.js";
+import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-masculine-singular-dative.js";
+import { member as m76 } from "./members/lexeme/pronoun/personal/ihm-third-person-neuter-singular-dative.js";
 import { member as m66 } from "./members/lexeme/pronoun/personal/ihn-third-person-masculine-singular-accusative.js";
 import { member as m93 } from "./members/lexeme/pronoun/personal/ihnen-second-person-formal-plural-dative.js";
 import { member as m89 } from "./members/lexeme/pronoun/personal/ihnen-third-person-plural-dative.js";
@@ -94,7 +95,8 @@ import { member as m90 } from "./members/lexeme/pronoun/personal/ihrer-third-per
 import { member as m60 } from "./members/lexeme/pronoun/personal/meiner-first-person-singular-genitive.js";
 import { member as m58 } from "./members/lexeme/pronoun/personal/mich-first-person-singular-accusative.js";
 import { member as m59 } from "./members/lexeme/pronoun/personal/mir-first-person-singular-dative.js";
-import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-masculine-neuter-singular-genitive.js";
+import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-masculine-singular-genitive.js";
+import { member as m77 } from "./members/lexeme/pronoun/personal/seiner-third-person-neuter-singular-genitive.js";
 import { member as m92 } from "./members/lexeme/pronoun/personal/sie-second-person-formal-plural-accusative.js";
 import { member as m91 } from "./members/lexeme/pronoun/personal/sie-second-person-formal-plural-nominative.js";
 import { member as m70 } from "./members/lexeme/pronoun/personal/sie-third-person-feminine-singular-accusative.js";
@@ -188,6 +190,8 @@ export const authoredMembers = [
 	m73,
 	m74,
 	m75,
+	m76,
+	m77,
 	m78,
 	m79,
 	m80,

@@ -2670,37 +2670,8 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									gender: {
 										anyOf: [
 											{
-												anyOf: [
-													{
-														type: "string",
-														enum: [
-															"Fem",
-															"Masc",
-															"Neut",
-														],
-													},
-													{
-														type: "array",
-														prefixItems: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-														],
-														items: {
-															type: "string",
-															enum: [
-																"Fem",
-																"Masc",
-																"Neut",
-															],
-														},
-													},
-												],
+												type: "string",
+												enum: ["Fem", "Masc", "Neut"],
 											},
 											{ type: "null" },
 										],

@@ -25,18 +25,6 @@ export function sameValue(left: unknown, right: unknown): boolean {
 		)
 	);
 }
-/**
- * Whether two feature values agree: equal, or a value set that contains the
- * other value. ihm's gender Masc, Neut agrees with er's Masc and es's Neut.
- */
-export function agreeingValue(left: unknown, right: unknown): boolean {
-	if (sameValue(left, right)) return true;
-	if (Array.isArray(left) && typeof right === "string")
-		return left.includes(right);
-	if (Array.isArray(right) && typeof left === "string")
-		return right.includes(left);
-	return false;
-}
 export function authoredFor(lemma: Dumling.Lemma) {
 	return authoredMembers.find((member) => sameValue(member.lemma, lemma));
 }
@@ -103,11 +91,11 @@ function marks(core: Readonly<Record<string, unknown>>, key: string): boolean {
 /**
  * Other Paradigm Cells of a reviewed pillar PRON or DET: cells of the same
  * Kind that differ only in the varied Core Features. Preserves every other
- * Core Feature, compares null literally, lets a value set match any value it
- * contains (er reaches ihm, whose gender is Masc, Neut), and returns only
- * reviewed alternatives. Both ends must mark every varied feature, so an invariant
- * member with unmarked case (man) is never reached by varying case, and
- * reaches nothing that way. A stem Lemma (dieser, mein) has no other cells,
+ * Core Feature, compares null literally, and returns only reviewed
+ * alternatives: er reaches the masculine ihm and seiner, never the neuter
+ * ones. Both ends must mark every varied feature, so an invariant member
+ * with unmarked case (man) is never reached by varying case, and reaches
+ * nothing that way. A stem Lemma (dieser, mein) has no other cells,
  * so it returns none; its forms are its own Surfaces (selectFormAlternatives).
  */
 export function selectGrammaticalAlternatives(input: {
@@ -143,7 +131,7 @@ export function selectGrammaticalAlternatives(input: {
 				Object.entries(input.source.coreFeatures).every(
 					([key, value]) =>
 						varied.has(key) ||
-						agreeingValue(
+						sameValue(
 							value,
 							(
 								member.lemma.coreFeatures as Record<

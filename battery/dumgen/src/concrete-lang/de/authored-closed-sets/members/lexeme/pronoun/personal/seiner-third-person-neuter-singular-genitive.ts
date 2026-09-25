@@ -5,7 +5,7 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "ihm",
+	canonicalForm: "seiner",
 	coreFeatures: {
 		extPos: null,
 		foreign: null,
@@ -13,9 +13,9 @@ const lemma = {
 		polite: null,
 		poss: null,
 		pronType: "Prs",
-		case: "Dat",
+		case: "Gen",
 		number: "Sing",
-		gender: ["Masc", "Neut"],
+		gender: "Neut",
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -24,9 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „ihm“ ist der Dativ von „er“ und „es“ und verweist auf die männliche oder sächliche dritte Person Einzahl.",
-		transcription: "iːm",
-		translations: { en: ["him, it (dative of er/es)"], ru: ["ему"] },
+			"Die Personalpronomenform „seiner“ ist der Genitiv von „es“ und verweist auf die sächliche dritte Person Einzahl.",
+		transcription: "ˈzaɪ̯nɐ",
+		translations: { en: ["of it"], ru: ["его"] },
 	},
 	coverage: {
 		transcription: "Authored",

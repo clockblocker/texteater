@@ -3,7 +3,7 @@ import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
-import { agreeingValue, sameValue } from "./select.js";
+import { sameValue } from "./select.js";
 
 export type AuthoredRealization = {
 	readonly member: AuthoredMember;
@@ -207,22 +207,7 @@ const grammaticalMembers = authoredMembers.filter(
 			.some((prior) => sameValue(prior.lemma, member.lemma)),
 );
 
-/**
- * Core nulls compare literally, and an authored value set admits each value
- * it contains: a judged ihm with gender Masc or Neut finds the one ihm Lemma.
- * No missing spelling map is interpreted as catalog absence.
- */
-function coreAgrees(authored: object, judged: Record<string, unknown>) {
-	const entries = Object.entries(authored);
-	return (
-		entries.length === Object.keys(judged).length &&
-		entries.every(
-			([key, value]) =>
-				Object.hasOwn(judged, key) && agreeingValue(value, judged[key]),
-		)
-	);
-}
-
+/** Core nulls compare literally; no missing spelling map is interpreted as catalog absence. */
 export function locateAuthoredIdentity(
 	input: {
 		kind: "DET" | "PRON" | "AUX";
@@ -235,7 +220,7 @@ export function locateAuthoredIdentity(
 	const compatible = grammaticalMembers.filter(
 		(member) =>
 			member.lemma.kind === input.kind &&
-			coreAgrees(member.lemma.coreFeatures, input.core),
+			sameValue(member.lemma.coreFeatures, input.core),
 	);
 	const matches = [
 		...new Set(

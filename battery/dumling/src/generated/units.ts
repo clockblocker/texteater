@@ -1414,15 +1414,7 @@ export interface UnitMap {
 							| "Tot"
 					  )
 					| null;
-				gender:
-					| (
-							| ("Fem" | "Masc" | "Neut")
-							| [
-									"Fem" | "Masc" | "Neut",
-									...Array<"Fem" | "Masc" | "Neut">,
-							  ]
-					  )
-					| null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
 			};
 		};
 		Surface: {
@@ -1454,15 +1446,7 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					gender:
-						| (
-								| ("Fem" | "Masc" | "Neut")
-								| [
-										"Fem" | "Masc" | "Neut",
-										...Array<"Fem" | "Masc" | "Neut">,
-								  ]
-						  )
-						| null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -1513,15 +1497,7 @@ export interface UnitMap {
 								| "Tot"
 						  )
 						| null;
-					gender:
-						| (
-								| ("Fem" | "Masc" | "Neut")
-								| [
-										"Fem" | "Masc" | "Neut",
-										...Array<"Fem" | "Masc" | "Neut">,
-								  ]
-						  )
-						| null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
 			};
 			emojiDescription: string;
@@ -1557,15 +1533,7 @@ export interface UnitMap {
 									| "Tot"
 							  )
 							| null;
-						gender:
-							| (
-									| ("Fem" | "Masc" | "Neut")
-									| [
-											"Fem" | "Masc" | "Neut",
-											...Array<"Fem" | "Masc" | "Neut">,
-									  ]
-							  )
-							| null;
+						gender: ("Fem" | "Masc" | "Neut") | null;
 					};
 				};
 				normalizedSurface: string;

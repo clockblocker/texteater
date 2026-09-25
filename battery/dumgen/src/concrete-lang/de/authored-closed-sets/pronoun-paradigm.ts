@@ -64,10 +64,7 @@ export function cellCoordinates(core: Partial<PronounCell>): string {
 			: core.number === "Plur"
 				? "Plural"
 				: null,
-		core.gender &&
-			(typeof core.gender === "string" ? [core.gender] : core.gender)
-				.map((gender) => genderNames[gender])
-				.join(" oder "),
+		core.gender && genderNames[core.gender],
 	]
 		.filter(Boolean)
 		.join(", ");

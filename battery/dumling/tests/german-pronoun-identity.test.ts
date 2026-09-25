@@ -62,7 +62,7 @@ const thirdSingular = {
 	number: "Sing",
 } as const;
 
-test("a personal cell shared by er and es marks the gender set Masc, Neut", () => {
+test("ihm and seiner keep er's and es's gender apart, never a set", () => {
 	accepts(
 		lemma("sie", { ...thirdSingular, gender: "Fem", case: "Nom" }),
 		true,
@@ -70,18 +70,21 @@ test("a personal cell shared by er and es marks the gender set Masc, Neut", () =
 	for (const [form, grammaticalCase] of [
 		["ihm", "Dat"],
 		["seiner", "Gen"],
-	] as const)
+	] as const) {
+		for (const gender of ["Masc", "Neut"])
+			accepts(
+				lemma(form, { ...thirdSingular, gender, case: grammaticalCase }),
+				true,
+			);
 		accepts(
 			lemma(form, {
 				...thirdSingular,
 				gender: ["Masc", "Neut"],
 				case: grammaticalCase,
 			}),
-			true,
+			false,
 		);
-	// A set is exactly Masc, Neut, and only on a third-person singular personal pronoun.
-	for (const gender of [["Neut", "Masc"], ["Fem", "Masc"], ["Masc"]])
-		accepts(lemma("ihm", { ...thirdSingular, gender, case: "Dat" }), false);
+	}
 	accepts(
 		lemma("dem", {
 			pronType: "Dem",

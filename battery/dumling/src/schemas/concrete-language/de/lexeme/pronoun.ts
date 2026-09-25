@@ -18,9 +18,9 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // ADR 0018 chooses Core identity coordinates; LEO does not prescribe Lemma granularity.
 // System ADR 0032: a pillar (personal, der-series, wer) sets case, number and
 // gender in Core; a stem word (dieser, keiner, meiner) marks them on its Surfaces.
-// A Lemma is decidable from the word and its sentence's grammar, never from
-// what a pronoun refers to (ADR 0018, 2026-09-25): ihm serves er and es, so its
-// gender is the set Masc, Neut, and possessor features describe the Surface.
+// A personal cell whose form er and es share (ihm, seiner) stays split by
+// gender, and the referent decides between them (ADR 0018, #606). Possessor
+// features describe a possessive's Surface: sein- serves Masc and Neut.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 const gender = DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]);
@@ -43,7 +43,7 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 			"Rel",
 			"Tot",
 		]),
-		gender: featureValueSetSchema(gender),
+		gender,
 	}).refine(isGermanPronounCore, { error: germanPronounCoreError }),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

@@ -102,18 +102,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			"The lexical identity has no marked grammatical gender, for example a plural-only identity; not missing evidence for an otherwise gendered noun",
 		byKind: {
 			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Plural-only names have unmarked gender.",
-			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? A personal pronoun marks gender only in a third-person singular cell, and only as far as its form shows: er/ihn are Masc, es Neut, sie/ihr/ihrer Fem, while ihm and genitive seiner serve er and es alike and are Masc,Neut whatever they refer to. wer-forms are Masc and was-forms Neut. Plural agreement has no marked gender. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
+			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? A personal pronoun marks gender only in a third-person singular cell: er/ihn are Masc, es Neut, sie/ihr/ihrer Fem. ihm and genitive seiner are the cells of er (Masc) or es (Neut); the gender of what they stand for decides, as it does for dem and dessen. wer-forms are Masc and was-forms Neut. Plural agreement has no marked gender. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
 			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), what grammatical gender belongs to its Paradigm Cell? It is the lexical gender of the noun the article modifies. Plural agreement has no marked gender. Every other determiner keeps gender on its Surface, not in Core.",
 		},
 		unmarkedByKind: {
 			PRON: "Gender is inapplicable in Core: a stem pronoun whose gender is on its Surface, a first/second-person nonpossessive identity, plural agreement, or an invariant identity without gender",
 			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose gender is on its Surface, an invariant determiner such as derlei, or plural agreement",
-		},
-		setsByKind: {
-			PRON: {
-				"Masc,Neut":
-					"Masculine or neuter: a third-person singular form er and es share, ihm or genitive seiner",
-			},
 		},
 	},
 	"lemma.coreFeatures.hyph": {

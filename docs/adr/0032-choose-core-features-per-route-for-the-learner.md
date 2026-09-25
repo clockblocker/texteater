@@ -83,8 +83,12 @@ Amended on 2026-09-25 to settle the pillar collisions (#595):
   `jemand` never reaches `man`.
 
 Amended on 2026-09-25 with [ADR 0018](./0018-promote-german-personal-case-forms-to-lemmas.md):
-a Lemma follows from the word and its sentence's grammar, never from what a
-pronoun refers to. Possessor gender and number are Surface features for German
-PRON as for DET, so each possessive stem is one Lemma. Personal `ihm` and
-genitive `seiner` mark gender as the set Masc, Neut, and navigation matches a
-set against any value it contains: `er` and `es` both reach them.
+possessor gender and number are Surface features for German PRON as for DET,
+so each possessive stem is one Lemma.
+
+Amended on 2026-09-25 with ADR 0018 (#606): pillar cells that share a form
+and differ only in what the form refers to stay separate Lemmas. Personal
+`ihm` and genitive `seiner` are again the cells of `er` and `es`. Varying
+case from `er` reaches `ihn` and the masculine `ihm` and `seiner`, never a
+neuter cell. Navigation compares Core values literally, and no Core value is
+a set.

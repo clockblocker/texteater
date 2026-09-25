@@ -165,10 +165,10 @@ function describeCell(features: Record<string, unknown>): string {
 			: features.number === "Plur"
 				? "plural"
 				: null;
-	const genders = [features.gender].flat().filter(Boolean).map(String);
-	const gender = genders.length
-		? genders.map((value) => genderNames[value] ?? value).join(" or ")
-		: null;
+	const gender =
+		typeof features.gender === "string"
+			? genderNames[features.gender]
+			: null;
 	if (number || gender)
 		parts.push(
 			`agreement ${[number, gender].filter(Boolean).join(" ")}${

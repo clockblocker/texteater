@@ -29,28 +29,16 @@ export function emojiDescriptionError(): string {
 	return "Emoji Description must contain one to four emoji graphemes";
 }
 
-/**
- * Null records no marked distinction; it never substitutes for a known gender.
- * A gender set records a form that serves several genders: third-person
- * singular ihm and seiner serve er and es, so their gender is Masc, Neut.
- */
+/** Null records no marked distinction; it never substitutes for a known gender. */
 export function isGermanPronounCore(core: Record<string, unknown>): boolean {
-	const gender = core.gender ?? null;
-	if (gender === null) return true;
+	if ((core.gender ?? null) === null) return true;
 	if (core.number === "Plur") return false;
-	const personal = core.pronType === "Prs";
-	if (personal && (core.person !== "3" || core.number !== "Sing"))
-		return false;
-	if (!Array.isArray(gender)) return true;
 	return (
-		personal &&
-		gender.length === 2 &&
-		gender[0] === "Masc" &&
-		gender[1] === "Neut"
+		core.pronType !== "Prs" || (core.person === "3" && core.number === "Sing")
 	);
 }
 export function germanPronounCoreError(): string {
-	return "German pronoun gender must agree with its subtype, person and number; a gender set is Masc, Neut on a third-person singular personal pronoun";
+	return "German pronoun gender must agree with its subtype, person and number";
 }
 
 /** Plural agreement has no marked gender; a cell never guesses one. */

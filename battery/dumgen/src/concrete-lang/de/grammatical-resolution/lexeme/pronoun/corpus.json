@@ -207,7 +207,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": ["Masc", "Neut"]
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -299,7 +299,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": ["Masc", "Neut"]
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -331,7 +331,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": ["Masc", "Neut"]
+					"gender": "Neut"
 				}
 			},
 			"realizationCoverage": "Full"
@@ -5469,12 +5469,12 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Prs",
-					"gender": ["Masc", "Neut"]
+					"gender": "Masc"
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "ihm is the dative of both er and es, so its gender is Masc,Neut whatever it refers to."
+		"explanation": "ihm stands for Ihr Bruder, so it is the dative of er: masculine singular."
 	},
 	"grammar-de-pron-demo-formal-ihnen": {
 		"input": {

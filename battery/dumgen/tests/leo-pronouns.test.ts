@@ -498,16 +498,12 @@ test("unlicensed cells and shortened genitives are absent", () => {
 		expect(lookup(text, features).matches, text).toEqual([]);
 });
 
-test("a judged er or es gender finds the one ihm and seiner Lemma", () => {
+test("a judged gender finds the ihm or seiner cell of er or es, never a set", () => {
 	for (const [spelled, grammaticalCase] of [
 		["ihm", "Dat"],
 		["seiner", "Gen"],
-	] as const)
-		for (const gender of [
-			"Masc",
-			"Neut",
-			["Masc", "Neut"],
-		] satisfies Core["gender"][]) {
+	] as const) {
+		for (const gender of ["Masc", "Neut"] as const) {
 			const located = lookup(spelled, {
 				pronType: "Prs",
 				person: "3",
@@ -515,14 +511,21 @@ test("a judged er or es gender finds the one ihm and seiner Lemma", () => {
 				case: grammaticalCase,
 				gender,
 			});
-			expect(located.status, `${spelled} ${String(gender)}`).toBe("Hit");
-			const [hit] = located.matches;
-			if (!hit) throw Error("Expected the merged Lemma");
-			expect((hit.lemma.coreFeatures as Partial<Core>).gender).toEqual([
-				"Masc",
-				"Neut",
-			]);
+			expect(located.status, `${spelled} ${gender}`).toBe("Hit");
+			expect(
+				(located.matches[0]?.lemma.coreFeatures as Partial<Core>).gender,
+			).toBe(gender);
 		}
+		expect(
+			lookup(spelled, {
+				pronType: "Prs",
+				person: "3",
+				number: "Sing",
+				case: grammaticalCase,
+				gender: ["Masc", "Neut"] as unknown as Core["gender"],
+			}).matches,
+		).toEqual([]);
+	}
 });
 
 test("same-spelling forms preserve case and article function, not the possessor", () => {

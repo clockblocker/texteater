@@ -15,7 +15,7 @@ const lemma = {
 		pronType: "Prs",
 		case: "Gen",
 		number: "Sing",
-		gender: ["Masc", "Neut"],
+		gender: "Masc",
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -24,12 +24,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „seiner“ ist der Genitiv von „er“ und „es“ und verweist auf die männliche oder sächliche dritte Person Einzahl.",
+			"Die Personalpronomenform „seiner“ ist der Genitiv von „er“ und verweist auf die männliche dritte Person Einzahl.",
 		transcription: "ˈzaɪ̯nɐ",
-		translations: {
-			en: ["of him, of it (genitive of er/es)"],
-			ru: ["его"],
-		},
+		translations: { en: ["of him"], ru: ["его"] },
 	},
 	coverage: {
 		transcription: "Authored",

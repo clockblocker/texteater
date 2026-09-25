@@ -126,18 +126,22 @@ test("same-spelling personal and possessive identities remain distinct", () => {
 				lemma.coreFeatures.gender === null,
 		),
 	).toHaveLength(1);
-	// Personal seiner (genitive of er and es) is one pillar cell whose gender
-	// is the set Masc, Neut.
-	expect(
-		pronouns
-			.filter(
-				(lemma) =>
-					lemma.canonicalForm === "seiner" &&
-					lemma.coreFeatures.poss === null &&
-					lemma.coreFeatures.case === "Gen",
-			)
-			.map((lemma) => lemma.coreFeatures.gender),
-	).toEqual([["Masc", "Neut"]]);
+	// Personal ihm and seiner are two cells each: those of er and of es.
+	for (const [form, grammaticalCase] of [
+		["ihm", "Dat"],
+		["seiner", "Gen"],
+	] as const)
+		expect(
+			pronouns
+				.filter(
+					(lemma) =>
+						lemma.canonicalForm === form &&
+						lemma.coreFeatures.poss === null &&
+						lemma.coreFeatures.case === grammaticalCase,
+				)
+				.map((lemma) => lemma.coreFeatures.gender)
+				.sort(),
+		).toEqual(["Masc", "Neut"]);
 	const demonstrative = pronouns.find(
 		(lemma) =>
 			lemma.canonicalForm === "der" &&

@@ -392,39 +392,36 @@ test("feature navigation preserves Case and compares unmarked values literally",
 		[],
 	);
 });
-test("feature navigation reaches the cells er and es share through a gender set", () => {
-	const cells = (form: string, grammaticalCase: string) =>
-		selectGrammaticalAlternatives({
-			source: required(
-				authoredMembers.find(
-					(member) =>
-						member.lemma.kind === "PRON" &&
-						member.lemma.canonicalForm === form &&
-						member.lemma.coreFeatures.case === grammaticalCase &&
-						member.lemma.coreFeatures.pronType === "Prs",
-				),
-				`Expected authored pronoun ${form}/${grammaticalCase}`,
-			).lemma as Dumling.Lemma<"de", "Lexeme", "PRON">,
-			vary: ["case"],
-		})
+test("varying case from er reaches only er's own cells, never a neuter one", () => {
+	const personal = (form: string, grammaticalCase: string) =>
+		required(
+			authoredMembers.find(
+				(member) =>
+					member.lemma.kind === "PRON" &&
+					member.lemma.canonicalForm === form &&
+					member.lemma.coreFeatures.case === grammaticalCase &&
+					member.lemma.coreFeatures.pronType === "Prs",
+			),
+			`Expected authored pronoun ${form}/${grammaticalCase}`,
+		).lemma as Dumling.Lemma<"de", "Lexeme", "PRON">;
+	const cells = (source: Dumling.Lemma<"de", "Lexeme", "PRON">) =>
+		selectGrammaticalAlternatives({ source, vary: ["case"] })
 			.map((reading) => {
 				const core = (
 					reading.lemma as Dumling.Lemma<"de", "Lexeme", "PRON">
 				).coreFeatures;
-				return `${reading.lemma.canonicalForm}/${core.case}`;
+				return `${reading.lemma.canonicalForm}/${core.case}.${core.gender}`;
 			})
 			.sort();
-	expect(cells("er", "Nom")).toEqual(["ihm/Dat", "ihn/Acc", "seiner/Gen"]);
-	expect(cells("es", "Nom")).toEqual(["es/Acc", "ihm/Dat", "seiner/Gen"]);
-	// From the shared cell, both genders' own cells are reachable; es/Nom has
-	// a referential and an expletive Reading.
-	expect(cells("ihm", "Dat")).toEqual([
-		"er/Nom",
-		"es/Acc",
-		"es/Nom",
-		"es/Nom",
-		"ihn/Acc",
-		"seiner/Gen",
+	expect(cells(personal("er", "Nom"))).toEqual([
+		"ihm/Dat.Masc",
+		"ihn/Acc.Masc",
+		"seiner/Gen.Masc",
+	]);
+	expect(cells(personal("es", "Nom"))).toEqual([
+		"es/Acc.Neut",
+		"ihm/Dat.Neut",
+		"seiner/Gen.Neut",
 	]);
 });
 test("feature navigation walks German article cells like pronoun cells", () => {
