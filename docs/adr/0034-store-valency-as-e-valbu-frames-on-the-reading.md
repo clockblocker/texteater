@@ -127,8 +127,11 @@ something:
   too: it is consistent, but a learner who clicks a verb's preposition would
   land on a preposition Note that only lists governors. Decided in
   [#603](https://github.com/clockblocker/texteater/issues/603).
-- A governed preposition belongs to the smallest word its government
-  survives with: `stolz auf` to ADJ `stolz`, `Angst vor` to NOUN `Angst`.
+- A governed preposition belongs to the smallest unit its government
+  survives with in the same sense: `stolz auf` to ADJ `stolz`, `Angst vor`
+  to NOUN `Angst`, but `Bescheid wissen über` to the Collocation, because
+  `Bescheid` means 'being informed' only inside its Collocations and
+  `Bescheid über` alone is the official notice.
   Duden and grammis list these complements under the adjective and the noun,
   UD HDT attaches the PP to `stolz` in 6 of 9 cases and to `Angst` in 31 of
   33 (all 5 `Angst haben … vor` included), and the government survives
