@@ -89,12 +89,18 @@ How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 
 A Valency Block shows the learner the Lemma with its frame. Optional slots
 are in parentheses. `jN` is an Acc person, `jM` a Dat person and `etw`
-something:
+something. A separable verb's `>` and `<` mark its split and are rendered
+from its `hasSepPrefix` Core Feature: `>passen` is the base the prefix
+attaches to on its left and `auf<` is the separated prefix, so `auf<` +
+`>passen` reads `aufpassen`. Only separable verbs carry them.
 
 ```text
 >passen (auf `jN/etw`) auf<             aufpassen
->gehen `jM` auf den Keks<               jemandem auf den Keks gehen
->stellen (`jM`) `etw` zur Verfügung<    (jemandem) etwas zur Verfügung stellen
+>fangen (mit `etw`) an<                 anfangen
+warten (auf `jN/etw`)                   warten
+stolz (auf `jN/etw`)                    stolz
+gehen `jM` auf den Keks                 jemandem auf den Keks gehen
+stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
 ```
 
 ## Consequences
@@ -154,5 +160,25 @@ something:
   rejected as a Collocation: it fails the restricted-choice test, it would
   make one Collocation per copula and adjective, and UD attaches `sein` as
   the adjective's `cop`.
-- Whether an ADP's own frame replaces `governedCase` is open on
-  [#595](https://github.com/clockblocker/texteater/issues/595).
+- `governedCase` leaves German ADP Core. Identity does not change, since no
+  two German ADPs differ by case alone. An authored, closed table per
+  language in Dumling records each preposition's allowed cases, a preferred
+  case where there is a norm, and whether it is two-way, keyed by `adpType`
+  where that matters: `für` {Acc}, `mit` {Dat}, `auf` and `in` {Acc, Dat}
+  two-way, `wegen` and `trotz` {Gen, Dat} preferring Gen, `entlang` Post
+  {Acc} and Prep {Gen, Dat}. It replaces Dumgen's `governablePrepositions`,
+  and a governor's Preposition slot is validated against it: `warten` `auf`
+  + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails.
+- A free ADP occurrence records the case it took as `realizedCase` in its
+  `valencyEvidence`, from the judgement Grammatical Resolution already makes
+  for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
+  governed preposition has no ADP Attestation; its case lives in the
+  governor's frame. The ADP's Valency Block renders from the table
+  (`` auf `etw` · Akk: wohin? · Dat: wo? ``), and each Source Context shows
+  its realized case and marks a colloquial one (`Dat · umgangssprachlich`).
+  A Core case set was rejected: it holds the same facts inside identity with
+  no preferred case and no per-sentence case. So was a generated frame per
+  ADP Reading: two-way would depend on the emoji judge splitting location
+  from direction, and a one-case slot cannot hold both cases when the judge
+  merges them. Decided in
+  [#604](https://github.com/clockblocker/texteater/issues/604).
