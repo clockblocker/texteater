@@ -21,7 +21,9 @@ function feature(bag: unknown, name: string): string | null {
  * The article a noun Surface is displayed with (ADR 0035). A noun owns its
  * article, but no stored value spells it: German derives it from the Lemma's
  * gender and the Surface's case, number and `article` (`dem` for `Wald` Dat
- * Sing Definite). English displays none. Hebrew writes `ה` for `Def`.
+ * Sing Definite). A proper noun cited with its article has it as the Core
+ * `article` instead (`der Schweiz` for `Schweiz` Dat Sing). English displays
+ * none. Hebrew writes `ה` for `Def`.
  */
 export function displayedArticle(
 	surface: DisplayedSurface,
@@ -29,9 +31,10 @@ export function displayedArticle(
 	const { lemma } = surface;
 	if (lemma.family !== "Lexeme") return null;
 	const bag = surface.inflectionalFeatures;
-	if (surface.language === "de" && lemma.kind === "NOUN") {
+	const proper = lemma.kind === "PROPN";
+	if (surface.language === "de" && (lemma.kind === "NOUN" || proper)) {
 		const text = germanArticleForm({
-			article: feature(bag, "article"),
+			article: feature(proper ? lemma.coreFeatures : bag, "article"),
 			case: feature(bag, "case"),
 			number: feature(bag, "number"),
 			gender: feature(lemma.coreFeatures, "gender"),
@@ -40,8 +43,10 @@ export function displayedArticle(
 	}
 	if (
 		surface.language === "he" &&
-		(lemma.kind === "NOUN" || lemma.kind === "ADJ") &&
-		feature(bag, "definite") === "Def"
+		(proper
+			? feature(lemma.coreFeatures, "article") === "Definite"
+			: (lemma.kind === "NOUN" || lemma.kind === "ADJ") &&
+				feature(bag, "definite") === "Def")
 	)
 		return { text: "ה", joiner: "" };
 	return null;

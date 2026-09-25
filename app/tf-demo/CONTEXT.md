@@ -158,8 +158,9 @@ Lemma and Reading records it presents.
 A projection of one normalized orthographic form in one language, aggregating
 its typed Lemma analyses without assigning the Note an outer Family or Kind.
 A noun Surface is displayed with the article derived from its features:
-Surface `Wald` (Dat, Sing, Definite) reads `dem Wald`. English nouns display no
-article.
+Surface `Wald` (Dat, Sing, Definite) reads `dem Wald`. A proper noun cited with
+its article takes it from its Core `article`: Surface `Schweiz` (Dat, Sing)
+reads `der Schweiz`. English nouns display no article.
 
 **Crossroad Note**:
 A projection of one Spelling Crossroad: every Reading whose Lemma's Canonical

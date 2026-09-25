@@ -27,10 +27,26 @@ export function coreGender(
 		: undefined;
 }
 
+/**
+ * The nominative definite article a German noun heading is cited with. A
+ * proper noun has one only when it is cited with its article (ADR 0035): `die
+ * Schweiz`, and plural `die Niederlande` without a gender.
+ */
 export function nounHeadingArticle(
 	lemma: LemmaFeatures & { readonly language: string },
 ): string | undefined {
-	if (lemma.language !== "de" || lemma.kind !== "NOUN") return undefined;
+	if (lemma.language !== "de" || lemma.family !== "Lexeme") return undefined;
+	if (lemma.kind === "PROPN") {
+		const core = lemma.coreFeatures;
+		if (
+			!core ||
+			typeof core !== "object" ||
+			!("article" in core) ||
+			core.article !== "Definite"
+		)
+			return undefined;
+		if (!("gender" in core) || core.gender === null) return "die";
+	} else if (lemma.kind !== "NOUN") return undefined;
 	switch (coreGender(lemma)) {
 		case "Masc":
 			return "der";

@@ -84,6 +84,61 @@ test("a noun Surface is displayed with the article its features derive", () => {
 	).toBe("Wald");
 });
 
+test("a name cited with its article is displayed with it, a bare one without", () => {
+	const name = (
+		normalizedSurface: string,
+		coreFeatures: Record<string, string | null>,
+		inflectionalFeatures: Record<string, string | null> | null,
+		language = "de",
+	) =>
+		displayedSurface({
+			language,
+			normalizedSurface,
+			inflectionalFeatures,
+			lemma: { family: "Lexeme", kind: "PROPN", coreFeatures },
+		});
+	const schweiz = { article: "Definite", gender: "Fem" };
+	expect(name("Schweiz", schweiz, { case: "Dat", number: "Sing" })).toBe(
+		"der Schweiz",
+	);
+	expect(name("Schweiz", schweiz, { case: "Acc", number: "Sing" })).toBe(
+		"die Schweiz",
+	);
+	expect(
+		name(
+			"Niederlanden",
+			{ article: "Definite", gender: null },
+			{ case: "Dat", number: "Plur" },
+		),
+	).toBe("den Niederlanden");
+	// Without a case, as in direct address, no article form is shown.
+	expect(name("Schweiz", schweiz, null)).toBe("Schweiz");
+	expect(
+		name(
+			"Berlin",
+			{ article: null, gender: "Neut" },
+			{ case: "Dat", number: "Sing" },
+		),
+	).toBe("Berlin");
+	expect(
+		name("ירדן", { article: "Definite", gender: "Masc" }, null, "he"),
+	).toBe("הירדן");
+	expect(
+		name("Netherlands", { article: "Definite" }, { number: "Plur" }, "en"),
+	).toBe("Netherlands");
+	const heading = (coreFeatures: Record<string, string | null>) =>
+		nounHeadingArticle({
+			language: "de",
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures,
+		});
+	expect(heading(schweiz)).toBe("die");
+	expect(heading({ article: "Definite", gender: "Masc" })).toBe("der");
+	expect(heading({ article: "Definite", gender: null })).toBe("die");
+	expect(heading({ article: null, gender: "Neut" })).toBeUndefined();
+});
+
 test("noun Reading heading has separate article and noun destinations", () => {
 	const followed: unknown[] = [];
 	const note = renderReading(readingNote(), {
