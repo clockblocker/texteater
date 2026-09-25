@@ -85,7 +85,7 @@ for (const example of review.constructions)
 				createDumgen({
 					...options,
 					onOperation: (trace) => traces.push(trace),
-				}).resolveGrammar(encounter),
+				}).resolveGrammar({ ...encounter, contextAvailable: false }),
 			);
 			expect(output.surface).toHaveProperty(
 				"inflectionalFeatures",
@@ -117,8 +117,8 @@ test("incompatible applicable features stop before missing-text generation", asy
 			createDumgen({
 				...options,
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: {
 						id: "invalid",
 						language: "de",
@@ -130,7 +130,8 @@ test("incompatible applicable features stop before missing-text generation", asy
 						memberSegmentIndices: [0],
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		),
 	);
 	expect(result).toMatchObject({
@@ -180,8 +181,8 @@ test("a bare mass noun keeps its click: NOUN Number never offers Unmarked", asyn
 					: judge(request, settings);
 			},
 			onOperation: (trace) => traces.push(trace),
-		}).resolveGrammar(
-			validateEncounter({
+		}).resolveGrammar({
+			...validateEncounter({
 				sentence: {
 					id: "bare-mass-noun",
 					language: "de",
@@ -200,7 +201,8 @@ test("a bare mass noun keeps its click: NOUN Number never offers Unmarked", asyn
 					memberSegmentIndices: [4],
 				},
 			}),
-		),
+			contextAvailable: false,
+		}),
 	);
 	const request = traces[0]?.calls[0]?.request;
 	if (!request || !("questions" in request))
@@ -260,8 +262,8 @@ test("finite homograph canonical candidate resolves without generation", async (
 				throw Error("Canonical candidate must not invoke generation");
 			},
 			onOperation: (trace) => traces.push(trace),
-		}).resolveGrammar(
-			validateEncounter({
+		}).resolveGrammar({
+			...validateEncounter({
 				sentence: {
 					id: "finite-homograph",
 					language: "de",
@@ -282,7 +284,8 @@ test("finite homograph canonical candidate resolves without generation", async (
 					memberSegmentIndices: [2],
 				},
 			}),
-		),
+			contextAvailable: false,
+		}),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("gehen");
 	expect(traces[0]?.calls).toHaveLength(1);
@@ -344,7 +347,7 @@ test("AUX catalog absence and uncertainty remain distinct and never invoke Luna"
 						throw Error("Must not generate");
 					},
 					onOperation: (trace) => traces.push(trace),
-				}).resolveGrammar(encounter),
+				}).resolveGrammar({ ...encounter, contextAvailable: false }),
 			),
 		);
 		expect(result).toMatchObject({
@@ -385,8 +388,8 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			createDumgen({
 				...grammarFixture(expected),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: {
 						id: "headword",
 						language: "de",
@@ -404,7 +407,8 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 						memberSegmentIndices: [0],
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe(canonicalForm);
 		expect(output.surface.normalizedSurface).toBe(normalized);
@@ -465,8 +469,8 @@ test("uncertain headword judgment stops without copying or generating", async ()
 					{ canonical: "Unresolved" },
 				),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: {
 						id: "uncertain-headword",
 						language: "de",
@@ -478,7 +482,8 @@ test("uncertain headword judgment stops without copying or generating", async ()
 						memberSegmentIndices: [0],
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		),
 	);
 	expect(result).toMatchObject({
@@ -532,7 +537,10 @@ for (const [id, rejected] of [
 					canonical: "CandidateIsCanonical",
 				}),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(markedEncounter(id, example.input.markedContext)),
+			}).resolveGrammar({
+				...markedEncounter(id, example.input.markedContext),
+				contextAvailable: false,
+			}),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe(
 			example.idealOutput.lemma.canonicalForm,
@@ -615,9 +623,10 @@ for (const [id, example, rejected] of [
 					canonical: "candidate_1",
 				}),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				markedEncounter(id, example.input.markedContext, "NOUN"),
-			),
+			}).resolveGrammar({
+				...markedEncounter(id, example.input.markedContext, "NOUN"),
+				contextAvailable: false,
+			}),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe(
 			example.idealOutput.lemma.canonicalForm,
@@ -646,9 +655,10 @@ test("a copied noun member under an uninflecting Surface stays the Canonical For
 		createDumgen({
 			...grammarFixture(example.idealOutput),
 			onOperation: (trace) => traces.push(trace),
-		}).resolveGrammar(
-			markedEncounter(id, example.input.markedContext, "NOUN"),
-		),
+		}).resolveGrammar({
+			...markedEncounter(id, example.input.markedContext, "NOUN"),
+			contextAvailable: false,
+		}),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("Chef");
 	expect(traces[0]?.calls).toHaveLength(1);
@@ -665,7 +675,10 @@ test("a stored noun Lemma under its own plural text stays the Canonical Form", a
 			}),
 			onOperation: (trace) => traces.push(trace),
 		}).resolveGrammar(
-			markedEncounter(id, example.input.markedContext, "NOUN"),
+			{
+				...markedEncounter(id, example.input.markedContext, "NOUN"),
+				contextAvailable: false,
+			},
 			[
 				{
 					lemma: {

@@ -415,8 +415,8 @@ for (const example of examples) {
 			},
 		});
 		const result = await Effect.runPromise(
-			dumgen.resolveGrammar(
-				validateEncounter({
+			dumgen.resolveGrammar({
+				...validateEncounter({
 					sentence: {
 						id: example.context,
 						language: "de",
@@ -444,7 +444,8 @@ for (const example of examples) {
 						),
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		);
 		expect(result.surface.lemma).toEqual(member.lemma);
 		expect(
@@ -513,7 +514,8 @@ test("a judged gender finds the ihm or seiner cell of er or es, never a set", ()
 			});
 			expect(located.status, `${spelled} ${gender}`).toBe("Hit");
 			expect(
-				(located.matches[0]?.lemma.coreFeatures as Partial<Core>).gender,
+				(located.matches[0]?.lemma.coreFeatures as Partial<Core>)
+					.gender,
 			).toBe(gender);
 		}
 		expect(

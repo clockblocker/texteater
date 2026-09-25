@@ -62,11 +62,19 @@ test("published consumer declarations preserve Language and Kind without a Zod g
 		await writeFile(
 			join(directory, "consumer.ts"),
 			`import {createDumgen} from ${JSON.stringify(join(root, "dist/index.js"))};
-import type {Encounter,AnalysisTarget,ComparisonInput,KnowledgeInput} from ${JSON.stringify(join(root, "dist/types.js"))};
+import type {Encounter,AnalysisTarget,ComparisonInput,KnowledgeInput,MoreContextRequired} from ${JSON.stringify(join(root, "dist/types.js"))};
 import type * as Dumling from ${JSON.stringify(resolve(root, "../dumling/dist/types.js"))};
 import {Effect} from ${JSON.stringify(resolve(root, "../../node_modules/effect/dist/dts/index.js"))};
 declare const encounter:Encounter<"de">;
-const operation=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}}).resolveGrammar(encounter);
+const operation=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}}).resolveGrammar({...encounter,contextAvailable:false});
+const withContext=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}}).resolveGrammar({...encounter,context:{before:"Maria kommt."}});
+const alone=createDumgen({execute:async()=>({output:null}),judge:async()=>{throw Error("Unexpected judgment")}}).resolveGrammar(encounter);
+declare const answered:Effect.Effect.Success<typeof withContext>;
+const answeredAttestation:Dumling.Attestation<"de">=answered;
+declare const maybe:Effect.Effect.Success<typeof alone>;
+// @ts-expect-error One Sentence while more exists may answer MoreContextRequired.
+const unchecked:Dumling.Attestation<"de">=maybe;
+const asked:MoreContextRequired|Dumling.Attestation<"de">=maybe;
 const recovered=operation.pipe(Effect.catchTag("InvalidInput",error=>Effect.succeed(error.message)));
 type Output=Effect.Effect.Success<typeof operation>;
 declare const output:Output;

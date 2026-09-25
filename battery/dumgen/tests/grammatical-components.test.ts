@@ -44,9 +44,10 @@ for (const name of [
 			target: source.idealOutput,
 		});
 		const result = await Effect.runPromise(
-			createDumgen(grammarFixture(fixture.idealOutput)).resolveGrammar(
-				encounter,
-			),
+			createDumgen(grammarFixture(fixture.idealOutput)).resolveGrammar({
+				...encounter,
+				contextAvailable: false,
+			}),
 		);
 		expect(result.surface.lemma.canonicalForm).toBe(
 			fixture.idealOutput.lemma.canonicalForm,
@@ -106,9 +107,10 @@ test("missing exact reviewed subject es is CatalogMiss, never referential substi
 		},
 	});
 	const result = await Effect.runPromise(
-		createDumgen(grammarFixture(fixture.idealOutput)).resolveGrammar(
-			encounter,
-		),
+		createDumgen(grammarFixture(fixture.idealOutput)).resolveGrammar({
+			...encounter,
+			contextAvailable: false,
+		}),
 	);
 	const index = authoredMembers.indexOf(subjectEs);
 	const mutable = authoredMembers as (typeof subjectEs)[];

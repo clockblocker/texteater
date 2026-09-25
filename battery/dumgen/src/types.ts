@@ -101,6 +101,42 @@ export type LemmaCandidate<L extends DumgenLanguage = DumgenLanguage> = {
 	readonly lemma: Dumling.Lemma<L>;
 	readonly foundUnder: readonly string[];
 };
+/**
+ * The Sentences just before and after an Encounter's Sentence in its Text, as
+ * far as they exist.
+ */
+export type SentenceContext = {
+	readonly before?: string;
+	readonly after?: string;
+};
+/**
+ * resolveGrammar could not choose between pronoun cells that differ only in
+ * what the form refers to (accusative `sie`: her or them), and the referent
+ * is outside the Sentence. Call again with the neighbouring Sentences.
+ */
+export type MoreContextRequired = { readonly decision: "MoreContextRequired" };
+/**
+ * An Encounter for resolveGrammar. `contextAvailable` (default true) says
+ * whether the Text has Sentences around this one; `context` supplies them.
+ */
+export type GrammarInput<L extends DumgenLanguage = DumgenLanguage> =
+	Encounter<L> & {
+		readonly context?: SentenceContext;
+		readonly contextAvailable?: boolean;
+	};
+/** Inputs whose resolution must pick a cell: context given, or none exists. */
+export type MustAnswerGrammarInput<L extends DumgenLanguage = DumgenLanguage> =
+	Encounter<L> &
+		(
+			| {
+					readonly context: SentenceContext;
+					readonly contextAvailable?: boolean;
+			  }
+			| {
+					readonly context?: undefined;
+					readonly contextAvailable: false;
+			  }
+		);
 export type EmojiDescription = Dumling.Reading["emojiDescription"];
 export type ReadingEmojiDescriptionResolution = {
 	readonly decision: "Reuse" | "New";
@@ -164,14 +200,25 @@ export interface Dumgen {
 		readonly sentence: SegmentedSentence<L>;
 		readonly clickedSegmentIndex: number;
 	}): Task<AnalysisTarget<L>>;
+	/**
+	 * Resolves the Encounter's Attestation. A pronoun form several cells share
+	 * (accusative `sie`, `ihm`, `dem`, sentence-initial `Sie`) is decided by
+	 * what it refers to. Given one Sentence while more exists, resolution may
+	 * answer MoreContextRequired; the caller then supplies `context`. With
+	 * `context`, or `contextAvailable: false`, it always picks a cell, the most
+	 * probable one if the referent stays unclear.
+	 *
+	 * `lemmaCandidates` are stored Lemmas the host found in the Sentence. Only
+	 * those found under the target's own text become Canonical Form candidates.
+	 */
 	resolveGrammar<L extends DumgenLanguage>(
-		input: Encounter<L>,
-		/**
-		 * Stored Lemmas the host found in the Encounter's Sentence. Only those
-		 * found under the target's own text become Canonical Form candidates.
-		 */
+		input: MustAnswerGrammarInput<L>,
 		lemmaCandidates?: readonly LemmaCandidate<L>[],
 	): Task<Dumling.Attestation<L>>;
+	resolveGrammar<L extends DumgenLanguage>(
+		input: GrammarInput<L>,
+		lemmaCandidates?: readonly LemmaCandidate<L>[],
+	): Task<Dumling.Attestation<L> | MoreContextRequired>;
 	resolveOrGenerateReadingEmojiDescription<L extends DumgenLanguage>(
 		input: ComparisonInput<L>,
 	): Task<ReadingEmojiDescriptionResolution>;

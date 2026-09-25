@@ -89,7 +89,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 			onModelExchange: (exchange) => calls.push(exchange.request.stage),
 		});
 		const attestation = await Effect.runPromise(
-			dumgen.resolveGrammar(encounter),
+			dumgen.resolveGrammar({ ...encounter, contextAvailable: false }),
 		);
 		expect(attestation.surface.lemma, id).toEqual(expected.lemma);
 		const input = comparisonInputSchema.parse({
@@ -125,7 +125,9 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 test("pronoun answers keep pillar cells in Core and stem cells on the Surface", () => {
 	for (const [id, golden] of Object.entries(pronounCases)) {
 		if ("decision" in golden.idealOutput) {
-			expect(golden.idealOutput.decision, id).toBe("Unresolved");
+			expect(["Unresolved", "MoreContextRequired"], id).toContain(
+				golden.idealOutput.decision,
+			);
 			continue;
 		}
 		const answer = grammarSchemas["de/Lexeme/PRON"].parse(
@@ -176,7 +178,7 @@ test("alternate accusative jemand retains the reviewed jemanden identity", async
 		onModelExchange: () => calls++,
 	});
 	const attestation = await Effect.runPromise(
-		dumgen.resolveGrammar(encounter),
+		dumgen.resolveGrammar({ ...encounter, contextAvailable: false }),
 	);
 	expect(attestation.members[0]?.attested).toBe("jemand");
 	expect(attestation.surface.spelling).toBe("Variant");

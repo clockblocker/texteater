@@ -11,6 +11,15 @@ import { z } from "zod";
 export const grammarInputSchema = z.strictObject({
 	markedContext: z.string().min(1),
 	members: z.array(z.string().min(1)).min(1),
+	/** The neighbouring Sentences a caller supplies for a referent. */
+	context: z
+		.strictObject({
+			before: z.string().min(1).optional(),
+			after: z.string().min(1).optional(),
+		})
+		.optional(),
+	/** Whether the Text has neighbouring Sentences; absent means it has. */
+	contextAvailable: z.boolean().optional(),
 });
 /** Source-local schemas validate every retained answer before demonstrations are assembled. */
 export function defineLinguisticCorpus<
@@ -33,15 +42,25 @@ export function defineLinguisticCorpus<
 			canonical: defineGoldenCaseCollection(args.source, { cases }),
 		},
 		fingerprintInput: (input) => {
-			const context = (input as { markedContext?: unknown })
-				.markedContext;
-			return typeof context === "string"
-				? context
-						.normalize("NFC")
-						.replaceAll(/\s+/gu, " ")
-						.trim()
-						.toLocaleLowerCase("de")
-				: stableJson(input);
+			const {
+				markedContext,
+				context: neighbours,
+				contextAvailable,
+			} = input as {
+				markedContext?: unknown;
+				context?: unknown;
+				contextAvailable?: unknown;
+			};
+			if (typeof markedContext !== "string") return stableJson(input);
+			const sentence = markedContext
+				.normalize("NFC")
+				.replaceAll(/\s+/gu, " ")
+				.trim()
+				.toLocaleLowerCase("de");
+			// The same Sentence with other neighbours is another case.
+			return neighbours === undefined && contextAvailable === undefined
+				? sentence
+				: `${sentence} ${stableJson({ neighbours, contextAvailable })}`;
 		},
 	});
 	return {

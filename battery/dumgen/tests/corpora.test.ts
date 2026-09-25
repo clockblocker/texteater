@@ -11,6 +11,7 @@ import targetData from "../src/concrete-lang/de/target-classification/source-dat
 import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
 import { grammarFixture } from "../src/testing.js";
+import type { SentenceContext } from "../src/types.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
@@ -78,7 +79,7 @@ test("canonical target corpus survives compact representation round-trips", () =
 		);
 	}
 });
-test("all 1109 retained grammar answers project through public operations", async () => {
+test("all 1122 retained grammar answers project through public operations", async () => {
 	let count = 0;
 	const verifiedRoutes = new Set<string>();
 	for (const spec of listExperiments().filter(
@@ -99,6 +100,8 @@ test("all 1109 retained grammar answers project through public operations", asyn
 			const input = golden.input as {
 				markedContext: string;
 				members: string[];
+				context?: SentenceContext;
+				contextAvailable?: boolean;
 			};
 			const segments: {
 					kind: "ResolvableText" | "OpaqueText";
@@ -136,14 +139,26 @@ test("all 1109 retained grammar answers project through public operations", asyn
 				Effect.either(
 					createDumgen(
 						grammarFixture(golden.idealOutput),
-					).resolveGrammar(encounter),
+					).resolveGrammar({
+						...encounter,
+						...(input.context ? { context: input.context } : {}),
+						...(input.contextAvailable === undefined
+							? {}
+							: { contextAvailable: input.contextAvailable }),
+					}),
 				),
 			);
-			if (
+			const decision =
 				typeof golden.idealOutput === "object" &&
 				golden.idealOutput &&
 				"decision" in golden.idealOutput
-			)
+					? golden.idealOutput.decision
+					: undefined;
+			if (decision === "MoreContextRequired")
+				expect(
+					result._tag === "Right" ? result.right : result.left,
+				).toEqual({ decision });
+			else if (decision)
 				expect(result).toMatchObject({
 					_tag: "Left",
 					left: { _tag: "Unresolved" },
@@ -156,6 +171,8 @@ test("all 1109 retained grammar answers project through public operations", asyn
 			else {
 				if (result._tag === "Left")
 					throw Error(`${id}: ${result.left.message}`);
+				if ("decision" in result.right)
+					throw Error(`${id}: unexpected ${result.right.decision}`);
 				const output = grammarSchemas[route].parse(golden.idealOutput);
 				expect([...result.right.members]).toEqual(
 					input.members.map((attested, index) => ({
@@ -177,6 +194,6 @@ test("all 1109 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1080);
+	expect(count).toBe(1093);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

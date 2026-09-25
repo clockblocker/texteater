@@ -6,9 +6,9 @@ export const COMPILED_RELATION_VERDICT = {
 	"fingerprints": {
 		"prompt": "sha256:9518dc27d59397718ca8568b9a930bf6990b90ea442b2cc2be564d166b1f78e0",
 		"schema": "sha256:a8a939f24eab56ca5708c081eeecc3ee9ba113aa74fb0bf6d1ab273b97dd468e",
-		"evaluator": "sha256:2fc1aa1cec3385750ca9d4efcf32f332c136b033b76d4a78097f4d787bad0933",
+		"evaluator": "sha256:022f5dd29a52c0137c1d3a17b4c0dd75e446371ff363c31557827f1ab23d2a03",
 		"model": "sha256:dae3db292da3e761d1703cc0cba41843832c1357a1635f856e9fadcada0a67ec",
-		"policy": "sha256:09d7fe1d294f2219cf36ab39c49ddb1aac6b4c8c2acabb70745223a38fd713ca"
+		"policy": "sha256:0cd14a371cc077c0f9d49137896e28bfa197a64854f5c51fd9866d73f81514b1"
 	},
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",

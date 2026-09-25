@@ -60,7 +60,10 @@ function example(
 		golden,
 		resolve: () =>
 			Effect.runPromise(
-				createDumgen(grammarFixture(golden)).resolveGrammar(encounter),
+				createDumgen(grammarFixture(golden)).resolveGrammar({
+					...encounter,
+					contextAvailable: false,
+				}),
 			),
 	};
 }
@@ -372,7 +375,7 @@ test("article attachment offers only complete lexical candidates", async () => {
 				}
 				return judge(request, settings);
 			},
-		}).resolveGrammar(fixture.encounter),
+		}).resolveGrammar({ ...fixture.encounter, contextAvailable: false }),
 	);
 	expect(inspected).toBe(true);
 	expect(result.surface.normalizedSurface).toBe("dem Wald");
@@ -415,7 +418,7 @@ test("unrelated Fusion evidence is optional and uncertainty is not a bare noun",
 		Effect.runPromise(
 			createDumgen(
 				grammarFixture(fixture.golden, { attachment: "Unresolved" }),
-			).resolveGrammar(fixture.encounter),
+			).resolveGrammar({ ...fixture.encounter, contextAvailable: false }),
 		),
 	).rejects.toThrow("Unresolved noun article attachment");
 });
@@ -437,7 +440,10 @@ test("Fusion morphology determines Case before any independent Case judgment", a
 		"surface.inflectionalFeatures.case": "Gen",
 	});
 	const result = await Effect.runPromise(
-		createDumgen(options).resolveGrammar(fixture.encounter),
+		createDumgen(options).resolveGrammar({
+			...fixture.encounter,
+			contextAvailable: false,
+		}),
 	);
 	expect(result.surface).toHaveProperty("inflectionalFeatures.case", "Dat");
 	expect(deriveNounArticle(result.surface)).toHaveProperty(
@@ -491,7 +497,10 @@ for (const [text, caseValue] of [
 					}
 					return judge(request, settings);
 				},
-			}).resolveGrammar(fixture.encounter),
+			}).resolveGrammar({
+				...fixture.encounter,
+				contextAvailable: false,
+			}),
 		);
 		expect(checked).toBe(true);
 		expect(traces[0]?.calls).toHaveLength(1);
@@ -547,7 +556,10 @@ for (const [text, caseValue] of [
 					}
 					return answered;
 				},
-			}).resolveGrammar(fixture.encounter),
+			}).resolveGrammar({
+				...fixture.encounter,
+				contextAvailable: false,
+			}),
 		);
 		expect(traces[0]?.calls.map((call) => call.request.route)).toEqual([
 			"de/Lexeme/NOUN/features",

@@ -36,11 +36,35 @@ export function grammarFixture(
 				}[];
 				candidates?: Record<string, string[]>;
 				lexicalStringCandidates?: Record<string, string[]>;
+				referentCells?: Record<string, Record<string, unknown>>;
 			};
+			const moreContext =
+				"decision" in output &&
+				output.decision === "MoreContextRequired";
 			return choiceAnswers(request.questions, (id) => {
 				if (overrides[id]) return overrides[id];
+				if (id === "referent") {
+					if (moreContext) return "MoreContextRequired";
+					const cells = Object.entries(state.referentCells ?? {});
+					const core = (
+						"lemma" in output ? output.lemma.coreFeatures : {}
+					) as Record<string, unknown>;
+					// A cell the expected Lemma takes, else any: code ignores the
+					// answer when the judged Core lands outside the split.
+					return (
+						cells.find(([, cell]) =>
+							Object.entries(cell).every(
+								([name, value]) => core[name] === value,
+							),
+						)?.[0] ??
+						cells[0]?.[0] ??
+						"Unresolved"
+					);
+				}
 				if (id === "support")
-					return "decision" in output ? "Unresolved" : "Supported";
+					return "decision" in output && !moreContext
+						? "Unresolved"
+						: "Supported";
 				if ("decision" in output) return "Unresolved";
 				if (id === "attachment") {
 					if (!output.articleEvidence) return "None";

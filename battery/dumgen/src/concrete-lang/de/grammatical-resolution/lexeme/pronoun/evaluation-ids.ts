@@ -1,3 +1,32 @@
+/**
+ * Pronoun forms whose cell only the referent decides (ADR 0018, #606): given
+ * the neighbouring Sentences, alone in a one-Sentence Text, and alone while
+ * more exists, where resolution may ask for the neighbours.
+ */
+export const referentContextCaseIds = [
+	"grammar-de-pron-referent-sie-acc-maria",
+	"grammar-de-pron-referent-sie-acc-kinder",
+	"grammar-de-pron-referent-sie-acc-alone",
+	"grammar-de-pron-referent-ihm-kind",
+	"grammar-de-pron-referent-sie-nom-nachbarn",
+	"grammar-de-pron-referent-sie-formal-meier",
+	"grammar-de-pron-referent-dem-plan",
+	"grammar-de-pron-referent-sie-acc-escape",
+	"grammar-de-pron-referent-ihm-escape",
+	"grammar-de-pron-referent-dem-escape",
+	"grammar-de-pron-referent-sie-in-sentence-fem",
+	"grammar-de-pron-referent-sie-in-sentence-plur",
+	"grammar-de-pron-referent-sie-nom-agreement",
+] as const;
+
+/**
+ * Cases whose Text leaves the referent open, so any cell of the ideal Lemma's
+ * case and subtype passes: a one-Sentence `Ich sehe sie.` is her or them.
+ */
+export const openReferentCaseIds: readonly string[] = [
+	"grammar-de-pron-referent-sie-acc-alone",
+];
+
 export const evaluationCaseIds = [
 	"grammar-de-pron-fixed-mir",
 	"grammar-de-pron-fixed-du",
@@ -166,4 +195,5 @@ export const evaluationCaseIds = [
 	"grammar-de-pron-dev-archaic-euer",
 	"grammar-de-pron-dev-formal-lowercase-typo",
 	"grammar-de-pron-accept-v4-foreign-he",
+	...referentContextCaseIds,
 ] as const;

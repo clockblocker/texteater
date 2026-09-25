@@ -301,8 +301,8 @@ test("the sentence-initial flag marks a target whose first member is the first R
 					realizationCoverage: "Full",
 				}),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: { id: "casing", language: "de", segments },
 					target: {
 						family: "Lexeme",
@@ -310,7 +310,8 @@ test("the sentence-initial flag marks a target whose first member is the first R
 						memberSegmentIndices: [index],
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe("er");
 		expect(traces[0]?.calls).toHaveLength(calls);
@@ -356,8 +357,8 @@ test("Open PRON population misses copy exact headwords and generate changed text
 			createDumgen({
 				...grammarFixture(expected),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: {
 						id: "open",
 						language: "de",
@@ -374,7 +375,8 @@ test("Open PRON population misses copy exact headwords and generate changed text
 						memberSegmentIndices: [0],
 					},
 				}),
-			),
+				contextAvailable: false,
+			}),
 		);
 		expect(output.surface.lemma.canonicalForm).toBe("meinesgleichen");
 		expect(

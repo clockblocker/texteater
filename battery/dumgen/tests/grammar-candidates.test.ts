@@ -44,7 +44,7 @@ test("article+noun selects the supplied headword without text generation", async
 					"An available headword must not require generation",
 				);
 			},
-		}).resolveGrammar(encounter),
+		}).resolveGrammar({ ...encounter, contextAvailable: false }),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("Aufstieg");
 	expect(output.surface.normalizedSurface).toBe("der Aufstieg");
@@ -85,7 +85,7 @@ test("an inflected noun can select a stored headword without generating text", a
 			execute: async () => {
 				throw Error("Stored headword should be selected");
 			},
-		}).resolveGrammar(inflected, [
+		}).resolveGrammar({ ...inflected, contextAvailable: false }, [
 			{
 				lemma: {
 					unitKind: "Lemma",
@@ -113,7 +113,7 @@ test("uncertain headword selection never falls through to generation", async () 
 					generated = true;
 					return { output: { canonicalForm: "Aufstieg" } };
 				},
-			}).resolveGrammar(encounter),
+			}).resolveGrammar({ ...encounter, contextAvailable: false }),
 		),
 	);
 	expect(result).toMatchObject({
@@ -153,7 +153,7 @@ test("missing headword text still generates and its trace preserves the actual r
 		createDumgen({
 			...grammarFixture(fixture),
 			onOperation: (trace) => traces.push(trace),
-		}).resolveGrammar(inflected),
+		}).resolveGrammar({ ...inflected, contextAvailable: false }),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("Aufstieg");
 	expect(

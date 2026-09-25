@@ -60,12 +60,13 @@ for (const [route, kind, id] of examples)
 			createDumgen({
 				...grammarFixture(golden.idealOutput),
 				onOperation: (trace) => traces.push(trace),
-			}).resolveGrammar(
-				validateEncounter({
+			}).resolveGrammar({
+				...validateEncounter({
 					sentence: { id, language: "de", segments },
 					target,
 				}),
-			),
+				contextAvailable: false,
+			}),
 		);
 		const expected = golden.idealOutput as {
 			lemma: { canonicalForm: string };

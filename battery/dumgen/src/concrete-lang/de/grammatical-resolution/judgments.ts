@@ -5,6 +5,7 @@ import type {
 	DumgenOptions,
 	Encounter,
 	LemmaCandidate,
+	MoreContextRequired,
 } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
@@ -31,6 +32,12 @@ import {
 	resolveNounArticle,
 } from "./noun-article.js";
 import type { GrammarOutput } from "./project.js";
+import {
+	inReferentGroup,
+	type ReferentMode,
+	referentChoice,
+	referentKeys,
+} from "./referent.js";
 import { routeGuidance } from "./route-guidance.js";
 import {
 	canonicalFormGuidance,
@@ -149,14 +156,17 @@ const partialCoveragePolicy =
 
 /**
  * Each round trip depends on every earlier one: the follow-ups ask only what
- * the earlier answers left open.
+ * the earlier answers left open. A PRON form that several cells share adds
+ * the referent question; only `MayAskForContext` lets it answer
+ * MoreContextRequired.
  */
 export function resolveGrammarJudgments(
 	options: DumgenOptions,
 	encounter: Encounter,
 	scope: OperationScope,
 	lemmaCandidates: readonly LemmaCandidate[] = [],
-): Effect.Effect<GrammarOutput, DumgenFailure> {
+	referentMode: ReferentMode = { mode: "MustAnswer" },
+): Effect.Effect<GrammarOutput | MoreContextRequired, DumgenFailure> {
 	return Effect.gen(function* () {
 		const route = `${encounter.sentence.language}/${encounter.target.family}/${encounter.target.kind}`;
 		if (
@@ -230,6 +240,19 @@ export function resolveGrammarJudgments(
 							),
 				)
 			: [];
+		const sentenceInitial =
+			encounter.target.memberSegmentIndices[0] ===
+			encounter.sentence.segments.findIndex(
+				(segment) => segment.kind === "ResolvableText",
+			);
+		const referent =
+			encounter.target.kind === "PRON"
+				? referentChoice(
+						input.members.join(" "),
+						sentenceInitial,
+						referentMode,
+					)
+				: null;
 		const questions: Questions = {
 			support: choice(
 				"Under `policy`, can the fixed target in `markedContext` support a coherent analysis on `route`?",
@@ -370,6 +393,7 @@ export function resolveGrammarJudgments(
 					Unresolved: "Government cannot be defensibly decided",
 				},
 			);
+		if (referent) questions.referent = referent.question;
 		const judge = judgmentCaller(options);
 		const state = {
 			...input,
@@ -398,6 +422,7 @@ export function resolveGrammarJudgments(
 				route: routeGuidance[encounter.target.kind] ?? "",
 			},
 			reviewedIdentities: identities.map((member) => member.lemma),
+			...referent?.state,
 		};
 		const features = yield* judge(
 			"resolveGrammar",
@@ -430,17 +455,48 @@ export function resolveGrammarJudgments(
 		}
 		try {
 			selected("support");
+			// A possessive stem (ihrer: hers, theirs) is one Lemma whatever
+			// it refers to, so it never needs the neighbours.
+			const referentAnswer = speculative("referent");
+			if (
+				referentAnswer === "MoreContextRequired" &&
+				speculative("lemma.coreFeatures.poss") !== "Yes"
+			)
+				return { decision: "MoreContextRequired" as const };
 			const core: Record<string, unknown> = {};
 			const openFeatures: string[] = [];
+			const byReferent: string[] = [];
 			for (const [path, field] of catalog)
 				if (path.startsWith("lemma.coreFeatures.") && !auxiliary) {
-					const key = path.slice("lemma.coreFeatures.".length),
-						answer = selected(path);
+					const key = path.slice("lemma.coreFeatures.".length);
+					if (
+						referent &&
+						(referentKeys as readonly string[]).includes(key)
+					) {
+						byReferent.push(key);
+						continue;
+					}
+					const answer = selected(path);
 					if (field.open) {
 						core[key] = null;
 						if (answer === "Present") openFeatures.push(key);
 					} else core[key] = featureValue(answer);
 				}
+			// The referent's cell settles the coordinates it splits once the
+			// rest of the judged Core lands in a group it splits.
+			const cell =
+				referent &&
+				referentAnswer?.startsWith("cell_") &&
+				inReferentGroup(referent, core)
+					? referent.cells[referentAnswer]
+					: undefined;
+			for (const key of byReferent) {
+				const path = `lemma.coreFeatures.${key}`;
+				if (cell) {
+					consumed.add(path);
+					core[key] = cell[key as keyof typeof cell];
+				} else core[key] = featureValue(selected(path));
+			}
 			const surface: Record<string, unknown> = {
 				spelling: selected("spelling"),
 				surfaceFeatures:
@@ -518,6 +574,15 @@ export function resolveGrammarJudgments(
 			const normalizationModes = input.members.map((_, index) =>
 				selected(`normalization_${index}`),
 			);
+			// The referent's cell settles a sentence-initial capital: formal Sie
+			// keeps it, any other cell has ordinary capitalization.
+			if (cell && sentenceInitial && normalizationModes.length === 1) {
+				const formal = cell.polite === "Form";
+				if (!formal && normalizationModes[0] === "Keep")
+					normalizationModes[0] = "LowerInitial";
+				if (formal && normalizationModes[0] === "LowerInitial")
+					normalizationModes[0] = "Keep";
+			}
 			let governedPrepositionEvidence: {
 				attested: string;
 				orthography: "Standard" | "Typo";
@@ -584,12 +649,7 @@ export function resolveGrammarJudgments(
 								core,
 								inflection: surface.inflectionalFeatures,
 								markedContext: input.markedContext,
-								sentenceInitial:
-									encounter.target.memberSegmentIndices[0] ===
-									encounter.sentence.segments.findIndex(
-										(segment) =>
-											segment.kind === "ResolvableText",
-									),
+								sentenceInitial,
 							},
 							scope,
 							[...upstream],

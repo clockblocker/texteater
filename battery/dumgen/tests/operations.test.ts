@@ -96,7 +96,7 @@ test("direct targets and classified targets share one grammar path", async () =>
 		dumgen.classifyTarget({ sentence, clickedSegmentIndex: 0 }),
 	);
 	const result = await Effect.runPromise(
-		dumgen.resolveGrammar({ sentence, target }),
+		dumgen.resolveGrammar({ sentence, target, contextAvailable: false }),
 	);
 	expect(calls.map((call) => call.stage)).toEqual([
 		"classifyTarget",
@@ -105,7 +105,13 @@ test("direct targets and classified targets share one grammar path", async () =>
 	expect(result.surface.lemma.canonicalForm).toBe("Haus");
 	expect(parseUnit(result).success).toBe(true);
 	expect(
-		await Effect.runPromise(dumgen.resolveGrammar({ sentence, target })),
+		await Effect.runPromise(
+			dumgen.resolveGrammar({
+				sentence,
+				target,
+				contextAvailable: false,
+			}),
+		),
 	).toEqual(result);
 	expect(calls[2]?.input).toEqual(calls[1]?.input);
 });
@@ -115,12 +121,15 @@ test("invalid encounters fail before execution; unsupported, unresolved and prov
 		expect(
 			await tag(
 				dumgen.resolveGrammar({
-					...encounter,
-					target: {
-						...encounter.target,
-						memberSegmentIndices: indices,
-					},
-				} as unknown as Encounter<"de">),
+					...({
+						...encounter,
+						target: {
+							...encounter.target,
+							memberSegmentIndices: indices,
+						},
+					} as unknown as Encounter<"de">),
+					contextAvailable: false,
+				}),
 			),
 		).toBe("InvalidInput");
 	expect(
@@ -141,14 +150,16 @@ test("invalid encounters fail before execution; unsupported, unresolved and prov
 					kind: "NOUN",
 					memberSegmentIndices: [0],
 				},
+				contextAvailable: false,
 			}),
 		),
 	).toBe("NotImplemented");
 	expect(
 		await tag(
-			controlled({ decision: "Unresolved" }).dumgen.resolveGrammar(
-				encounter,
-			),
+			controlled({ decision: "Unresolved" }).dumgen.resolveGrammar({
+				...encounter,
+				contextAvailable: false,
+			}),
 		),
 	).toBe("Unresolved");
 	expect(
@@ -158,12 +169,14 @@ test("invalid encounters fail before execution; unsupported, unresolved and prov
 				execute: executeOutput(async () => {
 					throw Error("offline");
 				}),
-			}).resolveGrammar(encounter),
+			}).resolveGrammar({ ...encounter, contextAvailable: false }),
 		),
 	).toBe("ProviderFailure");
-	expect(await tag(dumgen.resolveGrammar(encounter))).toBe(
-		"InvalidModelOutput",
-	);
+	expect(
+		await tag(
+			dumgen.resolveGrammar({ ...encounter, contextAvailable: false }),
+		),
+	).toBe("InvalidModelOutput");
 	expect(() =>
 		validateEncounter({
 			...encounter,

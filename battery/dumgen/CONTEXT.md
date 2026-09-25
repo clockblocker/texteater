@@ -111,6 +111,15 @@ production of a click-independent Attestation for
 an already classified Analysis Target, whether the Sentence Analysis or
 classification supplied it.
 
+**Referent Context**:
+the Sentences just before and after an Encounter's Sentence in its Text.
+Grammatical Resolution reads them only for a pronoun form that several cells
+share and that only its referent decides: accusative `sie` is her or them,
+`ihm` belongs to `er` or `es`. Given the Sentence alone while neighbours
+exist, resolution may answer More Context Required. With the neighbours, or
+with none to give, it always picks a cell.
+_Avoid_: surrounding text, paragraph context
+
 **Authored Content**:
 reviewed Lemmas, fixed Readings, Knowledge and semantic
 relation claims that Dumgen selects under its production policy.

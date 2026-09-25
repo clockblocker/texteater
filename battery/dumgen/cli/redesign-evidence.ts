@@ -345,7 +345,10 @@ async function executeManifest() {
 					);
 					const encounter = { sentence: input.sentence, target };
 					const attestation = await unwrap(
-						dumgen.resolveGrammar(encounter),
+						dumgen.resolveGrammar({
+							...encounter,
+							contextAvailable: false,
+						}),
 						context.signal,
 					);
 					if (entry.kind === "recognition")

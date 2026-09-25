@@ -9,6 +9,7 @@ export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
 	grammarSchemas["de/Lexeme/PRON"],
 	z.strictObject({ decision: z.literal("Unresolved") }),
+	z.strictObject({ decision: z.literal("MoreContextRequired") }),
 ]);
 export const corpusSource = defineLinguisticCorpus({
 	route: "grammatical-resolution/de/lexeme/pronoun",

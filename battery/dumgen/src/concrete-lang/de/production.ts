@@ -5,6 +5,7 @@ import type {
 	Dumgen,
 	DumgenOptions,
 	Encounter,
+	GrammarInput,
 	KnowledgeProduction,
 	KnowledgeRequest,
 	LemmaCandidate,
@@ -21,6 +22,7 @@ import {
 import { authoredFor, closedRoute } from "./authored-closed-sets/select.js";
 import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
 import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
+import type { ReferentMode } from "./grammatical-resolution/referent.js";
 import { produceKnowledge } from "./knowledge-production/produce.js";
 import { resolveReading } from "./reading-emoji-description/resolve.js";
 import { analyzeGermanSentence } from "./sentence-analysis/operation.js";
@@ -54,6 +56,35 @@ function supported(encounter: Encounter, stage: string): void {
 			"Production is not enabled for this Language",
 			routeOf(encounter),
 		);
+}
+/**
+ * One Sentence while more exists may ask for context; supplied context, or
+ * none to supply, must answer.
+ */
+function referentMode(input: GrammarInput): ReferentMode {
+	const { context, contextAvailable = true } = input;
+	const invalid = (message: string) =>
+		new DumgenFailure("InvalidInput", "resolveGrammar", message);
+	if (typeof contextAvailable !== "boolean")
+		throw invalid("contextAvailable is a boolean");
+	if (context === undefined)
+		return contextAvailable
+			? { mode: "MayAskForContext" }
+			: { mode: "MustAnswer" };
+	if (
+		!context ||
+		typeof context !== "object" ||
+		Object.keys(context).some(
+			(key) => key !== "before" && key !== "after",
+		) ||
+		Object.values(context).some(
+			(text) => typeof text !== "string" || !text.trim(),
+		)
+	)
+		throw invalid(
+			"context holds the non-empty Sentences before and after the Encounter's",
+		);
+	return { mode: "MustAnswer", context };
 }
 type EmojiInput = {
 	encounter: Encounter;
@@ -115,10 +146,10 @@ export function createGermanOperations(
 				) as Effect.Effect<AnalysisTarget<L>, DumgenFailure>;
 			});
 		},
-		resolveGrammar<L extends Dumling.Language>(
-			raw: Encounter<L>,
+		resolveGrammar: (<L extends Dumling.Language>(
+			raw: GrammarInput<L>,
 			lemmaCandidates: readonly LemmaCandidate<L>[] = [],
-		) {
+		) => {
 			return task(
 				"resolveGrammar",
 				{ ...raw, lemmaCandidates },
@@ -154,8 +185,14 @@ export function createGermanOperations(
 								};
 							},
 						);
+						const mode = referentMode(raw);
+						const {
+							context: _context,
+							contextAvailable: _available,
+							...bare
+						} = raw;
 						const encounter = validateEncounter(
-							raw,
+							bare,
 							"resolveGrammar",
 						);
 						supported(encounter, "resolveGrammar");
@@ -166,7 +203,9 @@ export function createGermanOperations(
 							encounter,
 							scope,
 							candidates,
+							mode,
 						);
+						if ("decision" in output) return output;
 						const normalizedSurface = normalizeGrammarSurface(
 							input,
 							output,
@@ -243,7 +282,7 @@ export function createGermanOperations(
 						);
 					}),
 			);
-		},
+		}) as Dumgen["resolveGrammar"],
 		resolveOrGenerateReadingEmojiDescription(raw: EmojiInput) {
 			return task(
 				"resolveOrGenerateReadingEmojiDescription",

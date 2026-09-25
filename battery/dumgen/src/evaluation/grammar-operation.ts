@@ -3,14 +3,21 @@ import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
 import type { LinguisticCorpus } from "../concrete-lang/de/authoring.js";
 import { grammarPromptRoutes } from "../generated/prompts.js";
-import type { DumgenOptions, LemmaCandidate, Segment } from "../types.js";
+import type {
+	DumgenOptions,
+	GrammarInput,
+	LemmaCandidate,
+	Segment,
+	SentenceContext,
+} from "../types.js";
 import { createDumgen } from "../universal/dumgen.js";
 import { validateEncounter } from "../universal/validation.js";
 
 /**
  * Retained grammar corpora describe the operation projection, never a model response.
  * A variant case input may add the stored Lemma candidates tf-demo passes; without
- * them the operation is called exactly as before.
+ * them the operation is called exactly as before. A case may also say whether
+ * the Text has neighbouring Sentences and supply them, as tf-demo does.
  */
 export function grammarOperationExperiment(
 	definition: {
@@ -50,6 +57,8 @@ export function grammarOperationExperiment(
 				markedContext: string;
 				members: string[];
 				lemmaCandidates?: readonly LemmaCandidate[];
+				context?: SentenceContext;
+				contextAvailable?: boolean;
 			};
 			const segments: Segment[] = [],
 				members: number[] = [];
@@ -98,19 +107,27 @@ export function grammarOperationExperiment(
 					options.onOperation?.(trace);
 				},
 			});
+			const grammarInput: GrammarInput = {
+				...encounter,
+				...(input.context ? { context: input.context } : {}),
+				...(input.contextAvailable === undefined
+					? {}
+					: { contextAvailable: input.contextAvailable }),
+			};
 			const result = await Effect.runPromise(
 				Effect.either(
 					input.lemmaCandidates
 						? dumgen.resolveGrammar(
-								encounter,
+								grammarInput,
 								input.lemmaCandidates,
 							)
-						: dumgen.resolveGrammar(encounter),
+						: dumgen.resolveGrammar(grammarInput),
 				),
 				{ signal },
 			);
 			if (result._tag === "Left") throw result.left;
 			const attestation = result.right;
+			if ("decision" in attestation) return attestation;
 			const {
 				lemma,
 				normalizedSurface,

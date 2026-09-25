@@ -6808,5 +6808,363 @@
 			"decision": "Unresolved"
 		},
 		"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
+	},
+	"grammar-de-pron-referent-sie-acc-maria": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"],
+			"context": {
+				"before": "Maria kommt.",
+				"after": "Sie winkt."
+			}
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Maria in the sentence before makes sie her: accusative feminine singular."
+	},
+	"grammar-de-pron-referent-sie-acc-kinder": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"],
+			"context": {
+				"before": "Die Kinder spielen.",
+				"after": "Sie lachen."
+			}
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Die Kinder in the sentence before make sie them: accusative plural."
+	},
+	"grammar-de-pron-referent-sie-acc-alone": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"],
+			"contextAvailable": false
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The whole Text is this sentence, so resolution must pick a cell. Either accusative sie is right; the evaluator accepts both."
+	},
+	"grammar-de-pron-referent-ihm-kind": {
+		"input": {
+			"markedContext": "Ich gebe <TARGET>ihm</TARGET> ein Bonbon.",
+			"members": ["ihm"],
+			"context": {
+				"before": "Das Kind weint."
+			}
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["ihm"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "ihm",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Neut"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "ihm stands for das Kind, so it is the dative of es."
+	},
+	"grammar-de-pron-referent-sie-nom-nachbarn": {
+		"input": {
+			"markedContext": "<TARGET>Sie</TARGET> kommen morgen.",
+			"members": ["Sie"],
+			"context": {
+				"before": "Die Nachbarn rufen an."
+			}
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Sentence-initial Sie stands for die Nachbarn: third person plural, not formal address."
+	},
+	"grammar-de-pron-referent-sie-formal-meier": {
+		"input": {
+			"markedContext": "Herr Meier, <TARGET>Sie</TARGET> kommen morgen?",
+			"members": ["Sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "Sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"extPos": null,
+					"foreign": null,
+					"person": "2",
+					"polite": "Form",
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The address Herr Meier and the mid-sentence capital settle formal Sie inside the sentence, so no context is needed."
+	},
+	"grammar-de-pron-referent-dem-plan": {
+		"input": {
+			"markedContext": "Ich traue <TARGET>dem</TARGET> nicht.",
+			"members": ["dem"],
+			"context": {
+				"before": "Der Plan ist riskant."
+			}
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["dem"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "dem",
+				"coreFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"extPos": null,
+					"foreign": null,
+					"person": null,
+					"polite": null,
+					"poss": null,
+					"pronType": "Dem",
+					"gender": "Masc"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Demonstrative dem stands for der Plan: dative masculine singular."
+	},
+	"grammar-de-pron-referent-sie-acc-escape": {
+		"input": {
+			"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"decision": "MoreContextRequired"
+		},
+		"explanation": "Nothing in the sentence tells her from them, and the Text goes on, so resolution asks for the neighbours."
+	},
+	"grammar-de-pron-referent-ihm-escape": {
+		"input": {
+			"markedContext": "Ich gebe <TARGET>ihm</TARGET> ein Bonbon.",
+			"members": ["ihm"]
+		},
+		"idealOutput": {
+			"decision": "MoreContextRequired"
+		},
+		"explanation": "Nothing in the sentence tells the ihm of er from the ihm of es, and the Text goes on."
+	},
+	"grammar-de-pron-referent-dem-escape": {
+		"input": {
+			"markedContext": "Ich traue <TARGET>dem</TARGET> nicht.",
+			"members": ["dem"]
+		},
+		"idealOutput": {
+			"decision": "MoreContextRequired"
+		},
+		"explanation": "Nothing in the sentence tells masculine from neuter dem, and the Text goes on."
+	},
+	"grammar-de-pron-referent-sie-in-sentence-fem": {
+		"input": {
+			"markedContext": "Maria lacht, und ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": "Fem"
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The antecedent Maria is inside the sentence, so no context is needed."
+	},
+	"grammar-de-pron-referent-sie-in-sentence-plur": {
+		"input": {
+			"markedContext": "Die Kinder lachen, und ich sehe <TARGET>sie</TARGET>.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Acc",
+					"number": "Plur",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "The antecedent die Kinder is inside the sentence, so no context is needed."
+	},
+	"grammar-de-pron-referent-sie-nom-agreement": {
+		"input": {
+			"markedContext": "Morgen kommen <TARGET>sie</TARGET> alle.",
+			"members": ["sie"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["sie"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "sie",
+				"coreFeatures": {
+					"case": "Nom",
+					"number": "Plur",
+					"extPos": null,
+					"foreign": null,
+					"person": "3",
+					"polite": null,
+					"poss": null,
+					"pronType": "Prs",
+					"gender": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Plural kommen and alle settle third person plural inside the sentence."
 	}
 }

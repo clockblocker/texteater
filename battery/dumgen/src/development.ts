@@ -13,6 +13,11 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
+import {
+	openReferentCaseIds,
+	referentContextCaseIds,
+} from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.js";
+import { evaluateOpenReferent } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluator.js";
 import { participleCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/verb/evaluation-ids.js";
 import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
@@ -47,6 +52,9 @@ const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
 	[targetRoute]: { "participle-boundary": participleBoundaryCaseIds },
 	"grammatical-resolution/de/lexeme/verb": { participles: participleCaseIds },
+	"grammatical-resolution/de/lexeme/pronoun": {
+		"referent-context": referentContextCaseIds,
+	},
 };
 const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
 	Object.entries(selections).map(([phase, ids]) => ({
@@ -127,6 +135,11 @@ export function getExperiment(id: string) {
 						typeof evaluateCombinedGermanKnowledge
 					>[0],
 				);
+			if (
+				route === "grammatical-resolution/de/lexeme/pronoun" &&
+				openReferentCaseIds.includes(args.caseId)
+			)
+				return evaluateOpenReferent(args);
 			if (
 				route === "reading-resolution/de" &&
 				meaningIsolationCaseIds.some((id) => id === args.caseId)
