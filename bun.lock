@@ -192,6 +192,7 @@
         "@types/node": "^24.13.3",
         "bun-types": "1.4.2",
         "dependency-cruiser": "^18.1.0",
+        "dumspec": "workspace:^",
         "esbuild": "^0.28.1",
         "knip": "^6.29.0",
         "prinfer": "^2.3.0",

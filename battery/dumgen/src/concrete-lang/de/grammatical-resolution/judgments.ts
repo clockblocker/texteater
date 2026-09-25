@@ -190,6 +190,15 @@ const reflexivePronouns: ReadonlySet<string> = new Set([
 const partialCoveragePolicy =
 	"Partial coverage is allowed for Idiom, DiscourseFormula, Proverb and Aphorism only when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
 
+/** The policy paragraphs, for the Rules each one cites in `rule-citations.ts`. */
+export const grammarPolicies = {
+	sharedPolicy,
+	nounPolicy,
+	verbalIdentityPolicy,
+	governmentPolicy,
+	partialCoveragePolicy,
+};
+
 /**
  * Each round trip depends on every earlier one: the follow-ups ask only what
  * the earlier answers left open. A PRON form that several cells share adds
