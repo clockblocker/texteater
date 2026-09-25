@@ -58,6 +58,15 @@ the Lemma's gender and the Surface's case, number and article.
 - \`{ kind: "Shared", article }\`: an article the noun does not own, such as the shared \`der\` of \`der Aufstieg und Abstieg\`; coverage is Partial
 - \`null\`: the noun has no article, and \`article\` is \`None\`
 
+A proper noun owns its article only if it is canonically cited with one
+(\`die Schweiz\`, \`der Rhein\`, \`der Struwwelpeter\`). Its Lemma then has the
+Core Feature \`article: Definite\`, and the article is an owned member like a
+common noun's: \`in die Schweiz\` attests \`[die, Schweiz]\`, \`im Rhein\`
+attests \`[m, Rhein]\`, and a host displays \`der Schweiz\` from the gender,
+the Surface's case and number, and the Core article. A name cited bare
+(\`Berlin\`) has \`article: null\` and no article evidence; an article it takes
+in a sentence (\`das alte Berlin\`) is its own \`DET\`.
+
 ## Example
 
 \`\`\`ts

@@ -1,5 +1,5 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as derArticle } from "../../../../attestations/de/attestation/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
+import { attestation as derArticle } from "../../../../attestations/de/attestation/Viele_vermissen_das_alte_Berlin/Viele_vermissen_[das]_alte_Berlin.ts";
 
 const document = defineLanguageOverlayPage({
 	description: "German Definite.",

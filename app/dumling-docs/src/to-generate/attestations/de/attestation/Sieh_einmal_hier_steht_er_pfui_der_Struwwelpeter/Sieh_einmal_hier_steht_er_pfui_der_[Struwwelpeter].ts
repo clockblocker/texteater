@@ -4,14 +4,22 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
+			attested: "der",
+			orthography: "Standard",
+		},
+		{
 			attested: "Struwwelpeter",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: { kind: "Owned", member: 0 },
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
+		inflectionalFeatures: {
+			case: "Nom",
+			number: "Sing",
+		},
 		language: "de",
 		normalizedSurface: "Struwwelpeter",
 		spelling: "Canonical",
@@ -25,6 +33,7 @@ const occurrenceAttestation = {
 			coreFeatures: {
 				gender: "Masc",
 				abbr: null,
+				article: "Definite",
 				foreign: null,
 			},
 		},
@@ -37,6 +46,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Sieh einmal, hier steht er, \npfui, der [Struwwelpeter]!",
 	classifierNotes:
-		"I treated Struwwelpeter as PROPN: der is a stylistic article here, but the referent is still the named character rather than a common noun.",
+		"Struwwelpeter is a name canonically cited with its article (der Struwwelpeter), so it is a PROPN with Core article Definite and owns der as its first member, like a common noun owns its article.",
 	isVerified: true,
 } as const;

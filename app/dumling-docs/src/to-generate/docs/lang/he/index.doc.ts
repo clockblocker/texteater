@@ -30,7 +30,10 @@ it. \`הבית\` is the noun \`בית\` with \`definite: Def\`, members \`[ה, �
 letters of its own: in \`לבית\` (*la-bayit*) the Fusion lists an empty \`ה\`
 component, the noun points at it with \`articleEvidence: { kind: "Hidden",
 fusion, component }\`, and its coverage is Partial. Where \`ה\` introduces a
-relative participle (\`האיש הנמצא בבית\`), it is \`SCONJ\`.
+relative participle (\`האיש הנמצא בבית\`), it is \`SCONJ\`. A proper noun
+owns \`ה\` only if it is canonically cited with it (\`הירדן\`): its Lemma has
+the Core Feature \`article: Definite\`, and its evidence follows the noun's. A
+name cited bare (\`ישראל\`) has \`article: null\`.
 
 ## Common Feature Areas
 

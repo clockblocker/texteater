@@ -58,10 +58,11 @@ An Attestation has \`unitKind: "Attestation"\`, a Surface, a non-empty ordered
 records exact \`attested\` text and \`orthography: "Standard" | "Typo" |
 "Shorthand" | "Fused"\`. A \`Fused\` member is one piece of a fused word; it
 also carries the \`fusion\` it belongs to and the index of the \`component\` it
-realizes. German, English and Hebrew noun Attestations, and Hebrew adjective
-Attestations, carry \`articleEvidence\`: an \`Owned\` article member, a
-\`Shared\` article, a \`Hidden\` Fusion component, or \`null\` when the noun has
-no article. Sentences and clicks belong to the consuming application.
+realizes. German, English and Hebrew noun and proper-noun Attestations, and
+Hebrew adjective Attestations, carry \`articleEvidence\`: an \`Owned\` article
+member, a \`Shared\` article, a \`Hidden\` Fusion component, or \`null\` when
+the noun has no article. A proper noun has article evidence only when its
+Lemma is cited with the article (Core \`article: Definite\`). Sentences and clicks belong to the consuming application.
 
 ## Validation and routing
 

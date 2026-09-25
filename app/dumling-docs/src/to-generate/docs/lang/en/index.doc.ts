@@ -27,7 +27,7 @@ English feature schemas are intentionally narrower than the abstract ontology.
 | \`VERB\` | \`phrasal\`, \`style\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\`, \`style\` | \`degree\` |
 
-English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. A noun owns its article: \`the big house\` is the Surface \`house\` with \`article: "Definite"\`, members \`[the, house]\` and \`articleEvidence: { kind: "Owned", member: 0 }\`. A noun without an article marks \`article: "None"\` and has \`articleEvidence: null\`.
+English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. A noun owns its article: \`the big house\` is the Surface \`house\` with \`article: "Definite"\`, members \`[the, house]\` and \`articleEvidence: { kind: "Owned", member: 0 }\`. A noun without an article marks \`article: "None"\` and has \`articleEvidence: null\`. A proper noun canonically cited with its article (\`the Netherlands\`) has the Core Feature \`article: "Definite"\` and owns \`the\` the same way; one cited bare (\`London\`) has \`article: null\`.
 
 Pieces split off a contracted word are syntactic words with \`Fused\` members: \`'ll\` in \`I'll\` is AUX \`will\`, \`n't\` in \`don't\` is PART \`not\`, and possessive \`'s\` is its own PART Lemma, which attaches to a whole phrase (\`the king of England's hat\`). English verb \`tense\` supports \`Past\` and \`Pres\`, and \`verbForm\` supports \`Fin\`, \`Ger\`, \`Inf\`, and \`Part\`.
 

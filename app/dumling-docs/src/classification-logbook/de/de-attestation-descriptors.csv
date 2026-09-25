@@ -132,8 +132,7 @@ Sie wurde um Geduld [gebeten].,wurde gebeten,Not Grundform,Lexeme,VERB
 "Sieh einmal, hier [steht] er, pfui, der Struwwelpeter!",steht,Not Grundform,Lexeme,VERB
 "Sieh einmal, hier steht [er], pfui, der Struwwelpeter!",er,Grundform,Lexeme,PRON
 "Sieh einmal, hier steht er, [pfui], der Struwwelpeter!",pfui,Grundform,Lexeme,INTJ
-"Sieh einmal, hier steht er, pfui, [der] Struwwelpeter!",der,Grundform,Lexeme,DET
-"Sieh einmal, hier steht er, pfui, der [Struwwelpeter]!",Struwwelpeter,Undetermined,Lexeme,PROPN
+"Sieh einmal, hier steht er, pfui, der [Struwwelpeter]!",Struwwelpeter,Grundform,Lexeme,PROPN
 "Sieh [mal] an, die Kleine von nebenan.",mal,Undetermined,Lexeme,ADV
 "[Tut mir leid], das war mein Fehler.",tut mir leid,Grundform,Phraseme,DiscourseFormula
 "Und Minz und Maunz, [die] schreien gar jämmerlich zu zweien",die,Grundform,Lexeme,PRON
@@ -151,6 +150,8 @@ Unter falschem [Namen] mietete er das Zimmer.,Namen,Not Grundform,Lexeme,NOUN
 "Verbrannt ist alles ganz und gar, das arme Kind mit Haut und [Haar];",Haar,Not Grundform,Lexeme,NOUN
 Viele [deutschsprachigen] Quellen fehlen noch.,deutschsprachigen,Not Grundform,Lexeme,ADJ
 [Viele] kamen zu spät.,viele,Grundform,Lexeme,PRON
+Viele vermissen [das] alte Berlin.,das,Grundform,Lexeme,DET
+Viele vermissen das alte [Berlin].,Berlin,Not Grundform,Lexeme,PROPN
 [Wegen] dem Regen kamen wir zu spät.,wegen,Grundform,Lexeme,ADP
 [Wer] war das?,wer,Grundform,Lexeme,PRON
 "[Wer] zuerst kommt, mahlt zuerst.",wer,Grundform,Lexeme,PRON

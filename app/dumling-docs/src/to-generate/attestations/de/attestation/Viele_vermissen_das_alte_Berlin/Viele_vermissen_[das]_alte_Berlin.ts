@@ -4,7 +4,7 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "der",
+			attested: "das",
 			orthography: "Standard",
 		},
 	],
@@ -12,18 +12,18 @@ const occurrenceAttestation = {
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "der",
+		normalizedSurface: "das",
 		spelling: "Canonical",
 		inflectionalFeatures: null,
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "der",
+			canonicalForm: "das",
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
-				case: "Nom",
-				gender: "Masc",
+				case: "Acc",
+				gender: "Neut",
 				number: "Sing",
 				definite: "Def",
 				pronType: "Art",
@@ -41,9 +41,8 @@ const occurrenceAttestation = {
 
 export const attestation = {
 	attestation: occurrenceAttestation,
-	sentenceMarkdown:
-		"Sieh einmal, hier steht er, \npfui, [der] Struwwelpeter!",
+	sentenceMarkdown: "Viele vermissen [das] alte Berlin.",
 	classifierNotes:
-		"This der is the definite article introducing Struwwelpeter, not a standalone pronoun, so it stays DET even though it precedes a name-like label.",
+		"Berlin is a name cited bare, so it owns no article: das is the definite article the phrase takes here, and it stays its own DET.",
 	isVerified: true,
 } as const;

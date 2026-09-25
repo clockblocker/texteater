@@ -17,6 +17,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,
@@ -32,6 +33,7 @@ const occurrenceAttestation = {
 			kind: "PROPN",
 			coreFeatures: {
 				abbr: "Yes",
+				article: null,
 				gender: "Masc",
 			},
 		},

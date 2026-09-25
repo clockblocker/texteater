@@ -73,6 +73,13 @@ as in \`der Aufstieg und Abstieg\` (Partial), or a \`Hidden\` Fusion component
 with no letters, such as the article in Hebrew \`בבית\` (Partial). A noun without
 an article has \`articleEvidence: null\`.
 
+A proper noun owns its article only if it is canonically cited with one:
+\`die Schweiz\`, \`der Rhein\`, \`the Netherlands\`, Hebrew \`הירדן\`. Its Lemma
+has the Core Feature \`article: Definite\`, and its members, article evidence
+and display follow the common noun's (\`in [der Schweiz]\`). A proper noun cited
+bare (\`Berlin\`) has \`article: null\`; an article it takes in a sentence
+(\`das alte Berlin\`) is its own \`DET\`.
+
 The full chain is:
 
 \`\`\`txt

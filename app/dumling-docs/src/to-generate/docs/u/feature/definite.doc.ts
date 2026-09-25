@@ -1,5 +1,5 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as derArticle } from "../../../attestations/de/attestation/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
+import { attestation as derArticle } from "../../../attestations/de/attestation/Viele_vermissen_das_alte_Berlin/Viele_vermissen_[das]_alte_Berlin.ts";
 import { attestation as bateiConstructState } from "../../../attestations/he/attestation/בתי_הספר_נסגרו_מוקדם/[בתי]_הספר_נסגרו_מוקדם.ts";
 import { attestation as habayitAttestation } from "../../../attestations/he/attestation/חזרתי_לבית/חזרתי_ל[בית].ts";
 

@@ -21,6 +21,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,
@@ -37,6 +38,7 @@ const occurrenceAttestation = {
 			coreFeatures: {
 				gender: "Fem",
 				abbr: null,
+				article: null,
 			},
 		},
 		surfaceFeatures: null,

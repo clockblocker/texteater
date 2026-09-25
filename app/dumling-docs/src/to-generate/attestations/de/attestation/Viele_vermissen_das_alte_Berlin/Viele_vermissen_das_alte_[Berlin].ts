@@ -4,7 +4,7 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "ירושלים",
+			attested: "Berlin",
 			orthography: "Standard",
 		},
 	],
@@ -12,32 +12,35 @@ const occurrenceAttestation = {
 	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
-		language: "he",
-		normalizedSurface: "ירושלים",
-		spelling: "Canonical",
-
 		inflectionalFeatures: {
+			case: "Acc",
 			number: "Sing",
 		},
+		language: "de",
+		normalizedSurface: "Berlin",
+		spelling: "Canonical",
+
 		lemma: {
 			unitKind: "Lemma",
-			language: "he",
-			canonicalForm: "ירושלים",
+			language: "de",
+			canonicalForm: "Berlin",
 			family: "Lexeme",
 			kind: "PROPN",
 			coreFeatures: {
-				gender: "Fem",
+				gender: "Neut",
 				abbr: null,
 				article: null,
+				foreign: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"he", "Lexeme", "PROPN">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "PROPN">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
-	sentenceMarkdown: "[ירושלים] יפה בלילה.",
+	sentenceMarkdown: "Viele vermissen das alte [Berlin].",
 	classifierNotes:
-		"ירושלים is a proper noun with feminine inherent gender and singular surface number.",
+		"Berlin is cited bare, so its Lemma has no article and the das before it is not its member.",
+	isVerified: true,
 } as const;

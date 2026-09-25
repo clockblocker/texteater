@@ -9,6 +9,7 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "en",
@@ -26,6 +27,7 @@ const occurrenceAttestation = {
 			kind: "PROPN",
 			coreFeatures: {
 				abbr: null,
+				article: null,
 				extPos: null,
 				style: null,
 			},
