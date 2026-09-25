@@ -34,14 +34,14 @@ describe("the corpus", () => {
 		).toEqual([]);
 	});
 
-	test("seeds both coverages, both statuses, No Target and a quotation", () => {
+	test("seeds both coverages, No Target and a quotation", () => {
 		const has = (
 			predicate: (record: (typeof records)[number]) => boolean,
 		) => expect(records.some(predicate)).toBe(true);
 		has((record) => record.coverage === "Full");
 		has((record) => record.coverage === "Partial");
+		// Seeds stay Draft until a person reviews them; the guards set Reviewed on copies.
 		has((record) => record.status === "Draft");
-		has((record) => record.status === "Reviewed");
 		has((record) => record.noTarget.length > 0);
 		has((record) => record.provenance.kind === "Quoted");
 		has((record) =>

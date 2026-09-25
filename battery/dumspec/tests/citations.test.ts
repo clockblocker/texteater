@@ -5,8 +5,8 @@ import type { Rule, SpecRecord } from "../src/types.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 
 const adrStatuses = readRepositoryAdrStatuses();
-const seed = loadSpecRecords().find((record) => record.status === "Reviewed");
-if (!seed) throw Error("Expected a Reviewed seed record");
+const seed = loadSpecRecords().find((record) => record.coverage === "Full");
+if (!seed) throw Error("Expected a Full seed record");
 
 const rule: Rule = {
 	id: "de/noun-owns-its-article",
