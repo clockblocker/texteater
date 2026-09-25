@@ -72,7 +72,7 @@
 					"kind": "VERB"
 				}
 			],
-			"explanation": "The encounter form mich resolves to the canonical Lexeme shadow sich; no component Reading is created."
+			"explanation": "The case-specific pronoun mich keeps its own Canonical Form mich in the Lexeme shadow, never sich; no component Reading is created."
 		},
 		"lexical-resolve-collocation-shadows": {
 			"input": {
