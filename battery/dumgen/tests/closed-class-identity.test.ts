@@ -21,26 +21,16 @@ const describe = (lemma: Dumling.Lemma) =>
 		.join(" ")}`;
 
 /**
- * Pillar collisions that are still to decide (system ADR 0032, #595). Each
- * line is two or more pillar Lemmas of one Kind with identical Core Features.
- * Remove a line once its Lemmas are told apart; never add one silently.
+ * The one accepted pillar collision (system ADR 0032). Standalone
+ * demonstrative deren and derer realize the same Gen.Fem.Sg and Gen.Plur
+ * cells and differ only in reference direction: derer points ahead to a
+ * relative clause (Wir gedenken derer, die geholfen haben), deren points back
+ * (Die Lösungen dort: Deren bedarf es). No UD feature marks that direction.
+ * Never add a line without such a reason.
  */
-const undecidedPillarCollisions = [
-	// wer and was share interrogative and free-relative Nom and Acc cells.
-	"was = wer: PRON case=Nom pronType=Int",
-	"was = wen: PRON case=Acc pronType=Int",
-	"was = wer: PRON case=Nom pronType=Rel",
-	"was = wen: PRON case=Acc pronType=Rel",
-	// irgendjemand repeats the jemand cells; man is a Nom.Sing indefinite.
-	"irgendjemand = jemand = man: PRON case=Nom number=Sing pronType=Ind",
-	"irgendjemanden = jemanden: PRON case=Acc number=Sing pronType=Ind",
-	"irgendjemandem = jemandem: PRON case=Dat number=Sing pronType=Ind",
-	"irgendjemandes = jemandes: PRON case=Gen number=Sing pronType=Ind",
-	// Standalone genitive deren and derer share the Fem.Sg and Plur cells.
+const acceptedPillarCollisions = [
 	"deren = derer: PRON case=Gen gender=Fem number=Sing pronType=Dem",
 	"deren = derer: PRON case=Gen number=Plur pronType=Dem",
-	"deren = derer: PRON case=Gen gender=Fem number=Sing pronType=Rel",
-	"deren = derer: PRON case=Gen number=Plur pronType=Rel",
 ];
 
 test("no two per-cell Lemmas of one Kind share all Core Features", () => {
@@ -56,7 +46,7 @@ test("no two per-cell Lemmas of one Kind share all Core Features", () => {
 	const collisions = [...groups]
 		.filter(([, forms]) => forms.size > 1)
 		.map(([key, forms]) => `${[...forms].sort().join(" = ")}: ${key}`);
-	expect(collisions.sort()).toEqual([...undecidedPillarCollisions].sort());
+	expect(collisions.sort()).toEqual([...acceptedPillarCollisions].sort());
 });
 
 test("a stem Lemma leaves its cell to the Surface and cites a Grundform", () => {
@@ -160,4 +150,106 @@ test("pillar navigation never lands on a stem Lemma", () => {
 				reading.lemma.canonicalForm,
 			).toBe(true);
 	}
+});
+
+test("jemand varies case only among its own cells", () => {
+	const jemand = lemmaOf("PRON", "jemand");
+	expect(
+		selectGrammaticalAlternatives({ source: jemand, vary: ["case"] })
+			.map(({ lemma }) => lemma.canonicalForm)
+			.sort(),
+	).toEqual(["jemandem", "jemanden", "jemandes"]);
+	// man leaves case unmarked, so varying case neither reaches nor leaves it.
+	const man = lemmaOf("PRON", "man");
+	expect(man.coreFeatures).toMatchObject({ case: null, number: "Sing" });
+	expect(
+		selectGrammaticalAlternatives({ source: man, vary: ["case"] }),
+	).toEqual([]);
+	// irgendjemand is a stem: its forms are its own Surfaces.
+	const irgendjemand = lemmaOf("PRON", "irgendjemand");
+	expect(isParadigmCell(irgendjemand)).toBe(false);
+	expect(
+		selectFormAlternatives({
+			source: irgendjemand,
+			cell: { case: "Nom", number: "Sing", gender: null },
+			vary: ["case"],
+		})
+			.map(({ spelled, cell }) => `${spelled}/${cell.case}`)
+			.sort(),
+	).toEqual([
+		"irgendjemand/Acc",
+		"irgendjemand/Dat",
+		"irgendjemandem/Dat",
+		"irgendjemanden/Acc",
+		"irgendjemandes/Gen",
+		"irgendjemands/Gen",
+	]);
+});
+
+test("wer is masculine and was neuter; wessen belongs to both", () => {
+	const pronouns = closedClass
+		.map(({ lemma }) => lemma)
+		.filter(
+			(lemma): lemma is Dumling.Lemma<"de", "Lexeme", "PRON"> =>
+				lemma.kind === "PRON" &&
+				["wer", "wen", "wem", "wessen", "was"].includes(
+					lemma.canonicalForm,
+				),
+		);
+	const cells = (pronType: string) =>
+		pronouns
+			.filter(
+				(lemma) =>
+					lemma.coreFeatures.pronType === pronType &&
+					lemma.coreFeatures.extPos === null,
+			)
+			.map((lemma) => describe(lemma).replace(/^PRON /, ""))
+			.sort();
+	for (const pronType of ["Int", "Rel"])
+		expect(cells(pronType)).toEqual(
+			[
+				"case=Acc gender=Masc",
+				"case=Acc gender=Neut",
+				"case=Dat gender=Masc",
+				"case=Gen gender=Masc",
+				"case=Gen gender=Neut",
+				"case=Nom gender=Masc",
+				"case=Nom gender=Neut",
+			].map((key) => `${key} pronType=${pronType}`),
+		);
+	const wer = required(
+		pronouns.find(
+			(lemma) =>
+				lemma.canonicalForm === "wer" &&
+				lemma.coreFeatures.pronType === "Int",
+		),
+		"Expected interrogative wer",
+	);
+	expect(
+		selectGrammaticalAlternatives({ source: wer, vary: ["gender"] }).map(
+			({ lemma }) => lemma.canonicalForm,
+		),
+	).toEqual(["was"]);
+});
+
+test("relative derer is a Variant of relative deren, not its own Lemma", () => {
+	const derer = authoredRealizations.filter(
+		({ spelled }) => spelled === "derer",
+	);
+	expect(
+		derer
+			.map(({ member }) => {
+				const core = member.lemma.coreFeatures as Record<
+					string,
+					unknown
+				>;
+				return `${member.lemma.canonicalForm} ${String(core.pronType)} ${String(core.number)}`;
+			})
+			.sort(),
+	).toEqual([
+		"deren Rel Plur",
+		"deren Rel Sing",
+		"derer Dem Plur",
+		"derer Dem Sing",
+	]);
 });

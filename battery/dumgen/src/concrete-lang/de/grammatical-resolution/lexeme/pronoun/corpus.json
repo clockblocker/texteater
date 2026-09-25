@@ -1040,7 +1040,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Masc",
 					"referenceNumber": null
 				}
 			},
@@ -1073,7 +1073,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Masc",
 					"referenceNumber": null
 				}
 			},
@@ -1106,7 +1106,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Masc",
 					"referenceNumber": null
 				}
 			},
@@ -1139,13 +1139,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Neut",
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+		"explanation": "Wessen asks for a thing here, so it is the neuter genitive of was, not the masculine genitive of wer."
 	},
 	"grammar-de-pron-fixed-jemand-jemand": {
 		"input": {
@@ -6384,7 +6384,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Masc",
 					"referenceNumber": null
 				}
 			},
@@ -6631,7 +6631,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Int",
-					"gender": null,
+					"gender": "Masc",
 					"referenceNumber": null
 				}
 			},
@@ -6649,13 +6649,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "irgendjemandem",
+				"canonicalForm": "irgendjemand",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,

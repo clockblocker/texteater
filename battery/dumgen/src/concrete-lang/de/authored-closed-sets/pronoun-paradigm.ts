@@ -164,14 +164,22 @@ export function pronounStem(
 		readonly uninflected?: readonly string[];
 	} = {},
 ): ReviewedPronoun {
-	const spellings: AuthoredSpelling[] = [
+	return pronounStemOf(options.citation ?? citationForm(table), description, [
 		...tableSpellings(table),
 		...(options.uninflected ?? []).map((spelled) => ({ spelled })),
-	];
+	]);
+}
+
+/** A stem pronoun whose spellings are listed with their cells, for a genderless paradigm such as irgendjemand. */
+export function pronounStemOf(
+	citation: PronounForm,
+	description: PronounDescription,
+	spellings: readonly AuthoredSpelling[],
+): ReviewedPronoun {
 	return stemMember({
 		kind: "PRON",
 		coreFeatures: { ...emptyCore, ...description.core },
-		citation: options.citation ?? citationForm(table),
+		citation,
 		description,
 		spellings,
 	});

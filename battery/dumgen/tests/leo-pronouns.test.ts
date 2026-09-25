@@ -116,25 +116,31 @@ const examples: readonly {
 		text: "wer",
 		canonical: "wer",
 		context: "Wer helfen will, kommt mit.",
-		features: { pronType: "Rel", case: "Nom" },
+		features: { pronType: "Rel", case: "Nom", gender: "Masc" },
 	},
 	{
 		text: "was",
 		canonical: "was",
 		context: "Nimm, was du brauchst.",
-		features: { pronType: "Rel", case: "Acc" },
+		features: { pronType: "Rel", case: "Acc", gender: "Neut" },
 	},
 	{
 		text: "was",
 		canonical: "was",
 		context: "Was brauchst du?",
-		features: { pronType: "Int", case: "Acc" },
+		features: { pronType: "Int", case: "Acc", gender: "Neut" },
 	},
 	{
 		text: "derer",
 		canonical: "derer",
 		context: "Die Namen derer, die warten, fehlen.",
 		features: { pronType: "Dem", case: "Gen", number: "Plur" },
+	},
+	{
+		text: "derer",
+		canonical: "deren",
+		context: "Die Opfer, derer wir gedenken, sind unvergessen.",
+		features: { pronType: "Rel", case: "Gen", number: "Plur" },
 	},
 	{
 		text: "dessen",
@@ -164,7 +170,12 @@ const examples: readonly {
 		text: "wessen",
 		canonical: "wessen",
 		context: "Wessen Kinder kennst du?",
-		features: { pronType: "Int", extPos: "DET", case: "Gen" },
+		features: {
+			pronType: "Int",
+			extPos: "DET",
+			case: "Gen",
+			gender: "Masc",
+		},
 	},
 	{
 		text: "manche",
@@ -221,15 +232,17 @@ const examples: readonly {
 	},
 	{
 		text: "irgendjemand",
-		canonical: "irgendjemandem",
+		canonical: "irgendjemand",
 		context: "Ich muss mit irgendjemand sprechen.",
-		features: { pronType: "Ind", case: "Dat", number: "Sing" },
+		features: { pronType: "Ind" },
+		cell: { case: "Dat", number: "Sing" },
+		variant: true,
 	},
 	{
 		text: "man",
 		canonical: "man",
 		context: "Hier kann man warten.",
-		features: { pronType: "Ind", case: "Nom", number: "Sing" },
+		features: { pronType: "Ind", number: "Sing" },
 	},
 	{
 		text: "etwas",
@@ -451,7 +464,7 @@ test("unlicensed cells and shortened genitives are absent", () => {
 			{ pronType: "Rel", case: "Gen", number: "Plur", extPos: "DET" },
 		],
 		["was", { pronType: "Int", case: "Dat" }],
-		["man", { pronType: "Ind", case: "Dat", number: "Sing" }],
+		["man", { pronType: "Ind", case: "Nom", number: "Sing" }],
 		[
 			"eins",
 			{ pronType: "Ind", case: "Gen", number: "Sing", gender: "Neut" },

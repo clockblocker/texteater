@@ -63,3 +63,21 @@ never through semantic relation claims.
   cell. English PRON has no Surface inflection.
 
 Amended on 2026-09-25 to confine per-cell identity to pillars.
+
+Amended on 2026-09-25 to settle the pillar collisions (#595):
+
+- `wer` takes masculine agreement and `was` neuter (*Wer hat seinen Schirm
+  vergessen?*, *Was ist es?*), so their Int and Rel cells mark gender Masc and
+  Neut. Genitive `wessen` is two Lemmas, Masc and Neut, like `uns`/Acc and
+  `uns`/Dat. Attributive `wessen` names a possessor person and is Masc.
+- `irgendjemand` is a stem. `man` has one form of its own and is an invariant
+  Lemma: case unmarked, number Sing.
+- Relative `derer` is nonstandard (Duden prescribes `deren`) and is a Variant
+  spelling of relative `deren`.
+- Standalone demonstrative `deren` and `derer` are the one accepted collision.
+  They realize the same cells and differ in reference direction: `derer` points
+  ahead to a relative clause (*Wir gedenken derer, die geholfen haben*),
+  `deren` points back. No UD feature marks that direction.
+- Grammatical navigation reaches a cell only when both ends mark every varied
+  feature; a plural cell's unmarked gender counts as marked. Varying case from
+  `jemand` never reaches `man`.

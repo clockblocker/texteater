@@ -143,6 +143,21 @@ const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 	niemanden: ["niemand"],
 	niemandem: ["niemand"],
 };
+/**
+ * Licensed alternate spellings of one pronoun Lemma rather than of every Lemma
+ * spelled alike. Relative derer (die Opfer, derer wir gedenken) is nonstandard;
+ * Duden prescribes deren, so it is a Variant of standalone relative deren.
+ */
+function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+	if (
+		lemma.canonicalForm === "deren" &&
+		core.pronType === "Rel" &&
+		core.extPos === null
+	)
+		return ["derer"];
+	return pronounAliases[lemma.canonicalForm] ?? [];
+}
 export const authoredRealizations: readonly AuthoredRealization[] =
 	authoredMembers.flatMap((member) => {
 		const { lemma } = member;
@@ -157,7 +172,7 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 				? (determinerAliases[lemma.canonicalForm] ?? [])
 				: lemma.kind === "AUX"
 					? (auxiliaryForms[lemma.canonicalForm] ?? [])
-					: (pronounAliases[lemma.canonicalForm] ?? []);
+					: pronounAliasesOf(lemma);
 		const reviewed = (
 			lemma.kind === "DET" ? reviewedDeterminers : reviewedPronouns
 		).find((entry) => entry.member === member);

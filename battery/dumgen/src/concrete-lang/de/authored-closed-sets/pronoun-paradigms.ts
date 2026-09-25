@@ -6,9 +6,11 @@ import {
 	pronounMember,
 	pronounParadigm,
 	pronounStem,
+	pronounStemOf,
 	type ReviewedPronoun,
 	strongPronoun,
 } from "./pronoun-paradigm.js";
+import type { AuthoredSpelling, SurfaceCell } from "./stem-lemma.js";
 
 type Core = Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"];
 const absent = [null, null, null, null] as const;
@@ -157,26 +159,47 @@ for (const pronType of ["Int", "Rel"] as const) {
 	);
 }
 
-// wer/was do not distinguish reference gender/number. Keep the established null
-// coordinates of interrogative wer; do not duplicate shared wessen by referent type.
+// wer takes masculine agreement and was neuter (Wer hat seinen Schirm
+// vergessen? Was ist es?), so gender tells their cells apart; neither marks
+// number. The shared genitive wessen is two Lemmas, Masc and Neut, like
+// uns/Acc and uns/Dat. Interrogative wer/wen/wem/wessen are member files.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-wer-was.xml?lang=de
 for (const pronType of ["Int", "Rel"] as const) {
-	const meaning = description(
+	const thing = description(
 		pronType,
 		pronType === "Int" ? "❓" : "🔗",
 		pronType === "Int"
 			? "Fragt nach einer Sache, einem Sachverhalt oder einer Handlung."
-			: "Bezeichnet in einem freien Relativsatz die gemeinte Person oder Sache.",
-		[pronType === "Int" ? "what" : "whoever; what"],
-		[pronType === "Int" ? "что" : "кто; что"],
+			: "Bezeichnet in einem freien Relativsatz die gemeinte Sache oder den Sachverhalt.",
+		[pronType === "Int" ? "what" : "whatever; what"],
+		[pronType === "Int" ? "что" : "что; то, что"],
 	);
 	for (const grammaticalCase of ["Nom", "Acc"] as const)
 		reviewed.push(
-			pronounMember(form("was", "vas"), meaning, {
+			pronounMember(form("was", "vas"), thing, {
 				case: grammaticalCase,
+				gender: "Neut",
 			}),
 		);
-	if (pronType === "Rel")
+	reviewed.push(
+		pronounMember(
+			form("wessen", "ˈvɛsən"),
+			{
+				...thing,
+				en: [pronType === "Int" ? "of what" : "of whatever; of what"],
+				ru: [pronType === "Int" ? "чего" : "чего; того, чего"],
+			},
+			{ case: "Gen", gender: "Neut" },
+		),
+	);
+	if (pronType === "Rel") {
+		const person = description(
+			pronType,
+			"🔗",
+			"Bezeichnet in einem freien Relativsatz die gemeinte Person.",
+			["whoever"],
+			["кто; тот, кто"],
+		);
 		for (const [text, ipa, grammaticalCase] of [
 			["wer", "veːɐ̯", "Nom"],
 			["wen", "veːn", "Acc"],
@@ -184,66 +207,74 @@ for (const pronType of ["Int", "Rel"] as const) {
 			["wessen", "ˈvɛsən", "Gen"],
 		] as const)
 			reviewed.push(
-				pronounMember(form(text, ipa), meaning, {
-					case: grammaticalCase,
-				}),
+				pronounMember(
+					form(text, ipa),
+					grammaticalCase === "Gen"
+						? {
+								...person,
+								en: ["whose; of whoever"],
+								ru: ["чей; того, кого"],
+							}
+						: person,
+					{ case: grammaticalCase, gender: "Masc" },
+				),
 			);
-	// Attributive genitives retain the pronoun's own Gen, not the following noun's case.
+	}
+	// Attributive wessen is the genitive of wer: it asks for or names a
+	// possessor person. It keeps the pronoun's own Gen, not the noun's case.
 	reviewed.push(
 		pronounMember(
 			form("wessen", "ˈvɛsən"),
 			{
-				...meaning,
+				...thing,
 				core: { pronType, extPos: "DET" },
 				definition:
-					"Bezeichnet fragend oder relativisch die Person oder Sache, der das folgende Nomen zugeordnet ist.",
+					"Bezeichnet fragend oder relativisch die Person, der das folgende Nomen zugeordnet ist.",
 				en: ["whose"],
 				ru: ["чей"],
 			},
-			{ case: "Gen" },
+			{ case: "Gen", gender: "Masc" },
 		),
 	);
 }
 
-// deren/derer restrictions are contextual: only deren is attributive; forward
-// demonstrative reference uses derer. Bare der is not a genitive PRON form.
+// Only deren is attributive. Standalone demonstrative derer points ahead to a
+// relative clause (Wir gedenken derer, die geholfen haben) and deren points
+// back, so both stay Lemmas of the same cells. Relative derer is nonstandard
+// (Duden prescribes deren) and is a Variant spelling of relative deren
+// (realizations.ts). Bare der is not a genitive PRON form.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Demonstr/Pron-der-die-das.html?lang=de
-for (const pronType of ["Dem", "Rel"] as const) {
-	const meaning = description(
-		pronType,
-		pronType === "Dem" ? "👉" : "🔗",
-		"Genitivischer Verweis auf eine im Kontext bestimmte Person oder Gruppe.",
-		["of that one; of those"],
-		["того; тех"],
-	);
-	for (const [gender, number] of [
-		["Fem", "Sing"],
-		[null, "Plur"],
-	] as const) {
-		reviewed.push(
-			pronounMember(
-				form("derer", "ˈdeːʁɐ"),
-				{
-					...meaning,
-					definition: `${meaning.definition} Steht selbstständig; demonstrativ ist der feminine Singular unüblich.`,
-				},
-				{ case: "Gen", gender, number },
+for (const [gender, number] of [
+	["Fem", "Sing"],
+	[null, "Plur"],
+] as const)
+	reviewed.push(
+		pronounMember(
+			form("derer", "ˈdeːʁɐ"),
+			description(
+				"Dem",
+				"👉",
+				"Genitivischer Verweis auf eine im Kontext bestimmte Person oder Gruppe. Steht selbstständig; der feminine Singular ist unüblich.",
+				["of that one; of those"],
+				["того; тех"],
 			),
-		);
-	}
+			{ case: "Gen", gender, number },
+		),
+	);
+for (const pronType of ["Dem", "Rel"] as const)
 	for (const [text, ipa, gender, number] of [
 		["dessen", "ˈdɛsən", "Masc", "Sing"],
 		["dessen", "ˈdɛsən", "Neut", "Sing"],
 		["deren", "ˈdeːʁən", "Fem", "Sing"],
 		["deren", "ˈdeːʁən", null, "Plur"],
-	] as const) {
+	] as const)
 		reviewed.push(
 			pronounMember(
 				form(text, ipa),
 				{
-					...meaning,
 					core: { pronType, extPos: "DET" },
+					emoji: pronType === "Dem" ? "👉" : "🔗",
 					definition:
 						"Ordnet das folgende Nomen dem Bezugswort des genitivischen Pronomens zu.",
 					en: ["whose; of whom; of which"],
@@ -252,8 +283,6 @@ for (const pronType of ["Dem", "Rel"] as const) {
 				{ case: "Gen", gender, number },
 			),
 		);
-	}
-}
 
 // Indefinite is not total: several and some are partial quantities.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-manch3.html?lang=de
@@ -561,7 +590,8 @@ for (const [stem, ipa] of [
 	);
 }
 
-// Missing genitives and the full irgendjemand series; uninflected Acc/Dat remain variants.
+// jemand and niemand are pillars: their Nom/Acc/Dat cells are member files and
+// their genitives are added here; uninflected Acc/Dat remain variants.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jemand3.html?lang=de
 for (const [stem, ipa, pronType, definition, en, ru] of [
 	[
@@ -580,50 +610,55 @@ for (const [stem, ipa, pronType, definition, en, ru] of [
 		"nobody",
 		"никто",
 	],
-	[
-		"irgendjemand",
-		"ˈɪʁɡəntˌjeːmant",
-		"Ind",
-		"Bezeichnet eine beliebige, nicht näher bestimmte Person.",
-		"anyone; someone",
-		"кто-нибудь",
-	],
-] as const) {
-	const meaning = description(
-		pronType,
-		pronType === "Neg" ? "🚫" : "👤",
-		definition,
-		[en],
-		[ru],
-	);
+] as const)
 	reviewed.push(
 		pronounMember(
 			form(`${stem}es`, `${ipa.slice(0, -1)}dəs`, `${stem}s`),
-			meaning,
+			description(
+				pronType,
+				pronType === "Neg" ? "🚫" : "👤",
+				definition,
+				[en],
+				[ru],
+			),
 			{ case: "Gen", number: "Sing" },
 		),
 	);
-	if (stem === "irgendjemand")
-		for (const [ending, grammaticalCase] of [
-			["", "Nom"],
-			["en", "Acc"],
-			["em", "Dat"],
-		] as const)
-			reviewed.push(
-				pronounMember(
-					form(
-						stem + ending,
-						ending
-							? `${ipa.slice(0, -1)}d${ending === "en" ? "ən" : "əm"}`
-							: ipa,
-						...(ending ? [stem] : []),
-					),
-					meaning,
-					{ case: grammaticalCase, number: "Sing" },
-				),
-			);
+// irgendjemand is jemand with irgend- in front and fully predictable forms, so
+// it is a stem: one Lemma whose Surfaces mark the cell (system ADR 0032).
+{
+	const cell = (grammaticalCase: SurfaceCell["case"]): SurfaceCell => ({
+		case: grammaticalCase,
+		number: "Sing",
+		gender: null,
+	});
+	const spellings: AuthoredSpelling[] = [
+		{ spelled: "irgendjemand", cell: cell("Nom") },
+		{ spelled: "irgendjemanden", cell: cell("Acc") },
+		{ spelled: "irgendjemand", cell: cell("Acc") },
+		{ spelled: "irgendjemandem", cell: cell("Dat") },
+		{ spelled: "irgendjemand", cell: cell("Dat") },
+		{ spelled: "irgendjemandes", cell: cell("Gen") },
+		{ spelled: "irgendjemands", cell: cell("Gen") },
+	];
+	const meaning = description(
+		"Ind",
+		"👤",
+		"Bezeichnet eine beliebige, nicht näher bestimmte Person.",
+		["anyone; someone"],
+		["кто-нибудь"],
+	);
+	reviewed.push(
+		pronounStemOf(
+			form("irgendjemand", "ˈɪʁɡəntˌjeːmant"),
+			meaning,
+			spellings,
+		),
+	);
 }
-// man has only Nom/Sing; einer supplies its oblique substitutes, not aliases of man.
+// man has one form of its own; its oblique cases are borrowed from einer
+// (einen, einem), so it is an invariant Lemma with case unmarked (ADR 0018).
+// It always takes singular agreement.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-man.html?lang=de
 reviewed.push(
 	pronounMember(
@@ -635,7 +670,7 @@ reviewed.push(
 			["one; people; you"],
 			["люди; неопределённо-личное местоимение"],
 		),
-		{ case: "Nom", number: "Sing" },
+		{ number: "Sing" },
 	),
 );
 // Invariant expressions keep unmarked coordinates, per ADR 0018.

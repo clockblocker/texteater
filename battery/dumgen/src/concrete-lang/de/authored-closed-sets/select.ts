@@ -78,11 +78,24 @@ function reviewedSource(source: NavigableLemma) {
 }
 
 /**
+ * Whether a cell marks a coordinate. Plural agreement has no gender, so a
+ * plural cell's unmarked gender still counts as its gender.
+ */
+function marks(core: Readonly<Record<string, unknown>>, key: string): boolean {
+	return (
+		(core[key] ?? null) !== null ||
+		(key === "gender" && core.number === "Plur")
+	);
+}
+
+/**
  * Other Paradigm Cells of a reviewed pillar PRON or DET: cells of the same
  * Kind that differ only in the varied Core Features. Preserves every other
  * Core Feature, compares null literally, and returns only reviewed
- * alternatives. A stem Lemma (dieser, mein) has no other cells, so it returns
- * none; its forms are its own Surfaces (selectFormAlternatives).
+ * alternatives. Both ends must mark every varied feature, so an invariant
+ * member with unmarked case (man) is never reached by varying case, and
+ * reaches nothing that way. A stem Lemma (dieser, mein) has no other cells,
+ * so it returns none; its forms are its own Surfaces (selectFormAlternatives).
  */
 export function selectGrammaticalAlternatives(input: {
 	readonly source: NavigableLemma;
@@ -97,7 +110,13 @@ export function selectGrammaticalAlternatives(input: {
 			"grammatical-navigation",
 			"Unknown feature coordinate",
 		);
-	if (!isParadigmCell(input.source)) return [];
+	const sourceCore: Readonly<Record<string, unknown>> =
+		input.source.coreFeatures;
+	if (
+		!isParadigmCell(input.source) ||
+		input.vary.some((key) => !marks(sourceCore, key))
+	)
+		return [];
 	const varied = new Set<string>(input.vary);
 	return authoredMembers
 		.filter(
@@ -105,6 +124,9 @@ export function selectGrammaticalAlternatives(input: {
 				member.lemma.kind === input.source.kind &&
 				isParadigmCell(member.lemma) &&
 				!sameValue(member.lemma, input.source) &&
+				input.vary.every((key) =>
+					marks(member.lemma.coreFeatures, key),
+				) &&
 				Object.entries(input.source.coreFeatures).every(
 					([key, value]) =>
 						varied.has(key) ||

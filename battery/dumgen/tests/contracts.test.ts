@@ -27,12 +27,13 @@ const reviewedCases = [
 	// Possessives are stems: one Lemma whose Surfaces mark the cell.
 	["fixed-sein-masc", "seiner", null, "Prs", null, "Masc"],
 	["fixed-sein-neut", "seiner", null, "Prs", null, "Neut"],
-	["fixed-wer", "wer", "Nom", "Int", null, null],
-	["fixed-wen", "wen", "Acc", "Int", null, null],
-	["fixed-wem", "wem", "Dat", "Int", null, null],
-	["fixed-wessen", "wessen", "Gen", "Int", null, null],
-	["dev-interrogative-wer-nom", "wer", "Nom", "Int", null, null],
-	["accept-v4-interrogative-wem-dat", "wem", "Dat", "Int", null, null],
+	["fixed-wer", "wer", "Nom", "Int", "Masc", null],
+	["fixed-wen", "wen", "Acc", "Int", "Masc", null],
+	["fixed-wem", "wem", "Dat", "Int", "Masc", null],
+	// wer is masculine and was neuter; this wessen asks for a thing.
+	["fixed-wessen", "wessen", "Gen", "Int", "Neut", null],
+	["dev-interrogative-wer-nom", "wer", "Nom", "Int", "Masc", null],
+	["accept-v4-interrogative-wem-dat", "wem", "Dat", "Int", "Masc", null],
 ] as const;
 
 test("pronoun grammar answers hand off to the exact reviewed Reading without generation", async () => {

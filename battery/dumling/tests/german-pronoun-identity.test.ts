@@ -108,6 +108,25 @@ test("unmarked and inapplicable features have explicit behavior", () => {
 	);
 	accepts(lemma("jemand", { pronType: "Ind", case: "Nom" }), true);
 });
+test("wer and was mark the gender they agree with (ADR 0018, 0032)", () => {
+	for (const pronType of ["Int", "Rel"]) {
+		accepts(lemma("wer", { pronType, case: "Nom", gender: "Masc" }), true);
+		accepts(lemma("was", { pronType, case: "Nom", gender: "Neut" }), true);
+		accepts(
+			lemma("wessen", {
+				pronType,
+				extPos: "DET",
+				case: "Gen",
+				gender: "Masc",
+			}),
+			true,
+		);
+	}
+	accepts(
+		lemma("wer", { pronType: "Int", number: "Plur", gender: "Masc" }),
+		false,
+	);
+});
 test("same spelling preserves Case and subtype identity", () => {
 	const acc = lemma("uns", {
 		pronType: "Prs",

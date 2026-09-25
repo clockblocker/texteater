@@ -16,7 +16,7 @@ const lemma = {
 		referenceNumber: null,
 		case: "Dat",
 		number: null,
-		gender: null,
+		gender: "Masc",
 		"gender[psor]": null,
 	},
 	unitKind: "Lemma",

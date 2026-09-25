@@ -16,7 +16,7 @@ const lemma = {
 		referenceNumber: null,
 		case: "Gen",
 		number: null,
-		gender: null,
+		gender: "Masc",
 		"gender[psor]": null,
 	},
 	unitKind: "Lemma",
@@ -28,7 +28,7 @@ export const member = defineAuthoredMember({
 		definition:
 			"Das Interrogativpronomen „wessen“ fragt nach einer Person in der durch seine Form ausgedrückten Kasusrolle.",
 		transcription: "ˈvɛsn̩",
-		translations: { en: ["whose"], ru: ["чей"] },
+		translations: { en: ["whose", "of whom"], ru: ["чей", "кого"] },
 	},
 	coverage: {
 		transcription: "Authored",

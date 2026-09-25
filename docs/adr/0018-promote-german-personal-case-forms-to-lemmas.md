@@ -35,3 +35,8 @@ Amended by [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
 on 2026-09-25: per-cell identity holds for pillars only, now including the
 German articles and English PRON. Stem words such as `dieser`, `keiner` and the
 possessives are one Lemma whose Surfaces carry case, number and gender.
+
+Amended by ADR 0032 on 2026-09-25: Int and Rel `wer` and `was` mark gender,
+Masc and Neut. This is the agreement each form takes, not a guess about a
+person's sex, and it extends marked gender to these two paradigms only.
+Dumling's gender check still binds only personal pronouns.
