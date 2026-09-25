@@ -48,6 +48,13 @@ test("the check reports stale pages and routes without a page", () => {
 	]);
 });
 
+test("no page is title-only", () => {
+	const titleOnly = docs.filter(
+		(doc) => doc.body.replace(/^# .*\n/u, "").trim().length === 0,
+	);
+	expect(titleOnly.map((doc) => doc.routeId)).toEqual([]);
+});
+
 test("a route page lists every record target that attests its route", () => {
 	const linked = new Set(
 		docs
