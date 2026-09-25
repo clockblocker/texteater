@@ -439,7 +439,14 @@ export function resolveGrammarJudgments(
 				},
 			),
 		};
-		if (catalog.has("surface.inflectionalFeatures"))
+		// A bag of one feature is that feature (ADV degree): its Unmarked is
+		// the null bag, so a separate Marked/Citation question would repeat it.
+		const inflectionFeatures = [...catalog.keys()].filter((path) =>
+			path.startsWith("surface.inflectionalFeatures."),
+		);
+		const bagFeature =
+			inflectionFeatures.length === 1 ? inflectionFeatures[0] : undefined;
+		if (catalog.has("surface.inflectionalFeatures") && !bagFeature)
 			questions.inflection = inflectionQuestion(encounter.target.kind);
 		for (const [path, field] of catalog) {
 			if (
@@ -859,6 +866,16 @@ export function resolveGrammarJudgments(
 						bag.voice = bag.passive === null ? null : "Pass";
 					surface.inflectionalFeatures = bag;
 				}
+			} else if (bagFeature) {
+				const value = featureValue(selected(bagFeature));
+				surface.inflectionalFeatures =
+					value === null
+						? null
+						: {
+								[bagFeature.slice(
+									"surface.inflectionalFeatures.".length,
+								)]: value,
+							};
 			}
 			const memberOrthographies: MemberOrthography[] = input.members.map(
 				(_, index) =>

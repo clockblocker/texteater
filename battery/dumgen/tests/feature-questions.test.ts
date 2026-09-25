@@ -20,7 +20,14 @@ test("every enabled German grammatical feature has explicit meanings for all sch
 		if (!kind || family === "Morpheme" || kind === "PUNCT") continue;
 		if (family === "Lexeme") lexemes.add(kind);
 		const fields = grammarFeatureFields(route);
-		if (fields.has("surface.inflectionalFeatures")) {
+		// A bag of one feature (ADV degree) is asked through that feature.
+		const bagFeatures = [...fields.keys()].filter((path) =>
+			path.startsWith("surface.inflectionalFeatures."),
+		);
+		if (
+			fields.has("surface.inflectionalFeatures") &&
+			bagFeatures.length > 1
+		) {
 			const question = inflectionQuestion(kind);
 			expect(question.instructions).toContain("`markedContext`");
 			expect(Object.keys(question.criteria)).toEqual([

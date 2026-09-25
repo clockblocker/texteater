@@ -548,10 +548,6 @@ const inflectionPolicies: Readonly<
 		marked: "Contextual adjective with degree, including predicative/adverbial use; attributive use additionally bears agreement",
 		citation: "Dictionary-only adjective mention",
 	},
-	ADV: {
-		marked: "Comparative/superlative adverb or explicitly established positive comparison paradigm",
-		citation: "Ordinary invariant adverb or dictionary mention",
-	},
 	DET: {
 		marked: "A stem determiner in context (diesem, meinen, keine, welches, einigen, vielen) with its Case, Number and Gender, or comparison degree (weniger, meisten) or possessor features",
 		citation:

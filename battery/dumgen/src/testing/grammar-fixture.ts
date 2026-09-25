@@ -205,6 +205,16 @@ export function grammarFixture(
 								) ?? -1);
 					return index === -1 ? "Unresolved" : `text_${index}`;
 				}
+				// A null bag leaves an inflectional feature unmarked where the
+				// question offers it (ADV degree stands for its bag).
+				const question = request.questions[id];
+				if (
+					id.startsWith("surface.inflectionalFeatures.") &&
+					output.surface.inflectionalFeatures === null &&
+					question?.type === "choice" &&
+					"Unmarked" in question.criteria
+				)
+					return "Unmarked";
 				let value: unknown = output;
 				for (const key of id.split("."))
 					value =
