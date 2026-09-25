@@ -1,0 +1,81 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Auf dem beschädigten Tonband war nur der Anfang „Wer anderen eine Grube gräbt …“ erhalten.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "beschädigten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tonband" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nur" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Anfang" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "anderen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Grube" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gräbt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "…" },
+		{ "kind": "Punctuation", "text": "“" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erhalten" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [17, 19, 21, 23, 25],
+			"notes": {
+				"rationale": "The ellipsis signals genuinely unrealized fixed material; every realized word is selected."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Proverb",
+						"canonicalForm": "Wer anderen eine Grube gräbt fällt selbst hinein",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Wer anderen eine Grube gräbt",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Wer", "orthography": "Standard" },
+					{ "attested": "anderen", "orthography": "Standard" },
+					{ "attested": "eine", "orthography": "Standard" },
+					{ "attested": "Grube", "orthography": "Standard" },
+					{ "attested": "gräbt", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Partial"
+			}
+		}
+	],
+	"noTarget": []
+}

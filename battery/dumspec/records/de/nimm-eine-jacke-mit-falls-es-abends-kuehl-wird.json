@@ -1,0 +1,59 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nimm eine Jacke mit, falls es abends kühl wird.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nimm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jacke" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "falls" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "abends" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kühl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [9],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"canonicalForm": "falls",
+						"coreFeatures": { "conjType": null }
+					},
+					"normalizedSurface": "falls",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "falls", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

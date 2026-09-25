@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir bleiben im Wald und Feld.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleiben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wald" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Feld" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [11],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Feld",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"normalizedSurface": "Feld",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"members": [{ "attested": "Feld", "orthography": "Standard" }],
+				"realizationCoverage": "Partial",
+				"articleEvidence": {
+					"kind": "Shared",
+					"article": {
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					}
+				},
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

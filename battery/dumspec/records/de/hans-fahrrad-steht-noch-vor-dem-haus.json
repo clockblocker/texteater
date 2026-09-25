@@ -1,0 +1,62 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Hans' Fahrrad steht noch vor dem Haus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Hans" },
+		{ "kind": "Punctuation", "text": "'" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fahrrad" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Hans",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"foreign": null,
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Hans",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+				},
+				"members": [{ "attested": "Hans", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		}
+	],
+	"noTarget": []
+}

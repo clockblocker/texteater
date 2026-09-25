@@ -1,0 +1,198 @@
+{
+	"slices": {},
+	"cases": {
+		"de/maria-eroeffnet-heute-die-ausstellung#0": {
+			"id": "grammar-de-propn-demo-person-maria",
+			"demonstration": true
+		},
+		"de/wir-treffen-uns-morgen-in-berlin#0": {
+			"id": "grammar-de-propn-demo-place-berlin",
+			"demonstration": true
+		},
+		"de/angela-merkel-hielt-am-abend-eine-rede#0": {
+			"id": "grammar-de-propn-demo-multi-angela-merkel",
+			"demonstration": true
+		},
+		"de/hans-fahrrad-steht-noch-vor-dem-haus#0": {
+			"id": "grammar-de-propn-demo-genitive-hans",
+			"demonstration": true
+		},
+		"de/die-nato-beraet-heute-ueber-den-antrag#0": {
+			"id": "grammar-de-propn-demo-acronym-nato",
+			"demonstration": true
+		},
+		"de/der-zug-haelt-morgen-in-koelnn#0": {
+			"id": "grammar-de-propn-demo-typo-koelnn",
+			"demonstration": true
+		},
+		"de/im-werkverzeichnis-steht-der-titel-tonio-kroeger#0": {
+			"id": "grammar-de-propn-demo-citation-work-tonio-kroeger",
+			"demonstration": true
+		},
+		"de/die-unesco-foerdert-das-neue-bildungsprojekt#0": {
+			"id": "grammar-de-propn-demo-org-unesco",
+			"demonstration": true
+		},
+		"de/hoer-bitte-kurz-zu-clara#0": {
+			"id": "grammar-de-propn-demo-vocative-clara",
+			"demonstration": true
+		},
+		"de/der-bericht-erwaehnt-ebay-nur-am-rand#0": {
+			"id": "grammar-de-propn-demo-stylized-ebay",
+			"demonstration": true
+		},
+		"de/das-rote-kreuz-eroeffnete-eine-neue-beratungsstelle#0": {
+			"id": "grammar-de-propn-demo-org-rotes-kreuz",
+			"demonstration": true
+		},
+		"de/das-theater-zeigt-heute-die-physiker#0": {
+			"id": "grammar-de-propn-demo-work-physiker",
+			"demonstration": true
+		},
+		"de/das-kind-sortiert-das-lego-nach-farben#0": {
+			"id": "grammar-de-propn-demo-integrated-lego",
+			"demonstration": true
+		},
+		"de/die-redaktion-interviewt-anna-am-freitag#0": {
+			"id": "grammar-de-propn-dev-person-anna-acc",
+			"evaluation": true
+		},
+		"de/peters-neuer-roman-erscheint-im-herbst#0": {
+			"id": "grammar-de-propn-dev-person-peters-gen",
+			"evaluation": true
+		},
+		"de/im-sommer-besucht-sie-die-schweiz#0": {
+			"id": "grammar-de-propn-dev-place-schweiz",
+			"evaluation": true
+		},
+		"de/seit-april-arbeitet-er-in-den-niederlanden#0": {
+			"id": "grammar-de-propn-dev-place-niederlanden",
+			"evaluation": true
+		},
+		"de/die-deutsche-bank-veroeffentlichte-den-bericht#0": {
+			"id": "grammar-de-propn-dev-org-deutsche-bank",
+			"evaluation": true
+		},
+		"de/die-spd-beschloss-ein-neues-programm#0": {
+			"id": "grammar-de-propn-dev-org-spd",
+			"evaluation": true
+		},
+		"de/sie-testet-das-neue-iphone-im-labor#0": {
+			"id": "grammar-de-propn-dev-product-iphone",
+			"evaluation": true
+		},
+		"de/die-kampagne-stellt-adidas-in-den-mittelpunkt#0": {
+			"id": "grammar-de-propn-dev-product-adidas",
+			"evaluation": true
+		},
+		"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper#0": {
+			"id": "grammar-de-propn-dev-work-zauberfloete",
+			"evaluation": true
+		},
+		"de/der-katalog-nennt-den-titel-der-prozess#0": {
+			"id": "grammar-de-propn-dev-work-prozess",
+			"evaluation": true
+		},
+		"de/im-register-steht-der-namenseintrag-hamburg#0": {
+			"id": "grammar-de-propn-dev-citation-hamburg",
+			"evaluation": true
+		},
+		"de/bitte-komm-herein-lukas#0": {
+			"id": "grammar-de-propn-dev-vocative-lukas",
+			"evaluation": true
+		},
+		"de/sie-lebt-seit-zwei-jahren-in-new-york#0": {
+			"id": "grammar-de-propn-dev-foreign-new-york",
+			"evaluation": true
+		},
+		"de/im-ukrainischsprachigen-teil-sagt-die-delegation-sie-reise#0": {
+			"id": "grammar-de-propn-dev-transliteration-kyjiw",
+			"evaluation": true
+		},
+		"de/der-reisebericht-verwendet-den-historischen-deutschen-namen#0": {
+			"id": "grammar-de-propn-dev-variant-pressburg",
+			"evaluation": true
+		},
+		"de/die-konferenz-findet-in-muenchn-statt#0": {
+			"id": "grammar-de-propn-dev-typo-muenchn",
+			"evaluation": true
+		},
+		"de/die-messe-wurde-nach-berlin-verlegt#0": {
+			"id": "grammar-de-propn-dev-casing-berLin",
+			"evaluation": true
+		},
+		"de/die-universitaet-ehrt-johann-wolfgang-von-goethe-mit-einer#0": {
+			"id": "grammar-de-propn-dev-multi-johann-goethe",
+			"evaluation": true
+		},
+		"de/die-stadt-berlin-waechst-weiterhin-schnell#0": {
+			"id": "grammar-de-propn-dev-neighbor-city-berlin",
+			"evaluation": true
+		},
+		"de/peter-kam-zuerst-doch-peter-ging-als-letzter#0": {
+			"id": "grammar-de-propn-dev-repeated-second-peter",
+			"evaluation": true
+		},
+		"de/im-winter-fahren-sie-in-die-alpen#0": {
+			"id": "grammar-de-propn-dev-plural-alpen",
+			"evaluation": true
+		},
+		"de/die-jury-dankt-leonie-fuer-ihren-einsatz#0": {
+			"id": "grammar-de-propn-accept-v3-person-leonie",
+			"evaluation": true
+		},
+		"de/saarland-meldet-steigende-besucherzahlen#0": {
+			"id": "grammar-de-propn-accept-v3-place-saarland",
+			"evaluation": true
+		},
+		"de/der-bus-durchquert-garmisch-partenkirchen-am-nachmittag#0": {
+			"id": "grammar-de-propn-accept-v3-multi-garmisch-partenkirchen",
+			"evaluation": true
+		},
+		"de/das-zdf-uebertraegt-die-debatte-live#0": {
+			"id": "grammar-de-propn-accept-v3-org-zdf",
+			"evaluation": true
+		},
+		"de/die-werkstatt-repariert-den-thermomix-noch-heute#0": {
+			"id": "grammar-de-propn-accept-v3-product-thermomix",
+			"evaluation": true
+		},
+		"de/die-klasse-interpretiert-das-nibelungenlied#0": {
+			"id": "grammar-de-propn-accept-v3-work-nibelungenlied",
+			"evaluation": true
+		},
+		"de/das-namenverzeichnis-enthaelt-den-ortsnamen-mainz#0": {
+			"id": "grammar-de-propn-accept-v3-citation-mainz",
+			"evaluation": true
+		},
+		"de/im-portugiesischsprachigen-gespraech-erzaehlt-sie-von-rio-de#0": {
+			"id": "grammar-de-propn-accept-v3-foreign-rio-de-janeiro",
+			"evaluation": true
+		},
+		"de/max-fahrrad-lehnt-an-der-mauer#0": {
+			"id": "grammar-de-propn-accept-v3-genitive-max",
+			"evaluation": true
+		},
+		"de/die-messe-findet-dieses-jahr-in-hannnover-statt#0": {
+			"id": "grammar-de-propn-accept-v3-typo-hannnover",
+			"evaluation": true
+		},
+		"de/das-woerterbuch-dokumentiert-preussen-als-historische#0": {
+			"id": "grammar-de-propn-accept-v3-variant-preussen",
+			"evaluation": true
+		},
+		"de/im-oktober-besuchen-sie-die-balearen#0": {
+			"id": "grammar-de-propn-accept-v3-plural-balearen",
+			"evaluation": true
+		},
+		"de/er-badet-im-rhein#0": {
+			"id": "grammar-de-propn-regression-fused-article-rhein"
+		},
+		"de/sieh-einmal-hier-steht-er#6": {
+			"id": "grammar-de-propn-regression-owned-article-struwwelpeter"
+		},
+		"de/viele-vermissen-das-alte-berlin#1": {
+			"id": "grammar-de-propn-regression-bare-name-altes-berlin"
+		}
+	}
+}

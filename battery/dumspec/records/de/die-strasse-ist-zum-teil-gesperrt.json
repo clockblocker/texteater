@@ -1,0 +1,93 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Straße ist zum Teil gesperrt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Straße" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Teil" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gesperrt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#495",
+				"url": "https://github.com/clockblocker/texteater/issues/495",
+				"supports": "Target 0, zu m Teil"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 7, 9],
+			"notes": {
+				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "zum Teil",
+						"coreFeatures": {
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"normalizedSurface": "zum Teil",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Teil", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

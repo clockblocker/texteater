@@ -1,0 +1,64 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Seit April arbeitet er in den Niederlanden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Seit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "April" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "arbeitet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Niederlanden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [10, 12],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Niederlande",
+						"coreFeatures": {
+							"abbr": null,
+							"article": "Definite",
+							"foreign": null,
+							"gender": null
+						}
+					},
+					"normalizedSurface": "Niederlanden",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Plur" }
+				},
+				"members": [
+					{ "attested": "den", "orthography": "Standard" },
+					{ "attested": "Niederlanden", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		}
+	],
+	"noTarget": []
+}

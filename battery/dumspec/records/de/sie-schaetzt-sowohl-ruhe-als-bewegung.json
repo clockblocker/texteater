@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie schätzt sowohl Ruhe als Bewegung.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schätzt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sowohl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ruhe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "als" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bewegung" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 8],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "sowohl … als",
+						"coreFeatures": { "conjType": null }
+					},
+					"normalizedSurface": "sowohl als",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "sowohl", "orthography": "Standard" },
+					{ "attested": "als", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir gedachten deiner in Dankbarkeit.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gedachten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "deiner" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dankbarkeit" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "deiner",
+						"coreFeatures": {
+							"case": "Gen",
+							"number": "Sing",
+							"extPos": null,
+							"foreign": null,
+							"person": "2",
+							"polite": "Infm",
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "deiner",
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{ "attested": "deiner", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

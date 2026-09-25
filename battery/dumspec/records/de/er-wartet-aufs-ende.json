@@ -1,0 +1,155 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er wartet aufs Ende.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wartet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf", "surface": "auf" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ende" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 4],
+			"notes": {
+				"rationale": "The adposition piece of the fused aufs is the governed-preposition member of warten; its s piece is the article of Ende (ADR 0035)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "warten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "wartet",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "wartet", "orthography": "Standard" },
+					{
+						"attested": "auf",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "aufs",
+							"components": [
+								{ "span": "auf", "surface": "auf" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		{
+			"memberSegmentIndices": [5, 7],
+			"notes": {
+				"rationale": "A colloquial fusion splits like a standard one: s is the noun's owned Fused article, and auf belongs to warten (ADR 0035)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ende",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"normalizedSurface": "Ende",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "s",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "aufs",
+							"components": [
+								{ "span": "auf", "surface": "auf" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Ende", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

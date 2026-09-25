@@ -1,0 +1,409 @@
+{
+	"slices": {},
+	"cases": {
+		"de/er-wartet-aufs-ende#0": {
+			"id": "grammar-de-verb-governed-preposition-fused-aufs"
+		},
+		"de/es-gibt-brot#0": {
+			"id": "grammar-de-verb-demo-exists",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-exists"]
+		},
+		"de/es-regnet-heute#0": {
+			"id": "grammar-de-verb-demo-weather",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-weather"]
+		},
+		"de/woerterbucheintrag-vollverb-arbeiten#0": {
+			"id": "grammar-de-verb-citation-arbeiten",
+			"demonstration": true
+		},
+		"de/pass-auf-dich-auf#0": {
+			"id": "grammar-de-verb-separable-imperative-aufpassen",
+			"demonstration": true
+		},
+		"de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte#0": {
+			"id": "grammar-de-verb-dw-future-beteiligen",
+			"demonstration": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
+			]
+		},
+		"de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf#0": {
+			"id": "grammar-de-verb-dw-separable-aufsetzen",
+			"demonstration": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/krieg-im-sudan-gesundheitsversorgung-im-exil/a-75817375"
+			]
+		},
+		"de/die-impfstofflieferung-fuer-die-eu-soll-in-den#0": {
+			"id": "grammar-de-verb-dw-modal-passive-hergestellt",
+			"demonstration": true,
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/eu-sichert-sich-300-millionen-biontech-impfdosen-f%C3%BCr-europa/a-55566897"
+			]
+		},
+		"de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in#0": {
+			"id": "grammar-de-verb-dw-perfect-passive-aufgefunden",
+			"demonstration": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
+			]
+		},
+		"de/gibt-es-einen-ausweg#0": {
+			"id": "grammar-de-verb-subject-question",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-question"]
+		},
+		"de/es-gab-damals-hoffnung#0": {
+			"id": "grammar-de-verb-subject-past",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-past"]
+		},
+		"de/weil-es-dort-noch-moeglichkeiten-gibt#0": {
+			"id": "grammar-de-verb-subject-subordinate",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-subordinate"]
+		},
+		"de/heute-regnet-es-wieder#0": {
+			"id": "grammar-de-verb-subject-weather",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-weather"]
+		},
+		"de/es-geht-heute-um-geld#0": {
+			"id": "grammar-de-verb-subject-governed",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-governed"]
+		},
+		"de/es-handelt-sich-um-einen-fehler#0": {
+			"id": "grammar-de-verb-subject-reflexive",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-reflexive"]
+		},
+		"de/es-liegt-auf-dem-tisch#0": {
+			"id": "grammar-de-verb-referential-es",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:referential-es"]
+		},
+		"de/es-kamen-gaeste#0": {
+			"id": "grammar-de-verb-positional-es",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:positional-es"]
+		},
+		"de/es-freut-mich-dass-du-kommst#0": {
+			"id": "grammar-de-verb-anticipatory-es",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:anticipatory-es"]
+		},
+		"de/sie-meint-es-gut-mit-dir#0": {
+			"id": "grammar-de-verb-object-es",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:object-es"]
+		},
+		"de/sie-liest-leise#0": {
+			"id": "grammar-de-verb-finite-liest",
+			"evaluation": true
+		},
+		"de/er-ging-nach-hause#0": {
+			"id": "grammar-de-verb-past-ging",
+			"evaluation": true
+		},
+		"de/lauf-schneller#0": {
+			"id": "grammar-de-verb-imperative-lauf",
+			"evaluation": true
+		},
+		"de/er-versucht-hinauszulaufen#0": {
+			"id": "grammar-de-verb-infinitive-hinauszulaufen",
+			"evaluation": true
+		},
+		"de/die-peitsche-hat-er-mitgebracht-2#0": {
+			"id": "grammar-de-verb-participle-mitgebracht",
+			"evaluation": true
+		},
+		"de/sie-hat-gesungen#0": {
+			"id": "grammar-de-verb-participle-gesungen",
+			"evaluation": true
+		},
+		"de/sie-erinnert-sich-an-den-geruch#0": {
+			"id": "grammar-de-verb-reflexive-erinnert",
+			"evaluation": true
+		},
+		"de/sie-wartet-auf-den-naechsten-zug#0": {
+			"id": "grammar-de-verb-governed-preposition-wartet",
+			"evaluation": true
+		},
+		"de/sie-steht-jeden-morgen-frueh-auf#0": {
+			"id": "grammar-de-verb-separable-finite-aufstehen",
+			"evaluation": true
+		},
+		"de/er-schaemt-sich#0": {
+			"id": "grammar-de-verb-reflexive-schaemt",
+			"evaluation": true
+		},
+		"de/sie-wird-reisen#0": {
+			"id": "grammar-de-verb-future-wird-reisen",
+			"evaluation": true
+		},
+		"de/sie-wurde-um-geduld-gebeten#0": {
+			"id": "grammar-de-verb-passive-wurde-gebeten",
+			"evaluation": true
+		},
+		"de/sie-mag-schokolade#0": {
+			"id": "grammar-de-verb-full-modal-mag",
+			"evaluation": true
+		},
+		"de/sie-kann-das#0": {
+			"id": "grammar-de-verb-elliptical-modal-kann",
+			"evaluation": true
+		},
+		"de/sie-wird-aerztin#0": {
+			"id": "grammar-de-verb-full-werden",
+			"evaluation": true
+		},
+		"de/sie-hat-ein-fahrrad#0": {
+			"id": "grammar-de-verb-full-hat",
+			"evaluation": true
+		},
+		"de/er-tanzd-gern#0": {
+			"id": "grammar-de-verb-typo-tanzd",
+			"evaluation": true
+		},
+		"de/die-tuer-wurde-geschlossen#0": {
+			"id": "grammar-de-verb-passive-participle-geschlossen",
+			"evaluation": true
+		},
+		"de/sie-versucht-zu-warten#0": {
+			"id": "grammar-de-verb-provisional-zu-infinitive-warten",
+			"evaluation": true
+		},
+		"de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg#0": {
+			"id": "grammar-de-verb-dw-perfect-etabliert",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
+			]
+		},
+		"de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro#0": {
+			"id": "grammar-de-verb-dw-perfect-eingependelt",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
+			]
+		},
+		"de/die-tansanische-wahlkommission-hat-die-chadema-partei-des#0": {
+			"id": "grammar-de-verb-dw-perfect-ausgeschlossen",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
+			]
+		},
+		"de/die-eindruecke-wirken-noch-nach-sagt-der-historiker-beim#0": {
+			"id": "grammar-de-verb-dw-separable-nachwirken",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
+			]
+		},
+		"de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0": {
+			"id": "grammar-de-verb-dw-passive-weitergeleitet",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
+			]
+		},
+		"de/auch-emilia-wird-vermutlich-schnell-einen-job-finden-sobald#0": {
+			"id": "grammar-de-verb-dw-future-finden",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/zukunft-stadtplanung-wie-werden-wir-leben-transport-nahrung-stadtentwicklung/a-74137152"
+			]
+		},
+		"de/die-gruenen-hatten-in-ihrem-wahlprogramm-angekuendigt-dass#0": {
+			"id": "grammar-de-verb-dw-pluperfect-angekuendigt",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
+			]
+		},
+		"de/diese-erfolge-werden-jedoch-von-den-steigenden-emissionen-im#0": {
+			"id": "grammar-de-verb-dw-passive-aufgefressen",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
+			]
+		},
+		"de/der-deutsche-aerztetag-die-vertretung-der-mediziner-in#0": {
+			"id": "grammar-de-verb-dw-perfect-ausgesprochen",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
+			]
+		},
+		"de/durch-die-meerenge-war-zuvor-fast-ein-fuenftel-des-weltweit#0": {
+			"id": "grammar-de-verb-dw-pluperfect-passive-verschifft",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
+			]
+		},
+		"de/die-bundeswehr-bereitet-sich-auf-einen-moeglichen-minenraeum#0": {
+			"id": "grammar-de-verb-dw-separable-vorbereiten",
+			"evaluation": true,
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
+			]
+		},
+		"de/die-fahrgaeste-warten-trotz-der-eisigen-kaelte-geduldig-auf#0": {
+			"id": "grammar-de-verb-prep-governed-warten-auf",
+			"evaluation": true
+		},
+		"de/waehrend-des-schweren-gewitters-wartet-der-hausmeister-im#0": {
+			"id": "grammar-de-verb-prep-free-warten-im",
+			"evaluation": true
+		},
+		"de/die-ministerin-verzichtet-trotz-heftiger-kritik-aus-der#0": {
+			"id": "grammar-de-verb-prep-governed-verzichten-auf",
+			"evaluation": true
+		},
+		"de/nach-langen-verhandlungen-spricht-die-ministerin-im-voll#0": {
+			"id": "grammar-de-verb-prep-free-sprechen-im",
+			"evaluation": true
+		},
+		"de/der-pensionierte-lehrer-erinnert-sich-noch-deutlich-an#0": {
+			"id": "grammar-de-verb-prep-governed-reflexive-erinnern-an",
+			"evaluation": true
+		},
+		"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#0": {
+			"id": "grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+			"evaluation": true
+		},
+		"de/nach-der-anstrengenden-sitzung-erholt-sich-die-ministerin-im#0": {
+			"id": "grammar-de-verb-prep-free-reflexive-erholen-im",
+			"evaluation": true
+		},
+		"de/internationale-fachleute-warnen-die-kuestenstaedte-seit#0": {
+			"id": "grammar-de-verb-prep-governed-warnen-vor",
+			"evaluation": true
+		},
+		"de/die-aerztin-arbeitet-seit-vielen-jahren-mit-einem-besonders#0": {
+			"id": "grammar-de-verb-prep-free-arbeiten-mit",
+			"evaluation": true
+		},
+		"de/die-kinder-spielen-auch-bei-kuehlem-herbstwetter-auf-dem#0": {
+			"id": "grammar-de-verb-prep-free-spielen-auf",
+			"evaluation": true
+		},
+		"de/fuer-die-ganze-weite-welt-haett-ich-selbst-ein-fest-bestellt#0": {
+			"id": "grammar-de-verb-dev-apocope-haett-bestellt",
+			"evaluation": true
+		},
+		"de/das-kind-kann-schon-schwimmen#0": {
+			"id": "grammar-de-verb-modal-demo-kann",
+			"demonstration": true
+		},
+		"de/im-woerterbuch-steht-das-modalverb-duerfen#0": {
+			"id": "grammar-de-verb-modal-citation-duerfen",
+			"evaluation": true
+		},
+		"de/der-hund-darf-heute-drinnen-bleiben#0": {
+			"id": "grammar-de-verb-modal-darf-bleiben",
+			"evaluation": true
+		},
+		"de/du-wolltest-doch-frueher-gehen#0": {
+			"id": "grammar-de-verb-modal-wolltest-gehen",
+			"evaluation": true
+		},
+		"de/lea-moechte-noch-etwas-bleiben#0": {
+			"id": "grammar-de-verb-modal-moechte-bleiben",
+			"evaluation": true
+		},
+		"de/in-der-beschaedigten-notiz-steht-wir-sollen#0": {
+			"id": "grammar-de-verb-modal-sollen-syncretic",
+			"evaluation": true
+		},
+		"de/wir-muessen-jetzt-eintreten#0": {
+			"id": "grammar-de-verb-modal-muessen",
+			"evaluation": true
+		},
+		"de/tobias-mag-spaeter-mitkommen#0": {
+			"id": "grammar-de-verb-modal-mag-infinitive",
+			"evaluation": true
+		},
+		"de/ihr-wollt-morgen-weiterfahren#0": {
+			"id": "grammar-de-verb-modal-wollt",
+			"evaluation": true
+		},
+		"de/er-sol-jetzt-warten#0": {
+			"id": "grammar-de-verb-modal-typo-sol",
+			"evaluation": true
+		},
+		"de/der-fahrer-mus-sofort-bremsen#0": {
+			"id": "grammar-de-verb-modal-typo-mus",
+			"evaluation": true
+		},
+		"de/im-alten-brief-steht-er-muss-morgen-abreisen#0": {
+			"id": "grammar-de-verb-modal-variant-muss",
+			"evaluation": true
+		},
+		"de/wir-koenen-den-termin-einhalten#0": {
+			"id": "grammar-de-verb-modal-typo-koenen",
+			"evaluation": true
+		},
+		"de/sie-mag-schokolade-aber-heute-mag-sie-lieber-kochen#0": {
+			"id": "grammar-de-verb-modal-contrast-mag",
+			"evaluation": true
+		},
+		"de/der-innenhof-ist-heute-still#0": {
+			"id": "grammar-de-verb-copula-ist",
+			"demonstration": true
+		},
+		"de/sei-bitte-vorsichtig#0": {
+			"id": "grammar-de-verb-copula-imperative-sei",
+			"evaluation": true
+		},
+		"de/nach-der-reise-bin-ich-muede#0": {
+			"id": "grammar-de-verb-copula-bin-muede",
+			"evaluation": true
+		},
+		"de/nach-der-reise-bist-du-muede#0": {
+			"id": "grammar-de-verb-copula-bist-muede",
+			"evaluation": true
+		},
+		"de/nach-der-reise-sind-wir-muede#0": {
+			"id": "grammar-de-verb-copula-sind-muede",
+			"evaluation": true
+		},
+		"de/nach-der-reise-seid-ihr-muede#0": {
+			"id": "grammar-de-verb-copula-seid-muede",
+			"evaluation": true
+		},
+		"de/der-see-war-am-morgen-ruhig#0": {
+			"id": "grammar-de-verb-copula-war-ruhig",
+			"evaluation": true
+		},
+		"de/der-raum-ist-lange-leer-gewesen#0": {
+			"id": "grammar-de-verb-copula-perfect-ist-gewesen",
+			"evaluation": true
+		},
+		"de/der-woerterbucheintrag-nennt-sein-als-kopula#0": {
+			"id": "grammar-de-verb-copula-citation-sein",
+			"evaluation": true
+		},
+		"de/sie-bekommt-das-paket-geliefert-2#0": {
+			"id": "grammar-de-verb-recipient-passive-bekommt-geliefert",
+			"evaluation": true
+		},
+		"de/der-preistraeger-erhielt-die-urkunde-ueberreicht#0": {
+			"id": "grammar-de-verb-recipient-passive-erhielt-ueberreicht",
+			"evaluation": true
+		},
+		"de/sie-bekommt-ein-paket#0": {
+			"id": "grammar-de-verb-lexical-bekommt-paket",
+			"evaluation": true
+		},
+		"de/sie-bekommt-das-glas-endlich-geoeffnet#0": {
+			"id": "grammar-de-verb-resultative-bekommt-geoeffnet",
+			"evaluation": true
+		}
+	}
+}

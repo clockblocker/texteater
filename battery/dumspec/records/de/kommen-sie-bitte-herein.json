@@ -1,0 +1,68 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Kommen Sie bitte herein.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Kommen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bitte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "herein" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#500",
+				"url": "https://github.com/clockblocker/texteater/issues/500",
+				"supports": "Target 0, Sie"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Formal address is one identity whatever the addressee count, so an unstated count still resolves (ticket 500)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "Sie",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Plur",
+							"extPos": null,
+							"foreign": null,
+							"person": "2",
+							"polite": "Form",
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "Sie",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

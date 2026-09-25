@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Warten lernen wir gewöhnlich erst, wenn wir nichts mehr zu erwarten haben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Warten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lernen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gewöhnlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erst" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wenn" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nichts" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erwarten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "haben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 21, 23],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Warten", "orthography": "Standard" },
+					{ "attested": "lernen", "orthography": "Standard" },
+					{ "attested": "wir", "orthography": "Standard" },
+					{ "attested": "gewöhnlich", "orthography": "Standard" },
+					{ "attested": "erst", "orthography": "Standard" },
+					{ "attested": "wenn", "orthography": "Standard" },
+					{ "attested": "wir", "orthography": "Standard" },
+					{ "attested": "nichts", "orthography": "Standard" },
+					{ "attested": "mehr", "orthography": "Standard" },
+					{ "attested": "zu", "orthography": "Standard" },
+					{ "attested": "erwarten", "orthography": "Standard" },
+					{ "attested": "haben", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

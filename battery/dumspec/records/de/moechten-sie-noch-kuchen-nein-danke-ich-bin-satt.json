@@ -1,0 +1,69 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "„Möchten Sie noch Kuchen?“ – „Nein danke, ich bin satt.“",
+	"segments": [
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Möchten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kuchen" },
+		{ "kind": "Punctuation", "text": "?" },
+		{ "kind": "Punctuation", "text": "“" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "–" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Nein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "danke" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "satt" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Punctuation", "text": "“" }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [14, 16],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"canonicalForm": "nein danke",
+						"coreFeatures": { "discourseFormulaRole": "Refusal" }
+					},
+					"normalizedSurface": "nein danke",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Nein", "orthography": "Standard" },
+					{ "attested": "danke", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

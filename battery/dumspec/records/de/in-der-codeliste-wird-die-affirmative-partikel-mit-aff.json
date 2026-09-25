@@ -1,0 +1,69 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "In der Codeliste wird die affirmative Partikel mit aff. abgekürzt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "In" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Codeliste" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "affirmative" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Partikel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aff" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "abgekürzt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [16],
+			"notes": {
+				"rationale": "The supplied letters plus the punctuation outside TARGET identify the established abbreviation Lemma aff.; never expand its canonicalForm to the full word affirmativ."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "aff.",
+						"coreFeatures": {
+							"abbr": "Yes",
+							"foreign": null,
+							"partType": null,
+							"polarity": "Pos"
+						}
+					},
+					"normalizedSurface": "aff",
+					"spelling": "Variant",
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "aff", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

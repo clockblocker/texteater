@@ -2,25 +2,82 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sieh einmal, hier steht er,\npfui, der Struwwelpeter!",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sieh" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einmal" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hier" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "steht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "pfui" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Struwwelpeter" },
-		{ "kind": "Punctuation", "text": "!" }
+		{
+			"kind": "ResolvableText",
+			"text": "Sieh"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einmal"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hier"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "steht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "pfui"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Struwwelpeter"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		}
 	],
 	"coverage": "Full",
 	"status": "Draft",
@@ -30,7 +87,11 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
@@ -39,7 +100,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Sieh", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Sieh",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -84,7 +150,10 @@
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "einmal", "orthography": "Standard" }
+					{
+						"attested": "einmal",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"surface": {
@@ -113,7 +182,12 @@
 			"memberSegmentIndices": [5],
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "hier", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "hier",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
@@ -141,7 +215,12 @@
 			"memberSegmentIndices": [7],
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "steht", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "steht",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
@@ -182,7 +261,12 @@
 			"memberSegmentIndices": [9],
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
@@ -215,27 +299,34 @@
 		{
 			"memberSegmentIndices": [12],
 			"notes": {
-				"rationale": "Pfui is treated as a plain interjection. I did not force `partType: Res` because this use expresses disgust/exclamation, not the schema's narrower response-particle reading."
+				"rationale": "Pfui independently expresses disgust; it is not a response interjection. Pfui is treated as a plain interjection. I did not force `partType: Res` because this use expresses disgust/exclamation, not the schema's narrower response-particle reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "pfui", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "pfui",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "pfui",
 						"family": "Lexeme",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"canonicalForm": "pfui",
+						"coreFeatures": {
+							"partType": null
+						}
 					},
+					"normalizedSurface": "pfui",
+					"spelling": "Canonical",
 					"surfaceFeatures": null
-				}
+				},
+				"members": [
+					{
+						"attested": "pfui",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
 			}
 		},
 		{
@@ -245,32 +336,44 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Struwwelpeter", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" },
 					"language": "de",
-					"normalizedSurface": "Struwwelpeter",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Struwwelpeter",
 						"family": "Lexeme",
 						"kind": "PROPN",
+						"canonicalForm": "Struwwelpeter",
 						"coreFeatures": {
-							"gender": "Masc",
 							"abbr": null,
 							"article": "Definite",
-							"foreign": null
+							"foreign": null,
+							"gender": "Masc"
 						}
 					},
-					"surfaceFeatures": null
+					"normalizedSurface": "Struwwelpeter",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Struwwelpeter",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
 				}
 			}
 		}

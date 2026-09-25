@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Welche Nachricht hat die Redaktion zuerst bestätigt?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Welche" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nachricht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hat" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Redaktion" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zuerst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bestätigt" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "The inflected member belongs to the welcher paradigm; canonicalForm is the full masculine nominative singular dictionary form, never the stem welch."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "welcher",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"foreign": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Int"
+						}
+					},
+					"normalizedSurface": "welche",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Fem",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"members": [
+					{ "attested": "Welche", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

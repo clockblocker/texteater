@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Am selben Morgen fiel erneut der Strom aus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "A", "surface": "an" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "selben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fiel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erneut" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Strom" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#503",
+				"url": "https://github.com/clockblocker/texteater/issues/503",
+				"supports": "Target 0, selben"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [3],
+			"notes": {
+				"rationale": "am selben is an demselben with the article fused into am: the piece realizes derselbe with Partial coverage, the article half lives in the fusion. selber is the invariant emphatic and never declines (ticket 503)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "derselbe",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"foreign": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					},
+					"normalizedSurface": "selben",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"members": [
+					{ "attested": "selben", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Partial"
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,56 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Bitte komm herein, Lukas!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Bitte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "komm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "herein" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lukas" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [7],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Lukas",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"foreign": null,
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Lukas",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": null, "number": "Sing" }
+				},
+				"members": [{ "attested": "Lukas", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		}
+	],
+	"noTarget": []
+}

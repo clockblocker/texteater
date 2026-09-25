@@ -1,0 +1,70 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der große Tisch ist unserer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "große" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tisch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "unserer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [8],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "unserer",
+						"coreFeatures": {
+							"case": null,
+							"number": null,
+							"extPos": null,
+							"foreign": null,
+							"person": "1",
+							"polite": null,
+							"poss": "Yes",
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "unserer",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": "Plur",
+						"reflex": null
+					}
+				},
+				"members": [
+					{ "attested": "unserer", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

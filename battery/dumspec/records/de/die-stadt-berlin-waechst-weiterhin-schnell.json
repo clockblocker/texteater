@@ -1,0 +1,64 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Stadt Berlin wächst weiterhin schnell.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stadt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Berlin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wächst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "weiterhin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schnell" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "The unmarked common NOUN Stadt is a neighbor, not a member to add."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Berlin",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"foreign": null,
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "Berlin",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"members": [
+					{ "attested": "Berlin", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		}
+	],
+	"noTarget": []
+}

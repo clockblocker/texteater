@@ -2,31 +2,106 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Fort geht nun die Mutter und\nwupp! den Daumen in den Mund.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Fort" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nun" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mutter" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": "\n" },
-		{ "kind": "ResolvableText", "text": "wupp" },
-		{ "kind": "Punctuation", "text": "!" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Daumen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mund" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Fort"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nun"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mutter"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": "\n"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wupp"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Daumen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mund"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -36,7 +111,11 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
@@ -48,7 +127,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Fort", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Fort",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
@@ -79,23 +163,30 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "wupp", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "wupp",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "wupp",
 						"family": "Lexeme",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"canonicalForm": "wupp",
+						"coreFeatures": {
+							"partType": null
+						}
 					},
+					"normalizedSurface": "wupp",
+					"spelling": "Canonical",
 					"surfaceFeatures": null
-				}
+				},
+				"members": [
+					{
+						"attested": "wupp",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

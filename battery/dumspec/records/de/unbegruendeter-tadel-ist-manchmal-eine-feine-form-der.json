@@ -1,0 +1,68 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Unbegründeter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tadel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "manchmal" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "feine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Form" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schmeichelei" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 6, 8, 10, 12, 14, 16],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Unbegründeter", "orthography": "Standard" },
+					{ "attested": "Tadel", "orthography": "Standard" },
+					{ "attested": "ist", "orthography": "Standard" },
+					{ "attested": "manchmal", "orthography": "Standard" },
+					{ "attested": "eine", "orthography": "Standard" },
+					{ "attested": "feine", "orthography": "Standard" },
+					{ "attested": "Form", "orthography": "Standard" },
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "Schmeichelei", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

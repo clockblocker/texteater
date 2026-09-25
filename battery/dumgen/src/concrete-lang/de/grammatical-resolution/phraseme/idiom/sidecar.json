@@ -1,0 +1,174 @@
+{
+	"slices": {},
+	"cases": {
+		"de/nach-dem-rueckstand-warf-die-trainerin-die-flinte-endgueltig#0": {
+			"id": "grammar-de-idiom-flinte-past-full",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"]
+		},
+		"de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen#0": {
+			"id": "grammar-de-idiom-grass-citation",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:ins-gras-beissen"]
+		},
+		"de/heult-nicht-laenger-mit-den-woelfen#0": {
+			"id": "grammar-de-idiom-woelfe-present-full",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:mit-den-woelfen-heulen"]
+		},
+		"de/kaum-sprachen-wir-von-ihr-da-malten-wir-offenbar-den-teufel#0": {
+			"id": "grammar-de-idiom-teufel-wand-full",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"]
+		},
+		"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0": {
+			"id": "grammar-de-idiom-nase-typo-full",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:auf-der-nase-herumtanzen"]
+		},
+		"de/die-erste-mannschaft-hat-das-handtuch-geworfen-und-spaeter#0": {
+			"id": "grammar-de-idiom-handtuch-ellipsis-partial",
+			"demonstration": true,
+			"contaminationKeys": ["de-idiom-lemma:das-handtuch-werfen"]
+		},
+		"de/was-zum#0": {
+			"id": "grammar-de-idiom-was-zum-truncation-partial",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:was-zum-teufel"]
+		},
+		"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#0": {
+			"id": "grammar-de-idiom-faeustchen-perfect-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"]
+		},
+		"de/blase-jetzt-nicht-laenger-truebsal#0": {
+			"id": "grammar-de-idiom-truebsal-imperative-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"]
+		},
+		"de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu#0": {
+			"id": "grammar-de-idiom-hand-fuss-subjunctive-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"]
+		},
+		"de/ohne-mantel-fror-sie-wie-ein-schneider#0": {
+			"id": "grammar-de-idiom-schneider-past-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"]
+		},
+		"de/mit-derselben-massnahme-schlaegt-sie-zwei-fliegen-mit-einer#0": {
+			"id": "grammar-de-idiom-fliegen-present-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"]
+		},
+		"de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab#0": {
+			"id": "grammar-de-idiom-loeffel-typo-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"]
+		},
+		"de/morgen-wird-sie-ihm-wohl-die-kalte-schulter-zeigen#0": {
+			"id": "grammar-de-idiom-kalte-schulter-future-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"]
+		},
+		"de/er-versucht-nicht-wieder-ins-fettnaepfchen-zu-treten#0": {
+			"id": "grammar-de-idiom-fettnaepfchen-infinitive-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"]
+		},
+		"de/du-hast-heute-wohl-tomaten-auf-den-augen#0": {
+			"id": "grammar-de-idiom-tomaten-present-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"]
+		},
+		"de/mit-dieser-diagnose-wurde-der-nagel-genau-auf-den-kopf#0": {
+			"id": "grammar-de-idiom-nagel-passive-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"]
+		},
+		"de/sie-versprach-kuenftig-die-zunge-im-zaum-zu-halten#0": {
+			"id": "grammar-de-idiom-zunge-im-zaum-infinitive-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"]
+		},
+		"de/die-freunde-gingen-gemeinsam-durch-dick-und-duenn#0": {
+			"id": "grammar-de-idiom-dick-duenn-past-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"]
+		},
+		"de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren#0": {
+			"id": "grammar-de-idiom-faden-perfect-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"]
+		},
+		"de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr#0": {
+			"id": "grammar-de-idiom-ohr-present-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"]
+		},
+		"de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten#0": {
+			"id": "grammar-de-idiom-kuerzeren-ellipsis-partial",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:den-kuerzeren-ziehen"]
+		},
+		"de/waehrend-der-waerter-das-historische-bett-huetete-huetete#0": {
+			"id": "grammar-de-idiom-bett-literal-figurative-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:das-bett-hueten"]
+		},
+		"de/das-sprichwort-morgenstund-hat-gold-im-mund-half-ihm-nicht#0": {
+			"id": "grammar-de-idiom-wolke-present-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"]
+		},
+		"de/nach-dem-aphorismus-ueber-die-hoffnung-fiel-sie-bei-der#0": {
+			"id": "grammar-de-idiom-wolken-past-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"]
+		},
+		"de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze#0": {
+			"id": "grammar-de-idiom-katze-perfect-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"]
+		},
+		"de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass#0": {
+			"id": "grammar-de-idiom-kirche-imperative-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"]
+		},
+		"de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen#0": {
+			"id": "grammar-de-idiom-blatt-future-full",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"
+			]
+		},
+		"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0": {
+			"id": "grammar-de-idiom-kopf-sand-typo-perfect",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"]
+		},
+		"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht#0": {
+			"id": "grammar-de-idiom-licht-passive-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"]
+		},
+		"de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun#0": {
+			"id": "grammar-de-idiom-haende-present-full",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-idiom-lemma:alle-haende-voll-zu-tun-haben"
+			]
+		},
+		"de/bei-dieser-frage-stehe-ich-voellig-auf-dem-schlauch#0": {
+			"id": "grammar-de-idiom-schlauch-present-full",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"]
+		},
+		"de/eva-hat-die-segel-gestrichen-nach-der-niederlage-hat-auch#0": {
+			"id": "grammar-de-idiom-segel-ellipsis-partial",
+			"evaluation": true,
+			"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]
+		}
+	}
+}

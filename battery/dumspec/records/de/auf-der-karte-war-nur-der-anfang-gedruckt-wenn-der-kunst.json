@@ -1,0 +1,89 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Auf der Karte war nur der Anfang gedruckt: „Wenn der Kunst kein Tempel mehr offen steht …“.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Karte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nur" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Anfang" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gedruckt" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Wenn" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kunst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tempel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "offen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "…" },
+		{ "kind": "Punctuation", "text": "“" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [18, 20, 22, 24, 26, 28, 30, 32],
+			"notes": {
+				"rationale": "Quote stops at ellipsis. Missing tail not overt. Full source known."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Wenn der Kunst kein Tempel mehr offen steht dann flüchtet sie in die Werkstatt",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Wenn der Kunst kein Tempel mehr offen steht",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Wenn", "orthography": "Standard" },
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "Kunst", "orthography": "Standard" },
+					{ "attested": "kein", "orthography": "Standard" },
+					{ "attested": "Tempel", "orthography": "Standard" },
+					{ "attested": "mehr", "orthography": "Standard" },
+					{ "attested": "offen", "orthography": "Standard" },
+					{ "attested": "steht", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Partial"
+			}
+		}
+	],
+	"noTarget": []
+}

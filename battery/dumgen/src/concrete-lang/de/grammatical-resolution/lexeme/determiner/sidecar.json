@@ -1,0 +1,179 @@
+{
+	"slices": {},
+	"cases": {
+		"de/der-hund-schlaeft-vor-der-tuer#0": {
+			"id": "grammar-de-det-demo-definite-article-der",
+			"demonstration": true
+		},
+		"de/ich-helfe-meinem-bruder-beim-umzug#0": {
+			"id": "grammar-de-det-demo-possessive-meinem",
+			"demonstration": true
+		},
+		"de/die-aerztin-beginnt-gleich-mit-der-sprechstunde#0": {
+			"id": "grammar-de-det-demo-feminine-article-die",
+			"demonstration": true
+		},
+		"de/das-kind-spielt-im-garten#0": {
+			"id": "grammar-de-det-demo-neuter-article-das",
+			"demonstration": true
+		},
+		"de/derlei-vorfaelle-werden-sofort-dokumentiert#0": {
+			"id": "grammar-de-det-demo-uninflected-derlei",
+			"demonstration": true
+		},
+		"de/da-steht-ne-kiste-auf-dem-flur#0": {
+			"id": "grammar-de-det-demo-variant-ne",
+			"demonstration": true
+		},
+		"de/welche-nachricht-hat-die-redaktion-zuerst-bestaetigt#0": {
+			"id": "grammar-de-det-demo-paradigm-welche",
+			"demonstration": true
+		},
+		"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#0": {
+			"id": "grammar-de-det-demo-paradigm-manchem",
+			"demonstration": true
+		},
+		"de/der-chronist-hegte-noch-etwelche-zweifel-an-dem-bericht#0": {
+			"id": "grammar-de-det-demo-quoted-archaic-etwelche",
+			"demonstration": true
+		},
+		"de/er-zaehlt-eins-und-kauft-danach-einen-mantel#0": {
+			"id": "grammar-de-det-dev-indefinite-article-einen",
+			"evaluation": true
+		},
+		"de/mit-diesem-plan-schaffen-wir-den-termin#0": {
+			"id": "grammar-de-det-dev-demonstrative-diesem",
+			"evaluation": true
+		},
+		"de/am-selben-morgen-fiel-erneut-der-strom-aus#0": {
+			"id": "grammar-de-det-dev-emphatic-selben",
+			"evaluation": true
+		},
+		"de/welch-ein-glueck-dass-niemand-verletzt-wurde#0": {
+			"id": "grammar-de-det-dev-exclamative-welch",
+			"evaluation": true
+		},
+		"de/welchen-weg-nehmen-wir-nach-dem-bahnhof#0": {
+			"id": "grammar-de-det-dev-interrogative-welchen",
+			"evaluation": true
+		},
+		"de/er-versprach-puenktliche-lieferung-welchem-versprechen#0": {
+			"id": "grammar-de-det-dev-relative-welchem",
+			"evaluation": true
+		},
+		"de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter#0": {
+			"id": "grammar-de-det-dev-negative-kein",
+			"evaluation": true
+		},
+		"de/alle-stuehle-stehen-schon-im-saal#0": {
+			"id": "grammar-de-det-dev-total-alle",
+			"evaluation": true
+		},
+		"de/sie-pruefte-beide-geraete-vor-dem-versand#0": {
+			"id": "grammar-de-det-dev-total-beide",
+			"evaluation": true
+		},
+		"de/viele-buecher-wurden-an-die-schule-gespendet#0": {
+			"id": "grammar-de-det-dev-indefinite-viele",
+			"evaluation": true
+		},
+		"de/heute-kamen-weniger-als-zwanzig-besucher#0": {
+			"id": "grammar-de-det-dev-comparative-weniger",
+			"evaluation": true
+		},
+		"de/die-meisten-gaeste-reisten-am-sonntag-ab#0": {
+			"id": "grammar-de-det-dev-superlative-meisten",
+			"evaluation": true
+		},
+		"de/du-legst-deinen-schluessel-auf-den-tisch#0": {
+			"id": "grammar-de-det-dev-possessive-deinen",
+			"evaluation": true
+		},
+		"de/wir-vertrauen-unserem-team-auch-unter-zeitdruck#0": {
+			"id": "grammar-de-det-dev-possessive-unserem",
+			"evaluation": true
+		},
+		"de/paul-sucht-seinen-ausweis-seit-dem-morgen#0": {
+			"id": "grammar-de-det-dev-possessive-seinen-masc",
+			"evaluation": true
+		},
+		"de/das-kind-raeumt-sein-zimmer-vor-dem-essen-auf#0": {
+			"id": "grammar-de-det-dev-possessive-sein-neut",
+			"evaluation": true
+		},
+		"de/mara-repariert-ihr-radio-noch-heute#0": {
+			"id": "grammar-de-det-dev-possessive-ihr-fem",
+			"evaluation": true
+		},
+		"de/wir-helfen-ihrem-team-bei-der-umstellung#0": {
+			"id": "grammar-de-det-dev-formal-ihrem",
+			"evaluation": true
+		},
+		"grammar-de-det-dev-foreign-the": {
+			"input": {
+				"markedContext": "Im Workshop diskutierten wir <TARGET>the</TARGET> main issue zuerst.",
+				"members": ["the"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501).",
+			"evaluation": true
+		},
+		"de/der-wievielte-versuch-war-schliesslich-erfolgreich#0": {
+			"id": "grammar-de-det-dev-ordinal-wievielte",
+			"evaluation": true
+		},
+		"de/wegen-des-laerms-schloss-die-bibliothek-frueher#0": {
+			"id": "grammar-de-det-accept-v4-definite-des",
+			"evaluation": true
+		},
+		"de/ein-kran-hebt-die-schwere-kiste-auf-das-dach#0": {
+			"id": "grammar-de-det-accept-v4-indefinite-ein",
+			"evaluation": true
+		},
+		"de/mit-jenem-schluessel-oeffnet-die-hausmeisterin-den-keller#0": {
+			"id": "grammar-de-det-accept-v4-demonstrative-jenem",
+			"evaluation": true
+		},
+		"de/fuer-welches-projekt-beantragt-das-institut-die-mittel#0": {
+			"id": "grammar-de-det-accept-v4-interrogative-welches",
+			"evaluation": true
+		},
+		"de/die-ermittlerin-fand-keinen-zeugen-fuer-den-vorfall#0": {
+			"id": "grammar-de-det-accept-v4-negative-keinen",
+			"evaluation": true
+		},
+		"de/jeder-schritt-wird-im-pruefprotokoll-dokumentiert#0": {
+			"id": "grammar-de-det-accept-v4-total-jeder",
+			"evaluation": true
+		},
+		"de/du-hilfst-deinem-bruder-beim-aufbau-des-schranks#0": {
+			"id": "grammar-de-det-accept-v4-possessive-deinem",
+			"evaluation": true
+		},
+		"de/frau-roth-wir-arbeiten-eng-mit-ihrem-buero-zusammen#0": {
+			"id": "grammar-de-det-accept-v4-formal-ihrem",
+			"evaluation": true
+		},
+		"de/die-neue-messung-erklaert-manches-problem-der-alten-studie#0": {
+			"id": "grammar-de-det-accept-v4-indefinite-manches",
+			"evaluation": true
+		},
+		"de/mit-disem-plan-erreicht-das-team-sein-ziel-nicht#0": {
+			"id": "grammar-de-det-accept-v4-typo-disem",
+			"evaluation": true
+		},
+		"de/wir-brauchen-fuer-den-transport-noch-n-auto#0": {
+			"id": "grammar-de-det-accept-v4-variant-n",
+			"evaluation": true
+		},
+		"grammar-de-det-accept-v4-archaic-etwelches": {
+			"input": {
+				"markedContext": "Der historische Kommentar zitiert „<TARGET>etwelches</TARGET>“ und markiert die Form als veraltet.",
+				"members": ["etwelches"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved.",
+			"evaluation": true
+		}
+	}
+}

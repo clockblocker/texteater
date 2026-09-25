@@ -1,0 +1,114 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "die Menschen, denen wir eine Stütze sind, die geben uns den Halt im Leben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Menschen" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "denen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stütze" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sind" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "uns" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Halt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Leben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [
+				0, 2, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24, 26, 27, 29
+			],
+			"notes": {
+				"rationale": "Lowercase at the beginning of the complete maxim is inappropriate casing, so that member is Typo and normalized to Die."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "die", "orthography": "Typo" },
+					{ "attested": "Menschen", "orthography": "Standard" },
+					{ "attested": "denen", "orthography": "Standard" },
+					{ "attested": "wir", "orthography": "Standard" },
+					{ "attested": "eine", "orthography": "Standard" },
+					{ "attested": "Stütze", "orthography": "Standard" },
+					{ "attested": "sind", "orthography": "Standard" },
+					{ "attested": "die", "orthography": "Standard" },
+					{ "attested": "geben", "orthography": "Standard" },
+					{ "attested": "uns", "orthography": "Standard" },
+					{ "attested": "den", "orthography": "Standard" },
+					{ "attested": "Halt", "orthography": "Standard" },
+					{
+						"attested": "i",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Leben", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

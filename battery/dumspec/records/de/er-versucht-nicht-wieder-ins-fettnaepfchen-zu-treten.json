@@ -1,0 +1,108 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er versucht, nicht wieder ins Fettnäpfchen zu treten.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "versucht" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wieder" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fettnäpfchen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "treten" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, in s Fettnäpfchen treten"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [9, 10, 12, 16],
+			"notes": {
+				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "ins Fettnäpfchen treten",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "ins Fettnäpfchen treten",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "in",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ins",
+							"components": [
+								{ "span": "in", "surface": "in" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "s",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ins",
+							"components": [
+								{ "span": "in", "surface": "in" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Fettnäpfchen", "orthography": "Standard" },
+					{ "attested": "treten", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

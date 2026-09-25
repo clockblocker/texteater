@@ -1,0 +1,163 @@
+{
+	"slices": {},
+	"cases": {
+		"de/als-die-enkel-ueber-das-fruehe-aufstehen-klagten-erinnerte#0": {
+			"id": "grammar-de-proverb-demo-morgenstund-attribution",
+			"demonstration": true,
+			"contaminationKeys": ["de-proverb:morgenstund-hat-gold-im-mund"]
+		},
+		"de/auf-dem-fehlerhaften-uebungsblatt-stand-das-sprichwort-aller#0": {
+			"id": "grammar-de-proverb-demo-aller-anfang-typo",
+			"demonstration": true,
+			"contaminationKeys": ["de-proverb:aller-anfang-ist-schwer"]
+		},
+		"de/vor-der-abreise-mahnte-der-vater-was-du-heute-kannst#0": {
+			"id": "grammar-de-proverb-demo-was-heute-punctuation",
+			"demonstration": true,
+			"contaminationKeys": ["de-proverb:was-du-heute-kannst-besorgen"]
+		},
+		"de/nachdem-die-reisenden-ueber-ungewohnte-essenszeiten#0": {
+			"id": "grammar-de-proverb-dev-andere-laender",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:andere-laender-andere-sitten"]
+		},
+		"de/als-die-auffuehrung-trotz-der-panne-gelang-fasste-der#0": {
+			"id": "grammar-de-proverb-dev-ende-gut",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:ende-gut-alles-gut"]
+		},
+		"de/nach-dem-ersten-misslungenen-versuch-ermutigte-die-trainerin#0": {
+			"id": "grammar-de-proverb-dev-uebung-meister",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:uebung-macht-den-meister"]
+		},
+		"de/als-fuenf-personen-gleichzeitig-den-ablauf-aendern-wollten#0": {
+			"id": "grammar-de-proverb-dev-viele-koeche",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:viele-koeche-verderben-den-brei"]
+		},
+		"de/nachdem-der-intrigant-an-seinem-eigenen-plan-gescheitert-war#0": {
+			"id": "grammar-de-proverb-dev-grube",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:wer-anderen-eine-grube-graebt"]
+		},
+		"de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die#0": {
+			"id": "grammar-de-proverb-dev-zuletzt-lacht",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-proverb:wer-zuletzt-lacht-lacht-am-besten"
+			]
+		},
+		"de/als-der-schweigsame-bewerber-die-beste-analyse-vorlegte#0": {
+			"id": "grammar-de-proverb-dev-stille-wasser",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:stille-wasser-sind-tief"]
+		},
+		"de/beim-abschliessen-des-lagerraums-erklaerte-der-hausmeister#0": {
+			"id": "grammar-de-proverb-dev-gelegenheit-diebe",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:gelegenheit-macht-diebe"]
+		},
+		"de/als-mutter-und-tochter-denselben-beruf-waehlten-kommentierte#0": {
+			"id": "grammar-de-proverb-dev-apfel-stamm",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-proverb:der-apfel-faellt-nicht-weit-vom-stamm"
+			]
+		},
+		"de/als-sich-die-kleinen-monatlichen-betraege-summierten-sagte#0": {
+			"id": "grammar-de-proverb-dev-kleinvieh",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:kleinvieh-macht-auch-mist"]
+		},
+		"de/nachdem-die-erfundene-ausrede-sofort-aufflog-stellte-der#0": {
+			"id": "grammar-de-proverb-dev-luegen-beine",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:luegen-haben-kurze-beine"]
+		},
+		"de/bevor-die-zeugin-antwortete-erinnerte-ihr-anwalt-sie-an-den#0": {
+			"id": "grammar-de-proverb-dev-reden-silber",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-proverb:reden-ist-silber-schweigen-ist-gold"
+			]
+		},
+		"de/nach-der-winterpause-begann-die-laufgruppe-wieder-zu#0": {
+			"id": "grammar-de-proverb-dev-wer-rastet",
+			"evaluation": true,
+			"contaminationKeys": ["de-proverb:wer-rastet-der-rostet"]
+		},
+		"de/als-der-schueler-sich-ueber-denselben-streich-beschwerte#0": {
+			"id": "grammar-de-proverb-dev-repeated-das",
+			"evaluation": true
+		},
+		"de/vor-dem-kartenverkauf-wies-die-veranstalterin-auf-die#0": {
+			"id": "grammar-de-proverb-accept-wer-zuerst",
+			"evaluation": true
+		},
+		"de/als-mehrere-voneinander-unabhaengige-hinweise-eintrafen#0": {
+			"id": "grammar-de-proverb-accept-wo-rauch",
+			"evaluation": true
+		},
+		"de/trotz-des-knappen-zeitplans-blieb-die-ingenieurin#0": {
+			"id": "grammar-de-proverb-accept-wo-wille",
+			"evaluation": true
+		},
+		"de/nachdem-er-seine-sorge-endlich-erzaehlt-hatte-erinnerte-ihn#0": {
+			"id": "grammar-de-proverb-accept-geteiltes-leid",
+			"evaluation": true
+		},
+		"de/auf-dem-beschaedigten-tonband-war-nur-der-anfang-wer-anderen#0": {
+			"id": "grammar-de-proverb-demo-grube-partial",
+			"demonstration": true
+		},
+		"de/in-der-zeitung-von-1985-stand-das-sprichwort-wer-a-sagt-muss#0": {
+			"id": "grammar-de-proverb-demo-muss-historical-variant",
+			"demonstration": true
+		},
+		"de/auf-dem-schild-war-der-sprichwortanfang-faelschlich#0": {
+			"id": "grammar-de-proverb-dev-casing-viele-koeche",
+			"evaluation": true
+		},
+		"de/im-schuelerheft-stand-der-fehlerhafte-satz-stille-wasser#0": {
+			"id": "grammar-de-proverb-dev-stille-wasser-typo",
+			"evaluation": true
+		},
+		"de/der-schauspieler-verwendete-im-historischen-stueck-die-alte#0": {
+			"id": "grammar-de-proverb-dev-wes-brot-archaic",
+			"evaluation": true
+		},
+		"de/der-abgerissene-zettel-enthielt-nur-die-halbe-zeile-reden#0": {
+			"id": "grammar-de-proverb-dev-reden-silber-partial",
+			"evaluation": true
+		},
+		"de/die-aufnahme-endete-nach-dem-klar-erkennbaren#0": {
+			"id": "grammar-de-proverb-accept-glashaus-partial",
+			"evaluation": true
+		},
+		"de/wo-gehobelt-wird-da-erklaerte-der-meister-und-setzte-das#0": {
+			"id": "grammar-de-proverb-demo-wo-gehobelt-discontinuous",
+			"demonstration": true
+		},
+		"de/nachdem-die-gruppe-den-werbeslogan-geiz-ist-geil-verworfen#0": {
+			"id": "grammar-de-proverb-accept-frueher-vogel-slogan-context",
+			"evaluation": true
+		},
+		"de/nach-der-begruessung-guten-morgen-bremste-die-ausbilderin#0": {
+			"id": "grammar-de-proverb-accept-eile-discourse-context",
+			"evaluation": true
+		},
+		"de/obwohl-im-gespraech-zuvor-die-redewendung-den-nagel-auf-den#0": {
+			"id": "grammar-de-proverb-accept-betten-idiom-context",
+			"evaluation": true
+		},
+		"de/die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine#0": {
+			"id": "grammar-de-proverb-accept-doppelt-quotation-context",
+			"evaluation": true
+		},
+		"de/nach-dem-aphorismus-alt-werden-heisst-sehend-werden#0": {
+			"id": "grammar-de-proverb-accept-gaul-aphorism-context",
+			"evaluation": true
+		}
+	}
+}

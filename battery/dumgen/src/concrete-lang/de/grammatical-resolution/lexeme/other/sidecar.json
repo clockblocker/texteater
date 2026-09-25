@@ -1,0 +1,149 @@
+{
+	"slices": {},
+	"cases": {
+		"de/im-feld-fuer-nicht-kategorisierte-woerter-stand-der-eintrag#0": {
+			"id": "grammar-de-x-demo-unknown-citation-zorp",
+			"demonstration": true
+		},
+		"de/in-der-sonst-deutschen-unterhaltung-antwortete-sie-nur#0": {
+			"id": "grammar-de-x-demo-foreign-whatever",
+			"demonstration": true
+		},
+		"de/mit-dem-glorp-konnte-niemand-etwas-anfangen#0": {
+			"id": "grammar-de-x-demo-inflection-glorp-dat",
+			"demonstration": true
+		},
+		"de/im-chat-war-mit-dem-fehlerhaft-geschriebenen-englischen-wort#0": {
+			"id": "grammar-de-x-demo-typo-watevr",
+			"demonstration": true
+		},
+		"de/in-ihrer-deutschen-nachricht-schrieb-sie-lediglich-idk#0": {
+			"id": "grammar-de-x-demo-abbr-idk",
+			"demonstration": true
+		},
+		"de/die-sprecherin-begann-mit-unver-und-brach-das-wort-hoerbar#0": {
+			"id": "grammar-de-x-demo-fragment-unver",
+			"demonstration": true
+		},
+		"de/die-testperson-verschob-die-nerpa-ohne-ihre-bedeutung-zu#0": {
+			"id": "grammar-de-x-demo-inflection-nerpa-acc",
+			"demonstration": true
+		},
+		"de/die-forscherin-sagte-das-geraet-plerke-nur-bei-vollmond#0": {
+			"id": "grammar-de-x-demo-inflection-plerke-sub",
+			"demonstration": true
+		},
+		"de/der-blarg-tauchte-ohne-erklaerung-im-bericht-auf#0": {
+			"id": "grammar-de-x-dev-unknown-blarg-nom",
+			"evaluation": true
+		},
+		"de/die-pruefer-markierten-die-glorps-im-letzten-absatz#0": {
+			"id": "grammar-de-x-dev-unknown-glorps-acc",
+			"evaluation": true
+		},
+		"de/im-beispiel-sollte-die-figur-morgen-glorpen-doch-die#0": {
+			"id": "grammar-de-x-dev-unknown-glorpen-inf",
+			"evaluation": true
+		},
+		"de/laut-der-versuchsanweisung-glorpt-er-jeden-morgen#0": {
+			"id": "grammar-de-x-dev-unknown-glorpt-fin",
+			"evaluation": true
+		},
+		"de/im-erfundenen-bericht-habe-die-maschine-bereits-geglorpt#0": {
+			"id": "grammar-de-x-dev-unknown-geglorpt-part",
+			"evaluation": true
+		},
+		"de/glorp-jetzt-stand-als-unbekannte-anweisung-auf-dem-display#0": {
+			"id": "grammar-de-x-dev-unknown-glorp-imp",
+			"evaluation": true
+		},
+		"de/mitten-im-deutschen-satz-fuegte-er-anyway-ein-und-sprach#0": {
+			"id": "grammar-de-x-dev-foreign-anyway",
+			"evaluation": true
+		},
+		"de/die-studentin-nannte-das-ergebnis-low-key-ueberraschend#0": {
+			"id": "grammar-de-x-dev-foreign-low-key",
+			"evaluation": true
+		},
+		"de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe#0": {
+			"id": "grammar-de-x-dev-slang-cringe",
+			"evaluation": true
+		},
+		"de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr#0": {
+			"id": "grammar-de-x-dev-slang-sus",
+			"evaluation": true
+		},
+		"de/whatever-sagte-sie-am-anfang-ihrer-deutschen-antwort#0": {
+			"id": "grammar-de-x-dev-casing-whatever",
+			"evaluation": true
+		},
+		"de/im-historischen-englischen-zitat-blieb-das-wort-thou#0": {
+			"id": "grammar-de-x-dev-archaic-thou",
+			"evaluation": true
+		},
+		"de/die-britische-schreibvariante-colour-stand-in-der-deutschen#0": {
+			"id": "grammar-de-x-dev-variant-colour",
+			"evaluation": true
+		},
+		"de/der-alte-forenbeitrag-endete-mit-dem-slangausdruck-w00t#0": {
+			"id": "grammar-de-x-dev-mixed-w00t",
+			"evaluation": true
+		},
+		"de/zuerst-sagte-sie-whatever-spaeter-schrieb-sie-whatever-noch#0": {
+			"id": "grammar-de-x-dev-repeated-whatever",
+			"evaluation": true
+		},
+		"de/der-beschaedigte-scan-zeigte-im-lesbaren-technischen#0": {
+			"id": "grammar-de-x-dev-near-opaque-foobar",
+			"evaluation": true
+		},
+		"de/neben-dem-namen-paris-der-abkuerzung-z-b-dem-ausruf-ach-dem#0": {
+			"id": "grammar-de-x-dev-near-known-routes-yeet",
+			"evaluation": true
+		},
+		"de/die-uneinheitlich-annotierte-spalte-enthielt-den-eintrag-3d#0": {
+			"id": "grammar-de-x-dev-alphanumeric-3d",
+			"evaluation": true
+		},
+		"de/das-glossar-fuehrte-den-nicht-weiter-bestimmten-eintrag#0": {
+			"id": "grammar-de-x-accept-v2-unknown-quend",
+			"evaluation": true
+		},
+		"de/dieser-zarg-erschien-ploetzlich-im-versuch-doch-niemand#0": {
+			"id": "grammar-de-x-accept-v2-unknown-zarg-nom-masc",
+			"evaluation": true
+		},
+		"de/die-wirkung-dieses-zorps-blieb-unklar#0": {
+			"id": "grammar-de-x-accept-v2-unknown-zorps-gen",
+			"evaluation": true
+		},
+		"de/die-zeugin-erklaerte-der-apparat-nerge-waehrend-der-nacht#0": {
+			"id": "grammar-de-x-accept-v2-unknown-nerge-sub",
+			"evaluation": true
+		},
+		"de/im-ansonsten-deutschen-gespraech-nannte-er-die-entscheidung#0": {
+			"id": "grammar-de-x-accept-v2-foreign-random",
+			"evaluation": true
+		},
+		"de/vor-ihrer-meinung-schrieb-sie-im-deutschen-chat-tbh#0": {
+			"id": "grammar-de-x-accept-v2-abbr-tbh",
+			"evaluation": true
+		},
+		"de/die-aufnahme-brach-mitten-im-begonnenen-wort-nach-trans#0": {
+			"id": "grammar-de-x-accept-v2-fragment-trans",
+			"evaluation": true
+		},
+		"de/der-englische-ausdruck-off-grid-blieb-im-deutschen-gespraech#0": {
+			"id": "grammar-de-x-accept-v2-hyphen-off-grid",
+			"evaluation": true
+		},
+		"de/im-deutsch-englischen-chat-war-mit-dem-tippfehler-wierd#0": {
+			"id": "grammar-de-x-accept-v2-typo-wierd",
+			"evaluation": true
+		},
+		"de/im-ausdruecklich-archaischen-englischen-dialog-stand-hither#0": {
+			"id": "grammar-de-x-accept-v2-archaic-hither",
+			"evaluation": true
+		}
+	}
+}

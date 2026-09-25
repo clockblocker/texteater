@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert, ist ein schlechter Erzieher.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seiner" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eigenen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kindheit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "deutlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erinnert" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schlechter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Erzieher" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [
+				0, 2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25
+			],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Wer", "orthography": "Standard" },
+					{ "attested": "sich", "orthography": "Standard" },
+					{ "attested": "seiner", "orthography": "Standard" },
+					{ "attested": "eigenen", "orthography": "Standard" },
+					{ "attested": "Kindheit", "orthography": "Standard" },
+					{ "attested": "nicht", "orthography": "Standard" },
+					{ "attested": "mehr", "orthography": "Standard" },
+					{ "attested": "deutlich", "orthography": "Standard" },
+					{ "attested": "erinnert", "orthography": "Standard" },
+					{ "attested": "ist", "orthography": "Standard" },
+					{ "attested": "ein", "orthography": "Standard" },
+					{ "attested": "schlechter", "orthography": "Standard" },
+					{ "attested": "Erzieher", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

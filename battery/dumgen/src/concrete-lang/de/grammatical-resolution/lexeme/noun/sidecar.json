@@ -1,0 +1,237 @@
+{
+	"slices": {
+		"governed": "A noun takes in its governed preposition as a member (ADR 0034)."
+	},
+	"cases": {
+		"de/der-aufstieg-und-abstieg#0": {
+			"id": "grammar-de-noun-demo-shared-abstieg",
+			"demonstration": true
+		},
+		"de/als-der-aufstieg-anstrengender-wurde#0": {
+			"id": "grammar-de-noun-demo-owned-aufstieg",
+			"demonstration": true
+		},
+		"de/woerterbucheintrag-haus#0": {
+			"id": "grammar-de-noun-demo-citation-haus",
+			"demonstration": true
+		},
+		"de/sie-sieht-den-hund-im-garten#0": {
+			"id": "grammar-de-noun-demo-acc-sing-hund",
+			"demonstration": true
+		},
+		"de/er-hilft-den-kindern-bei-den-aufgaben#0": {
+			"id": "grammar-de-noun-demo-dat-plur-kindern",
+			"demonstration": true
+		},
+		"de/der-kaffe-duftet-am-morgen#0": {
+			"id": "grammar-de-noun-demo-typo-kaffe",
+			"demonstration": true
+		},
+		"de/sie-bewundert-sein-antlitz#0": {
+			"id": "grammar-de-noun-demo-archaic-antlitz",
+			"demonstration": true
+		},
+		"de/sie-verkauft-kinder-und-jugendbuecher#0": {
+			"id": "grammar-de-noun-demo-suspended-kinderbuecher",
+			"demonstration": true
+		},
+		"de/der-aufstieg-und-abstieg-und-umstieg#0": {
+			"id": "grammar-de-noun-dev-shared-long",
+			"evaluation": true
+		},
+		"de/der-aufstieg-und-der-abstieg#0": {
+			"id": "grammar-de-noun-dev-repeated",
+			"evaluation": true
+		},
+		"de/der-anfang-des-aufstiegs#0": {
+			"id": "grammar-de-noun-dev-nested",
+			"evaluation": true
+		},
+		"de/der-steile-aufstieg#0": {
+			"id": "grammar-de-noun-dev-adjective",
+			"evaluation": true
+		},
+		"grammar-de-noun-dev-bad-agreement": {
+			"input": {
+				"markedContext": "<TARGET>den</TARGET> <TARGET>Haus</TARGET>",
+				"members": ["den", "Haus"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"evaluation": true
+		},
+		"de/die-banken-oeffnen-um-neun-uhr#0": {
+			"id": "grammar-de-noun-dev-nom-plur-banken",
+			"evaluation": true
+		},
+		"de/wir-sitzen-in-der-bibliothek#0": {
+			"id": "grammar-de-noun-dev-dat-sing-bibliothek",
+			"evaluation": true
+		},
+		"de/das-fahrrad-des-mannes-ist-neu#0": {
+			"id": "grammar-de-noun-dev-gen-sing-mannes",
+			"evaluation": true
+		},
+		"de/die-stimmen-der-frauen-waren-deutlich#0": {
+			"id": "grammar-de-noun-dev-gen-plur-frauen",
+			"evaluation": true
+		},
+		"de/hallo-leute-hoert-kurz-zu#0": {
+			"id": "grammar-de-noun-dev-vocative-leute",
+			"evaluation": true
+		},
+		"de/sie-kauft-die-buecher-fuer-den-kurs#0": {
+			"id": "grammar-de-noun-dev-acc-plur-buecher",
+			"evaluation": true
+		},
+		"de/das-maedchen-wartet-vor-der-schule#0": {
+			"id": "grammar-de-noun-dev-nom-sing-maedchen",
+			"evaluation": true
+		},
+		"de/wir-besuchen-die-stadt-am-wochenende#0": {
+			"id": "grammar-de-noun-dev-acc-sing-stadt",
+			"evaluation": true
+		},
+		"de/sie-spricht-mit-dem-chef-ueber-den-plan#0": {
+			"id": "grammar-de-noun-dev-dat-sing-chef",
+			"evaluation": true
+		},
+		"de/die-eltern-warten-draussen#0": {
+			"id": "grammar-de-noun-dev-nom-plur-eltern",
+			"evaluation": true
+		},
+		"de/der-arzt-untersucht-beide-knie-gruendlich#0": {
+			"id": "grammar-de-noun-dev-acc-plur-knie",
+			"evaluation": true
+		},
+		"de/die-mark-war-damals-die-waehrung#0": {
+			"id": "grammar-de-noun-accept-nom-sing-mark",
+			"evaluation": true
+		},
+		"de/der-tisch-steht-am-fenster#0": {
+			"id": "grammar-de-noun-accept-nom-sing-tisch",
+			"evaluation": true
+		},
+		"de/sie-oeffnet-die-tuer-ganz-leise#0": {
+			"id": "grammar-de-noun-accept-acc-sing-tuer",
+			"evaluation": true
+		},
+		"de/zwischen-den-haeusern-liegt-ein-hof#0": {
+			"id": "grammar-de-noun-accept-dat-plur-haeusern",
+			"evaluation": true
+		},
+		"de/das-lachen-der-kinder-war-laut#0": {
+			"id": "grammar-de-noun-accept-gen-plur-kinder",
+			"evaluation": true
+		},
+		"de/die-drei-maedchen-spielen-draussen#0": {
+			"id": "grammar-de-noun-accept-invariant-plur-maedchen",
+			"evaluation": true
+		},
+		"de/die-ferien-beginnen-morgen#0": {
+			"id": "grammar-de-noun-accept-plural-only-ferien",
+			"evaluation": true
+		},
+		"de/sie-nimmt-die-u-bahn-zur-arbeit#0": {
+			"id": "grammar-de-noun-dev-hyphenated-u-bahn",
+			"evaluation": true
+		},
+		"de/die-redaktion-fuehrt-fotografie-als-leitform-die#0": {
+			"id": "grammar-de-noun-dev-variant-photographie",
+			"evaluation": true
+		},
+		"de/sie-streichelt-die-katze-vorsichtig#0": {
+			"id": "grammar-de-noun-dev-lowercase-katze",
+			"evaluation": true
+		},
+		"de/der-odem-des-greises-ging-schwer#0": {
+			"id": "grammar-de-noun-dev-archaic-odem",
+			"evaluation": true
+		},
+		"de/er-streicht-die-haustuer-gruen#0": {
+			"id": "grammar-de-noun-dev-compound-haustuer",
+			"evaluation": true
+		},
+		"de/die-reisenden-steigen-am-bahnhof-aus#0": {
+			"id": "grammar-de-noun-dev-substantivized-reisenden",
+			"evaluation": true
+		},
+		"de/das-dach-der-schule-wird-saniert#0": {
+			"id": "grammar-de-noun-dev-gen-sing-schule",
+			"evaluation": true
+		},
+		"de/sie-beantwortet-die-e-mail-sofort#0": {
+			"id": "grammar-de-noun-accept-hyphenated-e-mail",
+			"evaluation": true
+		},
+		"de/wir-danken-den-angestellten-fuer-ihre-hilfe#0": {
+			"id": "grammar-de-noun-accept-substantivized-angestellten",
+			"evaluation": true
+		},
+		"de/sie-verkauft-kinder-und-jugendbuecher#1": {
+			"id": "grammar-de-noun-dev-suspended-right-jugendbuecher",
+			"evaluation": true
+		},
+		"de/die-seiten-des-kinder-und-jugendbuchs-fehlen#0": {
+			"id": "grammar-de-noun-dev-suspended-hyphen-genitiv",
+			"evaluation": true
+		},
+		"de/sie-verkauft-kidner-und-jugendbuecher#0": {
+			"id": "grammar-de-noun-dev-suspended-typo",
+			"evaluation": true
+		},
+		"de/der-laden-fuehrt-kinder-und-jugendbuecher#0": {
+			"id": "grammar-de-noun-accept-suspended-nonbreaking",
+			"evaluation": true
+		},
+		"de/sie-kauft-ein-kinder-oder-jugendbuch#0": {
+			"id": "grammar-de-noun-accept-suspended-oder-singular",
+			"evaluation": true
+		},
+		"de/mit-kinder-und-jugendbuechern-kennt-sie-sich-aus#0": {
+			"id": "grammar-de-noun-accept-suspended-dativ-plural",
+			"evaluation": true
+		},
+		"de/kinder-und-jugendbuecher-sind-beliebt#0": {
+			"id": "grammar-de-noun-accept-suspended-nominativ-plural",
+			"evaluation": true
+		},
+		"de/wir-bleiben-im-wald#0": {
+			"id": "grammar-de-noun-regression-fusion-im-wald",
+			"evaluation": true
+		},
+		"de/wir-gehen-zum-wald#0": {
+			"id": "grammar-de-noun-regression-fusion-zum-wald",
+			"evaluation": true
+		},
+		"de/wir-gehen-ins-haus#0": {
+			"id": "grammar-de-noun-regression-fusion-ins-haus",
+			"evaluation": true
+		},
+		"de/wir-bleiben-im-wald-und-feld#0": {
+			"id": "grammar-de-noun-regression-fusion-shared-feld",
+			"evaluation": true
+		},
+		"de/wir-gehen-zur-schule#0": {
+			"id": "grammar-de-noun-regression-fusion-zur-schule",
+			"evaluation": true
+		},
+		"de/er-wartet-aufs-ende#1": {
+			"id": "grammar-de-noun-regression-fusion-aufs-ende"
+		},
+		"de/hast-du-ne-frage#0": { "id": "grammar-de-noun-shorthand-ne-frage" },
+		"de/dipl-ing-mueller-leitet-das-projekt#0": {
+			"id": "grammar-de-noun-dev-abbreviation-dipl-ing",
+			"evaluation": true
+		},
+		"de/aus-angst-vor-hunden-bleibt-sie-zu-hause#0": {
+			"id": "grammar-de-noun-governed-angst-vor",
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"de/sie-spuert-die-angst-der-kinder-vor-hunden#0": {
+			"id": "grammar-de-noun-governed-article-angst-vor",
+			"evaluation": true,
+			"slices": ["governed"]
+		}
+	}
+}

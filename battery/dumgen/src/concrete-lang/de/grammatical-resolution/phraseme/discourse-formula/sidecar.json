@@ -1,0 +1,141 @@
+{
+	"slices": {},
+	"cases": {
+		"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte#0": {
+			"id": "grammar-de-discourse-formula-demo-guten-morgen",
+			"demonstration": true
+		},
+		"de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir#0": {
+			"id": "grammar-de-discourse-formula-demo-es-tut-mir-leid-discontinuous",
+			"demonstration": true
+		},
+		"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0": {
+			"id": "grammar-de-discourse-formula-demo-vielen-dank-complement",
+			"demonstration": true
+		},
+		"de/als-die-leiter-umkippte-rief-sie-ach-du-meine-guete-paul#0": {
+			"id": "grammar-de-discourse-formula-demo-ach-du-meine-guete-vocative",
+			"demonstration": true
+		},
+		"de/am-ende-der-dienstlichen-nachricht-stand-als-grussformel-mfg#0": {
+			"id": "grammar-de-discourse-formula-demo-mfg-variant",
+			"demonstration": true
+		},
+		"de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf#0": {
+			"id": "grammar-de-discourse-formula-dev-auf-wiedersehen",
+			"evaluation": true
+		},
+		"de/auf-den-dank-des-nachbarn-antwortete-sie-gern-geschehen#0": {
+			"id": "grammar-de-discourse-formula-dev-gern-geschehen",
+			"evaluation": true
+		},
+		"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt#0": {
+			"id": "grammar-de-discourse-formula-dev-nein-danke",
+			"evaluation": true
+		},
+		"de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf#0": {
+			"id": "grammar-de-discourse-formula-dev-darf-ich-bitten",
+			"evaluation": true
+		},
+		"de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der#0": {
+			"id": "grammar-de-discourse-formula-dev-dann-wollen-wir-mal",
+			"evaluation": true
+		},
+		"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat#0": {
+			"id": "grammar-de-discourse-formula-dev-wie-dem-auch-sei",
+			"evaluation": true
+		},
+		"de/die-museumsleiterin-begruesste-die-neue-gruppe-mit-herzlich#0": {
+			"id": "grammar-de-discourse-formula-dev-herzlich-willkommen",
+			"evaluation": true
+		},
+		"de/der-kellner-stellte-die-tasse-vor-den-gast-und-sagte-bitte#0": {
+			"id": "grammar-de-discourse-formula-dev-bitte-schoen-presentation",
+			"evaluation": true
+		},
+		"de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte#0": {
+			"id": "grammar-de-discourse-formula-dev-bitte-schoen-request",
+			"evaluation": true
+		},
+		"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir#0": {
+			"id": "grammar-de-discourse-formula-dev-tut-mir-leid-sympathy",
+			"evaluation": true
+		},
+		"de/nach-der-bestandenen-pruefung-sagte-der-ausbilder-herzlichen#0": {
+			"id": "grammar-de-discourse-formula-dev-herzlichen-glueckwunsch",
+			"evaluation": true
+		},
+		"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#0": {
+			"id": "grammar-de-discourse-formula-dev-danke-danke-repetition",
+			"evaluation": true
+		},
+		"de/an-der-hotelrezeption-wandte-sich-der-gast-an-die#0": {
+			"id": "grammar-de-discourse-formula-accept-schoenen-guten-tag",
+			"evaluation": true
+		},
+		"de/vor-dem-ausschalten-des-flurlichts-verabschiedete-sich-der#0": {
+			"id": "grammar-de-discourse-formula-accept-gute-nacht",
+			"evaluation": true
+		},
+		"de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte#0": {
+			"id": "grammar-de-discourse-formula-accept-besten-dank",
+			"evaluation": true
+		},
+		"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#0": {
+			"id": "grammar-de-discourse-formula-accept-ich-bitte-um-verzeihung",
+			"evaluation": true
+		},
+		"de/auf-sein-dankbares-nicken-antwortete-der-hausmeister-keine#0": {
+			"id": "grammar-de-discourse-formula-accept-keine-ursache",
+			"evaluation": true
+		},
+		"de/in-der-abgebrochenen-sprachnachricht-war-nur-die#0": {
+			"id": "grammar-de-discourse-formula-demo-es-tut-mir-partial",
+			"demonstration": true
+		},
+		"de/auf-dem-handgeschriebenen-schild-stand-die-begruessung-guten#0": {
+			"id": "grammar-de-discourse-formula-dev-guten-morgen-casing-typo",
+			"evaluation": true
+		},
+		"de/die-gastgeberin-oeffnete-die-tuer-und-sagte-herzlich#0": {
+			"id": "grammar-de-discourse-formula-dev-herzlich-wilkommen-typo",
+			"evaluation": true
+		},
+		"de/am-gartentor-verabschiedete-sich-der-besucher-mit-auf#0": {
+			"id": "grammar-de-discourse-formula-dev-auf-wiedersehn-variant",
+			"evaluation": true
+		},
+		"de/im-historischen-buehnenstueck-verabschiedete-sich-der#0": {
+			"id": "grammar-de-discourse-formula-dev-gott-befohlen-archaic",
+			"evaluation": true
+		},
+		"de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit#0": {
+			"id": "grammar-de-discourse-formula-dev-mit-freundlichen-partial",
+			"evaluation": true
+		},
+		"de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen#0": {
+			"id": "grammar-de-discourse-formula-accept-vielen-herzlichen-partial",
+			"evaluation": true
+		},
+		"de/nachdem-sie-ueber-eine-gute-reise-im-naechsten-jahr#0": {
+			"id": "grammar-de-discourse-formula-dev-gute-reise-wish",
+			"evaluation": true
+		},
+		"de/gibst-du-ihm-das-original-ohne-quittung-auf-keinen-fall#0": {
+			"id": "grammar-de-discourse-formula-accept-auf-keinen-fall",
+			"evaluation": true
+		},
+		"de/als-alle-plaetze-besetzt-waren-eroeffnete-die-moderatorin#0": {
+			"id": "grammar-de-discourse-formula-accept-nun-denn",
+			"evaluation": true
+		},
+		"de/nachdem-jemand-den-idiom-ausdruck-ins-gras-beissen-erwaehnt#0": {
+			"id": "grammar-de-discourse-formula-accept-um-himmels-willen",
+			"evaluation": true
+		},
+		"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans#0": {
+			"id": "grammar-de-discourse-formula-accept-willkommen-single",
+			"evaluation": true
+		}
+	}
+}

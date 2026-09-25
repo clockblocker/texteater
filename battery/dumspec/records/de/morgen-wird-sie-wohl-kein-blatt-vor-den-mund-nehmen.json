@@ -1,0 +1,91 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Morgen wird sie wohl kein Blatt vor den Mund nehmen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wohl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Blatt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mund" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nehmen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, wird kein Blatt vor den Mund nehmen"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 8, 10, 12, 14, 16, 18],
+			"notes": {
+				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "kein Blatt vor den Mund nehmen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "wird kein Blatt vor den Mund nehmen",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "wird", "orthography": "Standard" },
+					{ "attested": "kein", "orthography": "Standard" },
+					{ "attested": "Blatt", "orthography": "Standard" },
+					{ "attested": "vor", "orthography": "Standard" },
+					{ "attested": "den", "orthography": "Standard" },
+					{ "attested": "Mund", "orthography": "Standard" },
+					{ "attested": "nehmen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

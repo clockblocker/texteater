@@ -1,0 +1,66 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Deutsche Bank veröffentlichte den Bericht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Deutsche" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "veröffentlichte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bericht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4],
+			"notes": {
+				"rationale": "Upstream supplied both name members; Deutsche is not reclassified as ADJ and Bank is not repaired to a common NOUN."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Deutsche Bank",
+						"coreFeatures": {
+							"abbr": null,
+							"article": "Definite",
+							"foreign": null,
+							"gender": "Fem"
+						}
+					},
+					"normalizedSurface": "Deutsche Bank",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"members": [
+					{ "attested": "Die", "orthography": "Standard" },
+					{ "attested": "Deutsche", "orthography": "Standard" },
+					{ "attested": "Bank", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		}
+	],
+	"noTarget": []
+}

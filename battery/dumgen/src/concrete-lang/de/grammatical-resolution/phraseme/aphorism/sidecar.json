@@ -1,0 +1,199 @@
+{
+	"slices": {},
+	"cases": {
+		"de/alt-werden-heisst-sehend-werden#0": {
+			"id": "grammar-de-aphorism-alt-werden",
+			"demonstration": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:alt-werden-heisst-sehend-werden"
+			]
+		},
+		"de/wo-die-eitelkeit-anfaengt-hoehrt-der-verstand-auf#0": {
+			"id": "grammar-de-aphorism-typo-hoert",
+			"demonstration": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:wo-die-eitelkeit-anfaengt-hoert-der-verstand-auf"
+			]
+		},
+		"de/wer-nichts-weiss-muss-alles-glauben#0": {
+			"id": "grammar-de-aphorism-historical-muss",
+			"demonstration": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:wer-nichts-weiss-muss-alles-glauben"
+			]
+		},
+		"de/ebner-eschenbach-schrieb-die-meisten-nachahmer-lockt-das#0": {
+			"id": "grammar-de-aphorism-nachahmer",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:die-meisten-nachahmer"]
+		},
+		"de/die-meiste-nachsicht-uebt-der-der-die-wenigste-braucht#0": {
+			"id": "grammar-de-aphorism-nachsicht",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:die-meiste-nachsicht"]
+		},
+		"de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich#0": {
+			"id": "grammar-de-aphorism-kindheit",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:wer-sich-seiner-kindheit"]
+		},
+		"de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert#0": {
+			"id": "grammar-de-aphorism-alter",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:das-alter-verklaert"]
+		},
+		"de/in-der-jugend-lernt-im-alter-versteht-man#0": {
+			"id": "grammar-de-aphorism-jugend",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:in-der-jugend-lernt"]
+		},
+		"de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der#0": {
+			"id": "grammar-de-aphorism-tadel",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:unbegruendeter-tadel"]
+		},
+		"de/nachdem-sie-die-redewendung-den-nagel-auf-den-kopf-treffen#0": {
+			"id": "grammar-de-aphorism-gegenwart",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:nur-was-fuer-die-gegenwart"
+			]
+		},
+		"de/nach-dem-grammatikbeispiel-eine-entscheidung-treffen-folgte#0": {
+			"id": "grammar-de-aphorism-streiten",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:nicht-jene-die-streiten"]
+		},
+		"de/die-protokollnotiz-die-sitzung-endet-um-fuenf-war-nur#0": {
+			"id": "grammar-de-aphorism-unbezahlbar",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:man-kann-viele-dinge-kaufen"
+			]
+		},
+		"de/anders-als-das-sprichwort-morgenstund-hat-gold-im-mund-ist#0": {
+			"id": "grammar-de-aphorism-grundsaetze",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:wenn-zwei-brave-menschen"]
+		},
+		"de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den#0": {
+			"id": "grammar-de-aphorism-casing-menschen",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:die-menschen-denen-wir-eine-stuetze-sind"
+			]
+		},
+		"de/ein-aphorismus-ist-der-letzte-ring-einer-langen#0": {
+			"id": "grammar-de-aphorism-aphorismus-ring",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:ein-aphorismus-ist-der-letzte-ring"
+			]
+		},
+		"de/sag-etwas-das-sich-von-selbst-versteht-zum-ersten-mal-und-du#0": {
+			"id": "grammar-de-aphorism-selbstverstaendlich",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:sag-etwas-das-sich-von-selbst-versteht"
+			]
+		},
+		"de/was-uns-an-der-sichtbaren-schoenheit-entzueckt-ist-ewig-nur#0": {
+			"id": "grammar-de-aphorism-sichtbare-schoenheit",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:was-uns-an-der-sichtbaren-schoenheit"
+			]
+		},
+		"de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft#0": {
+			"id": "grammar-de-aphorism-vertrauen-discontinuous",
+			"demonstration": true,
+			"contaminationKeys": ["de-aphorism-lemma:vertrauen-ist-mut"]
+		},
+		"de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig#0": {
+			"id": "grammar-de-aphorism-verstehen-partial",
+			"demonstration": true,
+			"contaminationKeys": ["de-aphorism-lemma:die-verstehen-sehr-wenig"]
+		},
+		"de/neben-dem-werbeslogan-liebe-lohnt-sich-stand-der-aphorismus#0": {
+			"id": "grammar-de-aphorism-liebe-rechte",
+			"demonstration": true,
+			"contaminationKeys": ["de-aphorism-lemma:die-liebe-hat-rechte"]
+		},
+		"de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht#0": {
+			"id": "grammar-de-aphorism-geduld-streitsucht",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:geduld-mit-der-streitsucht"
+			]
+		},
+		"de/wie-weise-muss-man-sein-um-immer-gut-zu-sein#0": {
+			"id": "grammar-de-aphorism-weise-gut",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:wie-weise-muss-man-sein"]
+		},
+		"de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu#0": {
+			"id": "grammar-de-aphorism-warten",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:warten-lernen-wir"]
+		},
+		"de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte#0": {
+			"id": "grammar-de-aphorism-leidenschaft",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:die-leidenschaft-ist-immer"
+			]
+		},
+		"de/gebrannte-kinder-fuerchten-das-feuer-oder-vernarren-sich#0": {
+			"id": "grammar-de-aphorism-gebrannte-kinder",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:gebrannte-kinder-fuerchten"
+			]
+		},
+		"de/mitleid-ist-liebe-im-neglige#0": {
+			"id": "grammar-de-aphorism-mitleid-neglige",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:mitleid-ist-liebe"]
+		},
+		"de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend#0": {
+			"id": "grammar-de-aphorism-arme-reiche",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:der-arme-rechnet-dem-reichen"
+			]
+		},
+		"de/die-ausgabe-kuerzt-mit-auslassungszeichen-die-leute-denen#0": {
+			"id": "grammar-de-aphorism-widerspruch-partial",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:die-leute-denen-man-nie-widerspricht"
+			]
+		},
+		"de/huete-dich-vor-der-tugend-die-zu-besitzen-ein-mensch-von#0": {
+			"id": "grammar-de-aphorism-huete-dich",
+			"evaluation": true,
+			"contaminationKeys": ["de-aphorism-lemma:huete-dich-vor-der-tugend"]
+		},
+		"de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu#0": {
+			"id": "grammar-de-aphorism-alten-lesen",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:wenn-man-nur-die-alten-liest"
+			]
+		},
+		"de/auf-der-karte-war-nur-der-anfang-gedruckt-wenn-der-kunst#0": {
+			"id": "grammar-de-aphorism-kunst-tempel-partial",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:wenn-der-kunst-kein-tempel"
+			]
+		},
+		"de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht#0": {
+			"id": "grammar-de-aphorism-guete-grenzenlos",
+			"evaluation": true,
+			"contaminationKeys": [
+				"de-aphorism-lemma:die-guete-die-nicht-grenzenlos-ist"
+			]
+		}
+	}
+}

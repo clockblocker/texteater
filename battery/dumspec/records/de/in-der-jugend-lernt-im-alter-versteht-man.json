@@ -1,0 +1,90 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "In der Jugend lernt, im Alter versteht man.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "In" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jugend" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lernt" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Alter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "versteht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "man" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 6, 9, 10, 12, 14, 16],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "In der Jugend lernt im Alter versteht man",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "In der Jugend lernt im Alter versteht man",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "In", "orthography": "Standard" },
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "Jugend", "orthography": "Standard" },
+					{ "attested": "lernt", "orthography": "Standard" },
+					{
+						"attested": "i",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Alter", "orthography": "Standard" },
+					{ "attested": "versteht", "orthography": "Standard" },
+					{ "attested": "man", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

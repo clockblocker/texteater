@@ -2,63 +2,99 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er versucht, hinauszulaufen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "versucht" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hinauszulaufen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "versucht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hinauszulaufen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, hinauszulaufen"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
 			"notes": {
-				"rationale": "The infinitive spelling `hinauszulaufen` directly exposes the separable verb lemma `hinauslaufen`, so this is an unambiguous verbal inflection rather than a standalone directional adverb."
+				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The infinitive spelling `hinauszulaufen` directly exposes the separable verb lemma `hinauslaufen`, so this is an unambiguous verbal inflection rather than a standalone directional adverb."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "hinauszulaufen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "hinauszulaufen",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"verbForm": "Inf",
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "hinauslaufen",
 						"family": "Lexeme",
 						"kind": "VERB",
+						"canonicalForm": "hinauslaufen",
 						"coreFeatures": {
 							"hasSepPrefix": "hinaus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"surfaceFeatures": null
-				}
+					"normalizedSurface": "hinauszulaufen",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "hinauszulaufen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

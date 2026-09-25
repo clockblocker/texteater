@@ -1,0 +1,173 @@
+{
+	"slices": {},
+	"cases": {
+		"de/heute-faehrt-der-letzte-bus-nicht#0": {
+			"id": "grammar-de-part-demo-negative-nicht",
+			"demonstration": true
+		},
+		"de/mina-hofft-das-paket-morgen-zu-erhalten#0": {
+			"id": "grammar-de-part-demo-infinitival-zu",
+			"demonstration": true
+		},
+		"de/dann-warten-wir-halt-bis-montag#0": {
+			"id": "grammar-de-part-demo-modal-halt",
+			"demonstration": true
+		},
+		"de/lea-hat-sogar-den-schwierigen-zusatztest-bestanden#0": {
+			"id": "grammar-de-part-demo-focus-sogar",
+			"demonstration": true
+		},
+		"de/das-ist-ebn-der-entscheidende-unterschied#0": {
+			"id": "grammar-de-part-demo-typo-ebn",
+			"demonstration": true
+		},
+		"de/das-historische-woerterbuch-kennzeichnet-nit-ausdruecklich#0": {
+			"id": "grammar-de-part-demo-archaic-nit",
+			"demonstration": true
+		},
+		"de/das-fachlexikon-fuehrt-die-historische-negationspartikel-ni#0": {
+			"id": "grammar-de-part-demo-distinct-archaic-ni",
+			"demonstration": true
+		},
+		"de/im-deutsch-englischen-gespraech-sagte-sie-das-ist-yes-ganz#0": {
+			"id": "grammar-de-part-demo-foreign-yes",
+			"demonstration": true
+		},
+		"de/in-der-codeliste-wird-die-affirmative-partikel-mit-aff#0": {
+			"id": "grammar-de-part-demo-abbreviation-aff",
+			"demonstration": true
+		},
+		"de/nicht-jeder-vorschlag-wurde-angenommen#0": {
+			"id": "grammar-de-part-dev-negative-initial",
+			"evaluation": true
+		},
+		"de/auf-die-kontrollfrage-antwortete-sie-klar-mit-ja#0": {
+			"id": "grammar-de-part-dev-answer-ja",
+			"evaluation": true
+		},
+		"de/im-deutsch-englischen-gespraech-sagte-er-das-ist-not-okay#0": {
+			"id": "grammar-de-part-dev-foreign-not",
+			"evaluation": true
+		},
+		"de/im-transkript-wurde-die-partikel-nicht-als-n-abgekuerzt#0": {
+			"id": "grammar-de-part-dev-abbreviation-n",
+			"evaluation": true
+		},
+		"de/komm-doch-nach-der-arbeit-kurz-vorbei#0": {
+			"id": "grammar-de-part-dev-modal-doch",
+			"evaluation": true
+		},
+		"de/wie-hast-du-das-denn-so-schnell-geschafft#0": {
+			"id": "grammar-de-part-dev-modal-denn",
+			"evaluation": true
+		},
+		"de/der-zug-wird-wohl-erst-am-abend-eintreffen#0": {
+			"id": "grammar-de-part-dev-modal-wohl",
+			"evaluation": true
+		},
+		"de/sieh-mal-im-oberen-fach-nach#0": {
+			"id": "grammar-de-part-dev-modal-mal",
+			"evaluation": true
+		},
+		"de/du-kennst-den-weg-ja-bereits#0": {
+			"id": "grammar-de-part-dev-modal-ja",
+			"evaluation": true
+		},
+		"de/fuer-die-reparatur-braucht-sie-nur-einen-schraubendreher#0": {
+			"id": "grammar-de-part-dev-focus-nur",
+			"evaluation": true
+		},
+		"de/selbst-der-erfahrenste-techniker-uebersah-den-riss#0": {
+			"id": "grammar-de-part-dev-focus-selbst",
+			"evaluation": true
+		},
+		"de/das-ergebnis-ist-sehr-viel-besser-als-erwartet#0": {
+			"id": "grammar-de-part-dev-intensifying-sehr",
+			"evaluation": true
+		},
+		"de/auf-die-negative-frage-antwortete-pavel-entschieden-mit-doch#0": {
+			"id": "grammar-de-part-dev-answer-doch",
+			"evaluation": true
+		},
+		"de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen#0": {
+			"id": "grammar-de-part-dev-infinitival-beside-adp",
+			"evaluation": true
+		},
+		"de/er-arbeitet-heute-bloss-vormittags-von-zu-hause#0": {
+			"id": "grammar-de-part-dev-focus-beside-adv",
+			"evaluation": true
+		},
+		"de/sie-ist-eben-gegangen-weil-der-bus-schon-kam#0": {
+			"id": "grammar-de-part-dev-modal-beside-sconj",
+			"evaluation": true
+		},
+		"de/das-ist-aber-eine-erfreuliche-nachricht#0": {
+			"id": "grammar-de-part-dev-modal-aber-not-cconj",
+			"evaluation": true
+		},
+		"de/hoer-mal-mit-dem-laerm-auf#0": {
+			"id": "grammar-de-part-dev-beside-verb-particle",
+			"evaluation": true
+		},
+		"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale#0": {
+			"id": "grammar-de-part-dev-variant-nich",
+			"evaluation": true
+		},
+		"de/komm-dohc-bitte-kurz-herein#0": {
+			"id": "grammar-de-part-dev-typo-dohc",
+			"evaluation": true
+		},
+		"de/was-wolltest-du-eigentlich-noch-erzaehlen#0": {
+			"id": "grammar-de-part-dev-other-eigentlich",
+			"evaluation": true
+		},
+		"de/der-wartungsbericht-wurde-gestern-nicht-veroeffentlicht#0": {
+			"id": "grammar-de-part-accept-v2-negative-nicht",
+			"evaluation": true
+		},
+		"de/die-technikerin-versucht-den-fehler-vor-mittag-zu-beheben#0": {
+			"id": "grammar-de-part-accept-v2-infinitival-zu",
+			"evaluation": true
+		},
+		"de/auf-die-frage-ob-sie-nicht-teilnehmen-koenne-antwortete-sie#0": {
+			"id": "grammar-de-part-accept-v2-answer-doch",
+			"evaluation": true
+		},
+		"de/im-deutsch-englischen-dialog-sagte-kim-das-wuerde-ich-never#0": {
+			"id": "grammar-de-part-accept-v2-foreign-never",
+			"evaluation": true
+		},
+		"de/in-der-tag-legende-wird-die-positive-antwortpartikel-mit-pos#0": {
+			"id": "grammar-de-part-accept-v2-abbreviation-pos",
+			"evaluation": true
+		},
+		"de/wie-konnte-der-schluessel-bloss-hinter-den-schrank-geraten#0": {
+			"id": "grammar-de-part-accept-v2-modal-bloss",
+			"evaluation": true
+		},
+		"de/die-aenderung-betrifft-lediglich-den-letzten-absatz#0": {
+			"id": "grammar-de-part-accept-v2-focus-lediglich",
+			"evaluation": true
+		},
+		"de/die-messwerte-waren-gar-nicht-so-ungewoehnlich#0": {
+			"id": "grammar-de-part-accept-v2-intensifying-gar",
+			"evaluation": true
+		},
+		"de/der-neue-ablauf-ist-ja-deutlich-einfacher-als-der-alte#0": {
+			"id": "grammar-de-part-accept-v2-modal-ja-not-intj",
+			"evaluation": true
+		},
+		"de/die-datei-wurde-nciht-rechtzeitig-gespeichert#0": {
+			"id": "grammar-de-part-accept-v2-typo-nciht",
+			"evaluation": true
+		},
+		"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine#0": {
+			"id": "grammar-de-part-accept-v2-explicit-variant-nedd",
+			"evaluation": true
+		},
+		"de/das-historische-lexikon-fuehrt-die-negationspartikel-en-als#0": {
+			"id": "grammar-de-part-accept-v2-distinct-archaic-en",
+			"evaluation": true
+		}
+	}
+}

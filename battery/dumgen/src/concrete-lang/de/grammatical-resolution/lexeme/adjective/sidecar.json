@@ -1,0 +1,207 @@
+{
+	"slices": {
+		"participles": "Adjectival participles are ADJ with the uninflected participle as Canonical Form (ADR 0036).",
+		"governed": "An adjective takes in its governed preposition as a member (ADR 0034)."
+	},
+	"cases": {
+		"de/im-woerterbuch-steht-das-adjektiv-sanft#0": {
+			"id": "grammar-de-adj-demo-citation-sanft",
+			"demonstration": true
+		},
+		"de/als-grundform-wird-mild-angegeben#0": {
+			"id": "grammar-de-adj-accept-citation-mild",
+			"evaluation": true
+		},
+		"de/der-kleine-hund-schlaeft#0": {
+			"id": "grammar-de-adj-demo-attributive-klein",
+			"demonstration": true
+		},
+		"de/der-hund-laeuft-schnell#0": {
+			"id": "grammar-de-adj-demo-adverbial-schnell",
+			"demonstration": true
+		},
+		"de/sie-traegt-die-rote-tasche#0": {
+			"id": "grammar-de-adj-dev-attributive-acc-fem-rot",
+			"evaluation": true
+		},
+		"de/bei-kaltem-wetter-bleiben-wir-drinnen#0": {
+			"id": "grammar-de-adj-dev-attributive-dat-neut-kalt",
+			"evaluation": true
+		},
+		"de/wegen-neuer-regeln-aenderte-sich-der-ablauf#0": {
+			"id": "grammar-de-adj-dev-attributive-gen-plur-neu",
+			"evaluation": true
+		},
+		"de/die-alten-haeuser-stehen-am-marktplatz#0": {
+			"id": "grammar-de-adj-dev-attributive-nom-plur-alt",
+			"evaluation": true
+		},
+		"de/blau-ist-der-himmel-ueber-dem-meer#0": {
+			"id": "grammar-de-adj-dev-predicative-blau",
+			"evaluation": true
+		},
+		"de/sie-schliesst-die-tuer-leise#0": {
+			"id": "grammar-de-adj-dev-adverbial-leise",
+			"evaluation": true
+		},
+		"de/mit-langer-geduld-loeste-sie-das-raetsel#0": {
+			"id": "grammar-de-adj-accept-attributive-dat-fem-lang",
+			"evaluation": true
+		},
+		"de/sie-kaufte-ein-gruenes-fahrrad#0": {
+			"id": "grammar-de-adj-accept-attributive-acc-neut-gruen",
+			"evaluation": true
+		},
+		"de/trotz-starken-regens-begann-das-spiel#0": {
+			"id": "grammar-de-adj-accept-attributive-gen-masc-stark",
+			"evaluation": true
+		},
+		"de/der-see-bleibt-ruhig#0": {
+			"id": "grammar-de-adj-accept-predicative-ruhig",
+			"evaluation": true
+		},
+		"de/die-zeugin-sprach-deutlich#0": {
+			"id": "grammar-de-adj-accept-adverbial-deutlich",
+			"evaluation": true
+		},
+		"de/der-zweite-plan-ist-besser#0": {
+			"id": "grammar-de-adj-demo-comparative-besser",
+			"demonstration": true
+		},
+		"de/er-kaufte-ein-teureres-geraet#0": {
+			"id": "grammar-de-adj-dev-attributive-comparative-teuer",
+			"evaluation": true
+		},
+		"de/der-hoechste-turm-steht-am-fluss#0": {
+			"id": "grammar-de-adj-dev-attributive-superlative-hoch",
+			"evaluation": true
+		},
+		"de/von-allen-arbeitet-sie-am-sorgfaeltigsten#0": {
+			"id": "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+			"evaluation": true
+		},
+		"de/das-neue-buero-liegt-naeher#0": {
+			"id": "grammar-de-adj-dev-predicative-comparative-nah",
+			"evaluation": true
+		},
+		"de/das-war-die-beste-loesung#0": {
+			"id": "grammar-de-adj-accept-irregular-superlative-beste",
+			"evaluation": true
+		},
+		"de/heute-faehrt-der-zug-schneller#0": {
+			"id": "grammar-de-adj-accept-adverbial-comparative-schnell",
+			"evaluation": true
+		},
+		"de/ein-grsser-hund-wartet-draussen#0": {
+			"id": "grammar-de-adj-dev-typo-grsser",
+			"evaluation": true
+		},
+		"de/der-garten-sieht-wundershcoen-aus#0": {
+			"id": "grammar-de-adj-accept-typo-wunderschoen",
+			"evaluation": true
+		},
+		"de/der-spannende-vortrag-dauerte-eine-stunde#0": {
+			"id": "grammar-de-adj-dev-participial-spannend",
+			"evaluation": true
+		},
+		"de/der-mann-ist-voellig-verrueckt#0": {
+			"id": "grammar-de-adj-dev-lexicalized-participial-verrueckt",
+			"evaluation": true
+		},
+		"de/sie-trug-einen-lila-schal#0": {
+			"id": "grammar-de-adj-dev-invariant-lila",
+			"evaluation": true
+		},
+		"de/ihr-holdes-laecheln-bezauberte-die-gaeste#0": {
+			"id": "grammar-de-adj-dev-archaic-hold",
+			"evaluation": true
+		},
+		"de/eine-glaenzende-idee-rettete-das-projekt#0": {
+			"id": "grammar-de-adj-accept-participial-glaenzend",
+			"evaluation": true
+		},
+		"de/er-kaufte-ein-rosa-kleid#0": {
+			"id": "grammar-de-adj-accept-invariant-rosa",
+			"evaluation": true
+		},
+		"de/der-erste-versuch-gelang#0": {
+			"id": "grammar-de-adj-demo-ordinal-erste",
+			"demonstration": true
+		},
+		"de/die-antwort-klingt-freundlcih#0": {
+			"id": "grammar-de-adj-demo-typo-freundlcih",
+			"demonstration": true
+		},
+		"de/sie-las-die-siebenhundert-seiten-in-einer-woche#0": {
+			"id": "grammar-de-adj-dev-cardinal-siebenhundert",
+			"evaluation": true
+		},
+		"de/das-war-ein-special-moment-fuer-das-team#0": {
+			"id": "grammar-de-adj-dev-foreign-special",
+			"evaluation": true
+		},
+		"de/ein-sog-experte-sagte-vor-gericht-aus#0": {
+			"id": "grammar-de-adj-dev-abbreviation-sog",
+			"evaluation": true
+		},
+		"de/die-zweite-sitzung-begann-puenktlich#0": {
+			"id": "grammar-de-adj-accept-ordinal-zweite",
+			"evaluation": true
+		},
+		"de/die-geschlossene-tuer-bleibt-heute-zu#0": {
+			"id": "grammar-de-adj-dev-participial-geschlossen",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/er-kam-lachend-herein#0": {
+			"id": "grammar-de-adj-dev-adverbial-participle-one-lachend",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/die-gekochten-kartoffeln-standen-schon-bereit#0": {
+			"id": "grammar-de-adj-participle-attributive-gekochten",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand#0": {
+			"id": "grammar-de-adj-participle-attributive-bewunderte",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/das-am-see-gelegene-haus-gehoert-meinem-onkel#0": {
+			"id": "grammar-de-adj-participle-attributive-gelegene",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/der-sturm-blockierte-mit-dem-umgestuerzten-baum-die-strasse#0": {
+			"id": "grammar-de-adj-participle-attributive-umgestuerzte",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/sie-beobachtete-die-im-garten-spielenden-kinder#0": {
+			"id": "grammar-de-adj-participle-attributive-spielenden",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/die-tuer-ist-geschlossen#0": {
+			"id": "grammar-de-adj-participle-state-passive-geschlossen",
+			"evaluation": true,
+			"slices": ["participles"]
+		},
+		"de/er-ist-stolz-auf-seinen-sohn#0": {
+			"id": "grammar-de-adj-governed-stolz-auf",
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"de/auf-ihn-bin-ich-stolz#0": {
+			"id": "grammar-de-adj-governed-separated-auf-ihn",
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"de/der-auf-seinen-sohn-stolze-vater-laechelt#0": {
+			"id": "grammar-de-adj-governed-attributive-stolze",
+			"evaluation": true,
+			"slices": ["governed"]
+		}
+	}
+}

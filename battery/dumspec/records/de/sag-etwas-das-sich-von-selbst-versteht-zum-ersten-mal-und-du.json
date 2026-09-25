@@ -1,0 +1,112 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sag etwas, das sich von selbst versteht, zum ersten Mal, und du bist unsterblich.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sag" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "etwas" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "von" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "selbst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "versteht" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ersten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mal" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "unsterblich" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [
+				0, 2, 5, 7, 9, 11, 13, 16, 17, 19, 21, 24, 26, 28, 30
+			],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Sag", "orthography": "Standard" },
+					{ "attested": "etwas", "orthography": "Standard" },
+					{ "attested": "das", "orthography": "Standard" },
+					{ "attested": "sich", "orthography": "Standard" },
+					{ "attested": "von", "orthography": "Standard" },
+					{ "attested": "selbst", "orthography": "Standard" },
+					{ "attested": "versteht", "orthography": "Standard" },
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "ersten", "orthography": "Standard" },
+					{ "attested": "Mal", "orthography": "Standard" },
+					{ "attested": "und", "orthography": "Standard" },
+					{ "attested": "du", "orthography": "Standard" },
+					{ "attested": "bist", "orthography": "Standard" },
+					{ "attested": "unsterblich", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -2,21 +2,57 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Viele vermissen das alte Berlin.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Viele" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vermissen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "alte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Berlin" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Viele"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vermissen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "alte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Berlin"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
@@ -25,7 +61,12 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "das", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
@@ -64,32 +105,38 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "Berlin", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" },
 					"language": "de",
-					"normalizedSurface": "Berlin",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Berlin",
 						"family": "Lexeme",
 						"kind": "PROPN",
+						"canonicalForm": "Berlin",
 						"coreFeatures": {
-							"gender": "Neut",
 							"abbr": null,
 							"article": null,
-							"foreign": null
+							"foreign": null,
+							"gender": "Neut"
 						}
 					},
-					"surfaceFeatures": null
-				}
+					"normalizedSurface": "Berlin",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "Berlin",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

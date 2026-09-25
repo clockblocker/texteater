@@ -1,0 +1,77 @@
+{
+	"slices": {},
+	"cases": {
+		"de/mara-wird-morgen-abreisen#0": {
+			"id": "grammar-de-aux-demo-future-wird",
+			"demonstration": true
+		},
+		"de/nora-hat-bereits-gegessen#0": {
+			"id": "grammar-de-aux-dev-perfect-hat-gegessen",
+			"demonstration": true
+		},
+		"de/die-gaeste-waren-schon-gegangen#0": {
+			"id": "grammar-de-aux-dev-perfect-waren-gegangen",
+			"evaluation": true
+		},
+		"de/die-bruecke-wird-im-sommer-repariert#0": {
+			"id": "grammar-de-aux-dev-passive-wird-repariert",
+			"evaluation": true
+		},
+		"de/die-strasse-wurde-gestern-gesperrt#0": {
+			"id": "grammar-de-aux-dev-passive-wurde-gesperrt",
+			"demonstration": true
+		},
+		"de/der-zeuge-sagt-die-frau-sei-frueh-gegangen#0": {
+			"id": "grammar-de-aux-dev-subjunctive-sei-gegangen",
+			"evaluation": true
+		},
+		"de/ohne-den-anruf-waeren-sie-laenger-geblieben#0": {
+			"id": "grammar-de-aux-dev-subjunctive-waeren-geblieben",
+			"evaluation": true
+		},
+		"de/mira-wird-laengst-angekommen-sein#0": {
+			"id": "grammar-de-aux-dev-infinitive-sein",
+			"demonstration": true
+		},
+		"de/der-saal-muss-heute-gereinigt-werden#0": {
+			"id": "grammar-de-aux-dev-infinitive-passive-werden",
+			"evaluation": true
+		},
+		"de/der-antrag-ist-gestern-genehmigt-worden#0": {
+			"id": "grammar-de-aux-dev-participle-worden",
+			"demonstration": true
+		},
+		"de/der-kurier-ist-puenktlich-gegangen#0": {
+			"id": "grammar-de-aux-accept-perfect-ist-gegangen",
+			"evaluation": true
+		},
+		"de/wir-werden-am-freitag-abreisen#0": {
+			"id": "grammar-de-aux-accept-future-werden-abreisen",
+			"evaluation": true
+		},
+		"de/die-helfer-wurden-sofort-gerufen#0": {
+			"id": "grammar-de-aux-accept-passive-wurden-gerufen",
+			"evaluation": true
+		},
+		"de/mit-mehr-zeit-haette-er-das-ziel-erreicht#0": {
+			"id": "grammar-de-aux-accept-subjunctive-haette",
+			"evaluation": true
+		},
+		"de/sie-koennte-den-zug-verpasst-haben#0": {
+			"id": "grammar-de-aux-accept-infinitive-haben",
+			"evaluation": true
+		},
+		"de/der-bote-ward-freundlich-empfangen#0": {
+			"id": "grammar-de-aux-accept-archaic-ward",
+			"evaluation": true
+		},
+		"de/sie-bekommt-das-paket-geliefert#0": {
+			"id": "grammar-de-aux-dev-recipient-bekommt-geliefert",
+			"evaluation": true
+		},
+		"de/er-kriegt-alles-erklaert#0": {
+			"id": "grammar-de-aux-accept-recipient-kriegt-erklaert",
+			"evaluation": true
+		}
+	}
+}

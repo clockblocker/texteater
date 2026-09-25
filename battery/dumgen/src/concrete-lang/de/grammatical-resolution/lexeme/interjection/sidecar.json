@@ -1,0 +1,173 @@
+{
+	"slices": {},
+	"cases": {
+		"de/sieh-einmal-hier-steht-er#5": {
+			"id": "grammar-de-intj-demo-pfui-expressive",
+			"demonstration": true
+		},
+		"de/sie-fragte-ob-er-komme-er-antwortete-ja#0": {
+			"id": "grammar-de-intj-demo-ja-response",
+			"demonstration": true
+		},
+		"de/fort-geht-nun-die-mutter-und#1": {
+			"id": "grammar-de-intj-dev-wupp-onomatopoeia",
+			"evaluation": true
+		},
+		"de/am-gartentor-rief-sie-hallo-zu-den-nachbarn#0": {
+			"id": "grammar-de-intj-dev-hallo-greeting",
+			"evaluation": true
+		},
+		"de/nach-dem-sieg-riefen-alle-hurra#0": {
+			"id": "grammar-de-intj-dev-hurra-joy",
+			"evaluation": true
+		},
+		"de/als-sie-die-nachricht-las-sagte-sie-nur-oh#0": {
+			"id": "grammar-de-intj-dev-oh-reaction",
+			"evaluation": true
+		},
+		"de/beim-anblick-der-maus-rief-er-huch#0": {
+			"id": "grammar-de-intj-dev-huch-surprise",
+			"evaluation": true
+		},
+		"de/er-stiess-sich-am-tisch-und-rief-au#0": {
+			"id": "grammar-de-intj-dev-au-pain",
+			"evaluation": true
+		},
+		"de/ich-wollte-aeh-nur-kurz-nachfragen#0": {
+			"id": "grammar-de-intj-dev-aeh-hesitation",
+			"evaluation": true
+		},
+		"de/nach-dem-letzten-fehlschlag-sagte-sie-tja-und-ging#0": {
+			"id": "grammar-de-intj-dev-tja-resignation",
+			"evaluation": true
+		},
+		"de/die-katze-sprang-aufs-fensterbrett-miau#0": {
+			"id": "grammar-de-intj-dev-miau-onomatopoeia",
+			"evaluation": true
+		},
+		"de/auf-die-frage-nach-dem-termin-antwortete-er-nein#0": {
+			"id": "grammar-de-intj-dev-nein-response",
+			"evaluation": true
+		},
+		"de/sie-fragte-kommst-du-nicht-er-antwortete-doch#0": {
+			"id": "grammar-de-intj-dev-doch-corrective-response",
+			"evaluation": true
+		},
+		"de/der-offizier-fragte-nach-dem-auftrag-sie-antwortete-jawohl#0": {
+			"id": "grammar-de-intj-dev-jawohl-response",
+			"evaluation": true
+		},
+		"de/als-sie-den-zusammenhang-verstand-sagte-sie-aha#0": {
+			"id": "grammar-de-intj-accept-v2-aha-realization",
+			"evaluation": true
+		},
+		"de/als-das-glas-beinahe-fiel-rief-er-hoppla#0": {
+			"id": "grammar-de-intj-accept-v2-hoppla-mishap",
+			"evaluation": true
+		},
+		"de/das-lamm-lief-zum-gatter-maeh#0": {
+			"id": "grammar-de-intj-accept-v2-maeh-onomatopoeia",
+			"evaluation": true
+		},
+		"de/auf-die-frage-nach-der-reservierung-antwortete-sie-ja#0": {
+			"id": "grammar-de-intj-accept-v2-ja-response-initial",
+			"evaluation": true
+		},
+		"de/vom-anderen-ufer-rief-der-faehrmann-heda#0": {
+			"id": "grammar-de-intj-accept-v2-heda-prompting",
+			"evaluation": true
+		},
+		"de/sie-ueberlegte-einen-moment-hmm#0": {
+			"id": "grammar-de-intj-demo-hmm-lengthened",
+			"demonstration": true
+		},
+		"de/der-zauberer-lachte-ha-ha-und-verbeugte-sich#0": {
+			"id": "grammar-de-intj-demo-ha-ha-reduplication",
+			"demonstration": true
+		},
+		"de/im-stadion-rief-jemand-huraa#0": {
+			"id": "grammar-de-intj-demo-typo-huraa",
+			"demonstration": true
+		},
+		"de/in-dem-alten-festlied-riefen-sie-juchhei#0": {
+			"id": "grammar-de-intj-demo-archaic-juchhei",
+			"demonstration": true
+		},
+		"de/ach-das-ist-wirklich-schade#0": {
+			"id": "grammar-de-intj-dev-initial-ach",
+			"evaluation": true
+		},
+		"de/beim-blick-ins-tal-rief-er-boahhh#0": {
+			"id": "grammar-de-intj-dev-lengthened-boahhh",
+			"evaluation": true
+		},
+		"de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt#0": {
+			"id": "grammar-de-intj-dev-reduplicated-he-he",
+			"evaluation": true
+		},
+		"de/beim-anblick-des-schmutzes-sagte-er-pufi#0": {
+			"id": "grammar-de-intj-dev-typo-pufi",
+			"evaluation": true
+		},
+		"de/in-der-alten-posse-rief-der-diener-potz#0": {
+			"id": "grammar-de-intj-dev-archaic-potz",
+			"evaluation": true
+		},
+		"de/im-chat-schrieb-sie-nur-omg-und-legte-das-handy-weg#0": {
+			"id": "grammar-de-intj-dev-acronym-omg",
+			"evaluation": true
+		},
+		"de/als-der-schluessel-wieder-klemmte-rief-er-mann#0": {
+			"id": "grammar-de-intj-accept-v2-secondary-mann",
+			"evaluation": true
+		},
+		"de/beim-anblick-des-schadens-rief-sie-donnerwetter#0": {
+			"id": "grammar-de-intj-accept-v2-secondary-donnerwetter",
+			"evaluation": true
+		},
+		"de/beim-blick-auf-die-rechnung-stoehnte-er-aaach#0": {
+			"id": "grammar-de-intj-accept-v2-lengthened-aaach",
+			"evaluation": true
+		},
+		"de/vor-dem-schmutzigen-becken-rief-sie-igitt-igitt#0": {
+			"id": "grammar-de-intj-accept-v2-reduplicated-igitt-igitt",
+			"evaluation": true
+		},
+		"de/in-der-nachricht-begruesste-er-sie-mit-halol#0": {
+			"id": "grammar-de-intj-accept-v2-typo-halol",
+			"evaluation": true
+		},
+		"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol#0": {
+			"id": "grammar-de-intj-accept-v2-acronym-lol",
+			"evaluation": true
+		},
+		"de/als-die-ueberraschung-enthuellt-wurde-sagte-er-ohhh#0": {
+			"id": "grammar-de-intj-accept-v2-lengthened-ohhh",
+			"evaluation": true
+		},
+		"de/sein-staendiges-ach-stoerte-sie-spaeter-seufzte-er-ach#0": {
+			"id": "grammar-de-intj-demo-contextual-ach-after-noun",
+			"demonstration": true
+		},
+		"de/das-ist-ja-erstaunlich-auf-ihre-frage-antwortete-er-ja#0": {
+			"id": "grammar-de-intj-dev-beside-part-ja",
+			"evaluation": true
+		},
+		"de/nach-dem-guten-morgen-sah-er-die-rechnung-und-sagte-oh#0": {
+			"id": "grammar-de-intj-dev-beside-discourse-formula-oh",
+			"evaluation": true
+		},
+		"de/nun-war-alles-vorbereitet-na-dann-erzaehl-endlich#0": {
+			"id": "grammar-de-intj-dev-beside-adv-na",
+			"evaluation": true
+		},
+		"de/der-mist-lag-auf-dem-feld-am-bahnhof-rief-jemand-mist#0": {
+			"id": "grammar-de-intj-accept-v2-ordinary-lexical-mist",
+			"evaluation": true
+		},
+		"de/sie-sagte-vielen-dank-er-zoegerte-nur-aehm#0": {
+			"id": "grammar-de-intj-accept-v2-beside-formula-aehm",
+			"evaluation": true
+		}
+	}
+}

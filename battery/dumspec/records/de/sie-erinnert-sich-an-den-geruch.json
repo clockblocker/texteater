@@ -2,35 +2,123 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie erinnert sich an den Geruch.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erinnert" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Geruch" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erinnert"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "an"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Geruch"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, erinnert sich an"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"notes": {
-				"rationale": "The inherently reflexive sich is a Fixed member; governed an stays an occurrence member recorded in valencyEvidence and out of the normalized Surface erinnert sich. The Lemma identity remains sich erinnern with the same core features."
+				"rationale": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The inherently reflexive sich is a Fixed member; governed an stays an occurrence member recorded in valencyEvidence and out of the normalized Surface erinnert sich. The Lemma identity remains sich erinnern with the same core features."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich erinnern",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "erinnert sich",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
 				"members": [
-					{ "attested": "erinnert", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" },
-					{ "attested": "an", "orthography": "Standard" }
+					{
+						"attested": "erinnert",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "an",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -58,38 +146,7 @@
 						},
 						"realizedCase": "Acc"
 					}
-				],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "erinnert sich",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "sich erinnern",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"coreFeatures": {
-							"lexicallyReflexive": "Yes",
-							"hasSepPrefix": null,
-							"verbType": null
-						}
-					},
-					"surfaceFeatures": null
-				}
+				]
 			}
 		}
 	],

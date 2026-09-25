@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wer nichts weiß, muß alles glauben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nichts" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "weiß" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "muß" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alles" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "glauben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 7, 9, 11],
+			"notes": {
+				"rationale": "The attested 1893 muß is a licensed historical spelling, not a typo; the Canonical Form uses current muss."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Wer nichts weiß muss alles glauben",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "Wer nichts weiß muß alles glauben",
+					"spelling": "Variant",
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Wer", "orthography": "Standard" },
+					{ "attested": "nichts", "orthography": "Standard" },
+					{ "attested": "weiß", "orthography": "Standard" },
+					{ "attested": "muß", "orthography": "Standard" },
+					{ "attested": "alles", "orthography": "Standard" },
+					{ "attested": "glauben", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

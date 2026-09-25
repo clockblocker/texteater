@@ -1,0 +1,170 @@
+{
+	"slices": {},
+	"cases": {
+		"de/sie-faehrt-mit-dem-bus-zur-arbeit#0": {
+			"id": "grammar-de-adp-demo-prep-mit-dat",
+			"demonstration": true
+		},
+		"de/das-buch-liegt-auf-dem-tisch#0": {
+			"id": "grammar-de-adp-demo-two-way-auf",
+			"demonstration": true
+		},
+		"de/wir-liefen-den-fluss-entlang-bis-zur-bruecke#0": {
+			"id": "grammar-de-adp-demo-post-entlang-acc",
+			"demonstration": true
+		},
+		"de/von-diesem-tag-an-fuehrte-sie-das-protokoll#0": {
+			"id": "grammar-de-adp-demo-circ-von-an",
+			"demonstration": true
+		},
+		"de/wir-gehen-durch-den-park-nach-hause#0": {
+			"id": "grammar-de-adp-dev-prep-durch-acc",
+			"evaluation": true
+		},
+		"de/sie-geht-zu-ihrer-aerztin#0": {
+			"id": "grammar-de-adp-dev-prep-zu-dat",
+			"evaluation": true
+		},
+		"de/er-stellt-die-kiste-vor-die-tuer#0": {
+			"id": "grammar-de-adp-dev-two-way-vor-acc",
+			"evaluation": true
+		},
+		"de/den-kindern-zuliebe-blieb-sie-noch-eine-stunde#0": {
+			"id": "grammar-de-adp-dev-post-zuliebe-dat",
+			"evaluation": true
+		},
+		"de/sie-wohnt-seit-einem-jahr-in-bonn#0": {
+			"id": "grammar-de-adp-dev-prep-seit-dat",
+			"evaluation": true
+		},
+		"de/wir-blieben-wegen-dem-regen-zu-hause#0": {
+			"id": "grammar-de-adp-dev-wegen-local-dat-lexical-gen",
+			"evaluation": true
+		},
+		"de/um-des-friedens-willen-schwiegen-beide-seiten#0": {
+			"id": "grammar-de-adp-dev-circ-um-willen",
+			"evaluation": true
+		},
+		"de/der-radweg-fuehrt-an-der-schule-vorbei#0": {
+			"id": "grammar-de-adp-dev-circ-an-vorbei",
+			"evaluation": true
+		},
+		"de/dem-bahnhof-gegenueber-oeffnete-ein-cafe#0": {
+			"id": "grammar-de-adp-dev-post-gegenueber-dat",
+			"evaluation": true
+		},
+		"de/anstatt-dass-er-klagte-half-er-sofort#0": {
+			"id": "grammar-de-adp-dev-extpos-sconj-anstatt",
+			"evaluation": true
+		},
+		"de/im-finale-spielt-koeln-versus-berlin#0": {
+			"id": "grammar-de-adp-dev-foreign-versus-acc",
+			"evaluation": true
+		},
+		"de/entlang-des-kanals-stehen-alte-pappeln#0": {
+			"id": "grammar-de-adp-dev-prep-entlang-gen",
+			"evaluation": true
+		},
+		"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#0": {
+			"id": "grammar-de-adp-dev-adp-before-unmarked-particle",
+			"evaluation": true
+		},
+		"de/sie-wartet-auf-den-bus-geht-aber-ohne-schirm-los#0": {
+			"id": "grammar-de-adp-dev-adp-beside-governed-verb-member",
+			"evaluation": true
+		},
+		"de/im-regal-liegt-das-buch-auf-dem-mittleren-brett#0": {
+			"id": "grammar-de-adp-dev-adp-beside-fusion",
+			"evaluation": true
+		},
+		"de/obwohl-es-regnet-bleiben-wir-wegen-des-windes-drinnen#0": {
+			"id": "grammar-de-adp-dev-adp-beside-sconj",
+			"evaluation": true
+		},
+		"de/sie-backt-einen-kuchen-fuer-ihre-nachbarin#0": {
+			"id": "grammar-de-adp-accept-prep-fuer-acc",
+			"evaluation": true
+		},
+		"de/der-tisch-besteht-aus-massivem-holz#0": {
+			"id": "grammar-de-adp-accept-prep-aus-dat",
+			"evaluation": true
+		},
+		"de/waehrend-des-konzerts-blieb-ihr-handy-aus#0": {
+			"id": "grammar-de-adp-accept-prep-waehrend-gen",
+			"evaluation": true
+		},
+		"de/der-schluessel-liegt-zwischen-den-buechern#0": {
+			"id": "grammar-de-adp-accept-two-way-zwischen-dat",
+			"evaluation": true
+		},
+		"de/des-dichten-nebels-wegen-fiel-der-flug-aus#0": {
+			"id": "grammar-de-adp-accept-post-wegen-gen",
+			"evaluation": true
+		},
+		"de/von-der-terrasse-aus-sieht-man-den-see#0": {
+			"id": "grammar-de-adp-accept-circ-von-aus",
+			"evaluation": true
+		},
+		"de/die-wirkung-reicht-ueber-das-jahr-hinaus#0": {
+			"id": "grammar-de-adp-accept-circ-ueber-hinaus",
+			"evaluation": true
+		},
+		"de/den-regeln-gemaess-beginnt-die-sitzung-puenktlich#0": {
+			"id": "grammar-de-adp-accept-post-gemaess-dat",
+			"evaluation": true
+		},
+		"de/dank-des-schnellen-einsatzes-blieb-niemand-verletzt#0": {
+			"id": "grammar-de-adp-accept-alternating-dank",
+			"evaluation": true
+		},
+		"de/die-sperrung-gilt-bis-naechsten-montag#0": {
+			"id": "grammar-de-adp-accept-prep-bis-acc",
+			"evaluation": true
+		},
+		"de/sie-ging-one-mantel-hinaus#0": {
+			"id": "grammar-de-adp-demo-typo-one",
+			"demonstration": true
+		},
+		"de/ob-des-unwetters-blieb-das-tor-geschlossen#0": {
+			"id": "grammar-de-adp-demo-archaic-ob",
+			"demonstration": true
+		},
+		"de/wegen-des-sturms-blieb-die-faehre-im-hafen#0": {
+			"id": "grammar-de-adp-dev-sentence-initial-wegen",
+			"evaluation": true
+		},
+		"de/das-paket-liegt-unter-dem-tisch#0": {
+			"id": "grammar-de-adp-dev-casing-typo-unter",
+			"evaluation": true
+		},
+		"de/sie-protestiert-egen-den-neuen-plan#0": {
+			"id": "grammar-de-adp-dev-lexical-typo-gegen",
+			"evaluation": true
+		},
+		"de/der-preis-betraegt-inkl-versand-zehn-euro#0": {
+			"id": "grammar-de-adp-dev-abbreviation-inkl",
+			"evaluation": true
+		},
+		"de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des#0": {
+			"id": "grammar-de-adp-dev-variant-auf-grund",
+			"evaluation": true
+		},
+		"de/er-verliess-das-haus-ohhne-seine-schluessel#0": {
+			"id": "grammar-de-adp-accept-typo-ohhne",
+			"evaluation": true
+		},
+		"de/behufs-einer-pruefung-wurden-die-akten-versiegelt#0": {
+			"id": "grammar-de-adp-accept-archaic-behufs",
+			"evaluation": true
+		},
+		"de/er-legte-das-band-auf-das-geschenk#0": {
+			"id": "grammar-de-adp-dev-two-way-auf-acc",
+			"evaluation": true
+		},
+		"de/wir-wohnen-in-dem-wald#0": {
+			"id": "grammar-de-adp-dev-fused-in-dat",
+			"evaluation": true
+		},
+		"de/ich-bin-im-wald#0": { "id": "grammar-de-adp-fused-piece-i" }
+	}
+}

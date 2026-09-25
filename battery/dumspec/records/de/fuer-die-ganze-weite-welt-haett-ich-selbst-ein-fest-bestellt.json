@@ -1,0 +1,97 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Für die ganze weite Welt hätt ich selbst ein Fest bestellt!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Für" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganze" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "weite" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Welt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hätt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "selbst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fest" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bestellt" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#487",
+				"url": "https://github.com/clockblocker/texteater/issues/487",
+				"supports": "Target 0, hätt bestellt"
+			},
+			{
+				"title": "clockblocker/texteater#507",
+				"url": "https://github.com/clockblocker/texteater/issues/507",
+				"supports": "Target 0, hätt bestellt"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [10, 20],
+			"notes": {
+				"rationale": "Whole verbal Surface hätt bestellt: Konjunktiv II of the past (unreal past, perfect Yes with mood Sub and tense Past), finite as a whole; the Partizip II is only the shape of the head member. hätt is a licensed verse apocope of hätte, not a typo: member orthography Standard, Surface spelling Variant, the literal form kept in normalizedMembers, like muß. The auxiliary member is a Surface of the AUX Reading haben-Perfekt, reachable only from this Surface's sheet (map 487, ticket 507)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bestellen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "hätt bestellt",
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "hätt", "orthography": "Standard" },
+					{ "attested": "bestellt", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

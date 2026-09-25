@@ -2,33 +2,115 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie wurde um Geduld gebeten.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wurde" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "um" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Geduld" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gebeten" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wurde"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "um"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Geduld"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gebeten"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, wurde um gebeten"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 8],
 			"notes": {
-				"rationale": "Passive wurde is a Fixed member and governed um an occurrence member recorded in valencyEvidence, so the normalized Surface is wurde gebeten; the route-owning lexical head remains the ordinary participle gebeten with null tense and voice. The Nom Sie fills no preposition slot, so intake records none for it."
+				"rationale": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Passive wurde is a Fixed member and governed um an occurrence member recorded in valencyEvidence, so the normalized Surface is wurde gebeten; the route-owning lexical head remains the ordinary participle gebeten with null tense and voice. The Nom Sie fills no preposition slot, so intake records none for it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bitten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "wurde gebeten",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
 				"members": [
-					{ "attested": "wurde", "orthography": "Standard" },
-					{ "attested": "um", "orthography": "Standard" },
-					{ "attested": "gebeten", "orthography": "Standard" }
+					{
+						"attested": "wurde",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "um",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gebeten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -56,38 +138,7 @@
 						},
 						"realizedCase": "Acc"
 					}
-				],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "wurde gebeten",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Past",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": "Pass",
-						"passive": "Process"
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "bitten",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"surfaceFeatures": null
-				}
+				]
 			}
 		}
 	],

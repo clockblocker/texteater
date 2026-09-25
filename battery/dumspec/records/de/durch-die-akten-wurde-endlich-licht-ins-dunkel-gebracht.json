@@ -1,0 +1,111 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Durch die Akten wurde endlich Licht ins Dunkel gebracht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Durch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Akten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "endlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Licht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dunkel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gebracht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, wurde Licht in s Dunkel gebracht"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 10, 12, 13, 15, 17],
+			"notes": {
+				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "Licht ins Dunkel bringen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "wurde Licht ins Dunkel gebracht",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"members": [
+					{ "attested": "wurde", "orthography": "Standard" },
+					{ "attested": "Licht", "orthography": "Standard" },
+					{
+						"attested": "in",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ins",
+							"components": [
+								{ "span": "in", "surface": "in" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "s",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ins",
+							"components": [
+								{ "span": "in", "surface": "in" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Dunkel", "orthography": "Standard" },
+					{ "attested": "gebracht", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

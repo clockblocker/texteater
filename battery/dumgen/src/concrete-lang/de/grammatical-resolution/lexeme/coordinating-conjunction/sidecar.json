@@ -1,0 +1,249 @@
+{
+	"slices": {},
+	"cases": {
+		"de/anna-liest-und-ben-kocht#0": {
+			"id": "grammar-de-cconj-demo-ordinary-und",
+			"demonstration": true
+		},
+		"de/zum-fruehstueck-gibt-es-muesli-oder-brot#0": {
+			"id": "grammar-de-cconj-dev-ordinary-oder-nouns",
+			"evaluation": true
+		},
+		"de/sie-ist-muede-aber-sie-arbeitet-weiter#0": {
+			"id": "grammar-de-cconj-dev-adversative-aber-clauses",
+			"evaluation": true
+		},
+		"de/er-wollte-kommen-doch-der-zug-fiel-aus#0": {
+			"id": "grammar-de-cconj-dev-adversative-doch-clauses",
+			"evaluation": true
+		},
+		"de/das-wasser-ist-nicht-kalt-sondern-warm#0": {
+			"id": "grammar-de-cconj-dev-corrective-sondern",
+			"evaluation": true
+		},
+		"de/brot-sowie-kaese-werden-serviert#0": {
+			"id": "grammar-de-cconj-dev-additive-sowie",
+			"evaluation": true
+		},
+		"de/die-eltern-beziehungsweise-sorgeberechtigten-unterschreiben#0": {
+			"id": "grammar-de-cconj-dev-beziehungsweise-full",
+			"evaluation": true
+		},
+		"de/und-danach-gingen-alle-nach-hause#0": {
+			"id": "grammar-de-cconj-dev-sentence-initial-und",
+			"evaluation": true
+		},
+		"de/anna-und-ben-singen-und-carla-tanzt#0": {
+			"id": "grammar-de-cconj-dev-repeated-second-und",
+			"evaluation": true
+		},
+		"de/im-korb-liegen-aepfel-birnen-und-pflaumen#0": {
+			"id": "grammar-de-cconj-accept-und-list",
+			"evaluation": true
+		},
+		"de/wir-fahren-heute-oder-wir-bleiben-zu-hause#0": {
+			"id": "grammar-de-cconj-accept-oder-clauses",
+			"evaluation": true
+		},
+		"de/der-weg-ist-lang-aber-gut-ausgeschildert#0": {
+			"id": "grammar-de-cconj-accept-aber-adjectives",
+			"evaluation": true
+		},
+		"de/die-aerztin-sowie-der-pfleger-wurden-informiert#0": {
+			"id": "grammar-de-cconj-accept-sowie-subjects",
+			"evaluation": true
+		},
+		"de/auf-dem-zettel-stehen-brot-u-kaese#0": {
+			"id": "grammar-de-cconj-accept-variant-u",
+			"evaluation": true
+		},
+		"de/wir-reisen-entweder-am-freitag-oder-am-samstag#0": {
+			"id": "grammar-de-cconj-dev-entweder-freitag",
+			"evaluation": true
+		},
+		"de/entweder-faehrt-mia-heute-oder-sie-bleibt-bis-morgen#0": {
+			"id": "grammar-de-cconj-dev-entweder-clauses",
+			"evaluation": true
+		},
+		"de/sie-trinkt-weder-tee-noch-kaffee#0": {
+			"id": "grammar-de-cconj-dev-weder-noch",
+			"evaluation": true
+		},
+		"de/sie-schaetzt-sowohl-ruhe-als-bewegung#0": {
+			"id": "grammar-de-cconj-dev-sowohl-als",
+			"evaluation": true
+		},
+		"de/die-regel-gilt-sowohl-fuer-kinder-wie-fuer-erwachsene#0": {
+			"id": "grammar-de-cconj-dev-sowohl-wie",
+			"evaluation": true
+		},
+		"de/das-angebot-gilt-sowohl-online-wie-auch-im-laden#0": {
+			"id": "grammar-de-cconj-dev-sowohl-wie-auch",
+			"evaluation": true
+		},
+		"de/je-genauer-wir-messen-umso-sicherer-wird-das-ergebnis#0": {
+			"id": "grammar-de-cconj-dev-je-umso",
+			"evaluation": true
+		},
+		"de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm#0": {
+			"id": "grammar-de-cconj-dev-je-je",
+			"evaluation": true
+		},
+		"de/entweder-gewinnen-wir-heute-oder-wir-ueben-morgen-weiter#0": {
+			"id": "grammar-de-cconj-dev-casing-entweder",
+			"evaluation": true
+		},
+		"de/je-hoeher-der-druck-desdo-groesser-das-risiko#0": {
+			"id": "grammar-de-cconj-dev-desto-typo",
+			"evaluation": true
+		},
+		"de/die-frage-lautet-kaffee-oder-tee-doch-wir-bestellen-entweder#0": {
+			"id": "grammar-de-cconj-dev-near-ordinary-cconj",
+			"evaluation": true
+		},
+		"de/ob-es-regnet-weiss-niemand-wir-fahren-entweder-mit-dem-bus#0": {
+			"id": "grammar-de-cconj-dev-near-sconj",
+			"evaluation": true
+		},
+		"de/ausserdem-ist-der-entwurf-sowohl-klar-als-auch-knapp#0": {
+			"id": "grammar-de-cconj-dev-near-adv",
+			"evaluation": true
+		},
+		"de/zum-fruehstueck-gibt-es-entweder-muesli-oder-brot#0": {
+			"id": "grammar-de-cconj-accept-entweder-nouns",
+			"evaluation": true
+		},
+		"de/weder-rief-sie-zurueck-noch-schrieb-sie-eine-nachricht#0": {
+			"id": "grammar-de-cconj-accept-weder-clauses",
+			"evaluation": true
+		},
+		"de/der-kurs-ist-sowohl-anspruchsvoll-als-auch-unterhaltsam#0": {
+			"id": "grammar-de-cconj-accept-sowohl-als-auch",
+			"evaluation": true
+		},
+		"de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer#0": {
+			"id": "grammar-de-cconj-accept-sowohl-wie",
+			"evaluation": true
+		},
+		"de/je-ruhiger-die-see-war-desto-schneller-kamen-wir-voran#0": {
+			"id": "grammar-de-cconj-accept-je-desto",
+			"evaluation": true
+		},
+		"de/je-spaeter-der-abend-wurde-umso-leiser-sprach-die-runde#0": {
+			"id": "grammar-de-cconj-accept-je-umso",
+			"evaluation": true
+		},
+		"de/mira-ist-groesser-als-ihre-schwester#0": {
+			"id": "grammar-de-cconj-demo-comparative-als",
+			"demonstration": true
+		},
+		"de/wir-gehen-jetzt-denn-es-wird-spaet#0": {
+			"id": "grammar-de-cconj-demo-causal-denn",
+			"demonstration": true
+		},
+		"de/mira-ist-genauso-gross-wie-ihre-schwester#0": {
+			"id": "grammar-de-cconj-dev-comparative-wie",
+			"evaluation": true
+		},
+		"de/heute-kamen-mehr-gaeste-als-gestern#0": {
+			"id": "grammar-de-cconj-dev-comparative-als-mehr",
+			"evaluation": true
+		},
+		"de/die-polizei-suchte-ueberall-jedoch-sie-fand-ihn-nicht#0": {
+			"id": "grammar-de-cconj-dev-jedoch-null-position",
+			"evaluation": true
+		},
+		"de/die-aufgabe-war-schwierig-aber-alle-loesten-sie#0": {
+			"id": "grammar-de-cconj-dev-aber-not-particle",
+			"evaluation": true
+		},
+		"de/wir-warteten-lange-doch-niemand-erschien#0": {
+			"id": "grammar-de-cconj-dev-doch-not-particle",
+			"evaluation": true
+		},
+		"de/nora-schloss-das-fenster-denn-draussen-tobte-ein-sturm#0": {
+			"id": "grammar-de-cconj-dev-denn-verb-second-anchor",
+			"evaluation": true
+		},
+		"de/du-kannst-anrufen-oder-eine-nachricht-schreiben#0": {
+			"id": "grammar-de-cconj-dev-ordinary-oder-without-correlate",
+			"evaluation": true
+		},
+		"de/der-neue-brunnen-ist-tiefer-als-der-alte#0": {
+			"id": "grammar-de-cconj-accept-comparative-als-tiefer",
+			"evaluation": true
+		},
+		"de/die-zweite-loesung-ist-ebenso-robust-wie-die-erste#0": {
+			"id": "grammar-de-cconj-accept-comparative-wie-ebenso",
+			"evaluation": true
+		},
+		"de/lea-nahm-einen-schirm-denn-dunkle-wolken-zogen-auf#0": {
+			"id": "grammar-de-cconj-accept-denn-causal",
+			"evaluation": true
+		},
+		"de/doch-niemand-wollte-den-plan-aufgeben#0": {
+			"id": "grammar-de-cconj-accept-doch-sentence-initial",
+			"evaluation": true
+		},
+		"de/der-weg-war-weit-jedoch-die-gruppe-blieb-zusammen#0": {
+			"id": "grammar-de-cconj-accept-jedoch-null-position",
+			"evaluation": true
+		},
+		"de/tee-udn-kaffee-stehen-bereit#0": {
+			"id": "grammar-de-cconj-demo-typo-udn",
+			"demonstration": true
+		},
+		"de/die-eltern-bzw-sorgeberechtigten-unterschreiben#0": {
+			"id": "grammar-de-cconj-demo-variant-bzw",
+			"demonstration": true
+		},
+		"de/ich-wollte-helfen-allein-mir-fehlte-die-zeit#0": {
+			"id": "grammar-de-cconj-demo-archaic-allein",
+			"demonstration": true
+		},
+		"de/sie-hat-sowohl-den-film-gesehen-als-auch-das-buch-gelesen#0": {
+			"id": "grammar-de-cconj-demo-sowohl-als-auch",
+			"demonstration": true
+		},
+		"de/je-laenger-der-weg-wird-desto-mueder-werden-die-reisenden#0": {
+			"id": "grammar-de-cconj-demo-je-desto",
+			"demonstration": true
+		},
+		"de/wir-nehmen-endweder-den-bus-oder-die-bahn#0": {
+			"id": "grammar-de-cconj-demo-entweder-typo",
+			"demonstration": true
+		},
+		"de/nimm-den-bus-odre-geh-zu-fuss#0": {
+			"id": "grammar-de-cconj-dev-typo-odre",
+			"evaluation": true
+		},
+		"de/das-paket-ist-nicht-leicht-sonedrn-schwer#0": {
+			"id": "grammar-de-cconj-dev-typo-sonedrn",
+			"evaluation": true
+		},
+		"de/bzw-die-gesetzliche-vertretung-muss-zustimmen#0": {
+			"id": "grammar-de-cconj-dev-variant-bzw-initial",
+			"evaluation": true
+		},
+		"de/der-versuch-war-riskant-jedcoh-das-team-setzte-ihn-fort#0": {
+			"id": "grammar-de-cconj-accept-typo-jedcoh",
+			"evaluation": true
+		},
+		"de/die-mannschaft-kaempfte-tapfer-allein-der-sieg-blieb-aus#0": {
+			"id": "grammar-de-cconj-accept-archaic-allein",
+			"evaluation": true
+		},
+		"de/er-kam-spaet-d-h-nach-mitternacht#0": {
+			"id": "grammar-de-cconj-dev-abbreviation-dh",
+			"evaluation": true
+		},
+		"de/er-kam-spaet-das-heisst-nach-mitternacht#0": {
+			"id": "grammar-de-cconj-dev-written-das-heisst",
+			"evaluation": true
+		},
+		"de/sie-kommt-morgen-und-zwar-frueh#0": {
+			"id": "grammar-de-cconj-dev-written-und-zwar",
+			"evaluation": true
+		}
+	}
+}

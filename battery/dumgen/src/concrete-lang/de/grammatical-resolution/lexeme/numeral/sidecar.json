@@ -1,0 +1,157 @@
+{
+	"slices": {},
+	"cases": {
+		"de/die-schuelerin-kauft-vier-karierte-hefte#0": {
+			"id": "grammar-de-num-demo-word-vier",
+			"demonstration": true
+		},
+		"de/auf-der-anzeigetafel-steht-7#0": {
+			"id": "grammar-de-num-demo-digit-7",
+			"demonstration": true
+		},
+		"de/fuenf-gaeste-warten-bereits-im-foyer#0": {
+			"id": "grammar-de-num-dev-initial-fuenf",
+			"evaluation": true
+		},
+		"de/der-gemessene-wert-betraegt-drei-komma-vierzehn#0": {
+			"id": "grammar-de-num-dev-decimal-drei-komma-vierzehn",
+			"evaluation": true
+		},
+		"de/die-neue-bruecke-wurde-2024-eroeffnet#0": {
+			"id": "grammar-de-num-dev-year-2024",
+			"evaluation": true
+		},
+		"de/als-roemische-zahl-wird-vierzehn-xiv-geschrieben#0": {
+			"id": "grammar-de-num-dev-roman-xiv",
+			"evaluation": true
+		},
+		"de/die-stueckzahl-ist-mit-t-fuer-tausend-angegeben#0": {
+			"id": "grammar-de-num-dev-abbreviation-t",
+			"evaluation": true
+		},
+		"de/im-englischen-zitat-stand-die-zahl-three#0": {
+			"id": "grammar-de-num-dev-foreign-three",
+			"evaluation": true
+		},
+		"de/die-kinder-erhielten-jeweils-zwei-aepfel#0": {
+			"id": "grammar-de-num-dev-distributive-zwei",
+			"evaluation": true
+		},
+		"de/fuer-die-reise-kaufte-sie-zwei-paar-wanderschuhe#0": {
+			"id": "grammar-de-num-dev-collective-zwei",
+			"evaluation": true
+		},
+		"de/der-mittelwert-betraegt-ein-komma-fuenf#0": {
+			"id": "grammar-de-num-dev-multi-member-ein-komma-fuenf",
+			"evaluation": true
+		},
+		"de/auf-dem-bahnsteig-warten-dreizehn-reisende#0": {
+			"id": "grammar-de-num-accept-v3-word-dreizehn",
+			"evaluation": true
+		},
+		"de/das-trikot-traegt-die-nummer-73#0": {
+			"id": "grammar-de-num-accept-v3-digit-73",
+			"evaluation": true
+		},
+		"de/der-pegel-liegt-bei-sieben-komma-acht-metern#0": {
+			"id": "grammar-de-num-accept-v3-decimal-sieben-komma-acht",
+			"evaluation": true
+		},
+		"de/die-aufnahme-entstand-1987-in-leipzig#0": {
+			"id": "grammar-de-num-accept-v3-year-1987",
+			"evaluation": true
+		},
+		"de/die-roemische-zahl-neunzehn-wird-als-xix-notiert#0": {
+			"id": "grammar-de-num-accept-v3-roman-xix",
+			"evaluation": true
+		},
+		"de/die-waage-zeigt-vier-komma-neun-kilogramm#0": {
+			"id": "grammar-de-num-accept-v3-multi-member-vier-komma-neun",
+			"evaluation": true
+		},
+		"de/der-fonds-investiert-eine-million-euro#0": {
+			"id": "grammar-de-num-dev-inflected-million-acc",
+			"evaluation": true
+		},
+		"de/trotz-millionen-offener-fragen-begann-das-projekt#0": {
+			"id": "grammar-de-num-dev-inflected-millionen-gen",
+			"evaluation": true
+		},
+		"de/quadrillionen-kleinster-einheiten-waeren-dafuer-noetig#0": {
+			"id": "grammar-de-num-accept-v3-inflected-quadrillionen-nom",
+			"evaluation": true
+		},
+		"de/zween-ritter-bewachten-der-sage-nach-das-tor#0": {
+			"id": "grammar-de-num-dev-archaic-zween",
+			"evaluation": true
+		},
+		"de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte#0": {
+			"id": "grammar-de-num-dev-variant-zwo",
+			"evaluation": true
+		},
+		"de/im-protokoll-stehen-neunzhen-einzelne-meldungen#0": {
+			"id": "grammar-de-num-accept-v3-typo-neunzhen",
+			"evaluation": true
+		},
+		"de/im-alten-rechenbuch-steht-die-zahl-fuenff#0": {
+			"id": "grammar-de-num-accept-v3-archaic-fuenff",
+			"evaluation": true
+		},
+		"de/nach-dem-zweiten-versuch-gelang-schliesslich-versuch-nummer#0": {
+			"id": "grammar-de-num-dev-route-adj-drei",
+			"evaluation": true
+		},
+		"de/von-beiden-gruppen-kamen-jeweils-zwei-personen-zur-probe#0": {
+			"id": "grammar-de-num-dev-route-det-zwei",
+			"evaluation": true
+		},
+		"de/von-den-zwoelf-bewerbern-kamen-drei-spaeter-an#0": {
+			"id": "grammar-de-num-dev-route-pron-drei",
+			"evaluation": true
+		},
+		"de/die-anzeige-sprang-von-der-null-auf-eins#0": {
+			"id": "grammar-de-num-dev-route-noun-eins",
+			"evaluation": true
+		},
+		"de/die-gleichung-lautet-drei-plus-vier-gleich-7#0": {
+			"id": "grammar-de-num-dev-route-symbol-7",
+			"evaluation": true
+		},
+		"de/die-fahrt-dauert-eineinhalb-stunden#0": {
+			"id": "grammar-de-num-demo-fraction-eineinhalb",
+			"demonstration": true
+		},
+		"de/die-sprechstunde-laeuft-von-zehn-bis-zwoelf-uhr#0": {
+			"id": "grammar-de-num-demo-range-zehn-bis-zwoelf",
+			"demonstration": true
+		},
+		"de/mit-millionen-rechnet-die-planerin-nicht#0": {
+			"id": "grammar-de-num-demo-inflected-millionen",
+			"demonstration": true
+		},
+		"de/trillionen-winziger-teilchen-wuerden-den-behaelter-fuellen#0": {
+			"id": "grammar-de-num-demo-initial-inflected-trillionen",
+			"demonstration": true
+		},
+		"de/fuer-das-experiment-fehlen-dreii-kabel#0": {
+			"id": "grammar-de-num-demo-typo-dreii",
+			"demonstration": true
+		},
+		"de/der-klassifizierte-multiplikator-lautet-dreifach#0": {
+			"id": "grammar-de-num-dev-multiplicative-dreifach",
+			"evaluation": true
+		},
+		"de/der-tank-ist-zu-siebenachtel-gefuellt#0": {
+			"id": "grammar-de-num-accept-v3-fraction-siebenachtel",
+			"evaluation": true
+		},
+		"de/die-beschichtung-schuetzt-sechsfach-besser#0": {
+			"id": "grammar-de-num-accept-v3-multiplicative-sechsfach",
+			"evaluation": true
+		},
+		"de/das-angebot-gilt-fuer-gruppen-von-zwoelf-bis-sechzehn#0": {
+			"id": "grammar-de-num-accept-v3-range-zwoelf-bis-sechzehn",
+			"evaluation": true
+		}
+	}
+}

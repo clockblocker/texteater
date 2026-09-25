@@ -1,0 +1,1124 @@
+{
+	"slices": {
+		"referent-context": "Pronoun forms whose cell only the referent decides (ADR 0018, #606): given the neighbouring Sentences, alone in a one-Sentence Text, and alone while more exists, where resolution may ask for the neighbours."
+	},
+	"cases": {
+		"de/bitte-gib-mir-den-schluessel#0": {
+			"id": "grammar-de-pron-fixed-mir",
+			"evaluation": true
+		},
+		"de/heute-kochst-du-das-abendessen#0": {
+			"id": "grammar-de-pron-fixed-du",
+			"evaluation": true
+		},
+		"de/ich-rufe-dich-morgen-an#0": {
+			"id": "grammar-de-pron-fixed-dich",
+			"evaluation": true
+		},
+		"de/wir-gedachten-deiner-in-dankbarkeit#0": {
+			"id": "grammar-de-pron-fixed-deiner",
+			"evaluation": true
+		},
+		"de/am-montag-beginnt-er-die-neue-stelle#0": {
+			"id": "grammar-de-pron-fixed-er",
+			"evaluation": true
+		},
+		"de/die-kollegin-begruesst-ihn-am-eingang#0": {
+			"id": "grammar-de-pron-fixed-ihn",
+			"evaluation": true
+		},
+		"de/der-alte-pfarrer-war-beliebt-die-gemeinde-gedachte-seiner#0": {
+			"id": "grammar-de-pron-fixed-seiner-masc",
+			"evaluation": true
+		},
+		"de/der-arzt-hilft-ihr-sofort#0": {
+			"id": "grammar-de-pron-fixed-ihr-fem",
+			"evaluation": true
+		},
+		"de/die-alte-baeckerin-fehlt-allen-die-nachbarn-gedachten-ihrer#0": {
+			"id": "grammar-de-pron-fixed-ihrer-fem",
+			"evaluation": true
+		},
+		"de/das-tier-zittert-wir-geben-ihm-wasser#0": {
+			"id": "grammar-de-pron-fixed-ihm-neut",
+			"evaluation": true
+		},
+		"de/des-alten-gesetzes-wurde-seiner-gedacht#0": {
+			"id": "grammar-de-pron-fixed-seiner-neut",
+			"evaluation": true
+		},
+		"de/die-gastgeber-laden-uns-ein#0": {
+			"id": "grammar-de-pron-fixed-uns",
+			"evaluation": true
+		},
+		"de/man-erinnerte-sich-unser-gern#0": {
+			"id": "grammar-de-pron-fixed-unser-gen",
+			"evaluation": true
+		},
+		"de/morgen-beginnt-ihr-frueher#0": {
+			"id": "grammar-de-pron-fixed-ihr-second-plur",
+			"evaluation": true
+		},
+		"de/die-kinder-frieren-wir-geben-ihnen-decken#0": {
+			"id": "grammar-de-pron-fixed-ihnen-plur",
+			"evaluation": true
+		},
+		"de/die-opfer-des-ungluecks-sind-nicht-vergessen-die-stadt#0": {
+			"id": "grammar-de-pron-fixed-ihrer-plur",
+			"evaluation": true
+		},
+		"de/kommen-sie-bitte-herein-frau-mueller#0": {
+			"id": "grammar-de-pron-fixed-sie-formal-sing",
+			"evaluation": true
+		},
+		"de/ich-helfe-ihnen-gern-herr-oezdemir#0": {
+			"id": "grammar-de-pron-fixed-ihnen-formal-sing",
+			"evaluation": true
+		},
+		"de/frau-doktor-wir-gedachten-ihrer-dankbar#0": {
+			"id": "grammar-de-pron-fixed-ihrer-formal-sing",
+			"evaluation": true
+		},
+		"de/kommen-sie-bitte-herein-meine-damen#0": {
+			"id": "grammar-de-pron-fixed-sie-formal-plur",
+			"evaluation": true
+		},
+		"de/ich-helfe-ihnen-gern-liebe-gaeste#0": {
+			"id": "grammar-de-pron-fixed-ihnen-formal-plur",
+			"evaluation": true
+		},
+		"de/meine-damen-wir-gedachten-ihrer-dankbar#0": {
+			"id": "grammar-de-pron-fixed-ihrer-formal-plur",
+			"evaluation": true
+		},
+		"de/der-freie-platz-ist-deiner#0": {
+			"id": "grammar-de-pron-fixed-dein",
+			"evaluation": true
+		},
+		"de/paul-sucht-seinen-koffer-der-schwarze-koffer-dort-ist-seiner#0": {
+			"id": "grammar-de-pron-fixed-sein-masc",
+			"evaluation": true
+		},
+		"de/das-kind-sucht-sein-spielzeug-das-rote-spielzeug-dort-ist#0": {
+			"id": "grammar-de-pron-fixed-sein-neut",
+			"evaluation": true
+		},
+		"de/lena-sucht-ihren-mantel-der-gruene-mantel-dort-ist-ihrer#0": {
+			"id": "grammar-de-pron-fixed-ihr-fem-poss",
+			"evaluation": true
+		},
+		"de/die-gaeste-kommen-gleich-die-reservierten-plaetze-sind-ihre#0": {
+			"id": "grammar-de-pron-fixed-ihr-plur-poss",
+			"evaluation": true
+		},
+		"de/der-grosse-tisch-ist-unserer#0": {
+			"id": "grammar-de-pron-fixed-unser-poss",
+			"evaluation": true
+		},
+		"de/der-letzte-vorschlag-ist-eurer#0": {
+			"id": "grammar-de-pron-fixed-euer-poss",
+			"evaluation": true
+		},
+		"de/frau-weber-der-ordner-ist-ihrer#0": {
+			"id": "grammar-de-pron-fixed-ihr-formal-poss",
+			"evaluation": true
+		},
+		"de/wer-kommt-heute#0": {
+			"id": "grammar-de-pron-fixed-wer",
+			"evaluation": true
+		},
+		"de/wen-rufst-du-an#0": {
+			"id": "grammar-de-pron-fixed-wen",
+			"evaluation": true
+		},
+		"de/wessen-bedarf-es-noch#0": {
+			"id": "grammar-de-pron-fixed-wessen",
+			"evaluation": true
+		},
+		"de/jemand-wartet-vor-der-tuer#0": {
+			"id": "grammar-de-pron-fixed-jemand-jemand",
+			"evaluation": true
+		},
+		"de/ich-sehe-jemanden-vor-der-tuer#0": {
+			"id": "grammar-de-pron-fixed-jemand-jemanden",
+			"evaluation": true
+		},
+		"de/es-bedarf-jemandes-mit-erfahrung#0": {
+			"id": "grammar-de-pron-fixed-jemand-jemandes",
+			"evaluation": true
+		},
+		"de/niemand-wartet-vor-der-tuer#0": {
+			"id": "grammar-de-pron-fixed-niemand-niemand",
+			"evaluation": true
+		},
+		"de/ich-sehe-niemanden-vor-der-tuer#0": {
+			"id": "grammar-de-pron-fixed-niemand-niemanden",
+			"evaluation": true
+		},
+		"de/es-bedarf-niemandes-mit-erfahrung#0": {
+			"id": "grammar-de-pron-fixed-niemand-niemandes",
+			"evaluation": true
+		},
+		"de/von-den-frauen-kam-keine#0": {
+			"id": "grammar-de-pron-fixed-keiner-nom-sing-fem",
+			"evaluation": true
+		},
+		"de/von-den-maennern-sah-ich-keinen#0": {
+			"id": "grammar-de-pron-fixed-keiner-acc-sing-masc",
+			"evaluation": true
+		},
+		"de/ich-suche-eine-aerztin-mit-erfahrung-aber-ich-kenne-keine#0": {
+			"id": "grammar-de-pron-fixed-keiner-acc-sing-fem",
+			"evaluation": true
+		},
+		"de/von-den-geraeten-reparierte-ich-keines#0": {
+			"id": "grammar-de-pron-fixed-keiner-acc-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-half-ich-keinem#0": {
+			"id": "grammar-de-pron-fixed-keiner-dat-sing-masc",
+			"evaluation": true
+		},
+		"de/von-den-frauen-widersprach-ich-keiner#0": {
+			"id": "grammar-de-pron-fixed-keiner-dat-sing-fem",
+			"evaluation": true
+		},
+		"de/von-den-geraeten-vertraue-ich-keinem#0": {
+			"id": "grammar-de-pron-fixed-keiner-dat-sing-neut",
+			"evaluation": true
+		},
+		"de/es-bedarf-keines-der-vorgeschlagenen-vertraege#0": {
+			"id": "grammar-de-pron-fixed-keiner-gen-sing-masc",
+			"evaluation": true
+		},
+		"de/eine-genehmigung-es-bedarf-keiner#0": {
+			"id": "grammar-de-pron-fixed-keiner-gen-sing-fem",
+			"evaluation": true
+		},
+		"de/es-bedarf-keines-der-vorgeschlagenen-geraete#0": {
+			"id": "grammar-de-pron-fixed-keiner-gen-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-gaesten-sah-ich-keine#0": {
+			"id": "grammar-de-pron-fixed-keiner-acc-plur",
+			"evaluation": true
+		},
+		"de/von-den-gaesten-half-ich-keinen#0": {
+			"id": "grammar-de-pron-fixed-keiner-dat-plur",
+			"evaluation": true
+		},
+		"de/zusaetzliche-unterlagen-es-bedarf-keiner#0": {
+			"id": "grammar-de-pron-fixed-keiner-gen-plur",
+			"evaluation": true
+		},
+		"de/von-den-frauen-irrt-sich-manche#0": {
+			"id": "grammar-de-pron-fixed-mancher-nom-sing-fem",
+			"evaluation": true
+		},
+		"de/von-den-details-bleibt-manches-unklar#0": {
+			"id": "grammar-de-pron-fixed-mancher-nom-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-kenne-ich-manchen#0": {
+			"id": "grammar-de-pron-fixed-mancher-acc-sing-masc",
+			"evaluation": true
+		},
+		"de/von-den-frauen-kenne-ich-manche-die-schon-damals-dabei-war#0": {
+			"id": "grammar-de-pron-fixed-mancher-acc-sing-fem",
+			"evaluation": true
+		},
+		"de/von-den-details-verstehe-ich-manches#0": {
+			"id": "grammar-de-pron-fixed-mancher-acc-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-kandidaten-vertraue-ich-manchem#0": {
+			"id": "grammar-de-pron-fixed-mancher-dat-sing-masc",
+			"evaluation": true
+		},
+		"de/von-den-empfehlungen-folge-ich-mancher#0": {
+			"id": "grammar-de-pron-fixed-mancher-dat-sing-fem",
+			"evaluation": true
+		},
+		"de/die-meinung-manches-der-teilnehmer-blieb-ungehoert#0": {
+			"id": "grammar-de-pron-fixed-mancher-gen-sing-masc",
+			"evaluation": true
+		},
+		"de/die-stimme-mancher-der-frauen-fehlte#0": {
+			"id": "grammar-de-pron-fixed-mancher-gen-sing-fem",
+			"evaluation": true
+		},
+		"de/die-wirkung-manches-der-mittel-ist-unklar#0": {
+			"id": "grammar-de-pron-fixed-mancher-gen-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-gaesten-kenne-ich-manche#0": {
+			"id": "grammar-de-pron-fixed-mancher-acc-plur",
+			"evaluation": true
+		},
+		"de/von-den-gaesten-helfe-ich-manchen#0": {
+			"id": "grammar-de-pron-fixed-mancher-dat-plur",
+			"evaluation": true
+		},
+		"de/man-gedachte-mancher-die-nicht-mehr-dabei-waren#0": {
+			"id": "grammar-de-pron-fixed-mancher-gen-plur",
+			"evaluation": true
+		},
+		"de/jedermann-ist-willkommen#0": {
+			"id": "grammar-de-pron-fixed-jedermann-nom",
+			"evaluation": true
+		},
+		"de/das-steht-jedermann-frei#0": {
+			"id": "grammar-de-pron-fixed-jedermann-dat",
+			"evaluation": true
+		},
+		"de/alles-funktioniert#0": {
+			"id": "grammar-de-pron-fixed-alles-nom",
+			"evaluation": true
+		},
+		"de/mit-allem-bin-ich-einverstanden#0": {
+			"id": "grammar-de-pron-fixed-allem-dat",
+			"evaluation": true
+		},
+		"de/ich-kenne-alle#0": {
+			"id": "grammar-de-pron-fixed-alle-acc",
+			"evaluation": true
+		},
+		"de/ich-helfe-allen#0": {
+			"id": "grammar-de-pron-fixed-allen-dat",
+			"evaluation": true
+		},
+		"de/mehrere-kamen#0": {
+			"id": "grammar-de-pron-fixed-mehrere-nom",
+			"evaluation": true
+		},
+		"de/ich-kenne-mehrere#0": {
+			"id": "grammar-de-pron-fixed-mehrere-acc",
+			"evaluation": true
+		},
+		"de/unter-den-frauen-hilft-jede#0": {
+			"id": "grammar-de-pron-fixed-jeder-nom-fem",
+			"evaluation": true
+		},
+		"de/unter-den-kindern-hilft-jedes#0": {
+			"id": "grammar-de-pron-fixed-jeder-nom-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-kenne-ich-jeden#0": {
+			"id": "grammar-de-pron-fixed-jeder-acc-masc",
+			"evaluation": true
+		},
+		"de/von-den-kindern-kenne-ich-jedes#0": {
+			"id": "grammar-de-pron-fixed-jeder-acc-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-helfe-ich-jedem#0": {
+			"id": "grammar-de-pron-fixed-jeder-dat-masc",
+			"evaluation": true
+		},
+		"de/von-den-frauen-helfe-ich-jeder#0": {
+			"id": "grammar-de-pron-fixed-jeder-dat-fem",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jeder-gen-masc": {
+			"input": {
+				"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jedes</TARGET> wurde geprüft.",
+				"members": ["jedes"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core.",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jeder-gen-neut": {
+			"input": {
+				"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jedes</TARGET> wurde geprüft.",
+				"members": ["jedes"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "The occurrence realizes the jedes Lemma with Gen Case in Core.",
+			"evaluation": true
+		},
+		"de/unter-den-frauen-hilft-jedwede#0": {
+			"id": "grammar-de-pron-fixed-jedweder-nom-fem",
+			"evaluation": true
+		},
+		"de/unter-den-kindern-hilft-jedwedes#0": {
+			"id": "grammar-de-pron-fixed-jedweder-nom-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-kenne-ich-jedweden#0": {
+			"id": "grammar-de-pron-fixed-jedweder-acc-masc",
+			"evaluation": true
+		},
+		"de/von-den-kindern-kenne-ich-jedwedes#0": {
+			"id": "grammar-de-pron-fixed-jedweder-acc-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-helfe-ich-jedwedem#0": {
+			"id": "grammar-de-pron-fixed-jedweder-dat-masc",
+			"evaluation": true
+		},
+		"de/von-den-frauen-helfe-ich-jedweder#0": {
+			"id": "grammar-de-pron-fixed-jedweder-dat-fem",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jedweder-gen-masc": {
+			"input": {
+				"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jedwedes</TARGET> wurde geprüft.",
+				"members": ["jedwedes"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity.",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jedweder-gen-neut": {
+			"input": {
+				"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jedwedes</TARGET> wurde geprüft.",
+				"members": ["jedwedes"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity.",
+			"evaluation": true
+		},
+		"de/unter-den-frauen-hilft-jegliche#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-nom-sing-fem",
+			"evaluation": true
+		},
+		"de/unter-den-kindern-hilft-jegliches#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-nom-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-kenne-ich-jeglichen#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-acc-sing-masc",
+			"evaluation": true
+		},
+		"de/von-den-kindern-kenne-ich-jegliches#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-acc-sing-neut",
+			"evaluation": true
+		},
+		"de/von-den-maennern-helfe-ich-jeglichem#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-dat-sing-masc",
+			"evaluation": true
+		},
+		"de/von-den-frauen-helfe-ich-jeglicher#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-dat-sing-fem",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jeglicher-gen-sing-masc": {
+			"input": {
+				"markedContext": "Die Bewerber stellten Projekte vor; der Beitrag <TARGET>jegliches</TARGET> wurde geprüft.",
+				"members": ["jegliches"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder.",
+			"evaluation": true
+		},
+		"grammar-de-pron-fixed-jeglicher-gen-sing-neut": {
+			"input": {
+				"markedContext": "Die Kinder stellten Projekte vor; der Beitrag <TARGET>jegliches</TARGET> wurde geprüft.",
+				"members": ["jegliches"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Singular and plural contextual features remain distinct Surfaces of Lemma jeglicher; synonymy never changes identity or lends plural forms to jeder or jedweder.",
+			"evaluation": true
+		},
+		"de/die-vorschlaege-lagen-vor-wir-prueften-jegliche#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-acc-plur",
+			"evaluation": true
+		},
+		"de/die-vorschlaege-lagen-vor-der-wortlaut-jeglicher-wurde#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-gen-plur",
+			"evaluation": true
+		},
+		"de/den-nehme-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-den-acc-masc",
+			"evaluation": true
+		},
+		"de/der-mann-dort-mit-dem-arbeite-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-dem-dat-masc",
+			"evaluation": true
+		},
+		"de/der-plan-dort-dessen-bedarf-es#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-masc",
+			"evaluation": true
+		},
+		"de/die-gefaellt-mir#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-die-nom-fem",
+			"evaluation": true
+		},
+		"de/die-jacke-dort-die-nehme-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-die-acc-fem",
+			"evaluation": true
+		},
+		"de/die-frau-dort-mit-der-arbeite-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-der-dat-fem",
+			"evaluation": true
+		},
+		"de/die-loesung-dort-deren-bedarf-es#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-deren-gen-fem",
+			"evaluation": true
+		},
+		"de/das-gefaellt-mir#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-das-nom-neut",
+			"evaluation": true
+		},
+		"de/das-nehme-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-das-acc-neut",
+			"evaluation": true
+		},
+		"de/das-geraet-dort-mit-dem-arbeite-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-dem-dat-neut",
+			"evaluation": true
+		},
+		"de/das-werkzeug-dort-dessen-bedarf-es#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-neut",
+			"evaluation": true
+		},
+		"de/die-gefallen-mir#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-die-nom-plur",
+			"evaluation": true
+		},
+		"de/von-den-geraeten-nehme-ich-die#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-die-acc-plur",
+			"evaluation": true
+		},
+		"de/mit-denen-arbeite-ich#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-denen-dat-plur",
+			"evaluation": true
+		},
+		"de/die-loesungen-dort-deren-bedarf-es#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-deren-gen-plur",
+			"evaluation": true
+		},
+		"de/das-ist-der-mann-den-wir-begruessen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-den-acc-masc",
+			"evaluation": true
+		},
+		"de/das-ist-der-mann-mit-dem-wir-arbeiten#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-dem-dat-masc",
+			"evaluation": true
+		},
+		"de/das-ist-der-mann-dessen-plan-wir-pruefen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-masc",
+			"evaluation": true
+		},
+		"de/das-ist-die-frau-die-heute-auftritt#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-die-nom-fem",
+			"evaluation": true
+		},
+		"de/das-ist-die-frau-die-wir-begruessen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-die-acc-fem",
+			"evaluation": true
+		},
+		"de/das-ist-die-frau-mit-der-wir-arbeiten#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-der-dat-fem",
+			"evaluation": true
+		},
+		"de/das-ist-die-frau-deren-plan-wir-pruefen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-deren-gen-fem",
+			"evaluation": true
+		},
+		"de/das-ist-das-geraet-das-im-labor-steht#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-das-nom-neut",
+			"evaluation": true
+		},
+		"de/das-ist-das-geraet-das-wir-pruefen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-das-acc-neut",
+			"evaluation": true
+		},
+		"de/das-ist-das-geraet-mit-dem-wir-arbeiten#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-dem-dat-neut",
+			"evaluation": true
+		},
+		"de/das-ist-das-geraet-dessen-nummer-wir-notieren#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-neut",
+			"evaluation": true
+		},
+		"de/das-sind-die-geraete-die-im-labor-stehen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-die-nom-plur",
+			"evaluation": true
+		},
+		"de/das-sind-die-geraete-die-wir-pruefen#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-die-acc-plur",
+			"evaluation": true
+		},
+		"de/das-sind-die-geraete-mit-denen-wir-arbeiten#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-denen-dat-plur",
+			"evaluation": true
+		},
+		"de/das-sind-die-geraete-deren-nummern-wir-notieren#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-deren-gen-plur",
+			"evaluation": true
+		},
+		"de/ihr-bruder-zieht-um-anna-hilft-ihm-beim-umzug#0": {
+			"id": "grammar-de-pron-demo-personal-ihm",
+			"demonstration": true
+		},
+		"de/frau-weber-ich-danke-ihnen-fuer-die-hilfe#0": {
+			"id": "grammar-de-pron-demo-formal-ihnen",
+			"demonstration": true
+		},
+		"de/heute-fahre-ich-mit-dem-zug-nach-leipzig#0": {
+			"id": "grammar-de-pron-dev-personal-ich",
+			"evaluation": true
+		},
+		"de/nach-dem-essen-liest-sie-noch-eine-stunde#0": {
+			"id": "grammar-de-pron-dev-personal-sie-fem",
+			"evaluation": true
+		},
+		"de/die-gaeste-warten-draussen-der-portier-ruft-sie-herein#0": {
+			"id": "grammar-de-pron-dev-personal-sie-plur-acc",
+			"evaluation": true
+		},
+		"de/morgen-besuche-ich-euch-in-dresden#0": {
+			"id": "grammar-de-pron-dev-personal-euch",
+			"evaluation": true
+		},
+		"de/herr-yilmaz-sie-beginnen-bitte-mit-dem-bericht#0": {
+			"id": "grammar-de-pron-dev-formal-sie-nom",
+			"evaluation": true
+		},
+		"de/nach-der-besprechung-gebe-ich-dir-die-notizen-zurueck#0": {
+			"id": "grammar-de-pron-accept-v4-personal-dir-dat",
+			"evaluation": true
+		},
+		"de/am-naechsten-morgen-fahren-wir-gemeinsam-zur-baustelle#0": {
+			"id": "grammar-de-pron-accept-v4-personal-wir-nom",
+			"evaluation": true
+		},
+		"de/herr-brandt-die-rezeption-reserviert-ihnen-ein-ruhiges#0": {
+			"id": "grammar-de-pron-accept-v4-formal-ihnen-dat",
+			"evaluation": true
+		},
+		"de/kommen-sie-bitte-herein#0": {
+			"id": "grammar-de-pron-accept-formal-sie-unknown-addressee",
+			"evaluation": true
+		},
+		"de/nach-dem-training-waescht-lea-sich-die-haende#0": {
+			"id": "grammar-de-pron-demo-reflexive-sich",
+			"demonstration": true
+		},
+		"de/der-gefaellt-mir#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc",
+			"demonstration": true
+		},
+		"de/das-ist-der-mann-der-den-drucker-repariert#0": {
+			"id": "grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc",
+			"demonstration": true
+		},
+		"de/ich-helfe-jemandem-aus-der-nachbarschaft#0": {
+			"id": "grammar-de-pron-fixed-jemand-jemandem",
+			"demonstration": true
+		},
+		"de/ich-helfe-niemandem-aus-der-nachbarschaft#0": {
+			"id": "grammar-de-pron-fixed-niemand-niemandem",
+			"demonstration": true
+		},
+		"de/von-den-maennern-kam-keiner#0": {
+			"id": "grammar-de-pron-fixed-keiner-nom-sing-masc",
+			"demonstration": true
+		},
+		"de/von-den-geraeten-funktioniert-keines#0": {
+			"id": "grammar-de-pron-fixed-keiner-nom-sing-neut",
+			"demonstration": true
+		},
+		"de/von-den-gaesten-kamen-keine#0": {
+			"id": "grammar-de-pron-fixed-keiner-nom-plur",
+			"demonstration": true
+		},
+		"de/das-betrifft-jedermann#0": {
+			"id": "grammar-de-pron-fixed-jedermann-acc",
+			"demonstration": true
+		},
+		"de/das-ist-jedermanns-sache#0": {
+			"id": "grammar-de-pron-fixed-jedermann-gen",
+			"demonstration": true
+		},
+		"de/von-den-maennern-irrt-sich-mancher#0": {
+			"id": "grammar-de-pron-fixed-mancher-nom-sing-masc",
+			"demonstration": true
+		},
+		"de/von-den-gaesten-kommen-manche-spaeter#0": {
+			"id": "grammar-de-pron-fixed-mancher-nom-plur",
+			"demonstration": true
+		},
+		"de/von-den-kindern-hilft-das-manchem#0": {
+			"id": "grammar-de-pron-fixed-mancher-dat-sing-neut",
+			"demonstration": true
+		},
+		"de/vor-dem-spiegel-kaemme-ich-mich-sorgfaeltig#0": {
+			"id": "grammar-de-pron-dev-reflexive-mich",
+			"evaluation": true
+		},
+		"de/die-aerztin-untersucht-mich-am-montag#0": {
+			"id": "grammar-de-pron-dev-nonreflexive-mich",
+			"evaluation": true
+		},
+		"de/nach-dem-lauf-waeschst-du-dich-gruendlich#0": {
+			"id": "grammar-de-pron-fixed-reflexive-dich",
+			"evaluation": true
+		},
+		"de/vor-dem-foto-stellen-wir-uns-nebeneinander#0": {
+			"id": "grammar-de-pron-fixed-reflexive-uns",
+			"evaluation": true
+		},
+		"de/nach-dem-streit-hoerten-die-beiden-einander-wieder-zu#0": {
+			"id": "grammar-de-pron-dev-reciprocal-einander",
+			"evaluation": true
+		},
+		"de/mara-schaemt-sich-fuer-den-irrtum#0": {
+			"id": "grammar-de-pron-dev-inherent-reflexive-sich",
+			"evaluation": true
+		},
+		"de/vor-dem-wettkampf-waermt-euch-gruendlich-auf#0": {
+			"id": "grammar-de-pron-accept-v4-reflexive-euch-acc",
+			"evaluation": true
+		},
+		"de/das-ist-der-techniker-der-den-drucker-repariert-hat#0": {
+			"id": "grammar-de-pron-demo-relative-der",
+			"evaluation": true
+		},
+		"de/etwas-fehlt-noch-fuer-das-gemeinsame-fruehstueck#0": {
+			"id": "grammar-de-pron-demo-indefinite-etwas",
+			"evaluation": true
+		},
+		"de/das-gefaellt-der-ganzen-familie#0": {
+			"id": "grammar-de-pron-dev-demonstrative-das-nom",
+			"evaluation": true
+		},
+		"de/jener-war-deutlich-guenstiger-als-dieser-hier#0": {
+			"id": "grammar-de-pron-dev-standalone-jener",
+			"evaluation": true
+		},
+		"de/die-musikerin-die-heute-auftritt-kommt-aus-koeln#0": {
+			"id": "grammar-de-pron-dev-relative-die-nom",
+			"evaluation": true
+		},
+		"de/wer-uebernimmt-morgen-den-bereitschaftsdienst#0": {
+			"id": "grammar-de-pron-dev-interrogative-wer-nom",
+			"evaluation": true
+		},
+		"de/die-notiz-muss-jemandem-aus-dem-team-gehoeren#0": {
+			"id": "grammar-de-pron-dev-indefinite-jemandem",
+			"evaluation": true
+		},
+		"de/am-eingang-sah-der-pfoertner-niemanden-mehr#0": {
+			"id": "grammar-de-pron-dev-negative-niemanden",
+			"evaluation": true
+		},
+		"grammar-de-pron-dev-total-foreign-all": {
+			"input": {
+				"markedContext": "Im englischen Bericht stand: „<TARGET>All</TARGET> had arrived safely.“",
+				"members": ["All"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501).",
+			"evaluation": true
+		},
+		"de/die-dort-warten-bereits-auf-den-naechsten-bus#0": {
+			"id": "grammar-de-pron-accept-v4-demonstrative-die-nom-plur",
+			"evaluation": true
+		},
+		"de/das-geraet-mit-dem-wir-messen-steht-im-labor#0": {
+			"id": "grammar-de-pron-accept-v4-relative-dem-dat-neut",
+			"evaluation": true
+		},
+		"de/wem-gehoert-der-gruene-rucksack-am-eingang#0": {
+			"id": "grammar-de-pron-accept-v4-interrogative-wem-dat",
+			"evaluation": true
+		},
+		"de/die-nachricht-muss-irgendjemandem-im-buero-bekannt-vorkommen#0": {
+			"id": "grammar-de-pron-accept-v4-indefinite-irgendjemandem-dat",
+			"evaluation": true
+		},
+		"de/die-kontrolleurin-liess-niemanden-ohne-ausweis-hinein#0": {
+			"id": "grammar-de-pron-accept-v4-negative-niemanden-acc",
+			"evaluation": true
+		},
+		"de/im-engen-flur-gingen-die-besucher-einander-hoeflich-aus-dem#0": {
+			"id": "grammar-de-pron-accept-v4-reciprocal-einander",
+			"evaluation": true
+		},
+		"de/auf-dem-leeren-schreibtisch-lag-nichts-mehr#0": {
+			"id": "grammar-de-pron-accept-v4-negative-nichts",
+			"evaluation": true
+		},
+		"de/nach-dem-gewitter-war-im-keller-nix-mehr-trocken#0": {
+			"id": "grammar-de-pron-demo-variant-nix",
+			"demonstration": true
+		},
+		"de/der-rote-regenschirm-am-eingang-ist-meiner#0": {
+			"id": "grammar-de-pron-dev-poss-meiner",
+			"demonstration": true
+		},
+		"de/mehr-als-die-haelfte-der-gaeste-blieb-bis-zum-ende#0": {
+			"id": "grammar-de-pron-dev-comparative-mehr",
+			"evaluation": true
+		},
+		"de/wenn-s-morgen-regnet-bleibt-das-turnier-in-der-halle#0": {
+			"id": "grammar-de-pron-dev-contraction-s",
+			"evaluation": true
+		},
+		"de/nach-der-sitzung-fahre-ihc-direkt-nach-hause#0": {
+			"id": "grammar-de-pron-dev-typo-ihc",
+			"evaluation": true
+		},
+		"de/euer-gedenke-ich-in-dieser-schweren-stunde#0": {
+			"id": "grammar-de-pron-dev-archaic-euer",
+			"evaluation": true
+		},
+		"de/er-gedachte-meiner-in-dieser-schweren-stunde#0": {
+			"id": "grammar-de-pron-demo-archaic-meiner",
+			"demonstration": true
+		},
+		"de/wem-hilfst-du-morgen#0": {
+			"id": "grammar-de-pron-fixed-wem",
+			"demonstration": true
+		},
+		"de/ich-habe-alles-geprueft#0": {
+			"id": "grammar-de-pron-fixed-alles-acc",
+			"demonstration": true
+		},
+		"de/alle-sind-angekommen#0": {
+			"id": "grammar-de-pron-fixed-alle-nom",
+			"demonstration": true
+		},
+		"de/die-stimmen-aller-zaehlen#0": {
+			"id": "grammar-de-pron-fixed-aller-gen",
+			"demonstration": true
+		},
+		"de/unter-den-maennern-hilft-jeder#0": {
+			"id": "grammar-de-pron-fixed-jeder-nom-masc",
+			"demonstration": true
+		},
+		"de/von-den-frauen-kenne-ich-jede#0": {
+			"id": "grammar-de-pron-fixed-jeder-acc-fem",
+			"demonstration": true
+		},
+		"de/von-den-kindern-helfe-ich-jedem#0": {
+			"id": "grammar-de-pron-fixed-jeder-dat-neut",
+			"demonstration": true
+		},
+		"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jeder#0": {
+			"id": "grammar-de-pron-fixed-jeder-gen-fem",
+			"demonstration": true
+		},
+		"de/unter-den-maennern-hilft-jedweder#0": {
+			"id": "grammar-de-pron-fixed-jedweder-nom-masc",
+			"demonstration": true
+		},
+		"de/von-den-frauen-kenne-ich-jedwede#0": {
+			"id": "grammar-de-pron-fixed-jedweder-acc-fem",
+			"demonstration": true
+		},
+		"de/von-den-kindern-helfe-ich-jedwedem#0": {
+			"id": "grammar-de-pron-fixed-jedweder-dat-neut",
+			"demonstration": true
+		},
+		"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jedweder#0": {
+			"id": "grammar-de-pron-fixed-jedweder-gen-fem",
+			"demonstration": true
+		},
+		"de/unter-den-maennern-hilft-jeglicher#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-nom-sing-masc",
+			"demonstration": true
+		},
+		"de/von-den-frauen-kenne-ich-jegliche#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-acc-sing-fem",
+			"demonstration": true
+		},
+		"de/von-den-kindern-helfe-ich-jeglichem#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-dat-sing-neut",
+			"demonstration": true
+		},
+		"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-gen-sing-fem",
+			"demonstration": true
+		},
+		"de/die-vorschlaege-lagen-vor-jegliche-wurden-geprueft#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-nom-plur",
+			"demonstration": true
+		},
+		"de/die-vorschlaege-lagen-vor-wir-widersprachen-jeglichen#0": {
+			"id": "grammar-de-pron-fixed-jeglicher-dat-plur",
+			"demonstration": true
+		},
+		"de/ich-helfe-mehreren#0": {
+			"id": "grammar-de-pron-fixed-mehrere-dat",
+			"demonstration": true
+		},
+		"de/die-aussagen-mehrerer-stimmen-ueberein#0": {
+			"id": "grammar-de-pron-fixed-mehrere-gen",
+			"demonstration": true
+		},
+		"de/frau-doktor-bitte-setzen-sie-sich-an-den-tisch#0": {
+			"id": "grammar-de-pron-dev-formal-lowercase-typo",
+			"evaluation": true
+		},
+		"grammar-de-pron-accept-v4-foreign-he": {
+			"input": {
+				"markedContext": "Im englischen Protokoll heißt es: „<TARGET>He</TARGET> signed the form.“",
+				"members": ["He"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501).",
+			"evaluation": true
+		},
+		"grammar-de-pron-referent-sie-acc-maria": {
+			"input": {
+				"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+				"members": ["sie"],
+				"context": { "before": "Maria kommt.", "after": "Sie winkt." }
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["sie"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "sie",
+					"coreFeatures": {
+						"case": "Acc",
+						"number": "Sing",
+						"extPos": null,
+						"foreign": null,
+						"person": "3",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": "Fem"
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Maria in the sentence before makes sie her: accusative feminine singular.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-sie-acc-kinder": {
+			"input": {
+				"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+				"members": ["sie"],
+				"context": {
+					"before": "Die Kinder spielen.",
+					"after": "Sie lachen."
+				}
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["sie"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "sie",
+					"coreFeatures": {
+						"case": "Acc",
+						"number": "Plur",
+						"extPos": null,
+						"foreign": null,
+						"person": "3",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": null
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Die Kinder in the sentence before make sie them: accusative plural.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-sie-acc-alone": {
+			"input": {
+				"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+				"members": ["sie"],
+				"contextAvailable": false
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["sie"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "sie",
+					"coreFeatures": {
+						"case": "Acc",
+						"number": "Sing",
+						"extPos": null,
+						"foreign": null,
+						"person": "3",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": "Fem"
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The whole Text is this sentence, so resolution must pick a cell. Either accusative sie is right; the evaluator accepts both.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-ihm-kind": {
+			"input": {
+				"markedContext": "Ich gebe <TARGET>ihm</TARGET> ein Bonbon.",
+				"members": ["ihm"],
+				"context": { "before": "Das Kind weint." }
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["ihm"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "ihm",
+					"coreFeatures": {
+						"case": "Dat",
+						"number": "Sing",
+						"extPos": null,
+						"foreign": null,
+						"person": "3",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": "Neut"
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "ihm stands for das Kind, so it is the dative of es.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-sie-nom-nachbarn": {
+			"input": {
+				"markedContext": "<TARGET>Sie</TARGET> kommen morgen.",
+				"members": ["Sie"],
+				"context": { "before": "Die Nachbarn rufen an." }
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["sie"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "sie",
+					"coreFeatures": {
+						"case": "Nom",
+						"number": "Plur",
+						"extPos": null,
+						"foreign": null,
+						"person": "3",
+						"polite": null,
+						"poss": null,
+						"pronType": "Prs",
+						"gender": null
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Sentence-initial Sie stands for die Nachbarn: third person plural, not formal address.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"de/herr-meier-sie-kommen-morgen#0": {
+			"id": "grammar-de-pron-referent-sie-formal-meier",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-dem-plan": {
+			"input": {
+				"markedContext": "Ich traue <TARGET>dem</TARGET> nicht.",
+				"members": ["dem"],
+				"context": { "before": "Der Plan ist riskant." }
+			},
+			"idealOutput": {
+				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["dem"],
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"lemma": {
+					"canonicalForm": "dem",
+					"coreFeatures": {
+						"case": "Dat",
+						"number": "Sing",
+						"extPos": null,
+						"foreign": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem",
+						"gender": "Masc"
+					}
+				},
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Demonstrative dem stands for der Plan: dative masculine singular.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-sie-acc-escape": {
+			"input": {
+				"markedContext": "Ich sehe <TARGET>sie</TARGET>.",
+				"members": ["sie"]
+			},
+			"idealOutput": { "decision": "MoreContextRequired" },
+			"explanation": "Nothing in the sentence tells her from them, and the Text goes on, so resolution asks for the neighbours.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-ihm-escape": {
+			"input": {
+				"markedContext": "Ich gebe <TARGET>ihm</TARGET> ein Bonbon.",
+				"members": ["ihm"]
+			},
+			"idealOutput": { "decision": "MoreContextRequired" },
+			"explanation": "Nothing in the sentence tells the ihm of er from the ihm of es, and the Text goes on.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"grammar-de-pron-referent-dem-escape": {
+			"input": {
+				"markedContext": "Ich traue <TARGET>dem</TARGET> nicht.",
+				"members": ["dem"]
+			},
+			"idealOutput": { "decision": "MoreContextRequired" },
+			"explanation": "Nothing in the sentence tells masculine from neuter dem, and the Text goes on.",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"de/maria-lacht-und-ich-sehe-sie#0": {
+			"id": "grammar-de-pron-referent-sie-in-sentence-fem",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"de/die-kinder-lachen-und-ich-sehe-sie#0": {
+			"id": "grammar-de-pron-referent-sie-in-sentence-plur",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		},
+		"de/morgen-kommen-sie-alle#0": {
+			"id": "grammar-de-pron-referent-sie-nom-agreement",
+			"evaluation": true,
+			"slices": ["referent-context"]
+		}
+	}
+}

@@ -1,0 +1,103 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir stellen die Daten zur Verfügung.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stellen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Daten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "r", "surface": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Verfügung" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#451",
+				"url": "https://github.com/clockblocker/texteater/issues/451",
+				"supports": "Target 0, stellen zu r Verfügung"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 8, 9, 11],
+			"notes": {
+				"rationale": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Collocation",
+						"canonicalForm": "zur Verfügung stellen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "stellen zur Verfügung",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "stellen", "orthography": "Standard" },
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zur",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "r", "surface": "der" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "r",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zur",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "r", "surface": "der" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Verfügung", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

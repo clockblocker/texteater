@@ -2,34 +2,108 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er ist stolz auf seinen Sohn.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stolz" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seinen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Sohn" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stolz"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seinen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sohn"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0034"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"notes": {
-				"rationale": "An adjective takes in the preposition it governs, as a verb does: auf is an occurrence member, so a click on it opens stolz, and valencyEvidence names it by index with auf + Acc. It is not a Fixed member, so the normalized Surface is stolz. The copula ist stays its own VERB and forms no Collocation with the predicative adjective."
+				"rationale": "stolz governs auf in the same sense on its own, so the preposition is a governed member of the ADJ, never of the copula (ADR 0034). The Surface projects only the Fixed member: stolz. An adjective takes in the preposition it governs, as a verb does: auf is an occurrence member, so a click on it opens stolz, and valencyEvidence names it by index with auf + Acc. It is not a Fixed member, so the normalized Surface is stolz. The copula ist stays its own VERB and forms no Collocation with the predicative adjective."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "stolz",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "stolz",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
 				"members": [
-					{ "attested": "stolz", "orthography": "Standard" },
-					{ "attested": "auf", "orthography": "Standard" }
+					{
+						"attested": "stolz",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "auf",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
@@ -56,33 +130,7 @@
 						},
 						"realizedCase": "Acc"
 					}
-				],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "stolz",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "stolz",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"numType": null,
-							"variant": null
-						}
-					},
-					"surfaceFeatures": null
-				}
+				]
 			}
 		}
 	],

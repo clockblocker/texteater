@@ -1,0 +1,185 @@
+{
+	"slices": {},
+	"cases": {
+		"de/die-anzeige-zeigt-80-ladezustand#0": {
+			"id": "grammar-de-sym-demo-percent-unit",
+			"demonstration": true
+		},
+		"de/ein-einziges-steht-zwischen-den-zahlen#0": {
+			"id": "grammar-de-sym-demo-times-nominal",
+			"demonstration": true
+		},
+		"de/der-eintritt-kostet-zwoelf#0": {
+			"id": "grammar-de-sym-demo-euro-currency",
+			"demonstration": true
+		},
+		"de/mit-dem-verweist-sie-auf-die-einschlaegige-vorschrift#0": {
+			"id": "grammar-de-sym-demo-section-dative",
+			"demonstration": true
+		},
+		"de/die-form-des-ist-in-dieser-schrift-besonders-breit#0": {
+			"id": "grammar-de-sym-demo-equals-genitive",
+			"demonstration": true
+		},
+		"de/die-lektorin-nennt-die-eine-raute#0": {
+			"id": "grammar-de-sym-demo-feminine-hash",
+			"demonstration": true
+		},
+		"de/in-der-arabischen-quellenzeile-folgt-auf-die-zahl-das#0": {
+			"id": "grammar-de-sym-demo-foreign-arabic-percent",
+			"demonstration": true
+		},
+		"de/in-der-inventarliste-kennzeichnet-die-folgende#0": {
+			"id": "grammar-de-sym-demo-card-number-sign",
+			"demonstration": true
+		},
+		"de/in-der-tabellarischen-angabe-10-12-bezeichnet-der-strich#0": {
+			"id": "grammar-de-sym-demo-range-dash",
+			"demonstration": true
+		},
+		"de/die-unicode-tabelle-nennt-ausdruecklich-als-vollbreite#0": {
+			"id": "grammar-de-sym-demo-variant-fullwidth-plus",
+			"demonstration": true
+		},
+		"de/im-fehlerhaften-ocr-text-steht-statt-des-eurozeichens#0": {
+			"id": "grammar-de-sym-demo-typo-ocr-euro",
+			"demonstration": true
+		},
+		"de/die-beiden-verweisen-auf-getrennte-regelungen#0": {
+			"id": "grammar-de-sym-demo-sections-plural",
+			"demonstration": true
+		},
+		"de/die-rechnung-lautet-zwei-drei#0": {
+			"id": "grammar-de-sym-dev-math-plus",
+			"evaluation": true
+		},
+		"de/auf-der-tafel-steht-neun-vier#0": {
+			"id": "grammar-de-sym-dev-math-minus",
+			"evaluation": true
+		},
+		"de/die-dozentin-schreibt-ein-vor-den-ausdruck#0": {
+			"id": "grammar-de-sym-dev-science-integral",
+			"evaluation": true
+		},
+		"de/die-korngroesse-betraegt-fuenf-m#0": {
+			"id": "grammar-de-sym-dev-measurement-micro",
+			"evaluation": true
+		},
+		"de/am-nachmittag-werden-achtzehn-c-gemessen#0": {
+			"id": "grammar-de-sym-dev-measurement-degree",
+			"evaluation": true
+		},
+		"de/die-probe-enthaelt-zwei-salz#0": {
+			"id": "grammar-de-sym-dev-measurement-permille",
+			"evaluation": true
+		},
+		"de/das-ersatzteil-kostet-dreissig#0": {
+			"id": "grammar-de-sym-dev-currency-dollar",
+			"evaluation": true
+		},
+		"de/der-katalog-nennt-einen-preis-von-vierzig#0": {
+			"id": "grammar-de-sym-dev-currency-pound",
+			"evaluation": true
+		},
+		"de/im-impressum-steht-vor-dem-erscheinungsjahr-ein#0": {
+			"id": "grammar-de-sym-dev-legal-copyright",
+			"evaluation": true
+		},
+		"de/auf-dem-schild-steht-brot-kuchen#0": {
+			"id": "grammar-de-sym-dev-coordinator-ampersand",
+			"evaluation": true
+		},
+		"de/setze-ein-vor-das-stichwort#0": {
+			"id": "grammar-de-sym-dev-marker-hash",
+			"evaluation": true
+		},
+		"de/sie-beendet-die-nachricht-mit#0": {
+			"id": "grammar-de-sym-dev-emoticon-wink",
+			"evaluation": true
+		},
+		"de/links-steht-bereits-rechts-ergaenzt-sie-ein-zweites#0": {
+			"id": "grammar-de-sym-dev-repeated-plus-second",
+			"evaluation": true
+		},
+		"de/die-statistik-weist-einen-anteil-von-47-aus#0": {
+			"id": "grammar-de-sym-dev-numeric-neighbor-percent",
+			"evaluation": true
+		},
+		"de/vor-dem-abschliessenden-komma-steht-ein-das-auf-die-fussnote#0": {
+			"id": "grammar-de-sym-dev-punctuation-neighbor-star",
+			"evaluation": true
+		},
+		"de/vor-dem-nicht-anklickbaren-emoji-steht-ein#0": {
+			"id": "grammar-de-sym-dev-opaque-neighbor-hash",
+			"evaluation": true
+		},
+		"de/die-fundstelle-lautet-8-abs-2#0": {
+			"id": "grammar-de-sym-dev-abbreviation-neighbor-section",
+			"evaluation": true
+		},
+		"de/die-lehrerin-markiert-das-rot#0": {
+			"id": "grammar-de-sym-dev-inflection-acc-plus",
+			"evaluation": true
+		},
+		"de/die-form-des-ist-in-dieser-schrift-ungewoehnlich#0": {
+			"id": "grammar-de-sym-dev-inflection-gen-percent",
+			"evaluation": true
+		},
+		"de/die-designerin-nennt-die-eine-klammeraffe#0": {
+			"id": "grammar-de-sym-dev-inflection-feminine-at",
+			"evaluation": true
+		},
+		"de/die-legende-fuehrt-als-historisches-todeszeichen-auf#0": {
+			"id": "grammar-de-sym-dev-archaic-dagger",
+			"evaluation": true
+		},
+		"de/die-schuelerin-umkreist-das-mit-roter-farbe#0": {
+			"id": "grammar-de-sym-accept-v2-division-inflection",
+			"evaluation": true
+		},
+		"de/die-bedingung-lautet-x-5#0": {
+			"id": "grammar-de-sym-accept-v2-not-equal",
+			"evaluation": true
+		},
+		"de/in-der-herleitung-wird-die-reihe-mit-notiert#0": {
+			"id": "grammar-de-sym-accept-v2-sum",
+			"evaluation": true
+		},
+		"de/auf-der-indischen-rechnung-stehen-achthundert#0": {
+			"id": "grammar-de-sym-accept-v2-rupee",
+			"evaluation": true
+		},
+		"de/die-verpackung-traegt-hinter-dem-namen#0": {
+			"id": "grammar-de-sym-accept-v2-registered",
+			"evaluation": true
+		},
+		"de/das-zustandsdiagramm-zeigt-a-b#0": {
+			"id": "grammar-de-sym-accept-v2-double-arrow",
+			"evaluation": true
+		},
+		"de/die-abweichung-betraegt-drei#0": {
+			"id": "grammar-de-sym-accept-v2-basis-point",
+			"evaluation": true
+		},
+		"de/im-franzoesischen-formular-kennzeichnet-n-ausdruecklich-die#0": {
+			"id": "grammar-de-sym-accept-v2-card-numero",
+			"evaluation": true
+		},
+		"de/in-der-zahlenangabe-20-30-dient-die-tilde-ausdruecklich-als#0": {
+			"id": "grammar-de-sym-accept-v2-range-tilde",
+			"evaluation": true
+		},
+		"de/im-japanischen-original-steht-vor-dem-hinweis-das-zeichen#0": {
+			"id": "grammar-de-sym-accept-v2-foreign-japanese-reference",
+			"evaluation": true
+		},
+		"de/die-unicode-liste-erklaert-als-kleine-variante-von#0": {
+			"id": "grammar-de-sym-accept-v2-variant-small-percent",
+			"evaluation": true
+		},
+		"de/durch-einen-tippfehler-erscheint-statt-eines-einzelnen#0": {
+			"id": "grammar-de-sym-accept-v2-typo-double-permille",
+			"evaluation": true
+		}
+	}
+}
