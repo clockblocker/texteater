@@ -285,9 +285,10 @@ const abbreviation = (
 /**
  * Abbreviations are one Segment whose surface is the expansion. Multi-word
  * expansions are multi-member Lexemes with a whole-unit Kind (ADR 0009), not
- * Collocations; the Kinds ruled on issue 498 are marked, the rest are the
- * obvious whole-unit Kind and stay open to review. Candidate surfaces mark an
- * ambiguous abbreviation the sentence must decide.
+ * Collocations; the Kinds ruled on issue 498 are marked in
+ * `reviewedAbbreviationKinds`, the rest are the obvious whole-unit Kind and
+ * stay open to review. Candidate surfaces mark an ambiguous abbreviation the
+ * sentence must decide.
  */
 export const germanAbbreviations: readonly AbbreviationEntry[] = [
 	abbreviation(
@@ -441,6 +442,26 @@ export const germanAbbreviations: readonly AbbreviationEntry[] = [
 		"„Mrd.“ steht für „Milliarde“ oder „Milliarden“.",
 	),
 ];
+
+/**
+ * The abbreviations whose Kind a human ruled on in issue 498: the ruled
+ * expansions, and vgl. and sog. accepted in its review. Only these Kinds may
+ * stand for a route question.
+ */
+export const reviewedAbbreviationKinds: ReadonlySet<string> = new Set([
+	"z.B.",
+	"z.T.",
+	"u.a.",
+	"usw.",
+	"o.ä.",
+	"v.a.",
+	"i.A.",
+	"d.h.",
+	"bzw.",
+	"Dipl.-Ing.",
+	"vgl.",
+	"sog.",
+]);
 
 export const germanFusionTable: FusionTable = {
 	language: "de",

@@ -416,9 +416,24 @@ function expressionsOf(
 export function assembleAnalysis(
 	sentence: SegmentedSentence<"de">,
 	placement: Placement,
-	answers: Answers,
+	asked: Answers,
 	policy: AssemblyPolicy = productionPolicy,
 ): Omit<SentenceAnalysis, "sentenceId" | "language"> {
+	// An abbreviation's reviewed Kind stands for the route it is never asked.
+	const answers: Answers = {
+		...asked,
+		...Object.fromEntries(
+			[...placement.routes].map(([index, route]) => [
+				`route_${index}`,
+				{
+					type: "choice",
+					choice: route,
+					confidence: 1,
+					probabilities: { [route]: 1 },
+				},
+			]),
+		),
+	};
 	const { groups, unresolvable } = components(
 		placement.resolvable,
 		answers,

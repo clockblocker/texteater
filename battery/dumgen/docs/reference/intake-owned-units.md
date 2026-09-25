@@ -164,7 +164,7 @@ preposition, with the adjunct, particle and connective exclusions).
 | questions | count for n resolvable Segments | answer used as |
 | --- | --- | --- |
 | membership Choice from every anchor, under `criteria` | n(n-1) | symmetrized Include mass, connected components at tau 0.6 |
-| route Choice over the Lexeme inventory | n | Route Mass, summed per group |
+| route Choice over the Lexeme inventory | n, less one per abbreviation with one expansion and a Kind reviewed on issue 498, whose Kind counts in full | Route Mass, summed per group |
 | role Choice | n | Member Role value |
 | identity Choice over authored members, cell rubric | one per Segment with candidates | Identity Mass, summed per headword group |
 | fixedness Score, under `fixedness` | n | mean per expression |

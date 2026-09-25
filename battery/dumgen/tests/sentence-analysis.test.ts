@@ -6,6 +6,10 @@ import type {
 	TypeSafeExecutor,
 } from "promptsmith/typesafe";
 import {
+	germanAbbreviations,
+	reviewedAbbreviationKinds,
+} from "../src/concrete-lang/de/fusion-entries.js";
+import {
 	governablePrepositionIn,
 	governablePrepositionLemma,
 } from "../src/concrete-lang/de/governable-prepositions.js";
@@ -23,6 +27,7 @@ import {
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
 import {
+	lexemeRoutes,
 	realizationCriteria,
 	realizationEdits,
 } from "../src/concrete-lang/de/sentence-analysis/criteria.js";
@@ -824,6 +829,52 @@ test("placed abbreviations and clitics stand for their table surfaces", () => {
 	]);
 	const clitic = placement.segments.find((segment) => segment.text === "'s");
 	expect(placement.choices.get(clitic?.offset ?? -1)).toEqual(["es", "das"]);
+});
+
+test("an abbreviation's reviewed Kind routes it unasked; two expansions or an unreviewed Kind are asked", async () => {
+	// Sie0 kauft2 u.a.4 ca.6 zehn8 Brote10 usw.12
+	// Offsets: Sie0 kauft4 u.a.10 ca.15 zehn19 Brote24 usw.30
+	const sentence = sentenceOf("usw", "Sie kauft u.a. ca. zehn Brote usw.");
+	expect([...placeSegments(sentence).routes]).toEqual([[12, "Lexeme/ADV"]]);
+	const { dumgen, traces } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10], [12]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADV",
+			6: "Lexeme/ADV",
+			8: "Lexeme/NUM",
+			10: "Lexeme/NOUN",
+		},
+		roles: {},
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence }),
+	);
+	const request = traces[0]?.calls[0]?.request;
+	if (!request || !("questions" in request))
+		throw Error("Expected a judgment");
+	expect(
+		Object.keys(request.questions).filter((id) => id.startsWith("route_")),
+	).toEqual([
+		"route_0",
+		"route_2",
+		"route_4",
+		"route_6",
+		"route_8",
+		"route_10",
+	]);
+	expect(targetOf(analysis, 30)?.routeMass).toEqual({ ADV: 1 });
+});
+
+test("every reviewed abbreviation Kind is an authored route", () => {
+	for (const text of reviewedAbbreviationKinds) {
+		const kind = germanAbbreviations.find(
+			(entry) => entry.text === text,
+		)?.kind;
+		expect(lexemeRoutes, text).toHaveProperty(`Lexeme/${kind}`);
+	}
 });
 
 test("the analysis decides what 's stands for: its Selected identity, or das as an article", async () => {

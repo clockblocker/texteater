@@ -36,7 +36,11 @@ export function analyzeGermanSentence(
 		const placement = placeSegments(sentence);
 		const government = slotQuestions(sentence, placement);
 		const questions: Questions = {
-			...lexemeQuestions(sentence, placement.resolvable),
+			...lexemeQuestions(
+				sentence,
+				placement.resolvable,
+				placement.routes,
+			),
 			...phrasemeQuestions(sentence, placement.resolvable),
 			...government,
 		};

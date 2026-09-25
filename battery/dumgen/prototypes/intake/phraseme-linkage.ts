@@ -166,7 +166,11 @@ async function collect(wanted: readonly Sentence[]): Promise<Stored> {
 			const placement = placeSegments(german);
 			const government = slotQuestions(german, placement);
 			const questions: Questions = {
-				...lexemeQuestions(german, placement.resolvable),
+				...lexemeQuestions(
+					german,
+					placement.resolvable,
+					placement.routes,
+				),
 				...phrasemeQuestions(german, placement.resolvable),
 				...government,
 			};

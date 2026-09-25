@@ -1,10 +1,11 @@
 /**
  * The one jev call per sentence (Dumgen ADR 0006), as questions over the
  * input sentence's ResolvableText Segments tagged by index. The Lexeme layer
- * asks membership from every anchor, one route Choice, one role Choice and,
- * for a spelling with authored candidates, one identity Choice, all under
- * `criteria`. The Phraseme layer asks one fixedness Score and one Kind
- * Choice per occurrence and one Noul per unordered pair, under `fixedness`.
+ * asks membership from every anchor, one route Choice unless an
+ * abbreviation's reviewed Kind fixes it, one role Choice and, for a spelling
+ * with authored candidates, one identity Choice, all under `criteria`. The
+ * Phraseme layer asks one fixedness Score and one Kind Choice per occurrence
+ * and one Noul per unordered pair, under `fixedness`.
  * Government questions (`government.ts`) join the same call.
  */
 
@@ -23,6 +24,7 @@ import {
 } from "./criteria.js";
 import { governmentCriteria } from "./government.js";
 import { candidatesFor, identityInstructions, rubricOf } from "./identity.js";
+import type { Placement } from "./placement.js";
 
 /** `government` joins the state only when the call asks government questions. */
 export function analysisState(
@@ -43,6 +45,7 @@ const label = (sentence: SegmentedSentence<"de">, index: number) =>
 export function lexemeQuestions(
 	sentence: SegmentedSentence<"de">,
 	resolvable: readonly number[],
+	routes: Placement["routes"],
 ): Questions {
 	const questions: Questions = {};
 	for (const anchor of resolvable)
@@ -59,10 +62,11 @@ export function lexemeQuestions(
 			);
 		}
 	for (const index of resolvable) {
-		questions[`route_${index}`] = choice(
-			`Under \`criteria\`, what is the Family/Kind of the complete fixed unit that contains occurrence <s${index}> in \`sentence\`? Classify the whole unit, not the standalone part of speech of this word alone.`,
-			lexemeRoutes,
-		);
+		if (!routes.has(index))
+			questions[`route_${index}`] = choice(
+				`Under \`criteria\`, what is the Family/Kind of the complete fixed unit that contains occurrence <s${index}> in \`sentence\`? Classify the whole unit, not the standalone part of speech of this word alone.`,
+				lexemeRoutes,
+			);
 		questions[`role_${index}`] = choice(
 			`What is the role of occurrence ${label(sentence, index)} inside the complete fixed unit that contains it in \`sentence\`? Choose Free when that unit is this single occurrence.`,
 			roles,

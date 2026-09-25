@@ -5,6 +5,7 @@
  * apostrophe clitics expanded and abbreviations given their expansion as
  * surface (Dumgen ADR 0004). An entry with candidate surfaces places the
  * first; assembly replaces it with the one the Selected identity realizes.
+ * An abbreviation with one expansion and a reviewed Kind fixes its route.
  * Concatenated, the placed Segments give the
  * Stitched Text back: fused components keep the source letters and casing
  * (`Im` places `I` + `m`) while their surface stays the authored one.
@@ -16,7 +17,10 @@ import {
 	fusedWordPieces,
 	fusionEntry,
 } from "../../../universal/fusion-table.js";
-import { germanFusionTable } from "../fusion-entries.js";
+import {
+	germanFusionTable,
+	reviewedAbbreviationKinds,
+} from "../fusion-entries.js";
 import type { AnalyzedSegment, Fusion } from "./analysis.js";
 
 export type Placement = {
@@ -29,6 +33,12 @@ export type Placement = {
 	readonly resolvable: readonly number[];
 	/** Candidate surfaces per placed offset whose entry authors several ('s: es or das). */
 	readonly choices: ReadonlyMap<number, readonly string[]>;
+	/**
+	 * The route an abbreviation's reviewed Kind fixes, per input Segment
+	 * index. One with several expansions (u.a., i.A.) or a Kind no one
+	 * reviewed is left to its route question.
+	 */
+	readonly routes: ReadonlyMap<number, string>;
 };
 
 const first = (surface: string | readonly string[]) => {
@@ -43,6 +53,7 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 	const pieces = new Map<number, AnalyzedSegment[]>();
 	const resolvable: number[] = [];
 	const choices = new Map<number, readonly string[]>();
+	const routes = new Map<number, string>();
 	let offset = 0;
 	for (const [index, segment] of sentence.segments.entries()) {
 		const own: AnalyzedSegment[] = [];
@@ -63,9 +74,9 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 		}
 		resolvable.push(index);
 		const fusion = fusionEntry(germanFusionTable, segment.text);
+		const abbreviation = abbreviationEntry(germanFusionTable, segment.text);
 		const entry =
-			abbreviationEntry(germanFusionTable, segment.text) ??
-			cliticEntry(germanFusionTable, segment.text);
+			abbreviation ?? cliticEntry(germanFusionTable, segment.text);
 		if (fusion) {
 			const start = offset;
 			const texts = fusedWordPieces(fusion, segment.text);
@@ -92,6 +103,11 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 		} else if (entry) {
 			if (typeof entry.surface !== "string")
 				choices.set(offset, entry.surface);
+			else if (
+				abbreviation?.kind &&
+				reviewedAbbreviationKinds.has(abbreviation.text)
+			)
+				routes.set(index, `Lexeme/${abbreviation.kind}`);
 			push("ResolvableText", segment.text, first(entry.surface));
 		} else {
 			push("ResolvableText", segment.text, segment.text);
@@ -105,5 +121,6 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 		pieces,
 		resolvable,
 		choices,
+		routes,
 	};
 }
