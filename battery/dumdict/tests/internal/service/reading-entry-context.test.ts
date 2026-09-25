@@ -2,10 +2,9 @@ import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
-import { createFullSliceValidation } from "../../../src/service/full-slice-validation";
-import { loadReadingEntryContext } from "../../../src/service/load-reading-entry-context";
 import { createInMemoryTestStorage } from "../../../src/testing/in-memory-storage";
 import {
+	createDumdictService,
 	englishRunDraft,
 	englishWalkLemma,
 	englishWalkReading,
@@ -40,24 +39,16 @@ describe("Reading Entry context load", () => {
 		};
 
 		const result = await Effect.runPromise(
-			loadReadingEntryContext(
-				{
-					language: "en",
-					storage,
-					sliceValidation: createFullSliceValidation("en"),
-				},
-				{
-					intent: "ensureReadingEntry",
-					request: { entry: englishWalkReadingEntry() },
-				},
-			),
+			createDumdictService({
+				language: "en",
+				storage,
+			}).prepare.ensureReadingEntry({ entry: englishWalkReadingEntry() }),
 		);
 
 		expect(requests).toEqual([
 			{ intent: "ensureReadingEntry", reading: englishWalkReading },
 		]);
-		expect(result.intent).toBe("ensureReadingEntry");
-		expect(result.revision).toBe("mem-1");
+		expect(result.plan.baseRevision).toBe("mem-1");
 	});
 
 	test("rejects a response for another intent before the caller can plan", async () => {
@@ -75,17 +66,12 @@ describe("Reading Entry context load", () => {
 
 		await expect(
 			Effect.runPromise(
-				loadReadingEntryContext(
-					{
-						language: "en",
-						storage,
-						sliceValidation: createFullSliceValidation("en"),
-					},
-					{
-						intent: "ensureReadingEntry",
-						request: { entry: englishWalkReadingEntry() },
-					},
-				),
+				createDumdictService({
+					language: "en",
+					storage,
+				}).prepare.ensureReadingEntry({
+					entry: englishWalkReadingEntry(),
+				}),
 			),
 		).rejects.toThrow("Reading Entry context intent does not match");
 	});

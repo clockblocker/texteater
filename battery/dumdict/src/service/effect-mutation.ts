@@ -1,46 +1,20 @@
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
-import type { PlanMutationResult } from "../core/plan-mutation";
+import {
+	parseAsCommitChangesRequest,
+	parseAsCommitChangesResult,
+	unwrapDumdictParse,
+} from "../parsing/lightweight-parsers";
 import type {
 	DumdictCommitFailure,
-	DumdictRejection,
 	MutationResult,
 	PreparedMutation,
 } from "../public";
-import type { DumdictServiceRuntimeOptions } from "./runtime-options";
-
-export function prepared<L extends Dumling.Language>(
-	options: DumdictServiceRuntimeOptions<L>,
-	plan:
-		| PlanMutationResult<L>
-		| {
-				status: "rejected";
-				code: import("../public").MutationRejectedCode;
-				message?: string;
-		  },
-): Effect.Effect<PreparedMutation<L>, DumdictRejection> {
-	if (plan.status === "rejected")
-		return Effect.fail({
-			_tag: "DumdictRejection",
-			code: plan.code,
-			...(plan.message === undefined ? {} : { message: plan.message }),
-		});
-	return Effect.sync(() => {
-		const parsed = options.sliceValidation.plan({
-			baseRevision: plan.baseRevision,
-			changes: plan.changes,
-		});
-		return structuredClone({
-			plan: parsed,
-			affected: plan.affected,
-			summary: plan.summary,
-		});
-	});
-}
+import type { CreateDumdictServiceOptions } from "../storage";
 
 export function commitPrepared<L extends Dumling.Language>(
-	options: DumdictServiceRuntimeOptions<L>,
+	options: CreateDumdictServiceOptions<L>,
 	preparedMutation: PreparedMutation<L>,
 ): Effect.Effect<MutationResult<L>, DumdictCommitFailure> {
 	if (preparedMutation.plan.changes.length === 0)
@@ -53,11 +27,18 @@ export function commitPrepared<L extends Dumling.Language>(
 		});
 	return options.storage
 		.commitChanges(
-			options.sliceValidation.commitRequest(preparedMutation.plan),
+			unwrapDumdictParse(
+				parseAsCommitChangesRequest(
+					preparedMutation.plan,
+					options.language,
+				),
+			),
 		)
 		.pipe(
 			Effect.flatMap((raw) =>
-				Effect.sync(() => options.sliceValidation.commitResult(raw)),
+				Effect.sync(() =>
+					unwrapDumdictParse(parseAsCommitChangesResult(raw)),
+				),
 			),
 			Effect.flatMap((commit) => {
 				if (commit.status === "committed")

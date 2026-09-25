@@ -5,6 +5,7 @@ import {
 	type CleanupRelationsRequest,
 	type CleanupRelationsSlice,
 	createDumdictPlanner,
+	type DumdictPlanConflict,
 	type DumdictPlanOutcome,
 	type EnsureOwnedSurfaceRequest,
 	type EnsureReadingEntryRequest,
@@ -62,11 +63,8 @@ export type DumdictTransactionOutcome =
 			readonly code: MutationRejectedCode;
 			readonly message?: string;
 	  }
-	| {
-			readonly status: "conflict";
-			readonly code: "semanticPreconditionFailed";
-			readonly message?: string;
-	  };
+	/** A stale workset found while planning, or a commit whose preconditions failed. */
+	| DumdictPlanConflict;
 
 /**
  * A plan with more changes than one commit takes. Nothing was written, so
@@ -126,7 +124,7 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 	async function apply(
 		outcome: DumdictPlanOutcome<"de">,
 	): Promise<DumdictTransactionOutcome> {
-		if (outcome.status === "rejected") return outcome;
+		if (outcome.status !== "planned") return outcome;
 		const plan = dictionaryPlanResult(outcome.plan);
 		const commit = await applyDumdictPlanInTransaction(ctx, plan);
 		return commit.status === "committed"
@@ -179,7 +177,7 @@ export function createDumdictTransaction(ctx: MutationCtx): DumdictTransaction {
 				request,
 			);
 			if (
-				outcome.status !== "rejected" &&
+				outcome.status === "planned" &&
 				outcome.plan.changes.length > MAX_PLANNED_CHANGES
 			)
 				return {

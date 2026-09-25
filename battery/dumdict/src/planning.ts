@@ -24,6 +24,7 @@ export type {
 export type { ReadingEntryContextLoad } from "./service/context-request";
 export {
 	createDumdictPlanner,
+	type DumdictPlanConflict,
 	type DumdictPlanned,
 	type DumdictPlanner,
 	type DumdictPlanOutcome,

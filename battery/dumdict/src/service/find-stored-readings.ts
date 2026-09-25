@@ -2,15 +2,16 @@ import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
 import { lookupStoredReadings } from "../core/lookup";
+import { validateStoredReadingsSlice } from "../core/validate-slice";
 import type {
 	DumdictInvalidInput,
 	FindStoredReadingsRequest,
 	FindStoredReadingsResult,
 } from "../public";
-import type { DumdictServiceRuntimeOptions } from "./runtime-options";
+import type { CreateDumdictServiceOptions } from "../storage";
 
 export function findStoredReadings<L extends Dumling.Language>(
-	options: DumdictServiceRuntimeOptions<L>,
+	options: CreateDumdictServiceOptions<L>,
 	request: FindStoredReadingsRequest<L>,
 ): Effect.Effect<
 	FindStoredReadingsResult<L>,
@@ -25,7 +26,7 @@ export function findStoredReadings<L extends Dumling.Language>(
 		});
 	return options.storage.findStoredReadings(request).pipe(
 		Effect.map((slice) => {
-			options.sliceValidation.storedReadings(slice, request.lemma);
+			validateStoredReadingsSlice(options.language, slice, request.lemma);
 			return lookupStoredReadings(slice);
 		}),
 	);

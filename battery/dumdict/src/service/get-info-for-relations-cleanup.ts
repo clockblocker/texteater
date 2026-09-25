@@ -2,15 +2,16 @@ import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
 import { lookupRelationsCleanupInfo } from "../core/lookup";
+import { validateRelationsCleanupInfoSlice } from "../core/validate-slice";
 import type {
 	DumdictInvalidInput,
 	GetInfoForRelationsCleanupRequest,
 	GetInfoForRelationsCleanupResult,
 } from "../public";
-import type { DumdictServiceRuntimeOptions } from "./runtime-options";
+import type { CreateDumdictServiceOptions } from "../storage";
 
 export function getInfoForRelationsCleanup<L extends Dumling.Language>(
-	options: DumdictServiceRuntimeOptions<L>,
+	options: CreateDumdictServiceOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Effect.Effect<
 	GetInfoForRelationsCleanupResult<L>,
@@ -24,7 +25,11 @@ export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 		});
 	return options.storage.getInfoForRelationsCleanup({ canonicalForm }).pipe(
 		Effect.map((slice) => {
-			options.sliceValidation.relationsCleanupInfo(slice, canonicalForm);
+			validateRelationsCleanupInfoSlice(
+				options.language,
+				slice,
+				canonicalForm,
+			);
 			return lookupRelationsCleanupInfo(slice);
 		}),
 	);

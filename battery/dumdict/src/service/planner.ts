@@ -1,27 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { directSemanticRelationValues } from "dumrel";
 
-import { sameLemma } from "../core/identity";
-import { pendingSemanticRelationLocatorKey } from "../core/pending";
-import {
-	type PlanMutationResult,
-	planAddNewNote,
-	planApplyGeneratedKnowledge,
-	planCleanupRelations,
-	planEnsureOwnedSurface,
-	planEnsureReadingEntry,
-} from "../core/plan-mutation";
-import type { PlanMutationRejected } from "../core/plan-mutation/result";
-import {
-	validateCleanupRelationsSlice,
-	validateReadingEntryContext,
-} from "../core/validate-slice";
-import {
-	parseAsDumdictPlan,
-	parseKnowledgeChangeForDumdictRuntime,
-	parsePendingSemanticRelationForDumdictRuntime,
-	unwrapDumdictParse,
-} from "../parsing/lightweight-parsers";
 import type {
 	AddNewNoteRequest,
 	AffectedDictionaryEntities,
@@ -45,6 +23,11 @@ import {
 	type ReadingEntryContextLoad,
 	storageRequestFor,
 } from "./context-request";
+import {
+	createDumdictWorkflows,
+	type DumdictWorkflow,
+	type DumdictWorkflowFailure,
+} from "./workflows";
 
 export type DumdictPlanned<L extends Dumling.Language> = Readonly<{
 	status: "planned";
@@ -59,9 +42,17 @@ export type DumdictPlanRejected = Readonly<{
 	message?: string;
 }>;
 
+/** The loaded slice no longer supports the request, so planning stopped. */
+export type DumdictPlanConflict = Readonly<{
+	status: "conflict";
+	code: "revisionConflict" | "semanticPreconditionFailed";
+	message?: string;
+}>;
+
 export type DumdictPlanOutcome<L extends Dumling.Language> =
 	| DumdictPlanned<L>
-	| DumdictPlanRejected;
+	| DumdictPlanRejected
+	| DumdictPlanConflict;
 
 /**
  * Synchronous dictionary planning over a host-loaded storage slice.
@@ -69,9 +60,10 @@ export type DumdictPlanOutcome<L extends Dumling.Language> =
  * @remarks The Effect-based `DumdictService` reads its slice through a storage
  * port and commits through the same port. A host that already sits inside a
  * database transaction can instead load the slice itself, plan here, and apply
- * the plan in the same transaction. The planner validates the slice against
- * the request that produced it, runs the same planners as the service, and
- * returns a validated plan; it never reads or writes storage.
+ * the plan in the same transaction. The planner runs the same workflows as the
+ * service, so it checks the request, validates the slice against it, and
+ * returns a validated plan or the failure the service would raise; it never
+ * reads or writes storage.
  */
 export type DumdictPlanner<L extends Dumling.Language> = {
 	readonly language: L;
@@ -101,183 +93,68 @@ export type DumdictPlanner<L extends Dumling.Language> = {
 	): DumdictPlanOutcome<L>;
 };
 
-function rejected(
-	code: MutationRejectedCode,
-	message: string,
-): DumdictPlanRejected {
-	return { status: "rejected", code, message };
+function outcomeFor(
+	failure: DumdictWorkflowFailure,
+): DumdictPlanRejected | DumdictPlanConflict {
+	switch (failure._tag) {
+		case "DumdictRejection":
+			return {
+				status: "rejected",
+				code: failure.code,
+				...(failure.message === undefined
+					? {}
+					: { message: failure.message }),
+			};
+		case "DumdictInvalidInput":
+			return {
+				status: "rejected",
+				code: "invalidRequest",
+				message: failure.message,
+			};
+		case "DumdictRevisionConflict":
+		case "DumdictSemanticPreconditionFailure":
+			return {
+				status: "conflict",
+				code:
+					failure._tag === "DumdictRevisionConflict"
+						? "revisionConflict"
+						: "semanticPreconditionFailed",
+				...(failure.message === undefined
+					? {}
+					: { message: failure.message }),
+			};
+	}
 }
 
-function outcome<L extends Dumling.Language>(
-	language: L,
-	plan: PlanMutationResult<L> | PlanMutationRejected,
+function run<L extends Dumling.Language, Request, Slice>(
+	workflow: DumdictWorkflow<L, Request, Slice>,
+	slice: Slice,
+	request: Request,
 ): DumdictPlanOutcome<L> {
-	if (plan.status === "rejected")
-		return {
-			status: "rejected",
-			code: plan.code,
-			...(plan.message === undefined ? {} : { message: plan.message }),
-		};
-	const parsed = unwrapDumdictParse(
-		parseAsDumdictPlan(
-			{ baseRevision: plan.baseRevision, changes: plan.changes },
-			language,
-		),
-	);
-	return structuredClone({
-		status: "planned",
-		plan: parsed,
-		affected: plan.affected,
-		summary: plan.summary,
-	});
+	const checked = workflow.check(request);
+	if (checked.status === "failed") return outcomeFor(checked.failure);
+	const planned = workflow.plan(slice, checked.value);
+	return planned.status === "failed"
+		? outcomeFor(planned.failure)
+		: { status: "planned", ...planned.value };
 }
 
 export function createDumdictPlanner<L extends Dumling.Language>(
 	language: L,
 ): DumdictPlanner<L> {
+	const workflows = createDumdictWorkflows(language);
 	return {
 		language,
 		contextRequest: storageRequestFor,
-		addNewNote(context, request) {
-			const draftLanguage = request.draft.reading.lemma.language;
-			if (draftLanguage !== language)
-				return rejected(
-					"invalidDraft",
-					"Draft Reading language does not match the dictionary.",
-				);
-			for (const owned of request.draft.ownedSurfaces ?? []) {
-				if (
-					owned.surface.lemma.language !== language ||
-					!sameLemma(owned.surface.lemma, request.draft.reading.lemma)
-				)
-					return rejected(
-						"invalidDraft",
-						"Owned Surfaces must belong to the draft Reading's Lemma and dictionary language.",
-					);
-			}
-			validateReadingEntryContext(
-				language,
-				context,
-				storageRequestFor({ intent: "addNewNote", request }),
-			);
-			return outcome(language, planAddNewNote(context, request));
-		},
-		applyGeneratedKnowledge(context, request) {
-			if (request.reading.lemma.language !== language)
-				return rejected(
-					"invalidRequest",
-					"Reading language does not match the dictionary.",
-				);
-			const changes = request.changes.map((change) =>
-				unwrapDumdictParse(
-					parseKnowledgeChangeForDumdictRuntime(change),
-				),
-			);
-			const pendingRelations = request.pendingRelations.map((pending) =>
-				unwrapDumdictParse(
-					parsePendingSemanticRelationForDumdictRuntime(pending),
-				),
-			) as unknown as ApplyGeneratedKnowledgeRequest<L>["pendingRelations"];
-			if (
-				pendingRelations.some(
-					(pending) => pending.target.language !== language,
-				)
-			)
-				return rejected(
-					"invalidRequest",
-					"Pending Relation target language does not match the dictionary.",
-				);
-			const normalized = {
-				reading: request.reading,
-				changes,
-				pendingRelations,
-			} as ApplyGeneratedKnowledgeRequest<L>;
-			validateReadingEntryContext(
-				language,
-				context,
-				storageRequestFor({
-					intent: "applyGeneratedKnowledge",
-					request: normalized,
-				}),
-			);
-			return outcome(
-				language,
-				planApplyGeneratedKnowledge(context, normalized),
-			);
-		},
-		ensureOwnedSurface(context, request) {
-			if (
-				request.reading.lemma.language !== language ||
-				request.ownedSurface.surface.lemma.language !== language
-			)
-				return rejected(
-					"invalidRequest",
-					"Reading and owned Surface language must match the dictionary.",
-				);
-			if (
-				!sameLemma(
-					request.ownedSurface.surface.lemma,
-					request.reading.lemma,
-				)
-			)
-				return rejected(
-					"invalidDraft",
-					"The owned Surface must realize the Reading's Lemma.",
-				);
-			validateReadingEntryContext(
-				language,
-				context,
-				storageRequestFor({ intent: "ensureOwnedSurface", request }),
-			);
-			return outcome(language, planEnsureOwnedSurface(context, request));
-		},
-		ensureReadingEntry(context, request) {
-			if (request.entry.reading.lemma.language !== language)
-				return rejected(
-					"invalidRequest",
-					"Reading language does not match the dictionary.",
-				);
-			if (request.entry.knowledge?.semanticRelations !== undefined)
-				return rejected(
-					"invalidRequest",
-					"ensureReadingEntry does not accept Semantic Relations; use a relation-aware Dumdict workflow.",
-				);
-			validateReadingEntryContext(
-				language,
-				context,
-				storageRequestFor({ intent: "ensureReadingEntry", request }),
-			);
-			return outcome(language, planEnsureReadingEntry(context, request));
-		},
-		cleanupRelations(slice, request) {
-			const keys = request.resolutions.map(({ locator }) =>
-				pendingSemanticRelationLocatorKey(locator),
-			);
-			if (
-				new Set(keys).size !== keys.length ||
-				request.resolutions.some(
-					({ locator }) =>
-						!directSemanticRelationValues.includes(
-							locator.relation,
-						),
-				)
-			)
-				return rejected(
-					"invalidRequest",
-					"Cleanup resolution is invalid or duplicated.",
-				);
-			validateCleanupRelationsSlice(language, slice);
-			const pendingKeys = new Set(
-				slice.pendingRelations.map(({ locator }) =>
-					pendingSemanticRelationLocatorKey(locator),
-				),
-			);
-			if (keys.some((key) => !pendingKeys.has(key)))
-				return rejected(
-					"relationTargetMissing",
-					"Cleanup pending relation no longer exists.",
-				);
-			return outcome(language, planCleanupRelations(slice, request));
-		},
+		addNewNote: (context, request) =>
+			run(workflows.addNewNote, context, request),
+		applyGeneratedKnowledge: (context, request) =>
+			run(workflows.applyGeneratedKnowledge, context, request),
+		ensureOwnedSurface: (context, request) =>
+			run(workflows.ensureOwnedSurface, context, request),
+		ensureReadingEntry: (context, request) =>
+			run(workflows.ensureReadingEntry, context, request),
+		cleanupRelations: (slice, request) =>
+			run(workflows.cleanupRelations, slice, request),
 	};
 }
