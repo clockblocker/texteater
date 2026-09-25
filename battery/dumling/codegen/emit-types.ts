@@ -24,6 +24,7 @@ export function outputType(
 							"dumling.de-noun.surface",
 							"dumling.de-noun.attestation",
 							"dumling.de-adposition.attestation",
+							"dumling.de-valency.attestation",
 							"dumling.de-verbal.attestation",
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",

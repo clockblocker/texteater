@@ -721,5 +721,64 @@
 			"de-coll-lemma:entscheidung-treffen",
 			"de-coll-member-identity:support-verb-alternant"
 		]
+	},
+	"grammar-de-coll-governed-bescheid-ueber": {
+		"input": {
+			"markedContext": "Er <TARGET>weiß</TARGET> <TARGET>Bescheid</TARGET> <TARGET>über</TARGET> die Pläne.",
+			"members": ["weiß", "Bescheid", "über"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["weiß", "Bescheid", "über"],
+			"realizationCoverage": "Full",
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Bescheid wissen",
+				"coreFeatures": {}
+			},
+			"expletiveEvidence": null,
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "über",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid.",
+		"contaminationKeys": ["de-coll-lemma:bescheid-wissen"]
 	}
 }

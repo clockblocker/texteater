@@ -2166,9 +2166,33 @@
 						"case": "Acc",
 						"referent": "Someone"
 					}
-				]
+				],
+				"targets": [
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 4
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 13,
+								"role": "Head"
+							},
+							{
+								"offset": 19,
+								"role": "GovernedPreposition"
+							}
+						]
+					}
+				],
+				"phrasemes": []
 			},
-			"explanation": "The adjective stolz governs auf with the accusative."
+			"explanation": "The adjective stolz governs auf with the accusative and takes it in as a member; the copula ist stays its own word and forms no expression with stolz (ADR 0034)."
 		},
 		"sentence-de-government-abhaengig-von": {
 			"input": {
@@ -2297,9 +2321,31 @@
 						"preposition": "vor",
 						"case": "Dat"
 					}
+				],
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{
+								"offset": 13,
+								"role": "Head"
+							},
+							{
+								"offset": 19,
+								"role": "GovernedPreposition"
+							}
+						]
+					}
+				],
+				"phrasemes": [
+					{
+						"kind": "Collocation",
+						"words": [9, 13],
+						"governed": []
+					}
 				]
 			},
-			"explanation": "The noun Angst governs vor with the dative."
+			"explanation": "The noun Angst governs vor with the dative and keeps it inside the Collocation Angst haben, which takes the click (ADR 0034)."
 		},
 		"sentence-de-government-interesse-an": {
 			"input": {
@@ -2716,9 +2762,26 @@
 						"case": "Acc",
 						"referent": "Something"
 					}
+				],
+				"targets": [
+					{
+						"kind": "ADP",
+						"members": [
+							{
+								"offset": 9
+							}
+						]
+					}
+				],
+				"phrasemes": [
+					{
+						"kind": "Collocation",
+						"words": [4, 30],
+						"governed": [9]
+					}
 				]
 			},
-			"explanation": "The Collocation Bescheid wissen governs über with the accusative."
+			"explanation": "The Collocation Bescheid wissen governs über with the accusative; Bescheid governs it only inside the Collocation, so über is the Collocation's governed preposition and not a fixed word (ADR 0034)."
 		},
 		"sentence-de-government-spielen-adjunct": {
 			"input": {
@@ -3001,6 +3064,96 @@
 				"slots": []
 			},
 			"explanation": "am is a free place adjunct."
+		},
+		"sentence-de-copula-stolz-auf": {
+			"input": {
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sohn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "VERB",
+						"members": [
+							{
+								"offset": 3
+							}
+						]
+					},
+					{
+						"kind": "ADJ",
+						"members": [
+							{
+								"offset": 7,
+								"role": "Head"
+							},
+							{
+								"offset": 13,
+								"role": "GovernedPreposition"
+							}
+						]
+					}
+				],
+				"phrasemes": [],
+				"slots": [
+					{
+						"governors": [7],
+						"offset": 13,
+						"preposition": "auf",
+						"case": "Acc",
+						"referent": "Someone"
+					}
+				]
+			},
+			"explanation": "A copula never forms an expression with its predicative adjective: ist is its own VERB, and stolz takes in the auf it governs (ADR 0034)."
 		}
 	},
 	"demonstrationIds": []

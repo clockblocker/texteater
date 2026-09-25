@@ -10,6 +10,13 @@ export const participleCaseIds = [
 	"grammar-de-adj-participle-state-passive-geschlossen",
 ] as const;
 
+/** An adjective takes in its governed preposition as a member (ADR 0034). */
+export const governedCaseIds = [
+	"grammar-de-adj-governed-stolz-auf",
+	"grammar-de-adj-governed-separated-auf-ihn",
+	"grammar-de-adj-governed-attributive-stolze",
+] as const;
+
 export const evaluationCaseIds = [
 	"grammar-de-adj-accept-citation-mild",
 	"grammar-de-adj-dev-attributive-acc-fem-rot",
@@ -42,4 +49,5 @@ export const evaluationCaseIds = [
 	"grammar-de-adj-dev-abbreviation-sog",
 	"grammar-de-adj-accept-ordinal-zweite",
 	...participleCaseIds,
+	...governedCaseIds,
 ] as const;

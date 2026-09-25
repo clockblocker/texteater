@@ -98,6 +98,9 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",
 		...(route.key === "de/Lexeme/NOUN" ? { articleEvidence: null } : {}),
+		...(["de/Lexeme/ADJ", "de/Lexeme/NOUN"].includes(route.key)
+			? { valencyEvidence: [] }
+			: {}),
 	};
 	return { Lemma, Surface, Reading, Attestation };
 }

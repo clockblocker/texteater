@@ -20,7 +20,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-acc-sing-hund": {
@@ -51,7 +52,8 @@
 			"articleEvidence": {
 				"attested": "den",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-dat-plur-kindern": {
@@ -82,7 +84,8 @@
 			"articleEvidence": {
 				"attested": "den",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-nom-plur-banken": {
@@ -113,7 +116,8 @@
 			"articleEvidence": {
 				"attested": "Die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-dat-sing-bibliothek": {
@@ -144,7 +148,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-gen-sing-mannes": {
@@ -175,7 +180,8 @@
 			"articleEvidence": {
 				"attested": "des",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-gen-plur-frauen": {
@@ -206,7 +212,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-vocative-leute": {
@@ -234,7 +241,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-acc-plur-buecher": {
@@ -265,7 +273,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-nom-sing-maedchen": {
@@ -296,7 +305,8 @@
 			"articleEvidence": {
 				"attested": "Das",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-acc-sing-stadt": {
@@ -327,7 +337,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-dat-sing-chef": {
@@ -358,7 +369,8 @@
 			"articleEvidence": {
 				"attested": "dem",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-nom-plur-eltern": {
@@ -389,7 +401,8 @@
 			"articleEvidence": {
 				"attested": "Die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-acc-plur-knie": {
@@ -417,7 +430,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		},
 		"explanation": "The plural is fixed by beide while the noun form is invariant."
 	},
@@ -449,7 +463,8 @@
 			"articleEvidence": {
 				"attested": "Die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		},
 		"explanation": "Currency context fixes common NOUN, not a personal name."
 	},
@@ -481,7 +496,8 @@
 			"articleEvidence": {
 				"attested": "Der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-acc-sing-tuer": {
@@ -512,7 +528,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-dat-plur-haeusern": {
@@ -543,7 +560,8 @@
 			"articleEvidence": {
 				"attested": "den",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-gen-plur-kinder": {
@@ -574,7 +592,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-invariant-plur-maedchen": {
@@ -602,7 +621,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-plural-only-ferien": {
@@ -633,7 +653,8 @@
 			"articleEvidence": {
 				"attested": "Die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-typo-kaffe": {
@@ -664,7 +685,8 @@
 			"articleEvidence": {
 				"attested": "Der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-archaic-antlitz": {
@@ -694,7 +716,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-hyphenated-u-bahn": {
@@ -725,7 +748,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-variant-photographie": {
@@ -756,7 +780,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		},
 		"explanation": "Context names editorial headword; attested equal standard variant stays Variant."
 	},
@@ -788,7 +813,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-archaic-odem": {
@@ -821,7 +847,8 @@
 			"articleEvidence": {
 				"attested": "Der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-compound-haustuer": {
@@ -852,7 +879,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-substantivized-reisenden": {
@@ -883,7 +911,8 @@
 			"articleEvidence": {
 				"attested": "Die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-gen-sing-schule": {
@@ -914,7 +943,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-hyphenated-e-mail": {
@@ -945,7 +975,8 @@
 			"articleEvidence": {
 				"attested": "die",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-substantivized-angestellten": {
@@ -976,7 +1007,8 @@
 			"articleEvidence": {
 				"attested": "den",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-suspended-kinderbuecher": {
@@ -1004,7 +1036,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		},
 		"explanation": "Ergänzungsstrich points to shared Bücher; one member stays Standard and Full."
 	},
@@ -1033,7 +1066,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-suspended-hyphen-genitiv": {
@@ -1064,7 +1098,8 @@
 			"articleEvidence": {
 				"attested": "des",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-suspended-typo": {
@@ -1092,7 +1127,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-suspended-nonbreaking": {
@@ -1120,7 +1156,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-suspended-oder-singular": {
@@ -1151,7 +1188,8 @@
 			"articleEvidence": {
 				"attested": "ein",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-suspended-dativ-plural": {
@@ -1179,7 +1217,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-accept-suspended-nominativ-plural": {
@@ -1207,7 +1246,8 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-shared-abstieg": {
@@ -1238,7 +1278,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-demo-owned-aufstieg": {
@@ -1269,7 +1310,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-shared-long": {
@@ -1300,7 +1342,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-repeated": {
@@ -1331,7 +1374,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-nested": {
@@ -1362,7 +1406,8 @@
 			"articleEvidence": {
 				"attested": "des",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-adjective": {
@@ -1393,7 +1438,8 @@
 			"articleEvidence": {
 				"attested": "der",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-bad-agreement": {
@@ -1433,7 +1479,8 @@
 			"articleEvidence": {
 				"attested": "im",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-zum-wald": {
@@ -1464,7 +1511,8 @@
 			"articleEvidence": {
 				"attested": "zum",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-ins-haus": {
@@ -1495,7 +1543,8 @@
 			"articleEvidence": {
 				"attested": "ins",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-shared-feld": {
@@ -1526,7 +1575,8 @@
 			"articleEvidence": {
 				"attested": "im",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-zur-schule": {
@@ -1557,7 +1607,8 @@
 			"articleEvidence": {
 				"attested": "zur",
 				"orthography": "Standard"
-			}
+			},
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-dev-abbreviation-dipl-ing": {
@@ -1585,8 +1636,120 @@
 				}
 			},
 			"realizationCoverage": "Full",
-			"articleEvidence": null
+			"articleEvidence": null,
+			"valencyEvidence": []
 		},
 		"explanation": "A title abbreviation: one Standard member, a Variant Surface of the hyphenated Lemma; the name stays outside (issue 495)."
+	},
+	"grammar-de-noun-governed-angst-vor": {
+		"input": {
+			"markedContext": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+			"members": ["Angst", "vor"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["Angst", "vor"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing",
+					"article": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Angst",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": null,
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "vor",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
+		},
+		"explanation": "Angst governs vor without any verb, so vor is a governed member of the NOUN (ADR 0034). The Surface projects only the Fixed member: Angst."
+	},
+	"grammar-de-noun-governed-article-angst-vor": {
+		"input": {
+			"markedContext": "Sie spürt <TARGET>die</TARGET> <TARGET>Angst</TARGET> der Kinder <TARGET>vor</TARGET> Hunden.",
+			"members": ["die", "Angst", "vor"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["die", "Angst", "vor"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"article": "Definite"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Angst",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"attested": "die",
+				"orthography": "Standard"
+			},
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "vor",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
+		},
+		"explanation": "The noun owns its article and its governed preposition across a genitive attribute; the Surface is die Angst."
 	}
 }

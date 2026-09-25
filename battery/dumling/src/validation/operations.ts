@@ -7,6 +7,7 @@ import {
 	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
+	germanValencyAttestationError,
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
@@ -17,6 +18,7 @@ import {
 	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanPronounCore,
+	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 	nonEmptyFeatureBagError,
@@ -47,6 +49,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-adposition.attestation": check(
 		isGermanAdpositionAttestation,
 		germanAdpositionAttestationError,
+	),
+	"dumling.de-valency.attestation": check(
+		isGermanValencyAttestation,
+		germanValencyAttestationError,
 	),
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,

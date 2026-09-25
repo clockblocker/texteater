@@ -27,7 +27,8 @@ import data from "./source-data.json";
  * The sentence corpus (issue 495): gold keyed by character offset in the
  * Segmented Sentence's Stitched Text, a Lexeme layer of targets with members
  * and, where authored, roles and the closed-class headword group, a Phraseme
- * layer naming member words by head offset, and slots naming each
+ * layer naming member words by head offset and, where authored, the offsets
+ * of the prepositions it governs, and slots naming each
  * governed preposition's Segment with the words that may govern it. A layer
  * a case leaves out is not scored.
  */
@@ -53,6 +54,8 @@ export const goldSchema = z.strictObject({
 			z.strictObject({
 				kind: z.string().min(1),
 				words: z.array(z.number().int().nonnegative()).min(2),
+				/** The governed prepositions' offsets; scored only where authored. */
+				governed: z.array(z.number().int().nonnegative()).optional(),
 			}),
 		)
 		.optional(),
@@ -171,8 +174,18 @@ export function scoreAnalysis(
 		matched.add(phraseme.id);
 		phrasemesFound += 1;
 		const kind = selectPhrasemeKind(analysis, phraseme).kind;
-		if (kind === expected.kind) phrasemesCorrect += 1;
-		else failures.push(`${label}: kind ${kind}`);
+		const governed = governedOffsets(analysis, phraseme);
+		const governedRight =
+			expected.governed === undefined ||
+			governed.join(",") ===
+				[...expected.governed].sort((a, b) => a - b).join(",");
+		if (kind === expected.kind && governedRight) phrasemesCorrect += 1;
+		else if (kind !== expected.kind)
+			failures.push(`${label}: kind ${kind}`);
+		else
+			failures.push(
+				`${label}: governs ${governed.map(text).join(" ") || "nothing"}`,
+			);
 	}
 	const extra = gold.phrasemes
 		? analysis.phrasemes.filter((p) => !matched.has(p.id))
@@ -359,6 +372,7 @@ export function projectGold(analysis: SentenceAnalysis): SentenceGold {
 			words: membersOf(analysis, phraseme)
 				.map((target) => headOf(target).offset)
 				.sort((a, b) => a - b),
+			governed: governedOffsets(analysis, phraseme),
 		})),
 		slots: analysis.slots.map((slot) => ({
 			governors: governorTargets(analysis, slot.governor).map(
@@ -370,6 +384,17 @@ export function projectGold(analysis: SentenceAnalysis): SentenceGold {
 			referent: slot.complement.referent,
 		})),
 	};
+}
+
+/** The offsets of the prepositions a Phraseme governs, in order. */
+function governedOffsets(
+	analysis: SentenceAnalysis,
+	phraseme: SentenceAnalysis["phrasemes"][number],
+): number[] {
+	return analysis.targets
+		.filter((target) => phraseme.governedPrepositions.includes(target.id))
+		.map((target) => headOf(target).offset)
+		.sort((a, b) => a - b);
 }
 
 function emptyScore(gold: SentenceGold): SentenceScore {

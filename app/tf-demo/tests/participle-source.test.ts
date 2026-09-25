@@ -144,6 +144,7 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 			readingId,
 			realizationCoverage: "Full",
 			articleEvidence: null,
+			valencyEvidence: [],
 		});
 		await ctx.db.patch(segmentId, {
 			attestationMembership: { attestationId, orthography: "Standard" },

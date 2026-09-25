@@ -111,6 +111,7 @@ test("legacy noun checkpoints discard component references but retain exact occu
 			],
 			realizationCoverage: "Full",
 			articleEvidence: { attested: "Der", orthography: "Standard" },
+			valencyEvidence: [],
 		},
 	};
 	expect(() => parseResolvedGrammar(noun)).toThrow();

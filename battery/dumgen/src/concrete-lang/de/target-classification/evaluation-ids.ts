@@ -70,6 +70,21 @@ export const participleBoundaryCaseIds = [
 	"target-de-participle-boundary-beleidigt-adj-predicative",
 ] as const;
 
+/**
+ * Every governor takes in its governed preposition (ADR 0034): an adjective
+ * beside a copula, a fronted preposition, a noun with no verb around, and a
+ * present Collocation taking the click through the largest-unit rule.
+ */
+export const governedPrepositionCaseIds = [
+	"target-de-governed-adjective-copula-click-ist",
+	"target-de-governed-adjective-copula-click-stolz",
+	"target-de-governed-adjective-copula-click-auf",
+	"target-de-governed-adjective-fronted-click-auf",
+	"target-de-governed-noun-click-vor",
+	"target-de-governed-collocation-angst-haben-click-vor",
+	"target-de-governed-collocation-bescheid-click-ueber",
+] as const;
+
 export const evaluationCaseIds = [
 	"target-de-subject-question-0",
 	"target-de-subject-question-2",
@@ -320,4 +335,5 @@ export const evaluationCaseIds = [
 	"target-de-pronominal-adverb-worauf-click-worauf",
 
 	...participleBoundaryCaseIds,
+	...governedPrepositionCaseIds,
 ] as const;

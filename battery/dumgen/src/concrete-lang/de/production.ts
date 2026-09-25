@@ -265,6 +265,10 @@ export function createGermanOperations(
 									? {
 											expletiveEvidence:
 												output.expletiveEvidence,
+										}
+									: {}),
+								...("valencyEvidence" in output
+									? {
 											valencyEvidence:
 												output.valencyEvidence ?? [],
 										}

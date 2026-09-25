@@ -11,7 +11,8 @@
  * fixedness Score reaches the floor joins one, one pair alone never ties two
  * expressions together, a preposition joins only with its complement, and a
  * governor with only what it governs is valency, not a Phraseme. Slots are
- * read over the finished Lexeme Targets and Phraseme Targets.
+ * read over the finished Lexeme Targets and Phraseme Targets, and each
+ * governor then takes in the preposition its slot names.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -23,8 +24,15 @@ import type {
 	MemberRole,
 	PhrasemeTarget,
 	SentenceAnalysis,
+	Slot,
 } from "./analysis.js";
-import { fixednessFloor, selectIdentity } from "./analysis.js";
+import {
+	effectiveRoute,
+	fixednessFloor,
+	headOf,
+	selectIdentity,
+	selectPhrasemeKind,
+} from "./analysis.js";
 import type { RoleAnswer } from "./criteria.js";
 import { assembleSlots } from "./government.js";
 import {
@@ -214,14 +222,19 @@ const verbalRoles = new Set<RoleAnswer>([
 	"SeparableParticle",
 	"Reflexive",
 	"Expletive",
-	"GovernedPreposition",
 ]);
+
+/** The Lexeme Kinds that take in the preposition they govern (ADR 0034). */
+const governorKinds = new Set(["VERB", "ADJ", "NOUN"]);
+
+/** The Phraseme Kinds whose Attestation names a governed preposition. */
+const governingPhrasemeKinds = new Set(["Collocation", "Idiom"]);
 
 /**
  * The one-Head invariant: a group with two Heads is split at them. A
  * non-head follows the Head it scored the higher Include with; a verbal role
- * landing on a non-VERB Head, or an Article on a non-NOUN Head, becomes a
- * singleton.
+ * landing on a non-VERB Head, a governed preposition on a Head that governs
+ * nothing, or an Article on a non-NOUN Head, becomes a singleton.
  */
 function splitMultiHead(
 	sentence: SegmentedSentence<"de">,
@@ -246,6 +259,7 @@ function splitMultiHead(
 		const headKind = winner(routeMassOf(answers, [best]));
 		if (
 			(verbalRoles.has(role) && headKind !== "VERB") ||
+			(role === "GovernedPreposition" && !governorKinds.has(headKind)) ||
 			(role === "Article" && headKind !== "NOUN")
 		)
 			singletons.push(member);
@@ -631,6 +645,7 @@ export function assembleAnalysis(
 		phrasemes.push({
 			id: `p${phrasemes.length + 1}`,
 			members,
+			governedPrepositions: [],
 			kindMass: Object.fromEntries(
 				Object.entries(kindMass)
 					.sort((a, b) => b[1] - a[1])
@@ -662,11 +677,19 @@ export function assembleAnalysis(
 			...phraseme,
 			id: `p${position + 1}`,
 		}));
+	const slots = assembleSlots(placement, targets, answers, expressions);
+	const governed = absorbGovernedPrepositions(
+		placement,
+		targets,
+		expressions,
+		slots,
+		nextId,
+	);
 	// The analysis decides between an entry's candidate surfaces: an article
 	// member stands for its article (das in 's Wetter), a Selected identity
 	// for its own (es in geht's). Undecided, the first stays.
 	const surfaceOf = (offset: number, surfaces: readonly string[]) => {
-		const target = targets.find((entry) =>
+		const target = governed.targets.find((entry) =>
 			entry.members.some((member) => member.offset === offset),
 		);
 		const member = target?.members.find((entry) => entry.offset === offset);
@@ -693,9 +716,143 @@ export function assembleAnalysis(
 	return {
 		stitchedText: placement.stitchedText,
 		segments,
+		targets: governed.targets,
+		phrasemes: governed.phrasemes,
+		fusions: placement.fusions,
+		slots,
+	};
+}
+
+// --------------------------------------------------- governed prepositions
+
+/**
+ * Every governor takes in the preposition its slot names (ADR 0034): a VERB,
+ * ADJ or NOUN Lexeme Target gains it as a `GovernedPreposition` member,
+ * wherever it stands (`Auf ihn bin ich stolz`), and a Collocation or Idiom
+ * lists it among its governed prepositions, beside its fixed words and
+ * outside its fixedness. The preposition leaves the word it stood in: its
+ * own ADP singleton goes, and a member the Lexeme layer glued to another
+ * word is split off. A fused adposition (`vom`) stays its own word, as does
+ * a preposition that is a fixed word of an expression, one before a noun's
+ * article, and one under a governor that takes in nothing.
+ */
+function absorbGovernedPrepositions(
+	placement: Placement,
+	lexemes: readonly LexemeTarget[],
+	phrasemes: readonly PhrasemeTarget[],
+	slots: readonly Slot[],
+	nextId: () => string,
+): { targets: LexemeTarget[]; phrasemes: PhrasemeTarget[] } {
+	const targets = [...lexemes];
+	const expressions = [...phrasemes];
+	const fused = new Set(
+		placement.fusions.flatMap((fusion) =>
+			fusion.components.map((component) => component.offset),
+		),
+	);
+	const referenced = (id: string) =>
+		expressions.some(
+			(phraseme) =>
+				phraseme.members.includes(id) ||
+				phraseme.governedPrepositions.includes(id),
+		) || slots.some((slot) => slot.governor === id || slot.filler === id);
+	const replace = (target: LexemeTarget, next: LexemeTarget | null) => {
+		const position = targets.indexOf(target);
+		if (next) targets[position] = next;
+		else targets.splice(position, 1);
+	};
+	/** Takes the marker out of the word it stands in; false when it cannot leave. */
+	const detach = (owner: LexemeTarget, offset: number): boolean => {
+		if (owner.members.length === 1) {
+			if (referenced(owner.id)) return false;
+			replace(owner, null);
+			return true;
+		}
+		if (headOf(owner).offset === offset) return false;
+		replace(owner, {
+			...owner,
+			members: owner.members.filter((member) => member.offset !== offset),
+			provenance: `${owner.provenance}+guard:governed`,
+		});
+		return true;
+	};
+	const analysis = (): SentenceAnalysis => ({
+		sentenceId: "",
+		language: "de",
+		stitchedText: placement.stitchedText,
+		segments: placement.segments,
 		targets,
 		phrasemes: expressions,
 		fusions: placement.fusions,
-		slots: assembleSlots(placement, targets, answers, expressions),
-	};
+		slots,
+	});
+	for (const slot of slots) {
+		const offset = slot.marker;
+		if (offset === null || fused.has(offset)) continue;
+		const owner = targets.find((target) =>
+			target.members.some((member) => member.offset === offset),
+		);
+		if (!owner) continue;
+		const word = targets.find((target) => target.id === slot.governor);
+		if (word) {
+			const article = word.members.find(
+				(member) => member.role === "Article",
+			);
+			if (
+				!governorKinds.has(effectiveRoute(word).kind) ||
+				(article && offset < article.offset)
+			)
+				continue;
+			if (owner !== word && !detach(owner, offset)) continue;
+			const current = targets.find((target) => target.id === word.id);
+			if (!current) continue;
+			replace(current, {
+				...current,
+				members: [
+					...current.members.filter(
+						(member) => member.offset !== offset,
+					),
+					{ offset, role: "GovernedPreposition" as const },
+				].sort((a, b) => a.offset - b.offset),
+				provenance:
+					owner === word
+						? current.provenance
+						: `${current.provenance}+governed`,
+			});
+			continue;
+		}
+		const expression = expressions.find(
+			(phraseme) => phraseme.id === slot.governor,
+		);
+		if (
+			!expression ||
+			!governingPhrasemeKinds.has(
+				selectPhrasemeKind(analysis(), expression).kind,
+			)
+		)
+			continue;
+		let preposition = owner;
+		if (owner.members.length > 1) {
+			if (!detach(owner, offset)) continue;
+			preposition = {
+				id: nextId(),
+				members: [{ offset, role: "Head" }],
+				routeMass: { ADP: 1 },
+				identity: null,
+				provenance: "guard:governed",
+			};
+			targets.push(preposition);
+		} else if (referenced(owner.id)) continue;
+		expressions[expressions.indexOf(expression)] = {
+			...expression,
+			governedPrepositions: [
+				...expression.governedPrepositions,
+				preposition.id,
+			],
+		};
+	}
+	targets.sort(
+		(a, b) => (a.members[0]?.offset ?? 0) - (b.members[0]?.offset ?? 0),
+	);
+	return { targets, phrasemes: expressions };
 }

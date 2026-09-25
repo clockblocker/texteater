@@ -89,6 +89,7 @@ export const sentenceAnalysisSchema = z.strictObject({
 		z.strictObject({
 			id: z.string().min(1),
 			members: z.array(z.string().min(1)).min(2),
+			governedPrepositions: z.array(z.string().min(1)),
 			kindMass: massSchema,
 			fixedness: z.number().min(0).max(3),
 			provenance: z.string().min(1),

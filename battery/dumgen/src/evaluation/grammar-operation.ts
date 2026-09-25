@@ -142,11 +142,13 @@ export function grammarOperationExperiment(
 					coreFeatures: lemma.coreFeatures,
 				},
 				surface,
-				normalizedMembers:
+				normalizedMembers: withValencyMembers(
+					attestation,
 					"articleEvidence" in attestation &&
-					attestation.realizationCoverage === "Partial"
-						? normalizedSurface.split(" ").slice(1)
-						: withValencyMembers(attestation, normalizedSurface),
+						attestation.realizationCoverage === "Partial"
+						? normalizedSurface.split(" ").slice(1).join(" ")
+						: normalizedSurface,
+				),
 				memberOrthographies: attestation.members.map(
 					(member) => member.orthography,
 				),
@@ -155,10 +157,10 @@ export function grammarOperationExperiment(
 					? { articleEvidence: attestation.articleEvidence }
 					: {}),
 				...("expletiveEvidence" in attestation
-					? {
-							expletiveEvidence: attestation.expletiveEvidence,
-							valencyEvidence: attestation.valencyEvidence,
-						}
+					? { expletiveEvidence: attestation.expletiveEvidence }
+					: {}),
+				...("valencyEvidence" in attestation
+					? { valencyEvidence: attestation.valencyEvidence }
 					: {}),
 				...(attestation.surface.lemma.kind === "ADP" &&
 				"valencyEvidence" in attestation

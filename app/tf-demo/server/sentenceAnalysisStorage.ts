@@ -49,6 +49,7 @@ export function toStoredSentenceAnalysis(
 		phrasemes: analysis.phrasemes.map((phraseme) => ({
 			id: phraseme.id,
 			members: [...phraseme.members],
+			governedPrepositions: [...phraseme.governedPrepositions],
 			kindMass: toStoredMass(phraseme.kindMass),
 			fixedness: phraseme.fixedness,
 			provenance: phraseme.provenance,
@@ -90,6 +91,7 @@ export function fromStoredSentenceAnalysis(
 		phrasemes: stored.phrasemes.map((phraseme) => ({
 			id: phraseme.id,
 			members: phraseme.members,
+			governedPrepositions: phraseme.governedPrepositions,
 			kindMass: fromStoredMass(phraseme.kindMass),
 			fixedness: phraseme.fixedness,
 			provenance: phraseme.provenance,

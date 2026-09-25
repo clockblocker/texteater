@@ -36,6 +36,7 @@ export const realizationCriteria = targetCriteria
 /** The fixedness rules: which words are fixed lexical members of one expression. */
 export const fixednessCriteria = `An expression is an established multiword unit with its own dictionary identity, made of words that are its fixed lexical members. A word is a fixed lexical member when the expression requires this particular word or a narrow set of alternatives in this slot: replacing it with an ordinary synonym would break the expression. A fixed preposition or fixed article of the expression counts as a member through the word that carries it (ins Feuer, zur Verfügung, das Eis). Free arguments, modifiers and fillers are never members, however close they stand: in stellt den Schülern Material zur Verfügung the expression is stellt ... zur Verfügung and den Schülern and Material are free.
 Degrees of fixedness. A free combination lets every word be replaced by a synonym (ein Buch kaufen). A preferred combination is conventional but freely replaceable and has no expression of its own (starker Regen). A collocation is only a German Funktionsverbgefüge, a support verb with its predicate noun: the lexical choice is restricted while the meaning stays compositional (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, eine Frage stellen, zur Kenntnis nehmen, Abschied nehmen). An idiom is established and noncompositional in this contextual meaning, with or without a noun (den Faden verlieren, das Eis brechen, Öl ins Feuer gießen, es in sich haben); identical literal wording used literally is not an idiom. A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund); an aphorism is an established attributed maxim (Zeit ist Geld).
+A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) and its predicative adjective are never members of one expression: in Er ist stolz auf seinen Sohn no expression is established, and stolz governs auf on its own. A preposition an expression governs for a free complement (weiß Bescheid über die Pläne) is valency, never a fixed member.
 Mere proximity, frequency or ordinary compositional combination never establishes an expression. When membership is uncertain or contradictory, answer Unresolved instead of repairing, trimming or extending the expression.`;
 
 /** The Lexeme layer's route inventory: Lexeme Kinds only (AUX is not a route, ADR 0026). */
@@ -71,11 +72,11 @@ export const lexemeRoutes: Record<string, string> = {
 };
 
 export const roles = {
-	Head: "The member that names a unit with other fixed members: the noun of a noun phrase unit, the lexical verb (finite, infinitive or participle) of a verbal unit, the verb of an idiom",
+	Head: "The member that names a unit with other fixed members: the noun of a noun phrase unit, the lexical verb (finite, infinitive or participle) of a verbal unit, the adjective or noun with its governed preposition, the verb of an idiom",
 	SeparableParticle:
 		"The separated prefix of a separable verb standing apart from its verb (steht ... auf, wirken ... nach)",
 	GovernedPreposition:
-		"A preposition the verb lexically selects for its complement (wartet auf, erinnert sich an, geht um), not a free adjunct preposition (wartet im Keller)",
+		"A preposition the verb, adjective or noun lexically selects for its complement, also apart from it (wartet auf, erinnert sich an, geht um, stolz auf, Angst vor), not a free adjunct preposition (wartet im Keller)",
 	Reflexive:
 		"An inherently required reflexive pronoun of a reflexive verb (schämt sich, erinnert sich), not an optional reflexive object",
 	Expletive:
@@ -101,7 +102,7 @@ export const fixednessLevels = [
 export const phrasemeKindOptions = {
 	Aphorism: "Established concise attributed maxim",
 	Collocation:
-		"Funktionsverbgefüge: a support verb with its predicate noun, restricted in wording and compositional in meaning; wording without a predicate noun is never one",
+		"Funktionsverbgefüge: a support verb with its predicate noun, restricted in wording and compositional in meaning; wording without a predicate noun, such as a copula with a predicative adjective, is never one",
 	DiscourseFormula: "Established fixed discourse formula",
 	Idiom: "Established noncompositional expression in this contextual meaning",
 	Proverb: "Established traditional saying",

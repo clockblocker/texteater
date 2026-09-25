@@ -36503,7 +36503,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "stolz governs auf, but a governed preposition joins only a VERB head, and darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause. Each word is its own target: stolz ADJ, darauf ADV."
+			"explanation": "stolz governs auf, but darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause, so it never joins stolz (ADR 0029). Each word is its own target: stolz ADJ, darauf ADV."
 		},
 		"target-de-pronominal-adverb-stolz-click-darauf": {
 			"input": {
@@ -36584,7 +36584,7 @@
 				"kind": "ADV",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "stolz governs auf, but a governed preposition joins only a VERB head, and darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause. Each word is its own target: stolz ADJ, darauf ADV."
+			"explanation": "stolz governs auf, but darauf is a pronominal adverb standing for the whole auf-phrase that points forward to the zu-clause, so it never joins stolz (ADR 0029). Each word is its own target: stolz ADJ, darauf ADV."
 		},
 		"target-de-pronominal-adverb-warten-click-warte": {
 			"input": {
@@ -40705,6 +40705,440 @@
 				"memberSegmentIndices": [4, 8]
 			},
 			"explanation": "VERB schreiben. A werden-passive is verbal; wird joins the verb and gerade stays outside. Contrast the state passive Der Brief ist geschrieben."
+		},
+		"target-de-governed-adjective-copula-click-ist": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sohn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target.",
+			"contaminationKeys": ["target-stimulus:stolz-auf-sohn"]
+		},
+		"target-de-governed-adjective-copula-click-stolz": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sohn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target.",
+			"contaminationKeys": ["target-stimulus:stolz-auf-sohn"]
+		},
+		"target-de-governed-adjective-copula-click-auf": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sohn"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target.",
+			"contaminationKeys": ["target-stimulus:stolz-auf-sohn"]
+		},
+		"target-de-governed-adjective-fronted-click-auf": {
+			"input": {
+				"clickedSegmentIndex": 0,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ihn"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bin"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stolz"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [0, 8]
+			},
+			"explanation": "A fronted governed preposition joins its adjective the way a separated particle joins its verb (ADR 0034); bin stays a separate copula VERB.",
+			"contaminationKeys": ["target-stimulus:auf-ihn-stolz"]
+		},
+		"target-de-governed-noun-click-vor": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Aus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Angst"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vor"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hunden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bleibt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hause"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [2, 4]
+			},
+			"explanation": "Angst governs vor in the same sense without any verb, so the preposition joins the NOUN (ADR 0034); aus is a free preposition.",
+			"contaminationKeys": ["target-stimulus:aus-angst-vor"]
+		},
+		"target-de-governed-collocation-angst-haben-click-vor": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Angst"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vor"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hunden"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 4, 6]
+			},
+			"explanation": "vor belongs to the noun Angst, which keeps its government alone; the whole Collocation Angst haben is present, so the largest unit containing vor is the Collocation (ADR 0034).",
+			"contaminationKeys": ["target-stimulus:angst-haben-vor"]
+		},
+		"target-de-governed-collocation-bescheid-click-ueber": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "weiß"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Bescheid"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "über"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Pläne"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Phraseme",
+				"kind": "Collocation",
+				"memberSegmentIndices": [2, 4, 6]
+			},
+			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation, not a fixed one; die Pläne is its free complement (ADR 0034).",
+			"contaminationKeys": ["target-stimulus:bescheid-wissen-ueber"]
 		}
 	},
 	"demonstrationIds": [

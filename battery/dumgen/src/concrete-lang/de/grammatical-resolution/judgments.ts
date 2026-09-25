@@ -149,7 +149,14 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb lexically selects for its complement (wartet auf, erinnert sich an, geht um) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb or expression lexically selects for its complement (wartet auf, erinnert sich an, geht um, weiß Bescheid über) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+
+/** ADJ and NOUN take in their governed preposition like verbs (ADR 0034). */
+const governmentPolicy =
+	"An adjective or noun target that includes the preposition it lexically selects for its complement (stolz auf, abhängig von, Angst vor, Interesse an) is a supported complete target, also when the preposition stands apart from it (Auf ihn bin ich stolz, der auf seinen Sohn stolze Vater, die Angst der Kinder vor Hunden): that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition or an adposition with its own nominal complement is never governed-preposition evidence.";
+
+/** The Kinds that name a governed preposition among their members (ADR 0034). */
+const adnominalGovernors: ReadonlySet<string> = new Set(["ADJ", "NOUN"]);
 
 const partialCoveragePolicy =
 	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
@@ -208,7 +215,14 @@ export function resolveGrammarJudgments(
 		const canonicalFormAlternatives = [
 			...new Set([
 				...storedLemmas.map((lemma) => lemma.canonicalForm),
-				...(encounter.target.kind === "NOUN" ? input.members : []),
+				...(encounter.target.kind === "NOUN"
+					? input.members.filter(
+							(text) =>
+								!isGovernablePreposition(
+									text.toLocaleLowerCase("de"),
+								),
+						)
+					: []),
 			]),
 		]
 			.filter((text) => text !== canonicalFormCandidate)
@@ -223,6 +237,7 @@ export function resolveGrammarJudgments(
 			);
 		const catalog = grammarFeatureFields(route);
 		const verbal = verbalKinds.has(encounter.target.kind);
+		const adnominal = adnominalGovernors.has(encounter.target.kind);
 		const auxiliary = encounter.target.kind === "AUX";
 		const constructionFeature = (path: string) =>
 			/\.(perfect|future|passive)$/u.test(path);
@@ -378,10 +393,15 @@ export function resolveGrammarJudgments(
 		for (const [key, candidates] of Object.entries(lexicalStringCandidates))
 			questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
 		// Only a member spelling a governable preposition can be the one the
-		// verb governs; its complement's case and referent ride along and are
-		// consumed only when a member is chosen.
+		// verb, adjective or noun governs; its complement's case and referent
+		// ride along and are consumed only when a member is chosen.
+		const governor = verbal
+			? { name: "verbal target", policy: "policy.verbalIdentity" }
+			: encounter.target.kind === "ADJ"
+				? { name: "adjective", policy: "policy.government" }
+				: { name: "noun", policy: "policy.government" };
 		const governable =
-			verbal && !auxiliary && input.members.length > 1
+			(verbal || adnominal) && !auxiliary && input.members.length > 1
 				? input.members.flatMap((text, index) => {
 						const form = text.toLocaleLowerCase("de");
 						return isGovernablePreposition(form)
@@ -392,7 +412,7 @@ export function resolveGrammarJudgments(
 		const governedPreposition = governable.length > 0;
 		if (governedPreposition) {
 			questions.governedPreposition = choice(
-				"Under `policy.verbalIdentity`, which supplied member is the preposition this verbal target lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.",
+				`Under \`${governor.policy}\`, which supplied member is the preposition this ${governor.name} lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.`,
 				{
 					...Object.fromEntries(
 						governable.map(({ index, text }) => [
@@ -406,7 +426,7 @@ export function resolveGrammarJudgments(
 			);
 			if (governable.some(({ form }) => fixedCaseOf(form) === null))
 				questions.governedCase = choice(
-					"If a supplied member is the preposition this verbal target lexically governs, which case does that preposition's complement take in `markedContext`? Read it from the complement's form when the form shows it; otherwise give the case the verb requires with this preposition.",
+					`If a supplied member is the preposition this ${governor.name} lexically governs, which case does that preposition's complement take in \`markedContext\`? Read it from the complement's form when the form shows it; otherwise give the case the ${verbal ? "verb" : governor.name} requires with this preposition.`,
 					{
 						Acc: "Accusative",
 						Dat: "Dative",
@@ -414,7 +434,7 @@ export function resolveGrammarJudgments(
 					},
 				);
 			questions.governedReferent = choice(
-				"If a supplied member is the preposition this verbal target lexically governs, does that preposition's complement in `markedContext` name a person or a thing?",
+				`If a supplied member is the preposition this ${governor.name} lexically governs, does that preposition's complement in \`markedContext\` name a person or a thing?`,
 				{
 					Someone: "A person or a group of people",
 					Something:
@@ -462,6 +482,7 @@ export function resolveGrammarJudgments(
 				...(encounter.target.kind === "NOUN"
 					? { noun: nounPolicy }
 					: {}),
+				...(adnominal ? { government: governmentPolicy } : {}),
 				...(partial ? { coverage: partialCoveragePolicy } : {}),
 				route: routeGuidance[encounter.target.kind] ?? "",
 			},
@@ -816,7 +837,9 @@ export function resolveGrammarJudgments(
 									valencyEvidence: [],
 								}
 							: {}),
-						...(adposition ? { valencyEvidence: [] } : {}),
+						...(adposition || adnominal
+							? { valencyEvidence: [] }
+							: {}),
 						...(encounter.target.kind === "NOUN"
 							? { articleEvidence: null }
 							: {}),
@@ -1132,7 +1155,9 @@ export function resolveGrammarJudgments(
 					});
 			}
 			const output = {
-				...(verbal || adposition ? { valencyEvidence } : {}),
+				...(verbal || adposition || adnominal
+					? { valencyEvidence }
+					: {}),
 				...(verbal ? { expletiveEvidence } : {}),
 				...(encounter.target.kind === "NOUN"
 					? { articleEvidence: article?.evidence ?? null }

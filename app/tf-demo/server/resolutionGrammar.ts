@@ -1,6 +1,10 @@
 import type { Encounter } from "dumgen/types";
 import { validateEncounter } from "dumgen/validation";
 import type * as Dumling from "dumling/types";
+import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../shared/german-evidence-kinds";
 import { parseGermanAttestation } from "./operationalParsing";
 
 /** Durable grammar checkpoint retains the exact Encounter used for generation. */
@@ -58,8 +62,9 @@ export function restoreStoredGrammar(input: {
 		const lemma = surface.lemma as { language: string; kind: string };
 		const { articleReference: _legacy, ...currentSurface } = surface;
 		const verbal =
-			lemma.language === "de" &&
-			["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind);
+			lemma.language === "de" && germanVerbalKinds.includes(lemma.kind);
+		const governor =
+			lemma.language === "de" && germanGovernorKinds.includes(lemma.kind);
 		const bag = currentSurface.inflectionalFeatures;
 		if (verbal && bag && typeof bag === "object")
 			currentSurface.inflectionalFeatures = { expletive: null, ...bag };
@@ -72,10 +77,10 @@ export function restoreStoredGrammar(input: {
 					? {
 							expletiveEvidence:
 								attestation.expletiveEvidence ?? null,
-							valencyEvidence: attestation.valencyEvidence ?? [],
 						}
 					: {}),
-				...(lemma.language === "de" && lemma.kind === "ADP"
+				...(governor ||
+				(lemma.language === "de" && lemma.kind === "ADP")
 					? { valencyEvidence: attestation.valencyEvidence ?? [] }
 					: {}),
 			},

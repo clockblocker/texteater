@@ -13,7 +13,10 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
-import { participleCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.js";
+import {
+	governedCaseIds,
+	participleCaseIds,
+} from "./concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.js";
 import {
 	openReferentCaseIds,
 	referentContextCaseIds,
@@ -32,7 +35,10 @@ import {
 import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
 import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
-import { participleBoundaryCaseIds } from "./concrete-lang/de/target-classification/evaluation-ids.js";
+import {
+	governedPrepositionCaseIds,
+	participleBoundaryCaseIds,
+} from "./concrete-lang/de/target-classification/evaluation-ids.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
@@ -51,9 +57,13 @@ const targetRoute = "target-classification/de/high-level-whole-unit";
 /** Named slices of one corpus, run as their own experiments as `route:slice`. */
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
-	[targetRoute]: { "participle-boundary": participleBoundaryCaseIds },
+	[targetRoute]: {
+		"participle-boundary": participleBoundaryCaseIds,
+		"governed-preposition": governedPrepositionCaseIds,
+	},
 	"grammatical-resolution/de/lexeme/adjective": {
 		participles: participleCaseIds,
+		governed: governedCaseIds,
 	},
 	"grammatical-resolution/de/lexeme/pronoun": {
 		"referent-context": referentContextCaseIds,

@@ -275,6 +275,8 @@ export const storedSentenceAnalysisValidator = v.object({
 		v.object({
 			id: v.string(),
 			members: v.array(v.string()),
+			/** Prepositions only the expression governs; outside its fixedness (ADR 0034). */
+			governedPrepositions: v.array(v.string()),
 			kindMass: storedMassValidator,
 			fixedness: v.number(),
 			provenance: v.string(),

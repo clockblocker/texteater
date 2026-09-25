@@ -212,6 +212,21 @@ export function germanVerbalAttestationError(): string {
 	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, in a case the preposition allows";
 }
 
+/**
+ * A German adjective or noun Attestation names the owned members realizing
+ * the valency slots it attests, as a verbal one does (ADR 0034).
+ */
+export function isGermanValencyAttestation(input: unknown): boolean {
+	const value = input as {
+		valencyEvidence: ValencyEvidence[];
+		members: { attested: string; orthography: string }[];
+	};
+	return isOwnedValencyEvidence(value.valencyEvidence, value.members);
+}
+export function germanValencyAttestationError(): string {
+	return "Valency evidence must name distinct owned members spelling its preposition, in a case the preposition allows";
+}
+
 type ValencyEvidence = {
 	member: number | null;
 	complement:

@@ -5,6 +5,7 @@ import {
 	germanClosedClassSurfaceError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
+	germanValencyAttestationError,
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
@@ -13,6 +14,7 @@ import {
 	isGermanClosedClassSurface,
 	isGermanNounAttestation,
 	isGermanNounSurface,
+	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 	nonEmptyFeatureBagError,
@@ -135,9 +137,11 @@ const valencyEvidenceSchema = z.array(
 /**
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German verbal Attestation names its owned subject-expletive
- * member and the valency slots it realizes as evidence (ADR 0022, ADR 0034).
- * A German ADP Attestation records the case its complement took as its one
- * bare-case slot, checked against the ADP Case Table.
+ * member as evidence (ADR 0022). Every German governor Kind (VERB, AUX, ADJ,
+ * NOUN, Idiom, Collocation) names the valency slots it realizes, such as its
+ * governed preposition member (ADR 0034). A German ADP Attestation records
+ * the case its complement took as its one bare-case slot, checked against the
+ * ADP Case Table.
  */
 export function buildUnitSchemas<
 	L extends string,
@@ -160,6 +164,10 @@ export function buildUnitSchemas<
 		route.language === "de" &&
 		route.family === "Lexeme" &&
 		route.kind === "ADP";
+	const adnominalGovernor =
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		["ADJ", "NOUN"].includes(route.kind);
 	const closedClass =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
@@ -186,7 +194,9 @@ export function buildUnitSchemas<
 					valencyEvidence: valencyEvidenceSchema,
 				}
 			: {}),
-		...(adposition ? { valencyEvidence: valencyEvidenceSchema } : {}),
+		...(adposition || adnominalGovernor
+			? { valencyEvidence: valencyEvidenceSchema }
+			: {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
 			surface: typeof Surface;
@@ -212,14 +222,20 @@ export function buildUnitSchemas<
 					: Record<never, never>
 				: Record<never, never>) &
 			(L extends "de"
-				? K extends "ADP"
-					? { valencyEvidence: typeof valencyEvidenceSchema }
+				? F extends "Lexeme"
+					? K extends "ADP" | "ADJ" | "NOUN"
+						? { valencyEvidence: typeof valencyEvidenceSchema }
+						: Record<never, never>
 					: Record<never, never>
 				: Record<never, never>)
 	>;
 	if (noun)
 		Attestation = Attestation.refine(isGermanNounAttestation, {
 			error: germanNounAttestationError,
+		});
+	if (adnominalGovernor)
+		Attestation = Attestation.refine(isGermanValencyAttestation, {
+			error: germanValencyAttestationError,
 		});
 	if (verbal)
 		Attestation = Attestation.refine(isGermanVerbalAttestation, {

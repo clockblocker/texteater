@@ -239,6 +239,7 @@ test("an inspected click resolving a new Reading, then its Knowledge, shows each
 				},
 				realizationCoverage: "Full",
 				articleEvidence: null,
+				valencyEvidence: [],
 			},
 			"🏦",
 		]),

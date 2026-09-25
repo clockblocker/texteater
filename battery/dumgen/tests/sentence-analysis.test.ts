@@ -69,6 +69,8 @@ type Plan = {
 				readonly governor?: number | readonly number[];
 				readonly case?: string;
 				readonly referent?: string;
+				/** Whether the governing word keeps the government alone; Word by default. */
+				readonly scope?: "Word" | "Expression";
 			}
 		>
 	>;
@@ -184,6 +186,10 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 						chosen =
 							plan.government?.[numbers[0] ?? -1]?.referent ??
 							"Unresolved";
+					else if (prefix === "scope")
+						chosen =
+							plan.government?.[numbers[0] ?? -1]?.scope ??
+							"Word";
 					else throw Error(`Unexpected question ${id}`);
 					if (!options.includes(chosen))
 						throw Error(`${chosen} is not an option of ${id}`);
@@ -967,6 +973,21 @@ test("intake links a governed preposition to its governor and leaves an adjunct 
 	);
 	const angst = targetOf(analysis, 23);
 	if (!angst) throw Error("Expected the Angst target");
+	// The noun takes in the preposition it governs; the adjunct im stays out.
+	expect(angst.members).toEqual([
+		{ offset: 23, role: "Head" },
+		{ offset: 29, role: "GovernedPreposition" },
+	]);
+	expect(resolvedUnitAt(analysis, 29)).toEqual({
+		family: "Lexeme",
+		kind: "NOUN",
+		offsets: [23, 29],
+	});
+	expect(resolvedUnitAt(analysis, 13)).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		offsets: [13],
+	});
 	// No referent answer: the slot does not narrow it.
 	const slot: Slot = {
 		governor: angst.id,
@@ -1099,7 +1120,7 @@ test("a sentence without a governable preposition asks no slot question", async 
 
 // Input indices: Mit0 solchem2 Unsinn4 wollten6 sie8 nichts10 zu12 tun14 haben16 .17
 // Offsets: Mit0 solchem4 Unsinn12 wollten19 sie27 nichts31 zu38 tun41 haben45
-test("a preposition with a free complement leaves its expression, which governs it and is no Collocation without a predicate noun", async () => {
+test("a preposition with a free complement is no fixed word of its expression, which governs it and takes it in, and is no Collocation without a predicate noun", async () => {
 	const { dumgen } = dumgenWith({
 		words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
 		routes: {
@@ -1135,7 +1156,13 @@ test("a preposition with a free complement leaves its expression, which governs 
 	expect(analysis.phrasemes).toHaveLength(1);
 	const phraseme = analysis.phrasemes[0];
 	if (!phraseme) throw Error("Expected the expression");
-	expect(offsetsOf(analysis, phraseme)).toEqual([31, 38, 41, 45]);
+	// The expression takes in the preposition it governs, outside its fixed
+	// words and its fixedness (ADR 0034).
+	expect(phraseme.governedPrepositions).toEqual([
+		targetOf(analysis, 0)?.id ?? "",
+	]);
+	expect(phraseme.fixedness).toBe(2.2);
+	expect(offsetsOf(analysis, phraseme)).toEqual([0, 31, 38, 41, 45]);
 	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Idiom");
 	const slot: Slot = {
 		governor: phraseme.id,
@@ -1150,17 +1177,19 @@ test("a preposition with a free complement leaves its expression, which governs 
 		realizedCase: "Dat",
 	};
 	expect(analysis.slots).toEqual([slot]);
-	expect(slotsAt(analysis, [31, 38, 41, 45])).toEqual([slot]);
+	expect(slotsAt(analysis, [0, 31, 38, 41, 45])).toEqual([slot]);
+	expect(slotsAt(analysis, [31, 38, 41, 45])).toEqual([]);
 	expect(slotsAt(analysis, [45])).toEqual([]);
-	expect(resolvedUnitAt(analysis, 0)).toEqual({
+	for (const offset of [0, 38])
+		expect(resolvedUnitAt(analysis, offset)).toEqual({
+			family: "Phraseme",
+			kind: "Idiom",
+			offsets: [0, 31, 38, 41, 45],
+		});
+	expect(resolvedWordAt(analysis, 0)).toEqual({
 		family: "Lexeme",
 		kind: "ADP",
 		offsets: [0],
-	});
-	expect(resolvedUnitAt(analysis, 38)).toEqual({
-		family: "Phraseme",
-		kind: "Idiom",
-		offsets: [31, 38, 41, 45],
 	});
 	expect(resolvedWordAt(analysis, 38)).toEqual({
 		family: "Lexeme",
@@ -1204,4 +1233,378 @@ test("wording named only Collocation without a predicate noun resolves no Phrase
 		kind: "VERB",
 		offsets: [45],
 	});
+});
+
+// Every governor takes in its governed preposition (ADR 0034, issue 607).
+
+const text = (analysis: SentenceAnalysis, target: LexemeTarget | undefined) =>
+	target?.members.map(
+		(member) =>
+			`${analysis.segments.find((s) => s.offset === member.offset)?.text}/${member.role}`,
+	);
+
+// Input indices: Er0 ist2 stolz4 auf6 seinen8 Sohn10 .11
+// Offsets: Er0 ist3 stolz7 auf13 seinen17 Sohn24
+const stolz = sentenceOf("stolz", "Er ist stolz auf seinen Sohn.");
+const stolzWords = {
+	words: [[0], [2], [4], [6], [8], [10]],
+	routes: {
+		0: "Lexeme/PRON",
+		2: "Lexeme/VERB",
+		4: "Lexeme/ADJ",
+		6: "Lexeme/ADP",
+		8: "Lexeme/DET",
+		10: "Lexeme/NOUN",
+	},
+	roles: {},
+	government: {
+		6: { governor: 4, case: "Acc", referent: "Someone" },
+	},
+} as const;
+
+test("an adjective takes in its governed preposition beside a copula, which stays its own word", async () => {
+	const { dumgen } = dumgenWith({ ...stolzWords, expressions: [] });
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence: stolz }),
+	);
+	const adjective = targetOf(analysis, 7);
+	expect(text(analysis, adjective)).toEqual([
+		"stolz/Head",
+		"auf/GovernedPreposition",
+	]);
+	for (const offset of [7, 13])
+		expect(resolvedUnitAt(analysis, offset)).toEqual({
+			family: "Lexeme",
+			kind: "ADJ",
+			offsets: [7, 13],
+		});
+	expect(resolvedUnitAt(analysis, 3)).toEqual({
+		family: "Lexeme",
+		kind: "VERB",
+		offsets: [3],
+	});
+	expect(analysis.phrasemes).toEqual([]);
+	expect(analysis.slots).toEqual([
+		{
+			governor: adjective?.id ?? "",
+			marker: 13,
+			filler: null,
+			complement: {
+				kind: "Preposition",
+				preposition: governablePrepositionLemma("auf"),
+				case: "Acc",
+				referent: "Someone",
+			},
+			realizedCase: "Acc",
+		},
+	]);
+});
+
+test("a copula tied to its predicative adjective forms no Collocation", async () => {
+	const { dumgen } = dumgenWith({
+		...stolzWords,
+		expressions: [{ heads: [2, 4], kind: "Collocation", fixedness: 2 }],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence: stolz }),
+	);
+	for (const phraseme of analysis.phrasemes)
+		expect(selectPhrasemeKind(analysis, phraseme).kind).not.toBe(
+			"Collocation",
+		);
+	expect(resolvedUnitAt(analysis, 3)).toEqual({
+		family: "Lexeme",
+		kind: "VERB",
+		offsets: [3],
+	});
+	expect(resolvedUnitAt(analysis, 13)).toEqual({
+		family: "Lexeme",
+		kind: "ADJ",
+		offsets: [7, 13],
+	});
+});
+
+// Input indices: Auf0 ihn2 bin4 ich6 stolz8 .9; offsets: Auf0 ihn4 bin8 ich12 stolz16
+test("a fronted governed preposition joins its adjective like a separated particle", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8]],
+		routes: {
+			0: "Lexeme/ADP",
+			2: "Lexeme/PRON",
+			4: "Lexeme/VERB",
+			6: "Lexeme/PRON",
+			8: "Lexeme/ADJ",
+		},
+		roles: {},
+		expressions: [],
+		government: { 0: { governor: 8, case: "Acc", referent: "Someone" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("auf-ihn", "Auf ihn bin ich stolz."),
+		}),
+	);
+	expect(text(analysis, targetOf(analysis, 16))).toEqual([
+		"Auf/GovernedPreposition",
+		"stolz/Head",
+	]);
+	expect(resolvedUnitAt(analysis, 0)).toEqual({
+		family: "Lexeme",
+		kind: "ADJ",
+		offsets: [0, 16],
+	});
+});
+
+// Input indices: Der0 auf2 seinen4 Sohn6 stolze8 Vater10 lächelt12 .13
+// Offsets: Der0 auf4 seinen8 Sohn15 stolze20 Vater27 lächelt33
+test("an attributive adjective takes in its governed preposition across its complement", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0, 10], [2], [4], [6], [8], [12]],
+		routes: {
+			0: "Lexeme/NOUN",
+			2: "Lexeme/ADP",
+			4: "Lexeme/DET",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/ADJ",
+			10: "Lexeme/NOUN",
+			12: "Lexeme/VERB",
+		},
+		roles: { 0: "Article", 10: "Head" },
+		expressions: [],
+		government: { 2: { governor: 8, case: "Acc", referent: "Someone" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"stolze",
+				"Der auf seinen Sohn stolze Vater lächelt.",
+			),
+		}),
+	);
+	expect(text(analysis, targetOf(analysis, 20))).toEqual([
+		"auf/GovernedPreposition",
+		"stolze/Head",
+	]);
+	expect(resolvedUnitAt(analysis, 4)).toEqual({
+		family: "Lexeme",
+		kind: "ADJ",
+		offsets: [4, 20],
+	});
+});
+
+// Input indices: Er0 weiß2 Bescheid4 über6 die8 Pläne10 .11
+// Offsets: Er0 weiß3 Bescheid8 über17 die22 Pläne26
+const bescheid = sentenceOf("bescheid", "Er weiß Bescheid über die Pläne.");
+const bescheidPlan = {
+	words: [[0], [2], [4], [6], [8, 10]],
+	routes: {
+		0: "Lexeme/PRON",
+		2: "Lexeme/VERB",
+		4: "Lexeme/NOUN",
+		6: "Lexeme/ADP",
+		8: "Lexeme/NOUN",
+		10: "Lexeme/NOUN",
+	},
+	roles: { 8: "Article", 10: "Head" },
+	expressions: [{ heads: [2, 4], kind: "Collocation", fixedness: 2 }],
+} as const;
+
+for (const [name, plan] of [
+	[
+		"the noun that governs only inside it",
+		{
+			...bescheidPlan,
+			government: {
+				6: {
+					governor: 4,
+					case: "Acc",
+					referent: "Something",
+					scope: "Expression",
+				},
+			},
+		},
+	],
+	[
+		"a vote split over its words",
+		{
+			...bescheidPlan,
+			government: { 6: { governor: [2, 4], case: "Acc" } },
+		},
+	],
+	[
+		"the noun the Lexeme layer glued it to",
+		{
+			...bescheidPlan,
+			words: [[0], [2], [4, 6], [8, 10]],
+			// The route of a glued preposition is its word's.
+			routes: { ...bescheidPlan.routes, 6: "Lexeme/NOUN" },
+			roles: {
+				4: "Head",
+				6: "GovernedPreposition",
+				8: "Article",
+				10: "Head",
+			},
+			government: {
+				6: {
+					governor: 4,
+					case: "Acc",
+					referent: "Something",
+					scope: "Expression",
+				},
+			},
+		},
+	],
+] as const)
+	test(`a Collocation governs and takes in a preposition from ${name}, outside its fixedness`, async () => {
+		const { dumgen } = dumgenWith(plan);
+		const analysis = await Effect.runPromise(
+			dumgen.analyzeSentence({ sentence: bescheid }),
+		);
+		expect(analysis.phrasemes).toHaveLength(1);
+		const phraseme = analysis.phrasemes[0];
+		if (!phraseme) throw Error("Expected the Collocation");
+		const ueber = targetOf(analysis, 17);
+		expect(text(analysis, ueber)).toEqual(["über/Head"]);
+		expect(text(analysis, targetOf(analysis, 8))).toEqual([
+			"Bescheid/Head",
+		]);
+		expect(phraseme.governedPrepositions).toEqual([ueber?.id ?? ""]);
+		expect(phraseme.fixedness).toBe(2);
+		expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Collocation");
+		for (const offset of [3, 8, 17])
+			expect(resolvedUnitAt(analysis, offset)).toEqual({
+				family: "Phraseme",
+				kind: "Collocation",
+				offsets: [3, 8, 17],
+			});
+		expect(resolvedWordAt(analysis, 17)).toEqual({
+			family: "Lexeme",
+			kind: "ADP",
+			offsets: [17],
+		});
+		expect(analysis.slots.map((slot) => slot.governor)).toEqual([
+			phraseme.id,
+		]);
+		expect(slotsAt(analysis, [3, 8, 17])).toHaveLength(1);
+	});
+
+// Input indices: Sie0 hat2 Angst4 vor6 Hunden8 .9
+// Offsets: Sie0 hat4 Angst8 vor14 Hunden18
+test("a noun that keeps its government alone takes in its preposition inside a Collocation", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/ADP",
+			8: "Lexeme/NOUN",
+		},
+		roles: {},
+		expressions: [{ heads: [2, 4], kind: "Collocation", fixedness: 2 }],
+		government: { 6: { governor: 4, case: "Dat", scope: "Word" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("angst-haben", "Sie hat Angst vor Hunden."),
+		}),
+	);
+	const angst = targetOf(analysis, 8);
+	expect(text(analysis, angst)).toEqual([
+		"Angst/Head",
+		"vor/GovernedPreposition",
+	]);
+	const phraseme = analysis.phrasemes[0];
+	if (!phraseme) throw Error("Expected the Collocation");
+	expect(phraseme.governedPrepositions).toEqual([]);
+	expect(resolvedUnitAt(analysis, 14)).toEqual({
+		family: "Phraseme",
+		kind: "Collocation",
+		offsets: [4, 8, 14],
+	});
+	expect(resolvedWordAt(analysis, 14)).toEqual({
+		family: "Lexeme",
+		kind: "NOUN",
+		offsets: [8, 14],
+	});
+	expect(analysis.slots.map((slot) => slot.governor)).toEqual([
+		angst?.id ?? "",
+	]);
+});
+
+// Input indices: Aus0 Angst2 vor4 Hunden6 bleibt8 sie10 zu12 Hause14 .15
+// Offsets: Aus0 Angst4 vor10 Hunden14 bleibt21 sie28 zu32 Hause35
+test("a noun takes in its governed preposition with no verb around", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8], [10], [12], [14]],
+		routes: {
+			0: "Lexeme/ADP",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/ADP",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/VERB",
+			10: "Lexeme/PRON",
+			12: "Lexeme/ADP",
+			14: "Lexeme/NOUN",
+		},
+		roles: {},
+		expressions: [],
+		government: { 4: { governor: 2, case: "Dat" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"aus-angst",
+				"Aus Angst vor Hunden bleibt sie zu Hause.",
+			),
+		}),
+	);
+	expect(resolvedUnitAt(analysis, 10)).toEqual({
+		family: "Lexeme",
+		kind: "NOUN",
+		offsets: [4, 10],
+	});
+	expect(resolvedUnitAt(analysis, 0)).toEqual({
+		family: "Lexeme",
+		kind: "ADP",
+		offsets: [0],
+	});
+});
+
+// Input indices: Sie0 spürt2 die4 Angst6 der8 Kinder10 vor12 Hunden14 .15
+// Offsets: Sie0 spürt4 die10 Angst14 der20 Kinder24 vor31 Hunden35
+test("a noun keeps its article and takes in its governed preposition across a genitive", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4, 6], [8, 10], [12], [14]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/NOUN",
+			12: "Lexeme/ADP",
+			14: "Lexeme/NOUN",
+		},
+		roles: { 4: "Article", 6: "Head", 8: "Article", 10: "Head" },
+		expressions: [],
+		government: { 12: { governor: 6, case: "Dat" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"angst-der-kinder",
+				"Sie spürt die Angst der Kinder vor Hunden.",
+			),
+		}),
+	);
+	expect(text(analysis, targetOf(analysis, 14))).toEqual([
+		"die/Article",
+		"Angst/Head",
+		"vor/GovernedPreposition",
+	]);
+	expect(text(analysis, targetOf(analysis, 24))).toEqual([
+		"der/Article",
+		"Kinder/Head",
+	]);
 });

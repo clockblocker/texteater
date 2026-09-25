@@ -3,9 +3,10 @@
  * that realizes a governable preposition (the preposition itself, a fused
  * word's adposition, or a pronominal adverb), which occurrence in the
  * sentence lexically governs it, for a two-way preposition the case the
- * government requires, and whether the complement names a person or a thing.
- * The questions ride in the one Sentence Analysis call; a sentence without a
- * governable preposition asks nothing.
+ * government requires, whether the complement names a person or a thing, and
+ * whether the governing word keeps the government on its own or only inside
+ * an expression. The questions ride in the one Sentence Analysis call; a
+ * sentence without a governable preposition asks nothing.
  */
 
 import type { Questions } from "promptsmith/typesafe";
@@ -27,7 +28,7 @@ import {
 import type { Answers } from "./assemble.js";
 import type { Placement } from "./placement.js";
 
-export const governmentCriteria = `A word lexically governs a preposition when its meaning selects that preposition for a complement and a learner memorises the pair: warten auf + Acc, bestehen auf + Dat (insist) but bestehen aus + Dat (consist of), stolz auf + Acc, abhängig von + Dat, Angst vor + Dat, Interesse an + Dat, sich bedanken bei + Dat and für + Acc, Bescheid wissen über + Acc. A pronominal adverb (darauf, davon, worüber, hierfür) realizes a governed preposition together with its complement: in freut sich darauf, freut governs darauf. No word governs a free adjunct of place, time, manner, cause or instrument (wartet am Bahnhof, spielt im Garten, schneidet mit dem Messer), a separable verb particle (fängt ... an), or a pronominal adverb used as a connective (darum, danach, damit meaning so that). For a two-way preposition (an, auf, in, über, unter, vor, zwischen), read the case from the complement's form whenever the form shows it: an meine Mutter and auf ihn are accusative, an der Sitzung and vor dem Haus are dative. When the form does not show it, as with a pronominal adverb or a bare noun, give the case the governing word requires with this preposition, not the case a location would take.`;
+export const governmentCriteria = `A word lexically governs a preposition when its meaning selects that preposition for a complement and a learner memorises the pair: warten auf + Acc, bestehen auf + Dat (insist) but bestehen aus + Dat (consist of), stolz auf + Acc, abhängig von + Dat, Angst vor + Dat, Interesse an + Dat, sich bedanken bei + Dat and für + Acc, Bescheid wissen über + Acc. A pronominal adverb (darauf, davon, worüber, hierfür) realizes a governed preposition together with its complement: in freut sich darauf, freut governs darauf. No word governs a free adjunct of place, time, manner, cause or instrument (wartet am Bahnhof, spielt im Garten, schneidet mit dem Messer), a separable verb particle (fängt ... an), or a pronominal adverb used as a connective (darum, danach, damit meaning so that). For a two-way preposition (an, auf, in, über, unter, vor, zwischen), read the case from the complement's form whenever the form shows it: an meine Mutter and auf ihn are accusative, an der Sitzung and vor dem Haus are dative. When the form does not show it, as with a pronominal adverb or a bare noun, give the case the governing word requires with this preposition, not the case a location would take. A word keeps its government on its own when the pair means the same without any expression around it: Angst vor also in aus Angst vor Hunden, so it keeps it inside Angst haben vor, and stolz auf keeps it beside a copula. A word inside an expression governs only through the expression when it has another sense alone: Bescheid means being informed only in Bescheid wissen or Bescheid geben, and Bescheid über alone is an official notice.`;
 
 /**
  * The placed piece of an input Segment that realizes a governable
@@ -89,6 +90,16 @@ export function slotQuestions(
 					Unresolved: "The case cannot be defensibly decided",
 				},
 			);
+		questions[`scope_${index}`] = choice(
+			`Under \`government\`, does the word that governs the preposition realized by occurrence ${label(sentence, index)} govern it in this sense on its own, or only inside a multiword expression it belongs to here?`,
+			{
+				Word: "The word governs it in this sense on its own, also where it stands inside an expression (stolz auf, Angst vor, Angst haben vor)",
+				Expression:
+					"The word governs it only inside the expression around it and has another sense alone (Bescheid wissen über)",
+				Unresolved:
+					"No word governs it, or the scope cannot be defensibly decided",
+			},
+		);
 		// A pronominal adverb's filler is always a thing, so it asks nothing.
 		if (!piece.adverb)
 			questions[`ref_${index}`] = choice(
@@ -127,11 +138,14 @@ export const governorTau = 0.6;
  * One Slot per governed preposition. The governor vote is summed per word,
  * so `nimmt` and `teil` vote together for `teilnehmen`, and the word reaching
  * `governorTau` governs. Failing that, a preposition the Lexeme layer made a
- * verb's `GovernedPreposition` member is governed by that verb, and failing
+ * word's `GovernedPreposition` member is governed by that word, and failing
  * that, the vote summed over a Phraseme's words lets the expression govern
- * (`mit … nichts zu tun haben`, the vote split between `tun` and `haben`). A
- * preposition voted to govern itself and an unresolved case yield nothing;
- * an unresolved referent is `Either`.
+ * (`mit … nichts zu tun haben`, the vote split between `tun` and `haben`).
+ * A governing word inside a Phraseme hands the slot to the Phraseme when it
+ * governs only inside it (`Bescheid wissen über`, ADR 0034); a word that
+ * keeps the government alone keeps the slot (`Angst vor` inside `Angst
+ * haben`). A preposition voted to govern itself and an unresolved case yield
+ * nothing; an unresolved referent is `Either`.
  */
 export function assembleSlots(
 	placement: Placement,
@@ -166,8 +180,21 @@ export function assembleSlots(
 		)?.role;
 		if (!governor && role === "GovernedPreposition") governor = own;
 		if (governor && headOf(governor).offset === piece.offset) continue;
+		// A preposition that is a fixed word of the Phraseme in its own right
+		// (`zu` in `zur Verfügung stellen`) is never one it governs.
+		const fixedIn = (phraseme: PhrasemeTarget) =>
+			phraseme.members.includes(own.id) && own !== governor;
+		const around = governor
+			? phrasemes.find(
+					(phraseme) =>
+						phraseme.members.includes(governor.id) &&
+						!fixedIn(phraseme),
+				)
+			: undefined;
 		const expression = governor
-			? undefined
+			? around && top(answers, `scope_${index}`) === "Expression"
+				? around
+				: undefined
 			: phrasemes.find(
 					(phraseme) =>
 						!phraseme.members.includes(own.id) &&
@@ -178,7 +205,7 @@ export function assembleSlots(
 							.reduce((sum, [, share]) => sum + share, 0) >=
 							governorTau,
 				);
-		const governorId = governor?.id ?? expression?.id;
+		const governorId = expression?.id ?? governor?.id;
 		if (!governorId) continue;
 		const voted = top(answers, `case_${index}`);
 		const governedCase: PrepositionComplement["case"] | null =

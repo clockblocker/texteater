@@ -8,6 +8,10 @@ import {
 	spellingOf,
 } from "../../server/storedSegments";
 
+import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../../shared/german-evidence-kinds";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
@@ -47,7 +51,7 @@ export function surfaceValue(surface: SurfaceRecord, lemma: LemmaRecord) {
 	const bag = surface.inflectionalFeatures;
 	const inflectionalFeatures =
 		lemma.language === "de" &&
-		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind) &&
+		germanVerbalKinds.includes(lemma.kind) &&
 		bag &&
 		typeof bag === "object"
 			? { expletive: null, ...bag }
@@ -200,12 +204,11 @@ export async function loadOccurrenceAttestation(
 				| "Typo",
 		})),
 		realizationCoverage: attestation.realizationCoverage,
-		...(lemma.language === "de" &&
-		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind)
-			? {
-					expletiveEvidence: attestation.expletiveEvidence ?? null,
-					valencyEvidence: attestation.valencyEvidence ?? [],
-				}
+		...(lemma.language === "de" && germanVerbalKinds.includes(lemma.kind)
+			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
+			: {}),
+		...(lemma.language === "de" && germanGovernorKinds.includes(lemma.kind)
+			? { valencyEvidence: attestation.valencyEvidence ?? [] }
 			: {}),
 		...(lemma.language === "de" && lemma.kind === "ADP"
 			? { valencyEvidence: attestation.valencyEvidence ?? [] }

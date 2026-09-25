@@ -49,6 +49,7 @@ const attestation = {
 	surface,
 	members: [{ attested: "schweigend", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	valencyEvidence: [],
 } satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 // README_BLOCK:attestation:end

@@ -10,6 +10,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	articleEvidence: null,
+	valencyEvidence: [],
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,

@@ -224,6 +224,7 @@ async function seedOccurrence(
 			readingId,
 			realizationCoverage: "Full",
 			articleEvidence: null,
+			valencyEvidence: [],
 		});
 		await ctx.db.patch(segmentId, {
 			attestationMembership: { attestationId, orthography: "Standard" },

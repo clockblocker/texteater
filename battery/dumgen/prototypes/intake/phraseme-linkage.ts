@@ -442,6 +442,7 @@ function phrasemeLayer(
 		phrasemes.push({
 			id: `p${phrasemes.length + 1}`,
 			members,
+			governedPrepositions: [],
 			kindMass: Object.fromEntries(
 				Object.entries(kindMass)
 					.sort((a, b) => b[1] - a[1])

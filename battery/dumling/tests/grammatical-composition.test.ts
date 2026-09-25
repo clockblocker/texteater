@@ -333,3 +333,108 @@ test("an ADP Attestation records its realized case in a case the table allows", 
 	const { valencyEvidence: _, ...missing } = valid;
 	expect(parseUnit(missing).success).toBe(false);
 });
+test("an adjective or noun Attestation names its owned governed preposition like a verb", () => {
+	const auf = preposition("auf");
+	const slot = {
+		member: 0,
+		complement: {
+			kind: "Preposition",
+			preposition: auf,
+			case: "Acc",
+			referent: "Someone",
+		},
+		realizedCase: "Acc",
+	};
+	// Auf ihn bin ich stolz: the governed auf stands apart from its adjective.
+	const adjective = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			normalizedSurface: "stolz",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "ADJ",
+				canonicalForm: "stolz",
+				coreFeatures: {
+					abbr: null,
+					foreign: null,
+					numType: null,
+					variant: null,
+				},
+			},
+			inflectionalFeatures: {
+				case: null,
+				degree: "Pos",
+				gender: null,
+				number: null,
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "Auf", orthography: "Standard" },
+			{ attested: "stolz", orthography: "Standard" },
+		],
+		valencyEvidence: [slot],
+	};
+	expect(parseUnit(adjective).success).toBe(true);
+	expect(parseUnit({ ...adjective, valencyEvidence: [] }).success).toBe(true);
+	for (const invalid of [
+		[{ ...slot, member: 1 }],
+		[{ ...slot, member: 2 }],
+		[slot, slot],
+	])
+		expect(
+			parseUnit({ ...adjective, valencyEvidence: invalid }).success,
+		).toBe(false);
+	const { valencyEvidence: _omitted, ...withoutEvidence } = adjective;
+	expect(parseUnit(withoutEvidence).success).toBe(false);
+	// die Angst ... vor Hunden: the article opens the noun, vor is governed.
+	const angst = {
+		unitKind: "Attestation",
+		surface: {
+			...noun,
+			normalizedSurface: "die Angst",
+			lemma: {
+				...noun.lemma,
+				canonicalForm: "Angst",
+				coreFeatures: { gender: "Fem", hyph: null },
+			},
+			inflectionalFeatures: {
+				article: "Definite",
+				case: "Nom",
+				number: "Sing",
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "die", orthography: "Standard" },
+			{ attested: "Angst", orthography: "Standard" },
+			{ attested: "vor", orthography: "Standard" },
+		],
+		articleEvidence: { attested: "die", orthography: "Standard" },
+		valencyEvidence: [
+			{
+				member: 2,
+				complement: {
+					kind: "Preposition",
+					preposition: preposition("vor"),
+					case: "Dat",
+					referent: "Something",
+				},
+				realizedCase: "Dat",
+			},
+		],
+	};
+	expect(parseUnit(angst).success).toBe(true);
+	expect(
+		parseUnit({
+			...angst,
+			valencyEvidence: [{ ...angst.valencyEvidence[0], member: 1 }],
+		}).success,
+	).toBe(false);
+});

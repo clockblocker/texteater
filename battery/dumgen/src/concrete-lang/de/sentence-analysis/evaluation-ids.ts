@@ -21,6 +21,7 @@ export const evaluationCaseIds = [
 	"sentence-de-government-bestehen-aus",
 	"sentence-de-government-bestehen-none",
 	"sentence-de-government-stolz-auf",
+	"sentence-de-copula-stolz-auf",
 	"sentence-de-government-abhaengig-von",
 	"sentence-de-government-angst-vor",
 	"sentence-de-government-interesse-an",

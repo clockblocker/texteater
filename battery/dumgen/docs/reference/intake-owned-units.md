@@ -38,7 +38,8 @@ type LexemeTarget = {
 
 type PhrasemeTarget = {
   id: string;
-  members: LexemeTarget["id"][];                     // words, never Segments; ordered by first offset
+  members: LexemeTarget["id"][];                     // fixed words, never Segments; ordered by first offset
+  governedPrepositions: LexemeTarget["id"][];        // prepositions only the expression governs; outside fixedness
   kindMass: Record<PhrasemeKind | "None" | "Unresolved", number>;
   fixedness: number;                                 // mean Score, 0 free to 3 fixed expression
   provenance: string;
@@ -79,8 +80,9 @@ Invariants enforced in code, never asked:
   intake cannot place is a singleton whose Route Mass is `{ Unresolved: 1 }`.
 - A Lexeme Target has exactly one Head. A group the matrix glued around two
   Heads is split at them; a non-head follows the Head it scored the higher
-  Include with, and a verbal role landing on a non-VERB Head, or an Article
-  on a non-NOUN Head, becomes a singleton.
+  Include with, and a verbal role landing on a non-VERB Head, a governed
+  preposition on a Head that is no VERB, ADJ or NOUN, or an Article on a
+  non-NOUN Head, becomes a singleton.
 - A NOUN target keeps at most one article, and it opens the phrase.
 - A fused word never joins a group as a whole, whatever the matrix said about
   the source word. Its adposition component is a singleton ADP target; its
@@ -95,9 +97,21 @@ Invariants enforced in code, never asked:
   it. A word belongs to at most one Phraseme.
 - The governor vote is summed per word (`nimmt` and `teil` vote together)
   and the word reaching 0.6 governs. Without one, a preposition the Lexeme
-  layer made a verb's `GovernedPreposition` member is governed by that verb.
+  layer made a word's `GovernedPreposition` member is governed by that word,
+  and failing that the vote summed over a Phraseme's words lets it govern.
+  A governing word inside a Phraseme hands the Slot to the Phraseme when the
+  scope answer says it governs only there (`Bescheid wissen über`); one that
+  keeps its government alone keeps the Slot (`Angst vor` in `Angst haben`).
   A preposition voted to govern itself and a two-way preposition whose case
   vote is Unresolved yield no Slot. An Unresolved referent is `Either`.
+- Every governor takes in the preposition its Slot marks (ADR 0034). A VERB,
+  ADJ or NOUN target gains it as a `GovernedPreposition` member wherever it
+  stands (`Auf ihn bin ich stolz`); a Collocation or Idiom lists its Lexeme
+  Target in `governedPrepositions`, which never counts toward fixedness. The
+  preposition leaves its own ADP singleton, or the word the matrix glued it
+  to. A fused adposition (`vom`), a fixed word of an expression, and a
+  preposition before a noun's article stay where they are, and a pronominal
+  adverb stays its own ADV unit.
 
 ## The Resolution Selector
 
@@ -121,9 +135,11 @@ exports), scored by the sentence corpus. Given a Lexeme Target:
 
 Given a Phraseme Target: `None` below the fixedness floor, else the best
 named Kind of the Kind Mass; `Unresolved` only when no Kind has mass.
+Collocation needs a VERB and a NOUN among its fixed words, so a copula with
+its predicative adjective is never one.
 
-Given an offset: `largestOf` is the Phraseme containing the word when there
-is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
+Given an offset: `largestOf` is the Phraseme containing the word, as a fixed
+word or a governed preposition, when there is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
 Segment span, or null when it is Unresolved or `None`, or when the word's
 head Identity State is Miss.
 
@@ -155,6 +171,7 @@ adjunct, particle and connective exclusions).
 | governor Choice over the other occurrences plus None, under `government` | one per Segment realizing a governable preposition | mass summed per word, governor at 0.6 |
 | case Choice Acc/Dat | one per two-way preposition among those | argmax, Unresolved drops the Slot |
 | referent Choice Someone/Something | one per preposition among those, never a pronominal adverb | argmax, Unresolved is `Either` |
+| scope Choice Word/Expression | one per Segment realizing a governable preposition | argmax; Expression hands a Phraseme word's Slot to the Phraseme |
 
 Cost, measured: 16.2k input tokens per sentence, p50 about 370 ms per call;
 the 28-occurrence sentence needs several chunked calls.
@@ -164,8 +181,11 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 ## The click contract
 
 - A click selects the largest unit containing the clicked Segment: the
-  Phraseme when the word is a fixed member of one, else the word. A click on
-  a non-head member selects the same unit as the head.
+  Phraseme when the word is a fixed member of one or a preposition it
+  governs, else the word. A click on a non-head member selects the same unit
+  as the head, so a governed preposition opens its governor: `stolz` in
+  `Er ist stolz auf seinen Sohn`, `Angst haben` in `Sie hat Angst vor
+  Hunden`, `Angst` in `aus Angst vor Hunden`.
 - The host maps the clicked stored Segment to its offset range and reads
   `resolvedUnitAt`. A resolved unit becomes the Analysis Target for
   Grammatical Resolution with no classification call; a stored Segment is a
@@ -183,12 +203,13 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 - Sentence gold is keyed by offset (`sentence-analysis/de`, source
   `src/concrete-lang/de/sentence-analysis/source-data.json`): Lexeme
   Targets with members `{ offset, role? }`, a Kind, and for closed-class
-  heads the headword group `Kind:headword`; Phraseme Targets as a Kind and
-  the head offsets of their member words; Slots as the offset of the Segment
+  heads the headword group `Kind:headword`; Phraseme Targets as a Kind, the
+  head offsets of their member words and, where authored, the offsets of the
+  prepositions they govern; Slots as the offset of the Segment
   realizing the preposition (marker or pronominal adverb), its headword, its
   case, where authored its referent, and the offsets of the words that may
   govern it. Roles and referents are scored only where authored, and a layer
-  a case leaves out is not scored: the `sentence-de-government-*` cases
+  a case leaves out is not scored: most `sentence-de-government-*` cases
   score slots alone. The scorer (`scoreAnalysis`) reports members found,
   route, roles, identity, Phrasemes found and correct, extra Phrasemes, and
   slots correct and extra; `contractPass` is all of them right and nothing

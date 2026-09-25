@@ -21,4 +21,5 @@ export const evaluationCaseIds = [
 	"grammar-de-coll-unresolved-marked-dependent",
 	"grammar-de-coll-unresolved-elliptic-kenntnis",
 	"grammar-de-coll-unresolved-present-member-unmarked",
+	"grammar-de-coll-governed-bescheid-ueber",
 ] as const;

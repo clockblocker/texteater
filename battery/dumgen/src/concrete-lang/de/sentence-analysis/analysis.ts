@@ -11,7 +11,9 @@
  * of the Lexeme Targets into Phraseme Targets, whose members are words, never
  * Segments, with one Kind Mass and a fixedness score. Slots link each
  * governed preposition to the Lexeme or Phraseme Target that selects it (ADR
- * 0030, ADR 0034).
+ * 0030, ADR 0034), and the governor takes the preposition in: a Lexeme
+ * Target as a `GovernedPreposition` member, a Phraseme Target as a governed
+ * preposition that does not count toward its fixedness.
  * Nothing resolved is stored; the Resolution Selector below is the one pure
  * function that applies the policy.
  */
@@ -76,8 +78,15 @@ export type LexemeTarget = {
 
 export type PhrasemeTarget = {
 	readonly id: string;
-	/** Lexeme Target ids, ordered by first offset. */
+	/** The fixed words: Lexeme Target ids, ordered by first offset. */
 	readonly members: readonly string[];
+	/**
+	 * The Lexeme Targets of the prepositions the expression governs and no one
+	 * of its words governs alone (`über` in `weiß Bescheid über`, ADR 0034).
+	 * They belong to the Phraseme's span but are not fixed words, so they
+	 * never count toward its fixedness.
+	 */
+	readonly governedPrepositions: readonly string[];
 	/** Mass per Phraseme Kind plus `None` and `Unresolved`. */
 	readonly kindMass: Readonly<Record<string, number>>;
 	/** Mean fixedness Score of the member words, 0 (free) to 3 (fixed expression). */
@@ -291,7 +300,9 @@ export type SelectedPhrasemeKind = {
 
 /**
  * A Collocation is a Funktionsverbgefüge (ADR 0028): a support verb with its
- * predicate noun. Grammar refuses any other wording on the Collocation route.
+ * predicate noun. Grammar refuses any other wording on the Collocation route,
+ * so a copula with its predicative adjective (`ist stolz`) is never one (ADR
+ * 0034).
  */
 function funktionsverbgefuege(
 	analysis: SentenceAnalysis,
@@ -331,7 +342,7 @@ export function selectPhrasemeKind(
 	return { kind: key, share };
 }
 
-/** The Lexeme Targets a Phraseme is made of, in member order. */
+/** The fixed words a Phraseme is made of, in member order. */
 export function membersOf(
 	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
@@ -342,24 +353,35 @@ export function membersOf(
 	});
 }
 
-/** The Phraseme's Segment span is derived: every member word's Segments. */
+/**
+ * The Phraseme's Segment span is derived: every member word's Segments and
+ * every governed preposition's.
+ */
 export function offsetsOf(
 	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
 ): number[] {
-	return membersOf(analysis, phraseme)
+	return analysis.targets
+		.filter(
+			(target) =>
+				phraseme.members.includes(target.id) ||
+				phraseme.governedPrepositions.includes(target.id),
+		)
 		.flatMap((target) => target.members.map((member) => member.offset))
 		.sort((a, b) => a - b);
 }
 
+/** The Phraseme containing the word at an offset, as a fixed word or a governed preposition. */
 export function phrasemeOf(
 	analysis: SentenceAnalysis,
 	offset: number,
 ): PhrasemeTarget | undefined {
 	const target = targetOf(analysis, offset);
 	if (!target) return undefined;
-	return analysis.phrasemes.find((phraseme) =>
-		phraseme.members.includes(target.id),
+	return analysis.phrasemes.find(
+		(phraseme) =>
+			phraseme.members.includes(target.id) ||
+			phraseme.governedPrepositions.includes(target.id),
 	);
 }
 

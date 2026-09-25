@@ -11,6 +11,10 @@ import {
 	parseGermanReading,
 	parseGermanSurface,
 } from "../../server/operationalParsing";
+import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../german-evidence-kinds";
 import { NOTE_STUDY_FIXTURES } from "./fixtures/index";
 import type {
 	NoteStudyFixture,
@@ -293,8 +297,11 @@ function occurrenceFor(
 		})),
 		realizationCoverage: "Full",
 		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
-		...(["VERB", "AUX", "Idiom", "Collocation"].includes(reading.lemma.kind)
-			? { expletiveEvidence: null, valencyEvidence: [] }
+		...(germanVerbalKinds.includes(reading.lemma.kind)
+			? { expletiveEvidence: null }
+			: {}),
+		...(germanGovernorKinds.includes(reading.lemma.kind)
+			? { valencyEvidence: [] }
 			: {}),
 		...(reading.lemma.kind === "ADP" ? { valencyEvidence: [] } : {}),
 		surface: citationSurface,

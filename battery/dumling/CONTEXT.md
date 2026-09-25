@@ -77,13 +77,15 @@ article is included. A shared article gives Partial coverage without becoming
 a second owned member; a fused article is an owned Fused member with Full
 coverage, and a component with no letters of its own leaves the unit Partial
 with evidence pointing at the Fusion. German verbal Attestations retain
-subject-expletive source orthography as evidence for an owned member, and
-record the valency slots the occurrence realizes as valency evidence, each
-naming by index the owned member that realizes it, such as the governed
-preposition. A governed preposition is an owned member but not a Fixed one,
-so the normalized Surface leaves it out: `wartet`, not `wartet auf`. A German
-ADP Attestation records the case its complement took as its realized case:
-`auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem Regen` Dat.
+subject-expletive source orthography as evidence for an owned member. Every
+German governor (verb, adjective, noun, Idiom, Collocation) records the
+valency slots the occurrence realizes as valency evidence, each naming by
+index the owned member that realizes it, such as the governed preposition. A
+governed preposition is an owned member but not a Fixed one, so the
+normalized Surface leaves it out: `wartet`, not `wartet auf`; `stolz`, not
+`stolz auf`. A German ADP Attestation records the case its complement took
+as its realized case: `auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem
+Regen` Dat.
 _Avoid_: Selection, click result, selected Surface
 
 **Fusion**:

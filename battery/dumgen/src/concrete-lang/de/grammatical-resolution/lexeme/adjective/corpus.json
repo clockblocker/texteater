@@ -21,7 +21,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Dictionary mention. Citation Surface. No inflection bag."
 	},
@@ -47,7 +48,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-demo-attributive-klein": {
@@ -77,7 +79,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Attributive ADJ. Context gives nominative masculine singular."
 	},
@@ -108,7 +111,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Productive adverbial ADJ, not lexical ADV. Degree Pos. No agreement."
 	},
@@ -139,7 +143,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-attributive-dat-neut-kalt": {
@@ -169,7 +174,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-attributive-gen-plur-neu": {
@@ -199,7 +205,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Ending syncretic. Context gives genitive plural; noun gives feminine identity."
 	},
@@ -230,7 +237,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-predicative-blau": {
@@ -260,7 +268,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-adverbial-leise": {
@@ -290,7 +299,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-attributive-dat-fem-lang": {
@@ -320,7 +330,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-attributive-acc-neut-gruen": {
@@ -350,7 +361,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-attributive-gen-masc-stark": {
@@ -380,7 +392,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-predicative-ruhig": {
@@ -410,7 +423,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-adverbial-deutlich": {
@@ -440,7 +454,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-demo-comparative-besser": {
@@ -470,7 +485,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Suppletive comparative. Surface besser. Positive Lemma gut."
 	},
@@ -501,7 +517,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-attributive-superlative-hoch": {
@@ -531,7 +548,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig": {
@@ -561,7 +579,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-predicative-comparative-nah": {
@@ -591,7 +610,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-irregular-superlative-beste": {
@@ -621,7 +641,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-adverbial-comparative-schnell": {
@@ -651,7 +672,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-demo-typo-freundlcih": {
@@ -681,7 +703,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Letters transposed. Mark Typo. Repair Surface and Lemma."
 	},
@@ -712,7 +735,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-accept-typo-wunderschoen": {
@@ -742,7 +766,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-participial-spannend": {
@@ -772,7 +797,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Lexicalized 'exciting' with comparison (spannender), so a participial ADJ (ADR 0033): Canonical Form spannend, not spannen."
 	},
@@ -803,7 +829,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Lexicalized 'crazy' comes from no sense of verrücken (ADR 0033). Predicative ADJ, not a state passive VERB."
 	},
@@ -834,7 +861,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Attributive color ADJ. Not color-name NOUN. Invariant form keeps agreement."
 	},
@@ -867,7 +895,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Old poetic adjective. Mark Surface Archaic."
 	},
@@ -898,7 +927,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Lexicalized 'brilliant' with comparison (glänzender), so a participial ADJ (ADR 0033): Canonical Form glänzend."
 	},
@@ -929,7 +959,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-demo-ordinal-erste": {
@@ -959,7 +990,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Ordinal ADJ. Keep agreement. Lemma NumType Ord."
 	},
@@ -990,7 +1022,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Route fixed ADJ, not NUM. Cardinal identity. Invariant Surface."
 	},
@@ -1021,7 +1054,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Overt English adjective in German context. Mark Foreign Yes."
 	},
@@ -1052,7 +1086,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Licensed abbreviation. Period outside member. Variant Surface."
 	},
@@ -1083,7 +1118,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-adj-dev-participial-geschlossen": {
@@ -1113,7 +1149,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An attributive participle is an ADJ (ADR 0035): Canonical Form geschlossen, the uninflected participle, not schließen."
 	},
@@ -1144,7 +1181,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An adverbial Partizip I is an ADJ (ADR 0035): Canonical Form lachend; adverbial use has only degree."
 	},
@@ -1175,7 +1213,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An attributive Partizip II is an ADJ (ADR 0035): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked."
 	},
@@ -1206,7 +1245,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An attributive participle with a von-agent is still an ADJ (ADR 0035): Canonical Form bewundert; Nom Sing Masc."
 	},
@@ -1237,7 +1277,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Locative gelegen 'situated' is an attributive ADJ (ADR 0035), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
 	},
@@ -1268,7 +1309,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An attributive participle of a separable verb is an ADJ (ADR 0035): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
 	},
@@ -1299,7 +1341,8 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "An attributive Partizip I is an ADJ (ADR 0035): Canonical Form spielend; Acc Plur with Kinder."
 	},
@@ -1330,8 +1373,177 @@
 					"variant": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): predicative geschlossen has only degree."
+	},
+	"grammar-de-adj-governed-stolz-auf": {
+		"input": {
+			"markedContext": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+			"members": ["stolz", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["stolz", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "stolz",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Someone"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "stolz governs auf in the same sense on its own, so the preposition is a governed member of the ADJ, never of the copula (ADR 0034). The Surface projects only the Fixed member: stolz."
+	},
+	"grammar-de-adj-governed-separated-auf-ihn": {
+		"input": {
+			"markedContext": "<TARGET>Auf</TARGET> ihn bin ich <TARGET>stolz</TARGET>.",
+			"members": ["Auf", "stolz"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["auf", "stolz"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "stolz",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": 0,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Someone"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "A fronted governed preposition stays a member of its adjective, as a separated verb particle does; sentence-initial Auf normalizes to auf."
+	},
+	"grammar-de-adj-governed-attributive-stolze": {
+		"input": {
+			"markedContext": "Der <TARGET>auf</TARGET> seinen Sohn <TARGET>stolze</TARGET> Vater lächelt.",
+			"members": ["auf", "stolze"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["auf", "stolze"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "stolz",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": 0,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Someone"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "An attributive adjective keeps its governed preposition across its complement; the Surface is stolze."
 	}
 }

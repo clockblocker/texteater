@@ -46,6 +46,11 @@ export function normalizeGrammarSurface(
 		route.kind === "NOUN" &&
 		articleForm &&
 		output.realizationCoverage === "Full";
+	const valencyMembers = new Set(
+		(output.valencyEvidence ?? []).flatMap((slot) =>
+			slot.member === null ? [] : [slot.member],
+		),
+	);
 	if (ownedArticle)
 		constructNormalizedSurface({
 			attestedMembers: input.members.slice(0, 1),
@@ -64,6 +69,9 @@ export function normalizeGrammarSurface(
 					normalizedMembers: ownedArticle
 						? output.normalizedMembers.slice(1)
 						: output.normalizedMembers,
+					valencyMembers: ownedArticle
+						? new Set([...valencyMembers].map((index) => index - 1))
+						: valencyMembers,
 					surfaceKind: output.surface.inflectionalFeatures
 						? "Inflection"
 						: "Citation",
@@ -72,11 +80,7 @@ export function normalizeGrammarSurface(
 					attestedMembers: input.members,
 					memberOrthographies: output.memberOrthographies,
 					normalizedMembers: output.normalizedMembers,
-					valencyMembers: new Set(
-						(output.valencyEvidence ?? []).flatMap((slot) =>
-							slot.member === null ? [] : [slot.member],
-						),
-					),
+					valencyMembers,
 				});
 	if (route.kind === "NOUN" && output.realizationCoverage === "Partial") {
 		if (!articleForm || !output.articleEvidence)
@@ -143,6 +147,7 @@ function constructNounNormalizedSurface(args: {
 	readonly input: GrammaticalResolutionInput;
 	readonly memberOrthographies: readonly DeMemberOrthography[];
 	readonly normalizedMembers: readonly string[];
+	readonly valencyMembers: ReadonlySet<number>;
 	readonly surfaceKind: "Citation" | "Inflection";
 }): string {
 	const { input, memberOrthographies, normalizedMembers, surfaceKind } = args;
@@ -167,6 +172,7 @@ function constructNounNormalizedSurface(args: {
 			attestedMembers: input.members,
 			memberOrthographies,
 			normalizedMembers,
+			valencyMembers: args.valencyMembers,
 		});
 	}
 	if (surfaceKind !== "Inflection") throw invalidNounSuspension();

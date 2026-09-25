@@ -3785,6 +3785,7 @@ export const grammarSchemas = {
 		normalizedMembers: z.array(z.string().min(1)).min(1),
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		valencyEvidence: R0.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Lexeme/ADP": z.strictObject({
 		lemma: R1.lemmaSchema.omit({
@@ -3908,6 +3909,7 @@ export const grammarSchemas = {
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		articleEvidence: R7.attestationSchema.shape.articleEvidence,
+		valencyEvidence: R7.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Lexeme/NUM": z.strictObject({
 		lemma: R8.lemmaSchema.omit({

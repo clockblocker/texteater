@@ -55,14 +55,27 @@ type Fixture = {
 	readonly produced: { readonly design: string; readonly at: string };
 };
 
-// The lab fixtures predate intake slots; they attest none.
+// The lab fixtures predate intake slots; they attest none, so no Phraseme
+// governs a preposition either.
 const fixtures: readonly Fixture[] = (
 	latticeFixtures as readonly (Omit<Fixture, "analysis"> & {
-		readonly analysis: Omit<SegmentedSentence, "slots">;
+		readonly analysis: Omit<SegmentedSentence, "slots" | "phrasemes"> & {
+			readonly phrasemes: readonly Omit<
+				SegmentedSentence["phrasemes"][number],
+				"governedPrepositions"
+			>[];
+		};
 	})[]
 ).map((fixture) => ({
 	...fixture,
-	analysis: { ...fixture.analysis, slots: [] },
+	analysis: {
+		...fixture.analysis,
+		phrasemes: fixture.analysis.phrasemes.map((phraseme) => ({
+			...phraseme,
+			governedPrepositions: [],
+		})),
+		slots: [],
+	},
 }));
 
 /**

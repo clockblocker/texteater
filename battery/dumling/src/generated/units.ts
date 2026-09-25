@@ -93,6 +93,35 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
 		};
 	};
 	"de/Lexeme/ADP": {
@@ -1006,6 +1035,35 @@ export interface UnitMap {
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null;
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
 		};
 	};
 	"de/Lexeme/NUM": {

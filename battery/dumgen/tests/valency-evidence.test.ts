@@ -8,15 +8,102 @@ import { validateEncounter } from "../src/universal/validation.js";
 
 // A governed preposition stays an Attestation member, named by index in the
 // valency evidence, while the normalized Surface projects only Fixed members
-// (ADR 0034).
+// (ADR 0034). Every governor Kind takes it in: verbs, adjectives, nouns and
+// Phrasemes.
 const examples = [
-	["grammar-de-verb-governed-preposition-wartet", "wartet", 1, "auf"],
-	["grammar-de-verb-separable-imperative-aufpassen", "pass auf", 1, "auf"],
-	["grammar-de-verb-passive-wurde-gebeten", "wurde gebeten", 1, "um"],
+	[
+		"lexeme/verb",
+		"VERB",
+		"grammar-de-verb-governed-preposition-wartet",
+		"wartet",
+		1,
+		"auf",
+		"Acc",
+	],
+	[
+		"lexeme/verb",
+		"VERB",
+		"grammar-de-verb-separable-imperative-aufpassen",
+		"pass auf",
+		1,
+		"auf",
+		"Acc",
+	],
+	[
+		"lexeme/verb",
+		"VERB",
+		"grammar-de-verb-passive-wurde-gebeten",
+		"wurde gebeten",
+		1,
+		"um",
+		"Acc",
+	],
+	[
+		"lexeme/adjective",
+		"ADJ",
+		"grammar-de-adj-governed-stolz-auf",
+		"stolz",
+		1,
+		"auf",
+		"Acc",
+	],
+	[
+		"lexeme/adjective",
+		"ADJ",
+		"grammar-de-adj-governed-separated-auf-ihn",
+		"stolz",
+		0,
+		"auf",
+		"Acc",
+	],
+	[
+		"lexeme/adjective",
+		"ADJ",
+		"grammar-de-adj-governed-attributive-stolze",
+		"stolze",
+		0,
+		"auf",
+		"Acc",
+	],
+	[
+		"lexeme/noun",
+		"NOUN",
+		"grammar-de-noun-governed-angst-vor",
+		"Angst",
+		1,
+		"vor",
+		"Dat",
+	],
+	[
+		"lexeme/noun",
+		"NOUN",
+		"grammar-de-noun-governed-article-angst-vor",
+		"die Angst",
+		2,
+		"vor",
+		"Dat",
+	],
+	[
+		"phraseme/collocation",
+		"Collocation",
+		"grammar-de-coll-governed-bescheid-ueber",
+		"weiß Bescheid",
+		2,
+		"über",
+		"Acc",
+	],
 ] as const;
-for (const [id, surface, member, preposition] of examples)
+for (const [
+	route,
+	kind,
+	id,
+	surface,
+	member,
+	preposition,
+	governedCase,
+] of examples)
 	test(`${id}: the governed preposition is evidence, not Surface`, async () => {
-		const golden = getExperiment("grammatical-resolution/de/lexeme/verb")
+		const golden = getExperiment(`grammatical-resolution/de/${route}`)
 			.source.goldenCorpus?.cases[id];
 		if (!golden) throw Error(`Missing ${id}`);
 		const input = golden.input as {
@@ -37,8 +124,8 @@ for (const [id, surface, member, preposition] of examples)
 				...validateEncounter({
 					sentence: { id, language: "de", segments },
 					target: {
-						family: "Lexeme",
-						kind: "VERB",
+						family: kind === "Collocation" ? "Phraseme" : "Lexeme",
+						kind,
 						memberSegmentIndices: segments.flatMap(
 							(segment, index) =>
 								segment.kind === "ResolvableText"
@@ -60,10 +147,10 @@ for (const [id, surface, member, preposition] of examples)
 				complement: {
 					kind: "Preposition",
 					preposition: governablePrepositionLemma(preposition),
-					case: "Acc",
+					case: governedCase,
 					referent: expect.any(String),
 				},
-				realizedCase: "Acc",
+				realizedCase: governedCase,
 			},
 		]);
 	});

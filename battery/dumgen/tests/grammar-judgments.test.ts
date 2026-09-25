@@ -700,24 +700,33 @@ test("a stored noun Lemma under its own plural text stays the Canonical Form", a
 
 test("every reviewed noun inflected away from its headword is marked", () => {
 	for (const example of Object.values(nounCases)) {
-		const { lemma, surface, memberOrthographies } = example.idealOutput as {
-			lemma?: {
-				canonicalForm: string;
-				coreFeatures: { gender: unknown };
+		const { lemma, surface, memberOrthographies, valencyEvidence } =
+			example.idealOutput as {
+				lemma?: {
+					canonicalForm: string;
+					coreFeatures: { gender: unknown };
+				};
+				surface?: {
+					spelling: string;
+					inflectionalFeatures: Record<string, unknown> | null;
+				};
+				memberOrthographies?: string[];
+				valencyEvidence?: { member: number | null }[];
 			};
-			surface?: {
-				spelling: string;
-				inflectionalFeatures: Record<string, unknown> | null;
-			};
-			memberOrthographies?: string[];
-		};
 		const features = surface?.inflectionalFeatures;
 		if (!lemma || !features) continue;
-		const member = example.input.members.at(-1) ?? "";
+		// The noun is the last member that realizes no governed preposition.
+		const governed = new Set(
+			(valencyEvidence ?? []).map((slot) => slot.member),
+		);
+		const position = example.input.members.findLastIndex(
+			(_, index) => !governed.has(index),
+		);
+		const member = example.input.members[position] ?? "";
 		// Typos, variants and suspended compounds differ by more than inflection.
 		const inflectedOnly =
 			surface?.spelling === "Canonical" &&
-			memberOrthographies?.at(-1) === "Standard" &&
+			memberOrthographies?.[position] === "Standard" &&
 			!/[-‐‑]$/u.test(member);
 		if (inflectedOnly && member !== lemma.canonicalForm)
 			expect(

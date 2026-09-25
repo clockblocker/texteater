@@ -48,8 +48,11 @@ _Avoid_: word, token group
 **Phraseme Target**:
 the Lexeme Targets that are fixed lexical members of one expression,
 produced at intake: its member words, one Kind Mass over Phraseme Kinds with
-`None`, and its fixedness. It never lists a Segment; its span is its
-members' Segments. A word belongs to at most one Phraseme Target.
+`None`, and its fixedness. It also lists the prepositions the expression
+governs when no one of its words governs them alone (`über` in `weiß
+Bescheid über`); they are in its span but are not fixed, so they never count
+toward its fixedness. It never lists a Segment; its span is its members'
+Segments. A word belongs to at most one Phraseme Target.
 _Avoid_: expression, nested target, idiom group
 
 **Kind Mass**:
@@ -69,7 +72,9 @@ _Avoid_: confidence, idiomaticity
 one Segment inside a Lexeme Target with its Member Role: Head,
 SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
 Auxiliary, or Unresolved. Roles say what a member is inside its target; they
-do not move membership.
+do not move membership. A GovernedPreposition member belongs to a verb, an
+adjective or a noun, wherever it stands (`stolz` with `auf` in `Auf ihn bin
+ich stolz`).
 _Avoid_: role mass, Free member
 
 **Realized Slot**:
@@ -78,7 +83,11 @@ Target that lexically selects the preposition. Its marker is the Segment
 realizing the preposition (a preposition or a fused word's adposition); a
 pronominal adverb realizes the preposition and its filler at once, so it
 stays its own unit and is the slot's filler instead. The complement names
-the preposition's Lemma, its case and its referent. Intake records only
+the preposition's Lemma, its case and its referent. The governor takes the
+marker in, and the governor is the smallest unit the government survives
+with in the same sense: `Angst vor` belongs to `Angst`, also inside `Angst
+haben`, while `Bescheid wissen über` belongs to the Phraseme, since
+`Bescheid` alone is an official notice. Intake records only
 preposition slots; bare-case slots come from the Knowledge call's frame.
 Each preposition and case gives the governor's Valency Frame an Optional
 Preposition Slot if the frame lacks it. The rest of the frame comes from the

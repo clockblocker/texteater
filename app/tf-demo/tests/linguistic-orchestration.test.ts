@@ -73,6 +73,7 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 	},
 	realizationCoverage: "Full",
 	articleEvidence: null,
+	valencyEvidence: [],
 	members: [{ attested: "Banken", orthography: "Standard" }],
 };
 const grammar = parseResolvedGrammar({ encounter, attestation });
@@ -97,6 +98,7 @@ const grammarOutput = {
 	},
 	realizationCoverage: "Full",
 	articleEvidence: null,
+	valencyEvidence: [],
 };
 function setup(
 	outputs: unknown[],
@@ -578,6 +580,7 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 			},
 			realizationCoverage: "Full",
 			articleEvidence: null,
+			valencyEvidence: [],
 		},
 	]);
 	expect(
@@ -1102,6 +1105,7 @@ function verfuegungAnalysis(options: {
 					{
 						id: "p1",
 						members: ["stellt", "zu", "verfuegung"],
+						governedPrepositions: [],
 						kindMass: { Collocation: 0.8, None: 0.2 },
 						fixedness: 2.5,
 						provenance: "vote",
@@ -1131,6 +1135,8 @@ function setupWithAnalysis(
 		readonly inspection?: ReturnType<typeof createInspectionCapture>;
 		/** Stored Segments; the unsplit words by default. */
 		readonly segments?: readonly StoredSegment[];
+		/** The stored sentence's text; the `verfuegung` sentence by default. */
+		readonly stitchedText?: string;
 	},
 ) {
 	const encounters: Encounter<"de">[] = [];
@@ -1147,7 +1153,7 @@ function setupWithAnalysis(
 						textId: "text-1",
 						segmentedSentenceId: "sentence-1",
 						language: "de",
-						stitchedText: verfuegungText,
+						stitchedText: hooks.stitchedText ?? verfuegungText,
 						segments: hooks.segments ?? verfuegungSegments,
 					},
 				};
@@ -1473,6 +1479,125 @@ const splitVerfuegungSegments: StoredSegment[] = [
 		.slice(9)
 		.map((segment) => ({ ...segment, index: segment.index + 1 })),
 ];
+
+/**
+ * A stored sentence of plain words and its analysis, from `[text, kind,
+ * role?, target id]` words: consecutive words with one id form one Lexeme
+ * Target.
+ */
+function governedSentence(
+	words: readonly (readonly [string, string, MemberRole, string])[],
+	phrasemes: SentenceAnalysis["phrasemes"] = [],
+) {
+	const texts = words.flatMap(([text], position) =>
+		position === words.length - 1 ? [text, "."] : [text, " "],
+	);
+	const segments: StoredSegment[] = texts.map((text, index) => ({
+		index,
+		kind:
+			text === " "
+				? "Whitespace"
+				: text === "."
+					? "Punctuation"
+					: "ResolvableText",
+		text,
+	}));
+	const offsets = texts.map(
+		(_, index) => texts.slice(0, index).join("").length,
+	);
+	const targets = new Map<string, LexemeTarget>();
+	for (const [position, [, kind, role, id]] of words.entries()) {
+		const offset = offsets[position * 2] ?? 0;
+		const target = targets.get(id);
+		targets.set(id, {
+			id,
+			members: [...(target?.members ?? []), { offset, role }],
+			routeMass: { [kind]: 0.9, Unresolved: 0.1 },
+			identity: null,
+			provenance: "vote",
+		});
+	}
+	const analysis: SentenceAnalysis = {
+		sentenceId: "sentence-1",
+		language: "de",
+		stitchedText: texts.join(""),
+		segments: texts.map((text, index) => ({
+			offset: offsets[index] ?? 0,
+			kind: segments[index]?.kind ?? "ResolvableText",
+			text,
+			surface: text,
+		})),
+		targets: [...targets.values()],
+		phrasemes,
+		fusions: [],
+		slots: [],
+	};
+	return { segments, analysis, stitchedText: analysis.stitchedText };
+}
+
+test("a click on a governed preposition opens its governor: the adjective beside a copula, or the Collocation that governs it", async () => {
+	// Er ist stolz auf seinen Sohn: auf is stolz's member, ist stays alone.
+	const stolz = governedSentence([
+		["Er", "PRON", "Head", "er"],
+		["ist", "VERB", "Head", "ist"],
+		["stolz", "ADJ", "Head", "stolz"],
+		["auf", "ADJ", "GovernedPreposition", "stolz"],
+		["seinen", "DET", "Head", "seinen"],
+		["Sohn", "NOUN", "Head", "sohn"],
+	]);
+	for (const [clicked, target] of [
+		[6, { family: "Lexeme", kind: "ADJ", memberSegmentIndices: [4, 6] }],
+		[2, { family: "Lexeme", kind: "VERB", memberSegmentIndices: [2] }],
+	] as const) {
+		const run = setupWithAnalysis([], stolz);
+		await Effect.runPromise(
+			run.orchestrator.resolveSegment({
+				...selection,
+				clickedSegmentIndex: clicked,
+			}),
+		);
+		expect(run.encounters[0]?.target).toEqual(target);
+		expect(run.requests).toHaveLength(0);
+	}
+	// Er weiß Bescheid über die Pläne: über is the Collocation's governed
+	// preposition, not a fixed word, and still opens the Collocation.
+	const bescheid = governedSentence(
+		[
+			["Er", "PRON", "Head", "er"],
+			["weiß", "VERB", "Head", "weiss"],
+			["Bescheid", "NOUN", "Head", "bescheid"],
+			["über", "ADP", "Head", "ueber"],
+			["die", "NOUN", "Article", "plaene"],
+			["Pläne", "NOUN", "Head", "plaene"],
+		],
+		[
+			{
+				id: "p1",
+				members: ["weiss", "bescheid"],
+				governedPrepositions: ["ueber"],
+				kindMass: { Collocation: 0.8, None: 0.2 },
+				fixedness: 2,
+				provenance: "vote",
+			},
+		],
+	);
+	const run = setupWithAnalysis([], bescheid);
+	await Effect.runPromise(
+		run.orchestrator.resolveSegment({
+			...selection,
+			clickedSegmentIndex: 6,
+		}),
+	);
+	expect(run.encounters.map((encounter) => encounter.target)).toEqual([
+		{
+			family: "Phraseme",
+			kind: "Collocation",
+			memberSegmentIndices: [2, 4, 6],
+		},
+		{ family: "Lexeme", kind: "ADP", memberSegmentIndices: [6] },
+	]);
+	expect(run.requests).toHaveLength(0);
+});
 
 test("a click on the `zu` of a split `zur` reads its ADP from the analysis and resolves `zu der`", async () => {
 	const run = setupWithAnalysis([], {

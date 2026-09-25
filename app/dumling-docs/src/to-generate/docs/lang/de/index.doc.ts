@@ -79,6 +79,7 @@ const seenAttestation = {
 \tmembers: [{ attested: "Seen", orthography: "Standard" }],
 \trealizationCoverage: "Full",
 \tarticleEvidence: null,
+\tvalencyEvidence: [],
 \tsurface: seenSurface,
 } satisfies Dumling.Attestation<"de">;
 

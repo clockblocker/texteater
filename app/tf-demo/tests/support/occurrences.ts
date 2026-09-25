@@ -101,6 +101,7 @@ export function bankOccurrenceCommit(
 				],
 				realizationCoverage: "Full" as const,
 				articleEvidence: null,
+				valencyEvidence: [],
 				surface: bankenSurface,
 			},
 			surfaceKey: makeSurfaceId("de", bankenSurface),
@@ -162,6 +163,7 @@ export function dieBankenOccurrenceCommit(
 					attested: "die",
 					orthography: "Standard" as const,
 				},
+				valencyEvidence: [],
 				members: [
 					{ attested: "die", orthography: "Standard" as const },
 					{ attested: "Banken", orthography: "Standard" as const },

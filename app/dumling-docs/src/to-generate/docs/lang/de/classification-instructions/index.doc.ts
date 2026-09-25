@@ -95,7 +95,7 @@ The classifier should keep the payload split cleanly:
 
 This split matters in German because many tempting distinctions belong in different places.
 
-\`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it in \`valencyEvidence\`, and its normalized Surface leaves it out.
+\`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German \`Attestation\` of its governor, a verb, adjective, noun or Phraseme, records it in \`valencyEvidence\`, and its normalized Surface leaves it out (\`wartet\`, \`stolz\`).
 
 An adposition's case is not a Lemma fact either. Dumling's ADP Case Table lists the cases each German adposition allows (\`für\` Acc, two-way \`auf\` Acc or Dat, \`wegen\` Gen preferred with colloquial Dat). A free \`ADP\` \`Attestation\` records the case its complement took in \`valencyEvidence\`: \`auf dem Geschenk\` is Dat, \`auf das Geschenk\` is Acc, and \`wegen dem Regen\` is Dat.
 

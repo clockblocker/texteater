@@ -244,6 +244,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			readingId,
 			realizationCoverage: "Full",
 			articleEvidence: null,
+			valencyEvidence: [],
 		},
 	]);
 	const attestationId = attestations[0]?._id;

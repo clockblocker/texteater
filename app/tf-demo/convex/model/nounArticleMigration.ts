@@ -1,6 +1,10 @@
 import { makeSurfaceId } from "dumdict/planning";
 import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../server/operationalParsing";
+import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../../shared/german-evidence-kinds";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { materializeGrammaticalComponent } from "../dumdictTransaction";
@@ -53,22 +57,20 @@ export async function migrateCompositionAttestation(
 		);
 	const lemma = await ctx.db.get(surface.lemmaId);
 	const verbal =
-		lemma?.language === "de" &&
-		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind);
+		lemma?.language === "de" && germanVerbalKinds.includes(lemma.kind);
+	const governor =
+		lemma?.language === "de" && germanGovernorKinds.includes(lemma.kind);
 	if (
 		surface.redirectedTo ||
-		(verbal &&
-			(row.expletiveEvidence === undefined ||
-				row.valencyEvidence === undefined))
+		(verbal && row.expletiveEvidence === undefined) ||
+		(governor && row.valencyEvidence === undefined)
 	)
 		await ctx.db.patch(row._id, {
 			surfaceId: surface.redirectedTo ?? row.surfaceId,
 			...(verbal
-				? {
-						expletiveEvidence: row.expletiveEvidence ?? null,
-						valencyEvidence: row.valencyEvidence ?? [],
-					}
+				? { expletiveEvidence: row.expletiveEvidence ?? null }
 				: {}),
+			...(governor ? { valencyEvidence: row.valencyEvidence ?? [] } : {}),
 		});
 }
 
