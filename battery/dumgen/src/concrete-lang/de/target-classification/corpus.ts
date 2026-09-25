@@ -4,7 +4,7 @@ import {
 	compactTargetInputSchema as inputSchema,
 	targetOutputSchema as outputSchema,
 } from "../model-schemas.js";
-import { productionDemonstrationGuidance } from "./guidance.js";
+import { demonstrationCaseNotes } from "./demonstration-notes.js";
 import type { GermanHighLevelTargetClassificationTarget } from "./projection.js";
 import { createGermanHighLevelTargetClassificationProjection } from "./projection.js";
 import data from "./source-data.json";
@@ -25,7 +25,7 @@ const cases = Object.fromEntries(
 			{
 				...golden,
 				explanation:
-					productionDemonstrationGuidance[id] ??
+					demonstrationCaseNotes[id] ??
 					("explanation" in golden ? golden.explanation : undefined),
 				input: projection.modelInput,
 				idealOutput: projection.materialize(
