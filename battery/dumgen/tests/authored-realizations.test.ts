@@ -224,20 +224,18 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 			lookup === "Hit" ? 0 : 1,
 		);
 	};
-	const welcher = authoredMembers.find(
+	const article = authoredMembers.find(
 		(value) =>
 			value.lemma.kind === "DET" &&
-			value.lemma.canonicalForm === "welchen" &&
-			(value.lemma.coreFeatures as Record<string, unknown>).pronType ===
-				"Int" &&
+			value.lemma.canonicalForm === "den" &&
 			(value.lemma.coreFeatures as Record<string, unknown>).case ===
 				"Acc",
 	);
-	if (!welcher) throw Error("Missing fixture welchen");
+	if (!article) throw Error("Missing fixture den");
 	for (const [spelled, expected] of [
 		["Er", member("er", "PRON")],
 		["Wer", member("wer", "PRON")],
-		["Welchen", welcher],
+		["Den", article],
 	] as const) {
 		await identify(spelled, expected, true, "Hit");
 		await identify(spelled, expected, false, "Judged");

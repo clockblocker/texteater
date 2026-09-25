@@ -31,6 +31,7 @@ const possessive: Partial<Core> = {
 	person: "1",
 	referenceNumber: "Sing",
 };
+type Cell = Pick<Core, "case" | "number" | "gender">;
 const lookup = (spelled: string, features: Partial<Core>) =>
 	locateAuthoredIdentity({
 		kind: "PRON",
@@ -38,55 +39,78 @@ const lookup = (spelled: string, features: Partial<Core>) =>
 		core: core(features),
 		inflection: null,
 	});
+/** A stem pronoun's cell is Surface inflection (system ADR 0032). */
+const surfaceBag = (cell: Partial<Cell>) => ({
+	case: null,
+	gender: null,
+	number: null,
+	reflex: null,
+	...cell,
+});
+const lookupStem = (
+	spelled: string,
+	features: Partial<Core>,
+	cell: Partial<Cell>,
+) =>
+	locateAuthoredIdentity({
+		kind: "PRON",
+		spelled,
+		core: core(features),
+		inflection: surfaceBag(cell),
+	});
 
 // Independently stated grammatical expectations, including syncretism and defective cells.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/index.xml?lang=de
+// A pillar names its cell in Core features; a stem (dieser, keiner, meiner)
+// names it in `cell` and cites one Lemma for every form.
 const examples: readonly {
 	text: string;
 	canonical: string;
 	context: string;
 	features: Partial<Core>;
+	cell?: Partial<Cell>;
+	/** A licensed alternate spelling of the cell, not inflection alone. */
+	variant?: boolean;
 }[] = [
 	{
 		text: "diesem",
-		canonical: "diesem",
+		canonical: "dieser",
 		context: "Von den beiden Entwürfen vertraue ich diesem.",
 		features: {
 			pronType: "Dem",
-			case: "Dat",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Dat", number: "Sing", gender: "Masc" },
 	},
 	{
 		text: "denselben",
-		canonical: "denselben",
+		canonical: "derselbe",
 		context:
 			"Die Leute von gestern? Mit denselben habe ich heute gesprochen.",
-		features: { pronType: "Dem", case: "Dat", number: "Plur" },
+		features: { pronType: "Dem" },
+		cell: { case: "Dat", number: "Plur" },
 	},
 	{
 		text: "denjenigen",
-		canonical: "denjenigen",
+		canonical: "derjenige",
 		context: "Denjenigen, die warten, gebe ich Bescheid.",
-		features: { pronType: "Dem", case: "Dat", number: "Plur" },
+		features: { pronType: "Dem" },
+		cell: { case: "Dat", number: "Plur" },
 	},
 	{
 		text: "welchen",
-		canonical: "welchen",
+		canonical: "welcher",
 		context: "Zwei Männer warten. Welchen kennst du?",
 		features: {
 			pronType: "Int",
-			case: "Acc",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Acc", number: "Sing", gender: "Masc" },
 	},
 	{
 		text: "welchen",
-		canonical: "welchen",
+		canonical: "welcher",
 		context: "Die Männer, welchen ich half, gingen.",
-		features: { pronType: "Rel", case: "Dat", number: "Plur" },
+		features: { pronType: "Rel" },
+		cell: { case: "Dat", number: "Plur" },
 	},
 	{
 		text: "wer",
@@ -144,43 +168,44 @@ const examples: readonly {
 	},
 	{
 		text: "manche",
-		canonical: "manche",
+		canonical: "mancher",
 		context: "Manche kamen zu spät.",
-		features: { pronType: "Ind", case: "Nom", number: "Plur" },
+		features: { pronType: "Ind" },
+		cell: { case: "Nom", number: "Plur" },
 	},
 	{
 		text: "mehreren",
-		canonical: "mehreren",
+		canonical: "mehrere",
 		context: "Ich helfe mehreren.",
-		features: { pronType: "Ind", case: "Dat", number: "Plur" },
+		features: { pronType: "Ind" },
+		cell: { case: "Dat", number: "Plur" },
 	},
 	{
 		text: "einigen",
-		canonical: "einigen",
+		canonical: "einige",
 		context: "Ich helfe einigen.",
-		features: { pronType: "Ind", case: "Dat", number: "Plur" },
+		features: { pronType: "Ind" },
+		cell: { case: "Dat", number: "Plur" },
 	},
 	{
 		text: "keins",
-		canonical: "keines",
+		canonical: "keiner",
 		context: "Von diesen Büchern kenne ich keins.",
 		features: {
 			pronType: "Neg",
-			case: "Acc",
-			number: "Sing",
-			gender: "Neut",
 		},
+		cell: { case: "Acc", number: "Sing", gender: "Neut" },
+		variant: true,
 	},
 	{
 		text: "irgendeins",
-		canonical: "irgendeines",
+		canonical: "irgendeiner",
 		context: "Von diesen Büchern brauche ich irgendeins.",
 		features: {
 			pronType: "Ind",
-			case: "Acc",
-			number: "Sing",
-			gender: "Neut",
 		},
+		cell: { case: "Acc", number: "Sing", gender: "Neut" },
+		variant: true,
 	},
 	{
 		text: "jemands",
@@ -220,25 +245,22 @@ const examples: readonly {
 	},
 	{
 		text: "beidem",
-		canonical: "beidem",
+		canonical: "beide",
 		context: "Mit beidem bin ich zufrieden.",
 		features: {
 			pronType: "Tot",
-			case: "Dat",
-			number: "Sing",
-			gender: "Neut",
 		},
+		cell: { case: "Dat", number: "Sing", gender: "Neut" },
 	},
 	{
 		text: "meins",
-		canonical: "meines",
+		canonical: "meiner",
 		context: "Dieses Buch ist meins.",
 		features: {
 			...possessive,
-			case: "Nom",
-			number: "Sing",
-			gender: "Neut",
 		},
+		cell: { case: "Nom", number: "Sing", gender: "Neut" },
+		variant: true,
 	},
 	{
 		text: "meine",
@@ -246,10 +268,8 @@ const examples: readonly {
 		context: "Dein Wagen und der meine stehen draußen.",
 		features: {
 			...possessive,
-			case: "Nom",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Nom", number: "Sing", gender: "Masc" },
 	},
 	{
 		text: "meinige",
@@ -257,26 +277,23 @@ const examples: readonly {
 		context: "Dein Wagen und der meinige stehen draußen.",
 		features: {
 			...possessive,
-			case: "Nom",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Nom", number: "Sing", gender: "Masc" },
 	},
 	{
 		text: "unsrem",
-		canonical: "unserem",
+		canonical: "unserer",
 		context: "Du fährst mit deinem Wagen, ich mit unsrem.",
 		features: {
 			...possessive,
 			referenceNumber: "Plur",
-			case: "Dat",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Dat", number: "Sing", gender: "Masc" },
+		variant: true,
 	},
 	{
 		text: "euerem",
-		canonical: "eurem",
+		canonical: "eurer",
 		context: "Wir fahren mit unserem Wagen, ihr mit euerem.",
 		features: {
 			pronType: "Prs",
@@ -284,14 +301,13 @@ const examples: readonly {
 			person: "2",
 			polite: "Infm",
 			referenceNumber: "Plur",
-			case: "Dat",
-			number: "Sing",
-			gender: "Masc",
 		},
+		cell: { case: "Dat", number: "Sing", gender: "Masc" },
+		variant: true,
 	},
 	{
 		text: "Ihres",
-		canonical: "Ihres",
+		canonical: "Ihrer",
 		context: "Frau Meier, dieses Buch ist Ihres.",
 		features: {
 			pronType: "Prs",
@@ -299,22 +315,23 @@ const examples: readonly {
 			person: "2",
 			polite: "Form",
 			referenceNumber: null,
-			case: "Nom",
-			number: "Sing",
-			gender: "Neut",
 		},
+		cell: { case: "Nom", number: "Sing", gender: "Neut" },
 	},
 	{
 		text: "was für welche",
-		canonical: "was für welche",
+		canonical: "was für einer",
 		context: "Du suchst Bücher. Was für welche brauchst du?",
-		features: { pronType: "Int", case: "Acc", number: "Plur" },
+		features: { pronType: "Int" },
+		cell: { case: "Acc", number: "Plur" },
 	},
 ];
 
 for (const example of examples) {
 	test(`${example.context} — reviewed ${example.canonical}`, async () => {
-		const located = lookup(example.text, example.features);
+		const located = example.cell
+			? lookupStem(example.text, example.features, example.cell)
+			: lookup(example.text, example.features);
 		expect(located.status).toBe("Hit");
 		expect(located.matches).toHaveLength(1);
 		const member = located.matches[0];
@@ -338,11 +355,14 @@ for (const example of examples) {
 			},
 			surface: {
 				spelling:
-					example.text === example.canonical
-						? ("Canonical" as const)
-						: ("Variant" as const),
+					example.variant ||
+					(!example.cell && example.text !== example.canonical)
+						? ("Variant" as const)
+						: ("Canonical" as const),
 				surfaceFeatures: null,
-				inflectionalFeatures: null,
+				inflectionalFeatures: example.cell
+					? surfaceBag(example.cell)
+					: null,
 			},
 			normalizedMembers,
 			memberOrthographies: normalizedMembers.map(() => "Standard"),
@@ -389,6 +409,11 @@ for (const example of examples) {
 			),
 		);
 		expect(result.surface.lemma).toEqual(member.lemma);
+		expect(
+			"inflectionalFeatures" in result.surface
+				? result.surface.inflectionalFeatures
+				: undefined,
+		).toEqual(expected.surface.inflectionalFeatures);
 		expect(result.surface.spelling).toBe(expected.surface.spelling);
 		expect(
 			traces
@@ -403,6 +428,18 @@ for (const example of examples) {
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jeder3.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
 test("unlicensed cells and shortened genitives are absent", () => {
+	for (const [text, features, cell] of [
+		["welches", { pronType: "Rel" }, { case: "Gen", gender: "Neut" }],
+		["mehrere", { pronType: "Ind" }, { case: "Nom", gender: "Fem" }],
+		["mehrere", { pronType: "Tot" }, { case: "Nom", number: "Plur" }],
+		["jedes", { pronType: "Tot" }, { case: "Gen", gender: "Masc" }],
+		["beides", { pronType: "Tot" }, { case: "Gen", gender: "Neut" }],
+		["meins", possessive, { case: "Gen", gender: "Neut" }],
+	] satisfies [string, Partial<Core>, Partial<Cell>][])
+		expect(
+			lookupStem(text, features, { number: "Sing", ...cell }).matches,
+			text,
+		).toEqual([]);
 	for (const [text, features] of [
 		["der", { pronType: "Rel", case: "Gen", number: "Plur" }],
 		[
@@ -413,72 +450,53 @@ test("unlicensed cells and shortened genitives are absent", () => {
 			"derer",
 			{ pronType: "Rel", case: "Gen", number: "Plur", extPos: "DET" },
 		],
-		[
-			"welches",
-			{ pronType: "Rel", case: "Gen", number: "Sing", gender: "Neut" },
-		],
 		["was", { pronType: "Int", case: "Dat" }],
 		["man", { pronType: "Ind", case: "Dat", number: "Sing" }],
 		[
-			"mehrere",
-			{ pronType: "Ind", case: "Nom", number: "Sing", gender: "Fem" },
-		],
-		["mehrere", { pronType: "Tot", case: "Nom", number: "Plur" }],
-		[
-			"jedes",
-			{ pronType: "Tot", case: "Gen", number: "Sing", gender: "Masc" },
-		],
-		[
-			"beides",
-			{ pronType: "Tot", case: "Gen", number: "Sing", gender: "Neut" },
-		],
-		[
 			"eins",
 			{ pronType: "Ind", case: "Gen", number: "Sing", gender: "Neut" },
-		],
-		[
-			"meins",
-			{ ...possessive, case: "Gen", number: "Sing", gender: "Neut" },
 		],
 	] satisfies [string, Partial<Core>][])
 		expect(lookup(text, features).matches, text).toEqual([]);
 });
 
 test("same-spelling forms preserve case, possessor gender and article function", () => {
-	const first = lookup("seiner", {
-		pronType: "Prs",
-		poss: "Yes",
-		person: "3",
-		referenceNumber: "Sing",
-		"gender[psor]": "Masc",
-		gender: "Masc",
-		number: "Sing",
-		case: "Nom",
-	});
-	const second = lookup("seiner", {
-		pronType: "Prs",
-		poss: "Yes",
-		person: "3",
-		referenceNumber: "Sing",
-		"gender[psor]": "Neut",
-		gender: "Masc",
-		number: "Sing",
-		case: "Nom",
-	});
+	const nominative = { gender: "Masc", number: "Sing", case: "Nom" } as const;
+	const first = lookupStem(
+		"seiner",
+		{
+			pronType: "Prs",
+			poss: "Yes",
+			person: "3",
+			referenceNumber: "Sing",
+			"gender[psor]": "Masc",
+		},
+		nominative,
+	);
+	const second = lookupStem(
+		"seiner",
+		{
+			pronType: "Prs",
+			poss: "Yes",
+			person: "3",
+			referenceNumber: "Sing",
+			"gender[psor]": "Neut",
+		},
+		nominative,
+	);
 	expect(first.matches).toHaveLength(1);
 	expect(second.matches).toHaveLength(1);
 	expect(first.matches[0]?.lemma).not.toEqual(second.matches[0]?.lemma);
 	for (const grammaticalCase of ["Nom", "Acc"] as const)
 		expect(
-			lookup("meins", {
-				...possessive,
+			lookupStem("meins", possessive, {
 				case: grammaticalCase,
 				gender: "Neut",
 				number: "Sing",
 			}).matches,
 		).toHaveLength(1);
 	expect(
-		lookup("meins", { ...possessive, gender: "Neut", number: "Sing" })
+		lookupStem("meins", possessive, { gender: "Neut", number: "Sing" })
 			.matches,
 	).toHaveLength(0);
 	const relative = lookup("deren", {
@@ -504,25 +522,34 @@ test("same-spelling forms preserve case, possessor gender and article function",
 	);
 });
 
-test("DET reductions and plural was für realize their own Paradigm Cells", () => {
-	for (const [canonical, spelled] of [
-		["unsere", "unsre"],
-		["unserem", "unserm"],
-		["eure", "euere"],
-		["eurem", "euerm"],
-		["was für", "was für"],
-	]) {
+test("DET reductions and plural was für are Surfaces of their stem Lemma", () => {
+	for (const [canonical, spelled, cell] of [
+		["unser", "unsre", { case: "Nom", number: "Sing", gender: "Fem" }],
+		["unser", "unserm", { case: "Dat", number: "Sing", gender: "Masc" }],
+		["euer", "euere", { case: "Nom", number: "Sing", gender: "Fem" }],
+		["euer", "euerm", { case: "Dat", number: "Sing", gender: "Masc" }],
+		[
+			"was für ein",
+			"was für",
+			{ case: "Nom", number: "Plur", gender: null },
+		],
+	] as const) {
 		const member = authoredMembers.find(
 			({ lemma }) =>
 				lemma.kind === "DET" && lemma.canonicalForm === canonical,
 		);
-		if (!member || !spelled) throw Error("Missing determiner fixture");
+		if (!member) throw Error("Missing determiner fixture");
 		expect(
 			locateAuthoredIdentity({
 				kind: "DET",
 				spelled,
 				core: member.lemma.coreFeatures,
-				inflection: null,
+				inflection: {
+					degree: null,
+					"gender[psor]": null,
+					"number[psor]": null,
+					...cell,
+				},
 			}).matches,
 		).toEqual([member]);
 	}

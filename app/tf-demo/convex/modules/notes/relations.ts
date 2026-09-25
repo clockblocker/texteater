@@ -517,7 +517,11 @@ export async function loadGrammaticalAlternatives(
 		}),
 	);
 }
-/** The Paradigm Cells a learner can step to from a reviewed pronoun or determiner. */
+/**
+ * The Paradigm Cells a learner can step to from a reviewed pillar pronoun or
+ * article. A stem Lemma (dieser, mein) has none: all its forms are Surfaces
+ * of this one Reading, so navigation never leaves it.
+ */
 export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
 	if (lemma.family !== "Lexeme") return [];
 	try {

@@ -20,6 +20,7 @@ export function outputType(
 							"dumling.feature-bag.marked",
 							"dumling.de-pronoun.core",
 							"dumling.de-determiner.core",
+							"dumling.de-closed-class.surface",
 							"dumling.de-noun.surface",
 							"dumling.de-noun.attestation",
 							"dumling.de-verbal.attestation",

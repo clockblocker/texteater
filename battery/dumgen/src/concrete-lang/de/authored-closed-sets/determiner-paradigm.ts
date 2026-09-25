@@ -1,29 +1,17 @@
 import type * as Dumling from "dumling/types";
-import { type AuthoredMember, defineAuthoredMember } from "./member.js";
+import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 import {
-	cellCoordinates,
-	type PronounForm,
-	type PronounTable,
-} from "./pronoun-paradigm.js";
+	type AuthoredSpelling,
+	citationForm,
+	type ReviewedMember,
+	type StemDescription,
+	stemMember,
+	tableSpellings,
+} from "./stem-lemma.js";
 
 type Core = Dumling.Lemma<"de", "Lexeme", "DET">["coreFeatures"];
-type Cell = Pick<Core, "case" | "gender" | "number">;
-export type DeterminerDescription = {
-	readonly core: Partial<Core>;
-	readonly emoji: string;
-	readonly definition: string;
-	readonly en: readonly string[];
-	readonly ru: readonly string[];
-	/** Plural cells translate differently where the target language does: these, эти. */
-	readonly plural?: {
-		readonly en: readonly string[];
-		readonly ru: readonly string[];
-	};
-};
-export type ReviewedDeterminer = {
-	readonly member: AuthoredMember;
-	readonly variants: readonly string[];
-};
+export type DeterminerDescription = StemDescription<Core>;
+export type ReviewedDeterminer = ReviewedMember;
 
 const emptyCore: Core = {
 	case: null,
@@ -39,79 +27,29 @@ const emptyCore: Core = {
 	pronType: null,
 };
 
-/** One Paradigm Cell of an attributive determiner is one Lemma (system ADR 0032). */
-export function determinerMember(
-	form: PronounForm,
-	description: DeterminerDescription,
-	cell: Partial<Cell> = {},
-): ReviewedDeterminer {
-	const coreFeatures: Core = { ...emptyCore, ...description.core, ...cell };
-	const lemma: Dumling.Lemma<"de", "Lexeme", "DET"> = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "DET",
-		canonicalForm: form.text,
-		coreFeatures,
-	};
-	const coordinates = cellCoordinates(coreFeatures);
-	const translations =
-		coreFeatures.number === "Plur" && description.plural
-			? description.plural
-			: description;
-	return {
-		member: defineAuthoredMember({
-			lemma,
-			reading: {
-				unitKind: "Reading",
-				lemma,
-				emojiDescription: description.emoji,
-			},
-			knowledge: {
-				definition: `${description.definition}${coordinates ? ` Form: ${coordinates}.` : ""}`,
-				transcription: form.ipa,
-				translations: {
-					en: [...translations.en],
-					ru: [...translations.ru],
-				},
-			},
-			coverage: {
-				definition: "Authored",
-				transcription: "Authored",
-				translations: { en: "Authored", ru: "Authored" },
-				semanticRelationTargetKind: "lemma",
-				// Other cells of the paradigm are grammatical alternatives, not synonyms.
-				semanticRelations: {
-					synonym: "ReviewedEmpty",
-					nearSynonym: "ReviewedEmpty",
-					antonym: "ReviewedEmpty",
-					nearAntonym: "ReviewedEmpty",
-				},
-			},
-		}),
-		variants: form.variants ?? [],
-	};
-}
-
-/** Each occupied cell becomes a Lemma; null cells do not exist in this paradigm. */
-export function determinerParadigm(
+/**
+ * A stem determiner (dieser, mein, kein, viel) is one Lemma whose Surfaces
+ * mark the cell (system ADR 0032). It cites its Nom.Masc.Sg or, lacking one,
+ * its Nom.Plur cell unless a citation is given; uninflected spellings (viel
+ * Geld, all die Jahre) realize it without a cell.
+ */
+export function determinerStem(
 	table: PronounTable,
 	description: DeterminerDescription,
-): ReviewedDeterminer[] {
-	const result: ReviewedDeterminer[] = [];
-	for (const column of ["Masc", "Neut", "Fem", "Plur"] as const)
-		for (const [index, grammaticalCase] of (
-			["Nom", "Acc", "Dat", "Gen"] as const
-		).entries()) {
-			const form = table[column][index];
-			if (form)
-				result.push(
-					determinerMember(form, description, {
-						case: grammaticalCase,
-						gender: column === "Plur" ? null : column,
-						number: column === "Plur" ? "Plur" : "Sing",
-					}),
-				);
-		}
-	return result;
+	options: {
+		readonly citation?: PronounForm;
+		readonly uninflected?: readonly string[];
+	} = {},
+): ReviewedDeterminer {
+	const spellings: AuthoredSpelling[] = [
+		...tableSpellings(table),
+		...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+	];
+	return stemMember({
+		kind: "DET",
+		coreFeatures: { ...emptyCore, ...description.core },
+		citation: options.citation ?? citationForm(table),
+		description,
+		spellings,
+	});
 }

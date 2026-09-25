@@ -15,11 +15,23 @@ import type { IdentityCandidate } from "./analysis.js";
 const key = (text: string) => text.normalize("NFC").toLowerCase();
 
 const bySpelling = new Map<string, AuthoredMember[]>();
+/** The cells a stem Lemma's spelling marks on its Surface, per member and spelling. */
+const stemCells = new Map<
+	AuthoredMember,
+	Map<string, Record<string, unknown>[]>
+>();
 for (const realization of authoredRealizations) {
 	const spelled = key(realization.spelled);
 	const members = bySpelling.get(spelled) ?? [];
 	if (!members.includes(realization.member)) members.push(realization.member);
 	bySpelling.set(spelled, members);
+	if (!realization.inflection) continue;
+	const spellings = stemCells.get(realization.member) ?? new Map();
+	spellings.set(spelled, [
+		...(spellings.get(spelled) ?? []),
+		realization.inflection,
+	]);
+	stemCells.set(realization.member, spellings);
 }
 
 const core = (member: AuthoredMember) =>
@@ -46,6 +58,20 @@ export function candidatesFor(text: string): AuthoredMember[] {
 			`${b.lemma.kind} ${b.lemma.canonicalForm} ${JSON.stringify(b.lemma.coreFeatures)} ${b.knowledge.definition}`,
 		),
 	);
+}
+
+/**
+ * The cells an occurrence may mark: a pillar's own Core cell, or every cell a
+ * stem Lemma's Surface marks with this spelling (diesem: dative masculine or
+ * neuter singular).
+ */
+function cellsOf(member: AuthoredMember, text: string) {
+	const stem = surfacesOf(text).flatMap(
+		(surface) => stemCells.get(member)?.get(key(surface)) ?? [],
+	);
+	return stem.length
+		? stem.map((cell) => ({ ...core(member), ...cell }))
+		: [core(member)];
 }
 
 /** Members that share Kind, headword and pronType: the cell stays a grammar question. */
@@ -78,6 +104,7 @@ export function surfaceRealizing(
 
 export function candidateOf(
 	group: readonly AuthoredMember[],
+	text: string,
 ): IdentityCandidate {
 	const first = group[0];
 	if (!first) throw Error("A headword group has at least one member");
@@ -87,13 +114,16 @@ export function candidateOf(
 		kind: first.lemma.kind as IdentityCandidate["kind"],
 		headword: first.lemma.canonicalForm,
 		pronType: typeof pronType === "string" ? pronType : null,
-		cells: group.map((member) =>
-			Object.entries(member.lemma.coreFeatures)
-				.filter(
-					([name, value]) => value !== null && name !== "pronType",
-				)
-				.map(([name, value]) => `${name}=${String(value)}`)
-				.join(" "),
+		cells: group.flatMap((member) =>
+			cellsOf(member, text).map((features) =>
+				Object.entries(features)
+					.filter(
+						([name, value]) =>
+							value !== null && name !== "pronType",
+					)
+					.map(([name, value]) => `${name}=${String(value)}`)
+					.join(" "),
+			),
 		),
 		definition: first.knowledge.definition ?? "",
 	};
@@ -125,8 +155,7 @@ const genderNames: Record<string, string> = {
 };
 
 /** The cell in the syntactic terms the sentence shows. */
-function describeCell(member: AuthoredMember): string {
-	const features = core(member);
+function describeCell(features: Record<string, unknown>): string {
 	const parts: string[] = [];
 	if (typeof features.case === "string")
 		parts.push(caseUse[features.case] ?? features.case);
@@ -173,7 +202,7 @@ function describeCell(member: AuthoredMember): string {
 	return parts.length ? parts.join("; ") : "invariant, no cell to decide";
 }
 
-export function rubricOf(member: AuthoredMember) {
+export function rubricOf(member: AuthoredMember, text: string) {
 	const pronType = core(member).pronType;
 	return {
 		kind: member.lemma.kind,
@@ -181,7 +210,7 @@ export function rubricOf(member: AuthoredMember) {
 		...(typeof pronType === "string"
 			? { type: pronTypeNames[pronType] ?? pronType }
 			: {}),
-		cell: describeCell(member),
+		cell: cellsOf(member, text).map(describeCell).join(" | "),
 		meaning: member.knowledge.definition,
 	};
 }

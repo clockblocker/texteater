@@ -1,6 +1,7 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
@@ -9,6 +10,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
 	isGermanNounAttestation,
 	isGermanNounSurface,
@@ -55,6 +57,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-determiner.core": check(
 		isGermanDeterminerCore,
 		germanDeterminerCoreError,
+	),
+	"dumling.de-closed-class.surface": check(
+		isGermanClosedClassSurface,
+		germanClosedClassSurfaceError,
 	),
 	"dumling.feature-bag.marked": check(
 		hasMarkedFeature,

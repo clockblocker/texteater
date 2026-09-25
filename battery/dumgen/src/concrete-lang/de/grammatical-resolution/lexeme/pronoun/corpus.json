@@ -730,13 +730,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "deiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -744,7 +749,7 @@
 					"polite": "Infm",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Sing"
 				}
 			},
@@ -762,13 +767,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "seiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": "Masc",
 					"extPos": null,
 					"foreign": null,
@@ -776,7 +786,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Sing"
 				}
 			},
@@ -794,13 +804,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "seines",
+				"canonicalForm": "seiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": "Neut",
 					"extPos": null,
 					"foreign": null,
@@ -808,7 +823,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": "Sing"
 				}
 			},
@@ -826,13 +841,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "ihrer",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": "Fem",
 					"extPos": null,
 					"foreign": null,
@@ -840,7 +860,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Sing"
 				}
 			},
@@ -858,13 +878,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "ihre",
+				"canonicalForm": "ihrer",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -890,13 +915,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "unserer",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -904,7 +934,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Plur"
 				}
 			},
@@ -922,13 +952,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "eurer",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -936,7 +971,7 @@
 					"polite": "Infm",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Plur"
 				}
 			},
@@ -954,13 +989,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "Ihrer",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -968,7 +1008,7 @@
 					"polite": "Form",
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -1382,13 +1422,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1396,13 +1441,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keiner Lemma with Nom Case in Core."
+		"explanation": "The occurrence keiner is the Nom Sing Masc Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-sing-fem": {
 		"input": {
@@ -1415,13 +1460,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keine",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1429,13 +1479,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keine Lemma with Nom Case in Core."
+		"explanation": "The occurrence keine is the Nom Sing Fem Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-sing-neut": {
 		"input": {
@@ -1448,13 +1498,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keines",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1462,13 +1517,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keines Lemma with Nom Case in Core."
+		"explanation": "The occurrence keines is the Nom Sing Neut Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-masc": {
 		"input": {
@@ -1481,13 +1536,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keinen",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1495,13 +1555,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keinen Lemma with Acc Case in Core."
+		"explanation": "The occurrence keinen is the Acc Sing Masc Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-fem": {
 		"input": {
@@ -1514,13 +1574,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keine",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1528,13 +1593,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keine Lemma with Acc Case in Core."
+		"explanation": "The occurrence keine is the Acc Sing Fem Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-sing-neut": {
 		"input": {
@@ -1547,13 +1612,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keines",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1561,13 +1631,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keines Lemma with Acc Case in Core."
+		"explanation": "The occurrence keines is the Acc Sing Neut Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-masc": {
 		"input": {
@@ -1580,13 +1650,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keinem",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1594,13 +1669,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keinem Lemma with Dat Case in Core."
+		"explanation": "The occurrence keinem is the Dat Sing Masc Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-fem": {
 		"input": {
@@ -1613,13 +1688,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1627,13 +1707,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keiner Lemma with Dat Case in Core."
+		"explanation": "The occurrence keiner is the Dat Sing Fem Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-sing-neut": {
 		"input": {
@@ -1646,13 +1726,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keinem",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1660,13 +1745,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keinem Lemma with Dat Case in Core."
+		"explanation": "The occurrence keinem is the Dat Sing Neut Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-masc": {
 		"input": {
@@ -1679,13 +1764,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keines",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1693,13 +1783,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keines Lemma with Gen Case in Core."
+		"explanation": "The occurrence keines is the Gen Sing Masc Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-fem": {
 		"input": {
@@ -1712,13 +1802,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1726,13 +1821,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keiner Lemma with Gen Case in Core."
+		"explanation": "The occurrence keiner is the Gen Sing Fem Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-sing-neut": {
 		"input": {
@@ -1745,13 +1840,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keines",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1759,13 +1859,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Neg",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keines Lemma with Gen Case in Core."
+		"explanation": "The occurrence keines is the Gen Sing Neut Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-nom-plur": {
 		"input": {
@@ -1778,13 +1878,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keine",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1798,7 +1903,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keine Lemma with Nom Case in Core."
+		"explanation": "The occurrence keine is the Nom Plur Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-acc-plur": {
 		"input": {
@@ -1811,13 +1916,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keine",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1831,7 +1941,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keine Lemma with Acc Case in Core."
+		"explanation": "The occurrence keine is the Acc Plur Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-dat-plur": {
 		"input": {
@@ -1844,13 +1954,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "keinen",
+				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1864,7 +1979,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keinen Lemma with Dat Case in Core."
+		"explanation": "The occurrence keinen is the Dat Plur Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-keiner-gen-plur": {
 		"input": {
@@ -1877,13 +1992,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "keiner",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1897,7 +2017,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the keiner Lemma with Gen Case in Core."
+		"explanation": "The occurrence keiner is the Gen Plur Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-masc": {
 		"input": {
@@ -1910,13 +2030,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1924,13 +2049,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the mancher Lemma with Nom Case in Core."
+		"explanation": "The occurrence mancher is the Nom Sing Masc Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-fem": {
 		"input": {
@@ -1943,13 +2068,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manche",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1957,13 +2087,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manche Lemma with Nom Case in Core."
+		"explanation": "The occurrence manche is the Nom Sing Fem Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-sing-neut": {
 		"input": {
@@ -1976,13 +2106,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manches",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -1990,13 +2125,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manches Lemma with Nom Case in Core."
+		"explanation": "The occurrence manches is the Nom Sing Neut Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-masc": {
 		"input": {
@@ -2009,13 +2144,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manchen",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2023,13 +2163,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manchen Lemma with Acc Case in Core."
+		"explanation": "The occurrence manchen is the Acc Sing Masc Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-fem": {
 		"input": {
@@ -2042,13 +2182,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manche",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2056,13 +2201,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manche Lemma with Acc Case in Core."
+		"explanation": "The occurrence manche is the Acc Sing Fem Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-sing-neut": {
 		"input": {
@@ -2075,13 +2220,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manches",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2089,13 +2239,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manches Lemma with Acc Case in Core."
+		"explanation": "The occurrence manches is the Acc Sing Neut Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-masc": {
 		"input": {
@@ -2108,13 +2258,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manchem",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2122,13 +2277,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manchem Lemma with Dat Case in Core."
+		"explanation": "The occurrence manchem is the Dat Sing Masc Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-fem": {
 		"input": {
@@ -2141,13 +2296,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2155,13 +2315,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the mancher Lemma with Dat Case in Core."
+		"explanation": "The occurrence mancher is the Dat Sing Fem Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-sing-neut": {
 		"input": {
@@ -2174,13 +2334,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manchem",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2188,13 +2353,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manchem Lemma with Dat Case in Core."
+		"explanation": "The occurrence manchem is the Dat Sing Neut Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-masc": {
 		"input": {
@@ -2207,13 +2372,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manches",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2221,13 +2391,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manches Lemma with Gen Case in Core."
+		"explanation": "The occurrence manches is the Gen Sing Masc Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-fem": {
 		"input": {
@@ -2240,13 +2410,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2254,13 +2429,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the mancher Lemma with Gen Case in Core."
+		"explanation": "The occurrence mancher is the Gen Sing Fem Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-sing-neut": {
 		"input": {
@@ -2273,13 +2448,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manches",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2287,13 +2467,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Ind",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manches Lemma with Gen Case in Core."
+		"explanation": "The occurrence manches is the Gen Sing Neut Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-nom-plur": {
 		"input": {
@@ -2306,13 +2486,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manche",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2326,7 +2511,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manche Lemma with Nom Case in Core."
+		"explanation": "The occurrence manche is the Nom Plur Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-acc-plur": {
 		"input": {
@@ -2339,13 +2524,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manche",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2359,7 +2549,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manche Lemma with Acc Case in Core."
+		"explanation": "The occurrence manche is the Acc Plur Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-dat-plur": {
 		"input": {
@@ -2372,13 +2562,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "manchen",
+				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2392,7 +2587,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the manchen Lemma with Dat Case in Core."
+		"explanation": "The occurrence manchen is the Dat Plur Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mancher-gen-plur": {
 		"input": {
@@ -2405,13 +2600,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mancher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2425,7 +2625,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the mancher Lemma with Gen Case in Core."
+		"explanation": "The occurrence mancher is the Gen Plur Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jedermann-nom": {
 		"input": {
@@ -2570,13 +2770,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "alles",
+				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2584,13 +2789,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence alles is the Nom Sing Neut Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-alles-acc": {
 		"input": {
@@ -2603,13 +2808,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "alles",
+				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2617,13 +2827,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence alles is the Acc Sing Neut Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-allem-dat": {
 		"input": {
@@ -2636,13 +2846,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "allem",
+				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2650,13 +2865,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence allem is the Dat Sing Neut Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-alle-nom": {
 		"input": {
@@ -2669,13 +2884,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2689,7 +2909,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence alle is the Nom Plur Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-alle-acc": {
 		"input": {
@@ -2702,13 +2922,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2722,7 +2947,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence alle is the Acc Plur Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-allen-dat": {
 		"input": {
@@ -2735,13 +2960,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "allen",
+				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2755,7 +2985,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence allen is the Dat Plur Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-aller-gen": {
 		"input": {
@@ -2768,13 +2998,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "aller",
+				"canonicalForm": "alle",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2788,7 +3023,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The promoted total-pronoun population keeps singular alles and plural alle as separate Lemmas while case remains Surface evidence."
+		"explanation": "The occurrence aller is the Gen Plur Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-mehrere-nom": {
 		"input": {
@@ -2801,13 +3036,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mehrere",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2834,13 +3074,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "mehrere",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2867,13 +3112,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "mehreren",
+				"canonicalForm": "mehrere",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2900,13 +3150,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "mehrerer",
+				"canonicalForm": "mehrere",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2933,13 +3188,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2947,13 +3207,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jeder Lemma with Nom Case in Core."
+		"explanation": "The occurrence jeder is the Nom Sing Masc Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-nom-fem": {
 		"input": {
@@ -2966,13 +3226,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jede",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -2980,13 +3245,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jede Lemma with Nom Case in Core."
+		"explanation": "The occurrence jede is the Nom Sing Fem Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-nom-neut": {
 		"input": {
@@ -2999,13 +3264,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedes",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3013,13 +3283,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jedes Lemma with Nom Case in Core."
+		"explanation": "The occurrence jedes is the Nom Sing Neut Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-masc": {
 		"input": {
@@ -3032,13 +3302,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jeden",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3046,13 +3321,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jeden Lemma with Acc Case in Core."
+		"explanation": "The occurrence jeden is the Acc Sing Masc Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-fem": {
 		"input": {
@@ -3065,13 +3340,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jede",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3079,13 +3359,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jede Lemma with Acc Case in Core."
+		"explanation": "The occurrence jede is the Acc Sing Fem Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-acc-neut": {
 		"input": {
@@ -3098,13 +3378,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedes",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3112,13 +3397,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jedes Lemma with Acc Case in Core."
+		"explanation": "The occurrence jedes is the Acc Sing Neut Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-masc": {
 		"input": {
@@ -3131,13 +3416,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedem",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3145,13 +3435,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jedem Lemma with Dat Case in Core."
+		"explanation": "The occurrence jedem is the Dat Sing Masc Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-fem": {
 		"input": {
@@ -3164,13 +3454,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3178,13 +3473,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jeder Lemma with Dat Case in Core."
+		"explanation": "The occurrence jeder is the Dat Sing Fem Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-dat-neut": {
 		"input": {
@@ -3197,13 +3492,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedem",
+				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3211,13 +3511,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jedem Lemma with Dat Case in Core."
+		"explanation": "The occurrence jedem is the Dat Sing Neut Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-gen-masc": {
 		"input": {
@@ -3240,13 +3540,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeder",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3254,13 +3559,13 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The occurrence realizes the jeder Lemma with Gen Case in Core."
+		"explanation": "The occurrence jeder is the Gen Sing Fem Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 	},
 	"grammar-de-pron-fixed-jeder-gen-neut": {
 		"input": {
@@ -3283,13 +3588,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3297,7 +3607,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3316,13 +3626,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwede",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3330,7 +3645,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3349,13 +3664,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwedes",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3363,7 +3683,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3382,13 +3702,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedweden",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3396,7 +3721,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3415,13 +3740,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwede",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3429,7 +3759,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3448,13 +3778,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwedes",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3462,7 +3797,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3481,13 +3816,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwedem",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3495,7 +3835,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3514,13 +3854,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3528,7 +3873,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3547,13 +3892,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jedwedem",
+				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3561,7 +3911,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3590,13 +3940,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jedweder",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3604,7 +3959,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3633,13 +3988,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3647,7 +4007,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3666,13 +4026,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliche",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3680,7 +4045,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3699,13 +4064,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliches",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3713,7 +4083,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3732,13 +4102,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jeglichen",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3746,7 +4121,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3765,13 +4140,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliche",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3779,7 +4159,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3798,13 +4178,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliches",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3812,7 +4197,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3831,13 +4216,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jeglichem",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3845,7 +4235,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3864,13 +4254,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3878,7 +4273,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3897,13 +4292,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": "Neut",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jeglichem",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3911,7 +4311,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Neut",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3940,13 +4340,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": "Fem",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -3954,7 +4359,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Tot",
-					"gender": "Fem",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -3983,13 +4388,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliche",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -4016,13 +4426,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jegliche",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Acc",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -4049,13 +4464,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
-				"canonicalForm": "jeglichen",
+				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Dat",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -4082,13 +4502,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Gen",
+					"gender": null,
+					"number": "Plur",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jeglicher",
 				"coreFeatures": {
-					"case": "Gen",
-					"number": "Plur",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -5527,6 +5952,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5562,6 +5990,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5628,6 +6059,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5662,6 +6096,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5729,6 +6166,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -5764,6 +6204,9 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
+					"case": null,
+					"gender": null,
+					"number": null,
 					"reflex": "Yes"
 				}
 			},
@@ -6024,13 +6467,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "jener",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -6038,7 +6486,7 @@
 					"polite": null,
 					"poss": null,
 					"pronType": "Dem",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": null
 				}
 			},
@@ -6067,13 +6515,18 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": null
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"gender": "Masc",
+					"number": "Sing",
+					"reflex": null
+				}
 			},
 			"lemma": {
 				"canonicalForm": "meiner",
 				"coreFeatures": {
-					"case": "Nom",
-					"number": "Sing",
+					"case": null,
+					"number": null,
 					"gender[psor]": null,
 					"extPos": null,
 					"foreign": null,
@@ -6081,7 +6534,7 @@
 					"polite": null,
 					"poss": "Yes",
 					"pronType": "Prs",
-					"gender": "Masc",
+					"gender": null,
 					"referenceNumber": "Sing"
 				}
 			},

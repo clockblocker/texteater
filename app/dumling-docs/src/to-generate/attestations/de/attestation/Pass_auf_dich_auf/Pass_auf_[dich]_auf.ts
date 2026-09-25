@@ -15,6 +15,9 @@ const occurrenceAttestation = {
 		normalizedSurface: "dich",
 		spelling: "Canonical",
 		inflectionalFeatures: {
+			case: null,
+			gender: null,
+			number: null,
 			reflex: "Yes",
 		},
 		lemma: {

@@ -34,19 +34,41 @@ function noun(surface: Surface): GrundformRule {
 		};
 	return { features: { ...features, number: ["Sing"] } };
 }
-// German PRON and DET Case, Gender and Number distinguish the Lemma itself.
-// Valid realizations need no separate inflectional citation-form requirement.
-const germanParadigmCell: GrundformRule = { features: {} };
+/**
+ * A pillar PRON or DET is one Paradigm Cell: Core case, number or gender
+ * name the Lemma, so its spelling alone decides. A stem Lemma cites its
+ * Nom.Masc.Sg Surface, or its Nom.Plur Surface when it is cited in the plural
+ * (einige, beide); no German declension spells those two cells alike, so the
+ * Canonical Form check already tells them apart. A Surface without a bag is
+ * an uninflected realization (viel Geld, derlei) and its spelling decides.
+ */
+function germanClosedClass(surface: Surface): GrundformRule {
+	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
+	if (
+		["case", "number", "gender"].some(
+			(coordinate) => (core[coordinate] ?? null) !== null,
+		) ||
+		inflectionalFeatures(surface) === null
+	)
+		return { features: {} };
+	return {
+		features: {
+			case: ["Nom"],
+			number: ["Sing", "Plur"],
+			gender: ["Masc", null],
+		},
+	};
+}
 
 export const germanRules = {
 	"de/Lexeme/ADJ": adjective,
 	"de/Lexeme/ADV": { features: { degree: ["Pos"] } },
 	"de/Lexeme/AUX": infinitive,
-	"de/Lexeme/DET": germanParadigmCell,
+	"de/Lexeme/DET": germanClosedClass,
 	"de/Lexeme/NOUN": noun,
 	"de/Lexeme/NUM": lexicalConvention,
 	"de/Lexeme/X": lexicalConvention,
-	"de/Lexeme/PRON": germanParadigmCell,
+	"de/Lexeme/PRON": germanClosedClass,
 	"de/Lexeme/PROPN": noun,
 	"de/Lexeme/SYM": lexicalConvention,
 	"de/Lexeme/VERB": infinitive,

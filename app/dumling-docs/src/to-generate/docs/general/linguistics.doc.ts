@@ -97,7 +97,7 @@ Features are split by where they belong:
 - \`spelling\` describes the Surface
 - \`surfaceFeatures\` describe marked properties of the resolved surface itself, such as \`historicalStatus: "Archaic"\`
 
-Each language narrows the abstract feature inventory, and each language, family and kind decides which features are core. For example, German nouns support grammatical gender as a core feature and case/number as inflectional features, while German pronouns and determiners make case, number and gender core, one Lemma per paradigm cell. English nouns support number inflection but not grammatical case in the same way. Hebrew supports language-specific features such as \`hebBinyan\` for verbs.
+Each language narrows the abstract feature inventory, and each language, family and kind decides which features are core. For example, German nouns support grammatical gender as a core feature and case/number as inflectional features, while the German pillar pronouns and articles make case, number and gender core, one Lemma per paradigm cell, and German stem-and-ending words such as \`dieser\` keep them on the Surface. English nouns support number inflection but not grammatical case in the same way. Hebrew supports language-specific features such as \`hebBinyan\` for verbs.
 `,
 });
 

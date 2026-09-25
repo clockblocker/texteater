@@ -5,6 +5,7 @@ import {
 	type PronounTable,
 	pronounMember,
 	pronounParadigm,
+	pronounStem,
 	type ReviewedPronoun,
 	strongPronoun,
 } from "./pronoun-paradigm.js";
@@ -19,8 +20,19 @@ const description = (
 	ru: string[],
 ): PronounDescription => ({ core: { pronType }, emoji, definition, en, ru });
 const reviewed: ReviewedPronoun[] = [];
-const add = (table: PronounTable, meaning: PronounDescription) =>
-	reviewed.push(...pronounParadigm(table, meaning));
+// Pillars (personal, der-series, wer/was, jemand, einer) are one Lemma per
+// cell and are pushed explicitly below. Every add() is a stem with borrowed
+// article endings: one Lemma whose Surfaces mark the cell (system ADR 0032).
+const add = (
+	table: PronounTable,
+	meaning: PronounDescription,
+	options?: Parameters<typeof pronounStem>[2],
+) => reviewed.push(pronounStem(table, meaning, options));
+const plural = (table: PronounTable) => {
+	const cited = table.Plur[0];
+	if (!cited) throw Error("A plural citation needs a Nom.Plur cell");
+	return { citation: cited };
+};
 
 // LEO 1.5.1.5: the same demonstrative can accompany or replace a noun.
 // These are the standalone PRON identities; DET has its own existing members.
@@ -302,23 +314,20 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 	const t = strongPronoun(stem, ipa),
 		bare = (cell: (typeof t.Neut)[number]) =>
 			form(cell.text, cell.ipa, stem);
+	const table: PronounTable = {
+		Masc: absent,
+		Fem: absent,
+		Neut: [bare(t.Neut[0]), bare(t.Neut[1]), bare(t.Neut[2]), t.Masc[1]],
+		Plur: t.Plur,
+	};
 	add(
-		{
-			Masc: absent,
-			Fem: absent,
-			Neut: [
-				bare(t.Neut[0]),
-				bare(t.Neut[1]),
-				bare(t.Neut[2]),
-				t.Masc[1],
-			],
-			Plur: t.Plur,
-		},
+		table,
 		description("Ind", emoji, definition, [en], [ru]),
+		plural(table),
 	);
 }
 // meist stands alone only after the definite article (das meiste, die meisten),
-// so its standalone cells carry weak endings.
+// so its standalone cells carry weak endings. It is cited as die meisten.
 add(
 	{
 		Masc: absent,
@@ -343,17 +352,19 @@ add(
 		["most; the majority"],
 		["большинство; большая часть"],
 	),
+	{ citation: form("meisten", "ˈmaɪ̯stən") },
 );
 // sämtlich is total; standalone as neuter mass singular or plural.
 {
 	const t = strongPronoun("sämtlich", "ˈzɛmtlɪç");
+	const table: PronounTable = {
+		Masc: absent,
+		Fem: absent,
+		Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
+		Plur: t.Plur,
+	};
 	add(
-		{
-			Masc: absent,
-			Fem: absent,
-			Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
-			Plur: t.Plur,
-		},
+		table,
 		description(
 			"Tot",
 			"💯",
@@ -361,6 +372,7 @@ add(
 			["all; the whole of"],
 			["всё; все"],
 		),
+		plural(table),
 	);
 }
 
@@ -401,12 +413,13 @@ for (const [stem, ipa, en, ru] of [
 	["etwelch", "ˈɛtvɛlç", "some", "некоторые"],
 ] as const) {
 	const t = strongPronoun(stem, ipa);
+	const table: PronounTable = {
+		...t,
+		Masc: [t.Masc[0], t.Masc[1], t.Masc[2], t.Masc[1]],
+		Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
+	};
 	add(
-		{
-			...t,
-			Masc: [t.Masc[0], t.Masc[1], t.Masc[2], t.Masc[1]],
-			Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
-		},
+		table,
 		description(
 			"Ind",
 			"🔢",
@@ -414,10 +427,13 @@ for (const [stem, ipa, en, ru] of [
 			[en],
 			[ru],
 		),
+		plural(table),
 	);
 }
 
 // Singular keiner/einer vs plural keine; eins/keins only in Nom/Acc Neut.
+// einer is the pronominal use of the ein article table and, like it, a pillar
+// with one Lemma per cell; irgendeiner and keiner are stems.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-einer3.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-irgendein3.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
@@ -449,20 +465,20 @@ for (const [stem, ipa, pronType, definition, en, ru] of [
 ] as const) {
 	const t = strongPronoun(stem, ipa),
 		short = form(`${stem}es`, `${ipa}əs`, `${stem}s`);
-	add(
-		{
-			...t,
-			Neut: [short, short, t.Neut[2], t.Neut[3]],
-			Plur: stem === "kein" ? t.Plur : absent,
-		},
-		description(
-			pronType,
-			stem === "kein" ? "🚫" : stem === "ein" ? "1️⃣" : "❔",
-			definition,
-			[en],
-			[ru],
-		),
+	const table: PronounTable = {
+		...t,
+		Neut: [short, short, t.Neut[2], t.Neut[3]],
+		Plur: stem === "kein" ? t.Plur : absent,
+	};
+	const meaning = description(
+		pronType,
+		stem === "kein" ? "🚫" : stem === "ein" ? "1️⃣" : "❔",
+		definition,
+		[en],
+		[ru],
 	);
+	if (stem === "ein") reviewed.push(...pronounParadigm(table, meaning));
+	else add(table, meaning);
 }
 // Irgendwelche supplies the plural of irgendeiner, and also singular mass reference.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/index.html?lang=de
@@ -479,16 +495,20 @@ add(
 
 // all is total; keep each marked case instead of unmarked alle/alles placeholders.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-all3.html?lang=de
-add(
-	strongPronoun("all", "ˈal"),
-	description(
-		"Tot",
-		"🌐",
-		"Bezeichnet die Gesamtheit einer Menge oder aller Mitglieder einer Gruppe.",
-		["all; everything; everyone"],
-		["все; всё"],
-	),
-);
+{
+	const table = strongPronoun("all", "ˈal");
+	add(
+		table,
+		description(
+			"Tot",
+			"🌐",
+			"Bezeichnet die Gesamtheit einer Menge oder aller Mitglieder einer Gruppe.",
+			["all; everything; everyone"],
+			["все; всё"],
+		),
+		plural(table),
+	);
+}
 // jeder is singular. Genitive jedes cannot stand alone, unlike eines jeden.
 // Plural jedwede/jegliche is rare but closed: a Closed Route member covers every
 // cell of its supported feature product (map 487, ticket 499).

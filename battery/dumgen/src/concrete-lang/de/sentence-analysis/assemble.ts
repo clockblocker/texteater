@@ -261,10 +261,11 @@ function identityMassOf(
 	answers: Answers,
 	index: number,
 ): IdentityMass | null {
-	const candidates = candidatesFor(sentence.segments[index]?.text ?? "");
+	const text = sentence.segments[index]?.text ?? "";
+	const candidates = candidatesFor(text);
 	if (!candidates.length) return null;
 	const groups = headwordGroups(candidates);
-	const keyed = groups.map(candidateOf);
+	const keyed = groups.map((group) => candidateOf(group, text));
 	const mass: Record<string, number> = {};
 	for (const candidate of keyed) mass[candidate.key] = 0;
 	mass.NoMatch = 0;

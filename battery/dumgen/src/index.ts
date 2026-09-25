@@ -1,6 +1,7 @@
 export {
 	authoredReading as selectAuthoredReading,
 	selectAuthoredArticle,
+	selectFormAlternatives,
 	selectGrammaticalAlternatives,
 } from "./concrete-lang/de/authored-closed-sets/select.js";
 export { deriveGrammaticalComponent } from "./concrete-lang/de/grammatical-resolution/components.js";

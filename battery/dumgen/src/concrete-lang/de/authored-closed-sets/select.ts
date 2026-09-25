@@ -1,6 +1,9 @@
 import type * as Dumling from "dumling/types";
 import { DumgenFailure } from "../../../universal/failure.js";
+import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { authoredMembers } from "./inventory.js";
+import { reviewedPronouns } from "./pronoun-paradigms.js";
+import type { SurfaceCell } from "./stem-lemma.js";
 
 export function sameValue(left: unknown, right: unknown): boolean {
 	if (left === right) return true;
@@ -55,25 +58,37 @@ type NavigableFeature =
 	| keyof Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"]
 	| keyof Dumling.Lemma<"de", "Lexeme", "DET">["coreFeatures"];
 
-/**
- * Other Paradigm Cells of a reviewed PRON or DET: members of the same Kind that
- * differ only in the varied Core Features. Preserves every other Core Feature,
- * compares null literally, and returns only reviewed alternatives.
- */
-export function selectGrammaticalAlternatives(input: {
-	readonly source: NavigableLemma;
-	readonly vary: readonly NavigableFeature[];
-}): readonly Dumling.Reading<"de">[] {
-	const source = authoredFor(input.source);
-	if (
-		!source ||
-		(input.source.kind !== "PRON" && input.source.kind !== "DET")
-	)
+/** Whether a PRON or DET Lemma is a pillar's Paradigm Cell: it marks its cell in Core. */
+export function isParadigmCell(lemma: Dumling.Lemma): boolean {
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+	return ["case", "number", "gender"].some(
+		(coordinate) => (core[coordinate] ?? null) !== null,
+	);
+}
+
+function reviewedSource(source: NavigableLemma) {
+	const member = authoredFor(source);
+	if (!member || (source.kind !== "PRON" && source.kind !== "DET"))
 		throw new DumgenFailure(
 			"InvalidInput",
 			"grammatical-navigation",
 			"Source must be a reviewed authored member",
 		);
+	return member;
+}
+
+/**
+ * Other Paradigm Cells of a reviewed pillar PRON or DET: cells of the same
+ * Kind that differ only in the varied Core Features. Preserves every other
+ * Core Feature, compares null literally, and returns only reviewed
+ * alternatives. A stem Lemma (dieser, mein) has no other cells, so it returns
+ * none; its forms are its own Surfaces (selectFormAlternatives).
+ */
+export function selectGrammaticalAlternatives(input: {
+	readonly source: NavigableLemma;
+	readonly vary: readonly NavigableFeature[];
+}): readonly Dumling.Reading<"de">[] {
+	reviewedSource(input.source);
 	if (
 		input.vary.some((key) => !Object.hasOwn(input.source.coreFeatures, key))
 	)
@@ -82,11 +97,13 @@ export function selectGrammaticalAlternatives(input: {
 			"grammatical-navigation",
 			"Unknown feature coordinate",
 		);
+	if (!isParadigmCell(input.source)) return [];
 	const varied = new Set<string>(input.vary);
 	return authoredMembers
 		.filter(
 			(member) =>
 				member.lemma.kind === input.source.kind &&
+				isParadigmCell(member.lemma) &&
 				!sameValue(member.lemma, input.source) &&
 				Object.entries(input.source.coreFeatures).every(
 					([key, value]) =>
@@ -103,6 +120,51 @@ export function selectGrammaticalAlternatives(input: {
 				),
 		)
 		.map((member) => member.reading);
+}
+
+/** A reviewed spelling of a stem Lemma and the cell its Surface marks. */
+export type AuthoredForm = {
+	readonly spelled: string;
+	readonly cell: SurfaceCell;
+};
+const cellCoordinates = ["case", "number", "gender"] as const;
+
+/**
+ * Other Surfaces of a reviewed stem PRON or DET: the Lemma's own spellings
+ * whose cell differs from `cell` only in the varied coordinates. A stem's
+ * forms stay inside its Lemma: diesem reaches dieser and dieses, never jenem.
+ * A pillar has no such forms; its cells are Lemmas
+ * (selectGrammaticalAlternatives).
+ */
+export function selectFormAlternatives(input: {
+	readonly source: NavigableLemma;
+	readonly cell: SurfaceCell;
+	readonly vary: readonly (typeof cellCoordinates)[number][];
+}): readonly AuthoredForm[] {
+	const member = reviewedSource(input.source);
+	const varied = new Set<string>(input.vary);
+	const forms: AuthoredForm[] = [];
+	for (const { spelled, cell } of [
+		...reviewedDeterminers,
+		...reviewedPronouns,
+	].find((entry) => entry.member === member)?.spellings ?? [])
+		if (
+			cell &&
+			cellCoordinates.every(
+				(coordinate) =>
+					varied.has(coordinate) ||
+					cell[coordinate] === input.cell[coordinate],
+			) &&
+			!cellCoordinates.every(
+				(coordinate) => cell[coordinate] === input.cell[coordinate],
+			) &&
+			!forms.some(
+				(form) =>
+					form.spelled === spelled && sameValue(form.cell, cell),
+			)
+		)
+			forms.push({ spelled, cell });
+	return forms;
 }
 
 export function authoredReading(reading: unknown) {

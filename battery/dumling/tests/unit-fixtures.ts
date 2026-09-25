@@ -42,6 +42,16 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	// The first German number value is plural, whose agreement has no gender.
 	if (route.key === "de/Lexeme/DET") sample.core.gender = null;
 	const bag = route.bag.parse(sample);
+	// A Paradigm Cell coordinate is marked in Core or on the Surface, never both.
+	if (
+		(route.key === "de/Lexeme/DET" || route.key === "de/Lexeme/PRON") &&
+		bag.inflectional
+	)
+		Object.assign(bag.inflectional, {
+			case: null,
+			gender: null,
+			number: null,
+		});
 	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
 		Object.assign(bag.inflectional, { article: null });
 	const verbal =

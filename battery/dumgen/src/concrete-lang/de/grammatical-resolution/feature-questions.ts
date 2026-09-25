@@ -100,12 +100,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			"The lexical identity has no marked grammatical gender, for example a plural-only identity; not missing evidence for an otherwise gendered noun",
 		byKind: {
 			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Plural-only names have unmarked gender.",
-			PRON: "What grammatical gender belongs to this exact pronoun identity? For a possessive, judge the possessed item's gender; for a nonpossessive personal pronoun, mark gender only with third-person singular reference. Plural agreement has no marked gender. Never infer gender from a name alone.",
-			DET: "What grammatical gender belongs to the Paradigm Cell of this determiner? It is the lexical gender of the noun the determiner modifies, never the possessor's. Plural agreement has no marked gender.",
+			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? For a nonpossessive personal pronoun, mark gender only with third-person singular reference. Plural agreement has no marked gender. Never infer gender from a name alone. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
+			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), what grammatical gender belongs to its Paradigm Cell? It is the lexical gender of the noun the article modifies. Plural agreement has no marked gender. Every other determiner keeps gender on its Surface, not in Core.",
 		},
 		unmarkedByKind: {
-			PRON: "Gender is inapplicable: first/second-person nonpossessive identity, plural agreement, or an invariant identity without gender",
-			DET: "Plural agreement, or an invariant determiner such as derlei or uninflected viel with no cell to decide",
+			PRON: "Gender is inapplicable in Core: a stem pronoun whose gender is on its Surface, a first/second-person nonpossessive identity, plural agreement, or an invariant identity without gender",
+			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose gender is on its Surface, an invariant determiner such as derlei, or plural agreement",
 		},
 	},
 	"lemma.coreFeatures.hyph": {
@@ -268,28 +268,28 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"lemma.coreFeatures.case": {
 		question:
-			"Which Case belongs to this exact case-bearing pronoun identity in context? Case is a Core coordinate here: keep uns/Acc distinct from uns/Dat rather than reducing either to a nominative identity.",
+			"If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), which Case belongs to its Paradigm Cell in context? Case is a Core coordinate of a pillar: keep uns/Acc distinct from uns/Dat rather than reducing either to a nominative identity. A stem pronoun (dieser, keiner, meiner, alle) marks Case on its Surface, not in Core.",
 		values: grammaticalCase,
 		unmarked:
-			"Invariant identity without marked Case, such as etwas or einander; not uncertainty between possible cases",
+			"No Core Case: a stem pronoun whose Case is on its Surface, or an invariant identity such as etwas or einander; not uncertainty between possible cases",
 		byKind: {
-			DET: "Which Case does this determiner share with the noun it modifies? Case is a Core coordinate: dem Mann and den Mann are different determiner Lemmas. Judge the noun phrase's role and government in the sentence.",
+			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), which Case does it share with the noun it modifies? Case is a Core coordinate of an article cell: dem Mann and den Mann are different article Lemmas. Judge the noun phrase's role and government in the sentence. Every other determiner marks Case on its Surface, not in Core.",
 		},
 		unmarkedByKind: {
-			DET: "Invariant determiner without a cell to decide, such as derlei, manch or uninflected viel; not uncertainty between possible cases",
+			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose Case is on its Surface, or an invariant determiner such as derlei; not uncertainty between possible cases",
 		},
 	},
 	"lemma.coreFeatures.number": {
 		question:
-			"What grammatical agreement Number belongs to this exact pronoun identity? Formal Sie/Ihnen requires plural agreement even for one addressee. Do not copy an antecedent's number into dedicated sich; wer/wen/wem/wessen is unmarked for Number.",
+			"If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical agreement Number belongs to its Paradigm Cell? Formal Sie/Ihnen requires plural agreement even for one addressee. Do not copy an antecedent's number into dedicated sich; wer/wen/wem/wessen is unmarked for Number. A stem pronoun (dieser, keiner, meiner, alle) marks Number on its Surface, not in Core.",
 		values: number,
 		unmarked:
-			"No marked agreement Number under the pronoun policy, including dedicated sich and wer/wen/wem/wessen",
+			"No marked Core agreement Number: a stem pronoun whose Number is on its Surface, dedicated sich, or wer/wen/wem/wessen",
 		byKind: {
-			DET: "What Number does this determiner share with the noun it modifies? Number is a Core coordinate: der Tisch and die Tische use different determiner Lemmas. Do not confuse it with possessor Number.",
+			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), what Number does it share with the noun it modifies? Number is a Core coordinate of an article cell: der Tisch and die Tische use different article Lemmas. Every other determiner marks Number on its Surface, not in Core.",
 		},
 		unmarkedByKind: {
-			DET: "Invariant determiner without a cell to decide, such as derlei, manch or uninflected viel",
+			DET: "Not an article cell: a stem determiner such as dieser, mein or kein whose Number is on its Surface, or an invariant determiner such as derlei",
 		},
 	},
 	"lemma.coreFeatures.gender[psor]": {
@@ -345,6 +345,8 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			"Case is not marked here, including direct address or an inapplicable nominal-inflection premise",
 		byKind: {
 			ADJ: "If this adjective is attributive, what Case does it agree in with its modified noun? Predicative/adverbial adjectives have unmarked Case.",
+			DET: "If this is a stem determiner (dieser, mein, kein, welcher, einige, inflected viel), what Case does it share with the noun it modifies? An article marks Case in Core instead, and uninflected all/viel/wenig/wieviel has none.",
+			PRON: "If this is a stem pronoun (dieser, keiner, meiner, einige, alle, jeder), what Case does it bear in its clause? A pillar pronoun (personal, der/die/das, wer/was, jemand, einer) marks Case in Core instead.",
 			NUM: "If this numeral itself has supported nominal inflection, what Case does it bear? An invariant cardinal or digit does not inherit a neighboring noun's Case.",
 			SYM: "If this symbol itself fills a nominal phrase, what Case does it bear? A label noun or neighboring quantity does not lend the symbol its Case.",
 		},
@@ -356,6 +358,8 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		unmarked: "No applicable marked gender agreement",
 		byKind: {
 			ADJ: "If this adjective is attributive, what gender does it agree in? Predicative/adverbial use and plural agreement have unmarked Gender.",
+			DET: "If this is a stem determiner in the singular, what is the lexical gender of the noun it modifies? It is never the possessor's gender. Plural agreement, an article (gender in Core) and uninflected all/viel/wenig/wieviel have unmarked Gender.",
+			PRON: "If this is a stem pronoun in the singular, what gender does it agree in with its referent noun? For a possessive it is the possessed item's gender, not the possessor's. Plural agreement and pillar pronouns (gender in Core) have unmarked Gender.",
 			NUM: "If this numeral has visible nominal agreement, what gender is established? Ordinary invariant cardinals and digits do not inherit gender from a neighboring noun.",
 			SYM: "If the symbol itself fills a nominal phrase with gender agreement, what gender is established? Do not use the gender of a label noun that merely names the symbol.",
 		},
@@ -368,6 +372,8 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		byKind: {
 			ADJ: "If this adjective is attributive, what Number does it agree in with its modified noun? Predicative/adverbial adjectives have unmarked Number.",
 			PROPN: "What grammatical Number does this contextual name bear? One named person, place or organization is singular even without a visible ending or article; plural-only names or multiple bearers can be plural.",
+			DET: "If this is a stem determiner, what Number does it share with the noun it modifies? Do not confuse it with possessor Number. An article marks Number in Core instead, and uninflected all/viel/wenig/wieviel has none.",
+			PRON: "If this is a stem pronoun, what agreement Number does it bear? A pillar pronoun marks Number in Core instead.",
 			NUM: "If this numeral itself has visible nominal agreement, what Number does it bear? Numerical quantity is not grammatical Number; an invariant digit/cardinal has no agreement bag.",
 			SYM: "If this symbol itself fills a nominal phrase, what Number does it bear? A neighboring numerical amount does not establish grammatical agreement.",
 			X: "If this residual target has transparent nominal inflection or is a finite nonce verb, what grammatical Number is established? Otherwise leave it unmarked.",
@@ -568,14 +574,14 @@ const inflectionPolicies: Readonly<
 		citation: "Ordinary invariant adverb or dictionary mention",
 	},
 	DET: {
-		marked: "Comparison degree (weniger, meisten) or possessor features (seinen, unserem); case, number and gender are Core, not Surface inflection",
+		marked: "A stem determiner in context (diesem, meinen, keine, welches, einigen, vielen) with its Case, Number and Gender, or comparison degree (weniger, meisten) or possessor features",
 		citation:
-			"Any other determiner, including every article, demonstrative and quantifier without comparison",
+			"Every definite or indefinite article, whose cell is Core; an invariant or uninflected determiner (derlei, viel Geld, all die Jahre) without comparison; or a dictionary mention",
 	},
 	PRON: {
-		marked: "Reflexive occurrence: the pronoun refers to its clause subject acting on or for itself",
+		marked: "A stem pronoun in context (diesem, keinen, meiner, allen) with its Case, Number and Gender, or a reflexive occurrence: the pronoun refers to its clause subject acting on or for itself",
 		citation:
-			"Nonreflexive occurrence or dictionary mention; marked Core Case/Number alone does not create Surface inflection",
+			"A nonreflexive pillar pronoun (personal, der/die/das, wer/was, jemand, einer), whose cell is Core; an invariant pronoun (etwas, einander); or a dictionary mention",
 	},
 	NUM: {
 		marked: "The numeral itself has supported nominal agreement, such as inflected Million quantities or visibly agreeing historical forms",

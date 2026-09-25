@@ -52,6 +52,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"segmentAt",
 		"selectAuthoredArticle",
 		"selectAuthoredReading",
+		"selectFormAlternatives",
 		"selectGrammaticalAlternatives",
 		"selectIdentity",
 		"selectNounHeadingArticle",

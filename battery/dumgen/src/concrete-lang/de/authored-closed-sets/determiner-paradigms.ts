@@ -1,8 +1,7 @@
 import type * as Dumling from "dumling/types";
 import {
 	type DeterminerDescription,
-	determinerMember,
-	determinerParadigm,
+	determinerStem,
 	type ReviewedDeterminer,
 } from "./determiner-paradigm.js";
 import {
@@ -15,25 +14,26 @@ import {
 type Core = Dumling.Lemma<"de", "Lexeme", "DET">["coreFeatures"];
 const absent = [null, null, null, null] as const;
 const reviewed: ReviewedDeterminer[] = [];
-const add = (table: PronounTable, meaning: DeterminerDescription) =>
-	reviewed.push(...determinerParadigm(table, meaning));
+const add = (
+	table: PronounTable,
+	meaning: DeterminerDescription,
+	options?: Parameters<typeof determinerStem>[2],
+) => reviewed.push(determinerStem(table, meaning, options));
 const description = (
 	core: Partial<Core>,
 	emoji: string,
 	definition: string,
 	en: string[],
 	ru: string[],
-	plural?: DeterminerDescription["plural"],
-): DeterminerDescription => ({
-	core,
-	emoji,
-	definition,
-	en,
-	ru,
-	...(plural ? { plural } : {}),
-});
+): DeterminerDescription => ({ core, emoji, definition, en, ru });
 const endings = { "": "", e: "ə", en: "ən", em: "əm", es: "əs", er: "ɐ" };
 type Ending = keyof typeof endings;
+/** Quantifiers cited in the plural (einige, alle) name their Nom.Plur cell. */
+const plural = (table: PronounTable): PronounForm => {
+	const cited = table.Plur[0];
+	if (!cited) throw Error("A plural citation needs a Nom.Plur cell");
+	return cited;
+};
 const withVariants = (entry: PronounForm, ...variants: string[]) => ({
 	...entry,
 	variants: [...(entry.variants ?? []), ...variants],
@@ -80,19 +80,19 @@ function weak(stem: string, ipa: string): PronounTable {
 	};
 }
 
-// The definite and indefinite articles are authored one file per cell under
-// members/lexeme/determiner/article. Every other declining determiner is a
-// paradigm here; invariant ones (derlei, manch, lauter, mehr, selber, welch,
-// and uninflected viel, wenig, wieviel) keep their single-Lemma files.
+// The definite and indefinite articles are pillars, authored one Lemma per
+// cell under members/lexeme/determiner/article. Every other declining
+// determiner is a stem with borrowed article endings: one Lemma here whose
+// Surfaces mark the cell (system ADR 0032). Invariant ones (derlei, manch,
+// lauter, mehr, selber, welch) keep their single-Lemma files.
 
-for (const [stem, ipa, definition, en, ru, plural] of [
+for (const [stem, ipa, definition, en, ru] of [
 	[
 		"dies",
 		"ˈdiːz",
 		"Der Demonstrativartikel „dieser“ hebt einen bestimmten Bezug hervor.",
 		"this",
 		"этот",
-		["these", "эти"],
 	],
 	[
 		"jen",
@@ -100,7 +100,6 @@ for (const [stem, ipa, definition, en, ru, plural] of [
 		"Der Demonstrativartikel „jener“ hebt einen bestimmten Bezug hervor.",
 		"that",
 		"тот",
-		["those", "те"],
 	],
 	[
 		"solch",
@@ -108,15 +107,11 @@ for (const [stem, ipa, definition, en, ru, plural] of [
 		"Der Demonstrativartikel „solcher“ hebt einen bestimmten Bezug hervor.",
 		"such",
 		"такой",
-		["such", "такие"],
 	],
 ] as const)
 	add(
 		strongPronoun(stem, ipa),
-		description({ pronType: "Dem" }, "👉", definition, [en], [ru], {
-			en: [plural[0]],
-			ru: [plural[1]],
-		}),
+		description({ pronType: "Dem" }, "👉", definition, [en], [ru]),
 	);
 
 // Both parts decline: article + weak ending, including plural denjenigen/denselben.
@@ -207,11 +202,11 @@ for (const pronType of ["Int", "Rel"] as const)
 			"Der interrogative Determinierer „was für ein“ fragt nach der Art oder Beschaffenheit.",
 			["what kind of a"],
 			["какой"],
-			{ en: ["what kind of"], ru: ["какие"] },
 		),
 	);
 }
-// Uninflected wieviel has its own file; its declined cells are plural only.
+// Uninflected wieviel stands before a singular noun (wieviel Geld); its
+// declined cells are plural only.
 add(
 	{
 		Masc: absent,
@@ -227,10 +222,11 @@ add(
 	description(
 		{ pronType: "Int" },
 		"❓🔢",
-		"Der interrogative Determinierer „wieviel“ fragt nach einer Anzahl.",
-		["how many"],
+		"Der interrogative Determinierer „wieviel“ fragt nach Auswahl oder Menge.",
+		["how much", "how many"],
 		["сколько"],
 	),
+	{ citation: form("wieviel", "viːˈfiːl"), uninflected: ["wieviel"] },
 );
 add(
 	weak("wievielt", "viˈfiːlt"),
@@ -251,7 +247,6 @@ add(
 		"Der negative Determinierer „kein“ verneint das Vorhandensein des bezeichneten Bezugs.",
 		["no", "not a"],
 		["никакой"],
-		{ en: ["no"], ru: ["никакие"] },
 	),
 );
 
@@ -389,7 +384,9 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 
 // Indefinite quantifiers. einig/etlich/etwelch/viel/wenig/sämtlich/all take
 // the adjectival -en genitive before a strong genitive noun (einigen Aufwands).
-for (const [stem, ipa, definition, en, ru, emoji] of [
+// einige, etliche and etwelche are cited in the plural; viel and wenig by their
+// uninflected form before a singular noun (viel Geld).
+for (const [stem, ipa, definition, en, ru, emoji, citation] of [
 	[
 		"einig",
 		"ˈaɪ̯nɪɡ",
@@ -397,6 +394,7 @@ for (const [stem, ipa, definition, en, ru, emoji] of [
 		["some"],
 		["некоторые"],
 		"🔢",
+		"plural",
 	],
 	[
 		"etlich",
@@ -405,14 +403,16 @@ for (const [stem, ipa, definition, en, ru, emoji] of [
 		["several"],
 		["несколько"],
 		"🔢",
+		"plural",
 	],
 	[
 		"etwelch",
 		"ˈɛtˌvɛlç",
-		"Der quantifizierende Determinierer „etwelcher“ grenzt die Menge der bezeichneten Bezüge ein.",
+		"Der quantifizierende Determinierer „etwelche“ grenzt die Menge der bezeichneten Bezüge ein.",
 		["some"],
 		["некоторый"],
 		"🔢",
+		"plural",
 	],
 	[
 		"viel",
@@ -421,6 +421,7 @@ for (const [stem, ipa, definition, en, ru, emoji] of [
 		["much", "many"],
 		["много"],
 		"🔢",
+		"uninflected",
 	],
 	[
 		"wenig",
@@ -429,12 +430,22 @@ for (const [stem, ipa, definition, en, ru, emoji] of [
 		["little", "few"],
 		["мало"],
 		"➖",
+		"uninflected",
 	],
-] as const)
+] as const) {
+	const table = adjectivalGenitive(stem, ipa);
 	add(
-		adjectivalGenitive(stem, ipa),
+		table,
 		description({ pronType: "Ind" }, emoji, definition, [...en], [...ru]),
+		citation === "plural"
+			? { citation: plural(table) }
+			: {
+					// Transcriptions reviewed with the uninflected headword.
+					citation: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
+					uninflected: [stem],
+				},
 	);
+}
 for (const [stem, ipa, definition, en, ru] of [
 	[
 		"manch",
@@ -485,19 +496,20 @@ add(
 		["несколько"],
 	),
 );
-// meist declines weakly after the article; its Surfaces mark degree Sup.
+// meiste declines weakly after the article; its Surfaces mark degree Sup.
 add(
 	weak("meist", "ˈmaɪ̯st"),
 	description(
 		{ pronType: "Ind" },
 		"🔢",
-		"Der quantifizierende Determinierer „meist“ grenzt die Menge der bezeichneten Bezüge ein.",
+		"Der quantifizierende Determinierer „meiste“ grenzt die Menge der bezeichneten Bezüge ein.",
 		["most"],
 		["большинство"],
 	),
 );
 
-// Total quantifiers.
+// Total quantifiers, cited in the plural. Uninflected all stands before an
+// article or pronoun (all die Jahre).
 for (const [stem, ipa, definition, en, ru] of [
 	[
 		"all",
@@ -509,27 +521,21 @@ for (const [stem, ipa, definition, en, ru] of [
 	[
 		"sämtlich",
 		"ˈzɛmtlɪç",
-		"Der totalisierende Determinierer „sämtlich“ erfasst die bezeichnete Menge vollständig.",
+		"Der totalisierende Determinierer „sämtliche“ erfasst die bezeichnete Menge vollständig.",
 		["all"],
 		["все"],
 	],
-] as const)
+] as const) {
+	const table = adjectivalGenitive(stem, ipa);
 	add(
-		adjectivalGenitive(stem, ipa),
+		table,
 		description({ pronType: "Tot" }, "💯", definition, [...en], [...ru]),
+		{
+			citation: plural(table),
+			...(stem === "all" ? { uninflected: ["all"] } : {}),
+		},
 	);
-reviewed.push(
-	determinerMember(
-		form("all", "ˈal"),
-		description(
-			{ pronType: "Tot" },
-			"💯",
-			"Der totalisierende Determinierer „all“ steht unflektiert vor einem Artikel oder Pronomen (all die Jahre).",
-			["all"],
-			["весь", "все"],
-		),
-	),
-);
+}
 // jeder is singular; genitive jedes also appears as jeden (jeden Monats).
 for (const [stem, ipa, definition, en, ru] of [
 	[
@@ -597,5 +603,5 @@ add(
 	),
 );
 
-/** Reviewed determiner Paradigm Cells with their licensed alternate spellings. */
+/** Reviewed stem determiners with every spelling and the cell it marks. */
 export const reviewedDeterminers: readonly ReviewedDeterminer[] = reviewed;

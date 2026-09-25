@@ -76,7 +76,7 @@ export function lexemeQuestions(
 					...Object.fromEntries(
 						candidates.map((member, position) => [
 							`c${position}`,
-							rubricOf(member),
+							rubricOf(member, text),
 						]),
 					),
 					NoMatch:

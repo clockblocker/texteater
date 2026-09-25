@@ -8,10 +8,10 @@ import { sameValue } from "./select.js";
 export type AuthoredRealization = {
 	readonly member: AuthoredMember;
 	readonly spelled: string;
-	/** Additional occurrence coordinates needed to distinguish a syncretic realization. */
+	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
-/** Licensed alternate spellings of authored determiner cells, keyed by Canonical Form. */
+/** Licensed alternate spellings of authored determiners, keyed by Canonical Form. */
 // Free clitic article forms (fusion Entry table) and the comparative of
 // uninflected wenig.
 const determinerAliases: Readonly<Record<string, readonly string[]>> = {
@@ -152,26 +152,32 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 			lemma.kind !== "AUX"
 		)
 			return [];
-		const forms =
+		const aliases =
 			lemma.kind === "DET"
-				? [
-						...(determinerAliases[lemma.canonicalForm] ?? []),
-						...(reviewedDeterminers.find(
-							(entry) => entry.member === member,
-						)?.variants ?? []),
-					]
+				? (determinerAliases[lemma.canonicalForm] ?? [])
 				: lemma.kind === "AUX"
 					? (auxiliaryForms[lemma.canonicalForm] ?? [])
-					: [
-							...(pronounAliases[lemma.canonicalForm] ?? []),
-							...(reviewedPronouns.find(
-								(entry) => entry.member === member,
-							)?.variants ?? []),
-						];
-		return [...new Set([lemma.canonicalForm, ...forms])].map((spelled) => ({
-			member,
-			spelled,
-		}));
+					: (pronounAliases[lemma.canonicalForm] ?? []);
+		const reviewed = (
+			lemma.kind === "DET" ? reviewedDeterminers : reviewedPronouns
+		).find((entry) => entry.member === member);
+		// A stem Lemma's canonical spelling is one of its cells, never cell-less.
+		const spellings = reviewed?.spellings ?? [
+			{ spelled: lemma.canonicalForm },
+		];
+		const cellless = new Set(
+			spellings.filter(({ cell }) => !cell).map(({ spelled }) => spelled),
+		);
+		return [
+			...spellings.map(({ spelled, cell }) => ({
+				member,
+				spelled,
+				...(cell ? { inflection: { ...cell } } : {}),
+			})),
+			...aliases
+				.filter((spelled) => !cellless.has(spelled))
+				.map((spelled) => ({ member, spelled })),
+		];
 	});
 
 // Multiple Readings may share one Lemma. Deduplicate once so expanded paradigms

@@ -40,12 +40,9 @@ import { member as article_eines_neuter_singular_genitive } from "./members/lexe
 import { member as m16 } from "./members/lexeme/determiner/demonstrative/derlei.js";
 import { member as m17 } from "./members/lexeme/determiner/emphatic/selber.js";
 import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js";
-import { member as m21 } from "./members/lexeme/determiner/interrogative/wieviel.js";
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
 import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
-import { member as m33 } from "./members/lexeme/determiner/quantifying/viel.js";
-import { member as m36 } from "./members/lexeme/determiner/quantifying/wenig.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
 import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-masculine-singular-dative.js";
@@ -162,12 +159,9 @@ export const authoredMembers = [
 	m16,
 	m17,
 	m20,
-	m21,
 	m30,
 	m31,
-	m33,
 	m35,
-	m36,
 	aux0,
 	aux1,
 	aux2,

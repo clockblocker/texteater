@@ -55,7 +55,7 @@ export type IdentityCandidate = {
 	readonly kind: "DET" | "PRON" | "AUX";
 	readonly headword: string;
 	readonly pronType: string | null;
-	/** Authored cells behind the group; the grammar step picks one. */
+	/** A pillar group's Core cells, or the cells a stem's spelling marks on its Surface; the grammar step picks one. */
 	readonly cells: readonly string[];
 	readonly definition: string;
 };

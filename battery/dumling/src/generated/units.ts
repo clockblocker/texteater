@@ -829,7 +829,9 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				degree: ("Cmp" | "Pos" | "Sup") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
 				"gender[psor]":
 					| (
 							| ("Fem" | "Masc" | "Neut")
@@ -839,6 +841,7 @@ export interface UnitMap {
 							  ]
 					  )
 					| null;
+				number: ("Plur" | "Sing") | null;
 				"number[psor]": ("Plur" | "Sing") | null;
 			} | null;
 		};
@@ -921,7 +924,9 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					degree: ("Cmp" | "Pos" | "Sup") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 					"gender[psor]":
 						| (
 								| ("Fem" | "Masc" | "Neut")
@@ -931,6 +936,7 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
+					number: ("Plur" | "Sing") | null;
 					"number[psor]": ("Plur" | "Sing") | null;
 				} | null;
 			};
@@ -1434,7 +1440,12 @@ export interface UnitMap {
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures: { reflex: "Yes" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+				reflex: "Yes" | null;
+			} | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -1510,7 +1521,12 @@ export interface UnitMap {
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures: { reflex: "Yes" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+					reflex: "Yes" | null;
+				} | null;
 			};
 			members: [
 				{ attested: string; orthography: "Standard" | "Typo" },

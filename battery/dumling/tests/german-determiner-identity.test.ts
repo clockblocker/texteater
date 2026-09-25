@@ -82,3 +82,92 @@ test("a cell Surface spelled as its Lemma is Grundform without inflection", () =
 	const parsed = surfaceSchema.parse(surface);
 	expect(checkIfGrundform(parsed)).toEqual({ success: true, value: true });
 });
+
+const dieser = lemma("dieser", { pronType: "Dem" });
+function stemSurface(
+	normalizedSurface: string,
+	inflectionalFeatures: Record<string, string | null> | null,
+	source: ReturnType<typeof lemma> = dieser,
+) {
+	return {
+		unitKind: "Surface",
+		language: "de",
+		lemma: source,
+		normalizedSurface,
+		spelling: "Canonical",
+		surfaceFeatures: null,
+		inflectionalFeatures: inflectionalFeatures && {
+			case: null,
+			degree: null,
+			gender: null,
+			"gender[psor]": null,
+			number: null,
+			"number[psor]": null,
+			...inflectionalFeatures,
+		},
+	};
+}
+
+test("a stem Lemma marks its cell on the Surface, never also in Core", () => {
+	const diesem = stemSurface("diesem", {
+		case: "Dat",
+		number: "Sing",
+		gender: "Masc",
+	});
+	expect(surfaceSchema.safeParse(diesem).success).toBe(true);
+	expect(parseUnit(diesem).success).toBe(true);
+	const doubled = stemSurface(
+		"den",
+		{ case: "Acc" },
+		lemma("den", {
+			...article,
+			case: "Acc",
+			number: "Sing",
+			gender: "Masc",
+		}),
+	);
+	expect(surfaceSchema.safeParse(doubled).success).toBe(false);
+	expect(parseUnit(doubled).success).toBe(false);
+	const pluralGender = stemSurface("diese", {
+		case: "Nom",
+		number: "Plur",
+		gender: "Fem",
+	});
+	expect(surfaceSchema.safeParse(pluralGender).success).toBe(false);
+});
+
+test("a stem Lemma's Grundform is its Nom.Masc.Sg or plural-cited Surface", () => {
+	const grundform = (value: unknown) =>
+		checkIfGrundform(surfaceSchema.parse(value));
+	expect(
+		grundform(
+			stemSurface("dieser", {
+				case: "Nom",
+				number: "Sing",
+				gender: "Masc",
+			}),
+		),
+	).toEqual({ success: true, value: true });
+	// dieser is also the Gen.Plur and Dat/Gen.Fem.Sg spelling.
+	expect(
+		grundform(stemSurface("dieser", { case: "Gen", number: "Plur" })),
+	).toEqual({ success: true, value: false });
+	expect(
+		grundform(
+			stemSurface("diesem", {
+				case: "Dat",
+				number: "Sing",
+				gender: "Masc",
+			}),
+		),
+	).toEqual({ success: true, value: false });
+	const beide = lemma("beide", { pronType: "Tot", numType: "Card" });
+	expect(
+		grundform(stemSurface("beide", { case: "Nom", number: "Plur" }, beide)),
+	).toEqual({ success: true, value: true });
+	const viel = lemma("viel", { pronType: "Ind" });
+	expect(grundform(stemSurface("viel", null, viel))).toEqual({
+		success: true,
+		value: true,
+	});
+});

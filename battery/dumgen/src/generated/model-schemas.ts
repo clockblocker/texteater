@@ -1566,6 +1566,20 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									{
 										type: "object",
 										properties: {
+											case: {
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Acc",
+															"Dat",
+															"Gen",
+															"Nom",
+														],
+													},
+													{ type: "null" },
+												],
+											},
 											degree: {
 												anyOf: [
 													{
@@ -1574,6 +1588,19 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 															"Cmp",
 															"Pos",
 															"Sup",
+														],
+													},
+													{ type: "null" },
+												],
+											},
+											gender: {
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Fem",
+															"Masc",
+															"Neut",
 														],
 													},
 													{ type: "null" },
@@ -1617,6 +1644,15 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													{ type: "null" },
 												],
 											},
+											number: {
+												anyOf: [
+													{
+														type: "string",
+														enum: ["Plur", "Sing"],
+													},
+													{ type: "null" },
+												],
+											},
 											"number[psor]": {
 												anyOf: [
 													{
@@ -1628,8 +1664,11 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											},
 										},
 										required: [
+											"case",
 											"degree",
+											"gender",
 											"gender[psor]",
+											"number",
 											"number[psor]",
 										],
 										additionalProperties: false,
@@ -2600,6 +2639,42 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									{
 										type: "object",
 										properties: {
+											case: {
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Acc",
+															"Dat",
+															"Gen",
+															"Nom",
+														],
+													},
+													{ type: "null" },
+												],
+											},
+											gender: {
+												anyOf: [
+													{
+														type: "string",
+														enum: [
+															"Fem",
+															"Masc",
+															"Neut",
+														],
+													},
+													{ type: "null" },
+												],
+											},
+											number: {
+												anyOf: [
+													{
+														type: "string",
+														enum: ["Plur", "Sing"],
+													},
+													{ type: "null" },
+												],
+											},
 											reflex: {
 												anyOf: [
 													{
@@ -2610,7 +2685,12 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												],
 											},
 										},
-										required: ["reflex"],
+										required: [
+											"case",
+											"gender",
+											"number",
+											"reflex",
+										],
 										additionalProperties: false,
 									},
 									{ type: "null" },

@@ -62,6 +62,34 @@ export function germanDeterminerCoreError(): string {
 	return "German determiner plural agreement has no marked gender";
 }
 
+const cellCoordinates = ["case", "number", "gender"] as const;
+/**
+ * A pillar Lemma marks its Paradigm Cell in Core; a stem Lemma marks it on
+ * each Surface. A coordinate is never marked in both, and plural agreement
+ * marks no gender on either.
+ */
+export function isGermanClosedClassSurface(input: unknown): boolean {
+	const value = input as {
+		lemma: { coreFeatures: Record<string, unknown> };
+		inflectionalFeatures: Record<string, unknown> | null;
+	};
+	const core = value.lemma.coreFeatures;
+	const bag = value.inflectionalFeatures;
+	if (!bag) return true;
+	if (
+		cellCoordinates.some(
+			(coordinate) =>
+				(core[coordinate] ?? null) !== null &&
+				(bag[coordinate] ?? null) !== null,
+		)
+	)
+		return false;
+	return !(bag.number === "Plur" && (bag.gender ?? null) !== null);
+}
+export function germanClosedClassSurfaceError(): string {
+	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender";
+}
+
 /** Composition is reusable grammar; both component values must identify the same article. */
 type NounComposition = {
 	inflectionalFeatures: {

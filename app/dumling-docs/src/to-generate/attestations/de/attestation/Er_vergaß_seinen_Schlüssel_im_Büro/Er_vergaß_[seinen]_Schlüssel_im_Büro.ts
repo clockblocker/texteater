@@ -15,6 +15,9 @@ const occurrenceAttestation = {
 		normalizedSurface: "seinen",
 		spelling: "Canonical",
 		inflectionalFeatures: {
+			case: "Acc",
+			gender: "Masc",
+			number: "Sing",
 			"gender[psor]": "Masc",
 			"number[psor]": "Sing",
 			degree: null,
@@ -22,13 +25,13 @@ const occurrenceAttestation = {
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "seinen",
+			canonicalForm: "sein",
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
-				case: "Acc",
-				gender: "Masc",
-				number: "Sing",
+				case: null,
+				gender: null,
+				number: null,
 				person: "3",
 				poss: "Yes",
 				pronType: "Prs",
@@ -47,8 +50,8 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er vergaß [seinen] Schlüssel im Büro.",
 	classifierNotes:
-		"`Seinen` is the accusative masculine singular cell of the possessive determiner, agreeing with Schlüssel. Here the subject `Er` makes the possessor reading specifically 3rd-person masculine singular, so the separate possessor features are justified.",
+		"`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Here the subject `Er` makes the possessor reading specifically 3rd-person masculine singular, so the separate possessor features are justified.",
 	classificationMistakes:
-		"Reading belongs to a later layer; Dumling records `seinen` as its own possessive determiner Lemma.",
+		"Reading belongs to a later layer; Dumling records `seinen` as a Surface of the possessive determiner Lemma sein.",
 	isVerified: true,
 } as const;

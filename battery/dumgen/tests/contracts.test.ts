@@ -24,8 +24,9 @@ const reviewedCases = [
 	["dev-relative-die-nom", "die", "Nom", "Rel", "Fem", null],
 	["accept-v4-demonstrative-die-nom-plur", "die", "Nom", "Dem", null, null],
 	["accept-v4-relative-dem-dat-neut", "dem", "Dat", "Rel", "Neut", null],
-	["fixed-sein-masc", "seiner", "Nom", "Prs", "Masc", "Masc"],
-	["fixed-sein-neut", "seines", "Nom", "Prs", "Neut", "Neut"],
+	// Possessives are stems: one Lemma whose Surfaces mark the cell.
+	["fixed-sein-masc", "seiner", null, "Prs", null, "Masc"],
+	["fixed-sein-neut", "seiner", null, "Prs", null, "Neut"],
 	["fixed-wer", "wer", "Nom", "Int", null, null],
 	["fixed-wen", "wen", "Acc", "Int", null, null],
 	["fixed-wem", "wem", "Dat", "Int", null, null],
@@ -122,7 +123,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 	}
 });
 
-test("pronoun answers preserve case-bearing forms and isolate Surface reflexivity", () => {
+test("pronoun answers keep pillar cells in Core and stem cells on the Surface", () => {
 	for (const [id, golden] of Object.entries(pronounCases)) {
 		if ("decision" in golden.idealOutput) {
 			expect(golden.idealOutput.decision, id).toBe("Unresolved");
@@ -138,14 +139,15 @@ test("pronoun answers preserve case-bearing forms and isolate Surface reflexivit
 			expect(answer.lemma.canonicalForm, id).toBe(
 				answer.normalizedMembers.join(" "),
 			);
-		expect(
-			answer.surface.inflectionalFeatures === null
-				? []
-				: Object.keys(answer.surface.inflectionalFeatures),
-			id,
-		).toEqual(
-			answer.surface.inflectionalFeatures === null ? [] : ["reflex"],
-		);
+		const bag = answer.surface.inflectionalFeatures;
+		const pillar = answer.lemma.coreFeatures.case !== null;
+		if (!pillar && bag) expect(bag.case, id).not.toBeNull();
+		for (const coordinate of ["case", "number", "gender"] as const)
+			expect(
+				answer.lemma.coreFeatures[coordinate] === null ||
+					bag?.[coordinate] == null,
+				id,
+			).toBe(true);
 	}
 });
 

@@ -1,12 +1,14 @@
 import { z } from "zod";
 import {
 	emojiDescriptionError,
+	germanClosedClassSurfaceError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanClosedClassSurface,
 	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanVerbalAttestation,
@@ -109,7 +111,15 @@ export function buildUnitSchemas<
 		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
 			(route.family === "Phraseme" &&
 				["Idiom", "Collocation"].includes(route.kind)));
+	const closedClass =
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		["PRON", "DET"].includes(route.kind);
 	let Surface = base.Surface;
+	if (closedClass)
+		Surface = Surface.refine(isGermanClosedClassSurface, {
+			error: germanClosedClassSurfaceError,
+		});
 	if (noun)
 		Surface = Surface.refine(isGermanNounSurface, {
 			error: germanNounSurfaceError,

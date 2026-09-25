@@ -1,5 +1,12 @@
 import type * as Dumling from "dumling/types";
-import { type AuthoredMember, defineAuthoredMember } from "./member.js";
+import { defineAuthoredMember } from "./member.js";
+import {
+	type AuthoredSpelling,
+	citationForm,
+	type ReviewedMember,
+	stemMember,
+	tableSpellings,
+} from "./stem-lemma.js";
 
 type Core = Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"];
 export type PronounCell = Pick<Core, "case" | "gender" | "number">;
@@ -15,10 +22,7 @@ export type PronounDescription = {
 	readonly en: readonly string[];
 	readonly ru: readonly string[];
 };
-export type ReviewedPronoun = {
-	readonly member: AuthoredMember;
-	readonly variants: readonly string[];
-};
+export type ReviewedPronoun = ReviewedMember;
 export type AgreementColumn = "Masc" | "Neut" | "Fem" | "Plur";
 export type PronounTable = Readonly<
 	Record<
@@ -68,8 +72,8 @@ export function cellCoordinates(core: Partial<PronounCell>): string {
 		.join(", ");
 }
 
-/** Each occupied, reviewed table cell is an identity; null cells are intentionally absent.
- * ADR 0018, not LEO, determines this project's Lemma granularity.
+/** A pillar's occupied, reviewed table cell is an identity; null cells are intentionally absent.
+ * ADR 0018 and system ADR 0032, not LEO, determine this project's Lemma granularity.
  * https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/index.xml?lang=de
  */
 export function pronounMember(
@@ -117,10 +121,13 @@ export function pronounMember(
 				},
 			},
 		}),
-		variants: form.variants ?? [],
+		spellings: [form.text, ...(form.variants ?? [])].map((spelled) => ({
+			spelled,
+		})),
 	};
 }
 
+/** A pillar paradigm: one Lemma per occupied cell. */
 export function pronounParadigm(
 	table: PronounTable,
 	description: PronounDescription,
@@ -142,6 +149,32 @@ export function pronounParadigm(
 		}
 	}
 	return result;
+}
+
+/**
+ * A stem pronoun (dieser, keiner, meiner) is one Lemma whose Surfaces mark the
+ * cell. It cites its Nom.Masc.Sg or, lacking one, its Nom.Plur cell unless a
+ * citation is given; uninflected spellings realize it without a cell.
+ */
+export function pronounStem(
+	table: PronounTable,
+	description: PronounDescription,
+	options: {
+		readonly citation?: PronounForm;
+		readonly uninflected?: readonly string[];
+	} = {},
+): ReviewedPronoun {
+	const spellings: AuthoredSpelling[] = [
+		...tableSpellings(table),
+		...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+	];
+	return stemMember({
+		kind: "PRON",
+		coreFeatures: { ...emptyCore, ...description.core },
+		citation: options.citation ?? citationForm(table),
+		description,
+		spellings,
+	});
 }
 
 export const form = (

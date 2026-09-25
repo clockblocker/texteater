@@ -184,6 +184,32 @@ test("unreviewed destinations cannot create arbitrary Readings", async () => {
 	).toEqual([]);
 });
 
+test("a stem determiner's forms stay inside its Lemma: diesem never reaches jenem", () => {
+	const dieser: Dumling.Lemma<"de", "Lexeme", "DET"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "DET",
+		canonicalForm: "dieser",
+		coreFeatures: {
+			case: null,
+			definite: null,
+			extPos: null,
+			foreign: null,
+			gender: null,
+			number: null,
+			numType: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Dem",
+		},
+	};
+	// Every form of dieser belongs to this one Reading Note; no alternative
+	// opens another Lemma's note.
+	expect(reviewedAlternatives(dieser)).toEqual([]);
+});
+
 test("noun heading navigation materializes the authored DET Reading without relations or encounters", async () => {
 	const t = createTestConvex();
 	const lemmaId = await insertLemma(t, noun);

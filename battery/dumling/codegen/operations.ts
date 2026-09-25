@@ -1,6 +1,7 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
+	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
@@ -9,6 +10,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
 	isGermanNounAttestation,
 	isGermanNounSurface,
@@ -60,6 +62,13 @@ export const registrations = [
 		implementation: isGermanDeterminerCore,
 		error: germanDeterminerCoreError,
 		name: "dumling.de-determiner.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanClosedClassSurface,
+		error: germanClosedClassSurfaceError,
+		name: "dumling.de-closed-class.surface",
 		version: 1,
 	},
 	{

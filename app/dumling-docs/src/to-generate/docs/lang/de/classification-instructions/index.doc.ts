@@ -97,7 +97,7 @@ This split matters in German because many tempting distinctions belong in differ
 
 \`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it as \`governedPrepositionEvidence\`.
 
-\`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form, except where a route makes them Core: German \`DET\` and \`PRON\` cells.
+\`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form, except on German \`DET\` and \`PRON\` pillars, whose cells are Core.
 
 Semantic identity is a Dumling Reading—one Lemma plus one emoji description.
 Reading Resolution happens after grammatical resolution, and a Reading is not
@@ -111,7 +111,7 @@ The German pack does not try to encode every imaginable grammatical distinction.
 
 German noun-like Lemmas use \`gender\` as a core grammatical feature and commonly use \`case\` and \`number\` as inflectional features.
 
-\`ADJ\` and attributive participles carry inflectional \`case\`, \`number\`, and \`gender\`. \`DET\` and \`PRON\` are closed, authored inventories: \`case\`, \`number\`, and \`gender\` are Core Features there, so each Paradigm Cell is its own Lemma (\`dem\` and \`den\`, \`mich\` and \`mir\`). Plural agreement has no gender.
+\`ADJ\` and attributive participles carry inflectional \`case\`, \`number\`, and \`gender\`. \`DET\` and \`PRON\` are closed, authored inventories. Their pillars, whose forms a learner memorizes one by one, make \`case\`, \`number\`, and \`gender\` Core Features, so each Paradigm Cell is its own Lemma: the personal pronouns, the \`der\` and \`ein\` articles, the \`der\`-series demonstrative and relative pronouns, \`wer\`, and \`jemand\`/\`niemand\` (\`dem\` and \`den\`, \`mich\` and \`mir\`). A word made of a stem and borrowed article endings is one Lemma and carries \`case\`, \`number\`, and \`gender\` on its Surface: \`diesem\`, \`meinem\` and \`keinem\` are Surfaces of \`dieser\`, \`mein\` and \`kein\`. Plural agreement has no gender.
 
 Because German morphology is often syncretic, these features should be encoded only when the attested form or the local syntax really licenses them.
 
