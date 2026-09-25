@@ -9,6 +9,7 @@ type Analysis = {
 		string,
 		{ canonicalForm: string; kind: string }[] | null
 	>;
+	valency?: unknown[] | null;
 };
 export function knowledgeFixture(
 	output: unknown,
@@ -22,6 +23,8 @@ export function knowledgeFixture(
 				language?: string;
 			};
 			if (!analysis || typeof analysis !== "object") return { output };
+			if (input.aspect === "valency")
+				return { output: { valency: analysis.valency ?? [] } };
 			if (input.aspect)
 				return {
 					output: {

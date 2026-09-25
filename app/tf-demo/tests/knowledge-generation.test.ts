@@ -447,6 +447,100 @@ test("a Full Reading still tops up government its new sentence attests, and only
 	expect(await attempts(covered)).toEqual([]);
 });
 
+const VOR_DAT = {
+	kind: "Preposition",
+	preposition: { canonicalForm: "vor" },
+	case: "Dat",
+} as const;
+
+test.each([
+	{
+		name: "a sentence Contributes the governed preposition the proposed frame omits",
+		frame: [],
+		stored: [
+			{
+				status: "Optional",
+				complement: { ...VOR_DAT, referent: "Either" },
+			},
+		],
+	},
+	{
+		name: "a sentence never changes the status the proposed frame gave",
+		frame: [
+			{
+				status: "Required",
+				complement: {
+					kind: "Preposition",
+					preposition: "vor",
+					case: "Dat",
+					referent: "Something",
+				},
+			},
+		],
+		stored: [
+			{
+				status: "Required",
+				complement: { ...VOR_DAT, referent: "Something" },
+			},
+		],
+	},
+])(
+	"the Knowledge call that creates a Reading proposes its frame once: $name",
+	async ({ frame, stored }) => {
+		jest.useRealTimers();
+		const t = createTestConvex();
+		const occurrence = await seedOccurrence(t, ANGST_READING);
+		await addToDictionary(t, occurrence);
+		await insertAttempt(t, occurrence, "frame", { state: "Scheduled" });
+		const provider = stubProvider(
+			async ({ aspect, language }) => language ?? `${aspect} text`,
+			frame,
+		);
+		try {
+			await t.action(
+				internal.knowledgeGenerationActions.runKnowledgeGeneration,
+				{ attemptKey: "frame" },
+			);
+		} finally {
+			provider.restore();
+		}
+		expect(
+			provider.requests.filter(({ aspect }) => aspect === "valency"),
+		).toHaveLength(1);
+		expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+		const [accumulated] = await rows(t, "accumulatedKnowledge");
+		expect(accumulated).toMatchObject({
+			status: "Full",
+			knowledge: { valency: stored },
+		});
+		expect(
+			Reflect.get(Object(accumulated?.knowledge), "valency"),
+		).toHaveLength(stored.length);
+	},
+);
+
+test("an empty proposed frame stores nothing and still completes the Reading", async () => {
+	jest.useRealTimers();
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "empty-frame", { state: "Scheduled" });
+	const provider = stubProvider(
+		async ({ aspect, language }) => language ?? `${aspect} text`,
+	);
+	try {
+		await t.action(
+			internal.knowledgeGenerationActions.runKnowledgeGeneration,
+			{ attemptKey: "empty-frame" },
+		);
+	} finally {
+		provider.restore();
+	}
+	expect(provider.requests.map(({ aspect }) => aspect)).toContain("valency");
+	const [accumulated] = await rows(t, "accumulatedKnowledge");
+	expect(accumulated?.status).toBe("Full");
+	expect(accumulated?.knowledge).not.toHaveProperty("valency");
+});
+
 test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t, {
@@ -589,8 +683,14 @@ test("manual writes never downgrade Full and failures persist only a safe catego
 	});
 });
 
-/** Stubs the model provider and restores it with the fixture API key. */
-function stubProvider(respond: (modelInput: ModelInput) => Promise<string>) {
+/**
+ * Stubs the model provider and restores it with the fixture API key. A
+ * Valency Frame request gets `frame`; every other request gets text.
+ */
+function stubProvider(
+	respond: (modelInput: ModelInput) => Promise<string>,
+	frame: readonly unknown[] = [],
+) {
 	const previousFetch = globalThis.fetch;
 	const previousKey = process.env.OPENAI_API_KEY;
 	const requests: ModelInput[] = [];
@@ -607,7 +707,10 @@ function stubProvider(respond: (modelInput: ModelInput) => Promise<string>) {
 						{
 							type: "output_text",
 							text: JSON.stringify({
-								value: { text: await respond(modelInput) },
+								value:
+									modelInput.aspect === "valency"
+										? { valency: frame }
+										: { text: await respond(modelInput) },
 							}),
 						},
 					],
@@ -670,11 +773,12 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		},
 		[],
 	);
-	// Government is asked only when intake attested it in the sentence.
+	// The Knowledge call that creates the Reading proposes its frame.
 	expect(request).toEqual({
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
+		valency: null,
 	});
 	expect(
 		generationRequestFor(
@@ -709,21 +813,33 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		},
 		emojiDescription: "😨",
 	} as const;
-	expect(
-		generationRequestFor(angst, [], { attestsGovernment: true }),
-	).toEqual({
-		transcription: null,
-		definition: null,
-		translations: { en: null, ru: null },
-		valency: null,
-	});
+	// A top-up never proposes a frame; attested government travels beside it.
 	expect(
 		generationRequestFor(angst, [], {
 			translationLanguages: [],
 			topUpOnly: true,
-			attestsGovernment: true,
 		}),
-	).toEqual({ valency: null });
+	).toEqual({});
+	// Only a Reading with no frame yet asks for one.
+	expect(
+		missingKnowledgeRequest(generationRequestFor(angst, []), {
+			knowledge: {
+				definition: "Furcht.",
+				valency: [
+					{
+						status: "Optional",
+						complement: {
+							kind: "Preposition",
+							preposition: { canonicalForm: "vor" },
+							case: "Dat",
+							referent: "Either",
+						},
+					},
+				],
+			},
+			checkedRelationKinds: [],
+		}),
+	).toEqual({ transcription: null, translations: { en: null, ru: null } });
 });
 
 test("production publication remains empty without a reviewed verdict", () => {

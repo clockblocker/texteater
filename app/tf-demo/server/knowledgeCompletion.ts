@@ -95,6 +95,19 @@ export function knowledgeRequestComplete(
 }
 
 /**
+ * The request a final publication must cover in stored content. A proposed
+ * Valency Frame may be empty, and an empty frame stores nothing (ADR 0034), so
+ * a run without failures has answered `valency` whatever it stored; any
+ * failure already leaves the request incomplete.
+ */
+export function withoutAnsweredValency(
+	request: KnowledgeRequest,
+): KnowledgeRequest {
+	const { valency: _valency, ...rest } = request;
+	return rest;
+}
+
+/**
  * The relation kinds one final publication answered: every requested kind
  * whose relations reached the dictionary and did not fail. Pending Shadow
  * targets and an empty answer both count (ADR 0012).

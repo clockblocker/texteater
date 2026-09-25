@@ -129,9 +129,10 @@ head Identity State is Miss.
 
 Given a unit's offsets: `slotsAt` lists every Slot whose governor has a
 member among them, so a Phraseme reaches its member words' slots. The host
-requests the `valency` Knowledge aspect only when these hold a preposition
-and case the Reading's Valency Frame lacks; each becomes an Optional
-Preposition Slot with no model call.
+passes the prepositions and cases the Reading's Valency Frame lacks as
+`attestedGovernment`, and each becomes an Optional Preposition Slot with no
+model call. The `valency` Knowledge aspect is separate: it asks the Knowledge
+call for the whole frame of a Reading that has none yet.
 
 ## The intake call, German
 

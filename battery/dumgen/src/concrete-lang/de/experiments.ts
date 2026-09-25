@@ -58,6 +58,8 @@ import { corpusSource as p25 } from "./knowledge-production/phraseme/corpus.js";
 import { evaluationCaseIds as e25 } from "./knowledge-production/phraseme/evaluation-ids.js";
 import { corpusSource as p34 } from "./knowledge-production/translation/corpus.js";
 import { evaluationCaseIds as e34 } from "./knowledge-production/translation/evaluation-ids.js";
+import { corpusSource as p38 } from "./knowledge-production/valency/corpus.js";
+import { evaluationCaseIds as e38 } from "./knowledge-production/valency/evaluation-ids.js";
 import { evaluationCaseIds as e26 } from "./reading-emoji-description/generate/evaluation-ids.js";
 import { promptSource as p26 } from "./reading-emoji-description/generate/prompt.js";
 import { corpusSource as p27 } from "./reading-emoji-description/resolve/corpus.js";
@@ -104,4 +106,5 @@ export const corpusRegistrations = [
 	{ source: p33, evaluationCaseIds: e33 },
 	{ source: p34, evaluationCaseIds: e34 },
 	{ source: p37, evaluationCaseIds: e37 },
+	{ source: p38, evaluationCaseIds: e38 },
 ] as const;

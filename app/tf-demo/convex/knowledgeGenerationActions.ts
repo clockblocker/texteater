@@ -143,7 +143,6 @@ export const runKnowledgeGeneration = internalAction({
 				const request = generationRequestFor(reading, qualifiedKinds, {
 					translationLanguages: input.translationLanguages,
 					topUpOnly: input.topUpOnly,
-					attestsGovernment: input.government.length > 0,
 				});
 				requested = request;
 				const participleSource = asksParticipleSource(reading, {
@@ -228,19 +227,18 @@ export const runKnowledgeGeneration = internalAction({
 							encounter,
 							reading,
 							request: {
+								// A stored frame drops `valency`: only a Reading
+								// with no frame yet asks for one.
 								...missingKnowledgeRequest(request, {
 									knowledge: input.existingKnowledge,
 									checkedRelationKinds:
 										input.checkedRelationKinds,
 								}),
-								// Coverage is per occurrence: stored government may miss this sentence's.
-								...("valency" in request
-									? { valency: null }
-									: {}),
 								...(participleSource
 									? { participleSource: null }
 									: {}),
 							},
+							// Coverage is per occurrence: the stored frame may lack this sentence's government.
 							attestedGovernment: input.government,
 						} as KnowledgeInput<"de">)
 						.pipe(

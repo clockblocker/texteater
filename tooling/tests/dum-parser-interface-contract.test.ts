@@ -19,6 +19,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 	expect(Object.keys(dumrel).sort()).toEqual([
 		"KnowledgePolicyUnavailable",
 		"ParsingError",
+		"allowedComplementKinds",
 		"applyKnowledgeChange",
 		"directSemanticRelationValues",
 		"governedCaseValues",

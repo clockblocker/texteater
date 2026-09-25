@@ -3,10 +3,12 @@ import { directSemanticRelationValues, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 /**
- * The Knowledge one occurrence asks for. `valency` is requested only when
- * intake attested a governed preposition the Reading's Valency Frame lacks
- * (ADR 0034); a Reading whose Knowledge is already Full asks only for missing
- * translation languages and that government (`topUpOnly`).
+ * The Knowledge one occurrence asks for. The base request of a route with a
+ * Valency Frame includes `valency`, so the Knowledge call that creates the
+ * Reading proposes its whole frame (ADR 0034); a retry drops it once a frame
+ * is stored. A Reading whose Knowledge is already Full asks only for missing
+ * translation languages (`topUpOnly`). Government a sentence attests travels
+ * beside the request, never in it.
  */
 export function generationRequestFor(
 	reading: { readonly lemma: Dumling.Lemma<"de"> },
@@ -14,7 +16,6 @@ export function generationRequestFor(
 	options: {
 		readonly translationLanguages?: readonly Dumrel.TranslationLanguage[];
 		readonly topUpOnly?: boolean;
-		readonly attestsGovernment?: boolean;
 	} = {},
 ) {
 	const {
@@ -36,26 +37,17 @@ export function generationRequestFor(
 	});
 	if (!selected.success) throw selected.error;
 	const applicable = selected.value;
-	const government =
-		options.attestsGovernment && applicable.valency === null
-			? { valency: null }
-			: {};
 	if (options.topUpOnly) {
-		return {
-			...(applicable.translations
-				? { translations: applicable.translations }
-				: {}),
-			...government,
-		};
+		return applicable.translations
+			? { translations: applicable.translations }
+			: {};
 	}
 	const {
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,
-		valency: _valency,
 		participleSource: _participleSource,
-		...rest
+		...request
 	} = applicable;
-	const request = { ...rest, ...government };
 	const allowed = new Set(qualifiedKinds);
 	const semanticRelations = Object.fromEntries(
 		directSemanticRelationValues.flatMap((relation) =>

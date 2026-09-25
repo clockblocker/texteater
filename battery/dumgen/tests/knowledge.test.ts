@@ -1,11 +1,14 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
+import { applyKnowledgeChange } from "dumrel";
 import { Effect, Fiber } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
+import { markedContextEncounter } from "../src/evaluation/knowledge-operation.js";
 import { knowledgeInputSchema } from "../src/schemas.js";
 import { choiceAnswers } from "../src/testing.js";
 import type {
+	DumgenOptions,
 	KnowledgeInput,
 	KnowledgeProduction,
 	OperationTrace,
@@ -463,11 +466,11 @@ const governor = {
 		},
 		emojiDescription: "⏳",
 	},
-	request: { definition: null, valency: null },
+	request: { definition: null },
 } as const satisfies KnowledgeInput<"de">;
 const adposition = (
 	canonicalForm: string,
-	governedCase: "Acc" | null,
+	governedCase: "Acc" | "Dat" | null,
 ): Dumling.Lemma<"de", "Lexeme", "ADP"> => ({
 	unitKind: "Lemma",
 	language: "de",
@@ -483,8 +486,286 @@ const adposition = (
 		partType: null,
 	},
 });
+const verb = (
+	canonicalForm: string,
+	lexicallyReflexive: "Yes" | null = null,
+): Dumling.Lemma<"de", "Lexeme", "VERB"> => ({
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "VERB",
+	canonicalForm,
+	coreFeatures: { hasSepPrefix: null, lexicallyReflexive, verbType: null },
+});
+const angst: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "Angst",
+	coreFeatures: { gender: "Fem", hyph: null },
+};
+/** A new Reading's Knowledge run in `markedContext`, asking for its frame. */
+const newReading = (
+	markedContext: string,
+	lemma: Dumling.Lemma<"de">,
+	request: KnowledgeInput<"de">["request"] = { valency: null },
+) =>
+	({
+		encounter: markedContextEncounter(markedContext, lemma),
+		reading: { unitKind: "Reading", lemma, emojiDescription: "💬" },
+		request,
+	}) as KnowledgeInput<"de">;
+type ModelRequest = Parameters<DumgenOptions["execute"]>[0];
+/** A Knowledge call stubbed to propose `frame` and text for other aspects. */
+const proposing = (frame: unknown, seen: ModelRequest[] = []) =>
+	createDumgen({
+		execute: async (request) => {
+			seen.push(request);
+			const { aspect } = request.input as { aspect?: string };
+			return {
+				output:
+					aspect === "valency"
+						? { valency: frame }
+						: { text: "Text." },
+			};
+		},
+		judge: async () => {
+			throw Error("No judgment expected");
+		},
+	});
+const nom = {
+	status: "Required",
+	complement: { kind: "Case", case: "Nom", referent: "Someone" },
+} as const;
+const prepositionSlot = (
+	status: "Required" | "Optional",
+	preposition: string,
+	governedCase: "Acc" | "Dat",
+	referent: "Someone" | "Something" | "Either",
+) => ({
+	status,
+	complement: {
+		kind: "Preposition" as const,
+		preposition,
+		case: governedCase,
+		referent,
+	},
+});
+/** The same Slot with its preposition resolved to the ADP Lemma. */
+const stored = (
+	slot: ReturnType<typeof prepositionSlot>,
+	fixedCase: "Acc" | "Dat" | null = null,
+) => ({
+	...slot,
+	complement: {
+		...slot.complement,
+		preposition: adposition(slot.complement.preposition, fixedCase),
+	},
+});
 
-test("attested government becomes Optional Preposition Slots without a model call, resolves to ADP Lemmas, keeps fixed cases and publishes only at the end", async () => {
+test("the Knowledge call that creates a Reading proposes its whole frame, and a free adjunct is no slot", async () => {
+	const seen: ModelRequest[] = [];
+	const auf = prepositionSlot("Optional", "auf", "Acc", "Either");
+	const result = await Effect.runPromise(
+		proposing([nom, auf], seen).produceKnowledge(
+			newReading("Er <TARGET>wartet</TARGET> im Regen.", verb("warten")),
+		),
+	);
+	expect(result).toEqual({
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "valency",
+				value: [nom, stored(auf)],
+			},
+		],
+		pendingRelations: [],
+		failures: [],
+	});
+	expect(seen).toHaveLength(1);
+	const [call] = seen;
+	expect(call?.input).toMatchObject({
+		aspect: "valency",
+		markedContext: "Er <TARGET>wartet</TARGET> im Regen.",
+	});
+	expect(call?.input).not.toHaveProperty("encounter");
+	for (const criterion of [
+		"the subject included, in E-VALBU order",
+		"Required",
+		"Optional",
+		"im Regen in Er wartet im Regen",
+		"wohnen in/bei/auf",
+		"no slot for sich in sich gewöhnen an",
+		"separable prefix",
+		"auf den Keks is wording",
+	])
+		expect(call?.systemPrompt).toContain(criterion);
+	const schema = JSON.stringify(call?.outputSchema);
+	expect(schema).toContain('"Nom"');
+	expect(schema).toContain('"Preposition"');
+});
+
+test("a lexical reflexive gets no slot and a Required preposition keeps its status", async () => {
+	const an = prepositionSlot("Required", "an", "Acc", "Either");
+	const result = await Effect.runPromise(
+		proposing([nom, an]).produceKnowledge(
+			newReading(
+				"Ich habe mich an die Kälte <TARGET>gewöhnt</TARGET>.",
+				verb("sich gewöhnen", "Yes"),
+			),
+		),
+	);
+	expect(result.changes).toEqual([
+		{ kind: "Contribute", aspect: "valency", value: [nom, stored(an)] },
+	]);
+});
+
+test("a noun's frame is offered and keeps only governed prepositions", async () => {
+	const seen: ModelRequest[] = [];
+	const vor = prepositionSlot("Optional", "vor", "Dat", "Either");
+	const result = await Effect.runPromise(
+		proposing(
+			[
+				{
+					status: "Optional",
+					complement: {
+						kind: "Case",
+						case: "Gen",
+						referent: "Someone",
+					},
+				},
+				vor,
+			],
+			seen,
+		).produceKnowledge(
+			newReading(
+				"Er blieb aus <TARGET>Angst</TARGET> vor Hunden zu Hause.",
+				angst,
+			),
+		),
+	);
+	expect(result.changes).toEqual([
+		{ kind: "Contribute", aspect: "valency", value: [stored(vor)] },
+	]);
+	expect(result.failures).toEqual([]);
+	expect(seen[0]?.systemPrompt).toContain("it has no subject slot");
+	expect(JSON.stringify(seen[0]?.outputSchema)).not.toContain('"Nom"');
+});
+
+test("Dumrel drops the invalid Slots of a proposed frame and keeps the rest of the run", async () => {
+	const traces: OperationTrace[] = [];
+	const auf = prepositionSlot("Optional", "auf", "Acc", "Either");
+	const invalid = [
+		prepositionSlot("Optional", "für", "Dat", "Something"),
+		{ ...nom, status: "Optional" },
+		prepositionSlot("Optional", "wegen", "Dat", "Something"),
+		{ status: "Maybe", complement: nom.complement },
+		"auf",
+	];
+	const dumgen = createDumgen({
+		execute: async (request) => ({
+			output:
+				(request.input as { aspect: string }).aspect === "valency"
+					? { valency: [nom, ...invalid, auf] }
+					: { text: "Auf etwas harren." },
+		}),
+		judge: async () => {
+			throw Error("No judgment expected");
+		},
+		onOperation: (trace) => traces.push(trace),
+	});
+	const result = await Effect.runPromise(
+		dumgen.produceKnowledge(
+			newReading("Er <TARGET>wartet</TARGET>.", verb("warten"), {
+				definition: null,
+				valency: null,
+			}),
+		),
+	);
+	expect(result.failures).toEqual([]);
+	expect(result.changes).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Auf etwas harren.",
+		},
+		{ kind: "Contribute", aspect: "valency", value: [nom, stored(auf)] },
+	]);
+	const dropped = traces[0]?.events.find(
+		(event) => event.kind === "DroppedValencySlots",
+	)?.data as { dropped: { slot: unknown }[] };
+	expect(dropped.dropped.map(({ slot }) => slot)).toEqual(invalid);
+
+	const malformed = await Effect.runPromise(
+		proposing({ slots: [] }).produceKnowledge(
+			newReading("Er <TARGET>wartet</TARGET>.", verb("warten"), {
+				definition: null,
+				valency: null,
+			}),
+		),
+	);
+	expect(malformed.changes).toEqual([
+		{ kind: "Contribute", aspect: "definition", value: "Text." },
+	]);
+	expect(malformed.failures).toMatchObject([
+		{ aspect: "valency", code: "InvalidModelOutput" },
+	]);
+});
+
+test("a sentence Contributes the governed preposition a proposed frame omits", async () => {
+	const bei = prepositionSlot("Optional", "bei", "Dat", "Someone");
+	const fuer = prepositionSlot("Optional", "für", "Acc", "Either");
+	const bedanken = newReading(
+		"Sie <TARGET>bedankt</TARGET> sich für die Hilfe.",
+		verb("sich bedanken", "Yes"),
+	);
+	const attestedGovernment = [{ preposition: "für", case: "Acc" as const }];
+	const omitted = await Effect.runPromise(
+		proposing([nom, bei]).produceKnowledge({
+			...bedanken,
+			attestedGovernment,
+		}),
+	);
+	expect(omitted.changes).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "valency",
+			value: [nom, stored(bei, "Dat")],
+		},
+		{ kind: "Contribute", aspect: "valency", value: [stored(fuer, "Acc")] },
+	]);
+	let knowledge = {};
+	for (const change of omitted.changes) {
+		const applied = applyKnowledgeChange({
+			source: bedanken.reading,
+			knowledge,
+			change,
+		});
+		if (!applied.success) throw applied.error;
+		knowledge = applied.value;
+	}
+	expect(knowledge).toEqual({
+		valency: [nom, stored(bei, "Dat"), stored(fuer, "Acc")],
+	});
+
+	const proposed = prepositionSlot("Optional", "für", "Acc", "Something");
+	const covered = await Effect.runPromise(
+		proposing([nom, bei, proposed]).produceKnowledge({
+			...bedanken,
+			attestedGovernment,
+		}),
+	);
+	expect(covered.changes).toEqual([
+		{
+			kind: "Contribute",
+			aspect: "valency",
+			value: [nom, stored(bei, "Dat"), stored(proposed, "Acc")],
+		},
+	]);
+});
+
+test("government a later sentence attests is Contributed as Optional Slots without a model call, resolves to ADP Lemmas, keeps fixed cases and publishes only at the end", async () => {
 	const incremental: unknown[] = [];
 	const aspects: unknown[] = [];
 	const result = await Effect.runPromise(
@@ -507,7 +788,7 @@ test("attested government becomes Optional Preposition Slots without a model cal
 			],
 		}),
 	);
-	expect(aspects).not.toContain("valency");
+	expect(aspects).toEqual(["definition"]);
 	expect(result.failures).toEqual([]);
 	expect(
 		result.changes.find((change) => change.aspect === "valency"),
@@ -515,24 +796,8 @@ test("attested government becomes Optional Preposition Slots without a model cal
 		kind: "Contribute",
 		aspect: "valency",
 		value: [
-			{
-				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adposition("auf", null),
-					case: "Acc",
-					referent: "Either",
-				},
-			},
-			{
-				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adposition("für", "Acc"),
-					case: "Acc",
-					referent: "Either",
-				},
-			},
+			stored(prepositionSlot("Optional", "auf", "Acc", "Either")),
+			stored(prepositionSlot("Optional", "für", "Acc", "Either"), "Acc"),
 		],
 	});
 	expect(incremental).toEqual(["definition"]);
@@ -552,7 +817,7 @@ test("no attested government is no contribution, and an unlisted preposition is 
 				},
 			}).produceKnowledge({
 				...governor,
-				request: { valency: null },
+				request: {},
 				attestedGovernment,
 			}),
 		);
@@ -566,4 +831,50 @@ test("no attested government is no contribution, and an unlisted preposition is 
 	expect(invalid.failures).toMatchObject([
 		{ aspect: "valency", code: "InvalidInput" },
 	]);
+});
+
+test("the valency corpus runs through production Knowledge and its evaluator ignores only referents and order", async () => {
+	const { valencyOperationExperiment, evaluateValencyFrame } = await import(
+		"../src/concrete-lang/de/knowledge-production/valency/experiment.js"
+	);
+	const { knowledgeFixture } = await import("../src/testing.js");
+	const offline = valencyOperationExperiment({
+		execute: async () => {
+			throw Error("offline");
+		},
+		judge: async () => {
+			throw Error("offline");
+		},
+	});
+	const cases = Object.entries(offline.corpus.cases);
+	expect(cases).toHaveLength(8);
+	expect(offline.evaluation.cases).toHaveLength(8);
+	for (const [id, example] of cases) {
+		const output = await valencyOperationExperiment(
+			knowledgeFixture(example.idealOutput),
+		).run(example.input, {
+			signal: new AbortController().signal,
+			recordTrace: () => {},
+		});
+		expect(output, id).toEqual(example.idealOutput);
+	}
+	const ideal = [nom, prepositionSlot("Optional", "auf", "Acc", "Either")];
+	expect(evaluateValencyFrame(ideal, ideal)).toEqual({
+		contractPass: true,
+		referentPass: true,
+		exactMatch: true,
+	});
+	expect(
+		evaluateValencyFrame(
+			[prepositionSlot("Optional", "auf", "Acc", "Something"), nom],
+			ideal,
+		),
+	).toEqual({ contractPass: true, referentPass: false, exactMatch: false });
+	expect(
+		evaluateValencyFrame(
+			[nom, prepositionSlot("Required", "auf", "Acc", "Either")],
+			ideal,
+		).contractPass,
+	).toBe(false);
+	expect(evaluateValencyFrame([nom], ideal).contractPass).toBe(false);
 });

@@ -27,10 +27,6 @@ import {
 	closedRoute,
 } from "../authored-closed-sets/select.js";
 import {
-	governedCaseFor,
-	isGovernablePreposition,
-} from "../governable-prepositions.js";
-import {
 	draftedRelationCandidates,
 	draftedTexts,
 	translationFormClause,
@@ -44,9 +40,9 @@ import {
 import {
 	authoredKnowledge,
 	projectKnowledge,
-	type ValencySlotDraft,
 	validateRequest,
 } from "./project.js";
+import { proposeValencyFrame, valencyChanges } from "./valency.js";
 
 const relationCriteria: Record<Dumrel.DirectSemanticRelation, string> = {
 	synonym:
@@ -79,7 +75,11 @@ export function produceKnowledge(
 		encounter: Encounter;
 		reading: Dumling.Reading;
 		request: KnowledgeRequest;
-		/** What intake attested for this occurrence (`slotsAt`). */
+		/**
+		 * What intake attested for this occurrence (`slotsAt`). Each is
+		 * Contributed as an Optional Slot whether or not `valency` is
+		 * requested.
+		 */
 		attestedGovernment?: readonly {
 			preposition: string;
 			case: Dumrel.GovernedCase;
@@ -157,43 +157,24 @@ export function produceKnowledge(
 			failures: KnowledgeFailure[];
 		};
 		/**
-		 * Until the Knowledge call proposes the whole frame, Slots come only
-		 * from the governed prepositions this sentence attests, with no model
-		 * call. The sentence shows neither whether the word needs the
-		 * preposition nor what fills it, so each Slot is Optional with an
-		 * Either referent. Published with the final batch.
+		 * The frame is proposed only when requested, which a caller does while
+		 * the Reading has no frame. Government this sentence attests is
+		 * Contributed with no model call. Published with the final batch.
 		 */
-		const valency = () => {
-			const drafts = new Map<string, ValencySlotDraft>();
-			for (const {
-				preposition,
-				case: governedCase,
-			} of input.attestedGovernment ?? []) {
-				if (!isGovernablePreposition(preposition))
-					throw new DumgenFailure(
-						"InvalidInput",
-						stage,
-						`${preposition} is not a governable preposition`,
-						route,
-					);
-				const complement = {
-					kind: "Preposition",
-					preposition,
-					case: governedCaseFor(preposition, governedCase),
-					referent: "Either",
-				} as const;
-				drafts.set(`${complement.preposition}/${complement.case}`, {
-					status: "Optional",
-					complement,
-				});
-			}
-			const contribution = projectKnowledge(
-				reading,
-				{ valency: null },
-				{ valency: [...drafts.values()] },
-			);
-			return contribution.changes.length ? contribution : null;
-		};
+		const attested = input.attestedGovernment ?? [];
+		const valency = () =>
+			Effect.gen(function* () {
+				const proposed = Object.hasOwn(authored.missing, "valency")
+					? yield* proposeValencyFrame(options, scope, state, route)
+					: [];
+				const changes = valencyChanges(
+					reading,
+					proposed,
+					attested,
+					route,
+				);
+				return changes.length ? { changes } : null;
+			});
 		/**
 		 * The verb an adjectival participle comes from (ADR 0035), or no
 		 * contribution for a plain adjective. Published with the final batch
@@ -239,7 +220,11 @@ export function produceKnowledge(
 			snapshot();
 		};
 
-		for (const [aspect, selection] of Object.entries(authored.missing)) {
+		const aspects = Object.entries(authored.missing);
+		// Attested government is Contributed even when no frame is requested.
+		if (attested.length && !Object.hasOwn(authored.missing, "valency"))
+			aspects.push(["valency", null]);
+		for (const [aspect, selection] of aspects) {
 			if (aspect === "semanticRelations") continue;
 			const leaves =
 				aspect === "translations"
@@ -306,7 +291,7 @@ export function produceKnowledge(
 							);
 							const contribution =
 								aspect === "valency"
-									? valency()
+									? yield* valency()
 									: aspect === "participleSource"
 										? yield* participleSource()
 										: draftText !== undefined

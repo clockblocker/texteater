@@ -1,0 +1,393 @@
+{
+	"route": "knowledge-valency/de",
+	"cases": {
+		"valency-warten-free-adjunct": {
+			"input": {
+				"markedContext": "Er <TARGET>wartet</TARGET> im Regen.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "warten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"emojiDescription": "⏳"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "auf",
+							"case": "Acc",
+							"referent": "Either"
+						}
+					}
+				]
+			},
+			"explanation": "The frame belongs to the Reading, so the auf + Acc complement this sentence leaves out is an Optional slot. im Regen is a free adjunct of place and is not a slot.",
+			"sources": [
+				{
+					"title": "#599 acceptance case 1",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "warten is one Reading with an Optional auf slot."
+				}
+			]
+		},
+		"valency-warten-realized": {
+			"input": {
+				"markedContext": "Wir <TARGET>warten</TARGET> auf dich.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "warten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"emojiDescription": "⏳"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "auf",
+							"case": "Acc",
+							"referent": "Either"
+						}
+					}
+				]
+			},
+			"explanation": "Realizing auf + Acc does not make it Required: the same Reading keeps the same frame.",
+			"sources": [
+				{
+					"title": "#599 acceptance case 2",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "A sentence that realizes the Optional slot leaves the frame unchanged."
+				}
+			]
+		},
+		"valency-gewoehnen-lexical-reflexive": {
+			"input": {
+				"markedContext": "Ich habe mich an die Kälte <TARGET>gewöhnt</TARGET>.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich gewöhnen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						}
+					},
+					"emojiDescription": "🔄"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "an",
+							"case": "Acc",
+							"referent": "Either"
+						}
+					}
+				]
+			},
+			"explanation": "sich is the lexical reflexive, a fixed part from Lemma identity, so it has no slot. The an + Acc complement is Required.",
+			"sources": [
+				{
+					"title": "#599 acceptance case 3",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "sich gewöhnen an has a Required an slot."
+				}
+			]
+		},
+		"valency-bedanken-two-prepositions": {
+			"input": {
+				"markedContext": "Sie <TARGET>bedankt</TARGET> sich für die Hilfe.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich bedanken",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						}
+					},
+					"emojiDescription": "🙏"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "bei",
+							"case": "Dat",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "für",
+							"case": "Acc",
+							"referent": "Something"
+						}
+					}
+				]
+			},
+			"explanation": "sich bei jemandem für etwas bedanken: both prepositional complements are governed and Optional, and the lexical reflexive is not a slot.",
+			"sources": [
+				{
+					"title": "ADR 0030",
+					"path": "docs/adr/0030-store-preposition-government-as-reading-knowledge.md",
+					"supports": "bedanken governs bei + Dat and für + Acc."
+				}
+			]
+		},
+		"valency-wohnen-free-marker": {
+			"input": {
+				"markedContext": "Sie <TARGET>wohnt</TARGET> bei ihrer Tante.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wohnen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"emojiDescription": "🏠"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					}
+				]
+			},
+			"explanation": "wohnen takes in, bei or auf freely, so the location is a free-marker pattern and not a slot.",
+			"sources": [
+				{
+					"title": "ADR 0034",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "Patterns whose marker is free (wohnen in/bei/auf) are not recorded."
+				}
+			]
+		},
+		"valency-stolz-adjective": {
+			"input": {
+				"markedContext": "Er ist <TARGET>stolz</TARGET> auf seinen Sohn.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "stolz",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"emojiDescription": "🦚"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Someone"
+						}
+					},
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "auf",
+							"case": "Acc",
+							"referent": "Either"
+						}
+					}
+				]
+			},
+			"explanation": "The adjective governs auf + Acc. Er ist stolz keeps the sense without it, so the slot is Optional.",
+			"sources": [
+				{
+					"title": "ADR 0034",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "stolz stores auf + Acc."
+				}
+			]
+		},
+		"valency-angst-noun": {
+			"input": {
+				"markedContext": "Er blieb aus <TARGET>Angst</TARGET> vor Hunden zu Hause.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Angst",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"emojiDescription": "😨"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Optional",
+						"complement": {
+							"kind": "Preposition",
+							"preposition": "vor",
+							"case": "Dat",
+							"referent": "Either"
+						}
+					}
+				]
+			},
+			"explanation": "A German noun's frame holds only governed prepositions; its bare cases are attributes.",
+			"sources": [
+				{
+					"title": "Dumrel valency policy",
+					"path": "battery/dumrel/src/valency-policy.ts",
+					"supports": "German NOUN Readings allow only Preposition complements."
+				}
+			]
+		},
+		"valency-keks-idiom-wording": {
+			"input": {
+				"markedContext": "Du <TARGET>gehst</TARGET> mir auf den Keks.",
+				"reading": {
+					"unitKind": "Reading",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "auf den Keks gehen",
+						"coreFeatures": {}
+					},
+					"emojiDescription": "😤"
+				}
+			},
+			"idealOutput": {
+				"valency": [
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Nom",
+							"referent": "Either"
+						}
+					},
+					{
+						"status": "Required",
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Someone"
+						}
+					}
+				]
+			},
+			"explanation": "auf den Keks is the Idiom's wording, not a slot. The Idiom demands a Dat person, which the learner error Du gehst mich auf den Keks gets wrong.",
+			"sources": [
+				{
+					"title": "ADR 0034",
+					"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+					"supports": "jemandem auf den Keks gehen has a Required Dat slot."
+				}
+			]
+		}
+	},
+	"demonstrationIds": []
+}

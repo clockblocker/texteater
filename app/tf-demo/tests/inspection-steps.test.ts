@@ -301,7 +301,8 @@ test("an inspected click resolving a new Reading, then its Knowledge, shows each
 				"Generate and publish Knowledge > Publish Knowledge contribution [Code · app/tf-demo · knowledgeGenerationActions · Success]",
 			),
 			"Generate and publish Knowledge > Publish generated Knowledge [Code · app/tf-demo · knowledgeGenerationActions · Success]",
-			...Array(4).fill(
+			// Four text leaves and the new Reading's Valency Frame.
+			...Array(5).fill(
 				"Generate and publish Knowledge > produceKnowledge > produceKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
 			),
 			"Generate and publish Knowledge > produceKnowledge [Code · battery/dumgen · Success]",
@@ -310,7 +311,7 @@ test("an inspected click resolving a new Reading, then its Knowledge, shows each
 		expect(
 			steps.filter((step) => !step.startsWith("Generate and publish")),
 		).toEqual(click);
-		expect(providers.requests.length).toBe(clickRequests + 4);
+		expect(providers.requests.length).toBe(clickRequests + 5);
 		await expectEachCallOnce(t, "request-1", providers.requests.length);
 	} finally {
 		providers.restore();

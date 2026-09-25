@@ -81,8 +81,8 @@ stays its own unit and is the slot's filler instead. The complement names
 the preposition's Lemma, its case and its referent. Intake records only
 preposition slots; bare-case slots come from the Knowledge call's frame.
 Each preposition and case gives the governor's Valency Frame an Optional
-Preposition Slot. Until the Knowledge call proposes the whole frame, realized
-slots are the frame's only source (ADR 0034).
+Preposition Slot if the frame lacks it. The rest of the frame comes from the
+Knowledge call that creates the Reading (ADR 0034).
 _Avoid_: government list, valency guess, governed-preposition prompt
 
 **Route Mass**:

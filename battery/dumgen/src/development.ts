@@ -24,6 +24,7 @@ import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-produc
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
 import phases from "./concrete-lang/de/knowledge-production/evaluation/phases.json";
 import { translationOperationExperiment } from "./concrete-lang/de/knowledge-production/translation/experiment.js";
+import { valencyOperationExperiment } from "./concrete-lang/de/knowledge-production/valency/experiment.js";
 import {
 	evaluateReadingMeaningIsolation,
 	meaningIsolationCaseIds,
@@ -183,6 +184,8 @@ export function operationExperiment(id: string, options: DumgenOptions) {
 		return translationOperationExperiment(options);
 	if (id === "knowledge-draft/de/translations")
 		return draftTranslationOperationExperiment(options);
+	if (id === "knowledge-valency/de")
+		return valencyOperationExperiment(options);
 	if (id.startsWith("knowledge-analysis/de/"))
 		return knowledgeOperationExperiment(getExperiment(id), options);
 	if (routeOf(id) === targetRoute)
@@ -213,6 +216,7 @@ export async function evaluateExperiment(args: {
 		args.experimentId === "intake" ||
 		args.experimentId === "knowledge-analysis/translation" ||
 		args.experimentId === "knowledge-draft/de/translations" ||
+		args.experimentId === "knowledge-valency/de" ||
 		args.experimentId.startsWith("knowledge-analysis/de/")
 	) {
 		if (!args.judge)

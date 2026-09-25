@@ -42,6 +42,7 @@ export type {
 	ValencySlot,
 	ValencySlotStatus,
 } from "./types.js";
+export { allowedComplementKinds } from "./valency-policy.js";
 export {
 	directSemanticRelationValues,
 	governedCaseValues,

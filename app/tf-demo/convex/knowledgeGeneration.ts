@@ -5,6 +5,7 @@ import { translationLanguageValues } from "dumrel";
 import {
 	answeredRelationKinds,
 	knowledgeRequestComplete,
+	withoutAnsweredValency,
 } from "../server/knowledgeCompletion";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import { parseGermanReading } from "../server/operationalParsing";
@@ -487,7 +488,9 @@ export const publish = internalMutation({
 					...answered,
 				],
 			},
-			args.productionEvidence.request as KnowledgeRequest,
+			withoutAnsweredValency(
+				args.productionEvidence.request as KnowledgeRequest,
+			),
 			args.productionEvidence.failures as KnowledgeFailure[],
 		);
 		if (args.final)

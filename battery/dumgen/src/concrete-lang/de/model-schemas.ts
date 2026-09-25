@@ -98,7 +98,7 @@ export const knowledgeInputSchema = z.strictObject({
 });
 const targets = z.array(targetProposalSchema).nullable().optional();
 /** A Valency Frame Slot with its preposition still spelled as text. */
-const valencySlotDraftSchema = z.strictObject({
+export const valencySlotDraftSchema = z.strictObject({
 	status: valencySlotStatusSchema,
 	complement: z.union([
 		z.strictObject({
