@@ -58,8 +58,11 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			"gender[psor]": null,
 			"number[psor]": null,
 		});
-	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
-		Object.assign(bag.inflectional, { article: null });
+	if (
+		["de/Lexeme/NOUN", "en/Lexeme/NOUN"].includes(route.key) &&
+		bag.inflectional
+	)
+		Object.assign(bag.inflectional, { article: "None" });
 	const verbal =
 		route.language === "de" &&
 		["VERB", "AUX", "Idiom", "Collocation"].includes(route.kind);
@@ -97,7 +100,14 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		surface: Surface,
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",
-		...(route.key === "de/Lexeme/NOUN" ? { articleEvidence: null } : {}),
+		...([
+			"de/Lexeme/NOUN",
+			"en/Lexeme/NOUN",
+			"he/Lexeme/NOUN",
+			"he/Lexeme/ADJ",
+		].includes(route.key)
+			? { articleEvidence: null }
+			: {}),
 		...(["de/Lexeme/ADJ", "de/Lexeme/NOUN"].includes(route.key)
 			? { valencyEvidence: [] }
 			: {}),

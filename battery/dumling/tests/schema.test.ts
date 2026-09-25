@@ -10,7 +10,7 @@ import { surfaceSchema as hebrewAdjectiveSchema } from "../src/generated/schemas
 import { surfaceSchema as hebrewNounSchema } from "../src/generated/schemas/he/lexeme/noun.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
-test("concrete entrypoints expose canonical schemas for all 396 unit routes", async () => {
+test("concrete entrypoints expose canonical schemas for all 372 unit routes", async () => {
 	const names = {
 		Lemma: "lemmaSchema",
 		Surface: "surfaceSchema",

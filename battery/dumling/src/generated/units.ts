@@ -86,11 +86,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 			valencyEvidence: Array<{
@@ -202,11 +235,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 			valencyEvidence: Array<{
@@ -318,11 +384,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -585,17 +684,70 @@ export interface UnitMap {
 					| null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null;
+			expletiveEvidence:
+				| (
+						| {
+								attested: string;
+								orthography: "Standard" | "Typo" | "Shorthand";
+						  }
+						| {
+								attested: string;
+								orthography: "Fused";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -681,11 +833,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -876,11 +1061,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -939,11 +1157,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -978,7 +1229,7 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
-				article: ("Definite" | "Indefinite") | null;
+				article: "Definite" | "Indefinite" | "None";
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
 			} | null;
@@ -1018,23 +1269,105 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
-					article: ("Definite" | "Indefinite") | null;
+					article: "Definite" | "Indefinite" | "None";
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			articleEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null;
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -1146,11 +1479,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1243,11 +1609,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1326,11 +1725,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1505,11 +1937,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1592,11 +2057,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1711,11 +2209,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1774,11 +2305,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -1859,11 +2423,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2142,17 +2739,70 @@ export interface UnitMap {
 					| null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null;
+			expletiveEvidence:
+				| (
+						| {
+								attested: string;
+								orthography: "Standard" | "Typo" | "Shorthand";
+						  }
+						| {
+								attested: string;
+								orthography: "Fused";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -2238,74 +2888,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"de/Morpheme/Clitic": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Morpheme";
-			kind: "Clitic";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Morpheme";
-					kind: "Clitic";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2364,11 +2984,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2427,11 +3080,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2490,11 +3176,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2553,11 +3272,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2616,11 +3368,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2679,11 +3464,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2742,11 +3560,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2805,11 +3656,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -2868,11 +3752,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -3135,17 +4052,70 @@ export interface UnitMap {
 					| null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null;
+			expletiveEvidence:
+				| (
+						| {
+								attested: string;
+								orthography: "Standard" | "Typo" | "Shorthand";
+						  }
+						| {
+								attested: string;
+								orthography: "Fused";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -3291,11 +4261,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -3558,17 +4561,70 @@ export interface UnitMap {
 					| null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null;
+			expletiveEvidence:
+				| (
+						| {
+								attested: string;
+								orthography: "Standard" | "Typo" | "Shorthand";
+						  }
+						| {
+								attested: string;
+								orthography: "Fused";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -3654,11 +4710,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -3747,11 +4836,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -3822,11 +4944,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4028,11 +5183,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4117,11 +5305,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4183,11 +5404,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4422,11 +5676,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4505,11 +5792,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4552,6 +5872,7 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
+				article: "Definite" | "Indefinite" | "None";
 				number: ("Plur" | "Ptan" | "Sing") | null;
 			} | null;
 		};
@@ -4598,17 +5919,104 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
+					article: "Definite" | "Indefinite" | "None";
 					number: ("Plur" | "Ptan" | "Sing") | null;
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"en/Lexeme/NUM": {
@@ -4685,11 +6093,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4751,11 +6192,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -4830,11 +6304,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5091,11 +6598,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5176,11 +6716,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5239,11 +6812,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5318,11 +6924,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5397,11 +7036,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5496,11 +7168,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5559,74 +7264,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"en/Morpheme/Clitic": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "en";
-			family: "Morpheme";
-			kind: "Clitic";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "en";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "en";
-				lemma: {
-					unitKind: "Lemma";
-					language: "en";
-					family: "Morpheme";
-					kind: "Clitic";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5685,11 +7360,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5748,11 +7456,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5811,11 +7552,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5874,11 +7648,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -5937,11 +7744,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6000,11 +7840,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6063,11 +7936,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6126,11 +8032,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6189,11 +8128,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6252,11 +8224,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6375,11 +8380,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6438,11 +8476,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6501,11 +8572,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6584,13 +8688,99 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"he/Lexeme/ADP": {
@@ -6656,11 +8846,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6719,11 +8942,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6818,11 +9074,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6881,11 +9170,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -6964,11 +9286,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7027,11 +9382,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7146,13 +9534,99 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"he/Lexeme/NUM": {
@@ -7239,11 +9713,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7302,11 +9809,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7365,11 +9905,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7464,11 +10037,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7563,11 +10169,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7626,11 +10265,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7689,11 +10361,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7752,11 +10457,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7909,11 +10647,44 @@ export interface UnitMap {
 				} | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -7972,74 +10743,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"he/Morpheme/Clitic": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "he";
-			family: "Morpheme";
-			kind: "Clitic";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "he";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Morpheme";
-				kind: "Clitic";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "he";
-				lemma: {
-					unitKind: "Lemma";
-					language: "he";
-					family: "Morpheme";
-					kind: "Clitic";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8098,11 +10839,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8161,11 +10935,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8224,11 +11031,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8287,11 +11127,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8350,11 +11223,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8413,11 +11319,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8476,11 +11415,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8539,11 +11511,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8602,11 +11607,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8665,11 +11703,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8728,11 +11799,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8791,11 +11895,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};
@@ -8854,11 +11991,44 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
-				{ attested: string; orthography: "Standard" | "Typo" },
-				...Array<{
-					attested: string;
-					orthography: "Standard" | "Typo";
-				}>,
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
 			];
 			realizationCoverage: "Full" | "Partial";
 		};

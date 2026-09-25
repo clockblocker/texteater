@@ -10,6 +10,9 @@ const routes = await loadRoutes();
 const nounRoute = routes.find((route) => route.key === "de/Lexeme/NOUN");
 if (!nounRoute) throw Error("Missing German noun route");
 const noun = unitFixtures(nounRoute, z);
+const hebrewNounRoute = routes.find((route) => route.key === "he/Lexeme/NOUN");
+if (!hebrewNounRoute) throw Error("Missing Hebrew noun route");
+const hebrewNoun = unitFixtures(hebrewNounRoute, z);
 function replaced(
 	input: unknown,
 	path: (string | number)[],
@@ -43,7 +46,7 @@ function* corruptions(
 }
 describe("compiled unit interface", () => {
 	test("all unit routes preserve canonical outputs and malformed nested acceptance", () => {
-		expect(routes).toHaveLength(96);
+		expect(routes).toHaveLength(93);
 		for (const route of routes) {
 			const fixtures = unitFixtures(route, z);
 			for (const kind of Object.values(UnitKind)) {
@@ -146,8 +149,8 @@ describe("compiled unit interface", () => {
 	});
 	test("preserves feature refinements and nonempty occurrence members", () => {
 		const result = parseUnit({
-			...noun.Surface,
-			inflectionalFeatures: { case: null, number: null, article: null },
+			...hebrewNoun.Surface,
+			inflectionalFeatures: { definite: null, number: null },
 		});
 		expect(result.success).toBe(false);
 		if (!result.success)

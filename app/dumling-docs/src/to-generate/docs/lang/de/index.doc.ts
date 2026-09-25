@@ -25,7 +25,7 @@ Start with:
 | \`family\` | \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
-| \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
+| \`Morpheme\` | \`Circumfix\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 
 Fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\` are not Lemmas; each piece stands for its own word and its Attestation member carries the orthography \`Fused\`. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.

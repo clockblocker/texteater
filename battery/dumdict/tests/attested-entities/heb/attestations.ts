@@ -19,6 +19,7 @@ export const hebrewShanaCitationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "שנה", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: hebrewShanaCitationSurface,
 } satisfies Dumling.Attestation<"he", "Lexeme", "NOUN">;
 

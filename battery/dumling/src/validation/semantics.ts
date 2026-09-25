@@ -85,54 +85,101 @@ export function germanClosedClassSurfaceError(): string {
 	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender; only a possessive marks possessor features";
 }
 
-/** Composition is reusable grammar; both component values must identify the same article. */
-type NounComposition = {
-	inflectionalFeatures: {
-		article: string | null;
-		case: string | null;
-		number: string | null;
-	} | null;
-
-	lemma: { coreFeatures: { gender: string | null } };
-	normalizedSurface: string;
-};
+/** A German article feature names an article form that agrees with its noun. */
 export function isGermanNounSurface(input: unknown): boolean {
-	const value = input as NounComposition;
-	const bag = value.inflectionalFeatures;
-	if (!bag?.article) return true;
-	const form = germanArticleForm({
-		...bag,
-		gender: value.lemma.coreFeatures.gender,
-	});
-	return form !== null && value.normalizedSurface.startsWith(`${form} `);
-}
-export function germanNounSurfaceError(): string {
-	return "Noun article must match its article feature, agreement and normalized form";
-}
-export function isGermanNounAttestation(input: unknown): boolean {
 	const value = input as {
-		surface: NounComposition;
-		articleEvidence: { attested: string; orthography: string } | null;
-		realizationCoverage: string;
-		members: { attested: string }[];
+		inflectionalFeatures: {
+			article: string;
+			case: string | null;
+			number: string | null;
+		} | null;
+		lemma: { coreFeatures: { gender: string | null } };
 	};
-	const article = value.surface.inflectionalFeatures?.article;
-	if (!article)
-		return (
-			value.articleEvidence === null &&
-			value.realizationCoverage === "Full"
-		);
-	if (!value.articleEvidence) return false;
+	const bag = value.inflectionalFeatures;
+	if (!bag || bag.article === "None") return true;
 	return (
-		value.realizationCoverage === "Partial" ||
-		value.members.some(
-			(member: { attested: string }) =>
-				member.attested === value.articleEvidence?.attested,
-		)
+		germanArticleForm({
+			...bag,
+			gender: value.lemma.coreFeatures.gender,
+		}) !== null
 	);
 }
-export function germanNounAttestationError(): string {
-	return "Noun realization requires article evidence; Full coverage owns the article and bare nouns have Full coverage";
+export function germanNounSurfaceError(): string {
+	return "Noun article must have a form for its case, number and gender";
+}
+
+type Fusion = { spelling: string; components: { span: string }[] };
+/** The components' spans spell the fused word, in order. */
+export function isFusion(input: unknown): boolean {
+	const value = input as Fusion;
+	return (
+		value.components.map((component) => component.span).join("") ===
+		value.spelling
+	);
+}
+export function fusionError(): string {
+	return "Fusion component spans must spell the fused word in order";
+}
+/** A Fused member spells the Fusion component it realizes. */
+export function isFusedMember(input: unknown): boolean {
+	const value = input as {
+		attested: string;
+		fusion: Fusion;
+		component: number;
+	};
+	return value.fusion.components[value.component]?.span === value.attested;
+}
+export function fusedMemberError(): string {
+	return "A Fused member must spell the Fusion component it realizes";
+}
+
+/**
+ * A noun owns its article (ADR 0035). German and English mark it with
+ * `article`, Hebrew with `definite: Def`. A noun without an article has no
+ * article evidence and Full coverage; an owned article keeps Full coverage;
+ * a shared article or a hidden Fusion component leaves the noun Partial.
+ * A Hebrew `Def` form may name no evidence.
+ */
+export function isNounArticleAttestation(input: unknown): boolean {
+	const value = input as {
+		surface: {
+			language: string;
+			inflectionalFeatures: {
+				article?: string;
+				definite?: string | null;
+			} | null;
+		};
+		articleEvidence:
+			| { kind: "Owned"; member: number }
+			| { kind: "Shared" }
+			| { kind: "Hidden"; fusion: Fusion; component: number }
+			| null;
+		realizationCoverage: string;
+		members: unknown[];
+	};
+	const bag = value.surface.inflectionalFeatures;
+	const hebrew = value.surface.language === "he";
+	const article = hebrew
+		? bag?.definite === "Def"
+		: (bag?.article ?? "None") !== "None";
+	const evidence = value.articleEvidence;
+	if (!evidence)
+		return value.realizationCoverage === "Full" && (hebrew || !article);
+	if (!article) return false;
+	if (evidence.kind === "Owned")
+		return (
+			value.realizationCoverage === "Full" &&
+			evidence.member < value.members.length
+		);
+	if (evidence.kind === "Hidden")
+		return (
+			value.realizationCoverage === "Partial" &&
+			evidence.fusion.components[evidence.component]?.span === ""
+		);
+	return value.realizationCoverage === "Partial";
+}
+export function nounArticleAttestationError(): string {
+	return "A noun's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a noun without an article has no article evidence and Full coverage";
 }
 
 const definiteForms: Record<string, Record<string, string>> = {

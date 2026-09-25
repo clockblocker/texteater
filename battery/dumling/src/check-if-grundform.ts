@@ -13,17 +13,11 @@ import type { Surface } from "./types.js";
  * A supplied Variant spelling is trusted as an accepted spelling alternative;
  * this function does not perform spell checking or infer missing grammar.
  * Routes without represented inflection use the canonical form/variant evidence.
+ * A noun's article is not part of its form (ADR 0035), so no rule reads it.
  * Parse unknown input with parseUnit first. No field or caller override stores
  * the assessment, and neither the Surface nor its feature bags are modified.
  */
 export function checkIfGrundform(surface: Surface): GrundformResult {
-	if (
-		"inflectionalFeatures" in surface &&
-		surface.inflectionalFeatures &&
-		"article" in surface.inflectionalFeatures &&
-		surface.inflectionalFeatures.article
-	)
-		return { success: true, value: false };
 	if (
 		surface.spelling !== "Variant" &&
 		surface.normalizedSurface !== surface.lemma.canonicalForm

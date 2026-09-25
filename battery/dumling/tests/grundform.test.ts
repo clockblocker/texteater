@@ -38,8 +38,9 @@ function surface(
 		...("features" in options
 			? {
 					inflectionalFeatures:
-						key === "de/Lexeme/NOUN" && options.features
-							? { article: null, ...options.features }
+						["de/Lexeme/NOUN", "en/Lexeme/NOUN"].includes(key) &&
+						options.features
+							? { article: "None", ...options.features }
 							: options.features,
 				}
 			: {}),
@@ -321,6 +322,41 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: true });
 	});
+	test("a noun's article does not decide its Grundform", () => {
+		for (const article of ["Definite", "None", "Indefinite"])
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/NOUN", {
+						canonical: "Tisch",
+						core: { gender: "Masc" },
+						features: { article, case: "Nom", number: "Sing" },
+					}),
+				),
+				article,
+			).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("de/Lexeme/NOUN", {
+					canonical: "Tisch",
+					form: "Tische",
+					core: { gender: "Masc" },
+					features: {
+						article: "Definite",
+						case: "Nom",
+						number: "Plur",
+					},
+				}),
+			),
+		).toEqual({ success: true, value: false });
+		expect(
+			checkIfGrundform(
+				surface("en/Lexeme/NOUN", {
+					canonical: "house",
+					features: { article: "Definite", number: "Sing" },
+				}),
+			),
+		).toEqual({ success: true, value: true });
+	});
 	test("Hebrew nouns have their own singular indefinite Grundform features", () => {
 		expect(
 			checkIfGrundform(
@@ -342,7 +378,7 @@ describe("Grundform assessment", () => {
 					features: { number: "Sing", definite: "Def" },
 				}),
 			),
-		).toEqual({ success: true, value: false });
+		).toEqual({ success: true, value: true });
 		expect(
 			errorOf(
 				surface("he/Lexeme/NOUN", {

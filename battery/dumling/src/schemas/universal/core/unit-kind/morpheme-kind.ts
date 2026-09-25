@@ -8,7 +8,6 @@ const INFIX = z.literal("Infix");
 const CIRCUMFIX = z.literal("Circumfix");
 const INTERFIX = z.literal("Interfix");
 const TRANSFIX = z.literal("Transfix");
-const CLITIC = z.literal("Clitic");
 const TONE_MARKING = z.literal("ToneMarking");
 const DUPLIFIX = z.literal("Duplifix");
 
@@ -21,7 +20,6 @@ export const MorphemeKindSchema = z.enum([
 	CIRCUMFIX.value,
 	INTERFIX.value,
 	TRANSFIX.value,
-	CLITIC.value,
 	TONE_MARKING.value,
 	DUPLIFIX.value,
 ]);

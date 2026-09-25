@@ -70,7 +70,7 @@ IDs, click indices, and marked context belong to the calling application.
 | Kind | Use |
 | --- | --- |
 | \`Lexeme\` | lexical identities, including fixed multi-member realizations, categorized by one whole-unit Universal Dependencies-style POS tag |
-| \`Morpheme\` | roots, prefixes, suffixes, clitics, and related sub-word units |
+| \`Morpheme\` | roots, prefixes, suffixes, and related sub-word units |
 | \`Phraseme\` | multi-word or formulaic expressions such as idioms and proverbs |
 
 \`kind\` is the public subtype field for all three families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.

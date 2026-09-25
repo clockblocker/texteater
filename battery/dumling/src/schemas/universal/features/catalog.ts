@@ -50,7 +50,7 @@ import { VerbTypeSchema } from "./ud/verb-type.js";
 import { VoiceSchema } from "./ud/voice.js";
 
 export const UNIVERSAL_FEATURE_SCHEMA = {
-	article: z.enum(["Definite", "Indefinite"]),
+	article: z.enum(["Definite", "Indefinite", "None"]),
 	abbr: AbbrSchema,
 	adpType: AdpTypeSchema,
 	animacy: AnimacySchema,

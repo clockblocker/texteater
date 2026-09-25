@@ -114,7 +114,6 @@ const makeDeRelMap = () =>
 		},
 		Morpheme: {
 			Circumfix: request(select()),
-			Clitic: request(select()),
 			Duplifix: request(select()),
 			Infix: request(select()),
 			Interfix: request(select()),

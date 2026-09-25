@@ -58,7 +58,7 @@ test("schema output types retain route-specific features and composition", async
 			backend: "typescript7",
 		}),
 	).toMatchInlineSnapshot(
-		`"type NounFeatures = { article: "Definite" | "Indefinite" | null; case: "Acc" | "Dat" | "Gen" | "Nom" | null; number: "Plur" | "Sing" | null; } | null"`,
+		`"type NounFeatures = { article: "Definite" | "Indefinite" | "None"; case: "Acc" | "Dat" | "Gen" | "Nom" | null; number: "Plur" | "Sing" | null; } | null"`,
 	);
 	expect(
 		await inferredType(fixture, {

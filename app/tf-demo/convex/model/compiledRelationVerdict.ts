@@ -8,7 +8,7 @@ export const COMPILED_RELATION_VERDICT = {
 		"schema": "sha256:9c359f91f30fbf964f7e59e23cd29e695a72b5cc10c37d2135063ecb8a4ba55a",
 		"evaluator": "sha256:58f7e414a99873d79c36a061b639e0997607d90192a30240eaabc626cb20d1c8",
 		"model": "sha256:dae3db292da3e761d1703cc0cba41843832c1357a1635f856e9fadcada0a67ec",
-		"policy": "sha256:35d9186c9357441a730af7e3a6fc867011e8d30f8719701d6980fdb42991ed4e"
+		"policy": "sha256:4af25e2c54f9a3c526109985be2a04364690e99d51bbc16c39164426363897f0"
 	},
 	"historicalCandidate": {
 		"candidateId": "100b1cd5891c34ea363293ac0a4fb41b1caeeb41a74455a31b0a49d6b260fc68",

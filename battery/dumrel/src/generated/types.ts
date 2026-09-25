@@ -64,7 +64,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "de"; family: "Lexeme"; kind: "SYM" }
 		| { language: "de"; family: "Lexeme"; kind: "VERB" }
 		| { language: "de"; family: "Morpheme"; kind: "Circumfix" }
-		| { language: "de"; family: "Morpheme"; kind: "Clitic" }
 		| { language: "de"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "de"; family: "Morpheme"; kind: "Infix" }
 		| { language: "de"; family: "Morpheme"; kind: "Interfix" }
@@ -96,7 +95,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Lexeme"; kind: "SYM" }
 		| { language: "en"; family: "Lexeme"; kind: "VERB" }
 		| { language: "en"; family: "Morpheme"; kind: "Circumfix" }
-		| { language: "en"; family: "Morpheme"; kind: "Clitic" }
 		| { language: "en"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "en"; family: "Morpheme"; kind: "Infix" }
 		| { language: "en"; family: "Morpheme"; kind: "Interfix" }
@@ -128,7 +126,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "he"; family: "Lexeme"; kind: "SYM" }
 		| { language: "he"; family: "Lexeme"; kind: "VERB" }
 		| { language: "he"; family: "Morpheme"; kind: "Circumfix" }
-		| { language: "he"; family: "Morpheme"; kind: "Clitic" }
 		| { language: "he"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "he"; family: "Morpheme"; kind: "Infix" }
 		| { language: "he"; family: "Morpheme"; kind: "Interfix" }
@@ -175,12 +172,6 @@ export type UnitShadow =
 			canonicalForm: string;
 			family: "Morpheme";
 			kind: "Circumfix";
-	  }
-	| {
-			language: "de";
-			canonicalForm: string;
-			family: "Morpheme";
-			kind: "Clitic";
 	  }
 	| {
 			language: "de";
@@ -287,12 +278,6 @@ export type UnitShadow =
 			language: "en";
 			canonicalForm: string;
 			family: "Morpheme";
-			kind: "Clitic";
-	  }
-	| {
-			language: "en";
-			canonicalForm: string;
-			family: "Morpheme";
 			kind: "Duplifix";
 	  }
 	| {
@@ -389,12 +374,6 @@ export type UnitShadow =
 			canonicalForm: string;
 			family: "Morpheme";
 			kind: "Circumfix";
-	  }
-	| {
-			language: "he";
-			canonicalForm: string;
-			family: "Morpheme";
-			kind: "Clitic";
 	  }
 	| {
 			language: "he";
@@ -539,7 +518,6 @@ export type MorphologicalTreeNode =
 			nodeKind: "morphemeReading";
 			reading:
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
-				| Dumling.Reading<"de", "Morpheme", "Clitic">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
 				| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -549,7 +527,6 @@ export type MorphologicalTreeNode =
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
-				| Dumling.Reading<"en", "Morpheme", "Clitic">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
 				| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -560,7 +537,6 @@ export type MorphologicalTreeNode =
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
-				| Dumling.Reading<"he", "Morpheme", "Clitic">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
 				| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -987,7 +963,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"de", "Lexeme", "SYM">
 						| Dumling.Reading<"de", "Lexeme", "VERB">
 						| Dumling.Reading<"de", "Morpheme", "Circumfix">
-						| Dumling.Reading<"de", "Morpheme", "Clitic">
 						| Dumling.Reading<"de", "Morpheme", "Duplifix">
 						| Dumling.Reading<"de", "Morpheme", "Infix">
 						| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -1019,7 +994,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Lexeme", "SYM">
 						| Dumling.Reading<"en", "Lexeme", "VERB">
 						| Dumling.Reading<"en", "Morpheme", "Circumfix">
-						| Dumling.Reading<"en", "Morpheme", "Clitic">
 						| Dumling.Reading<"en", "Morpheme", "Duplifix">
 						| Dumling.Reading<"en", "Morpheme", "Infix">
 						| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -1051,7 +1025,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"he", "Lexeme", "SYM">
 						| Dumling.Reading<"he", "Lexeme", "VERB">
 						| Dumling.Reading<"he", "Morpheme", "Circumfix">
-						| Dumling.Reading<"he", "Morpheme", "Clitic">
 						| Dumling.Reading<"he", "Morpheme", "Duplifix">
 						| Dumling.Reading<"he", "Morpheme", "Infix">
 						| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -1090,7 +1063,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1122,7 +1094,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1154,7 +1125,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1190,7 +1160,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1222,7 +1191,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1254,7 +1222,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1290,7 +1257,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1322,7 +1288,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1354,7 +1319,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1390,7 +1354,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1422,7 +1385,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1454,7 +1416,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1490,7 +1451,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1522,7 +1482,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1554,7 +1513,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1590,7 +1548,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"de", "Morpheme", "Clitic">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
 						| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1622,7 +1579,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"en", "Morpheme", "Clitic">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
 						| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1654,7 +1610,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-						| Dumling.Lemma<"he", "Morpheme", "Clitic">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
 						| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1721,7 +1676,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
-				| Dumling.Reading<"de", "Morpheme", "Clitic">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
 				| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -1753,7 +1707,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
-				| Dumling.Reading<"en", "Morpheme", "Clitic">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
 				| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -1785,7 +1738,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
-				| Dumling.Reading<"he", "Morpheme", "Clitic">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
 				| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -1825,7 +1777,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"de", "Morpheme", "Clitic">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
 				| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -1857,7 +1808,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"en", "Morpheme", "Clitic">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
 				| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -1889,7 +1839,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"he", "Morpheme", "Clitic">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
 				| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -1973,7 +1922,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"de", "Lexeme", "SYM">
 		| Dumling.Reading<"de", "Lexeme", "VERB">
 		| Dumling.Reading<"de", "Morpheme", "Circumfix">
-		| Dumling.Reading<"de", "Morpheme", "Clitic">
 		| Dumling.Reading<"de", "Morpheme", "Duplifix">
 		| Dumling.Reading<"de", "Morpheme", "Infix">
 		| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2005,7 +1953,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Lexeme", "SYM">
 		| Dumling.Reading<"en", "Lexeme", "VERB">
 		| Dumling.Reading<"en", "Morpheme", "Circumfix">
-		| Dumling.Reading<"en", "Morpheme", "Clitic">
 		| Dumling.Reading<"en", "Morpheme", "Duplifix">
 		| Dumling.Reading<"en", "Morpheme", "Infix">
 		| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2037,7 +1984,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"he", "Lexeme", "SYM">
 		| Dumling.Reading<"he", "Lexeme", "VERB">
 		| Dumling.Reading<"he", "Morpheme", "Circumfix">
-		| Dumling.Reading<"he", "Morpheme", "Clitic">
 		| Dumling.Reading<"he", "Morpheme", "Duplifix">
 		| Dumling.Reading<"he", "Morpheme", "Infix">
 		| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -2072,7 +2018,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"de", "Morpheme", "Clitic">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
 				| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -2104,7 +2049,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"en", "Morpheme", "Clitic">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
 				| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -2136,7 +2080,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"he", "Morpheme", "Clitic">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
 				| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -2170,7 +2113,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
-				| Dumling.Reading<"de", "Morpheme", "Clitic">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
 				| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2202,7 +2144,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
-				| Dumling.Reading<"en", "Morpheme", "Clitic">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
 				| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2234,7 +2175,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
-				| Dumling.Reading<"he", "Morpheme", "Clitic">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
 				| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -2294,7 +2234,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"de", "Lexeme", "SYM">
 		| Dumling.Reading<"de", "Lexeme", "VERB">
 		| Dumling.Reading<"de", "Morpheme", "Circumfix">
-		| Dumling.Reading<"de", "Morpheme", "Clitic">
 		| Dumling.Reading<"de", "Morpheme", "Duplifix">
 		| Dumling.Reading<"de", "Morpheme", "Infix">
 		| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2326,7 +2265,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Lexeme", "SYM">
 		| Dumling.Reading<"en", "Lexeme", "VERB">
 		| Dumling.Reading<"en", "Morpheme", "Circumfix">
-		| Dumling.Reading<"en", "Morpheme", "Clitic">
 		| Dumling.Reading<"en", "Morpheme", "Duplifix">
 		| Dumling.Reading<"en", "Morpheme", "Infix">
 		| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2358,7 +2296,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"he", "Lexeme", "SYM">
 		| Dumling.Reading<"he", "Lexeme", "VERB">
 		| Dumling.Reading<"he", "Morpheme", "Circumfix">
-		| Dumling.Reading<"he", "Morpheme", "Clitic">
 		| Dumling.Reading<"he", "Morpheme", "Duplifix">
 		| Dumling.Reading<"he", "Morpheme", "Infix">
 		| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -2393,7 +2330,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"de", "Morpheme", "Clitic">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
 				| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -2425,7 +2361,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"en", "Morpheme", "Clitic">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
 				| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -2457,7 +2392,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"he", "Morpheme", "Clitic">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
 				| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -2491,7 +2425,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
-				| Dumling.Reading<"de", "Morpheme", "Clitic">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
 				| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2523,7 +2456,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
-				| Dumling.Reading<"en", "Morpheme", "Clitic">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
 				| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2555,7 +2487,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
-				| Dumling.Reading<"he", "Morpheme", "Clitic">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
 				| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -2598,7 +2529,6 @@ export type ParticipleProjection = {
 		| Dumling.Reading<"de", "Lexeme", "SYM">
 		| Dumling.Reading<"de", "Lexeme", "VERB">
 		| Dumling.Reading<"de", "Morpheme", "Circumfix">
-		| Dumling.Reading<"de", "Morpheme", "Clitic">
 		| Dumling.Reading<"de", "Morpheme", "Duplifix">
 		| Dumling.Reading<"de", "Morpheme", "Infix">
 		| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2630,7 +2560,6 @@ export type ParticipleProjection = {
 		| Dumling.Reading<"en", "Lexeme", "SYM">
 		| Dumling.Reading<"en", "Lexeme", "VERB">
 		| Dumling.Reading<"en", "Morpheme", "Circumfix">
-		| Dumling.Reading<"en", "Morpheme", "Clitic">
 		| Dumling.Reading<"en", "Morpheme", "Duplifix">
 		| Dumling.Reading<"en", "Morpheme", "Infix">
 		| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2662,7 +2591,6 @@ export type ParticipleProjection = {
 		| Dumling.Reading<"he", "Lexeme", "SYM">
 		| Dumling.Reading<"he", "Lexeme", "VERB">
 		| Dumling.Reading<"he", "Morpheme", "Circumfix">
-		| Dumling.Reading<"he", "Morpheme", "Clitic">
 		| Dumling.Reading<"he", "Morpheme", "Duplifix">
 		| Dumling.Reading<"he", "Morpheme", "Infix">
 		| Dumling.Reading<"he", "Morpheme", "Interfix">
@@ -2697,7 +2625,6 @@ export type ParticipleProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"de", "Morpheme", "Clitic">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
 				| Dumling.Lemma<"de", "Morpheme", "Interfix">
@@ -2729,7 +2656,6 @@ export type ParticipleProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"en", "Morpheme", "Clitic">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
 				| Dumling.Lemma<"en", "Morpheme", "Interfix">
@@ -2761,7 +2687,6 @@ export type ParticipleProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
-				| Dumling.Lemma<"he", "Morpheme", "Clitic">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
 				| Dumling.Lemma<"he", "Morpheme", "Interfix">
@@ -2795,7 +2720,6 @@ export type ParticipleProjection = {
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
-				| Dumling.Reading<"de", "Morpheme", "Clitic">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
 				| Dumling.Reading<"de", "Morpheme", "Interfix">
@@ -2827,7 +2751,6 @@ export type ParticipleProjection = {
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
-				| Dumling.Reading<"en", "Morpheme", "Clitic">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
 				| Dumling.Reading<"en", "Morpheme", "Interfix">
@@ -2859,7 +2782,6 @@ export type ParticipleProjection = {
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
-				| Dumling.Reading<"he", "Morpheme", "Clitic">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
 				| Dumling.Reading<"he", "Morpheme", "Interfix">

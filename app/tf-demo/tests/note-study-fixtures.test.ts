@@ -193,7 +193,6 @@ describe("German note-study fixtures", () => {
 				"Lexeme/SCONJ",
 				"Lexeme/VERB",
 				"Morpheme/Circumfix",
-				"Morpheme/Clitic",
 				"Morpheme/Interfix",
 				"Morpheme/Prefix",
 				"Morpheme/Root",

@@ -13,7 +13,7 @@ test("planning entrypoint plans without Effect, schema authoring, or retained pa
  const request={draft:{reading,note:{attestedTranslations:[],attestations:[],notes:""}}};
  const planned=planner.addNewNote({intent:"addNewNote",revision:"convex-0",existingOwnedSurfaces:[],explicitExistingLemmaTargets:[],exactPendingRelations:[],pendingRelationsMatchingProposedLemma:[],relationLemmas:[],relationReadings:[]},request);
  if(planned.status!=="planned" || planned.plan.changes.map(c=>c.type).join(",")!=="createLemma,createReading") throw Error("Invalid plan "+JSON.stringify(planned));
- const rejected=planner.ensureOwnedSurface({intent:"ensureOwnedSurface",revision:"convex-0",existingOwnedSurfaces:[]},{reading,ownedSurface:{surface:{unitKind:"Surface",language:"de",lemma,normalizedSurface:"Bank",spelling:"Canonical",surfaceFeatures:null,inflectionalFeatures:{case:"Nom",number:"Sing",article:null}},note:{attestedTranslations:[],attestations:[],notes:""}}});
+ const rejected=planner.ensureOwnedSurface({intent:"ensureOwnedSurface",revision:"convex-0",existingOwnedSurfaces:[]},{reading,ownedSurface:{surface:{unitKind:"Surface",language:"de",lemma,normalizedSurface:"Bank",spelling:"Canonical",surfaceFeatures:null,inflectionalFeatures:{case:"Nom",number:"Sing",article:"None"}},note:{attestedTranslations:[],attestations:[],notes:""}}});
  if(rejected.status!=="rejected" || rejected.code!=="readingMissing") throw Error("Expected readingMissing "+JSON.stringify(rejected));
  console.log("planning-ok");
  `,

@@ -4,7 +4,7 @@ import { checkIfGrundform, parseUnit } from "../src/index.js";
 const noun = {
 	unitKind: "Surface",
 	language: "de",
-	normalizedSurface: "dem Haus",
+	normalizedSurface: "Haus",
 	spelling: "Canonical",
 	surfaceFeatures: null,
 	lemma: {
@@ -48,7 +48,7 @@ const verb = {
 		voice: null,
 	},
 } as const;
-test("noun parsing validates feature-derived agreement and rejects obsolete embedded fields", () => {
+test("noun parsing validates article agreement and rejects obsolete embedded fields", () => {
 	const result = parseUnit(noun);
 	expect(result.success).toBe(true);
 	if (!result.success || result.chain.unitKind !== "Surface")
@@ -60,7 +60,13 @@ test("noun parsing validates feature-derived agreement and rejects obsolete embe
 	expect(result.chain.value.lemma).toEqual(noun.lemma);
 	for (const invalid of [
 		{ ...noun, articleReference: null },
-		{ ...noun, normalizedSurface: "den Haus" },
+		{
+			...noun,
+			inflectionalFeatures: {
+				...noun.inflectionalFeatures,
+				article: null,
+			},
+		},
 		{
 			...noun,
 			inflectionalFeatures: { ...noun.inflectionalFeatures, case: null },
@@ -138,6 +144,218 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 				.success,
 		).toBe(false);
 	}
+});
+// Ich bin im Wald: i is the ADP in, m the article the noun owns (ADR 0035).
+const im = {
+	spelling: "im",
+	components: [
+		{ span: "i", surface: "in" },
+		{ span: "m", surface: "dem" },
+	],
+};
+const wald = {
+	unitKind: "Attestation",
+	surface: {
+		...noun,
+		normalizedSurface: "Wald",
+		lemma: {
+			...noun.lemma,
+			canonicalForm: "Wald",
+			coreFeatures: { gender: "Masc", hyph: null },
+		},
+	},
+	realizationCoverage: "Full",
+	members: [
+		{ attested: "m", orthography: "Fused", fusion: im, component: 1 },
+		{ attested: "Wald", orthography: "Standard" },
+	],
+	articleEvidence: { kind: "Owned", member: 0 },
+	valencyEvidence: [],
+};
+test("a fused article is an owned Fused member of its noun", () => {
+	expect(parseUnit(wald).success).toBe(true);
+	for (const invalid of [
+		{ ...wald, realizationCoverage: "Partial" },
+		{ ...wald, articleEvidence: null },
+		{ ...wald, articleEvidence: { kind: "Owned", member: 2 } },
+		{
+			...wald,
+			members: [{ ...wald.members[0], component: 0 }, wald.members[1]],
+		},
+		{
+			...wald,
+			members: [
+				{
+					...wald.members[0],
+					fusion: {
+						...im,
+						components: [
+							{ span: "in", surface: "in" },
+							{ span: "m", surface: "dem" },
+						],
+					},
+				},
+				wald.members[1],
+			],
+		},
+		{
+			...wald,
+			members: [{ attested: "m", orthography: "Standard", component: 1 }],
+		},
+	])
+		expect(parseUnit(invalid).success).toBe(false);
+	// im Wald und Feld: Feld shares the article m and does not own it.
+	const feld = {
+		...wald,
+		surface: {
+			...wald.surface,
+			normalizedSurface: "Feld",
+			lemma: {
+				...wald.surface.lemma,
+				canonicalForm: "Feld",
+				coreFeatures: { gender: "Neut", hyph: null },
+			},
+		},
+		realizationCoverage: "Partial",
+		members: [{ attested: "Feld", orthography: "Standard" }],
+		articleEvidence: { kind: "Shared", article: wald.members[0] },
+	};
+	expect(parseUnit(feld).success).toBe(true);
+	expect(parseUnit({ ...feld, realizationCoverage: "Full" }).success).toBe(
+		false,
+	);
+	// Ich bin in Wald und Flur: a bare noun owns no article.
+	const bare = {
+		...wald,
+		surface: {
+			...wald.surface,
+			inflectionalFeatures: {
+				...wald.surface.inflectionalFeatures,
+				article: "None",
+			},
+		},
+		members: [wald.members[1]],
+		articleEvidence: null,
+	};
+	expect(parseUnit(bare).success).toBe(true);
+	expect(
+		parseUnit({ ...bare, articleEvidence: { kind: "Owned", member: 0 } })
+			.success,
+	).toBe(false);
+	expect(parseUnit({ ...bare, realizationCoverage: "Partial" }).success).toBe(
+		false,
+	);
+});
+test("a shortened article is a Shorthand member of its noun", () => {
+	// Hast du 'ne Frage?
+	expect(
+		parseUnit({
+			...wald,
+			surface: {
+				...noun,
+				normalizedSurface: "Frage",
+				lemma: {
+					...noun.lemma,
+					canonicalForm: "Frage",
+					coreFeatures: { gender: "Fem", hyph: null },
+				},
+				inflectionalFeatures: {
+					article: "Indefinite",
+					case: "Acc",
+					number: "Sing",
+				},
+			},
+			members: [
+				{ attested: "'ne", orthography: "Shorthand" },
+				{ attested: "Frage", orthography: "Standard" },
+			],
+		}).success,
+	).toBe(true);
+});
+test("an English noun owns its article across an adjective", () => {
+	// the big house
+	const house = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "house",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "en",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "house",
+				coreFeatures: {
+					abbr: null,
+					extPos: null,
+					foreign: null,
+					numForm: null,
+					numType: null,
+					style: null,
+				},
+			},
+			inflectionalFeatures: { article: "Definite", number: "Sing" },
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "the", orthography: "Standard" },
+			{ attested: "house", orthography: "Standard" },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(house).success).toBe(true);
+	expect(parseUnit({ ...house, articleEvidence: null }).success).toBe(false);
+});
+test("a hidden Hebrew article is a Fusion component that leaves its noun Partial", () => {
+	// ישבנו בבית: ב is the ADP, the article ה has no letters of its own.
+	const fusion = {
+		spelling: "בבית",
+		components: [
+			{ span: "ב", surface: "ב" },
+			{ span: "", surface: "ה" },
+			{ span: "בית", surface: "בית" },
+		],
+	};
+	const bayit = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "he",
+			normalizedSurface: "בית",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "he",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "בית",
+				coreFeatures: { abbr: null, gender: "Masc" },
+			},
+			inflectionalFeatures: { definite: "Def", number: "Sing" },
+		},
+		realizationCoverage: "Partial",
+		members: [
+			{ attested: "בית", orthography: "Fused", fusion, component: 2 },
+		],
+		articleEvidence: { kind: "Hidden", fusion, component: 1 },
+	};
+	expect(parseUnit(bayit).success).toBe(true);
+	for (const invalid of [
+		{ ...bayit, realizationCoverage: "Full" },
+		{ ...bayit, articleEvidence: { kind: "Hidden", fusion, component: 2 } },
+		{
+			...bayit,
+			surface: {
+				...bayit.surface,
+				inflectionalFeatures: { definite: "Ind", number: "Sing" },
+			},
+		},
+	])
+		expect(parseUnit(invalid).success).toBe(false);
 });
 const preposition = (canonicalForm: string, adpType = "Prep") => ({
 	unitKind: "Lemma",
@@ -398,7 +616,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 		unitKind: "Attestation",
 		surface: {
 			...noun,
-			normalizedSurface: "die Angst",
+			normalizedSurface: "Angst",
 			lemma: {
 				...noun.lemma,
 				canonicalForm: "Angst",
@@ -416,7 +634,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 			{ attested: "Angst", orthography: "Standard" },
 			{ attested: "vor", orthography: "Standard" },
 		],
-		articleEvidence: { attested: "die", orthography: "Standard" },
+		articleEvidence: { kind: "Owned", member: 0 },
 		valencyEvidence: [
 			{
 				member: 2,

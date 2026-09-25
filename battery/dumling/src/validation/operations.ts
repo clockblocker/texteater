@@ -1,10 +1,11 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	fusedMemberError,
+	fusionError,
 	germanAdpositionAttestationError,
 	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
-	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
 	germanValencyAttestationError,
@@ -12,17 +13,20 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isFusedMember,
+	isFusion,
 	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
-	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanPronounCore,
 	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
+	isNounArticleAttestation,
 	nonEmptyFeatureBagError,
 	normalizeForm,
+	nounArticleAttestationError,
 } from "./semantics.js";
 
 function check(
@@ -58,10 +62,12 @@ export const validationOperations: ValidationOperations = {
 		isGermanNounSurface,
 		germanNounSurfaceError,
 	),
-	"dumling.de-noun.attestation": check(
-		isGermanNounAttestation,
-		germanNounAttestationError,
+	"dumling.noun-article.attestation": check(
+		isNounArticleAttestation,
+		nounArticleAttestationError,
 	),
+	"dumling.fusion": check(isFusion, fusionError),
+	"dumling.fused-member": check(isFusedMember, fusedMemberError),
 	"dumling.de-pronoun.core": check(
 		isGermanPronounCore,
 		germanPronounCoreError,

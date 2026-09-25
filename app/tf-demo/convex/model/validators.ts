@@ -34,7 +34,6 @@ export const lexemeKindValues = [
 ] as const;
 export const morphemeKindValues = [
 	"Circumfix",
-	"Clitic",
 	"Duplifix",
 	"Infix",
 	"Interfix",

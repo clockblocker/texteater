@@ -49,6 +49,7 @@ export const englishBankFinancialAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishBankFinancialCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -57,6 +58,7 @@ export const englishBankRiverAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "bank", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishBankRiverCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -65,6 +67,7 @@ export const englishPlantOrganismAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishPlantOrganismCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -73,6 +76,7 @@ export const englishPlantFactoryAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "plant", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishPlantFactoryCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -81,6 +85,7 @@ export const englishLightIlluminationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishLightIlluminationCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -97,6 +102,7 @@ export const englishSpringSeasonAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishSpringSeasonCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -105,6 +111,7 @@ export const englishSpringCoilAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "spring", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishSpringCoilCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 
@@ -113,6 +120,7 @@ export const englishRakeToolAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "rake", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishRakeToolCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "NOUN">;
 

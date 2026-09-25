@@ -50,50 +50,6 @@ export const morphemeFixtures = [
 		tags: [noteToken("#Morphem"), noteToken("#PartizipII")],
 	},
 	{
-		presentationKey: "Clitic-s",
-		family: "Morpheme",
-		kind: "Clitic",
-		emoji: "🔗",
-		title: [noteToken("’s")],
-		titleText: "’s",
-		summary: "Unbetonte Kurzform von es",
-		contexts: [
-			[
-				"Wie geht",
-				noteToken("’s", "reference", "Kurzform von „es“"),
-				" dir nach der Prüfung?",
-			],
-			[
-				"Ich hab",
-				noteToken("’s", "reference", "Kurzform von „es“"),
-				" gleich verstanden.",
-			],
-		],
-		definition:
-			"’s ist die unbetonte, angehängte Kurzform von es; der Apostroph zeigt die Auslassung des e.",
-		formation: [
-			[
-				noteToken("geht"),
-				" + ",
-				noteToken("es"),
-				" → ",
-				noteToken("geht’s"),
-			],
-			[
-				noteToken("hab"),
-				" + ",
-				noteToken("es"),
-				" → ",
-				noteToken("hab’s"),
-			],
-		],
-		translations: [
-			"’s; unstressed clitic form of it",
-			"’s; безударная клитическая форма es",
-		],
-		tags: [noteToken("#Morphem"), noteToken("#Klitikon")],
-	},
-	{
 		presentationKey: "Fugen-s",
 		family: "Morpheme",
 		kind: "Interfix",

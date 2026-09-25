@@ -31,6 +31,9 @@ function hebrewAuxiliary(surface: Surface): GrundformRule {
 	return lexicalConvention;
 }
 
+// The article is the noun's own member (ADR 0035): a definite form cites like
+// a bare one, and only the construct state is not the Grundform.
+const citableDefiniteness = [null, "Ind", "Def"];
 function hebrewNoun(surface: Surface): GrundformRule {
 	const number = inflectionalFeatures(surface)?.number;
 	if (
@@ -42,9 +45,9 @@ function hebrewNoun(surface: Surface): GrundformRule {
 			...lemmaRule(
 				"This Hebrew noun needs its Lemma's canonical Number convention",
 			),
-			features: { definite: ["Ind"] },
+			features: { definite: citableDefiniteness },
 		};
-	return { features: { number: ["Sing"], definite: ["Ind"] } };
+	return { features: { number: ["Sing"], definite: citableDefiniteness } };
 }
 
 function properNoun(surface: Surface): GrundformRule {
@@ -56,7 +59,11 @@ function properNoun(surface: Surface): GrundformRule {
 }
 export const hebrewRules = {
 	"he/Lexeme/ADJ": {
-		features: { gender: ["Masc"], number: ["Sing"], definite: [null] },
+		features: {
+			gender: ["Masc"],
+			number: ["Sing"],
+			definite: [null, "Def"],
+		},
 	},
 	"he/Lexeme/AUX": hebrewAuxiliary,
 	"he/Lexeme/DET": lexicalConvention,
