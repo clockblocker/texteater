@@ -1,6 +1,7 @@
 /**
- * Segment placement: the input sentence's Segments become offset-keyed
- * analysed Segments, with fused words split by the German fusion table,
+ * Segment placement: the sentence's words, a fused word read whole (`im`),
+ * become offset-keyed analysed Segments, with fused words split by the German
+ * fusion table again,
  * apostrophe clitics expanded and abbreviations given their expansion as
  * surface (Dumgen ADR 0004). An entry with candidate surfaces places the
  * first; assembly replaces it with the one the Selected identity realizes.

@@ -11,9 +11,11 @@ import { englishFusionTable } from "../src/concrete-lang/en/fusion-entries.js";
 import {
 	abbreviationEntry,
 	fusedPieceAt,
+	fusedWordAt,
 	fusionEntry,
 	shorthandSurfaces,
 	splitClitic,
+	unsplitFusedWord,
 	validateFusionTable,
 } from "../src/universal/fusion-table.js";
 
@@ -206,10 +208,32 @@ test("a Segment is a piece of the fused word its neighbours spell", () => {
 	).toBeUndefined();
 });
 
+test("a whole fused word is found, and a split one is found by its first piece", () => {
+	const split = words("Ich", " ", "bin", " ", "I", "m", " ", "Wald");
+	expect(fusedWordAt(germanFusionTable, split, 4)).toEqual([4, 5]);
+	expect(fusedWordAt(germanFusionTable, split, 5)).toBeUndefined();
+	expect(unsplitFusedWord(germanFusionTable, split)).toBeUndefined();
+	expect(
+		unsplitFusedWord(
+			germanFusionTable,
+			words("Ich", " ", "bin", " ", "im"),
+		),
+	).toBe(4);
+	// A host and its clitic is no table fusion.
+	expect(
+		fusedWordAt(germanFusionTable, words("geht", "'s", " ", "gut"), 0),
+	).toBeUndefined();
+});
+
 test("free clitics and abbreviations are Shorthand spellings", () => {
 	expect(shorthandSurfaces(germanFusionTable, "'ne")).toEqual(["eine"]);
 	expect(shorthandSurfaces(germanFusionTable, "’s")).toEqual(["es", "das"]);
-	expect(shorthandSurfaces(germanFusionTable, "z.B.")).toEqual([]);
+	expect(shorthandSurfaces(germanFusionTable, "z.B.")).toEqual([
+		"zum Beispiel",
+	]);
+	expect(shorthandSurfaces(germanFusionTable, "Dipl.-Ing.")).toEqual([
+		"Diplom-Ingenieur",
+	]);
 	expect(shorthandSurfaces(germanFusionTable, "'m")).toBeUndefined();
 	expect(shorthandSurfaces(germanFusionTable, "Frage")).toBeUndefined();
 });

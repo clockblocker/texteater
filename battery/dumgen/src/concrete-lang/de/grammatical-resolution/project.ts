@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { MemberOrthography } from "./member-spelling.js";
+import type { MemberOrthography, PieceReadings } from "./member-spelling.js";
 
 type DeMemberOrthography = MemberOrthography;
 type GrammaticalResolutionInput = {
@@ -28,7 +28,35 @@ export type GrammarOutput = {
 	memberOrthographies: DeMemberOrthography[];
 	normalizedMembers: string[];
 	realizationCoverage: "Full" | "Partial";
+	/**
+	 * Member positions written onto the member before them, with no space:
+	 * the pieces of a fused word the unit holds whole (zu + r in zur
+	 * Verfügung stellen). Code derives them; no judgment names them.
+	 */
+	gluedMembers?: ReadonlySet<number>;
+	/** What each fused-word piece the members touch stands for, by Segment index. */
+	pieceReadings?: PieceReadings;
 };
+
+/**
+ * Members joined as the Surface shows them: single spaces, except that a
+ * glued member continues the word before it (`zur`, not `zu r`).
+ */
+export function joinMembers(
+	texts: readonly string[],
+	glued: ReadonlySet<number> = new Set(),
+	skipped: ReadonlySet<number> = new Set(),
+): string {
+	let joined = "";
+	for (const [position, text] of texts.entries()) {
+		if (skipped.has(position)) continue;
+		joined += joined && !glued.has(position) ? ` ${text}` : text;
+	}
+	return joined;
+}
+
+const shifted = (positions: ReadonlySet<number> | undefined) =>
+	new Set([...(positions ?? [])].map((position) => position - 1));
 /**
  * A noun's Surface is its own letters (ADR 0035): an owned article stays an
  * Attestation member but leaves the Surface, like a governed preposition.
@@ -49,6 +77,7 @@ export function normalizeGrammarSurface(
 			memberOrthographies: output.memberOrthographies,
 			normalizedMembers: output.normalizedMembers,
 			valencyMembers,
+			glued: output.gluedMembers,
 		});
 	const owned =
 		output.articleEvidence?.kind === "Owned"
@@ -64,6 +93,7 @@ export function normalizeGrammarSurface(
 			memberOrthographies: output.memberOrthographies,
 			normalizedMembers: output.normalizedMembers,
 			valencyMembers,
+			glued: output.gluedMembers,
 			surfaceKind: output.surface.inflectionalFeatures
 				? "Inflection"
 				: "Citation",
@@ -77,7 +107,8 @@ export function normalizeGrammarSurface(
 		input: { ...input, members: input.members.slice(1) },
 		memberOrthographies: output.memberOrthographies.slice(1),
 		normalizedMembers: output.normalizedMembers.slice(1),
-		valencyMembers: new Set([...valencyMembers].map((index) => index - 1)),
+		valencyMembers: shifted(valencyMembers),
+		glued: shifted(output.gluedMembers),
 		surfaceKind: output.surface.inflectionalFeatures
 			? "Inflection"
 			: "Citation",
@@ -93,6 +124,7 @@ function constructNormalizedSurface(args: {
 	readonly memberOrthographies: readonly DeMemberOrthography[];
 	readonly normalizedMembers: readonly string[];
 	readonly valencyMembers?: ReadonlySet<number>;
+	readonly glued?: ReadonlySet<number>;
 }): string {
 	const { attestedMembers, memberOrthographies, normalizedMembers } = args;
 	assertAlignedMembers(args);
@@ -108,7 +140,7 @@ function constructNormalizedSurface(args: {
 		) {
 			throw invalidMemberAlignment();
 		}
-		assertCanonicalNormalizedMember(normalized, position);
+		assertCanonicalNormalizedMember(normalized, position, orthography);
 		if (!isLicensedNormalization(attested, normalized, orthography)) {
 			throw new DeGrammaticalResolutionProjectionError(
 				`Normalized member ${position} is not a positional normalization of its attested member.`,
@@ -116,14 +148,16 @@ function constructNormalizedSurface(args: {
 		}
 	}
 
-	const fixed = normalizedMembers.filter(
-		(_, position) => !args.valencyMembers?.has(position),
+	const surface = joinMembers(
+		normalizedMembers,
+		args.glued,
+		args.valencyMembers,
 	);
-	if (fixed.length === 0)
+	if (!surface)
 		throw new DeGrammaticalResolutionProjectionError(
 			"A Surface needs at least one Fixed member.",
 		);
-	return fixed.join(" ");
+	return surface;
 }
 
 const trailingErgaenzungsstrich = /[-‐‑]$/u;
@@ -137,6 +171,7 @@ function constructNounNormalizedSurface(args: {
 	readonly memberOrthographies: readonly DeMemberOrthography[];
 	readonly normalizedMembers: readonly string[];
 	readonly valencyMembers: ReadonlySet<number>;
+	readonly glued?: ReadonlySet<number>;
 	readonly surfaceKind: "Citation" | "Inflection";
 }): string {
 	const { input, memberOrthographies, normalizedMembers, surfaceKind } = args;
@@ -146,7 +181,11 @@ function constructNounNormalizedSurface(args: {
 		normalizedMembers,
 	});
 	for (const [position, normalized] of normalizedMembers.entries()) {
-		assertCanonicalNormalizedMember(normalized, position);
+		assertCanonicalNormalizedMember(
+			normalized,
+			position,
+			memberOrthographies[position],
+		);
 	}
 
 	const member = input.members[0];
@@ -162,6 +201,7 @@ function constructNounNormalizedSurface(args: {
 			memberOrthographies,
 			normalizedMembers,
 			valencyMembers: args.valencyMembers,
+			glued: args.glued,
 		});
 	}
 	if (surfaceKind !== "Inflection") throw invalidNounSuspension();
@@ -237,11 +277,16 @@ function assertAlignedMembers(args: {
 	}
 }
 
+/** One word per member; an abbreviation stands for its whole expansion (z.B. is zum Beispiel). */
 function assertCanonicalNormalizedMember(
 	normalized: string,
 	position: number,
+	orthography: DeMemberOrthography | undefined,
 ): void {
-	if (normalized.length === 0 || /\s/u.test(normalized)) {
+	if (
+		normalized.length === 0 ||
+		(orthography !== "Shorthand" && /\s/u.test(normalized))
+	) {
 		throw new DeGrammaticalResolutionProjectionError(
 			`Normalized member ${position} contains whitespace.`,
 		);

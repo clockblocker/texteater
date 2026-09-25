@@ -60,12 +60,12 @@
 	},
 	"grammar-de-coll-verfuegung-present-full": {
 		"input": {
-			"markedContext": "Wir <TARGET>stellen</TARGET> die Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
-			"members": ["stellen", "zur", "Verfügung"]
+			"markedContext": "Wir <TARGET>stellen</TARGET> die Daten <TARGET>zu</TARGET><TARGET>r</TARGET> <TARGET>Verfügung</TARGET>.",
+			"members": ["stellen", "zu", "r", "Verfügung"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["stellen", "zur", "Verfügung"],
+			"memberOrthographies": ["Standard", "Fused", "Fused", "Standard"],
+			"normalizedMembers": ["stellen", "zu", "r", "Verfügung"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -340,12 +340,12 @@
 	},
 	"grammar-de-coll-ende-imperative-full": {
 		"input": {
-			"markedContext": "<TARGET>Komm</TARGET> endlich <TARGET>zum</TARGET> <TARGET>Ende</TARGET>!",
-			"members": ["Komm", "zum", "Ende"]
+			"markedContext": "<TARGET>Komm</TARGET> endlich <TARGET>zu</TARGET><TARGET>m</TARGET> <TARGET>Ende</TARGET>!",
+			"members": ["Komm", "zu", "m", "Ende"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["komm", "zum", "Ende"],
+			"memberOrthographies": ["Standard", "Fused", "Fused", "Standard"],
+			"normalizedMembers": ["komm", "zu", "m", "Ende"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -415,12 +415,12 @@
 	},
 	"grammar-de-coll-ausdruck-infinitive-full": {
 		"input": {
-			"markedContext": "Sie versucht, ihre Sorge <TARGET>zum</TARGET> <TARGET>Ausdruck</TARGET> zu <TARGET>bringen</TARGET>.",
-			"members": ["zum", "Ausdruck", "bringen"]
+			"markedContext": "Sie versucht, ihre Sorge <TARGET>zu</TARGET><TARGET>m</TARGET> <TARGET>Ausdruck</TARGET> zu <TARGET>bringen</TARGET>.",
+			"members": ["zu", "m", "Ausdruck", "bringen"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["zum", "Ausdruck", "bringen"],
+			"memberOrthographies": ["Fused", "Fused", "Standard", "Standard"],
+			"normalizedMembers": ["zu", "m", "Ausdruck", "bringen"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -654,8 +654,8 @@
 	},
 	"grammar-de-coll-unresolved-elliptic-kenntnis": {
 		"input": {
-			"markedContext": "Sie nahm den Bericht zur Kenntnis. Und die Warnung? – Ebenfalls <TARGET>zur</TARGET> <TARGET>Kenntnis</TARGET>.",
-			"members": ["zur", "Kenntnis"]
+			"markedContext": "Sie nahm den Bericht zur Kenntnis. Und die Warnung? – Ebenfalls <TARGET>zu</TARGET><TARGET>r</TARGET> <TARGET>Kenntnis</TARGET>.",
+			"members": ["zu", "r", "Kenntnis"]
 		},
 		"idealOutput": {
 			"decision": "Unresolved"

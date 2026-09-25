@@ -1707,9 +1707,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["Dipl.-Ing."],
+			"normalizedMembers": ["Diplom-Ingenieur"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
 					"case": "Nom",
@@ -1728,7 +1728,7 @@
 			"articleEvidence": null,
 			"valencyEvidence": []
 		},
-		"explanation": "A title abbreviation: one Standard member, a Variant Surface of the hyphenated Lemma; the name stays outside (issue 495)."
+		"explanation": "A title abbreviation is one Shorthand member whose Surface is its expansion, Diplom-Ingenieur; the name stays outside (ADR 0035)."
 	},
 	"grammar-de-noun-governed-angst-vor": {
 		"input": {

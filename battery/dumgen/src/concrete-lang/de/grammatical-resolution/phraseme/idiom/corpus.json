@@ -1,18 +1,19 @@
 {
 	"grammar-de-idiom-flinte-past-full": {
 		"input": {
-			"markedContext": "Nach dem Rückstand <TARGET>warf</TARGET> die Trainerin <TARGET>die</TARGET> <TARGET>Flinte</TARGET> endgültig <TARGET>ins</TARGET> <TARGET>Korn</TARGET>.",
-			"members": ["warf", "die", "Flinte", "ins", "Korn"]
+			"markedContext": "Nach dem Rückstand <TARGET>warf</TARGET> die Trainerin <TARGET>die</TARGET> <TARGET>Flinte</TARGET> endgültig <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Korn</TARGET>.",
+			"members": ["warf", "die", "Flinte", "in", "s", "Korn"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
-			"normalizedMembers": ["warf", "die", "Flinte", "ins", "Korn"],
+			"normalizedMembers": ["warf", "die", "Flinte", "in", "s", "Korn"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -42,12 +43,12 @@
 	},
 	"grammar-de-idiom-grass-citation": {
 		"input": {
-			"markedContext": "Im Wörterbuch steht der Eintrag <TARGET>ins</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>.",
-			"members": ["ins", "Gras", "beißen"]
+			"markedContext": "Im Wörterbuch steht der Eintrag <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>.",
+			"members": ["in", "s", "Gras", "beißen"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["ins", "Gras", "beißen"],
+			"memberOrthographies": ["Fused", "Fused", "Standard", "Standard"],
+			"normalizedMembers": ["in", "s", "Gras", "beißen"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -230,12 +231,12 @@
 	},
 	"grammar-de-idiom-was-zum-truncation-partial": {
 		"input": {
-			"markedContext": "<TARGET>Was</TARGET> <TARGET>zum</TARGET> …?",
-			"members": ["Was", "zum"]
+			"markedContext": "<TARGET>Was</TARGET> <TARGET>zu</TARGET><TARGET>m</TARGET> …?",
+			"members": ["Was", "zu", "m"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["was", "zum"],
+			"memberOrthographies": ["Standard", "Fused", "Fused"],
+			"normalizedMembers": ["was", "zu", "m"],
 			"realizationCoverage": "Partial",
 			"surface": {
 				"spelling": "Canonical",
@@ -254,18 +255,26 @@
 	},
 	"grammar-de-idiom-faeustchen-perfect-full": {
 		"input": {
-			"markedContext": "Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
-			"members": ["hat", "sich", "ins", "Fäustchen", "gelacht"]
+			"markedContext": "Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
+			"members": ["hat", "sich", "in", "s", "Fäustchen", "gelacht"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard"
 			],
-			"normalizedMembers": ["hat", "sich", "ins", "Fäustchen", "gelacht"],
+			"normalizedMembers": [
+				"hat",
+				"sich",
+				"in",
+				"s",
+				"Fäustchen",
+				"gelacht"
+			],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -535,12 +544,12 @@
 	},
 	"grammar-de-idiom-fettnaepfchen-infinitive-full": {
 		"input": {
-			"markedContext": "Er versucht, nicht wieder <TARGET>ins</TARGET> <TARGET>Fettnäpfchen</TARGET> zu <TARGET>treten</TARGET>.",
-			"members": ["ins", "Fettnäpfchen", "treten"]
+			"markedContext": "Er versucht, nicht wieder <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Fettnäpfchen</TARGET> zu <TARGET>treten</TARGET>.",
+			"members": ["in", "s", "Fettnäpfchen", "treten"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["ins", "Fettnäpfchen", "treten"],
+			"memberOrthographies": ["Fused", "Fused", "Standard", "Standard"],
+			"normalizedMembers": ["in", "s", "Fettnäpfchen", "treten"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -670,18 +679,19 @@
 	},
 	"grammar-de-idiom-zunge-im-zaum-infinitive-full": {
 		"input": {
-			"markedContext": "Sie versprach, künftig <TARGET>die</TARGET> <TARGET>Zunge</TARGET> <TARGET>im</TARGET> <TARGET>Zaum</TARGET> zu <TARGET>halten</TARGET>.",
-			"members": ["die", "Zunge", "im", "Zaum", "halten"]
+			"markedContext": "Sie versprach, künftig <TARGET>die</TARGET> <TARGET>Zunge</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Zaum</TARGET> zu <TARGET>halten</TARGET>.",
+			"members": ["die", "Zunge", "i", "m", "Zaum", "halten"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard"
 			],
-			"normalizedMembers": ["die", "Zunge", "im", "Zaum", "halten"],
+			"normalizedMembers": ["die", "Zunge", "i", "m", "Zaum", "halten"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -792,12 +802,12 @@
 	},
 	"grammar-de-idiom-ohr-present-full": {
 		"input": {
-			"markedContext": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
-			"members": ["haut", "übers", "Ohr"]
+			"markedContext": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>über</TARGET><TARGET>s</TARGET> <TARGET>Ohr</TARGET>.",
+			"members": ["haut", "über", "s", "Ohr"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard", "Standard"],
-			"normalizedMembers": ["haut", "übers", "Ohr"],
+			"memberOrthographies": ["Standard", "Fused", "Fused", "Standard"],
+			"normalizedMembers": ["haut", "über", "s", "Ohr"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -977,15 +987,16 @@
 	},
 	"grammar-de-idiom-katze-perfect-full": {
 		"input": {
-			"markedContext": "Nach der Formel „Guten Morgen“ <TARGET>hat</TARGET> sie ohne Prüfung <TARGET>die</TARGET> <TARGET>Katze</TARGET> <TARGET>im</TARGET> <TARGET>Sack</TARGET> <TARGET>gekauft</TARGET>.",
-			"members": ["hat", "die", "Katze", "im", "Sack", "gekauft"]
+			"markedContext": "Nach der Formel „Guten Morgen“ <TARGET>hat</TARGET> sie ohne Prüfung <TARGET>die</TARGET> <TARGET>Katze</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Sack</TARGET> <TARGET>gekauft</TARGET>.",
+			"members": ["hat", "die", "Katze", "i", "m", "Sack", "gekauft"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard"
 			],
@@ -993,7 +1004,8 @@
 				"hat",
 				"die",
 				"Katze",
-				"im",
+				"i",
+				"m",
 				"Sack",
 				"gekauft"
 			],
@@ -1026,18 +1038,19 @@
 	},
 	"grammar-de-idiom-kirche-imperative-full": {
 		"input": {
-			"markedContext": "Nachdem der Ausschuss eine Entscheidung getroffen hat, <TARGET>lass</TARGET> bitte <TARGET>die</TARGET> <TARGET>Kirche</TARGET> <TARGET>im</TARGET> <TARGET>Dorf</TARGET>!",
-			"members": ["lass", "die", "Kirche", "im", "Dorf"]
+			"markedContext": "Nachdem der Ausschuss eine Entscheidung getroffen hat, <TARGET>lass</TARGET> bitte <TARGET>die</TARGET> <TARGET>Kirche</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Dorf</TARGET>!",
+			"members": ["lass", "die", "Kirche", "i", "m", "Dorf"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
-			"normalizedMembers": ["lass", "die", "Kirche", "im", "Dorf"],
+			"normalizedMembers": ["lass", "die", "Kirche", "i", "m", "Dorf"],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -1169,21 +1182,23 @@
 	},
 	"grammar-de-idiom-licht-passive-full": {
 		"input": {
-			"markedContext": "Durch die Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>ins</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
-			"members": ["wurde", "Licht", "ins", "Dunkel", "gebracht"]
+			"markedContext": "Durch die Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
+			"members": ["wurde", "Licht", "in", "s", "Dunkel", "gebracht"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard"
 			],
 			"normalizedMembers": [
 				"wurde",
 				"Licht",
-				"ins",
+				"in",
+				"s",
 				"Dunkel",
 				"gebracht"
 			],

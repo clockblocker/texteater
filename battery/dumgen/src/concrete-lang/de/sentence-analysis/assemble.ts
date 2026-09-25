@@ -16,6 +16,8 @@
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
+import { abbreviationEntry } from "../../../universal/fusion-table.js";
+import { germanFusionTable } from "../fusion-entries.js";
 import { articleForms } from "../target-classification/assembly.js";
 import type {
 	IdentityMass,
@@ -458,6 +460,11 @@ export function assembleAnalysis(
 		return role;
 	};
 
+	const abbreviationKindOf = (index: number) =>
+		abbreviationEntry(
+			germanFusionTable,
+			sentence.segments[index]?.text ?? "",
+		)?.kind ?? undefined;
 	const fusionOf = (index: number) =>
 		placement.fusions.find(
 			(entry) =>
@@ -483,7 +490,25 @@ export function assembleAnalysis(
 					});
 				} else fusedArticles.push({ offset: component.offset });
 		}
-		const plain = word.members.filter((index) => !fusionOf(index));
+		// An abbreviation stands for its whole expansion, and the table names
+		// the Kind of the unit that expansion is.
+		for (const index of word.members) {
+			const kind = abbreviationKindOf(index);
+			const piece = placement.pieces.get(index)?.[0];
+			if (!kind || !piece) continue;
+			const id = nextId();
+			headIndexOf.set(id, index);
+			targets.push({
+				id,
+				members: [{ offset: piece.offset, role: "Head" }],
+				routeMass: { [kind]: 1 },
+				identity: null,
+				provenance: "abbreviation-table",
+			});
+		}
+		const plain = word.members.filter(
+			(index) => !fusionOf(index) && !abbreviationKindOf(index),
+		);
 		if (plain.length === 0) continue;
 		const singleton = plain.length === 1;
 		const members: Member[] = plain.flatMap((index) =>

@@ -5,6 +5,7 @@ import type * as Dumrel from "dumrel/types";
 export type Segment = {
 	kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
 	text: string;
+	surface?: string | undefined;
 };
 export type SegmentedSentence = {
 	id: string;

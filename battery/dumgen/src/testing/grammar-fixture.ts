@@ -102,6 +102,9 @@ export function grammarFixture(
 							: keys[0]) ?? "Unresolved"
 					);
 				}
+				// Another piece's reading ('s of geht's) defaults to the table's
+				// first word; a test names another through `overrides`.
+				if (id.startsWith("reading_")) return "surface_0";
 				if (id.startsWith("surface_")) {
 					const question = request.questions[id];
 					if (question?.type !== "choice")

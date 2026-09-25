@@ -298,7 +298,9 @@ test("canonical classification evaluation calls the production operation and pre
 		run.cases.every(
 			(record) =>
 				record.traces.length === 1 &&
-				record.calls > 0 &&
+				// A table abbreviation takes its Kind from the table, uncalled.
+				(record.calls > 0 ||
+					record.caseId.startsWith("target-de-abbreviation-")) &&
 				record.calls < 3,
 		),
 	).toBe(true);

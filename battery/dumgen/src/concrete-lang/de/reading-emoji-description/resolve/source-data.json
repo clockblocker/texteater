@@ -478,14 +478,14 @@
 		},
 		"reading-de-construction-fusion-am-temporal": {
 			"input": {
-				"markedContext": "Der Kurs beginnt <TARGET>am</TARGET> Montag.",
-				"lemma": "am",
+				"markedContext": "Der Kurs beginnt <TARGET>a</TARGET>m Montag.",
+				"lemma": "an",
 				"existingEmojiDescriptions": ["📍"]
 			},
 			"idealOutput": {
 				"emojiDescription": "📅"
 			},
-			"explanation": "The fused form marks a calendar-time relation, not a place. New."
+			"explanation": "The a of am is the adposition an, here marking a calendar-time relation, not a place. New."
 		},
 		"reading-de-lexeme-cconj-entweder-oder": {
 			"input": {

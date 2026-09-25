@@ -58,9 +58,9 @@ test("all development selections are disjoint and production assembly uses only 
 				item.id === "target-classification/de/high-level-whole-unit",
 		),
 	).toMatchObject({
-		caseCount: 610,
+		caseCount: 614,
 		demonstrationCount: 34,
-		evaluationCount: 312,
+		evaluationCount: 316,
 	});
 	expect(
 		Object.keys(prompts).some((route) =>

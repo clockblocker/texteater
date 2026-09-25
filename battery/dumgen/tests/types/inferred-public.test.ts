@@ -68,7 +68,7 @@ const inferred = (name: string, options: typeof full | typeof hover = full) =>
 describe("public Dumgen types read as their Domain names", () => {
 	test("Segments and Segmentation Decisions spell out their kinds", async () => {
 		expect(await inferred("PublicSegment")).toMatchInlineSnapshot(
-			`"type PublicSegment = { kind: "OpaqueText" | "Punctuation" | "ResolvableText" | "Whitespace"; text: string; }"`,
+			`"type PublicSegment = { kind: "OpaqueText" | "Punctuation" | "ResolvableText" | "Whitespace"; text: string; surface?: string | undefined; }"`,
 		);
 		expect(await inferred("PublicSegmentKind")).toMatchInlineSnapshot(
 			`"type PublicSegmentKind = "OpaqueText" | "Punctuation" | "ResolvableText" | "Whitespace""`,

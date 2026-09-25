@@ -12,6 +12,7 @@
  */
 import { Effect } from "effect";
 import { createTypeSafeExecutor } from "promptsmith/typesafe";
+import { joinFusedWords } from "../../src/concrete-lang/de/segmentation/fused-word-guard.js";
 import { segmentGerman } from "../../src/concrete-lang/de/segmentation/segment.js";
 import type { SentenceAnalysis } from "../../src/concrete-lang/de/sentence-analysis/analysis.js";
 import {
@@ -125,7 +126,7 @@ for (const spec of fixtureSentences) {
 	);
 	fixtures.push({
 		analysis,
-		gold: goldOf(spec, placeSegments(sentence)),
+		gold: goldOf(spec, placeSegments(joinFusedWords(sentence))),
 		note: spec.note,
 		produced: {
 			design: "production analyzeSentence (Dumgen ADR 0006)",

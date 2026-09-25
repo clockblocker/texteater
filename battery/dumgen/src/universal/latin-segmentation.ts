@@ -1,6 +1,7 @@
 import type { Segment, SegmentKind } from "../types.js";
 import {
 	type FusionTable,
+	fusedWordSegments,
 	leadingAbbreviation,
 	leadingFreeClitic,
 	splitClitic,
@@ -34,8 +35,9 @@ const punctuationRun = /^(?:[?!]+|\.{3}|…+)/u;
 
 /**
  * Shared Latin-script scanner. A language with a fusion table cuts its
- * abbreviations and apostrophe clitics where the table says (Dumgen ADR
- * 0004); English keeps its own abbreviation list and whole contractions.
+ * abbreviations, apostrophe clitics and fused words where the table says
+ * (Dumgen ADR 0004): `im` is the Segments `i` and `m` (ADR 0035). English
+ * keeps its own abbreviation list and whole contractions.
  */
 export function segmentLatin(
 	stitchedText: string,
@@ -263,13 +265,27 @@ export function segmentLatin(
 
 		const wordValue = rest.match(word)?.[0];
 		if (wordValue) {
-			pushSegment(
-				segments,
-				trace,
-				"ResolvableText",
-				wordValue,
-				`${language}-surface-candidate`,
-			);
+			const pieces = table
+				? fusedWordSegments(table, wordValue)
+				: undefined;
+			if (pieces)
+				for (const piece of pieces)
+					pushSegment(
+						segments,
+						trace,
+						"ResolvableText",
+						piece.text,
+						"fused-word-piece",
+						piece.surface,
+					);
+			else
+				pushSegment(
+					segments,
+					trace,
+					"ResolvableText",
+					wordValue,
+					`${language}-surface-candidate`,
+				);
 			offset += wordValue.length;
 			continue;
 		}

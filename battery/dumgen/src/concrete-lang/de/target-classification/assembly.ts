@@ -1,7 +1,12 @@
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
+import {
+	fusedPieceAt,
+	shorthandSurfaces,
+} from "../../../universal/fusion-table.js";
 import { choice } from "../../../universal/questions.js";
 import { indexedContext } from "../../../universal/validation.js";
+import { germanFusionTable } from "../fusion-entries.js";
 
 /**
  * The parts of German target classification that do not talk to the judge:
@@ -65,13 +70,41 @@ export type ClassificationInput = {
 	readonly clickedSegmentIndex: number;
 };
 
+/**
+ * What each piece of a split fused word stands for (ADR 0035): `<s4>i</s4>`
+ * and `<s5>m</s5>` read as one written word, so the judge is told that they
+ * are in and dem.
+ */
+export function fusedWordNotes(sentence: SegmentedSentence): string[] {
+	const notes: string[] = [];
+	for (const index of sentence.segments.keys()) {
+		const piece = fusedPieceAt(germanFusionTable, sentence.segments, index);
+		if (piece?.component !== 0) continue;
+		const parts = piece.pieces.map(
+			({ span, surfaces }, position) =>
+				`<s${index + position}> ${span} ${
+					surfaces.length
+						? `stands for ${surfaces.join(" or ")}`
+						: "keeps its own letters"
+				}`,
+		);
+		notes.push(
+			`${piece.pieces.map(({ span }) => span).join("")} is one written word split into pieces: ${parts.join("; ")}.`,
+		);
+	}
+	return notes;
+}
+
 export function classificationState(
 	input: ClassificationInput,
 	criteria: string,
 ) {
+	const fusedWords =
+		input.sentence.language === "de" ? fusedWordNotes(input.sentence) : [];
 	return {
 		sentence: indexedContext(input.sentence),
 		clickedSegmentIndex: input.clickedSegmentIndex,
+		...(fusedWords.length ? { fusedWords } : {}),
 		criteria:
 			"In `sentence`, <sN> tags identify selectable occurrences by original segment index N. Untagged text supplies context only. " +
 			criteria,
@@ -115,13 +148,24 @@ export type Assembly =
 	  }
 	| { readonly decision: "Unresolved"; readonly reason: string };
 
+/**
+ * The members that are an article: a standalone one (der), the article piece
+ * of a fused word (m in im) or a shortened one ('ne).
+ */
 export function articleMembers(
 	sentence: SegmentedSentence,
 	members: readonly number[],
 ): number[] {
-	return members.filter((index) =>
-		articleForms.has(sentence.segments[index]?.text.toLowerCase() ?? ""),
-	);
+	return members.filter((index) => {
+		const text = sentence.segments[index]?.text ?? "";
+		const piece = fusedPieceAt(germanFusionTable, sentence.segments, index);
+		const surfaces = piece
+			? (piece.pieces[piece.component]?.surfaces ?? [])
+			: (shorthandSurfaces(germanFusionTable, text) ?? [text]);
+		return surfaces.some((surface) =>
+			articleForms.has(surface.toLowerCase()),
+		);
+	});
 }
 
 /**

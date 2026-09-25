@@ -457,14 +457,18 @@ test("Fused and standalone article produce the same reusable noun Surface", asyn
 	expect(standalone.realizationCoverage).toBe("Full");
 });
 
-test("an unsplit fused word supplies no article", async () => {
+test("an unsplit fused word is rejected, not resolved without its article", async () => {
 	const fixture = example(
 		"Wir bleiben im Wald",
-		["Wald"],
+		["m", "Wald"],
 		"Wald",
-		"",
-		"None",
+		"dem",
+		"Definite",
 		"Dat",
+		"Sing",
+		"Masc",
+		null,
+		"Fused",
 	);
 	const segments = fixture.encounter.sentence.segments.flatMap((segment) =>
 		segment.text === "i"
@@ -473,31 +477,23 @@ test("an unsplit fused word supplies no article", async () => {
 				? []
 				: [segment],
 	);
-	const options = grammarFixture(fixture.golden);
-	const judge = options.judge;
-	if (!judge) throw Error("Missing fixture judge");
-	const offered: string[][] = [];
-	await Effect.runPromise(
-		createDumgen({
-			...options,
-			judge: async (request, settings) => {
-				const question = request.questions.attachment;
-				if (question?.type === "choice")
-					offered.push(Object.keys(question.criteria));
-				return judge(request, settings);
-			},
-		}).resolveGrammar({
-			...validateEncounter({
-				sentence: { ...fixture.encounter.sentence, segments },
-				target: {
-					...fixture.encounter.target,
-					memberSegmentIndices: [6],
-				},
+	const encounter = {
+		sentence: { ...fixture.encounter.sentence, segments },
+		target: { ...fixture.encounter.target, memberSegmentIndices: [6] },
+	};
+	expect(() => validateEncounter(encounter)).toThrow(/whole fused word/u);
+	const result = await Effect.runPromise(
+		Effect.either(
+			createDumgen(grammarFixture(fixture.golden)).resolveGrammar({
+				...(encounter as unknown as typeof fixture.encounter),
+				contextAvailable: false,
 			}),
-			contextAvailable: false,
-		}),
+		),
 	);
-	expect(offered).toEqual([["None", "Unresolved"]]);
+	expect(result).toMatchObject({
+		_tag: "Left",
+		left: { _tag: "InvalidInput", stage: "resolveGrammar" },
+	});
 });
 
 test("article attachment offers only complete lexical candidates", async () => {

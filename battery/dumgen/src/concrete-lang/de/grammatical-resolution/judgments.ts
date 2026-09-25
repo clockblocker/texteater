@@ -32,6 +32,7 @@ import { grammarFeatureFields } from "./feature-schema.js";
 import { infinitiveShaped } from "./infinitive-shape.js";
 import { possiblyInflectedNoun } from "./inflected-noun.js";
 import {
+	ambiguousPieces,
 	attestedMember,
 	type MemberOrthography,
 	tableSpelling,
@@ -42,7 +43,7 @@ import {
 	nounArticleState,
 	resolveNounArticle,
 } from "./noun-article.js";
-import type { GrammarOutput } from "./project.js";
+import { type GrammarOutput, joinMembers } from "./project.js";
 import {
 	inReferentGroup,
 	type ReferentMode,
@@ -141,7 +142,7 @@ const sharedPolicy = {
 	canonicalForm:
 		"Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete `canonicalFormCandidate` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise select an exact headword from `canonicalFormAlternatives` when available. These include stored dictionary headwords and, for nouns, individual source members without the article. Candidates are suggestions, not proof: preserve contextual identity and Core Features; select missing text only when no candidate is the exact headword. Inflection does not prevent identical spelling. Selection requires exact headword text and casing; the headword may omit compositional articles even though Attestation membership stays fixed.",
 	orthography:
-		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. A piece of a fused word (i and m in im, geht and 's in geht's) or a shortened word ('ne, z.B.) is spelled as `memberSpellings` says, and code sets its orthography. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
+		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. A piece of a fused word (i and m in im, geht and 's in geht's) or a shortened word ('ne, z.B.) is spelled as `memberSpellings` says, and code sets its orthography. An abbreviation stands for its expansion, and the Surface is that expansion (z.B. is zum Beispiel). Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
 	inflection:
 		"Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Structural null is not uncertainty.",
 };
@@ -203,25 +204,60 @@ export function resolveGrammarJudgments(
 		// A piece of a fused word or a shortened word stands for what the fusion
 		// table says (ADR 0035): i in im is in, 'ne is eine. Code sets its
 		// orthography and, when the table names one word, its normalization.
+		// A fused word the unit holds whole keeps its written letters (zur in
+		// zur Verfügung stellen), its pieces glued together; an abbreviation
+		// stands for its expansion (z.B. is zum Beispiel).
 		const spellings = encounter.target.memberSegmentIndices.map((index) =>
 			tableSpelling(encounter, index),
 		);
-		const spelledMembers = input.members.map((text, position) => {
-			const surfaces = spellings[position]?.surfaces ?? [];
-			return surfaces.length === 1 ? (surfaces[0] ?? text) : text;
-		});
-		const memberSpellings = spellings.flatMap((spelling, position) =>
-			spelling
-				? [
-						`members[${position}] ${input.members[position]}: ${
-							spelling.orthography === "Fused"
-								? `a piece of the fused word ${spelling.piece.pieces.map((piece) => piece.span).join("")}`
-								: "a shortened spelling"
-						}${spelling.surfaces.length ? `, standing for ${spelling.surfaces.join(" or ")}` : ""}`,
-					]
-				: [],
+		const tableTexts = spellings.map((spelling) =>
+			spelling?.orthography === "Fused" && spelling.written !== undefined
+				? [spelling.written]
+				: (spelling?.surfaces ?? []),
 		);
-		const canonicalFormCandidate = spelledMembers.join(" ");
+		const gluedMembers = new Set(
+			spellings.flatMap((spelling, position) =>
+				spelling?.orthography === "Fused" &&
+				spelling.written !== undefined &&
+				spelling.piece.component > 0
+					? [position]
+					: [],
+			),
+		);
+		const spelledMembers = input.members.map((text, position) => {
+			const texts = tableTexts[position] ?? [];
+			return texts.length === 1 ? (texts[0] ?? text) : text;
+		});
+		const memberSpellings = spellings.flatMap((spelling, position) => {
+			if (!spelling) return [];
+			const fusedWord =
+				spelling.orthography === "Fused"
+					? spelling.piece.pieces.map((piece) => piece.span).join("")
+					: "";
+			const what =
+				spelling.orthography === "Shorthand"
+					? "a shortened spelling"
+					: spelling.written === undefined
+						? `a piece of the fused word ${fusedWord}`
+						: `a piece of the fused word ${fusedWord}, which this target holds whole`;
+			return [
+				`members[${position}] ${input.members[position]}: ${what}${spelling.surfaces.length ? `, standing for ${spelling.surfaces.join(" or ")}` : ""}`,
+			];
+		});
+		// The other pieces of the fused words the members belong to: one that
+		// can stand for several words (the 's of geht's) is read here too, so
+		// the Fusion shows what the sentence chose.
+		const readingPieces = [...ambiguousPieces(encounter)].filter(
+			([segment]) =>
+				!encounter.target.memberSegmentIndices.includes(segment),
+		);
+		const tableSpelled = spellings.every(
+			(_, position) => (tableTexts[position] ?? []).length > 0,
+		);
+		const canonicalFormCandidate = joinMembers(
+			spelledMembers,
+			gluedMembers,
+		);
 		// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
 		// 102 → 0/154), so a stored Lemma of the same route found under another
 		// word would become this target's Lemma: "stolz" for "normal".
@@ -296,7 +332,7 @@ export function resolveGrammarJudgments(
 		const referent =
 			encounter.target.kind === "PRON"
 				? referentChoice(
-						spelledMembers.join(" "),
+						joinMembers(spelledMembers, gluedMembers),
 						sentenceInitial,
 						referentMode,
 					)
@@ -346,9 +382,18 @@ export function resolveGrammarJudgments(
 				field,
 			);
 		}
+		// The Surface spelling is the spelling of the words the members show:
+		// a fused piece or a shortened word stands for its full word ('ne is
+		// eine) and never makes the Surface a Variant (ADR 0035).
+		if (tableSpelled) delete questions.spelling;
+		else if (memberSpellings.length)
+			questions.spelling = choice(
+				`Under \`policy.orthography\` and \`policy.route\`, is the Surface realized by \`members\` in \`markedContext\` a canonical spelling of its Lemma or a licensed variant? Judge only the members \`memberSpellings\` does not list (${input.members.filter((_, position) => !spellings[position]).join(", ")}): a listed member stands for its full word and never makes the Surface a Variant. Inflection alone never means Variant.`,
+				{ Canonical: null, Variant: null, Unresolved: null },
+			);
 		for (const [index] of input.members.entries()) {
 			const spelling = spellings[index];
-			const surfaces = spelling?.surfaces ?? [];
+			const surfaces = tableTexts[index] ?? [];
 			if (surfaces.length > 1)
 				questions[`surface_${index}`] = choice(
 					`Which word does \`members[${index}]\` stand for in \`markedContext\`?`,
@@ -378,6 +423,19 @@ export function resolveGrammarJudgments(
 				normalizations,
 			);
 		}
+		for (const [segment, piece] of readingPieces)
+			questions[`reading_${segment}`] = choice(
+				`\`members[${piece.member}]\` is a piece of the fused word ${piece.spelling}. Which word does its piece ${encounter.sentence.segments[segment]?.text ?? ""} stand for in \`markedContext\`?`,
+				{
+					...Object.fromEntries(
+						piece.surfaces.map((surface, index) => [
+							`surface_${index}`,
+							surface,
+						]),
+					),
+					Unresolved: null,
+				},
+			);
 		const partial = [
 			"Idiom",
 			"DiscourseFormula",
@@ -454,7 +512,11 @@ export function resolveGrammarJudgments(
 			(verbal || adnominal) && !auxiliary && input.members.length > 1
 				? spelledMembers.flatMap((text, index) => {
 						const form = text.toLocaleLowerCase("de");
-						return isGovernablePreposition(form)
+						const spelling = spellings[index];
+						const whole =
+							spelling?.orthography === "Fused" &&
+							spelling.written !== undefined;
+						return !whole && isGovernablePreposition(form)
 							? [{ index, text, form }]
 							: [];
 					})
@@ -628,7 +690,7 @@ export function resolveGrammarJudgments(
 				} else core[key] = featureValue(selected(path));
 			}
 			const surface: Record<string, unknown> = {
-				spelling: selected("spelling"),
+				spelling: tableSpelled ? "Canonical" : selected("spelling"),
 				surfaceFeatures:
 					selected("historicalStatus") === "Archaic"
 						? { historicalStatus: "Archaic" }
@@ -707,11 +769,32 @@ export function resolveGrammarJudgments(
 			// A member the table spells stands for its one surface, or the one
 			// the judgment picks; a host or an abbreviation normalizes as usual.
 			const tableSurfaces = input.members.map((_, index) => {
-				const surfaces = spellings[index]?.surfaces ?? [];
+				const surfaces = tableTexts[index] ?? [];
 				if (surfaces.length < 2) return surfaces[0];
 				const answer = selected(`surface_${index}`);
 				return surfaces[Number(answer.slice("surface_".length))];
 			});
+			const pieceReadings = new Map<number, string>();
+			for (const [
+				position,
+				index,
+			] of encounter.target.memberSegmentIndices.entries()) {
+				const reading = tableSurfaces[position];
+				if (
+					spellings[position]?.orthography === "Fused" &&
+					(tableTexts[position] ?? []).length > 1 &&
+					reading !== undefined
+				)
+					pieceReadings.set(index, reading);
+			}
+			for (const [segment, piece] of readingPieces) {
+				const answer = selected(`reading_${segment}`);
+				const reading =
+					piece.surfaces[Number(answer.slice("surface_".length))];
+				if (reading === undefined)
+					return fail(`Unaligned reading of Segment ${segment}`);
+				pieceReadings.set(segment, reading);
+			}
 			const normalizationModes = input.members.map((_, index) =>
 				tableSurfaces[index] === undefined
 					? selected(`normalization_${index}`)
@@ -781,8 +864,11 @@ export function resolveGrammarJudgments(
 				);
 			const copiedCanonical = () =>
 				encounter.target.kind === "DiscourseFormula"
-					? normalizedMembers.join(" ").toLocaleLowerCase("de")
-					: normalizedMembers.join(" ");
+					? joinMembers(
+							normalizedMembers,
+							gluedMembers,
+						).toLocaleLowerCase("de")
+					: joinMembers(normalizedMembers, gluedMembers);
 			let lemma: GrammarOutput["lemma"];
 			if (auxiliary) {
 				const identity = selected("identity");
@@ -807,7 +893,10 @@ export function resolveGrammarJudgments(
 							options,
 							{
 								kind: encounter.target.kind as "DET" | "PRON",
-								spelled: normalizedMembers.join(" "),
+								spelled: joinMembers(
+									normalizedMembers,
+									gluedMembers,
+								),
 								core,
 								inflection: surface.inflectionalFeatures,
 								markedContext: input.markedContext,
@@ -963,12 +1052,15 @@ export function resolveGrammarJudgments(
 					{
 						stage: "generateCanonicalForm",
 						route: `${route}/text`,
-						input: normalizedMembers
-							.filter(
-								(_, index) =>
-									index !== governedPrepositionPosition,
-							)
-							.join(" "),
+						input: joinMembers(
+							normalizedMembers,
+							gluedMembers,
+							new Set(
+								governedPrepositionPosition === undefined
+									? []
+									: [governedPrepositionPosition],
+							),
+						),
 						systemPrompt: canonicalFormPrompt(
 							encounter.target.kind,
 						),
@@ -1195,6 +1287,15 @@ export function resolveGrammarJudgments(
 			const article = judgedArticle?.article;
 			if (article) {
 				coverage = article.coverage;
+				// An owned article piece stands for the article form attached.
+				const owner = encounter.target.memberSegmentIndices[0];
+				if (
+					article.evidence.kind === "Owned" &&
+					owner !== undefined &&
+					normalizedMembers[0] !== undefined &&
+					spellings[0]?.orthography === "Fused"
+				)
+					pieceReadings.set(owner, normalizedMembers[0]);
 			}
 			let expletiveEvidence: GrammarOutput["expletiveEvidence"] = null;
 			if (
@@ -1219,7 +1320,7 @@ export function resolveGrammarJudgments(
 					encounter,
 					index,
 					orthography,
-					"es",
+					new Map([...pieceReadings, [index, "es"]]),
 				);
 			}
 			if (adposition) {
@@ -1267,12 +1368,16 @@ export function resolveGrammarJudgments(
 				realizationCoverage: coverage,
 			};
 			try {
-				return parse<GrammarOutput>(
-					`grammar/${route}`,
-					output,
-					"resolveGrammar",
-					true,
-				);
+				return {
+					...parse<GrammarOutput>(
+						`grammar/${route}`,
+						output,
+						"resolveGrammar",
+						true,
+					),
+					gluedMembers,
+					pieceReadings,
+				};
 			} catch (error) {
 				if (!(error instanceof DumgenFailure)) throw error;
 				recordEvent(scope, "IncoherentApplicableFeatures", output);

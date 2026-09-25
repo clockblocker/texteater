@@ -4,6 +4,7 @@ import {
 	isGermanFusedWord,
 	splitGermanFusedWords,
 } from "../src/authored.js";
+import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 
 test("a stored German Sentence holds the pieces of each fused word", () => {
 	expect(
@@ -45,4 +46,25 @@ test("a Fusion value finds its authored one-liner", () => {
 			components: [{ span: "x" }, { span: "y" }],
 		}),
 	).toBeUndefined();
+});
+
+test("Segments from Dumgen's segmenter already hold the pieces and pass through", () => {
+	const segmented = segmentGerman("Im Wald und aufs Dach").segments;
+	expect(
+		segmented
+			.filter((segment) => "surface" in segment)
+			.map(({ text, surface }) => [text, surface]),
+	).toEqual([
+		["I", "in"],
+		["m", "dem"],
+		["auf", "auf"],
+		["s", "das"],
+	]);
+	expect(splitGermanFusedWords(segmented)).toEqual(segmented);
+	// Pieces that lost their surface gain it back.
+	expect(
+		splitGermanFusedWords(
+			segmented.map(({ kind, text }) => ({ kind, text })),
+		),
+	).toEqual(segmented);
 });

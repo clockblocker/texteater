@@ -6,9 +6,15 @@ import {
 } from "dumrel/schema";
 import { z } from "zod";
 
+/**
+ * One Segment (Dumgen ADR 0004). `surface` is the word a piece of a fused
+ * word stands for (`i` in `im` is `in`); a Segment without one stands for its
+ * own text.
+ */
 export const segmentSchema = z.strictObject({
 	kind: z.enum(["ResolvableText", "OpaqueText", "Whitespace", "Punctuation"]),
 	text: z.string().min(1),
+	surface: z.string().min(1).optional(),
 });
 export const segmentedSentenceSchema = z.strictObject({
 	id: z.string().min(1),

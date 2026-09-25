@@ -4,6 +4,7 @@ import {
 	ParsingError,
 	parseCompiledValidation,
 } from "dumval/runtime";
+import { assertFusedWordsSplit } from "../concrete-lang/de/segmentation/fused-word-guard.js";
 import { validationRegistry } from "../generated/linked-validation.js";
 import type { Encounter, SegmentedSentence } from "../types.js";
 import { DumgenFailure } from "./failure.js";
@@ -49,6 +50,7 @@ export function validateEncounter(
 			);
 		previous = index;
 	}
+	assertFusedWordsSplit(encounter.sentence, stage);
 	return encounter;
 }
 const escapeText = (text: string) =>

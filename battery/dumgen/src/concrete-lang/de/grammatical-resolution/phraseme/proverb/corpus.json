@@ -1,18 +1,26 @@
 {
 	"grammar-de-proverb-demo-morgenstund-attribution": {
 		"input": {
-			"markedContext": "Als die Enkel über das frühe Aufstehen klagten, erinnerte die Großmutter sie: „<TARGET>Morgenstund</TARGET> <TARGET>hat</TARGET> <TARGET>Gold</TARGET> <TARGET>im</TARGET> <TARGET>Mund</TARGET>.“",
-			"members": ["Morgenstund", "hat", "Gold", "im", "Mund"]
+			"markedContext": "Als die Enkel über das frühe Aufstehen klagten, erinnerte die Großmutter sie: „<TARGET>Morgenstund</TARGET> <TARGET>hat</TARGET> <TARGET>Gold</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Mund</TARGET>.“",
+			"members": ["Morgenstund", "hat", "Gold", "i", "m", "Mund"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
-			"normalizedMembers": ["Morgenstund", "hat", "Gold", "im", "Mund"],
+			"normalizedMembers": [
+				"Morgenstund",
+				"hat",
+				"Gold",
+				"i",
+				"m",
+				"Mund"
+			],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",
@@ -251,8 +259,8 @@
 	},
 	"grammar-de-proverb-dev-zuletzt-lacht": {
 		"input": {
-			"markedContext": "Nach dem unerwarteten Sieg erinnerte der Kapitän die Spötter: „<TARGET>Wer</TARGET> <TARGET>zuletzt</TARGET> <TARGET>lacht</TARGET>, <TARGET>lacht</TARGET> <TARGET>am</TARGET> <TARGET>besten</TARGET>.“",
-			"members": ["Wer", "zuletzt", "lacht", "lacht", "am", "besten"]
+			"markedContext": "Nach dem unerwarteten Sieg erinnerte der Kapitän die Spötter: „<TARGET>Wer</TARGET> <TARGET>zuletzt</TARGET> <TARGET>lacht</TARGET>, <TARGET>lacht</TARGET> <TARGET>a</TARGET><TARGET>m</TARGET> <TARGET>besten</TARGET>.“",
+			"members": ["Wer", "zuletzt", "lacht", "lacht", "a", "m", "besten"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
@@ -260,7 +268,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
 			"normalizedMembers": [
@@ -268,7 +277,8 @@
 				"zuletzt",
 				"lacht",
 				"lacht",
-				"am",
+				"a",
+				"m",
 				"besten"
 			],
 			"realizationCoverage": "Full",
@@ -330,14 +340,15 @@
 	},
 	"grammar-de-proverb-dev-apfel-stamm": {
 		"input": {
-			"markedContext": "Als Mutter und Tochter denselben Beruf wählten, kommentierte der Onkel: „<TARGET>Der</TARGET> <TARGET>Apfel</TARGET> <TARGET>fällt</TARGET> <TARGET>nicht</TARGET> <TARGET>weit</TARGET> <TARGET>vom</TARGET> <TARGET>Stamm</TARGET>.“",
+			"markedContext": "Als Mutter und Tochter denselben Beruf wählten, kommentierte der Onkel: „<TARGET>Der</TARGET> <TARGET>Apfel</TARGET> <TARGET>fällt</TARGET> <TARGET>nicht</TARGET> <TARGET>weit</TARGET> <TARGET>vo</TARGET><TARGET>m</TARGET> <TARGET>Stamm</TARGET>.“",
 			"members": [
 				"Der",
 				"Apfel",
 				"fällt",
 				"nicht",
 				"weit",
-				"vom",
+				"vo",
+				"m",
 				"Stamm"
 			]
 		},
@@ -348,7 +359,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
 			"normalizedMembers": [
@@ -357,7 +369,8 @@
 				"fällt",
 				"nicht",
 				"weit",
-				"vom",
+				"vo",
+				"m",
 				"Stamm"
 			],
 			"realizationCoverage": "Full",
@@ -849,17 +862,18 @@
 	},
 	"grammar-de-proverb-accept-glashaus-partial": {
 		"input": {
-			"markedContext": "Die Aufnahme endete nach dem klar erkennbaren Sprichwortanfang „<TARGET>Wer</TARGET> <TARGET>im</TARGET> <TARGET>Glashaus</TARGET> <TARGET>sitzt</TARGET> …“.",
-			"members": ["Wer", "im", "Glashaus", "sitzt"]
+			"markedContext": "Die Aufnahme endete nach dem klar erkennbaren Sprichwortanfang „<TARGET>Wer</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Glashaus</TARGET> <TARGET>sitzt</TARGET> …“.",
+			"members": ["Wer", "i", "m", "Glashaus", "sitzt"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard"
 			],
-			"normalizedMembers": ["Wer", "im", "Glashaus", "sitzt"],
+			"normalizedMembers": ["Wer", "i", "m", "Glashaus", "sitzt"],
 			"realizationCoverage": "Partial",
 			"surface": {
 				"spelling": "Canonical",
@@ -1022,7 +1036,7 @@
 	},
 	"grammar-de-proverb-accept-gaul-aphorism-context": {
 		"input": {
-			"markedContext": "Nach dem Aphorismus „Alt werden heißt sehend werden“ wechselte die Dozentin zu einem traditionellen Sprichwort: „<TARGET>Einem</TARGET> <TARGET>geschenkten</TARGET> <TARGET>Gaul</TARGET> <TARGET>schaut</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>ins</TARGET> <TARGET>Maul</TARGET>.“",
+			"markedContext": "Nach dem Aphorismus „Alt werden heißt sehend werden“ wechselte die Dozentin zu einem traditionellen Sprichwort: „<TARGET>Einem</TARGET> <TARGET>geschenkten</TARGET> <TARGET>Gaul</TARGET> <TARGET>schaut</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Maul</TARGET>.“",
 			"members": [
 				"Einem",
 				"geschenkten",
@@ -1030,7 +1044,8 @@
 				"schaut",
 				"man",
 				"nicht",
-				"ins",
+				"in",
+				"s",
 				"Maul"
 			]
 		},
@@ -1042,7 +1057,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
 			"normalizedMembers": [
@@ -1052,7 +1068,8 @@
 				"schaut",
 				"man",
 				"nicht",
-				"ins",
+				"in",
+				"s",
 				"Maul"
 			],
 			"realizationCoverage": "Full",

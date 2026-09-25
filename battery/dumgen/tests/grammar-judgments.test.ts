@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution/infinitive-shape.js";
 import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resolution/inflected-noun.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
@@ -8,6 +9,7 @@ import review from "../src/evaluation/redesign/review-cases.json";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
+import { fusedWordPieces, fusionEntry } from "../src/universal/fusion-table.js";
 import { validateEncounter } from "../src/universal/validation.js";
 
 for (const example of review.constructions)
@@ -272,7 +274,8 @@ test("finite homograph canonical candidate resolves without generation", async (
 						{ kind: "Whitespace", text: " " },
 						{ kind: "ResolvableText", text: "gehen" },
 						{ kind: "Whitespace", text: " " },
-						{ kind: "ResolvableText", text: "ins" },
+						{ kind: "ResolvableText", text: "in" },
+						{ kind: "ResolvableText", text: "s" },
 						{ kind: "Whitespace", text: " " },
 						{ kind: "ResolvableText", text: "Haus" },
 						{ kind: "Punctuation", text: "." },
@@ -505,14 +508,19 @@ function markedEncounter(
 		/(<TARGET>)?(\s+|[\p{L}\p{N}]+|[^\s\p{L}\p{N}<])(?:<\/TARGET>)?/gu,
 	)) {
 		if (target) members.push(segments.length);
-		segments.push({
-			text,
-			kind: /^\s+$/u.test(text)
-				? "Whitespace"
-				: /^[\p{L}\p{N}]+$/u.test(text)
-					? "ResolvableText"
-					: "Punctuation",
-		});
+		// A fused word is one Segment per component (ADR 0035).
+		const fusion = target
+			? undefined
+			: fusionEntry(germanFusionTable, text);
+		for (const piece of fusion ? fusedWordPieces(fusion, text) : [text])
+			segments.push({
+				text: piece,
+				kind: /^\s+$/u.test(piece)
+					? "Whitespace"
+					: /^[\p{L}\p{N}]+$/u.test(piece)
+						? "ResolvableText"
+						: "Punctuation",
+			});
 	}
 	return validateEncounter({
 		sentence: { id, language: "de", segments },

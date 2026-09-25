@@ -119,7 +119,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -1031,7 +1035,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -1496,7 +1504,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -1893,7 +1905,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2231,7 +2247,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2812,7 +2832,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -3044,7 +3068,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",

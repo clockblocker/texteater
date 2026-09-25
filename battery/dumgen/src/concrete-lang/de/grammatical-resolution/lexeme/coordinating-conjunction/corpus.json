@@ -1093,9 +1093,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["bzw."],
+			"normalizedMembers": ["beziehungsweise"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null
 			},
 			"lemma": {
@@ -1106,7 +1106,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation. Standard member. Variant Surface. Full Lemma."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, beziehungsweise (ADR 0035)."
 	},
 	"grammar-de-cconj-demo-archaic-allein": {
 		"input": {
@@ -1181,9 +1181,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["bzw."],
+			"normalizedMembers": ["beziehungsweise"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null
 			},
 			"lemma": {
@@ -1193,7 +1193,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, beziehungsweise (ADR 0035)."
 	},
 	"grammar-de-cconj-accept-typo-jedcoh": {
 		"input": {
@@ -1246,9 +1247,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["d.h."],
+			"normalizedMembers": ["das heißt"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null
 			},
 			"lemma": {
@@ -1259,7 +1260,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, das heißt (ADR 0035)."
 	},
 	"grammar-de-cconj-dev-written-das-heisst": {
 		"input": {

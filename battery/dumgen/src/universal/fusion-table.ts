@@ -2,8 +2,9 @@
  * Reviewed data for splitting one source word into several Segments at
  * intake (Dumgen ADR 0004). Each language authors a table of closed entries;
  * open patterns (Hebrew prefix stacks) are enumerated in code and are not
- * tables. A language's segmenter reads its table to cut abbreviations and
- * apostrophe clitics, and placement reads it for the surfaces.
+ * tables. A language's segmenter reads its table to cut abbreviations,
+ * apostrophe clitics and fused words, and placement reads it for the
+ * surfaces.
  */
 
 /** One Segment of a fused word: the letters shown and the surface they stand for. */
@@ -162,6 +163,30 @@ export function fusedWordPieces(
 	});
 }
 
+/**
+ * A fused word as the Segments it splits into, each with the surface it
+ * stands for when the table names one word (`Im` is `I` standing for `in` and
+ * `m` standing for `dem`); undefined for any other word. Segmentation and
+ * every host that splits a stored word use this one rule.
+ */
+export function fusedWordSegments(
+	table: FusionTable,
+	text: string,
+): readonly { readonly text: string; readonly surface?: string }[] | undefined {
+	const fusion = fusionEntry(table, text);
+	if (!fusion) return undefined;
+	const pieces = fusedWordPieces(fusion, text);
+	return fusion.components.map((component, position) => {
+		const [surface, ...others] = surfaces(component.surface);
+		return {
+			text: pieces[position] ?? "",
+			...(surface !== undefined && others.length === 0
+				? { surface }
+				: {}),
+		};
+	});
+}
+
 /** Written as authored, or with its first letter capitalized to open a sentence. */
 function spells(table: FusionTable, authored: string, written: string) {
 	return (
@@ -232,17 +257,25 @@ export type FusedPiece = {
 const fold = (table: FusionTable, text: string) =>
 	text.normalize("NFC").toLocaleLowerCase(table.language);
 
+type SegmentText = { readonly kind: string; readonly text: string };
+
 /**
- * The fused word a Segment is a piece of: adjacent ResolvableText Segments
- * with nothing between them that spell a table fusion piece by piece (`i` +
- * `m`), or a host and its attached clitic (`geht` + `'s`). An unsplit fused
- * word (`im`) is one Segment and no piece.
+ * The run of adjacent ResolvableText Segments, nothing between them, that
+ * holds the Segment at `index`, when it spells a table fusion piece by piece
+ * (`i` + `m`) or a host and its attached clitic (`geht` + `'s`).
  */
-export function fusedPieceAt(
+function fusedRunAt(
 	table: FusionTable,
-	segments: readonly { readonly kind: string; readonly text: string }[],
+	segments: readonly SegmentText[],
 	index: number,
-): FusedPiece | undefined {
+):
+	| {
+			readonly start: number;
+			readonly spans: readonly string[];
+			readonly surfaces: readonly (readonly string[])[];
+			readonly fusion: FusionEntry | undefined;
+	  }
+	| undefined {
 	const resolvable = (position: number) =>
 		segments[position]?.kind === "ResolvableText";
 	if (!resolvable(index)) return undefined;
@@ -252,7 +285,6 @@ export function fusedPieceAt(
 	while (resolvable(end + 1)) end += 1;
 	if (start === end) return undefined;
 	const spans = segments.slice(start, end + 1).map(({ text }) => text);
-	const component = index - start;
 	const fusion = fusionEntry(table, spans.join(""));
 	if (
 		fusion &&
@@ -263,11 +295,10 @@ export function fusedPieceAt(
 		)
 	)
 		return {
-			pieces: spans.map((span, position) => ({
-				span,
-				surfaces: surfaces(fusion.components[position]?.surface ?? []),
-			})),
-			component,
+			start,
+			spans,
+			surfaces: fusion.components.map((part) => surfaces(part.surface)),
+			fusion,
 		};
 	const [host, clitic] = spans;
 	if (spans.length !== 2 || host === undefined || clitic === undefined)
@@ -279,19 +310,74 @@ export function fusedPieceAt(
 		cliticEntry(table, clitic) === attached.entry
 	)
 		return {
-			pieces: [
-				{ span: host, surfaces: [] },
-				{ span: clitic, surfaces: surfaces(attached.entry.surface) },
-			],
-			component,
+			start,
+			spans,
+			surfaces: [[], surfaces(attached.entry.surface)],
+			fusion: undefined,
 		};
 	return undefined;
 }
 
 /**
+ * The fused word a Segment is a piece of: adjacent ResolvableText Segments
+ * with nothing between them that spell a table fusion piece by piece (`i` +
+ * `m`), or a host and its attached clitic (`geht` + `'s`). An unsplit fused
+ * word (`im`) is one Segment and no piece.
+ */
+export function fusedPieceAt(
+	table: FusionTable,
+	segments: readonly SegmentText[],
+	index: number,
+): FusedPiece | undefined {
+	const run = fusedRunAt(table, segments, index);
+	return (
+		run && {
+			pieces: run.spans.map((span, position) => ({
+				span,
+				surfaces: run.surfaces[position] ?? [],
+			})),
+			component: index - run.start,
+		}
+	);
+}
+
+/**
+ * The Segment indices of the table fusion whose first piece is at `index`
+ * (`i` + `m` of `im`); undefined anywhere else, a clitic's host included.
+ */
+export function fusedWordAt(
+	table: FusionTable,
+	segments: readonly SegmentText[],
+	index: number,
+): readonly number[] | undefined {
+	const run = fusedRunAt(table, segments, index);
+	return run?.fusion && run.start === index
+		? run.spans.map((_, position) => index + position)
+		: undefined;
+}
+
+/**
+ * The first ResolvableText Segment that is a whole table fusion (`im` as one
+ * Segment). Segmentation always splits one into its pieces (ADR 0035), so a
+ * Sentence that still holds one did not come from Dumgen.
+ */
+export function unsplitFusedWord(
+	table: FusionTable,
+	segments: readonly SegmentText[],
+): number | undefined {
+	const index = segments.findIndex(
+		(segment, position) =>
+			segment.kind === "ResolvableText" &&
+			fusionEntry(table, segment.text) !== undefined &&
+			fusedRunAt(table, segments, position) === undefined,
+	);
+	return index === -1 ? undefined : index;
+}
+
+/**
  * A standalone shortened spelling (ADR 0035), a free clitic ('ne) or an
- * abbreviation (z.B.), with the surfaces a clitic stands for; an
- * abbreviation keeps its own letters. Undefined for any other spelling.
+ * abbreviation (z.B.), with the surfaces it stands for: 'ne is eine, z.B.
+ * is zum Beispiel. Undefined for any other spelling.
  */
 export function shorthandSurfaces(
 	table: FusionTable,
@@ -300,7 +386,8 @@ export function shorthandSurfaces(
 	const clitic = cliticEntry(table, text);
 	if (clitic && clitic.attachment !== "Attached")
 		return surfaces(clitic.surface);
-	return abbreviationEntry(table, text) ? [] : undefined;
+	const abbreviation = abbreviationEntry(table, text);
+	return abbreviation && surfaces(abbreviation.surface);
 }
 
 /**

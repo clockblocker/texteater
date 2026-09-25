@@ -430,13 +430,13 @@ export const germanAbbreviations: readonly AbbreviationEntry[] = [
 	),
 	abbreviation(
 		"Mio.",
-		"Million",
+		["Million", "Millionen"],
 		"NOUN",
 		"„Mio.“ steht für „Million“ oder „Millionen“.",
 	),
 	abbreviation(
 		"Mrd.",
-		"Milliarde",
+		["Milliarde", "Milliarden"],
 		"NOUN",
 		"„Mrd.“ steht für „Milliarde“ oder „Milliarden“.",
 	),

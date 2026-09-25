@@ -592,7 +592,7 @@
 		},
 		"draft-translation-idiom-not-neighbouring-idiom": {
 			"input": {
-				"markedContext": "Durch die neuen Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>ins</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
+				"markedContext": "Durch die neuen Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
 				"lemma": {
 					"unitKind": "Lemma",
 					"language": "de",

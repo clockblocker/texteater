@@ -9,6 +9,7 @@ import {
 	governablePrepositionIn,
 	governablePrepositionLemma,
 } from "../src/concrete-lang/de/governable-prepositions.js";
+import { joinFusedWords } from "../src/concrete-lang/de/segmentation/fused-word-guard.js";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 import {
 	headOf,
@@ -716,7 +717,12 @@ test("placed Segments keep the source casing of a fused word and spell the Stitc
 			],
 		],
 	] as const) {
-		const sentence = sentenceOf(fused, text);
+		// Segmentation splits the fused word; intake joins it back to read it
+		// whole and places the pieces by the table again.
+		const sentence = joinFusedWords(sentenceOf(fused, text));
+		expect(
+			sentence.segments.some((segment) => segment.text === fused),
+		).toBe(true);
 		const placement = placeSegments(sentence);
 		expect(placement.stitchedText).toBe(sourceOf(sentence));
 		expect(placement.stitchedText).toBe(text);

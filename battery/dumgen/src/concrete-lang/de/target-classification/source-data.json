@@ -729,7 +729,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -764,14 +768,14 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "SCONJ",
-				"memberSegmentIndices": [4, 10]
+				"memberSegmentIndices": [4, 11]
 			},
 			"explanation": "ADR 0009 treats um and zu as the ordered fixed members of one Lexeme/SCONJ; the purpose-clause material between them remains free context. Source: https://universaldependencies.org/u/pos/SCONJ.html",
 			"contaminationKeys": ["target-lexeme:sconj:um-zu"]
 		},
 		"target-de-route-lexeme-sconj-um-zu-click-zu": {
 			"input": {
-				"clickedSegmentIndex": 10,
+				"clickedSegmentIndex": 11,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -799,7 +803,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -834,7 +842,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "SCONJ",
-				"memberSegmentIndices": [4, 10]
+				"memberSegmentIndices": [4, 11]
 			},
 			"explanation": "Clicking either fixed anchor returns the same source-ordered um zu Lexeme/SCONJ membership. Source: https://universaldependencies.org/u/pos/SCONJ.html",
 			"contaminationKeys": ["target-lexeme:sconj:um-zu"]
@@ -1953,7 +1961,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -1974,7 +1986,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. The IDS preposition entry identifies zum as zu plus dem.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. The IDS preposition entry identifies zum as zu plus dem.",
 			"contaminationKeys": ["target-construction:fusion:zum"]
 		},
 		"target-de-demo-symbol-percent": {
@@ -2312,7 +2324,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2331,7 +2347,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Proverb",
-				"memberSegmentIndices": [0, 2, 4, 6, 8]
+				"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
 			},
 			"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
 		},
@@ -2365,7 +2381,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2384,7 +2404,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Proverb",
-				"memberSegmentIndices": [0, 2, 4, 6, 8]
+				"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
 			},
 			"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
 		},
@@ -2418,7 +2438,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2437,7 +2461,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Proverb",
-				"memberSegmentIndices": [0, 2, 4, 6, 8]
+				"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
 			},
 			"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
 		},
@@ -2471,7 +2495,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2490,13 +2518,13 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Proverb",
-				"memberSegmentIndices": [0, 2, 4, 6, 8]
+				"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
 			},
 			"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
 		},
 		"target-de-route-phraseme-proverb-click-mund": {
 			"input": {
-				"clickedSegmentIndex": 8,
+				"clickedSegmentIndex": 9,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -2524,7 +2552,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2543,7 +2575,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Proverb",
-				"memberSegmentIndices": [0, 2, 4, 6, 8]
+				"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
 			},
 			"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
 		},
@@ -2719,11 +2751,15 @@
 		},
 		"target-de-route-phraseme-collocation-kritik-click-uebte": {
 			"input": {
-				"clickedSegmentIndex": 4,
+				"clickedSegmentIndex": 5,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2806,17 +2842,21 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [4]
+				"memberSegmentIndices": [5]
 			},
 			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/VERB. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
 		"target-de-route-phraseme-collocation-kritik-click-kritik": {
 			"input": {
-				"clickedSegmentIndex": 12,
+				"clickedSegmentIndex": 13,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -2899,7 +2939,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [12]
+				"memberSegmentIndices": [13]
 			},
 			"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/NOUN. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
@@ -3159,7 +3199,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -3178,7 +3222,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [6, 16, 18]
+				"memberSegmentIndices": [6, 16, 17, 19]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
@@ -3252,7 +3296,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -3271,13 +3319,13 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [6, 16, 18]
+				"memberSegmentIndices": [6, 16, 17, 19]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
 		"target-de-route-phraseme-collocation-verfuegung-click-verfuegung": {
 			"input": {
-				"clickedSegmentIndex": 18,
+				"clickedSegmentIndex": 19,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -3345,7 +3393,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -3364,7 +3416,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [6, 16, 18]
+				"memberSegmentIndices": [6, 16, 17, 19]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
 		},
@@ -3621,7 +3673,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -3642,7 +3698,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem.",
 			"contaminationKeys": ["target-construction:fusion:zum"]
 		},
 		"target-de-suspended-compound-and-left": {
@@ -3989,7 +4045,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -4010,7 +4070,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the German preposition-article contraction category.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the German preposition-article contraction category.",
 			"contaminationKeys": ["target-construction:fusion:am"]
 		},
 		"target-de-route-lexeme-cconj-click-je": {
@@ -4727,11 +4787,15 @@
 		},
 		"target-de-boundary-idiom-click-brach": {
 			"input": {
-				"clickedSegmentIndex": 15,
+				"clickedSegmentIndex": 16,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -4834,17 +4898,21 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23]
+				"memberSegmentIndices": [16, 22, 24]
 			},
 			"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
 		},
 		"target-de-boundary-idiom-click-das": {
 			"input": {
-				"clickedSegmentIndex": 21,
+				"clickedSegmentIndex": 22,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -4947,17 +5015,21 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23]
+				"memberSegmentIndices": [16, 22, 24]
 			},
 			"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
 		},
 		"target-de-boundary-idiom-click-eis": {
 			"input": {
-				"clickedSegmentIndex": 23,
+				"clickedSegmentIndex": 24,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -5060,17 +5132,21 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23]
+				"memberSegmentIndices": [16, 22, 24]
 			},
 			"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
 		},
 		"target-de-boundary-idiom-near-endlich": {
 			"input": {
-				"clickedSegmentIndex": 19,
+				"clickedSegmentIndex": 20,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -5173,7 +5249,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [19]
+				"memberSegmentIndices": [20]
 			},
 			"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
 		},
@@ -7154,7 +7230,7 @@
 		},
 		"target-de-demo-state-passive-bauplan-click-freigegeben": {
 			"input": {
-				"clickedSegmentIndex": 16,
+				"clickedSegmentIndex": 17,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -7206,7 +7282,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -7233,7 +7313,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [16]
+				"memberSegmentIndices": [17]
 			},
 			"explanation": "A state passive, even with a named agent, is the copula plus an ADJ: freigegeben is an ADJ with Participle Source freigeben, and ist stays a separate VERB (ADR 0035)."
 		},
@@ -9097,7 +9177,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -9116,7 +9200,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23, 25]
+				"memberSegmentIndices": [15, 21, 23, 24, 26]
 			},
 			"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": ["target-lexical-unit:oel-ins-feuer-giessen"]
@@ -9219,7 +9303,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -9238,7 +9326,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23, 25]
+				"memberSegmentIndices": [15, 21, 23, 24, 26]
 			},
 			"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": ["target-lexical-unit:oel-ins-feuer-giessen"]
@@ -9341,7 +9429,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -9360,14 +9452,14 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23, 25]
+				"memberSegmentIndices": [15, 21, 23, 24, 26]
 			},
 			"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": ["target-lexical-unit:oel-ins-feuer-giessen"]
 		},
 		"target-de-diagnostic-idiom-oel-click-feuer": {
 			"input": {
-				"clickedSegmentIndex": 25,
+				"clickedSegmentIndex": 26,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -9463,7 +9555,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -9482,7 +9578,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [15, 21, 23, 25]
+				"memberSegmentIndices": [15, 21, 23, 24, 26]
 			},
 			"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": ["target-lexical-unit:oel-ins-feuer-giessen"]
@@ -9585,7 +9681,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -9919,11 +10019,15 @@
 		},
 		"target-de-demo-literal-faden-click-faden": {
 			"input": {
-				"clickedSegmentIndex": 12,
+				"clickedSegmentIndex": 13,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Beim"
+						"text": "Bei"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -9982,7 +10086,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [8, 12]
+				"memberSegmentIndices": [9, 13]
 			},
 			"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
 		},
@@ -10161,7 +10265,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -10187,7 +10295,7 @@
 		},
 		"target-de-demo-literal-gras-click-gras": {
 			"input": {
-				"clickedSegmentIndex": 21,
+				"clickedSegmentIndex": 22,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -10267,7 +10375,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -10286,9 +10398,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "NOUN",
-				"memberSegmentIndices": [21]
+				"memberSegmentIndices": [20, 22]
 			},
-			"explanation": "The feeding scene makes biss ins Gras a physical, compositional occurrence rather than the familiar death idiom. Issue #82 therefore selects only the clicked verb or noun Lexeme. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+			"explanation": "The feeding scene makes biss ins Gras a physical, compositional occurrence rather than the familiar death idiom. Issue #82 therefore selects only the clicked verb or noun Lexeme; the noun owns the article piece s of ins (ADR 0035). Source: https://grammis.ids-mannheim.de/terminologie/1175",
 			"contaminationKeys": ["target-lexical-unit:ins-gras-beissen"]
 		},
 		"target-de-demo-governed-rechnen-click-rechnet": {
@@ -11060,7 +11172,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -11079,7 +11195,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [2, 10, 12]
+				"memberSegmentIndices": [2, 10, 11, 13]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
@@ -11129,7 +11245,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -11148,13 +11268,13 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [2, 10, 12]
+				"memberSegmentIndices": [2, 10, 11, 13]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
 		"target-de-demo-collocation-kenntnis-click-kenntnis": {
 			"input": {
-				"clickedSegmentIndex": 12,
+				"clickedSegmentIndex": 13,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -11198,7 +11318,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zur"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "r"
 					},
 					{
 						"kind": "Whitespace",
@@ -11217,7 +11341,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Collocation",
-				"memberSegmentIndices": [2, 10, 12]
+				"memberSegmentIndices": [2, 10, 11, 13]
 			},
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
 		},
@@ -13107,7 +13231,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -13467,7 +13595,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Punctuation",
@@ -13478,7 +13610,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [0, 2]
+				"memberSegmentIndices": [0, 2, 3]
 			},
 			"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
 		},
@@ -13496,7 +13628,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Punctuation",
@@ -13507,7 +13643,7 @@
 			"idealOutput": {
 				"family": "Phraseme",
 				"kind": "Idiom",
-				"memberSegmentIndices": [0, 2]
+				"memberSegmentIndices": [0, 2, 3]
 			},
 			"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
 		},
@@ -16913,7 +17049,7 @@
 		},
 		"target-de-participle-benchmark-01-repariert-click-hat": {
 			"input": {
-				"clickedSegmentIndex": 19,
+				"clickedSegmentIndex": 20,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -16941,7 +17077,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -17076,13 +17216,13 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [19, 37]
+				"memberSegmentIndices": [20, 38]
 			},
 			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-01-repariert-click-repariert": {
 			"input": {
-				"clickedSegmentIndex": 37,
+				"clickedSegmentIndex": 38,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -17110,7 +17250,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -17245,7 +17389,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [19, 37]
+				"memberSegmentIndices": [20, 38]
 			},
 			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
@@ -17359,7 +17503,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -17402,13 +17550,13 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [22, 34]
+				"memberSegmentIndices": [22, 35]
 			},
 			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-02-unterschrieben-click-unterschrieben": {
 			"input": {
-				"clickedSegmentIndex": 34,
+				"clickedSegmentIndex": 35,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -17516,7 +17664,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -17559,7 +17711,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [22, 34]
+				"memberSegmentIndices": [22, 35]
 			},
 			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
@@ -17955,7 +18107,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -18048,7 +18204,7 @@
 		},
 		"target-de-participle-benchmark-04-bezahlt-click-bezahlt": {
 			"input": {
-				"clickedSegmentIndex": 26,
+				"clickedSegmentIndex": 27,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -18132,7 +18288,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -18219,7 +18379,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [26]
+				"memberSegmentIndices": [27]
 			},
 			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): bezahlt is a singleton ADJ with Participle Source bezahlen, and the copula stays a separate VERB."
 		},
@@ -18619,7 +18779,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -18660,7 +18824,7 @@
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-eingeladen": {
 			"input": {
-				"clickedSegmentIndex": 29,
+				"clickedSegmentIndex": 30,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -18756,7 +18920,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -18791,7 +18959,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [29]
+				"memberSegmentIndices": [30]
 			},
 			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): eingeladen is a singleton ADJ with Participle Source einladen, and the copula stays a separate VERB."
 		},
@@ -19111,7 +19279,7 @@
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-ist": {
 			"input": {
-				"clickedSegmentIndex": 17,
+				"clickedSegmentIndex": 18,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -19139,7 +19307,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -19223,7 +19395,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -19310,13 +19486,13 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [17]
+				"memberSegmentIndices": [18]
 			},
 			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and gefüllt a separate ADJ."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-gefuellt": {
 			"input": {
-				"clickedSegmentIndex": 31,
+				"clickedSegmentIndex": 33,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -19344,7 +19520,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -19428,7 +19608,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -19515,7 +19699,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [31]
+				"memberSegmentIndices": [33]
 			},
 			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): gefüllt is a singleton ADJ with Participle Source füllen, and the copula stays a separate VERB."
 		},
@@ -21879,7 +22063,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -21936,7 +22124,7 @@
 		},
 		"target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet": {
 			"input": {
-				"clickedSegmentIndex": 31,
+				"clickedSegmentIndex": 32,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -22024,7 +22212,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -22075,7 +22267,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [31]
+				"memberSegmentIndices": [32]
 			},
 			"explanation": "ungeöffnet has an un- form the verb öffnen lacks, so it is an ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
@@ -25343,7 +25535,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -25410,13 +25606,13 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [32, 54]
+				"memberSegmentIndices": [32, 55]
 			},
 			"explanation": "IDS establishes werden plus a full-verb participle as a passive verbal periphrasis. Issue #82 product policy maps the distant wird and verstanden to one Lexeme/VERB at exact original indices [32,54], excluding all intervening free context. Source: https://grammis.ids-mannheim.de/progr%40mm/1695"
 		},
 		"target-de-robust-long-click-verstanden": {
 			"input": {
-				"clickedSegmentIndex": 54,
+				"clickedSegmentIndex": 55,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -25580,7 +25776,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -25647,7 +25847,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [32, 54]
+				"memberSegmentIndices": [32, 55]
 			},
 			"explanation": "IDS establishes werden plus a full-verb participle as a passive verbal periphrasis. Issue #82 product policy maps the distant wird and verstanden to one Lexeme/VERB at exact original indices [32,54], excluding all intervening free context. Source: https://grammis.ids-mannheim.de/progr%40mm/1695"
 		},
@@ -25708,7 +25908,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "beim"
+						"text": "bei"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -25729,7 +25933,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:beim"]
 		},
 		"target-de-adaptive-fusion-vom": {
@@ -25754,7 +25958,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -25775,7 +25983,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:vom"]
 		},
 		"target-de-adaptive-fusion-ins": {
@@ -25808,7 +26016,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ins"
+						"text": "in"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -25829,7 +26041,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:ins"]
 		},
 		"target-de-adaptive-fusion-ans": {
@@ -25862,7 +26074,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "ans"
+						"text": "an"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
 					},
 					{
 						"kind": "Whitespace",
@@ -25883,7 +26099,7 @@
 				"kind": "ADP",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. This corpus keeps the fused word as one Segment, so its whole-word Kind is ADP; the article part is derived from the noun. IDS establishes the fused-preposition category with zum.",
+			"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the fused-preposition category with zum.",
 			"contaminationKeys": ["target-construction:fusion:ans"]
 		},
 		"target-de-adaptive-paired-weder-click-weder": {
@@ -34494,7 +34710,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -34544,7 +34764,7 @@
 		},
 		"target-de-abbreviation-zum-beispiel-click-beispiel": {
 			"input": {
-				"clickedSegmentIndex": 8,
+				"clickedSegmentIndex": 9,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -34572,7 +34792,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -34588,7 +34812,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -34631,7 +34859,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [6, 8]
+				"memberSegmentIndices": [6, 7, 9]
 			},
 			"explanation": "The written-out multiword adverb is one unit from either member.",
 			"contaminationKeys": ["abbreviation:zum-beispiel"]
@@ -34666,7 +34894,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -34682,7 +34914,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -34725,7 +34961,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [6, 8]
+				"memberSegmentIndices": [6, 7, 9]
 			},
 			"explanation": "The written-out multiword adverb is one unit from either member.",
 			"contaminationKeys": ["abbreviation:zum-beispiel"]
@@ -35784,7 +36020,7 @@
 		},
 		"target-de-abbreviation-zum-teil-click-teil": {
 			"input": {
-				"clickedSegmentIndex": 8,
+				"clickedSegmentIndex": 9,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -35812,7 +36048,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -35839,7 +36079,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [6, 8]
+				"memberSegmentIndices": [6, 7, 9]
 			},
 			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here.",
 			"contaminationKeys": ["abbreviation:zum-teil"]
@@ -35874,7 +36114,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "zum"
+						"text": "zu"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -35901,7 +36145,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [6, 8]
+				"memberSegmentIndices": [6, 7, 9]
 			},
 			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here.",
 			"contaminationKeys": ["abbreviation:zum-teil"]
@@ -36062,11 +36306,15 @@
 		},
 		"target-de-abbreviation-im-allgemeinen-click-allgemeinen": {
 			"input": {
-				"clickedSegmentIndex": 2,
+				"clickedSegmentIndex": 3,
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -36117,9 +36365,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [0, 2]
+				"memberSegmentIndices": [0, 1, 3]
 			},
-			"explanation": "Im Allgemeinen is one ADV unit; the fused Im is a member today and splits into i and m once Segments split fused words (ADR 0004).",
+			"explanation": "Im Allgemeinen is one ADV unit; both pieces of the fused Im, I and m, are members (ADR 0035).",
 			"contaminationKeys": ["abbreviation:im-allgemeinen"]
 		},
 		"target-de-abbreviation-im-allgemeinen-click-im": {
@@ -36128,7 +36376,11 @@
 				"segments": [
 					{
 						"kind": "ResolvableText",
-						"text": "Im"
+						"text": "I"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -36179,9 +36431,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADV",
-				"memberSegmentIndices": [0, 2]
+				"memberSegmentIndices": [0, 1, 3]
 			},
-			"explanation": "Im Allgemeinen is one ADV unit; the fused Im is a member today and splits into i and m once Segments split fused words (ADR 0004).",
+			"explanation": "Im Allgemeinen is one ADV unit; both pieces of the fused Im, I and m, are members (ADR 0035).",
 			"contaminationKeys": ["abbreviation:im-allgemeinen"]
 		},
 		"target-de-abbreviation-und-zwar-click-zwar": {
@@ -37177,7 +37429,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -37407,7 +37663,7 @@
 		},
 		"target-de-participle-boundary-gelegen-adj-productive-attributive": {
 			"input": {
-				"clickedSegmentIndex": 6,
+				"clickedSegmentIndex": 7,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -37419,7 +37675,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -37478,7 +37738,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [6]
+				"memberSegmentIndices": [7]
 			},
 			"explanation": "ADJ gelegen, Participle Source liegen. Attributive, so adjectival even in liegen's own sense 'situated'.",
 			"sources": [
@@ -38575,7 +38835,7 @@
 		},
 		"target-de-participle-boundary-umgestuerzt-adj-agent": {
 			"input": {
-				"clickedSegmentIndex": 6,
+				"clickedSegmentIndex": 7,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -38587,7 +38847,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -38646,7 +38910,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [6]
+				"memberSegmentIndices": [7]
 			},
 			"explanation": "ADJ umgestürzt, Participle Source umstürzen. Attributive participle of a separable verb with a vom-cause phrase that stays outside."
 		},
@@ -38729,7 +38993,7 @@
 		},
 		"target-de-participle-boundary-entworfen-adj-agent": {
 			"input": {
-				"clickedSegmentIndex": 6,
+				"clickedSegmentIndex": 7,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -38741,7 +39005,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "vom"
+						"text": "vo"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -38781,7 +39049,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "am"
+						"text": "a"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -38800,7 +39072,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [6]
+				"memberSegmentIndices": [7]
 			},
 			"explanation": "ADJ entworfen, Participle Source entwerfen. Attributive with a vom-agent phrase that stays outside."
 		},
@@ -38882,7 +39154,7 @@
 		},
 		"target-de-participle-boundary-spielend-adj-attributive": {
 			"input": {
-				"clickedSegmentIndex": 6,
+				"clickedSegmentIndex": 7,
 				"segments": [
 					{
 						"kind": "ResolvableText",
@@ -38894,7 +39166,11 @@
 					},
 					{
 						"kind": "ResolvableText",
-						"text": "im"
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
 					},
 					{
 						"kind": "Whitespace",
@@ -38945,7 +39221,7 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "ADJ",
-				"memberSegmentIndices": [6]
+				"memberSegmentIndices": [7]
 			},
 			"explanation": "ADJ spielend, Participle Source spielen. Attributive Partizip I; im Garten stays outside.",
 			"sources": [
@@ -41139,6 +41415,206 @@
 			},
 			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation, not a fixed one; die Pläne is its free complement (ADR 0034).",
 			"contaminationKeys": ["target-stimulus:bescheid-wissen-ueber"]
+		},
+		"target-de-fused-article-im-wald-click-m": {
+			"input": {
+				"clickedSegmentIndex": 5,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bin"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wald"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [5, 7]
+			},
+			"explanation": "The article piece m of im stands for dem and is the owned article of Wald, joining the noun like a standalone article (ADR 0035).",
+			"contaminationKeys": ["target-fusion:im-wald"]
+		},
+		"target-de-fused-article-im-wald-click-wald": {
+			"input": {
+				"clickedSegmentIndex": 7,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bin"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wald"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [5, 7]
+			},
+			"explanation": "Wald owns the article piece m of im, so the noun target is m and Wald (ADR 0035).",
+			"contaminationKeys": ["target-fusion:im-wald"]
+		},
+		"target-de-fused-article-im-wald-click-i": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bin"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "i"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "m"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wald"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADP",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "The preposition piece i of im stands for in and is a singleton ADP; its article piece belongs to Wald (ADR 0035).",
+			"contaminationKeys": ["target-fusion:im-wald"]
+		},
+		"target-de-fused-article-aufs-ende-click-s": {
+			"input": {
+				"clickedSegmentIndex": 5,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "s"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ende"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [5, 7]
+			},
+			"explanation": "s in aufs stands for das and is the owned article of Ende, while auf is the preposition wartet governs (ADR 0035).",
+			"contaminationKeys": ["target-fusion:aufs-ende"]
 		}
 	},
 	"demonstrationIds": [

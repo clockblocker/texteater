@@ -302,13 +302,14 @@
 	},
 	"grammar-de-aphorism-jugend": {
 		"input": {
-			"markedContext": "<TARGET>In</TARGET> <TARGET>der</TARGET> <TARGET>Jugend</TARGET> <TARGET>lernt</TARGET>, <TARGET>im</TARGET> <TARGET>Alter</TARGET> <TARGET>versteht</TARGET> <TARGET>man</TARGET>.",
+			"markedContext": "<TARGET>In</TARGET> <TARGET>der</TARGET> <TARGET>Jugend</TARGET> <TARGET>lernt</TARGET>, <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Alter</TARGET> <TARGET>versteht</TARGET> <TARGET>man</TARGET>.",
 			"members": [
 				"In",
 				"der",
 				"Jugend",
 				"lernt",
-				"im",
+				"i",
+				"m",
 				"Alter",
 				"versteht",
 				"man"
@@ -320,7 +321,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard",
 				"Standard"
@@ -330,7 +332,8 @@
 				"der",
 				"Jugend",
 				"lernt",
-				"im",
+				"i",
+				"m",
 				"Alter",
 				"versteht",
 				"man"
@@ -679,7 +682,7 @@
 	},
 	"grammar-de-aphorism-casing-menschen": {
 		"input": {
-			"markedContext": "<TARGET>die</TARGET> <TARGET>Menschen</TARGET>, <TARGET>denen</TARGET> <TARGET>wir</TARGET> <TARGET>eine</TARGET> <TARGET>Stütze</TARGET> <TARGET>sind</TARGET>, <TARGET>die</TARGET> <TARGET>geben</TARGET> <TARGET>uns</TARGET> <TARGET>den</TARGET> <TARGET>Halt</TARGET> <TARGET>im</TARGET> <TARGET>Leben</TARGET>.",
+			"markedContext": "<TARGET>die</TARGET> <TARGET>Menschen</TARGET>, <TARGET>denen</TARGET> <TARGET>wir</TARGET> <TARGET>eine</TARGET> <TARGET>Stütze</TARGET> <TARGET>sind</TARGET>, <TARGET>die</TARGET> <TARGET>geben</TARGET> <TARGET>uns</TARGET> <TARGET>den</TARGET> <TARGET>Halt</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Leben</TARGET>.",
 			"members": [
 				"die",
 				"Menschen",
@@ -693,7 +696,8 @@
 				"uns",
 				"den",
 				"Halt",
-				"im",
+				"i",
+				"m",
 				"Leben"
 			]
 		},
@@ -711,7 +715,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
 			"normalizedMembers": [
@@ -727,7 +732,8 @@
 				"uns",
 				"den",
 				"Halt",
-				"im",
+				"i",
+				"m",
 				"Leben"
 			],
 			"realizationCoverage": "Full",
@@ -799,7 +805,7 @@
 	},
 	"grammar-de-aphorism-selbstverstaendlich": {
 		"input": {
-			"markedContext": "<TARGET>Sag</TARGET> <TARGET>etwas</TARGET>, <TARGET>das</TARGET> <TARGET>sich</TARGET> <TARGET>von</TARGET> <TARGET>selbst</TARGET> <TARGET>versteht</TARGET>, <TARGET>zum</TARGET> <TARGET>ersten</TARGET> <TARGET>Mal</TARGET>, <TARGET>und</TARGET> <TARGET>du</TARGET> <TARGET>bist</TARGET> <TARGET>unsterblich</TARGET>.",
+			"markedContext": "<TARGET>Sag</TARGET> <TARGET>etwas</TARGET>, <TARGET>das</TARGET> <TARGET>sich</TARGET> <TARGET>von</TARGET> <TARGET>selbst</TARGET> <TARGET>versteht</TARGET>, <TARGET>zu</TARGET><TARGET>m</TARGET> <TARGET>ersten</TARGET> <TARGET>Mal</TARGET>, <TARGET>und</TARGET> <TARGET>du</TARGET> <TARGET>bist</TARGET> <TARGET>unsterblich</TARGET>.",
 			"members": [
 				"Sag",
 				"etwas",
@@ -808,7 +814,8 @@
 				"von",
 				"selbst",
 				"versteht",
-				"zum",
+				"zu",
+				"m",
 				"ersten",
 				"Mal",
 				"und",
@@ -826,7 +833,8 @@
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard",
 				"Standard",
 				"Standard",
@@ -842,7 +850,8 @@
 				"von",
 				"selbst",
 				"versteht",
-				"zum",
+				"zu",
+				"m",
 				"ersten",
 				"Mal",
 				"und",
@@ -1281,18 +1290,26 @@
 	},
 	"grammar-de-aphorism-mitleid-neglige": {
 		"input": {
-			"markedContext": "<TARGET>Mitleid</TARGET> <TARGET>ist</TARGET> <TARGET>Liebe</TARGET> <TARGET>im</TARGET> <TARGET>Négligé</TARGET>.",
-			"members": ["Mitleid", "ist", "Liebe", "im", "Négligé"]
+			"markedContext": "<TARGET>Mitleid</TARGET> <TARGET>ist</TARGET> <TARGET>Liebe</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Négligé</TARGET>.",
+			"members": ["Mitleid", "ist", "Liebe", "i", "m", "Négligé"]
 		},
 		"idealOutput": {
 			"memberOrthographies": [
 				"Standard",
 				"Standard",
 				"Standard",
-				"Standard",
+				"Fused",
+				"Fused",
 				"Standard"
 			],
-			"normalizedMembers": ["Mitleid", "ist", "Liebe", "im", "Négligé"],
+			"normalizedMembers": [
+				"Mitleid",
+				"ist",
+				"Liebe",
+				"i",
+				"m",
+				"Négligé"
+			],
 			"realizationCoverage": "Full",
 			"surface": {
 				"spelling": "Canonical",

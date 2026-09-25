@@ -78,8 +78,13 @@ export function pushSegment(
 	kind: SegmentKind,
 	text: string,
 	rule: string,
+	surface?: string,
 ): void {
 	if (text.length === 0) return;
-	segments.push({ kind, text } as Segment);
+	segments.push(
+		(surface === undefined
+			? { kind, text }
+			: { kind, text, surface }) as Segment,
+	);
 	trace.push({ kind, text, rule });
 }

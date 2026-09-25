@@ -103,12 +103,12 @@
 	},
 	"grammar-de-adv-demo-superlative-am-liebsten": {
 		"input": {
-			"markedContext": "Mina reist <TARGET>am</TARGET> <TARGET>liebsten</TARGET> im Frühling.",
-			"members": ["am", "liebsten"]
+			"markedContext": "Mina reist <TARGET>a</TARGET><TARGET>m</TARGET> <TARGET>liebsten</TARGET> im Frühling.",
+			"members": ["a", "m", "liebsten"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["am", "liebsten"],
+			"memberOrthographies": ["Fused", "Fused", "Standard"],
+			"normalizedMembers": ["a", "m", "liebsten"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -403,12 +403,12 @@
 	},
 	"grammar-de-adv-dev-superlative-am-fruehesten": {
 		"input": {
-			"markedContext": "Von allen Zügen kommt dieser <TARGET>am</TARGET> <TARGET>frühesten</TARGET> an.",
-			"members": ["am", "frühesten"]
+			"markedContext": "Von allen Zügen kommt dieser <TARGET>a</TARGET><TARGET>m</TARGET> <TARGET>frühesten</TARGET> an.",
+			"members": ["a", "m", "frühesten"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["am", "frühesten"],
+			"memberOrthographies": ["Fused", "Fused", "Standard"],
+			"normalizedMembers": ["a", "m", "frühesten"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1048,9 +1048,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["z.B."],
+			"normalizedMembers": ["zum Beispiel"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1064,16 +1064,16 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, zum Beispiel (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-zum-beispiel": {
 		"input": {
-			"markedContext": "Das Museum öffnet <TARGET>zum</TARGET> <TARGET>Beispiel</TARGET> am Montag.",
-			"members": ["zum", "Beispiel"]
+			"markedContext": "Das Museum öffnet <TARGET>zu</TARGET><TARGET>m</TARGET> <TARGET>Beispiel</TARGET> am Montag.",
+			"members": ["zu", "m", "Beispiel"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["zum", "Beispiel"],
+			"memberOrthographies": ["Fused", "Fused", "Standard"],
+			"normalizedMembers": ["zu", "m", "Beispiel"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1098,9 +1098,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["usw."],
+			"normalizedMembers": ["und so weiter"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1114,7 +1114,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, und so weiter (ADR 0035)."
 	},
 	"grammar-de-adv-dev-abbreviation-usw-final": {
 		"input": {
@@ -1123,9 +1123,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["usw."],
+			"normalizedMembers": ["und so weiter"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1139,7 +1139,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, und so weiter (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-und-so-weiter": {
 		"input": {
@@ -1173,9 +1173,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["u.a."],
+			"normalizedMembers": ["unter anderem"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1189,7 +1189,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, unter anderem (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-unter-anderem": {
 		"input": {
@@ -1223,9 +1223,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["o.Ä."],
+			"normalizedMembers": ["oder Ähnliches"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1239,7 +1239,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, oder Ähnliches (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-oder-aehnliches": {
 		"input": {
@@ -1273,9 +1273,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["z.T."],
+			"normalizedMembers": ["zum Teil"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1289,16 +1289,16 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, zum Teil (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-zum-teil": {
 		"input": {
-			"markedContext": "Die Straße ist <TARGET>zum</TARGET> <TARGET>Teil</TARGET> gesperrt.",
-			"members": ["zum", "Teil"]
+			"markedContext": "Die Straße ist <TARGET>zu</TARGET><TARGET>m</TARGET> <TARGET>Teil</TARGET> gesperrt.",
+			"members": ["zu", "m", "Teil"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["zum", "Teil"],
+			"memberOrthographies": ["Fused", "Fused", "Standard"],
+			"normalizedMembers": ["zu", "m", "Teil"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1323,9 +1323,9 @@
 		},
 		"idealOutput": {
 			"memberOrthographies": ["Shorthand"],
-			"normalizedMembers": ["v.a."],
+			"normalizedMembers": ["vor allem"],
 			"surface": {
-				"spelling": "Variant",
+				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": null
 			},
@@ -1339,7 +1339,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Licensed abbreviation: one Standard member, a Variant Surface of the multi-word Lemma (issue 495)."
+		"explanation": "An abbreviation is one Shorthand member whose Surface is its expansion, vor allem (ADR 0035)."
 	},
 	"grammar-de-adv-dev-written-vor-allem": {
 		"input": {
@@ -1368,12 +1368,12 @@
 	},
 	"grammar-de-adv-dev-written-im-allgemeinen": {
 		"input": {
-			"markedContext": "<TARGET>Im</TARGET> <TARGET>Allgemeinen</TARGET> ist der Zug pünktlich.",
-			"members": ["Im", "Allgemeinen"]
+			"markedContext": "<TARGET>I</TARGET><TARGET>m</TARGET> <TARGET>Allgemeinen</TARGET> ist der Zug pünktlich.",
+			"members": ["I", "m", "Allgemeinen"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["im", "Allgemeinen"],
+			"memberOrthographies": ["Fused", "Fused", "Standard"],
+			"normalizedMembers": ["i", "m", "Allgemeinen"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,

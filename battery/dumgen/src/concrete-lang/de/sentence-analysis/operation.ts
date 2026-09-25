@@ -4,6 +4,7 @@ import type { DumgenOptions, SegmentedSentence } from "../../../types.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { parse } from "../../../universal/validation.js";
+import { joinFusedWords } from "../segmentation/fused-word-guard.js";
 import type { SentenceAnalysis } from "./analysis.js";
 import { assembleAnalysis } from "./assemble.js";
 import { slotQuestions } from "./government.js";
@@ -21,14 +22,17 @@ import {
  * chunked only when the question count exceeds the request budget, then pure
  * assembly. A sentence with no
  * resolvable Segment has an empty analysis and makes no call. A failed chunk
- * fails the analysis and interrupts its sibling chunks.
+ * fails the analysis and interrupts its sibling chunks. The judgment reads a
+ * fused word whole (`im`), and placement splits it by the fusion table again,
+ * so the analysis keeps the caller's offsets.
  */
 export function analyzeGermanSentence(
 	options: DumgenOptions,
-	sentence: SegmentedSentence<"de">,
+	pieces: SegmentedSentence<"de">,
 	scope: OperationScope,
 ) {
 	return Effect.gen(function* () {
+		const sentence = joinFusedWords(pieces);
 		const placement = placeSegments(sentence);
 		const government = slotQuestions(sentence, placement);
 		const questions: Questions = {

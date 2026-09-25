@@ -26,6 +26,7 @@ import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
 import type { ReferentMode } from "./grammatical-resolution/referent.js";
 import { produceKnowledge } from "./knowledge-production/produce.js";
 import { resolveReading } from "./reading-emoji-description/resolve.js";
+import { assertFusedWordsSplit } from "./segmentation/fused-word-guard.js";
 import { analyzeGermanSentence } from "./sentence-analysis/operation.js";
 import { classifyGermanTarget } from "./target-classification/judgments.js";
 
@@ -112,6 +113,7 @@ export function createGermanOperations(
 					raw,
 					"analyzeSentence",
 				);
+				assertFusedWordsSplit(input.sentence, "analyzeSentence");
 				return analyzeGermanSentence(options, input.sentence, scope);
 			});
 		},
@@ -140,6 +142,7 @@ export function createGermanOperations(
 						"classifyTarget",
 						"Target Classification is not enabled for this Language",
 					);
+				assertFusedWordsSplit(input.sentence, "classifyTarget");
 				return classifyGermanTarget(
 					options,
 					input,
@@ -263,9 +266,8 @@ export function createGermanOperations(
 												output.memberOrthographies[
 													position
 												] ?? "Standard",
-												output.normalizedMembers[
-													position
-												] ?? "",
+												output.pieceReadings ??
+													new Map(),
 											),
 									),
 								realizationCoverage: output.realizationCoverage,

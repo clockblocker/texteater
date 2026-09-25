@@ -24,9 +24,15 @@ export const realizationCriteria = targetCriteria
 		/An established noncompositional expression is an Idiom;[^\n]*?only a support-verb predicate is a Collocation\.\n/u,
 		"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",
 	)
+	// The judgment reads a fused word whole (`im`), so the click-time
+	// wording about its pieces gives way to the measured intake wording.
 	.replace(
-		"im/zum/ins remain ADP and do not join nouns. Their internal article may supply noun grammar later without adding the fused word to noun membership.",
-		"im/zum/ins do not join nouns as a whole.",
+		", including an article piece of a fused word (m in im, s in ins) and a shortened article ('ne, 'nen).",
+		".",
+	)
+	.replace(
+		"mein/dieser/kein remain independent DETs. Bare nouns stay bare.",
+		"mein/dieser/kein remain independent DETs; im/zum/ins do not join nouns as a whole. Bare nouns stay bare.",
 	)
 	.replace(
 		" These noun rules preserve any larger established idiom boundary.",

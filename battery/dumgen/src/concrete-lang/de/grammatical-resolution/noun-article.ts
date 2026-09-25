@@ -44,14 +44,15 @@ const indefiniteSpellings = new Set([
 const casePath = "surface.inflectionalFeatures.case";
 
 export const nounArticlePolicy =
-	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or a fused word left whole, choose Unresolved.";
+	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling, choose Unresolved.";
 
 /**
  * Candidate spelling establishes possible analyses from raw source text, so the
  * attachment question can travel in the same round trip as the feature
  * questions; the judgment still decides contextual attachment. A piece of a
  * fused word or a shortened article stands for what the fusion table says
- * (m in im is dem, 'ne is eine); an unsplit fused word supplies nothing. Owned
+ * (m in im is dem, 'ne is eine); a Sentence never holds a fused word whole
+ * (ADR 0035). Owned
  * orthography is patched from the judged member orthography afterwards.
  */
 export function nounArticleCandidates(
@@ -68,7 +69,6 @@ export function nounArticleCandidates(
 		if (owned ? position !== 0 || members.length < 2 : index >= firstMember)
 			continue;
 		const form = segment.text.normalize("NFC").toLocaleLowerCase("de");
-		if (germanFusion(form)) continue;
 		const spelling = tableSpelling(encounter, index);
 		const forms = spelling ? spelling.surfaces : [form];
 		const articleCase =
@@ -295,7 +295,7 @@ export function resolveNounArticle(
 							encounter,
 							candidate.segmentIndex,
 							candidate.orthography,
-							candidate.form,
+							new Map([[candidate.segmentIndex, candidate.form]]),
 						),
 					};
 		return {
