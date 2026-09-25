@@ -141,6 +141,27 @@ test("Kind and relation decisions reject cross-Family/None, retain valid sibling
 	]);
 	expect(result.changes).toEqual([]);
 });
+test("a candidate naming the source Lemma yields no self relation", async () => {
+	const dumgen = createDumgen({
+		execute: async () => ({
+			output: { candidates: ["Bank", "Geldinstitut"] },
+		}),
+		judge: async ({ questions }) =>
+			choiceAnswers(questions, (id) =>
+				id.startsWith("kind_") ? "NOUN" : "synonym",
+			),
+	});
+	const result = await Effect.runPromise(
+		dumgen.produceKnowledge({
+			...input,
+			request: { semanticRelations: { synonym: null } },
+		}),
+	);
+	expect(
+		result.pendingRelations.map((item) => item.target.canonicalForm),
+	).toEqual(["Geldinstitut"]);
+	expect(result.failures).toEqual([]);
+});
 test("empty discovery and null base text are no contribution, never ReviewedEmpty", async () => {
 	const dumgen = createDumgen({
 		execute: async (request) => ({

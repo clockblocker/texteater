@@ -502,7 +502,7 @@ export function produceKnowledge(
 				},
 			);
 			questions[`relation_${index}`] = choice(
-				`Which requested direct relation does candidate ${index} (${candidate}) bear to the fixed source Reading? Relation must hold generally for this Reading, not merely this sentence. Distinguish exact/near relations. Do not create a self relation, conflate category and whole, or select inverse-only Hyponym or Meronym. Select None when no requested relation holds.`,
+				`Which requested direct relation does candidate ${index} (${candidate}) bear to the fixed source Reading? Relation must hold generally for this Reading, not merely this sentence. Distinguish exact/near relations. Do not create a self relation or conflate category and whole. Select None when no requested relation holds.`,
 				{
 					...Object.fromEntries(
 						requestedRelations.map((relation) => [
@@ -536,9 +536,14 @@ export function produceKnowledge(
 						relation = judgments.answers[`relation_${index}`];
 					if (kind?.type !== "choice" || relation?.type !== "choice")
 						throw Error("Expected candidate choices");
+					const namesSource =
+						normalizeText(candidate) ===
+							reading.lemma.canonicalForm &&
+						kind.choice === reading.lemma.kind;
 					if (
 						relation.choice === "None" ||
-						kind.choice === "OtherFamily"
+						kind.choice === "OtherFamily" ||
+						namesSource
 					) {
 						recordEvent(scope, "RejectedRelationCandidate", {
 							candidate,
