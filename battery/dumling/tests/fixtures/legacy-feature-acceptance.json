@@ -75,7 +75,6 @@
 					"adpType": "Circ",
 					"extPos": "ADV",
 					"foreign": "Yes",
-					"governedCase": "Acc",
 					"partType": "Vbp"
 				}
 			},
@@ -117,7 +116,6 @@
 					"adpType": "Circ",
 					"extPos": "ADV",
 					"foreign": "Yes",
-					"governedCase": "Acc",
 					"partType": "Vbp"
 				},
 				"unexpected": true

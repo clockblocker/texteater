@@ -275,6 +275,12 @@ export function createGermanOperations(
 												output.articleEvidence ?? null,
 										}
 									: {}),
+								...(lemma.kind === "ADP"
+									? {
+											valencyEvidence:
+												output.valencyEvidence ?? [],
+										}
+									: {}),
 							},
 							"resolveGrammar",
 							true,

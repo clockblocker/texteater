@@ -34,7 +34,6 @@ const occurrenceAttestation = {
 						adpType: "Prep",
 						extPos: null,
 						foreign: null,
-						governedCase: null,
 						partType: null,
 					},
 				},

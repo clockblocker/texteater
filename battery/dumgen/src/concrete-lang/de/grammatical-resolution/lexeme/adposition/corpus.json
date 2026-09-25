@@ -18,13 +18,23 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
-		"explanation": "Contextual ADP stays Citation; stable dative government belongs to Lemma."
+		"explanation": "Contextual ADP stays Citation; the occurrence records the dative its complement takes."
 	},
 	"grammar-de-adp-demo-two-way-auf": {
 		"input": {
@@ -45,13 +55,23 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
-		"explanation": "Local dative does not become stable government for two-way auf."
+		"explanation": "A location (wo?) gives the two-way auf a dative complement, recorded on the occurrence, not the Lemma."
 	},
 	"grammar-de-adp-demo-post-entlang-acc": {
 		"input": {
@@ -72,11 +92,21 @@
 					"adpType": "Post",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Following its accusative complement establishes postpositional entlang."
 	},
@@ -99,11 +129,21 @@
 					"adpType": "Circ",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"explanation": "Two supplied members enclose one dative complement and remain positionally aligned."
 	},
@@ -126,11 +166,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-prep-zu-dat": {
@@ -152,11 +202,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-two-way-vor-acc": {
@@ -178,11 +238,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-post-zuliebe-dat": {
@@ -204,11 +274,21 @@
 					"adpType": "Post",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-prep-seit-dat": {
@@ -230,11 +310,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-wegen-local-dat-lexical-gen": {
@@ -256,13 +346,23 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
-		"explanation": "Colloquial local dative does not erase canonical genitive government."
+		"explanation": "The complement is colloquially dative, so the occurrence records Dat; the ADP Case Table keeps Gen as the preferred case of the same Lemma."
 	},
 	"grammar-de-adp-dev-circ-um-willen": {
 		"input": {
@@ -283,11 +383,21 @@
 					"adpType": "Circ",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-circ-an-vorbei": {
@@ -309,11 +419,21 @@
 					"adpType": "Circ",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-post-gegenueber-dat": {
@@ -335,11 +455,21 @@
 					"adpType": "Post",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-extpos-sconj-anstatt": {
@@ -361,11 +491,11 @@
 					"adpType": "Prep",
 					"extPos": "SCONJ",
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed ADP route keeps lexical identity while clause use supplies ExtPos SCONJ."
 	},
@@ -388,11 +518,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": "Yes",
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-prep-entlang-gen": {
@@ -414,11 +554,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		},
 		"explanation": "Complement position and genitive fix the prepositional entlang reading."
 	},
@@ -441,11 +591,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Marked auf governs a noun; later unmarked auf belongs to the verb."
 	},
@@ -468,11 +628,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Only supplied ohne resolves here; unmarked auf belongs to warten."
 	},
@@ -495,11 +665,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"explanation": "Unmarked im is a Fusion and does not change the supplied ADP target."
 	},
@@ -522,11 +702,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-prep-fuer-acc": {
@@ -548,11 +738,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-prep-aus-dat": {
@@ -574,11 +774,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-prep-waehrend-gen": {
@@ -600,11 +810,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-two-way-zwischen-dat": {
@@ -626,11 +846,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-post-wegen-gen": {
@@ -652,11 +882,21 @@
 					"adpType": "Post",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-circ-von-aus": {
@@ -678,11 +918,21 @@
 					"adpType": "Circ",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-circ-ueber-hinaus": {
@@ -704,11 +954,21 @@
 					"adpType": "Circ",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-post-gemaess-dat": {
@@ -730,11 +990,21 @@
 					"adpType": "Post",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Dat",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-alternating-dank": {
@@ -756,13 +1026,23 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		},
-		"explanation": "Dative and genitive are both licensed, so scalar governedCase stays null."
+		"explanation": "Dative and genitive are both licensed; this occurrence records its genitive complement."
 	},
 	"grammar-de-adp-accept-prep-bis-acc": {
 		"input": {
@@ -783,11 +1063,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-demo-typo-one": {
@@ -809,11 +1099,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Missing h is a genuine typo; repair only the supplied member."
 	},
@@ -838,11 +1138,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-sentence-initial-wegen": {
@@ -864,11 +1174,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		},
 		"explanation": "Sentence-initial capitalization is Standard and normalizes to lowercase."
 	},
@@ -891,11 +1211,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": null,
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-lexical-typo-gegen": {
@@ -917,11 +1247,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-dev-abbreviation-inkl": {
@@ -943,11 +1283,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		},
 		"explanation": "Segment supplies letters only; following period remains unmarked punctuation."
 	},
@@ -970,11 +1320,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		},
 		"explanation": "Context names editorial headword; two-word standard variant stays aligned."
 	},
@@ -997,11 +1357,21 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Acc",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		}
 	},
 	"grammar-de-adp-accept-archaic-behufs": {
@@ -1025,11 +1395,95 @@
 					"adpType": "Prep",
 					"extPos": null,
 					"foreign": null,
-					"governedCase": "Gen",
 					"partType": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Gen",
+						"referent": "Either"
+					},
+					"realizedCase": "Gen"
+				}
+			]
 		}
+	},
+	"grammar-de-adp-dev-two-way-auf-acc": {
+		"input": {
+			"markedContext": "Er legte das Band <TARGET>auf</TARGET> das Geschenk.",
+			"members": ["auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "auf",
+				"coreFeatures": {
+					"abbr": null,
+					"adpType": "Prep",
+					"extPos": null,
+					"foreign": null,
+					"partType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Acc",
+						"referent": "Either"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "A direction (wohin?) gives the two-way auf an accusative complement; the Lemma is the same auf as in auf dem Geschenk."
+	},
+	"grammar-de-adp-dev-fused-in-dat": {
+		"input": {
+			"markedContext": "Wir wohnen <TARGET>in</TARGET> dem Wald.",
+			"members": ["in"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["in"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "in",
+				"coreFeatures": {
+					"abbr": null,
+					"adpType": "Prep",
+					"extPos": null,
+					"foreign": null,
+					"partType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
+		},
+		"explanation": "The adposition component of the fused im reads as in dem; a location (wo?) gives in a dative complement."
 	}
 }

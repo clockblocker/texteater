@@ -48,6 +48,8 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"ParsingError",
 		"UnitKind",
 		"checkIfGrundform",
+		"germanAdpositionAllows",
+		"germanAdpositionCases",
 		"germanArticleForm",
 		"parseUnit",
 	]);

@@ -9,6 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	valencyEvidence: [
+		{
+			member: null,
+			complement: { kind: "Case", case: "Dat", referent: "Either" },
+			realizedCase: "Dat",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -26,7 +33,6 @@ const occurrenceAttestation = {
 				abbr: null,
 				extPos: null,
 				foreign: null,
-				governedCase: null,
 				partType: null,
 			},
 		},
@@ -38,6 +44,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Das rote Band lag [auf] dem Geschenk.",
 	classifierNotes:
-		"`auf` heads the ordinary locative prepositional phrase `auf dem Geschenk`, so it is a plain preposition, not part of the verb `liegen`. I left `governedCase` unset because `auf` is a two-way preposition and the schema stores that feature lexically rather than per attested token, even though this local phrase is dative.",
+		"`auf` heads the ordinary locative prepositional phrase `auf dem Geschenk`, so it is a plain preposition, not part of the verb `liegen`. The Lemma carries no case: `auf` is two-way in the ADP Case Table, and this occurrence records the dative of `dem Geschenk` (wo?) as its realized case.",
 	isVerified: true,
 } as const;

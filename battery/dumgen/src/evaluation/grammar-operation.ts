@@ -160,6 +160,10 @@ export function grammarOperationExperiment(
 							valencyEvidence: attestation.valencyEvidence,
 						}
 					: {}),
+				...(attestation.surface.lemma.kind === "ADP" &&
+				"valencyEvidence" in attestation
+					? { valencyEvidence: attestation.valencyEvidence }
+					: {}),
 			};
 		},
 	};

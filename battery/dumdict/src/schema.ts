@@ -124,12 +124,21 @@ function createSchemasFor<const L extends Dumling.Language>(
 		readingKnowledgeSchema as unknown as ZodType<
 			Dumrel.ReadingKnowledge<Dumling.Reading<L>>
 		>
-	).refine(
-		namedValidationPredicate<Dumrel.ReadingKnowledge<Dumling.Reading<L>>>(
-			`dumdict.reading-knowledge.language.${language}`,
-		),
-		namedValidationError(`dumdict.reading-knowledge.language.${language}`),
-	);
+	)
+		.refine(
+			namedValidationPredicate<
+				Dumrel.ReadingKnowledge<Dumling.Reading<L>>
+			>(`dumdict.reading-knowledge.language.${language}`),
+			namedValidationError(
+				`dumdict.reading-knowledge.language.${language}`,
+			),
+		)
+		.refine(
+			namedValidationPredicate<
+				Dumrel.ReadingKnowledge<Dumling.Reading<L>>
+			>("dumdict.reading-knowledge.preposition-case"),
+			namedValidationError("dumdict.reading-knowledge.preposition-case"),
+		);
 	const languagePendingSemanticRelationSchema = (
 		pendingSemanticRelationSchema as unknown as ZodType<{
 			relation: z.output<typeof directSemanticRelationSchema>;
@@ -251,14 +260,20 @@ function createSchemasFor<const L extends Dumling.Language>(
 		}),
 	]);
 
-	const languageReadingKnowledgeChangeValueSchema =
-		knowledgeChangeSchema.refine(
+	const languageReadingKnowledgeChangeValueSchema = knowledgeChangeSchema
+		.refine(
 			namedValidationPredicate<Dumrel.KnowledgeChange>(
 				`dumdict.knowledge-change.language.${language}`,
 			),
 			namedValidationError(
 				`dumdict.knowledge-change.language.${language}`,
 			),
+		)
+		.refine(
+			namedValidationPredicate<Dumrel.KnowledgeChange>(
+				"dumdict.knowledge-change.preposition-case",
+			),
+			namedValidationError("dumdict.knowledge-change.preposition-case"),
 		) as unknown as ZodType<Dumrel.KnowledgeChange<Dumling.Reading<L>>>;
 	const readingKnowledgeChangeSchema = z.strictObject({
 		reading: languageReadingSchema,

@@ -32,4 +32,6 @@ export const evaluationCaseIds = [
 	"grammar-de-adp-dev-variant-auf-grund",
 	"grammar-de-adp-accept-typo-ohhne",
 	"grammar-de-adp-accept-archaic-behufs",
+	"grammar-de-adp-dev-two-way-auf-acc",
+	"grammar-de-adp-dev-fused-in-dat",
 ] as const;

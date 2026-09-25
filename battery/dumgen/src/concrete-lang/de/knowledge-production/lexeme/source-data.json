@@ -1563,7 +1563,6 @@
 							"adpType": null,
 							"extPos": null,
 							"foreign": null,
-							"governedCase": null,
 							"partType": null
 						},
 						"unitKind": "Lemma"
@@ -1610,7 +1609,6 @@
 							"adpType": null,
 							"extPos": null,
 							"foreign": null,
-							"governedCase": null,
 							"partType": null
 						},
 						"unitKind": "Lemma"
@@ -2562,7 +2560,6 @@
 							"adpType": null,
 							"extPos": null,
 							"foreign": null,
-							"governedCase": null,
 							"partType": null
 						},
 						"unitKind": "Lemma"

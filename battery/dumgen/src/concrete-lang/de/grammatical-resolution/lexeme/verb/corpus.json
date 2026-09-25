@@ -303,7 +303,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -366,7 +365,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -429,7 +427,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -606,7 +603,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Acc",
 								"partType": null
 							}
 						},
@@ -940,7 +936,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1129,7 +1124,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Dat",
 								"partType": null
 							}
 						},
@@ -1236,7 +1230,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1471,7 +1464,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Acc",
 								"partType": null
 							}
 						},
@@ -1624,7 +1616,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1690,7 +1681,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1791,7 +1781,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1892,7 +1881,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -1955,7 +1943,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Dat",
 								"partType": null
 							}
 						},
@@ -2056,7 +2043,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": null,
 								"partType": null
 							}
 						},
@@ -2450,7 +2436,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Acc",
 								"partType": null
 							}
 						},
@@ -2522,7 +2507,6 @@
 								"adpType": "Prep",
 								"extPos": null,
 								"foreign": null,
-								"governedCase": "Acc",
 								"partType": null
 							}
 						},

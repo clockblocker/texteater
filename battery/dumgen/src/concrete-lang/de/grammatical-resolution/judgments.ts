@@ -1,3 +1,4 @@
+import { germanAdpositionCases } from "dumling";
 import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
@@ -17,8 +18,8 @@ import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
 import {
+	fixedCaseOf,
 	governablePrepositionLemma,
-	governablePrepositions,
 	isGovernablePreposition,
 } from "../governable-prepositions.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
@@ -403,11 +404,7 @@ export function resolveGrammarJudgments(
 					Unresolved: "Government cannot be defensibly decided",
 				},
 			);
-			if (
-				governable.some(
-					({ form }) => governablePrepositions[form] === null,
-				)
-			)
+			if (governable.some(({ form }) => fixedCaseOf(form) === null))
 				questions.governedCase = choice(
 					"If a supplied member is the preposition this verbal target lexically governs, which case does that preposition's complement take in `markedContext`? Read it from the complement's form when the form shows it; otherwise give the case the verb requires with this preposition.",
 					{
@@ -426,6 +423,20 @@ export function resolveGrammarJudgments(
 				},
 			);
 		}
+		// A free adposition records the case its complement takes here; the
+		// ADP Case Table, not this answer, says which cases it allows.
+		const adposition = encounter.target.kind === "ADP";
+		if (adposition)
+			questions.realizedCase = choice(
+				"Which case does the complement of this adposition take in `markedContext`? Read it from the complement's form when the form shows it: auf dem Tisch and wegen dem Regen are dative, auf den Tisch is accusative, wegen des Regens is genitive. When the form does not show it, give the case this adposition assigns in this use; a two-way adposition takes accusative for a direction (wohin?) and dative for a location (wo?).",
+				{
+					Acc: "Accusative",
+					Dat: "Dative",
+					Gen: "Genitive",
+					None: "No case-marked nominal complement: a clause, an adverb or no complement at all",
+					Unresolved: "The case cannot be defensibly decided",
+				},
+			);
 		if (referent) questions.referent = referent.question;
 		const judge = judgmentCaller(options);
 		const state = {
@@ -630,7 +641,7 @@ export function resolveGrammarJudgments(
 					if (form === undefined)
 						return fail("Unaligned governed-preposition evidence");
 					const governedCase =
-						governablePrepositions[form] ??
+						fixedCaseOf(form) ??
 						(selected("governedCase") as "Acc" | "Dat");
 					const referent = speculative("governedReferent");
 					valencyEvidence.push({
@@ -805,6 +816,7 @@ export function resolveGrammarJudgments(
 									valencyEvidence: [],
 								}
 							: {}),
+						...(adposition ? { valencyEvidence: [] } : {}),
 						...(encounter.target.kind === "NOUN"
 							? { articleEvidence: null }
 							: {}),
@@ -1089,8 +1101,39 @@ export function resolveGrammarJudgments(
 					orthography,
 				};
 			}
+			if (adposition) {
+				// A one-case adposition (`mit` Dat) takes that case whatever the
+				// answer says; the judgement decides only where the table allows
+				// several (`auf`, `wegen`).
+				const answer = selected("realizedCase");
+				const allowed = germanAdpositionCases({
+					canonicalForm: String(lemma.canonicalForm),
+					coreFeatures: lemma.coreFeatures as {
+						adpType?: string | null;
+					},
+				})?.allowed;
+				const realizedCase =
+					answer !== "None" && allowed?.length === 1
+						? allowed[0]
+						: answer;
+				if (
+					realizedCase === "Acc" ||
+					realizedCase === "Dat" ||
+					realizedCase === "Gen"
+				)
+					valencyEvidence.push({
+						member: null,
+						complement: {
+							kind: "Case",
+							case: realizedCase,
+							referent: "Either",
+						},
+						realizedCase,
+					});
+			}
 			const output = {
-				...(verbal ? { expletiveEvidence, valencyEvidence } : {}),
+				...(verbal || adposition ? { valencyEvidence } : {}),
+				...(verbal ? { expletiveEvidence } : {}),
 				...(encounter.target.kind === "NOUN"
 					? { articleEvidence: article?.evidence ?? null }
 					: {}),

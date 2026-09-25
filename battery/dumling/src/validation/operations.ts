@@ -1,6 +1,7 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	germanAdpositionAttestationError,
 	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
 	germanNounAttestationError,
@@ -10,6 +11,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
 	isGermanNounAttestation,
@@ -41,6 +43,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-verbal.attestation": check(
 		isGermanVerbalAttestation,
 		germanVerbalAttestationError,
+	),
+	"dumling.de-adposition.attestation": check(
+		isGermanAdpositionAttestation,
+		germanAdpositionAttestationError,
 	),
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,

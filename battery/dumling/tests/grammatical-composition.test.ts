@@ -139,30 +139,26 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 		).toBe(false);
 	}
 });
+const preposition = (canonicalForm: string, adpType = "Prep") => ({
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "ADP",
+	canonicalForm,
+	coreFeatures: {
+		abbr: null,
+		adpType,
+		extPos: null,
+		foreign: null,
+		partType: null,
+	},
+});
 test("valency evidence names the owned member realizing its preposition", () => {
-	const preposition = (
-		canonicalForm: string,
-		governedCase: string | null,
-	) => ({
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "ADP",
-		canonicalForm,
-		coreFeatures: {
-			abbr: null,
-			adpType: "Prep",
-			extPos: null,
-			foreign: null,
-			governedCase,
-			partType: null,
-		},
-	});
 	const slot = {
 		member: 1,
 		complement: {
 			kind: "Preposition",
-			preposition: preposition("auf", null),
+			preposition: preposition("auf"),
 			case: "Acc",
 			referent: "Something",
 		},
@@ -201,7 +197,7 @@ test("valency evidence names the owned member realizing its preposition", () => 
 				...slot,
 				complement: {
 					...slot.complement,
-					preposition: preposition("auf", "Dat"),
+					preposition: preposition("für"),
 				},
 			},
 		],
@@ -224,4 +220,116 @@ test("valency evidence names the owned member realizing its preposition", () => 
 			],
 		}).success,
 	).toBe(true);
+});
+test("a governor's preposition slot takes a case the ADP Case Table allows", () => {
+	const attestation = (canonicalForm: string, grammaticalCase: string) => ({
+		unitKind: "Attestation",
+		surface: {
+			...verb,
+			normalizedSurface: "wartet",
+			inflectionalFeatures: {
+				...verb.inflectionalFeatures,
+				expletive: null,
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "wartet", orthography: "Standard" },
+			{ attested: canonicalForm, orthography: "Standard" },
+		],
+		expletiveEvidence: null,
+		valencyEvidence: [
+			{
+				member: 1,
+				complement: {
+					kind: "Preposition",
+					preposition: preposition(canonicalForm),
+					case: grammaticalCase,
+					referent: "Either",
+				},
+				realizedCase: grammaticalCase,
+			},
+		],
+	});
+	expect(parseUnit(attestation("auf", "Acc")).success).toBe(true);
+	expect(parseUnit(attestation("auf", "Dat")).success).toBe(true);
+	expect(parseUnit(attestation("für", "Acc")).success).toBe(true);
+	expect(parseUnit(attestation("für", "Dat")).success).toBe(false);
+});
+
+// A free ADP occurrence records the case its complement took (ADR 0034).
+const adpAttestation = (
+	attested: string,
+	canonicalForm: string,
+	realizedCase: string | null,
+	adpType = "Prep",
+) => ({
+	unitKind: "Attestation",
+	members: [{ attested, orthography: "Standard" }],
+	realizationCoverage: "Full",
+	valencyEvidence:
+		realizedCase === null
+			? []
+			: [
+					{
+						member: null,
+						complement: {
+							kind: "Case",
+							case: realizedCase,
+							referent: "Either",
+						},
+						realizedCase,
+					},
+				],
+	surface: {
+		unitKind: "Surface",
+		language: "de",
+		normalizedSurface: canonicalForm,
+		spelling: "Canonical",
+		surfaceFeatures: null,
+		lemma: preposition(canonicalForm, adpType),
+	},
+});
+test("an ADP Attestation records its realized case in a case the table allows", () => {
+	for (const [attested, canonicalForm, realizedCase, adpType] of [
+		["auf", "auf", "Dat", "Prep"],
+		["auf", "auf", "Acc", "Prep"],
+		["Wegen", "wegen", "Dat", "Prep"],
+		["Wegen", "wegen", "Gen", "Prep"],
+		["entlang", "entlang", "Acc", "Post"],
+		["Entlang", "entlang", "Gen", "Prep"],
+		["in", "in", "Dat", "Prep"],
+		["Anstatt", "anstatt", null, "Prep"],
+		["versus", "versus", "Acc", "Prep"],
+	] as const)
+		expect(
+			parseUnit(
+				adpAttestation(attested, canonicalForm, realizedCase, adpType),
+			).success,
+		).toBe(true);
+	for (const [attested, canonicalForm, realizedCase, adpType] of [
+		["für", "für", "Dat", "Prep"],
+		["mit", "mit", "Acc", "Prep"],
+		["auf", "auf", "Gen", "Prep"],
+		["entlang", "entlang", "Gen", "Post"],
+		["Entlang", "entlang", "Acc", "Prep"],
+		["auf", "auf", "Nom", "Prep"],
+	] as const)
+		expect(
+			parseUnit(
+				adpAttestation(attested, canonicalForm, realizedCase, adpType),
+			).success,
+		).toBe(false);
+	const valid = adpAttestation("auf", "auf", "Dat");
+	const [slot] = valid.valencyEvidence;
+	for (const invalid of [
+		[slot, slot],
+		[{ ...slot, member: 0 }],
+		[{ ...slot, realizedCase: "Acc" }],
+	])
+		expect(parseUnit({ ...valid, valencyEvidence: invalid }).success).toBe(
+			false,
+		);
+	const { valencyEvidence: _, ...missing } = valid;
+	expect(parseUnit(missing).success).toBe(false);
 });

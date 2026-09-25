@@ -360,7 +360,6 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 						adpType: "Prep",
 						extPos: null,
 						foreign: null,
-						governedCase: null,
 						partType: null,
 					},
 				},

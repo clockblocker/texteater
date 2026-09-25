@@ -60,9 +60,22 @@ test("a two-way preposition takes the construction's case", () => {
 		success: true,
 		value: { valency: [required(nom), optional(aufAcc)] },
 	});
+	// `bestehen auf` + Dat: the ADP Case Table allows `auf` both cases.
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: { valency: [optional(aufDat)] },
+		}).success,
+	).toBe(true);
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: { valency: [optional({ ...aufAcc, case: "Gen" })] },
+		}).success,
+	).toBe(false);
 });
 
-test("a fixed-case preposition rejects another case", () => {
+test("a preposition rejects a case the ADP Case Table does not allow it", () => {
 	const parsed = parseReadingKnowledge({
 		source: wartenReading,
 		knowledge: {

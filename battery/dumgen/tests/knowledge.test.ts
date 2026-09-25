@@ -470,7 +470,6 @@ const governor = {
 } as const satisfies KnowledgeInput<"de">;
 const adposition = (
 	canonicalForm: string,
-	governedCase: "Acc" | "Dat" | null,
 ): Dumling.Lemma<"de", "Lexeme", "ADP"> => ({
 	unitKind: "Lemma",
 	language: "de",
@@ -482,7 +481,6 @@ const adposition = (
 		adpType: "Prep",
 		extPos: null,
 		foreign: null,
-		governedCase,
 		partType: null,
 	},
 });
@@ -553,14 +551,11 @@ const prepositionSlot = (
 	},
 });
 /** The same Slot with its preposition resolved to the ADP Lemma. */
-const stored = (
-	slot: ReturnType<typeof prepositionSlot>,
-	fixedCase: "Acc" | "Dat" | null = null,
-) => ({
+const stored = (slot: ReturnType<typeof prepositionSlot>) => ({
 	...slot,
 	complement: {
 		...slot.complement,
-		preposition: adposition(slot.complement.preposition, fixedCase),
+		preposition: adposition(slot.complement.preposition),
 	},
 });
 
@@ -731,9 +726,9 @@ test("a sentence Contributes the governed preposition a proposed frame omits", a
 		{
 			kind: "Contribute",
 			aspect: "valency",
-			value: [nom, stored(bei, "Dat")],
+			value: [nom, stored(bei)],
 		},
-		{ kind: "Contribute", aspect: "valency", value: [stored(fuer, "Acc")] },
+		{ kind: "Contribute", aspect: "valency", value: [stored(fuer)] },
 	]);
 	let knowledge = {};
 	for (const change of omitted.changes) {
@@ -746,7 +741,7 @@ test("a sentence Contributes the governed preposition a proposed frame omits", a
 		knowledge = applied.value;
 	}
 	expect(knowledge).toEqual({
-		valency: [nom, stored(bei, "Dat"), stored(fuer, "Acc")],
+		valency: [nom, stored(bei), stored(fuer)],
 	});
 
 	const proposed = prepositionSlot("Optional", "für", "Acc", "Something");
@@ -760,7 +755,7 @@ test("a sentence Contributes the governed preposition a proposed frame omits", a
 		{
 			kind: "Contribute",
 			aspect: "valency",
-			value: [nom, stored(bei, "Dat"), stored(proposed, "Acc")],
+			value: [nom, stored(bei), stored(proposed)],
 		},
 	]);
 });
@@ -797,7 +792,7 @@ test("government a later sentence attests is Contributed as Optional Slots witho
 		aspect: "valency",
 		value: [
 			stored(prepositionSlot("Optional", "auf", "Acc", "Either")),
-			stored(prepositionSlot("Optional", "für", "Acc", "Either"), "Acc"),
+			stored(prepositionSlot("Optional", "für", "Acc", "Either")),
 		],
 	});
 	expect(incremental).toEqual(["definition"]);

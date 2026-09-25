@@ -1,6 +1,7 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
+	germanAdpositionAttestationError,
 	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
 	germanNounAttestationError,
@@ -10,6 +11,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
 	isGermanNounAttestation,
@@ -34,7 +36,14 @@ export const registrations = [
 		implementation: isGermanVerbalAttestation,
 		error: germanVerbalAttestationError,
 		name: "dumling.de-verbal.attestation",
-		version: 2,
+		version: 3,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanAdpositionAttestation,
+		error: germanAdpositionAttestationError,
+		name: "dumling.de-adposition.attestation",
+		version: 1,
 	},
 	{
 		construct: "custom",

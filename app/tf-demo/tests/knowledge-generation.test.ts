@@ -162,7 +162,6 @@ function governedAnalysis(segmentedSentenceId: string) {
 							adpType: "Prep",
 							extPos: null,
 							foreign: null,
-							governedCase: null,
 							partType: null,
 						},
 					},

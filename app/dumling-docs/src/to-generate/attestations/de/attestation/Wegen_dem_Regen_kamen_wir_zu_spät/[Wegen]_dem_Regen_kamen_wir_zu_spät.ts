@@ -9,6 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	valencyEvidence: [
+		{
+			member: null,
+			complement: { kind: "Case", case: "Dat", referent: "Either" },
+			realizedCase: "Dat",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -23,7 +30,6 @@ const occurrenceAttestation = {
 			kind: "ADP",
 			coreFeatures: {
 				adpType: "Prep",
-				governedCase: "Gen",
 				abbr: null,
 				extPos: null,
 				foreign: null,
@@ -38,7 +44,7 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[Wegen] dem Regen kamen wir zu spät.",
 	classifierNotes:
-		"This is the normative genitive-governing adposition even though the complement phrase is colloquially dative.",
+		"`wegen` takes a colloquial dative here. The ADP Case Table keeps genitive as its preferred case, so the Lemma stays the same `wegen` and the occurrence records the dative it realized.",
 	classificationMistakes:
 		"Reading belongs to a later layer; this Dumling Attestation only resolves the reviewed adposition `wegen`.",
 } as const;

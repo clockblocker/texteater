@@ -33,10 +33,7 @@ export const prefixLemma = {
 	coreFeatures: { hasSepPrefix: null },
 } as const satisfies Dumling.Lemma<"de", "Morpheme", "Prefix">;
 
-const adposition = (
-	canonicalForm: string,
-	governedCase: "Acc" | "Dat" | null,
-) =>
+const adposition = (canonicalForm: string) =>
 	({
 		unitKind: "Lemma",
 		language: "de",
@@ -48,15 +45,14 @@ const adposition = (
 			adpType: "Prep",
 			extPos: null,
 			foreign: null,
-			governedCase,
 			partType: null,
 		},
 	}) as const satisfies Dumling.Lemma<"de", "Lexeme", "ADP">;
 
 /** Two-way preposition: the construction supplies the case. */
-export const aufLemma = adposition("auf", null);
+export const aufLemma = adposition("auf");
 /** Fixed-case preposition. */
-export const fuerLemma = adposition("für", "Acc");
+export const fuerLemma = adposition("für");
 
 export const wartenReading = {
 	unitKind: "Reading",

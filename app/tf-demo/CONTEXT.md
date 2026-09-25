@@ -39,7 +39,11 @@ The pinned Block listing where the Subject was met, most recent first.
 **Valency Block**:
 The Block showing a Reading's Lemma with its Valency Frame, such as
 `>passen (auf jN/etw) auf<`. It is computed from the frame at render time and
-never stored as text. A Reading without a frame has no Valency Block.
+never stored as text. A Reading without a frame has no Valency Block. A
+German ADP Reading has no frame; its block renders from Dumling's ADP Case
+Table (`auf etw · Akk: wohin? · Dat: wo?`), and each of its Source Contexts
+shows the case it realized, marking a non-preferred one
+(`Dat · umgangssprachlich`).
 
 **Anchor Blocks**:
 The Heading and Source Contexts, which stay visible across every form so the

@@ -75,6 +75,9 @@ export function restoreStoredGrammar(input: {
 							valencyEvidence: attestation.valencyEvidence ?? [],
 						}
 					: {}),
+				...(lemma.language === "de" && lemma.kind === "ADP"
+					? { valencyEvidence: attestation.valencyEvidence ?? [] }
+					: {}),
 			},
 		});
 	} catch {

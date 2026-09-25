@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
 	emojiDescriptionError,
+	germanAdpositionAttestationError,
 	germanClosedClassSurfaceError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
@@ -8,6 +9,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanNounAttestation,
 	isGermanNounSurface,
@@ -134,6 +136,8 @@ const valencyEvidenceSchema = z.array(
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German verbal Attestation names its owned subject-expletive
  * member and the valency slots it realizes as evidence (ADR 0022, ADR 0034).
+ * A German ADP Attestation records the case its complement took as its one
+ * bare-case slot, checked against the ADP Case Table.
  */
 export function buildUnitSchemas<
 	L extends string,
@@ -152,6 +156,10 @@ export function buildUnitSchemas<
 		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
 			(route.family === "Phraseme" &&
 				["Idiom", "Collocation"].includes(route.kind)));
+	const adposition =
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		route.kind === "ADP";
 	const closedClass =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
@@ -178,6 +186,7 @@ export function buildUnitSchemas<
 					valencyEvidence: valencyEvidenceSchema,
 				}
 			: {}),
+		...(adposition ? { valencyEvidence: valencyEvidenceSchema } : {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
 			surface: typeof Surface;
@@ -201,6 +210,11 @@ export function buildUnitSchemas<
 							valencyEvidence: typeof valencyEvidenceSchema;
 						}
 					: Record<never, never>
+				: Record<never, never>) &
+			(L extends "de"
+				? K extends "ADP"
+					? { valencyEvidence: typeof valencyEvidenceSchema }
+					: Record<never, never>
 				: Record<never, never>)
 	>;
 	if (noun)
@@ -210,6 +224,10 @@ export function buildUnitSchemas<
 	if (verbal)
 		Attestation = Attestation.refine(isGermanVerbalAttestation, {
 			error: germanVerbalAttestationError,
+		});
+	if (adposition)
+		Attestation = Attestation.refine(isGermanAdpositionAttestation, {
+			error: germanAdpositionAttestationError,
 		});
 	return { Lemma: base.Lemma, Surface, Reading: base.Reading, Attestation };
 }

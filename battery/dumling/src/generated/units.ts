@@ -107,43 +107,6 @@ export interface UnitMap {
 				adpType: ("Circ" | "Post" | "Prep") | null;
 				extPos: ("ADV" | "SCONJ") | null;
 				foreign: "Yes" | null;
-				governedCase:
-					| (
-							| "Acc"
-							| "Abe"
-							| "Ben"
-							| "Cau"
-							| "Cmp"
-							| "Cns"
-							| "Com"
-							| "Dat"
-							| "Dis"
-							| "Equ"
-							| "Gen"
-							| "Ins"
-							| "Par"
-							| "Tem"
-							| "Abl"
-							| "Add"
-							| "Ade"
-							| "All"
-							| "Del"
-							| "Ela"
-							| "Ess"
-							| "Ill"
-							| "Ine"
-							| "Lat"
-							| "Loc"
-							| "Nom"
-							| "Per"
-							| "Sbe"
-							| "Sbl"
-							| "Spl"
-							| "Sub"
-							| "Sup"
-							| "Ter"
-					  )
-					| null;
 				partType: "Vbp" | null;
 			};
 		};
@@ -161,43 +124,6 @@ export interface UnitMap {
 					adpType: ("Circ" | "Post" | "Prep") | null;
 					extPos: ("ADV" | "SCONJ") | null;
 					foreign: "Yes" | null;
-					governedCase:
-						| (
-								| "Acc"
-								| "Abe"
-								| "Ben"
-								| "Cau"
-								| "Cmp"
-								| "Cns"
-								| "Com"
-								| "Dat"
-								| "Dis"
-								| "Equ"
-								| "Gen"
-								| "Ins"
-								| "Par"
-								| "Tem"
-								| "Abl"
-								| "Add"
-								| "Ade"
-								| "All"
-								| "Del"
-								| "Ela"
-								| "Ess"
-								| "Ill"
-								| "Ine"
-								| "Lat"
-								| "Loc"
-								| "Nom"
-								| "Per"
-								| "Sbe"
-								| "Sbl"
-								| "Spl"
-								| "Sub"
-								| "Sup"
-								| "Ter"
-						  )
-						| null;
 					partType: "Vbp" | null;
 				};
 			};
@@ -218,43 +144,6 @@ export interface UnitMap {
 					adpType: ("Circ" | "Post" | "Prep") | null;
 					extPos: ("ADV" | "SCONJ") | null;
 					foreign: "Yes" | null;
-					governedCase:
-						| (
-								| "Acc"
-								| "Abe"
-								| "Ben"
-								| "Cau"
-								| "Cmp"
-								| "Cns"
-								| "Com"
-								| "Dat"
-								| "Dis"
-								| "Equ"
-								| "Gen"
-								| "Ins"
-								| "Par"
-								| "Tem"
-								| "Abl"
-								| "Add"
-								| "Ade"
-								| "All"
-								| "Del"
-								| "Ela"
-								| "Ess"
-								| "Ill"
-								| "Ine"
-								| "Lat"
-								| "Loc"
-								| "Nom"
-								| "Per"
-								| "Sbe"
-								| "Sbl"
-								| "Spl"
-								| "Sub"
-								| "Sup"
-								| "Ter"
-						  )
-						| null;
 					partType: "Vbp" | null;
 				};
 			};
@@ -276,43 +165,6 @@ export interface UnitMap {
 						adpType: ("Circ" | "Post" | "Prep") | null;
 						extPos: ("ADV" | "SCONJ") | null;
 						foreign: "Yes" | null;
-						governedCase:
-							| (
-									| "Acc"
-									| "Abe"
-									| "Ben"
-									| "Cau"
-									| "Cmp"
-									| "Cns"
-									| "Com"
-									| "Dat"
-									| "Dis"
-									| "Equ"
-									| "Gen"
-									| "Ins"
-									| "Par"
-									| "Tem"
-									| "Abl"
-									| "Add"
-									| "Ade"
-									| "All"
-									| "Del"
-									| "Ela"
-									| "Ess"
-									| "Ill"
-									| "Ine"
-									| "Lat"
-									| "Loc"
-									| "Nom"
-									| "Per"
-									| "Sbe"
-									| "Sbl"
-									| "Spl"
-									| "Sub"
-									| "Sup"
-									| "Ter"
-							  )
-							| null;
 						partType: "Vbp" | null;
 					};
 				};
@@ -328,6 +180,35 @@ export interface UnitMap {
 				}>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
 		};
 	};
 	"de/Lexeme/ADV": {
@@ -707,43 +588,6 @@ export interface UnitMap {
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: ("ADV" | "SCONJ") | null;
 									foreign: "Yes" | null;
-									governedCase:
-										| (
-												| "Acc"
-												| "Abe"
-												| "Ben"
-												| "Cau"
-												| "Cmp"
-												| "Cns"
-												| "Com"
-												| "Dat"
-												| "Dis"
-												| "Equ"
-												| "Gen"
-												| "Ins"
-												| "Par"
-												| "Tem"
-												| "Abl"
-												| "Add"
-												| "Ade"
-												| "All"
-												| "Del"
-												| "Ela"
-												| "Ess"
-												| "Ill"
-												| "Ine"
-												| "Lat"
-												| "Loc"
-												| "Nom"
-												| "Per"
-												| "Sbe"
-												| "Sbl"
-												| "Spl"
-												| "Sub"
-												| "Sup"
-												| "Ter"
-										  )
-										| null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -2272,43 +2116,6 @@ export interface UnitMap {
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: ("ADV" | "SCONJ") | null;
 									foreign: "Yes" | null;
-									governedCase:
-										| (
-												| "Acc"
-												| "Abe"
-												| "Ben"
-												| "Cau"
-												| "Cmp"
-												| "Cns"
-												| "Com"
-												| "Dat"
-												| "Dis"
-												| "Equ"
-												| "Gen"
-												| "Ins"
-												| "Par"
-												| "Tem"
-												| "Abl"
-												| "Add"
-												| "Ade"
-												| "All"
-												| "Del"
-												| "Ela"
-												| "Ess"
-												| "Ill"
-												| "Ine"
-												| "Lat"
-												| "Loc"
-												| "Nom"
-												| "Per"
-												| "Sbe"
-												| "Sbl"
-												| "Spl"
-												| "Sub"
-												| "Sup"
-												| "Ter"
-										  )
-										| null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -3302,43 +3109,6 @@ export interface UnitMap {
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: ("ADV" | "SCONJ") | null;
 									foreign: "Yes" | null;
-									governedCase:
-										| (
-												| "Acc"
-												| "Abe"
-												| "Ben"
-												| "Cau"
-												| "Cmp"
-												| "Cns"
-												| "Com"
-												| "Dat"
-												| "Dis"
-												| "Equ"
-												| "Gen"
-												| "Ins"
-												| "Par"
-												| "Tem"
-												| "Abl"
-												| "Add"
-												| "Ade"
-												| "All"
-												| "Del"
-												| "Ela"
-												| "Ess"
-												| "Ill"
-												| "Ine"
-												| "Lat"
-												| "Loc"
-												| "Nom"
-												| "Per"
-												| "Sbe"
-												| "Sbl"
-												| "Spl"
-												| "Sub"
-												| "Sup"
-												| "Ter"
-										  )
-										| null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -3762,43 +3532,6 @@ export interface UnitMap {
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: ("ADV" | "SCONJ") | null;
 									foreign: "Yes" | null;
-									governedCase:
-										| (
-												| "Acc"
-												| "Abe"
-												| "Ben"
-												| "Cau"
-												| "Cmp"
-												| "Cns"
-												| "Com"
-												| "Dat"
-												| "Dis"
-												| "Equ"
-												| "Gen"
-												| "Ins"
-												| "Par"
-												| "Tem"
-												| "Abl"
-												| "Add"
-												| "Ade"
-												| "All"
-												| "Del"
-												| "Ela"
-												| "Ess"
-												| "Ill"
-												| "Ine"
-												| "Lat"
-												| "Loc"
-												| "Nom"
-												| "Per"
-												| "Sbe"
-												| "Sbl"
-												| "Spl"
-												| "Sub"
-												| "Sup"
-												| "Ter"
-										  )
-										| null;
 									partType: "Vbp" | null;
 								};
 							};

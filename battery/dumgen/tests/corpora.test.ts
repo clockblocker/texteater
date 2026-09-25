@@ -190,10 +190,15 @@ test("all 1122 retained grammar answers project through public operations", asyn
 						"inflectionalFeatures",
 						output.surface.inflectionalFeatures,
 					);
+				if ("valencyEvidence" in output)
+					expect(result.right).toHaveProperty(
+						"valencyEvidence",
+						output.valencyEvidence,
+					);
 			}
 			count++;
 		}
 	}
-	expect(count).toBe(1093);
+	expect(count).toBe(1095);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

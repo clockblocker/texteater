@@ -181,6 +181,8 @@ export const sourceContextPageValidator = v.object({
 			memberTexts: v.array(v.string()),
 			origin: sourceOriginValidator,
 			target: sourceTargetValidator,
+			/** The case an ADP occurrence's complement took (ADR 0034). */
+			realizedCase: v.optional(governedCaseValidator),
 		}),
 	),
 	continueCursor: v.string(),
@@ -246,6 +248,8 @@ export type SourceContextProjection = {
 	readonly memberTexts: string[];
 	readonly origin: SourceOrigin;
 	readonly target: SourceTarget;
+	/** The case an ADP occurrence's complement took (ADR 0034). */
+	readonly realizedCase?: Infer<typeof governedCaseValidator>;
 };
 
 async function loadUnitReading(ctx: QueryCtx, readingIdValue: string) {
@@ -637,7 +641,38 @@ async function projectSourceContext(
 		},
 		visitorId,
 	);
-	return source
-		? { attestationId, ...source, memberTexts: members.memberTexts }
-		: null;
+	if (!source) return null;
+	const realizedCase = occurrenceRealizedCase(
+		(await ctx.db.get(attestationId))?.valencyEvidence,
+	);
+	return {
+		attestationId,
+		...source,
+		memberTexts: members.memberTexts,
+		...(realizedCase ? { realizedCase } : {}),
+	};
+}
+
+/**
+ * The case an occurrence's own complement took: the one bare-case slot no
+ * member marks, which only an ADP Attestation records.
+ */
+function occurrenceRealizedCase(
+	valencyEvidence: unknown,
+): Infer<typeof governedCaseValidator> | undefined {
+	if (!Array.isArray(valencyEvidence)) return undefined;
+	for (const slot of valencyEvidence as {
+		member?: unknown;
+		complement?: { kind?: unknown };
+		realizedCase?: unknown;
+	}[])
+		if (
+			slot.member === null &&
+			slot.complement?.kind === "Case" &&
+			(slot.realizedCase === "Acc" ||
+				slot.realizedCase === "Dat" ||
+				slot.realizedCase === "Gen")
+		)
+			return slot.realizedCase;
+	return undefined;
 }

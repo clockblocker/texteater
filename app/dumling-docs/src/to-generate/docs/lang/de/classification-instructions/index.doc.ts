@@ -97,6 +97,8 @@ This split matters in German because many tempting distinctions belong in differ
 
 \`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it in \`valencyEvidence\`, and its normalized Surface leaves it out.
 
+An adposition's case is not a Lemma fact either. Dumling's ADP Case Table lists the cases each German adposition allows (\`für\` Acc, two-way \`auf\` Acc or Dat, \`wegen\` Gen preferred with colloquial Dat). A free \`ADP\` \`Attestation\` records the case its complement took in \`valencyEvidence\`: \`auf dem Geschenk\` is Dat, \`auf das Geschenk\` is Acc, and \`wegen dem Regen\` is Dat.
+
 \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form, except on German \`DET\` and \`PRON\` pillars, whose cells are Core.
 
 Semantic identity is a Dumling Reading—one Lemma plus one emoji description.
@@ -148,7 +150,6 @@ For participles, keep the layer distinction sharp:
 
 Some distinctions are German-specific or model-specific rather than plain UD inventory:
 
-- \`governedCase\` on adpositions
 - \`discourseFormulaRole\` on discourse formulas
 - \`gender[psor]\` and \`number[psor]\` on possessive determiner and pronoun Surfaces, as far as the form shows them: \`sein\` marks the set Masc, Neut, and \`ihr\` marks neither
 - \`historicalStatus: "Archaic"\` on surfaces when that status is explicitly modeled

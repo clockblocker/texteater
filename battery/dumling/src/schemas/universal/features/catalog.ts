@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { DiscourseFormulaRoleSchema } from "./custom/discourse-formula-role.js";
-import { GovernedCaseSchema } from "./custom/governed-case.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
@@ -71,7 +70,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	expletive: z.literal("Subject"),
 	gender: GenderSchema,
 	"gender[psor]": GenderSchema,
-	governedCase: GovernedCaseSchema,
 	hasSepPrefix: HasSepPrefixSchema,
 	hebBinyan: HebBinyanSchema,
 	hebExistential: HebExistentialSchema,

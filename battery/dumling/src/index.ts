@@ -2,6 +2,12 @@ export { ParsingError } from "common-utils";
 export { checkIfGrundform } from "./check-if-grundform.js";
 export { UnitKind } from "./generated/vocabulary.js";
 export {
+	type GermanAdpositionCase,
+	type GermanAdpositionCases,
+	germanAdpositionAllows,
+	germanAdpositionCases,
+} from "./grammar/german-adposition-cases.js";
+export {
 	GrundformAssessmentError,
 	type GrundformIssue,
 	type GrundformResult,

@@ -86,7 +86,6 @@ const analysis: StoredSentenceAnalysis = {
 						adpType: "Prep",
 						extPos: null,
 						foreign: null,
-						governedCase: "Dat",
 						partType: null,
 					},
 				},

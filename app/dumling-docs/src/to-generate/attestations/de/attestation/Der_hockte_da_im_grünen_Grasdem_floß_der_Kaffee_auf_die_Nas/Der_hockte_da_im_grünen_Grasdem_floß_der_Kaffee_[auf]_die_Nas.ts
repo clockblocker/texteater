@@ -9,6 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	valencyEvidence: [
+		{
+			member: null,
+			complement: { kind: "Case", case: "Acc", referent: "Either" },
+			realizedCase: "Acc",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -26,7 +33,6 @@ const occurrenceAttestation = {
 				abbr: null,
 				extPos: null,
 				foreign: null,
-				governedCase: null,
 				partType: null,
 			},
 		},
@@ -39,6 +45,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Der hockte da im grünen Gras;\ndem floß der Kaffee [auf] die Nas.",
 	classifierNotes:
-		"`auf` heads the directional phrase `auf die Nas`, so I treated it as an ordinary preposition, not as a verbal particle. I left `governedCase` unset even though this local phrase is accusative, because the Lemma `auf` is a two-way preposition and the Dumling schema stores that feature lexically rather than per attested token.",
+		"`auf` heads the directional phrase `auf die Nas`, so I treated it as an ordinary preposition, not as a verbal particle. The two-way Lemma carries no case; this occurrence records the accusative of `die Nas` (wohin?) as its realized case.",
 	isVerified: true,
 } as const;

@@ -9,7 +9,6 @@ export type {
 	UniversalFeatureBags,
 } from "./features/catalog.js";
 export { DiscourseFormulaRole } from "./features/custom/discourse-formula-role.js";
-export { GovernedCase } from "./features/custom/governed-case.js";
 export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";

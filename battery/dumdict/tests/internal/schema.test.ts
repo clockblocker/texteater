@@ -107,6 +107,48 @@ describe("public storage-facing schemas", () => {
 		}
 	});
 
+	test("Reading Knowledge checks Preposition Slots against the ADP Case Table", () => {
+		const schema = getDumdictSchemasFor("de").readingEntrySchema;
+		const slot = (canonicalForm: string, grammaticalCase: string) => ({
+			status: "Optional",
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm,
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						partType: null,
+					},
+				},
+				case: grammaticalCase,
+				referent: "Either",
+			},
+		});
+		const entry = (canonicalForm: string, grammaticalCase: string) => ({
+			reading: germanGehenReading,
+			attestedTranslations: [],
+			attestations: [],
+			notes: "",
+			knowledge: { valency: [slot(canonicalForm, grammaticalCase)] },
+		});
+		expect(schema.safeParse(entry("auf", "Acc")).success).toBe(true);
+		expect(schema.safeParse(entry("auf", "Dat")).success).toBe(true);
+		expect(schema.safeParse(entry("für", "Acc")).success).toBe(true);
+		const rejected = schema.safeParse(entry("für", "Dat"));
+		expect(rejected.success).toBe(false);
+		if (!rejected.success)
+			expect(rejected.error.issues[0]?.message).toBe(
+				"A Preposition Slot must take a case the ADP Case Table allows its preposition.",
+			);
+	});
+
 	test("Surface Entries compose Dumling's concrete Surface schemas", () => {
 		const schema = getDumdictSchemasFor("de").surfaceEntrySchema;
 		const entry = {

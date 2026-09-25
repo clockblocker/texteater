@@ -63,7 +63,6 @@ const NULL_CORE_FEATURES_BY_KIND = {
 		adpType: null,
 		extPos: null,
 		foreign: null,
-		governedCase: null,
 		partType: null,
 	},
 	ADV: { foreign: null, numType: null, pronType: null },
@@ -297,6 +296,7 @@ function occurrenceFor(
 		...(["VERB", "AUX", "Idiom", "Collocation"].includes(reading.lemma.kind)
 			? { expletiveEvidence: null, valencyEvidence: [] }
 			: {}),
+		...(reading.lemma.kind === "ADP" ? { valencyEvidence: [] } : {}),
 		surface: citationSurface,
 	});
 	return {

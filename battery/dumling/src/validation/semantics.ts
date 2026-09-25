@@ -1,4 +1,5 @@
 import emojiRegex from "emoji-regex";
+import { germanAdpositionAllows } from "../grammar/german-adposition-cases.js";
 
 /** Shared by Zod authoring and compiled validation operations. */
 export function hasMarkedFeature(bag: Record<string, unknown>): boolean {
@@ -219,7 +220,7 @@ type ValencyEvidence = {
 				kind: "Preposition";
 				preposition: {
 					canonicalForm: string;
-					coreFeatures: { governedCase: string | null };
+					coreFeatures: { adpType: string | null };
 				};
 				case: string;
 		  };
@@ -229,7 +230,7 @@ type ValencyEvidence = {
 /**
  * Each slot names a distinct owned member, or none. A preposition slot's
  * member spells its preposition unless it is a Typo, takes a case the ADP
- * Lemma allows, and keeps that case in the occurrence. A bare-case slot has
+ * Case Table allows the preposition, and keeps that case in the occurrence. A bare-case slot has
  * no marker member.
  */
 function isOwnedValencyEvidence(
@@ -242,11 +243,10 @@ function isOwnedValencyEvidence(
 	if (new Set(named).size !== named.length) return false;
 	return evidence.every(({ member: index, complement, realizedCase }) => {
 		if (complement.kind === "Case") return index === null;
-		const { canonicalForm, coreFeatures } = complement.preposition;
+		const { canonicalForm } = complement.preposition;
 		if (
 			realizedCase !== complement.case ||
-			(coreFeatures.governedCase !== null &&
-				coreFeatures.governedCase !== complement.case)
+			!germanAdpositionAllows(complement.preposition, complement.case)
 		)
 			return false;
 		if (index === null) return true;
@@ -257,6 +257,35 @@ function isOwnedValencyEvidence(
 				member.attested.toLocaleLowerCase("de") === canonicalForm)
 		);
 	});
+}
+
+/**
+ * A German ADP Attestation records at most one slot: the bare case its
+ * complement took (`auf dem Tisch` Dat), marked by no member, in a case the
+ * ADP Case Table allows. An ADP with no case-marked complement records none.
+ */
+export function isGermanAdpositionAttestation(input: unknown): boolean {
+	const value = input as {
+		surface: {
+			lemma: {
+				canonicalForm: string;
+				coreFeatures: { adpType: string | null };
+			};
+		};
+		valencyEvidence: ValencyEvidence[];
+	};
+	const [slot, ...rest] = value.valencyEvidence;
+	if (!slot) return true;
+	return (
+		rest.length === 0 &&
+		slot.member === null &&
+		slot.complement.kind === "Case" &&
+		slot.complement.case === slot.realizedCase &&
+		germanAdpositionAllows(value.surface.lemma, slot.realizedCase)
+	);
+}
+export function germanAdpositionAttestationError(): string {
+	return "ADP valency evidence is at most one bare-case slot with no member, realized in a case the ADP Case Table allows";
 }
 
 export function isGermanVerbalSurface(input: unknown): boolean {

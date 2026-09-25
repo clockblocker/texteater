@@ -9,6 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	valencyEvidence: [
+		{
+			member: null,
+			complement: { kind: "Case", case: "Dat", referent: "Either" },
+			realizedCase: "Dat",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -23,7 +30,6 @@ const occurrenceAttestation = {
 			kind: "ADP",
 			coreFeatures: {
 				adpType: "Prep",
-				governedCase: "Dat",
 				abbr: null,
 				extPos: null,
 				foreign: null,

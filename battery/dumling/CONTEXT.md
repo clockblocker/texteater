@@ -81,7 +81,9 @@ subject-expletive source orthography as evidence for an owned member, and
 record the valency slots the occurrence realizes as valency evidence, each
 naming by index the owned member that realizes it, such as the governed
 preposition. A governed preposition is an owned member but not a Fixed one,
-so the normalized Surface leaves it out: `wartet`, not `wartet auf`.
+so the normalized Surface leaves it out: `wartet`, not `wartet auf`. A German
+ADP Attestation records the case its complement took as its realized case:
+`auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem Regen` Dat.
 _Avoid_: Selection, click result, selected Surface
 
 **Fusion**:
@@ -126,6 +128,17 @@ marks them by case: a bare case (`jemandem`, Dat) or a governed preposition
 with the case it assigns (`auf` + Acc), each with a referent of Someone,
 Something or Either. The subject is a Slot too.
 _Avoid_: argument, valent, complement slot, Ergänzung
+
+**ADP Case Table**:
+The closed, authored list of a language's adpositions with the cases each
+takes: the allowed cases, a preferred case where the others are colloquial,
+and whether it is two-way. German keys it by Canonical Form and, where
+position changes the case, by `adpType`: `für` {Acc}, `auf` {Acc, Dat}
+two-way, `wegen` {Gen, Dat} preferring Gen, `entlang` Post {Acc} and Prep
+{Gen, Dat}. Case is not ADP Core, since no two German ADPs differ by case
+alone. A governor's Preposition Slot and an ADP occurrence's realized case
+must be cases the table allows.
+_Avoid_: governed case, governedCase, case government feature
 
 ### German classifications
 

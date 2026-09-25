@@ -207,6 +207,9 @@ export async function loadOccurrenceAttestation(
 					valencyEvidence: attestation.valencyEvidence ?? [],
 				}
 			: {}),
+		...(lemma.language === "de" && lemma.kind === "ADP"
+			? { valencyEvidence: attestation.valencyEvidence ?? [] }
+			: {}),
 		...(attestation.articleEvidence === undefined
 			? {}
 			: { articleEvidence: attestation.articleEvidence }),

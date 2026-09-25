@@ -1,3 +1,4 @@
+import { germanAdpositionAllows } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -151,6 +152,34 @@ function valencyUsesLanguage(
 	);
 }
 
+/** Each Preposition Slot takes a case the ADP Case Table allows its preposition. */
+function valencyCasesAllowed(frame: readonly Dumrel.ValencySlot[]): boolean {
+	return frame.every(
+		({ complement }) =>
+			complement.kind !== "Preposition" ||
+			complement.preposition.language !== "de" ||
+			germanAdpositionAllows(complement.preposition, complement.case),
+	);
+}
+
+function knowledgePrepositionCasesAllowed(
+	knowledge: Dumrel.ReadingKnowledge,
+): boolean {
+	return valencyCasesAllowed(knowledge.valency ?? []);
+}
+
+function knowledgeChangePrepositionCasesAllowed(
+	change: Dumrel.KnowledgeChange,
+): boolean {
+	if (change.aspect !== "valency") return true;
+	return "value" in change
+		? valencyCasesAllowed(change.value)
+		: !change.complement ||
+				valencyCasesAllowed([
+					{ status: "Optional", complement: change.complement },
+				]);
+}
+
 type ReadingEntryLike = {
 	readonly knowledge?: Dumrel.ReadingKnowledge;
 	readonly reading: Dumling.Reading;
@@ -272,6 +301,7 @@ const predicateNames = [
 	"dumdict.knowledge-change.language.de",
 	"dumdict.knowledge-change.language.en",
 	"dumdict.knowledge-change.language.he",
+	"dumdict.knowledge-change.preposition-case",
 	"dumdict.knowledge-change.reading-matches-patched",
 	"dumdict.pending.locator-matches-relation",
 	"dumdict.pending.locator-source",
@@ -283,6 +313,7 @@ const predicateNames = [
 	"dumdict.reading-knowledge.language.de",
 	"dumdict.reading-knowledge.language.en",
 	"dumdict.reading-knowledge.language.he",
+	"dumdict.reading-knowledge.preposition-case",
 	"dumdict.reading.language.de",
 	"dumdict.reading.language.en",
 	"dumdict.reading.language.he",
@@ -327,6 +358,8 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 			return forLanguage("en", knowledgeChangeUsesLanguage);
 		case "dumdict.knowledge-change.language.he":
 			return forLanguage("he", knowledgeChangeUsesLanguage);
+		case "dumdict.knowledge-change.preposition-case":
+			return namedPredicate(knowledgeChangePrepositionCasesAllowed);
 		case "dumdict.knowledge-change.reading-matches-patched":
 			return namedPredicate(knowledgeChangeReadingMatchesPatched);
 		case "dumdict.pending.locator-matches-relation":
@@ -361,6 +394,8 @@ function constructNamedPredicate(name: PredicateName): NamedPredicate {
 			return forLanguage("en", knowledgeUsesLanguage);
 		case "dumdict.reading-knowledge.language.he":
 			return forLanguage("he", knowledgeUsesLanguage);
+		case "dumdict.reading-knowledge.preposition-case":
+			return namedPredicate(knowledgePrepositionCasesAllowed);
 		case "dumdict.reading.language.de":
 			return forLanguage("de", readingUsesLanguage);
 		case "dumdict.reading.language.en":
@@ -378,6 +413,9 @@ export const dumdictNamedValidationPredicates = lazyNamedRegistry(
 	predicateNames,
 	constructNamedPredicate,
 ) as Readonly<Record<PredicateName, NamedPredicate>>;
+
+const prepositionCaseError =
+	"A Preposition Slot must take a case the ADP Case Table allows its preposition.";
 
 function constantError(message: string): () => string {
 	return () => message;
@@ -397,6 +435,8 @@ function constructNamedError(name: PredicateName): () => string {
 			return constantError(
 				"Reading Knowledge Change references must use he.",
 			);
+		case "dumdict.knowledge-change.preposition-case":
+			return constantError(prepositionCaseError);
 		case "dumdict.knowledge-change.reading-matches-patched":
 			return constantError(
 				"Knowledge Change Reading must match the patched Reading.",
@@ -435,6 +475,8 @@ function constructNamedError(name: PredicateName): () => string {
 			return constantError("Reading Knowledge references must use en.");
 		case "dumdict.reading-knowledge.language.he":
 			return constantError("Reading Knowledge references must use he.");
+		case "dumdict.reading-knowledge.preposition-case":
+			return constantError(prepositionCaseError);
 		case "dumdict.reading.language.de":
 			return constantError("Reading must use de.");
 		case "dumdict.reading.language.en":

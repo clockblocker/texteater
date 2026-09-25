@@ -12,9 +12,9 @@ import type { Questions } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
 import { choice } from "../../../universal/questions.js";
 import {
+	fixedCaseOf,
 	governablePrepositionIn,
 	governablePrepositionLemma,
-	governablePrepositions,
 	isGovernablePreposition,
 } from "../governable-prepositions.js";
 import {
@@ -80,7 +80,7 @@ export function slotQuestions(
 				Unresolved: "Government cannot be defensibly decided",
 			},
 		);
-		if (governablePrepositions[piece.preposition] === null)
+		if (fixedCaseOf(piece.preposition) === null)
 			questions[`case_${index}`] = choice(
 				`Under \`government\`, which case does the complement of the preposition realized by occurrence ${label(sentence, index)} take here?`,
 				{
@@ -182,7 +182,7 @@ export function assembleSlots(
 		if (!governorId) continue;
 		const voted = top(answers, `case_${index}`);
 		const governedCase: PrepositionComplement["case"] | null =
-			governablePrepositions[piece.preposition] ??
+			fixedCaseOf(piece.preposition) ??
 			(voted === "Acc" || voted === "Dat" ? voted : null);
 		if (!governedCase) continue;
 		const referent = piece.adverb

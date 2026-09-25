@@ -15,6 +15,10 @@ import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shad
 import { renderDefaultSurfaceHeader } from "../universal/blocks/renderers/surface/header/default";
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
 import { renderHeaderDeLexemeVerb } from "./block-renderer-overrides/reading/header/lexeme-verb";
+import {
+	renderDeAdpositionSourceContexts,
+	renderDeAdpositionValency,
+} from "./block-renderers/reading/valency/adposition";
 import { renderDeReadingValency } from "./block-renderers/reading/valency/default";
 
 const READING_BASE = {
@@ -37,7 +41,11 @@ const READING_VALENT = {
 const READING = {
 	Lexeme: {
 		ADJ: READING_VALENT,
-		ADP: READING_RELATIONAL,
+		ADP: {
+			...READING_RELATIONAL,
+			SourceContexts: renderDeAdpositionSourceContexts,
+			Valency: renderDeAdpositionValency,
+		},
 		ADV: READING_RELATIONAL,
 		AUX: READING_RELATIONAL,
 		CCONJ: READING_RELATIONAL,

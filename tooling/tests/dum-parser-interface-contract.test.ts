@@ -13,6 +13,8 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"ParsingError",
 		"UnitKind",
 		"checkIfGrundform",
+		"germanAdpositionAllows",
+		"germanAdpositionCases",
 		"germanArticleForm",
 		"parseUnit",
 	]);

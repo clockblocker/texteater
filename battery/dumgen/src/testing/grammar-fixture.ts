@@ -107,6 +107,14 @@ export function grammarFixture(
 					return governed ? `member_${governed.member}` : "Absent";
 				if (id === "governedCase")
 					return governed?.complement.case ?? "Unresolved";
+				if (id === "realizedCase")
+					return (
+						output.valencyEvidence?.find(
+							(slot) =>
+								slot.member === null &&
+								slot.complement.kind === "Case",
+						)?.realizedCase ?? "None"
+					);
 				if (id === "governedReferent")
 					return governed?.complement.referent === "Either"
 						? "Unresolved"

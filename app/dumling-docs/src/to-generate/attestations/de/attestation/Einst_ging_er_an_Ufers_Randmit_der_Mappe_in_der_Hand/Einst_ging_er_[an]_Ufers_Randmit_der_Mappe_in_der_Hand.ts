@@ -9,6 +9,13 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	valencyEvidence: [
+		{
+			member: null,
+			complement: { kind: "Case", case: "Dat", referent: "Either" },
+			realizedCase: "Dat",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -26,7 +33,6 @@ const occurrenceAttestation = {
 				abbr: null,
 				extPos: null,
 				foreign: null,
-				governedCase: null,
 				partType: null,
 			},
 		},
@@ -39,6 +45,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Einst ging er [an] Ufers Rand\nmit der Mappe in der Hand.",
 	classifierNotes:
-		"`an` is the ordinary two-way preposition. I left `governedCase` unset because this schema only accepts one value there, while the lexeme alternates between accusative and dative and the local context is not decisive enough to hard-code one on the Lemma itself.",
+		"`an` is the ordinary two-way preposition. The form of `Ufers Rand` does not show its case, so the occurrence records the dative of the location reading (wo?): he walks along the bank, which the next lines confirm.",
 	isVerified: true,
 } as const;
