@@ -127,5 +127,29 @@ something:
   too: it is consistent, but a learner who clicks a verb's preposition would
   land on a preposition Note that only lists governors. Decided in
   [#603](https://github.com/clockblocker/texteater/issues/603).
+- A governed preposition belongs to the smallest word its government
+  survives with: `stolz auf` to ADJ `stolz`, `Angst vor` to NOUN `Angst`.
+  Duden and grammis list these complements under the adjective and the noun,
+  UD HDT attaches the PP to `stolz` in 6 of 9 cases and to `Angst` in 31 of
+  33 (all 5 `Angst haben … vor` included), and the government survives
+  without the verb (`aus Angst vor Hunden`, `der auf seinen Sohn stolze
+  Vater`). When the whole Collocation is present, the largest-unit rule
+  resolves the click to it: `Sie hat Angst vor Hunden` and `Hast du Angst?`
+  open `Angst haben`, while `aus Angst vor Hunden` opens `Angst`. The
+  Collocation Note reaches the governor's frame and the verb through its
+  `lexicalBreakdown`. The Collocation stores its own frame, not a projection
+  of its members' frames, because slots like the Dat of `jemandem auf den
+  Keks gehen` come from no member.
+- A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich zeigen`)
+  never forms a Collocation with a predicative adjective, so an adjective
+  and its governed preposition resolve to the ADJ even beside a copula. A
+  Collocation needs a verb the noun or adjective lexically selects: `Angst
+  haben`, `Lust haben auf`, `Rücksicht nehmen auf`. `Angst haben` qualifies
+  by restricted lexical choice (`Angst haben/bekommen`, not `*Angst
+  besitzen`), though it fails grammis's Funktionsverbgefüge tests.
+  `stolz auf jN sein` was
+  rejected as a Collocation: it fails the restricted-choice test, it would
+  make one Collocation per copula and adjective, and UD attaches `sein` as
+  the adjective's `cop`.
 - Whether an ADP's own frame replaces `governedCase` is open on
   [#595](https://github.com/clockblocker/texteater/issues/595).
