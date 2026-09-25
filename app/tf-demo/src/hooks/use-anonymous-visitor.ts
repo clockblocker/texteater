@@ -1,13 +1,15 @@
-import { useState } from "react";
-
 const VISITOR_STORAGE_KEY = "tf-demo:anonymous-visitor:v1";
 const VISITOR_ID_MAX_LENGTH = 200;
 
 type StoredVisitor = { readonly id: string };
 
+// One Visitor per page: every hook instance reads this, so a Storage failure
+// cannot give two components different IDs.
+let pageVisitorId: string | undefined;
+
 export function useAnonymousVisitorId(): string {
-	const [visitorId] = useState(loadOrCreateVisitorId);
-	return visitorId;
+	pageVisitorId ??= loadOrCreateVisitorId();
+	return pageVisitorId;
 }
 
 function loadOrCreateVisitorId(): string {
@@ -25,7 +27,7 @@ function loadOrCreateVisitorId(): string {
 	try {
 		localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify(visitor));
 	} catch {
-		// The in-memory state still keeps this visitor stable for the page lifetime.
+		// The module-level ID still keeps this visitor stable for the page lifetime.
 	}
 	return visitor.id;
 }
