@@ -18,7 +18,6 @@ Start with:
 - [/de/entity/lemma/](/de/entity/lemma/) for the four Lemma branches
 - [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/), and [/de/entity/lemma/phraseme/](/de/entity/lemma/phraseme/) for concrete inventories
 - [/de/feature/](/de/feature/) and [/de/feature/attestation/](/de/feature/attestation/) for feature pages
-- [/de/classification-instructions/](/de/classification-instructions/) for German-specific classifier instructions
 
 ## Supported Lemma Families
 

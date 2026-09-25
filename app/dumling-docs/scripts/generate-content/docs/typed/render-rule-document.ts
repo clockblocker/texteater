@@ -108,12 +108,6 @@ export function renderRuleDocumentBody(
 	return sections.join("\n\n").trim();
 }
 
-function childListHeading(childPages: readonly RenderedChildPage[]): string {
-	return childPages.every((page) => page.title.startsWith("How To "))
-		? "How-to Pages"
-		: "Subpages";
-}
-
 export function renderChildPages(
 	childPages: readonly RenderedChildPage[],
 ): string {
@@ -122,7 +116,7 @@ export function renderChildPages(
 	}
 
 	return [
-		`## ${childListHeading(childPages)}`,
+		"## Subpages",
 		...childPages.map((page) =>
 			page.description === undefined ||
 			page.description.trim().length === 0

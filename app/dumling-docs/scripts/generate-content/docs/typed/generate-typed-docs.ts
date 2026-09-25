@@ -111,26 +111,6 @@ function universalRouteIdForLanguageRoute(
 	return routeId === lang ? "u" : `u/${routeId.slice(lang.length + 1)}`;
 }
 
-function isClassificationInstructionsRoute(
-	relativeConceptPath: string,
-): boolean {
-	return (
-		relativeConceptPath === "classification-instructions" ||
-		relativeConceptPath.startsWith("classification-instructions/")
-	);
-}
-
-function isLanguageOnlyClassificationLeaf(
-	relativeConceptPath: string,
-): boolean {
-	if (!relativeConceptPath.startsWith("classification-instructions/")) {
-		return false;
-	}
-
-	const segments = relativeConceptPath.split("/");
-	return segments.length === 2 && (segments[1] ?? "").startsWith("how-to-");
-}
-
 function validateLanguageOverlaySource(
 	source: LanguageOverlaySource,
 	universalsByRouteId: Map<string, UniversalConceptSource>,
@@ -139,24 +119,6 @@ function validateLanguageOverlaySource(
 		if (!universalsByRouteId.has("u")) {
 			throw new Error(
 				`${source.sourcePath} mirrors the language root but no universal /u/ page exists.`,
-			);
-		}
-		return;
-	}
-
-	if (isClassificationInstructionsRoute(source.relativeConceptPath)) {
-		if (
-			source.relativeConceptPath !== "classification-instructions" &&
-			!isLanguageOnlyClassificationLeaf(source.relativeConceptPath)
-		) {
-			throw new Error(
-				`${source.sourcePath} is outside the allowed classification-instructions shape. Use lang/{lang}/classification-instructions/index.doc.ts or how-to-*.doc.ts.`,
-			);
-		}
-
-		if (!universalsByRouteId.has("u/classification-instructions")) {
-			throw new Error(
-				`${source.sourcePath} requires a universal u/classification-instructions/index.doc.ts page.`,
 			);
 		}
 		return;
@@ -271,10 +233,7 @@ function buildMirroredLanguageDrafts(
 
 		for (const source of sources) {
 			explicitByRouteId.set(source.routeId, source);
-
-			if (!isLanguageOnlyClassificationLeaf(source.relativeConceptPath)) {
-				mirroredRouteIds.add(source.routeId);
-			}
+			mirroredRouteIds.add(source.routeId);
 			for (const ancestorRouteId of ancestorRouteIds(source.routeId)) {
 				mirroredRouteIds.add(ancestorRouteId);
 			}
@@ -282,14 +241,6 @@ function buildMirroredLanguageDrafts(
 
 		for (const routeId of [...mirroredRouteIds].toSorted()) {
 			const explicitOverlay = explicitByRouteId.get(routeId);
-			if (
-				explicitOverlay !== undefined &&
-				isLanguageOnlyClassificationLeaf(
-					explicitOverlay.relativeConceptPath,
-				)
-			) {
-				continue;
-			}
 
 			const universalRouteId = universalRouteIdForLanguageRoute(
 				routeId,
@@ -330,13 +281,6 @@ function buildMirroredLanguageDrafts(
 					explicitOverlay?.sourcePath ?? universalSource.sourcePath,
 				title: mergedMeta.title,
 			});
-		}
-
-		for (const source of sources) {
-			if (!isLanguageOnlyClassificationLeaf(source.relativeConceptPath)) {
-				continue;
-			}
-			drafts.push(emitSingleDocumentDraft(source, source.routeId));
 		}
 	}
 
