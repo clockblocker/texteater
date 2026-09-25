@@ -19,3 +19,10 @@ const record = findSpecRecord(records, "de/ich-bin-im-wald");
 
 `loadSpecRecords` reads the files with `node:fs`, so call it in build-time
 code. It throws a `SpecRecordError` that lists every failing check.
+
+`rules` holds the classification Rules, each with an id such as
+`de/noun-owns-its-article`, a statement, the ADRs it rests on, its routes and
+the records that show it. A citation stores the Rule's id with
+`ruleStatementHash(statement)`. `checkPromptCitations` fails a prompt
+paragraph whose cited Rule was reworded since the paragraph was checked
+against it.

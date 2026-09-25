@@ -33,8 +33,10 @@ their wording.
 _Avoid_: criterion, judgment, prompt paragraph
 
 **Rule Citation**:
-A Rule as a record cites it: the Rule's id and the hash of its statement when
-the record was reviewed. Rewording the Rule makes the citation stale.
+A Rule as a record or a Dumgen prompt paragraph cites it: the Rule's id and
+the hash of its statement when the record was reviewed or the paragraph last
+checked against it. Rewording the Rule makes the citation stale until someone
+re-checks the citing text and cites the new hash.
 
 **Review Status**:
 Draft or Reviewed. A Reviewed record has been checked by a person against the

@@ -12,6 +12,7 @@ export type SpecRecordId = string;
  */
 export type AdrId = string;
 
+/** `<language>/<kebab-case name>`: `de/noun-owns-its-article`. */
 export type RuleId = string;
 
 export type SegmentKind =
@@ -59,7 +60,10 @@ export type Coverage = "Full" | "Partial";
 
 export type ReviewStatus = "Draft" | "Reviewed";
 
-/** A Rule as it read when the citing record was reviewed. */
+/**
+ * A Rule as it read when the citing record was reviewed, or when the citing
+ * prompt paragraph was last checked against it.
+ */
 export interface RuleCitation {
 	rule: RuleId;
 	/** `ruleStatementHash` of the Rule's statement at review time. */
@@ -102,10 +106,35 @@ export type RuleRoute = Pick<Dumling.UnitRoute, "language" | "family" | "kind">;
 /** A classification Rule (ADR 0037). */
 export interface Rule {
 	id: RuleId;
-	/** Written for people. Changing it reopens every Reviewed record citing it. */
+	/**
+	 * Written for people. Changing it reopens every Reviewed record and prompt
+	 * paragraph citing it.
+	 */
 	statement: string;
 	adrs: readonly AdrId[];
+	/** Empty when the Rule applies to every route of its language. */
 	routes: readonly RuleRoute[];
-	/** Records that show the Rule, minimal pairs included. */
+	/**
+	 * Records that show the Rule, minimal pairs included. Empty while the Rule
+	 * still needs one.
+	 */
 	records: readonly SpecRecordId[];
+}
+
+/** One paragraph of a prompt and the Rules it implements. */
+export interface ParagraphCitation {
+	/** The paragraph's first words, which find it in the prompt text. */
+	opens: string;
+	implements: readonly RuleCitation[];
+}
+
+/**
+ * A prompt text that implements Rules, such as Dumgen's classification
+ * criteria. Its paragraphs are its lines, each citing the Rules it implements
+ * with the statement hash it was last checked against.
+ */
+export interface CitingPrompt {
+	name: string;
+	text: string;
+	paragraphs: readonly ParagraphCitation[];
 }

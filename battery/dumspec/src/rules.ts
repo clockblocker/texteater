@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
+import { germanRules } from "./german-rules.js";
 import type { Rule } from "./types.js";
 
-/** The classification Rules. They arrive with the Rules work (ADR 0037). */
-export const rules: readonly Rule[] = [];
+/** The classification Rules (ADR 0037). */
+export const rules: readonly Rule[] = [...germanRules];
 
 /**
  * The hash a Rule citation stores: the first 16 hex digits of the SHA-256 of
