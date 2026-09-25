@@ -123,7 +123,7 @@ const auxiliaryForms = new Set(
  * werden is, and the rest are Auxiliaries. A role the Attestation does not
  * decide is undefined and goes unscored.
  */
-export function memberRoles(
+function memberRoles(
 	attestation: Dumling.Attestation,
 ): (MemberRole | undefined)[] {
 	const roles: (MemberRole | undefined)[] = attestation.members.map(
