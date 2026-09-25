@@ -118,7 +118,7 @@ export function fullRecordTargets(
 	);
 	if (uncovered.length > 0)
 		return {
-			reason: `its Lexeme layer covers ${uncovered.join(", ")} not exactly once`,
+			reason: `puts ${uncovered.join(", ")} in no Lexeme target, or in several`,
 		};
 	return { targets: expected };
 }
