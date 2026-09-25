@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Sie kam [lachend] herein.",
 	classifierNotes:
-		"Lachend is an adverbially used Partizip I, so it is the ADJ lachend with Participle Source lachen (ADR 0035).",
+		"Lachend is an adverbially used Partizip I, so it is the ADJ lachend with Participle Source lachen (ADR 0036).",
 	isVerified: true,
 } as const;

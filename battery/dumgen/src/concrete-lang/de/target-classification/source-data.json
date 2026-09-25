@@ -7329,7 +7329,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "Die Banken sind geöffnet is a state passive: copular sind is its own VERB target and geöffnet a separate ADJ (ADR 0035)."
+			"explanation": "Die Banken sind geöffnet is a state passive: copular sind is its own VERB target and geöffnet a separate ADJ (ADR 0036)."
 		},
 		"target-de-demo-state-passive-banken-click-geoeffnet": {
 			"input": {
@@ -7374,7 +7374,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "Die Banken sind geöffnet is a state passive: geöffnet is an ADJ with Participle Source öffnen, and copular sind stays a separate VERB (ADR 0035)."
+			"explanation": "Die Banken sind geöffnet is a state passive: geöffnet is an ADJ with Participle Source öffnen, and copular sind stays a separate VERB (ADR 0036)."
 		},
 		"target-de-demo-state-passive-bauplan-click-freigegeben": {
 			"input": {
@@ -7463,7 +7463,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [17]
 			},
-			"explanation": "A state passive, even with a named agent, is the copula plus an ADJ: freigegeben is an ADJ with Participle Source freigeben, and ist stays a separate VERB (ADR 0035)."
+			"explanation": "A state passive, even with a named agent, is the copula plus an ADJ: freigegeben is an ADJ with Participle Source freigeben, and ist stays a separate VERB (ADR 0036)."
 		},
 		"target-de-demo-state-passive-absperrung-click-versetzt": {
 			"input": {
@@ -7588,7 +7588,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [26]
 			},
-			"explanation": "A state passive, even with an agent and a distance, is the copula plus an ADJ: versetzt is an ADJ with Participle Source versetzen, and ist stays a separate VERB (ADR 0035)."
+			"explanation": "A state passive, even with an agent and a distance, is the copula plus an ADJ: versetzt is an ADJ with Participle Source versetzen, and ist stays a separate VERB (ADR 0036)."
 		},
 		"target-de-demo-participial-adjective-brief-click-ist": {
 			"input": {
@@ -7861,7 +7861,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "An attributive participle is adjectival (ADR 0035): lachende is a singleton ADJ with Canonical Form lachend and Participle Source lachen; the article and noun stay outside."
+			"explanation": "An attributive participle is adjectival (ADR 0036): lachende is a singleton ADJ with Canonical Form lachend and Participle Source lachen; the article and noun stay outside."
 		},
 		"target-de-boundary-participle-one-adverbial-lachend": {
 			"input": {
@@ -7906,7 +7906,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "An adverbial participle is adjectival (ADR 0035): lachend is a singleton ADJ with Participle Source lachen."
+			"explanation": "An adverbial participle is adjectival (ADR 0036): lachend is a singleton ADJ with Participle Source lachen."
 		},
 		"target-de-boundary-modal-click-muss": {
 			"input": {
@@ -18348,7 +18348,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [16]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and bezahlt a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and bezahlt a separate ADJ."
 		},
 		"target-de-participle-benchmark-04-bezahlt-click-bezahlt": {
 			"input": {
@@ -18529,7 +18529,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [27]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): bezahlt is a singleton ADJ with Participle Source bezahlen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): bezahlt is a singleton ADJ with Participle Source bezahlen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-ist": {
 			"input": {
@@ -18678,7 +18678,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [20]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and gestrichen a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and gestrichen a separate ADJ."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-gestrichen": {
 			"input": {
@@ -18827,7 +18827,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [32]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): gestrichen is a singleton ADJ with Participle Source streichen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): gestrichen is a singleton ADJ with Participle Source streichen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-sind": {
 			"input": {
@@ -18968,7 +18968,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [15]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): sind is its own VERB target and eingeladen a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): sind is its own VERB target and eingeladen a separate ADJ."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-eingeladen": {
 			"input": {
@@ -19109,7 +19109,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [30]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): eingeladen is a singleton ADJ with Participle Source einladen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): eingeladen is a singleton ADJ with Participle Source einladen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-ist": {
 			"input": {
@@ -19266,7 +19266,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [24]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and genehmigt a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and genehmigt a separate ADJ."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-genehmigt": {
 			"input": {
@@ -19423,7 +19423,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [34]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): genehmigt is a singleton ADJ with Participle Source genehmigen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): genehmigt is a singleton ADJ with Participle Source genehmigen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-ist": {
 			"input": {
@@ -19636,7 +19636,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [18]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and gefüllt a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and gefüllt a separate ADJ."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-gefuellt": {
 			"input": {
@@ -19849,7 +19849,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [33]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): gefüllt is a singleton ADJ with Participle Source füllen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): gefüllt is a singleton ADJ with Participle Source füllen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-ist": {
 			"input": {
@@ -20030,7 +20030,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and verrückt a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and verrückt a separate ADJ."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-verrueckt": {
 			"input": {
@@ -20211,7 +20211,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [40]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): verrückt is a singleton ADJ with Participle Source verrücken, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): verrückt is a singleton ADJ with Participle Source verrücken, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-ist": {
 			"input": {
@@ -20408,7 +20408,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [17]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and geschlossen a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and geschlossen a separate ADJ."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-geschlossen": {
 			"input": {
@@ -20605,7 +20605,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [33]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-11-verrueckt-click-ist": {
 			"input": {
@@ -22928,7 +22928,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [24]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): ist is its own VERB target and geschlossen a separate ADJ."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): ist is its own VERB target and geschlossen a separate ADJ."
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-geschlossen": {
 			"input": {
@@ -23125,7 +23125,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [36]
 			},
-			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-ist": {
 			"input": {

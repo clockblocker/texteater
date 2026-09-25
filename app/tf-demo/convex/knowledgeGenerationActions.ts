@@ -274,7 +274,7 @@ export const runKnowledgeGeneration = internalAction({
 					return null;
 				}
 				generationCompleted = true;
-				// A Participle Source always has a target (ADR 0035): a source
+				// A Participle Source always has a target (ADR 0036): a source
 				// verb the dictionary lacks gets a Reading before the link. A
 				// source whose Reading cannot be generated is dropped and fails
 				// its aspect, so the run is Partial and retries it.

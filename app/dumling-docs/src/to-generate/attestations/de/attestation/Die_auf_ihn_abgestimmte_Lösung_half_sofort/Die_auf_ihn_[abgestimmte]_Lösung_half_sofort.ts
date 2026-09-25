@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die auf ihn [abgestimmte] Lösung half sofort.",
 	classifierNotes:
-		"Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0035). The dependent auf ihn stays outside.",
+		"Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). The dependent auf ihn stays outside.",
 	isVerified: true,
 } as const;

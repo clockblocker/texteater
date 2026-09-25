@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der [geschriebene] Brief lag auf dem Tisch.",
 	classifierNotes:
-		"Geschriebene is an attributive participle modifying Brief with nominative masculine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0035).",
+		"Geschriebene is an attributive participle modifying Brief with nominative masculine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0036).",
 	isVerified: true,
 } as const;

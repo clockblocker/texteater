@@ -17,7 +17,7 @@ tense, mood, person or agreement inherited from the modal.
 Meaning-bearing modals remain separate targets and own their scoped
 grammatical auxiliaries: `hat ... schreiben müssen` has `[hat, müssen]` and
 `[schreiben]`. Selecting a reviewed modal identity does not force a singleton.
-The contextual VERB/AUX/ADJ boundary in [ADR 0035](./0035-make-adjectival-german-participles-adj-linked-to-their-verb.md) determines the route: a participle is verbal only in a perfect or passive, and the state passive is the copula `sein` plus an ADJ.
+The contextual VERB/AUX/ADJ boundary in [ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md) determines the route: a participle is verbal only in a perfect or passive, and the state passive is the copula `sein` plus an ADJ.
 
 `perfect` and `future` use `Yes` for a present construction and null for its
 absence. `passive` names the process or recipient construction when voice

@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Kartoffeln sind bereits [gekocht].",
 	classifierNotes:
-		"sein plus gekocht is a state passive: sind is the copula VERB and gekocht the ADJ gekocht with Participle Source kochen (ADR 0035).",
+		"sein plus gekocht is a state passive: sind is the copula VERB and gekocht the ADJ gekocht with Participle Source kochen (ADR 0036).",
 	isVerified: true,
 } as const;

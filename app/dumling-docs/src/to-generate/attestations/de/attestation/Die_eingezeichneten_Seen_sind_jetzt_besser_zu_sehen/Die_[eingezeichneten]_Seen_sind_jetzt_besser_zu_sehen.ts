@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die [eingezeichneten] Seen sind jetzt besser zu sehen.",
 	classifierNotes:
-		"Eingezeichneten is an attributive participle modifying Seen, so it is the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0035), like predicative eingezeichnet after sein.",
+		"Eingezeichneten is an attributive participle modifying Seen, so it is the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036), like predicative eingezeichnet after sein.",
 	isVerified: true,
 } as const;

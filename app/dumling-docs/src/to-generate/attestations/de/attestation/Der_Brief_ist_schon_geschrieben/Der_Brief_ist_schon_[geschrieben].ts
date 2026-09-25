@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der Brief ist schon [geschrieben].",
 	classifierNotes:
-		"sein plus geschrieben is a state passive: ist is the copula VERB and geschrieben the ADJ geschrieben with Participle Source schreiben (ADR 0035).",
+		"sein plus geschrieben is a state passive: ist is the copula VERB and geschrieben the ADJ geschrieben with Participle Source schreiben (ADR 0036).",
 	isVerified: true,
 } as const;

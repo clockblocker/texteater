@@ -1,5 +1,5 @@
 ---
-status: superseded by ADR-0035
+status: superseded by ADR-0036
 ---
 
 # Resolve productive German participles to their verb

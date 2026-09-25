@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der [reisende] Händler wartete draußen.",
 	classifierNotes:
-		"Reisende is an attributive participle modifying Händler with nominative masculine singular agreement, so it is the ADJ reisend with Participle Source reisen (ADR 0035). Without an overt noun, Der Reisende is a substantivized NOUN.",
+		"Reisende is an attributive participle modifying Händler with nominative masculine singular agreement, so it is the ADJ reisend with Participle Source reisen (ADR 0036). Without an overt noun, Der Reisende is a substantivized NOUN.",
 	isVerified: true,
 } as const;

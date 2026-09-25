@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die [gekochten] Kartoffeln standen schon bereit.",
 	classifierNotes:
-		"Gekochten is an attributive participle modifying Kartoffeln, so it is the ADJ gekocht with Participle Source kochen (ADR 0035).",
+		"Gekochten is an attributive participle modifying Kartoffeln, so it is the ADJ gekocht with Participle Source kochen (ADR 0036).",
 	isVerified: true,
 } as const;

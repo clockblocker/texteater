@@ -336,7 +336,7 @@ export async function syncStructuralShadowReferences(
 	);
 }
 
-/** The Lemma key of a stored Participle Source (ADR 0035), if any. */
+/** The Lemma key of a stored Participle Source (ADR 0036), if any. */
 function participleSourceKey(knowledge: unknown): string | undefined {
 	const source =
 		knowledge && typeof knowledge === "object"

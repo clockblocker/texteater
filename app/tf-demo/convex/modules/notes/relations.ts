@@ -507,7 +507,7 @@ export async function loadRelationProjections(
 }
 
 /**
- * One Participle Source edge on a Reading Note (ADR 0035): the ADJ Reading
+ * One Participle Source edge on a Reading Note (ADR 0036): the ADJ Reading
  * names its source VERB Lemma, and the verb's Readings list the participial
  * adjectives that name it. The verb's side is projected, never stored.
  */

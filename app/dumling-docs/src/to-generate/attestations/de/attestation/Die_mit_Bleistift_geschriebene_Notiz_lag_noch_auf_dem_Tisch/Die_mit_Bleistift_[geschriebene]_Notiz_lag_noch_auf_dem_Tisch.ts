@@ -44,6 +44,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.",
 	classifierNotes:
-		"Geschriebene is an attributive participle modifying Notiz with nominative feminine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0035). The mit Bleistift phrase stays outside.",
+		"Geschriebene is an attributive participle modifying Notiz with nominative feminine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0036). The mit Bleistift phrase stays outside.",
 	isVerified: true,
 } as const;

@@ -4,7 +4,7 @@ import { relationPreference } from "../../../../../../../shared/knowledge-prefer
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { RelationMark } from "../../common/relation-mark";
 
-/** How a Reading Note names each side of a Participle Source (ADR 0035). */
+/** How a Reading Note names each side of a Participle Source (ADR 0036). */
 const PARTICIPLE_LABELS = {
 	participleSource: "participle of",
 	participialAdjective: "participial adjectives",

@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der [lachende] Junge winkte uns zu.",
 	classifierNotes:
-		"Lachende is an attributive Partizip I modifying Junge with nominative masculine singular agreement, so it is the ADJ lachend with Participle Source lachen (ADR 0035).",
+		"Lachende is an attributive Partizip I modifying Junge with nominative masculine singular agreement, so it is the ADJ lachend with Participle Source lachen (ADR 0036).",
 	isVerified: true,
 } as const;

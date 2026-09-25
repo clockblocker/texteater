@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Tür ist [geschlossen].",
 	classifierNotes:
-		"sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0035).",
+		"sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036).",
 	isVerified: true,
 } as const;

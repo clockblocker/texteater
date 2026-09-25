@@ -46,7 +46,7 @@ contracts in ADRs 0003 and 0004 are unchanged. The rulings are recorded on
 [the auxiliary schema decision](https://github.com/clockblocker/texteater/issues/504)
 and [the AUX Readings decision](https://github.com/clockblocker/texteater/issues/507).
 
-Amended on 2026-09-25 by [ADR 0035](./0035-make-adjectival-german-participles-adj-linked-to-their-verb.md):
+Amended on 2026-09-25 by [ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md):
 `sein` with a participle outside the perfect is the copula VERB and the
 participle an ADJ, so the Zustandspassiv AUX Reading is retired and `passive`
 has no `State` value.

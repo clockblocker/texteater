@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Auf der Karte sind drei Seen [eingezeichnet].",
 	classifierNotes:
-		"sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0035).",
+		"sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036).",
 	isVerified: true,
 } as const;

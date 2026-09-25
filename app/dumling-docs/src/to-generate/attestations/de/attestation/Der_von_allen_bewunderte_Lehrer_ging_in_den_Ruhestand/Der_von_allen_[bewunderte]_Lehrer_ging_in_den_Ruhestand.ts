@@ -44,6 +44,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Der von allen [bewunderte] Lehrer ging in den Ruhestand.",
 	classifierNotes:
-		"Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0035). The von-agent stays outside.",
+		"Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0036). The von-agent stays outside.",
 	isVerified: true,
 } as const;

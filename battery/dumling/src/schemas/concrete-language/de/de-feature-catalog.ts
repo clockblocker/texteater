@@ -152,7 +152,7 @@ const forms = [
 	{ ...finite, mood: DE_FEATURE_SCHEMA.imperativeMood, tense: z.null() },
 	{ ...nonfinite, verbForm: DE_FEATURE_SCHEMA.infinitiveForm },
 	// Only a perfect or passive participle is verbal; an adjectival one is an
-	// ADJ (ADR 0035), so a verbal participle never agrees with a noun.
+	// ADJ (ADR 0036), so a verbal participle never agrees with a noun.
 	{
 		...nonfinite,
 		verbForm: DE_FEATURE_SCHEMA.participleForm,

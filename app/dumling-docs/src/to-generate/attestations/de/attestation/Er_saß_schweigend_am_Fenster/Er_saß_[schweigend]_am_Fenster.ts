@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er saß [schweigend] am Fenster.",
 	classifierNotes:
-		"Schweigend is an adverbially used Partizip I, so it is the ADJ schweigend with Participle Source schweigen (ADR 0035).",
+		"Schweigend is an adverbially used Partizip I, so it is the ADJ schweigend with Participle Source schweigen (ADR 0036).",
 	isVerified: true,
 } as const;

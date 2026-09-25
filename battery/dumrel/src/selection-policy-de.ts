@@ -10,7 +10,7 @@ const select = (
 
 /** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
 const framed = { valency: null } as const;
-/** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0035). */
+/** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
 const participial = { ...framed, participleSource: null } as const;
 
 function request(

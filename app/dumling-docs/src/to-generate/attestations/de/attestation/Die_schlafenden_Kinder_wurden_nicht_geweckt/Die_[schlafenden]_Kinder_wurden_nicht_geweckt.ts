@@ -43,6 +43,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die [schlafenden] Kinder wurden nicht geweckt.",
 	classifierNotes:
-		"Schlafenden is an attributive Partizip I modifying Kinder, so this nominative plural form is the ADJ schlafend with Participle Source schlafen (ADR 0035).",
+		"Schlafenden is an attributive Partizip I modifying Kinder, so this nominative plural form is the ADJ schlafend with Participle Source schlafen (ADR 0036).",
 	isVerified: true,
 } as const;
