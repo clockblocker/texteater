@@ -1,0 +1,74 @@
+{
+	"name": "dumspec",
+	"version": "0.1.0",
+	"description": "The Dumling spec's golden corpus: Spec Records of attested sentences and the classification Rules they follow.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"keywords": [
+		"linguistics",
+		"corpus",
+		"annotation",
+		"gold-standard",
+		"german",
+		"dumling"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./types": {
+			"types": "./dist/types.d.ts",
+			"import": "./dist/types.js",
+			"default": "./dist/types.js"
+		},
+		"./schema/*": "./schema/*",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"records",
+		"schema",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": "24.x"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts --bundle --external:dumling --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"fix": "bun run --silent biome check --write .",
+		"generate": "bun codegen/generate-record-schemas.ts",
+		"generate:check": "bun codegen/generate-record-schemas.ts --check",
+		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"lint": "bun run --silent biome check .",
+		"prepack": "bun run build",
+		"test": "bun test",
+		"validate": "bun ../../tooling/validate-package.ts"
+	},
+	"dependencies": {
+		"dumling": "workspace:^",
+		"zod": "^4.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"typescript": "^7.0.2"
+	}
+}

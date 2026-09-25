@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"paths": {
+			"common-utils": ["../common-utils/dist/index.d.ts"],
+			"dumling": ["../dumling/dist/index.d.ts"],
+			"dumling/types": ["../dumling/dist/types.d.ts"]
+		}
+	},
+	"include": ["src/index.ts", "src/types.ts"]
+}

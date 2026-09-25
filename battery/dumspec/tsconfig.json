@@ -1,0 +1,12 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"paths": {
+			"common-utils": ["../common-utils/src/index.ts"],
+			"dumling": ["../dumling/src/index.ts"],
+			"dumling/types": ["../dumling/src/types.ts"],
+			"dumling/schema/*": ["../dumling/src/generated/schemas/*"]
+		}
+	},
+	"include": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}

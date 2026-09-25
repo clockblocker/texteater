@@ -1,0 +1,150 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Pass auf dich auf!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Pass" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Full",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0004", "ADR-0034"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 6],
+			"grundform": false,
+			"notes": {
+				"rationale": "Pass, the governed auf and the detached prefix auf are one aufpassen occurrence. valencyEvidence names the first auf by index, which tells it apart from the prefix; the normalized Surface pass auf leaves the governed preposition out.",
+				"knownMistakes": [
+					"Treating the first auf as the separable prefix and the last as a preposition.",
+					"Making the governed auf a Fixed member, so the Surface reads pass auf auf."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Pass", "orthography": "Standard" },
+					{ "attested": "auf", "orthography": "Standard" },
+					{ "attested": "auf", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "pass auf",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"verbForm": "Fin",
+						"tense": null,
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "aufpassen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "auf",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"grundform": true,
+			"notes": {
+				"rationale": "dich is a free reflexive object, not a member of aufpassen, so it is its own PRON target.",
+				"knownMistakes": [
+					"Folding dich into aufpassen as a lexical reflexive."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "dich", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "dich",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": "Yes"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "dich",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "2",
+							"pronType": "Prs",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Acc",
+							"number": "Sing",
+							"gender": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

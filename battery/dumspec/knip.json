@@ -1,0 +1,6 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": ["src/types.ts", "tests/**/*.ts"],
+	"project": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
+	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
+}
