@@ -168,17 +168,26 @@ function markedSegments(markedContext: string) {
 		}));
 }
 
-function resolveAdposition(id: string, overrides?: Record<string, string>) {
+function resolveAdposition(
+	id: string,
+	overrides?: Record<string, string>,
+	asked: Record<string, unknown>[] = [],
+) {
 	const golden = getExperiment("grammatical-resolution/de/lexeme/adposition")
 		.source.goldenCorpus?.cases[id];
 	if (!golden) throw Error(`Missing ${id}`);
 	const segments = markedSegments(
 		(golden.input as { markedContext: string }).markedContext,
 	);
+	const fixture = grammarFixture(golden.idealOutput, overrides);
 	return Effect.runPromise(
-		createDumgen(
-			grammarFixture(golden.idealOutput, overrides),
-		).resolveGrammar({
+		createDumgen({
+			...fixture,
+			judge: (request, settings) => {
+				asked.push(request.questions);
+				return fixture.judge(request, settings);
+			},
+		}).resolveGrammar({
 			...validateEncounter({
 				sentence: { id, language: "de", segments },
 				target: {
@@ -233,6 +242,24 @@ test("a one-case adposition keeps its table case whatever the judgement says", a
 		realizedCase: "Acc",
 	});
 	expect(output).toHaveProperty("valencyEvidence.0.realizedCase", "Dat");
+});
+
+test("a table preposition is asked only its position among its Core", async () => {
+	const asked: Record<string, unknown>[] = [];
+	const output = await resolveAdposition(
+		"grammar-de-adp-demo-prep-mit-dat",
+		undefined,
+		asked,
+	);
+	expect(output.surface.lemma).toEqual(governablePrepositionLemma("mit"));
+	const [questions] = asked;
+	expect(Object.keys(questions ?? {})).toContain(
+		"lemma.coreFeatures.adpType",
+	);
+	for (const fixed of ["abbr", "extPos", "foreign", "partType"])
+		expect(Object.keys(questions ?? {})).not.toContain(
+			`lemma.coreFeatures.${fixed}`,
+		);
 });
 
 test("an adposition with no nominal complement records no case", async () => {

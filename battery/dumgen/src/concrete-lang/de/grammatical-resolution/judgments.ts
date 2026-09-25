@@ -362,6 +362,30 @@ export function resolveGrammarJudgments(
 							),
 				)
 			: [];
+		const adposition = encounter.target.kind === "ADP";
+		// A one-word adposition's spelling names its table entry: the
+		// governable-preposition table fixes every Core feature but adpType
+		// (nach and über also follow their complement).
+		const tablePrepositionForm =
+			adposition && spelledMembers.length === 1
+				? spelledMembers[0]?.normalize("NFC").toLocaleLowerCase("de")
+				: undefined;
+		const tablePreposition =
+			tablePrepositionForm !== undefined &&
+			isGovernablePreposition(tablePrepositionForm)
+				? governablePrepositionLemma(tablePrepositionForm)
+				: undefined;
+		const tableCore: Readonly<Record<string, unknown>> | undefined =
+			tablePreposition?.coreFeatures;
+		const fixedByTable = (path: string) => {
+			const key = path.slice("lemma.coreFeatures.".length);
+			return (
+				tableCore !== undefined &&
+				path.startsWith("lemma.coreFeatures.") &&
+				key !== "adpType" &&
+				Object.hasOwn(tableCore, key)
+			);
+		};
 		// Membership settles what member roles decide (#490). A Phraseme's fixed
 		// wording can hold an object es (es eilig haben), so only its es is judged.
 		const esPositions = input.members.flatMap((text, position) =>
@@ -471,6 +495,7 @@ export function resolveGrammarJudgments(
 				continue;
 			if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
 			if (path.endsWith(".lexicallyReflexive")) continue;
+			if (fixedByTable(path)) continue;
 			if (path.endsWith(".expletive") && expletive !== undefined)
 				continue;
 			questions[path] = featureQuestion(
@@ -664,7 +689,6 @@ export function resolveGrammarJudgments(
 		}
 		// A free adposition records the case its complement takes here; the
 		// ADP Case Table, not this answer, says which cases it allows.
-		const adposition = encounter.target.kind === "ADP";
 		if (adposition)
 			questions.realizedCase = choice(
 				"Which case does the complement of this adposition take in `markedContext`? Read it from the complement's form when the form shows it: auf dem Tisch and wegen dem Regen are dative, auf den Tisch is accusative, wegen des Regens is genitive. When the form does not show it, give the case this adposition assigns in this use; a two-way adposition takes accusative for a direction (wohin?) and dative for a location (wo?).",
@@ -763,6 +787,10 @@ export function resolveGrammarJudgments(
 					}
 					if (key === "lexicallyReflexive") {
 						core[key] = lexicallyReflexive;
+						continue;
+					}
+					if (tableCore && fixedByTable(path)) {
+						core[key] = tableCore[key];
 						continue;
 					}
 					const answer = selected(path);
