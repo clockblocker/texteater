@@ -15,6 +15,7 @@
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
+import { articleForms } from "../target-classification/assembly.js";
 import type {
 	IdentityMass,
 	LexemeTarget,
@@ -23,7 +24,8 @@ import type {
 	PhrasemeTarget,
 	SentenceAnalysis,
 } from "./analysis.js";
-import { articleForms, type RoleAnswer } from "./criteria.js";
+import { fixednessFloor } from "./analysis.js";
+import type { RoleAnswer } from "./criteria.js";
 import { assembleGovernment } from "./government.js";
 import { candidateOf, candidatesFor, headwordGroups } from "./identity.js";
 import type { Placement } from "./placement.js";
@@ -42,7 +44,7 @@ export type AssemblyPolicy = {
 export const productionPolicy: AssemblyPolicy = {
 	membershipTau: 0.6,
 	phrasemeTau: 0.5,
-	fixednessFloor: 1.5,
+	fixednessFloor,
 };
 
 type Distribution = Readonly<Record<string, number>>;

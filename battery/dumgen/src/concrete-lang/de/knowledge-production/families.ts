@@ -4,14 +4,6 @@
  * Reading's Family selects the route, the schema, and the relation-target
  * inventory.
  */
-export const germanKnowledgeFamilies = [
-	"Lexeme",
-	"Phraseme",
-	"Morpheme",
-] as const;
-
-export type GermanKnowledgeFamily = (typeof germanKnowledgeFamilies)[number];
-
 /**
  * Dumling Kind inventories per relation-bearing Family. Only Lexeme and
  * Phraseme Readings request Semantic Relations, so only those inventories
@@ -54,14 +46,4 @@ export function isRelationBearingKnowledgeFamily(
 	family: string,
 ): family is "Lexeme" | "Phraseme" {
 	return family === "Lexeme" || family === "Phraseme";
-}
-
-/** Whether an injected relation target Kind stays inside the source Family. */
-export function germanFamilySupportsRelationTargetKind(
-	family: string,
-	kind: string,
-): boolean {
-	return isRelationBearingKnowledgeFamily(family)
-		? germanRelationTargetKindsByFamily[family].includes(kind)
-		: false;
 }

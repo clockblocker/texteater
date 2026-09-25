@@ -108,19 +108,3 @@ export const phrasemeKindOptions = {
 	None: "This word is not a fixed lexical member of any established expression here",
 	Unresolved: "Whether it is a member cannot be defensibly decided",
 } as const;
-
-/** Definite and indefinite article forms a NOUN target may absorb. */
-export const articleForms: ReadonlySet<string> = new Set([
-	"der",
-	"die",
-	"das",
-	"den",
-	"dem",
-	"des",
-	"ein",
-	"eine",
-	"einen",
-	"einem",
-	"einer",
-	"eines",
-]);

@@ -167,13 +167,6 @@ export function createGermanOperations(
 							scope,
 							candidates,
 						);
-						if ("decision" in output)
-							throw new DumgenFailure(
-								"Unresolved",
-								"resolveGrammar",
-								"Target could not be resolved",
-								route,
-							);
 						const normalizedSurface = normalizeGrammarSurface(
 							input,
 							output,

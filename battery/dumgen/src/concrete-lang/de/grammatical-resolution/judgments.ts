@@ -18,7 +18,11 @@ import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
-import { featureQuestion, inflectionQuestion } from "./feature-questions.js";
+import {
+	featureQuestion,
+	inflectionQuestion,
+	verbalKinds,
+} from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
 import { infinitiveShaped } from "./infinitive-shape.js";
 import { possiblyInflectedNoun } from "./inflected-noun.js";
@@ -198,9 +202,7 @@ export function resolveGrammarJudgments(
 				route,
 			);
 		const catalog = grammarFeatureFields(route);
-		const verbal = ["VERB", "AUX", "Idiom", "Collocation"].includes(
-			encounter.target.kind,
-		);
+		const verbal = verbalKinds.has(encounter.target.kind);
 		const auxiliary = encounter.target.kind === "AUX";
 		const constructionFeature = (path: string) =>
 			/\.(perfect|future|passive)$/u.test(path);
@@ -832,7 +834,7 @@ export function resolveGrammarJudgments(
 								: words,
 						),
 					];
-					if (candidates[key]!.length > 254)
+					if (candidates[key]!.length > lexicalStringLimit)
 						return fail(
 							"Too many complete lexical-string candidates",
 						);

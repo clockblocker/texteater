@@ -484,7 +484,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 };
 
-const verbalKinds = new Set(["VERB", "AUX", "Idiom", "Collocation"]);
+export const verbalKinds: ReadonlySet<string> = new Set([
+	"VERB",
+	"AUX",
+	"Idiom",
+	"Collocation",
+]);
 
 export function featureQuestion(
 	kind: string,
