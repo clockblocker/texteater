@@ -16,8 +16,8 @@
  * or the rule is what failed.
  */
 
-import auxiliaryCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
-import verbCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
+import auxiliaryProjection from "../../src/generated/grammar-cases/lexeme/auxiliary.json";
+import verbProjection from "../../src/generated/grammar-cases/lexeme/verb.json";
 
 type GrammarCase = {
 	input: { markedContext: string; members: string[] };
@@ -375,7 +375,7 @@ function main() {
 
 	console.log("== verb gold: complex features from shape ==");
 	for (const [id, c] of Object.entries(
-		verbCases as Record<string, GrammarCase>,
+		verbProjection.cases as Record<string, GrammarCase>,
 	)) {
 		if (c.idealOutput.lemma.coreFeatures.verbType === "Mod") continue;
 		const derived = derive(c.input.members);
@@ -413,7 +413,7 @@ function main() {
 	let auxMatch = 0;
 	let auxTotal = 0;
 	for (const [id, c] of Object.entries(
-		auxiliaryCases as Record<string, GrammarCase>,
+		auxiliaryProjection.cases as Record<string, GrammarCase>,
 	)) {
 		const hint = Object.keys(readingHint)
 			.sort((a, b) => b.length - a.length)

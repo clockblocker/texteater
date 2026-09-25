@@ -1,0 +1,740 @@
+{
+	"demonstrationIds": [
+		"grammar-de-intj-demo-pfui-expressive",
+		"grammar-de-intj-demo-ja-response",
+		"grammar-de-intj-demo-hmm-lengthened",
+		"grammar-de-intj-demo-ha-ha-reduplication",
+		"grammar-de-intj-demo-typo-huraa",
+		"grammar-de-intj-demo-archaic-juchhei",
+		"grammar-de-intj-demo-contextual-ach-after-noun"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-intj-dev-wupp-onomatopoeia",
+		"grammar-de-intj-dev-hallo-greeting",
+		"grammar-de-intj-dev-hurra-joy",
+		"grammar-de-intj-dev-oh-reaction",
+		"grammar-de-intj-dev-huch-surprise",
+		"grammar-de-intj-dev-au-pain",
+		"grammar-de-intj-dev-aeh-hesitation",
+		"grammar-de-intj-dev-tja-resignation",
+		"grammar-de-intj-dev-miau-onomatopoeia",
+		"grammar-de-intj-dev-nein-response",
+		"grammar-de-intj-dev-doch-corrective-response",
+		"grammar-de-intj-dev-jawohl-response",
+		"grammar-de-intj-accept-v2-aha-realization",
+		"grammar-de-intj-accept-v2-hoppla-mishap",
+		"grammar-de-intj-accept-v2-maeh-onomatopoeia",
+		"grammar-de-intj-accept-v2-ja-response-initial",
+		"grammar-de-intj-accept-v2-heda-prompting",
+		"grammar-de-intj-dev-initial-ach",
+		"grammar-de-intj-dev-lengthened-boahhh",
+		"grammar-de-intj-dev-reduplicated-he-he",
+		"grammar-de-intj-dev-typo-pufi",
+		"grammar-de-intj-dev-archaic-potz",
+		"grammar-de-intj-dev-acronym-omg",
+		"grammar-de-intj-accept-v2-secondary-mann",
+		"grammar-de-intj-accept-v2-secondary-donnerwetter",
+		"grammar-de-intj-accept-v2-lengthened-aaach",
+		"grammar-de-intj-accept-v2-reduplicated-igitt-igitt",
+		"grammar-de-intj-accept-v2-typo-halol",
+		"grammar-de-intj-accept-v2-acronym-lol",
+		"grammar-de-intj-accept-v2-lengthened-ohhh",
+		"grammar-de-intj-dev-beside-part-ja",
+		"grammar-de-intj-dev-beside-discourse-formula-oh",
+		"grammar-de-intj-dev-beside-adv-na",
+		"grammar-de-intj-accept-v2-ordinary-lexical-mist",
+		"grammar-de-intj-accept-v2-beside-formula-aehm"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-intj-demo-pfui-expressive": {
+			"input": {
+				"markedContext": "Sieh einmal, hier steht er,\n<TARGET>pfui</TARGET>, der Struwwelpeter!",
+				"members": ["pfui"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "pfui",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["pfui"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Pfui independently expresses disgust; it is not a response interjection. Pfui is treated as a plain interjection. I did not force `partType: Res` because this use expresses disgust/exclamation, not the schema's narrower response-particle reading."
+		},
+		"grammar-de-intj-demo-ja-response": {
+			"input": {
+				"markedContext": "Sie fragte, ob er komme; er antwortete: „<TARGET>Ja</TARGET>.“",
+				"members": ["Ja"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ja",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ja"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The standalone answer carries response partType Res; quotation-initial capitalization remains Standard."
+		},
+		"grammar-de-intj-dev-wupp-onomatopoeia": {
+			"input": {
+				"markedContext": "Fort geht nun die Mutter und\n<TARGET>wupp</TARGET>! den Daumen in den Mund.",
+				"members": ["wupp"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wupp",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["wupp"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Wupp looks like an exclamatory sound-effect item, so I treated it as a plain interjection. I did not model it as a discourse formula because there is no larger fixed phrase to recover, and I did not force `partType: Res` because this is an expressive exclamation rather than a response particle."
+		},
+		"grammar-de-intj-dev-hallo-greeting": {
+			"input": {
+				"markedContext": "Am Gartentor rief sie <TARGET>hallo</TARGET> zu den Nachbarn.",
+				"members": ["hallo"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hallo",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["hallo"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-hurra-joy": {
+			"input": {
+				"markedContext": "Nach dem Sieg riefen alle <TARGET>hurra</TARGET>.",
+				"members": ["hurra"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hurra",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["hurra"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-oh-reaction": {
+			"input": {
+				"markedContext": "Als sie die Nachricht las, sagte sie nur <TARGET>oh</TARGET>.",
+				"members": ["oh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "oh",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["oh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-huch-surprise": {
+			"input": {
+				"markedContext": "Beim Anblick der Maus rief er <TARGET>huch</TARGET>!",
+				"members": ["huch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "huch",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["huch"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-au-pain": {
+			"input": {
+				"markedContext": "Er stieß sich am Tisch und rief <TARGET>au</TARGET>.",
+				"members": ["au"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "au",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["au"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-aeh-hesitation": {
+			"input": {
+				"markedContext": "Ich wollte, <TARGET>äh</TARGET>, nur kurz nachfragen.",
+				"members": ["äh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "äh",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["äh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-tja-resignation": {
+			"input": {
+				"markedContext": "Nach dem letzten Fehlschlag sagte sie <TARGET>tja</TARGET> und ging.",
+				"members": ["tja"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "tja",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["tja"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-miau-onomatopoeia": {
+			"input": {
+				"markedContext": "Die Katze sprang aufs Fensterbrett: <TARGET>miau</TARGET>!",
+				"members": ["miau"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "miau",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["miau"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-nein-response": {
+			"input": {
+				"markedContext": "Auf die Frage nach dem Termin antwortete er <TARGET>nein</TARGET>.",
+				"members": ["nein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "nein",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["nein"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-doch-corrective-response": {
+			"input": {
+				"markedContext": "Sie fragte: „Kommst du nicht?“ Er antwortete <TARGET>doch</TARGET>.",
+				"members": ["doch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "doch",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["doch"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-jawohl-response": {
+			"input": {
+				"markedContext": "Der Offizier fragte nach dem Auftrag; sie antwortete <TARGET>jawohl</TARGET>.",
+				"members": ["jawohl"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "jawohl",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["jawohl"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-aha-realization": {
+			"input": {
+				"markedContext": "Als sie den Zusammenhang verstand, sagte sie <TARGET>aha</TARGET>.",
+				"members": ["aha"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aha",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["aha"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-hoppla-mishap": {
+			"input": {
+				"markedContext": "Als das Glas beinahe fiel, rief er <TARGET>hoppla</TARGET>!",
+				"members": ["hoppla"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hoppla",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["hoppla"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-maeh-onomatopoeia": {
+			"input": {
+				"markedContext": "Das Lamm lief zum Gatter: <TARGET>mäh</TARGET>!",
+				"members": ["mäh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mäh",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["mäh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-ja-response-initial": {
+			"input": {
+				"markedContext": "Auf die Frage nach der Reservierung antwortete sie: „<TARGET>Ja</TARGET>.“",
+				"members": ["Ja"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ja",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ja"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-heda-prompting": {
+			"input": {
+				"markedContext": "Vom anderen Ufer rief der Fährmann <TARGET>heda</TARGET>!",
+				"members": ["heda"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "heda",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["heda"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-demo-hmm-lengthened": {
+			"input": {
+				"markedContext": "Sie überlegte einen Moment: <TARGET>hmm</TARGET>.",
+				"members": ["hmm"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hm",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["hmm"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Expressive sound lengthening is a licensed Variant and remains Standard occurrence evidence."
+		},
+		"grammar-de-intj-demo-ha-ha-reduplication": {
+			"input": {
+				"markedContext": "Der Zauberer lachte <TARGET>ha</TARGET> <TARGET>ha</TARGET> und verbeugte sich.",
+				"members": ["ha", "ha"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ha",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["ha", "ha"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The two authoritative members are one licensed reduplicated realization; preserve both members and use the base Lemma ha."
+		},
+		"grammar-de-intj-demo-typo-huraa": {
+			"input": {
+				"markedContext": "Im Stadion rief jemand <TARGET>huraa</TARGET>.",
+				"members": ["huraa"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hurra",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["hurra"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-demo-archaic-juchhei": {
+			"input": {
+				"markedContext": "In dem alten Festlied riefen sie <TARGET>juchhei</TARGET>.",
+				"members": ["juchhei"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "juchhei",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				},
+				"normalizedMembers": ["juchhei"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-initial-ach": {
+			"input": {
+				"markedContext": "<TARGET>Ach</TARGET>, das ist wirklich schade.",
+				"members": ["Ach"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ach",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ach"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-lengthened-boahhh": {
+			"input": {
+				"markedContext": "Beim Blick ins Tal rief er <TARGET>boahhh</TARGET>!",
+				"members": ["boahhh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "boah",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["boahhh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-reduplicated-he-he": {
+			"input": {
+				"markedContext": "Sie warnte ihn mit einem <TARGET>he</TARGET> <TARGET>he</TARGET> vor dem Schritt.",
+				"members": ["he", "he"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "he",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["he", "he"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-typo-pufi": {
+			"input": {
+				"markedContext": "Beim Anblick des Schmutzes sagte er <TARGET>pufi</TARGET>.",
+				"members": ["pufi"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "pfui",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["pfui"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-archaic-potz": {
+			"input": {
+				"markedContext": "In der alten Posse rief der Diener <TARGET>potz</TARGET>!",
+				"members": ["potz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "potz",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				},
+				"normalizedMembers": ["potz"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-dev-acronym-omg": {
+			"input": {
+				"markedContext": "Im Chat schrieb sie nur <TARGET>OMG</TARGET> und legte das Handy weg.",
+				"members": ["OMG"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "OMG",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["OMG"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The exact INTJ codec has no abbreviation or foreign feature; preserve the acronymic identity rather than expanding it."
+		},
+		"grammar-de-intj-accept-v2-secondary-mann": {
+			"input": {
+				"markedContext": "Als der Schlüssel wieder klemmte, rief er <TARGET>Mann</TARGET>!",
+				"members": ["Mann"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mann",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["Mann"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-secondary-donnerwetter": {
+			"input": {
+				"markedContext": "Beim Anblick des Schadens rief sie <TARGET>Donnerwetter</TARGET>!",
+				"members": ["Donnerwetter"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Donnerwetter",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["Donnerwetter"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-lengthened-aaach": {
+			"input": {
+				"markedContext": "Beim Blick auf die Rechnung stöhnte er <TARGET>aaach</TARGET>.",
+				"members": ["aaach"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ach",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["aaach"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-reduplicated-igitt-igitt": {
+			"input": {
+				"markedContext": "Vor dem schmutzigen Becken rief sie <TARGET>igitt</TARGET> <TARGET>igitt</TARGET>!",
+				"members": ["igitt", "igitt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "igitt",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["igitt", "igitt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-typo-halol": {
+			"input": {
+				"markedContext": "In der Nachricht begrüßte er sie mit <TARGET>halol</TARGET>.",
+				"members": ["halol"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hallo",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["hallo"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-acronym-lol": {
+			"input": {
+				"markedContext": "Auf die Pointe antwortete sie im Chat nur mit <TARGET>LOL</TARGET>.",
+				"members": ["LOL"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "LOL",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["LOL"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-accept-v2-lengthened-ohhh": {
+			"input": {
+				"markedContext": "Als die Überraschung enthüllt wurde, sagte er <TARGET>ohhh</TARGET>.",
+				"members": ["ohhh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "oh",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["ohhh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-intj-demo-contextual-ach-after-noun": {
+			"input": {
+				"markedContext": "Sein ständiges Ach störte sie; später seufzte er <TARGET>ach</TARGET>.",
+				"members": ["ach"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ach",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ach"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The marked occurrence is already classified INTJ; the unmarked nominal use does not change its route or Lemma."
+		},
+		"grammar-de-intj-dev-beside-part-ja": {
+			"input": {
+				"markedContext": "Das ist ja erstaunlich; auf ihre Frage antwortete er <TARGET>ja</TARGET>.",
+				"members": ["ja"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ja",
+					"coreFeatures": { "partType": "Res" }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ja"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The unmarked ja is a modal particle; the supplied answer occurrence is fixed upstream as INTJ and carries Res."
+		},
+		"grammar-de-intj-dev-beside-discourse-formula-oh": {
+			"input": {
+				"markedContext": "Nach dem Guten Morgen sah er die Rechnung und sagte <TARGET>oh</TARGET>.",
+				"members": ["oh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "oh",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["oh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The nearby greeting is an unmarked DiscourseFormula; the authoritative singleton reaction remains INTJ."
+		},
+		"grammar-de-intj-dev-beside-adv-na": {
+			"input": {
+				"markedContext": "Nun war alles vorbereitet; <TARGET>na</TARGET>, dann erzähl endlich.",
+				"members": ["na"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "na",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["na"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The unmarked nun is an adverb; the prompting target is independently classified INTJ."
+		},
+		"grammar-de-intj-accept-v2-ordinary-lexical-mist": {
+			"input": {
+				"markedContext": "Der Mist lag auf dem Feld; am Bahnhof rief jemand <TARGET>Mist</TARGET>!",
+				"members": ["Mist"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mist",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["Mist"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The unmarked noun and marked secondary interjection share spelling, but the supplied route is authoritative."
+		},
+		"grammar-de-intj-accept-v2-beside-formula-aehm": {
+			"input": {
+				"markedContext": "Sie sagte vielen Dank; er zögerte nur <TARGET>ähm</TARGET>.",
+				"members": ["ähm"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ähm",
+					"coreFeatures": { "partType": null }
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ähm"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		}
+	}
+}

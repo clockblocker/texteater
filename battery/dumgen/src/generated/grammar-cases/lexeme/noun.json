@@ -1,0 +1,1605 @@
+{
+	"demonstrationIds": [
+		"grammar-de-noun-demo-shared-abstieg",
+		"grammar-de-noun-demo-owned-aufstieg",
+		"grammar-de-noun-demo-citation-haus",
+		"grammar-de-noun-demo-acc-sing-hund",
+		"grammar-de-noun-demo-dat-plur-kindern",
+		"grammar-de-noun-demo-typo-kaffe",
+		"grammar-de-noun-demo-archaic-antlitz",
+		"grammar-de-noun-demo-suspended-kinderbuecher"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-noun-dev-shared-long",
+		"grammar-de-noun-dev-repeated",
+		"grammar-de-noun-dev-nested",
+		"grammar-de-noun-dev-adjective",
+		"grammar-de-noun-dev-bad-agreement",
+		"grammar-de-noun-dev-nom-plur-banken",
+		"grammar-de-noun-dev-dat-sing-bibliothek",
+		"grammar-de-noun-dev-gen-sing-mannes",
+		"grammar-de-noun-dev-gen-plur-frauen",
+		"grammar-de-noun-dev-vocative-leute",
+		"grammar-de-noun-dev-acc-plur-buecher",
+		"grammar-de-noun-dev-nom-sing-maedchen",
+		"grammar-de-noun-dev-acc-sing-stadt",
+		"grammar-de-noun-dev-dat-sing-chef",
+		"grammar-de-noun-dev-nom-plur-eltern",
+		"grammar-de-noun-dev-acc-plur-knie",
+		"grammar-de-noun-accept-nom-sing-mark",
+		"grammar-de-noun-accept-nom-sing-tisch",
+		"grammar-de-noun-accept-acc-sing-tuer",
+		"grammar-de-noun-accept-dat-plur-haeusern",
+		"grammar-de-noun-accept-gen-plur-kinder",
+		"grammar-de-noun-accept-invariant-plur-maedchen",
+		"grammar-de-noun-accept-plural-only-ferien",
+		"grammar-de-noun-dev-hyphenated-u-bahn",
+		"grammar-de-noun-dev-variant-photographie",
+		"grammar-de-noun-dev-lowercase-katze",
+		"grammar-de-noun-dev-archaic-odem",
+		"grammar-de-noun-dev-compound-haustuer",
+		"grammar-de-noun-dev-substantivized-reisenden",
+		"grammar-de-noun-dev-gen-sing-schule",
+		"grammar-de-noun-accept-hyphenated-e-mail",
+		"grammar-de-noun-accept-substantivized-angestellten",
+		"grammar-de-noun-dev-suspended-right-jugendbuecher",
+		"grammar-de-noun-dev-suspended-hyphen-genitiv",
+		"grammar-de-noun-dev-suspended-typo",
+		"grammar-de-noun-accept-suspended-nonbreaking",
+		"grammar-de-noun-accept-suspended-oder-singular",
+		"grammar-de-noun-accept-suspended-dativ-plural",
+		"grammar-de-noun-accept-suspended-nominativ-plural",
+		"grammar-de-noun-regression-fusion-im-wald",
+		"grammar-de-noun-regression-fusion-zum-wald",
+		"grammar-de-noun-regression-fusion-ins-haus",
+		"grammar-de-noun-regression-fusion-shared-feld",
+		"grammar-de-noun-regression-fusion-zur-schule",
+		"grammar-de-noun-dev-abbreviation-dipl-ing",
+		"grammar-de-noun-governed-angst-vor",
+		"grammar-de-noun-governed-article-angst-vor"
+	],
+	"slices": {
+		"governed": [
+			"grammar-de-noun-governed-angst-vor",
+			"grammar-de-noun-governed-article-angst-vor"
+		]
+	},
+	"cases": {
+		"grammar-de-noun-demo-shared-abstieg": {
+			"input": {
+				"markedContext": "der Aufstieg und <TARGET>Abstieg</TARGET>",
+				"members": ["Abstieg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Abstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Abstieg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Partial",
+				"articleEvidence": {
+					"kind": "Shared",
+					"article": { "attested": "der", "orthography": "Standard" }
+				},
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-owned-aufstieg": {
+			"input": {
+				"markedContext": "Als <TARGET>der</TARGET> <TARGET>Aufstieg</TARGET> anstrengender wurde",
+				"members": ["der", "Aufstieg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Aufstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Aufstieg"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-citation-haus": {
+			"input": {
+				"markedContext": "Wörterbucheintrag: <TARGET>Haus</TARGET>.",
+				"members": ["Haus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Haus",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Haus"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-acc-sing-hund": {
+			"input": {
+				"markedContext": "Sie sieht <TARGET>den</TARGET> <TARGET>Hund</TARGET> im Garten.",
+				"members": ["den", "Hund"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Hund",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["den", "Hund"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-dat-plur-kindern": {
+			"input": {
+				"markedContext": "Er hilft <TARGET>den</TARGET> <TARGET>Kindern</TARGET> bei den Aufgaben.",
+				"members": ["den", "Kindern"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kind",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["den", "Kindern"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-typo-kaffe": {
+			"input": {
+				"markedContext": "<TARGET>Der</TARGET> <TARGET>Kaffe</TARGET> duftet am Morgen.",
+				"members": ["Der", "Kaffe"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kaffee",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Kaffee"],
+				"memberOrthographies": ["Standard", "Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-archaic-antlitz": {
+			"input": {
+				"markedContext": "Sie bewundert sein <TARGET>Antlitz</TARGET>.",
+				"members": ["Antlitz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Antlitz",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Antlitz"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-demo-suspended-kinderbuecher": {
+			"input": {
+				"markedContext": "Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+				"members": ["Kinder-"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Kinderbücher"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Ergänzungsstrich points to shared Bücher; one member stays Standard and Full."
+		},
+		"grammar-de-noun-dev-shared-long": {
+			"input": {
+				"markedContext": "der Aufstieg und Abstieg und <TARGET>Umstieg</TARGET>",
+				"members": ["Umstieg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Umstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Umstieg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Partial",
+				"articleEvidence": {
+					"kind": "Shared",
+					"article": { "attested": "der", "orthography": "Standard" }
+				},
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-repeated": {
+			"input": {
+				"markedContext": "der Aufstieg und <TARGET>der</TARGET> <TARGET>Abstieg</TARGET>",
+				"members": ["der", "Abstieg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Abstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Abstieg"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-nested": {
+			"input": {
+				"markedContext": "der Anfang <TARGET>des</TARGET> <TARGET>Aufstiegs</TARGET>",
+				"members": ["des", "Aufstiegs"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Aufstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["des", "Aufstiegs"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-adjective": {
+			"input": {
+				"markedContext": "<TARGET>der</TARGET> steile <TARGET>Aufstieg</TARGET>",
+				"members": ["der", "Aufstieg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Aufstieg",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Aufstieg"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-bad-agreement": {
+			"input": {
+				"markedContext": "<TARGET>den</TARGET> <TARGET>Haus</TARGET>",
+				"members": ["den", "Haus"]
+			},
+			"idealOutput": { "decision": "Unresolved" }
+		},
+		"grammar-de-noun-dev-nom-plur-banken": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Banken</TARGET> öffnen um neun Uhr.",
+				"members": ["Die", "Banken"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Bank",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["die", "Banken"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-dat-sing-bibliothek": {
+			"input": {
+				"markedContext": "Wir sitzen in <TARGET>der</TARGET> <TARGET>Bibliothek</TARGET>.",
+				"members": ["der", "Bibliothek"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Bibliothek",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Bibliothek"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-gen-sing-mannes": {
+			"input": {
+				"markedContext": "Das Fahrrad <TARGET>des</TARGET> <TARGET>Mannes</TARGET> ist neu.",
+				"members": ["des", "Mannes"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mann",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["des", "Mannes"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-gen-plur-frauen": {
+			"input": {
+				"markedContext": "Die Stimmen <TARGET>der</TARGET> <TARGET>Frauen</TARGET> waren deutlich.",
+				"members": ["der", "Frauen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Frau",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["der", "Frauen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-vocative-leute": {
+			"input": {
+				"markedContext": "Hallo, <TARGET>Leute</TARGET>, hört kurz zu!",
+				"members": ["Leute"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Leute",
+					"coreFeatures": { "gender": null, "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": null,
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Leute"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-acc-plur-buecher": {
+			"input": {
+				"markedContext": "Sie kauft <TARGET>die</TARGET> <TARGET>Bücher</TARGET> für den Kurs.",
+				"members": ["die", "Bücher"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Buch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["die", "Bücher"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-nom-sing-maedchen": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> <TARGET>Mädchen</TARGET> wartet vor der Schule.",
+				"members": ["Das", "Mädchen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mädchen",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["das", "Mädchen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-acc-sing-stadt": {
+			"input": {
+				"markedContext": "Wir besuchen <TARGET>die</TARGET> <TARGET>Stadt</TARGET> am Wochenende.",
+				"members": ["die", "Stadt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Stadt",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Stadt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-dat-sing-chef": {
+			"input": {
+				"markedContext": "Sie spricht mit <TARGET>dem</TARGET> <TARGET>Chef</TARGET> über den Plan.",
+				"members": ["dem", "Chef"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Chef",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["dem", "Chef"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-nom-plur-eltern": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Eltern</TARGET> warten draußen.",
+				"members": ["Die", "Eltern"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Eltern",
+					"coreFeatures": { "gender": null, "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["die", "Eltern"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-acc-plur-knie": {
+			"input": {
+				"markedContext": "Der Arzt untersucht beide <TARGET>Knie</TARGET> gründlich.",
+				"members": ["Knie"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Knie",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Knie"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "The plural is fixed by beide while the noun form is invariant."
+		},
+		"grammar-de-noun-accept-nom-sing-mark": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Mark</TARGET> war damals die Währung.",
+				"members": ["Die", "Mark"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mark",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Mark"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			},
+			"explanation": "Currency context fixes common NOUN, not a personal name."
+		},
+		"grammar-de-noun-accept-nom-sing-tisch": {
+			"input": {
+				"markedContext": "<TARGET>Der</TARGET> <TARGET>Tisch</TARGET> steht am Fenster.",
+				"members": ["Der", "Tisch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Tisch",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Tisch"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-acc-sing-tuer": {
+			"input": {
+				"markedContext": "Sie öffnet <TARGET>die</TARGET> <TARGET>Tür</TARGET> ganz leise.",
+				"members": ["die", "Tür"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Tür",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Tür"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-dat-plur-haeusern": {
+			"input": {
+				"markedContext": "Zwischen <TARGET>den</TARGET> <TARGET>Häusern</TARGET> liegt ein Hof.",
+				"members": ["den", "Häusern"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Haus",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["den", "Häusern"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-gen-plur-kinder": {
+			"input": {
+				"markedContext": "Das Lachen <TARGET>der</TARGET> <TARGET>Kinder</TARGET> war laut.",
+				"members": ["der", "Kinder"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kind",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["der", "Kinder"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-invariant-plur-maedchen": {
+			"input": {
+				"markedContext": "Die drei <TARGET>Mädchen</TARGET> spielen draußen.",
+				"members": ["Mädchen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mädchen",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Mädchen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-plural-only-ferien": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Ferien</TARGET> beginnen morgen.",
+				"members": ["Die", "Ferien"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Ferien",
+					"coreFeatures": { "gender": null, "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["die", "Ferien"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-hyphenated-u-bahn": {
+			"input": {
+				"markedContext": "Sie nimmt <TARGET>die</TARGET> <TARGET>U-Bahn</TARGET> zur Arbeit.",
+				"members": ["die", "U-Bahn"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "U-Bahn",
+					"coreFeatures": { "gender": "Fem", "hyph": "Yes" }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "U-Bahn"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-variant-photographie": {
+			"input": {
+				"markedContext": "Die Redaktion führt „Fotografie“ als Leitform; <TARGET>die</TARGET> <TARGET>Photographie</TARGET> im Zitat bleibt zulässig.",
+				"members": ["die", "Photographie"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Fotografie",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Photographie"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			},
+			"explanation": "Context names editorial headword; attested equal standard variant stays Variant."
+		},
+		"grammar-de-noun-dev-lowercase-katze": {
+			"input": {
+				"markedContext": "Sie streichelt <TARGET>die</TARGET> <TARGET>katze</TARGET> vorsichtig.",
+				"members": ["die", "katze"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Katze",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Katze"],
+				"memberOrthographies": ["Standard", "Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-archaic-odem": {
+			"input": {
+				"markedContext": "<TARGET>Der</TARGET> <TARGET>Odem</TARGET> des Greises ging schwer.",
+				"members": ["Der", "Odem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Odem",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Odem"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-compound-haustuer": {
+			"input": {
+				"markedContext": "Er streicht <TARGET>die</TARGET> <TARGET>Haustür</TARGET> grün.",
+				"members": ["die", "Haustür"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Haustür",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Haustür"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-substantivized-reisenden": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Reisenden</TARGET> steigen am Bahnhof aus.",
+				"members": ["Die", "Reisenden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Reisende",
+					"coreFeatures": { "gender": null, "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["die", "Reisenden"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-gen-sing-schule": {
+			"input": {
+				"markedContext": "Das Dach <TARGET>der</TARGET> <TARGET>Schule</TARGET> wird saniert.",
+				"members": ["der", "Schule"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Schule",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Schule"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-hyphenated-e-mail": {
+			"input": {
+				"markedContext": "Sie beantwortet <TARGET>die</TARGET> <TARGET>E-Mail</TARGET> sofort.",
+				"members": ["die", "E-Mail"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "E-Mail",
+					"coreFeatures": { "gender": "Fem", "hyph": "Yes" }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "E-Mail"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-substantivized-angestellten": {
+			"input": {
+				"markedContext": "Wir danken <TARGET>den</TARGET> <TARGET>Angestellten</TARGET> für ihre Hilfe.",
+				"members": ["den", "Angestellten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Angestellte",
+					"coreFeatures": { "gender": null, "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["den", "Angestellten"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-suspended-right-jugendbuecher": {
+			"input": {
+				"markedContext": "Sie verkauft Kinder- und <TARGET>Jugendbücher</TARGET>.",
+				"members": ["Jugendbücher"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Jugendbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Jugendbücher"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-suspended-hyphen-genitiv": {
+			"input": {
+				"markedContext": "Die Seiten <TARGET>des</TARGET> <TARGET>Kinder‐</TARGET> und Jugendbuchs fehlen.",
+				"members": ["des", "Kinder‐"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Gen",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["des", "Kinderbuchs"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-dev-suspended-typo": {
+			"input": {
+				"markedContext": "Sie verkauft <TARGET>Kidner-</TARGET> und Jugendbücher.",
+				"members": ["Kidner-"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Kinderbücher"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-suspended-nonbreaking": {
+			"input": {
+				"markedContext": "Der Laden führt <TARGET>Kinder‑</TARGET> und Jugendbücher.",
+				"members": ["Kinder‑"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Acc",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Kinderbücher"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-suspended-oder-singular": {
+			"input": {
+				"markedContext": "Sie kauft <TARGET>ein</TARGET> <TARGET>Kinder-</TARGET> oder Jugendbuch.",
+				"members": ["ein", "Kinder-"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Indefinite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["ein", "Kinderbuch"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-suspended-dativ-plural": {
+			"input": {
+				"markedContext": "Mit <TARGET>Kinder-</TARGET> und Jugendbüchern kennt sie sich aus.",
+				"members": ["Kinder-"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Dat",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Kinderbüchern"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-accept-suspended-nominativ-plural": {
+			"input": {
+				"markedContext": "<TARGET>Kinder-</TARGET> und Jugendbücher sind beliebt.",
+				"members": ["Kinder-"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kinderbuch",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Nom",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["Kinderbücher"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-im-wald": {
+			"input": {
+				"markedContext": "Wir bleiben i<TARGET>m</TARGET> <TARGET>Wald</TARGET>.",
+				"members": ["m", "Wald"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Wald",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["dem", "Wald"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-zum-wald": {
+			"input": {
+				"markedContext": "Wir gehen zu<TARGET>m</TARGET> <TARGET>Wald</TARGET>.",
+				"members": ["m", "Wald"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Wald",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["dem", "Wald"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-ins-haus": {
+			"input": {
+				"markedContext": "Wir gehen in<TARGET>s</TARGET> <TARGET>Haus</TARGET>.",
+				"members": ["s", "Haus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Haus",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["das", "Haus"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-shared-feld": {
+			"input": {
+				"markedContext": "Wir bleiben im Wald und <TARGET>Feld</TARGET>.",
+				"members": ["Feld"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Feld",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Feld"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Partial",
+				"articleEvidence": {
+					"kind": "Shared",
+					"article": {
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					}
+				},
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-zur-schule": {
+			"input": {
+				"markedContext": "Wir gehen zu<TARGET>r</TARGET> <TARGET>Schule</TARGET>.",
+				"members": ["r", "Schule"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Schule",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["der", "Schule"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-fusion-aufs-ende": {
+			"input": {
+				"markedContext": "Er wartet auf<TARGET>s</TARGET> <TARGET>Ende</TARGET>.",
+				"members": ["s", "Ende"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Ende",
+					"coreFeatures": { "gender": "Neut", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["das", "Ende"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			},
+			"explanation": "A colloquial fusion splits like a standard one: s is the noun's owned Fused article, and auf belongs to warten (ADR 0035)."
+		},
+		"grammar-de-noun-shorthand-ne-frage": {
+			"input": {
+				"markedContext": "Hast du <TARGET>'ne</TARGET> <TARGET>Frage</TARGET>?",
+				"members": ["'ne", "Frage"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Frage",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Indefinite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["eine", "Frage"],
+				"memberOrthographies": ["Shorthand", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			},
+			"explanation": "A shortened article is the noun's owned Shorthand member; the Surface stays Frage (ADR 0035)."
+		},
+		"grammar-de-noun-dev-abbreviation-dipl-ing": {
+			"input": {
+				"markedContext": "<TARGET>Dipl.-Ing.</TARGET> Müller leitet das Projekt.",
+				"members": ["Dipl.-Ing."]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Diplom-Ingenieur",
+					"coreFeatures": { "gender": "Masc", "hyph": "Yes" }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Diplom-Ingenieur"],
+				"memberOrthographies": ["Shorthand"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "A title abbreviation is one Shorthand member whose Surface is its expansion, Diplom-Ingenieur; the name stays outside (ADR 0035)."
+		},
+		"grammar-de-noun-governed-angst-vor": {
+			"input": {
+				"markedContext": "Aus <TARGET>Angst</TARGET> <TARGET>vor</TARGET> Hunden bleibt sie zu Hause.",
+				"members": ["Angst", "vor"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Angst",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Dat",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Angst", "vor"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "vor",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Angst governs vor without any verb, so vor is a governed member of the NOUN (ADR 0034). The Surface projects only the Fixed member: Angst."
+		},
+		"grammar-de-noun-governed-article-angst-vor": {
+			"input": {
+				"markedContext": "Sie spürt <TARGET>die</TARGET> <TARGET>Angst</TARGET> der Kinder <TARGET>vor</TARGET> Hunden.",
+				"members": ["die", "Angst", "vor"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Angst",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"case": "Acc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["die", "Angst", "vor"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "vor",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "The noun owns its article and its governed preposition across a genitive attribute; the Surface is die Angst."
+		}
+	}
+}

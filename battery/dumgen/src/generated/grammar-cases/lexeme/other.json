@@ -1,0 +1,1027 @@
+{
+	"demonstrationIds": [
+		"grammar-de-x-demo-unknown-citation-zorp",
+		"grammar-de-x-demo-foreign-whatever",
+		"grammar-de-x-demo-inflection-glorp-dat",
+		"grammar-de-x-demo-typo-watevr",
+		"grammar-de-x-demo-abbr-idk",
+		"grammar-de-x-demo-fragment-unver",
+		"grammar-de-x-demo-inflection-nerpa-acc",
+		"grammar-de-x-demo-inflection-plerke-sub"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-x-dev-unknown-blarg-nom",
+		"grammar-de-x-dev-unknown-glorps-acc",
+		"grammar-de-x-dev-unknown-glorpen-inf",
+		"grammar-de-x-dev-unknown-glorpt-fin",
+		"grammar-de-x-dev-unknown-geglorpt-part",
+		"grammar-de-x-dev-unknown-glorp-imp",
+		"grammar-de-x-dev-foreign-anyway",
+		"grammar-de-x-dev-foreign-low-key",
+		"grammar-de-x-dev-slang-cringe",
+		"grammar-de-x-dev-slang-sus",
+		"grammar-de-x-dev-casing-whatever",
+		"grammar-de-x-dev-archaic-thou",
+		"grammar-de-x-dev-variant-colour",
+		"grammar-de-x-dev-mixed-w00t",
+		"grammar-de-x-dev-repeated-whatever",
+		"grammar-de-x-dev-near-opaque-foobar",
+		"grammar-de-x-dev-near-known-routes-yeet",
+		"grammar-de-x-dev-alphanumeric-3d",
+		"grammar-de-x-accept-v2-unknown-quend",
+		"grammar-de-x-accept-v2-unknown-zarg-nom-masc",
+		"grammar-de-x-accept-v2-unknown-zorps-gen",
+		"grammar-de-x-accept-v2-unknown-nerge-sub",
+		"grammar-de-x-accept-v2-foreign-random",
+		"grammar-de-x-accept-v2-abbr-tbh",
+		"grammar-de-x-accept-v2-fragment-trans",
+		"grammar-de-x-accept-v2-hyphen-off-grid",
+		"grammar-de-x-accept-v2-typo-wierd",
+		"grammar-de-x-accept-v2-archaic-hither"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-x-demo-unknown-citation-zorp": {
+			"input": {
+				"markedContext": "Im Feld für nicht kategorisierte Wörter stand der Eintrag <TARGET>zorp</TARGET>.",
+				"members": ["zorp"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zorp",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["zorp"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The upstream X identity is valid; the isolated form expresses no codec-supported inflection."
+		},
+		"grammar-de-x-demo-foreign-whatever": {
+			"input": {
+				"markedContext": "In der sonst deutschen Unterhaltung antwortete sie nur <TARGET>whatever</TARGET>.",
+				"members": ["whatever"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "whatever",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["whatever"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-demo-inflection-glorp-dat": {
+			"input": {
+				"markedContext": "Mit dem <TARGET>Glorp</TARGET> konnte niemand etwas anfangen.",
+				"members": ["Glorp"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Glorp",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": "Neut",
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Glorp"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The unknown identity stays X while the German article licenses conservative case, gender, and number features."
+		},
+		"grammar-de-x-demo-typo-watevr": {
+			"input": {
+				"markedContext": "Im Chat war mit dem fehlerhaft geschriebenen englischen Wort <TARGET>watevr</TARGET> eine gleichgültige Antwort gemeint.",
+				"members": ["watevr"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "whatever",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["whatever"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-demo-abbr-idk": {
+			"input": {
+				"markedContext": "In ihrer deutschen Nachricht schrieb sie lediglich <TARGET>idk</TARGET>.",
+				"members": ["idk"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "idk",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["idk"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-demo-fragment-unver": {
+			"input": {
+				"markedContext": "Die Sprecherin begann mit <TARGET>unver</TARGET>… und brach das Wort hörbar ab.",
+				"members": ["unver"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "unver",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["unver"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The classified readable fragment remains ResolvableText/X; the unmarked interruption punctuation is context."
+		},
+		"grammar-de-x-demo-inflection-nerpa-acc": {
+			"input": {
+				"markedContext": "Die Testperson verschob die <TARGET>Nerpa</TARGET> ohne ihre Bedeutung zu kennen.",
+				"members": ["Nerpa"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Nerpa",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": "Fem",
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Nerpa"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The article and syntax license nominal Inflection even though the residual lexical identity remains X."
+		},
+		"grammar-de-x-demo-inflection-plerke-sub": {
+			"input": {
+				"markedContext": "Die Forscherin sagte, das Gerät <TARGET>plerke</TARGET> nur bei Vollmond.",
+				"members": ["plerke"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "plerken",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": "Sub",
+						"number": "Sing",
+						"verbForm": "Fin"
+					}
+				},
+				"normalizedMembers": ["plerke"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Indirect speech plus the transparent finite nonce form licenses Sub, Sing, and Fin while the Lemma remains the inferred infinitive."
+		},
+		"grammar-de-x-dev-unknown-blarg-nom": {
+			"input": {
+				"markedContext": "Der <TARGET>Blarg</TARGET> tauchte ohne Erklärung im Bericht auf.",
+				"members": ["Blarg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Blarg",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Blarg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-unknown-glorps-acc": {
+			"input": {
+				"markedContext": "Die Prüfer markierten die <TARGET>Glorps</TARGET> im letzten Absatz.",
+				"members": ["Glorps"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Glorp",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"mood": null,
+						"number": "Plur",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Glorps"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-unknown-glorpen-inf": {
+			"input": {
+				"markedContext": "Im Beispiel sollte die Figur morgen <TARGET>glorpen</TARGET>, doch die Bedeutung blieb offen.",
+				"members": ["glorpen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "glorpen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": null,
+						"number": null,
+						"verbForm": "Inf"
+					}
+				},
+				"normalizedMembers": ["glorpen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-unknown-glorpt-fin": {
+			"input": {
+				"markedContext": "Laut der Versuchsanweisung <TARGET>glorpt</TARGET> er jeden Morgen.",
+				"members": ["glorpt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "glorpen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": "Ind",
+						"number": "Sing",
+						"verbForm": "Fin"
+					}
+				},
+				"normalizedMembers": ["glorpt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-unknown-geglorpt-part": {
+			"input": {
+				"markedContext": "Im erfundenen Bericht habe die Maschine bereits <TARGET>geglorpt</TARGET>.",
+				"members": ["geglorpt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "glorpen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": null,
+						"number": null,
+						"verbForm": "Part"
+					}
+				},
+				"normalizedMembers": ["geglorpt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-unknown-glorp-imp": {
+			"input": {
+				"markedContext": "<TARGET>Glorp</TARGET> jetzt, stand als unbekannte Anweisung auf dem Display!",
+				"members": ["Glorp"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "glorpen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": "Imp",
+						"number": "Sing",
+						"verbForm": "Fin"
+					}
+				},
+				"normalizedMembers": ["glorp"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-foreign-anyway": {
+			"input": {
+				"markedContext": "Mitten im deutschen Satz fügte er <TARGET>anyway</TARGET> ein und sprach weiter.",
+				"members": ["anyway"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "anyway",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["anyway"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-foreign-low-key": {
+			"input": {
+				"markedContext": "Die Studentin nannte das Ergebnis <TARGET>low-key</TARGET> überraschend.",
+				"members": ["low-key"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "low-key",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": "Yes",
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["low-key"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-slang-cringe": {
+			"input": {
+				"markedContext": "In der Jugendgruppe fanden alle die Szene ziemlich <TARGET>cringe</TARGET>.",
+				"members": ["cringe"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "cringe",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["cringe"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The classified slang form is category-indeterminate here; loan origin alone does not force Foreign."
+		},
+		"grammar-de-x-dev-slang-sus": {
+			"input": {
+				"markedContext": "Im deutschsprachigen Spielchat wirkte die Erklärung sehr <TARGET>sus</TARGET>.",
+				"members": ["sus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sus",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["sus"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-casing-whatever": {
+			"input": {
+				"markedContext": "<TARGET>Whatever</TARGET> sagte sie am Anfang ihrer deutschen Antwort.",
+				"members": ["Whatever"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "whatever",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["whatever"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-archaic-thou": {
+			"input": {
+				"markedContext": "Im historischen englischen Zitat blieb das Wort <TARGET>thou</TARGET> unübersetzt.",
+				"members": ["thou"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "thou",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["thou"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-variant-colour": {
+			"input": {
+				"markedContext": "Die britische Schreibvariante <TARGET>colour</TARGET> stand in der deutschen Notiz.",
+				"members": ["colour"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "color",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["colour"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-dev-mixed-w00t": {
+			"input": {
+				"markedContext": "Der alte Forenbeitrag endete mit dem Slangausdruck <TARGET>w00t</TARGET>.",
+				"members": ["w00t"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "w00t",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["w00t"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Mixed letters and digits are part of this licensed slang spelling and are not a Typo repair."
+		},
+		"grammar-de-x-dev-repeated-whatever": {
+			"input": {
+				"markedContext": "Zuerst sagte sie whatever, später schrieb sie <TARGET>whatever</TARGET> noch einmal in den Chat.",
+				"members": ["whatever"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "whatever",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["whatever"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Only the second occurrence is supplied; the earlier identical form remains context."
+		},
+		"grammar-de-x-dev-near-opaque-foobar": {
+			"input": {
+				"markedContext": "Der beschädigte Scan zeigte ????; im lesbaren technischen Kommentar stand <TARGET>foobar</TARGET>.",
+				"members": ["foobar"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "foobar",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["foobar"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The unmarked unreadable placeholder is OpaqueText; the marked, readable category-indeterminate token is X."
+		},
+		"grammar-de-x-dev-near-known-routes-yeet": {
+			"input": {
+				"markedContext": "Neben dem Namen Paris, der Abkürzung z.B., dem Ausruf ach, dem Zeichen % und dem Verb laufen stand im Chat <TARGET>yeet</TARGET>.",
+				"members": ["yeet"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "yeet",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["yeet"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "Unmarked PROPN, abbreviation, INTJ, SYM, and identifiable German POS controls do not reopen the fixed X route."
+		},
+		"grammar-de-x-dev-alphanumeric-3d": {
+			"input": {
+				"markedContext": "Die uneinheitlich annotierte Spalte enthielt den Eintrag <TARGET>3D</TARGET> ohne weitere Kategorienangabe.",
+				"members": ["3D"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "3D",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"foreign": null,
+						"hyph": null,
+						"numType": "Card"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["3D"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-unknown-quend": {
+			"input": {
+				"markedContext": "Das Glossar führte den nicht weiter bestimmten Eintrag <TARGET>quend</TARGET> auf.",
+				"members": ["quend"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "quend",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["quend"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-unknown-zarg-nom-masc": {
+			"input": {
+				"markedContext": "Dieser <TARGET>Zarg</TARGET> erschien plötzlich im Versuch, doch niemand kannte seine Bedeutung.",
+				"members": ["Zarg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Zarg",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Zarg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-unknown-zorps-gen": {
+			"input": {
+				"markedContext": "Die Wirkung dieses <TARGET>Zorps</TARGET> blieb unklar.",
+				"members": ["Zorps"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Zorp",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": null,
+						"mood": null,
+						"number": "Sing",
+						"verbForm": null
+					}
+				},
+				"normalizedMembers": ["Zorps"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-unknown-nerge-sub": {
+			"input": {
+				"markedContext": "Die Zeugin erklärte, der Apparat <TARGET>nerge</TARGET> während der Nacht.",
+				"members": ["nerge"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "nergen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"mood": "Sub",
+						"number": "Sing",
+						"verbForm": "Fin"
+					}
+				},
+				"normalizedMembers": ["nerge"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-foreign-random": {
+			"input": {
+				"markedContext": "Im ansonsten deutschen Gespräch nannte er die Entscheidung ausdrücklich <TARGET>random</TARGET>, wie im Englischen.",
+				"members": ["random"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "random",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["random"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-abbr-tbh": {
+			"input": {
+				"markedContext": "Vor ihrer Meinung schrieb sie im deutschen Chat <TARGET>tbh</TARGET>.",
+				"members": ["tbh"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "tbh",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["tbh"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-fragment-trans": {
+			"input": {
+				"markedContext": "Die Aufnahme brach mitten im begonnenen Wort nach <TARGET>trans</TARGET>…",
+				"members": ["trans"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "trans",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["trans"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-hyphen-off-grid": {
+			"input": {
+				"markedContext": "Der englische Ausdruck <TARGET>off-grid</TARGET> blieb im deutschen Gespräch unübersetzt.",
+				"members": ["off-grid"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "off-grid",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": "Yes",
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["off-grid"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-typo-wierd": {
+			"input": {
+				"markedContext": "Im deutsch-englischen Chat war mit dem Tippfehler <TARGET>wierd</TARGET> eindeutig weird gemeint.",
+				"members": ["wierd"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "weird",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["weird"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-x-accept-v2-archaic-hither": {
+			"input": {
+				"markedContext": "Im ausdrücklich archaischen englischen Dialog stand <TARGET>hither</TARGET> für eine Richtungsangabe.",
+				"members": ["hither"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hither",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"hyph": null,
+						"numType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["hither"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		}
+	}
+}

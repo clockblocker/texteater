@@ -1,10 +1,10 @@
 import { z } from "zod";
+import projected from "../../../../../generated/grammar-cases/lexeme/symbol.json";
 import { grammarSchemas } from "../../../../../generated/schemas.js";
 import {
 	defineLinguisticCorpus,
 	grammarInputSchema,
 } from "../../../authoring.js";
-import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
 	grammarSchemas["de/Lexeme/SYM"],
@@ -14,20 +14,8 @@ export const corpusSource = defineLinguisticCorpus({
 	route: "grammatical-resolution/de/lexeme/symbol",
 	inputSchema,
 	outputSchema,
-	cases,
-	demonstrationIds: [
-		"grammar-de-sym-demo-percent-unit",
-		"grammar-de-sym-demo-times-nominal",
-		"grammar-de-sym-demo-euro-currency",
-		"grammar-de-sym-demo-section-dative",
-		"grammar-de-sym-demo-equals-genitive",
-		"grammar-de-sym-demo-feminine-hash",
-		"grammar-de-sym-demo-foreign-arabic-percent",
-		"grammar-de-sym-demo-card-number-sign",
-		"grammar-de-sym-demo-range-dash",
-		"grammar-de-sym-demo-variant-fullwidth-plus",
-		"grammar-de-sym-demo-typo-ocr-euro",
-		"grammar-de-sym-demo-sections-plural",
-	],
+	cases: projected.cases,
+	demonstrationIds: projected.demonstrationIds,
 	source: import.meta.url,
 });
+export const { evaluationCaseIds, slices } = projected;

@@ -4,10 +4,10 @@ import { closedParadigmVerb } from "../src/concrete-lang/de/authored-closed-sets
 import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution/infinitive-shape.js";
 import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resolution/inflected-noun.js";
-import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
-import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
-import proverbCases from "../src/concrete-lang/de/grammatical-resolution/phraseme/proverb/corpus.json";
 import review from "../src/evaluation/redesign/review-cases.json";
+import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
+import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
+import proverbProjection from "../src/generated/grammar-cases/phraseme/proverb.json";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
@@ -112,7 +112,8 @@ for (const example of review.constructions)
 	});
 test("incompatible applicable features stop before missing-text generation", async () => {
 	const traces: OperationTrace[] = [];
-	const expected = verbCases["grammar-de-verb-finite-liest"].idealOutput;
+	const expected =
+		verbProjection.cases["grammar-de-verb-finite-liest"].idealOutput;
 	const options = grammarFixture(expected, {
 		"surface.inflectionalFeatures.mood": "Unresolved",
 	});
@@ -470,7 +471,8 @@ test("uncertain headword judgment stops without copying or generating", async ()
 		Effect.either(
 			createDumgen({
 				...grammarFixture(
-					verbCases["grammar-de-verb-finite-liest"].idealOutput,
+					verbProjection.cases["grammar-de-verb-finite-liest"]
+						.idealOutput,
 					{ canonical: "Unresolved" },
 				),
 				onOperation: (trace) => traces.push(trace),
@@ -536,7 +538,7 @@ function markedEncounter(
 
 test("a saying keeps its capital initial against LowerInitial", async () => {
 	const id = "grammar-de-proverb-dev-andere-laender";
-	const example = proverbCases[id];
+	const example = proverbProjection.cases[id];
 	const output = await Effect.runPromise(
 		createDumgen(
 			grammarFixture(example.idealOutput, {
@@ -560,7 +562,7 @@ for (const [id, rejected] of [
 	["grammar-de-verb-imperative-lauf", "Lauf"],
 ] as const)
 	test(`CandidateIsCanonical for finite ${rejected} generates the Canonical Form`, async () => {
-		const example = verbCases[id];
+		const example = verbProjection.cases[id];
 		const traces: OperationTrace[] = [];
 		const output = await Effect.runPromise(
 			createDumgen({
@@ -599,7 +601,7 @@ for (const [id, canonicalForm] of [
 	["grammar-de-verb-full-hat", "haben"],
 ] as const)
 	test(`a closed paradigm names ${canonicalForm} without a Luna call: ${id}`, async () => {
-		const example = verbCases[id];
+		const example = verbProjection.cases[id];
 		const traces: OperationTrace[] = [];
 		const output = await Effect.runPromise(
 			createDumgen({
@@ -680,7 +682,7 @@ for (const id of [
 	"grammar-de-verb-finite-liest",
 ] as const)
 	test(`membership settles expletive and lexicallyReflexive: ${id}`, async () => {
-		const example = verbCases[id];
+		const example = verbProjection.cases[id];
 		const traces: OperationTrace[] = [];
 		const output = await Effect.runPromise(
 			createDumgen({
@@ -713,7 +715,7 @@ for (const id of [
 	});
 
 test("every reviewed VERB Canonical Form is infinitive-shaped", () => {
-	for (const example of Object.values(verbCases))
+	for (const example of Object.values(verbProjection.cases))
 		expect(
 			infinitiveShaped(example.idealOutput.lemma.canonicalForm),
 		).toBeTrue();
@@ -751,17 +753,17 @@ const weakNoun = {
 for (const [id, example, rejected] of [
 	[
 		"grammar-de-noun-dev-acc-plur-buecher",
-		nounCases["grammar-de-noun-dev-acc-plur-buecher"],
+		nounProjection.cases["grammar-de-noun-dev-acc-plur-buecher"],
 		"Bücher",
 	],
 	[
 		"grammar-de-noun-accept-dat-plur-haeusern",
-		nounCases["grammar-de-noun-accept-dat-plur-haeusern"],
+		nounProjection.cases["grammar-de-noun-accept-dat-plur-haeusern"],
 		"Häusern",
 	],
 	[
 		"grammar-de-noun-dev-gen-sing-mannes",
-		nounCases["grammar-de-noun-dev-gen-sing-mannes"],
+		nounProjection.cases["grammar-de-noun-dev-gen-sing-mannes"],
 		"Mannes",
 	],
 	["weak-dat-sing-nachbarn", weakNoun, "Nachbarn"],
@@ -802,7 +804,7 @@ for (const [id, example, rejected] of [
 
 test("a copied noun member under an uninflecting Surface stays the Canonical Form", async () => {
 	const id = "grammar-de-noun-dev-dat-sing-chef";
-	const example = nounCases[id];
+	const example = nounProjection.cases[id];
 	const traces: OperationTrace[] = [];
 	const output = await Effect.runPromise(
 		createDumgen({
@@ -819,7 +821,7 @@ test("a copied noun member under an uninflecting Surface stays the Canonical For
 
 test("a stored noun Lemma under its own plural text stays the Canonical Form", async () => {
 	const id = "grammar-de-noun-dev-acc-plur-knie";
-	const example = nounCases[id];
+	const example = nounProjection.cases[id];
 	const traces: OperationTrace[] = [];
 	const output = await Effect.runPromise(
 		createDumgen({
@@ -852,7 +854,7 @@ test("a stored noun Lemma under its own plural text stays the Canonical Form", a
 });
 
 test("every reviewed noun inflected away from its headword is marked", () => {
-	for (const example of Object.values(nounCases)) {
+	for (const example of Object.values(nounProjection.cases)) {
 		const { lemma, surface, memberOrthographies, valencyEvidence } =
 			example.idealOutput as {
 				lemma?: {

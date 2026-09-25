@@ -1,0 +1,1617 @@
+{
+	"demonstrationIds": [
+		"grammar-de-adj-demo-citation-sanft",
+		"grammar-de-adj-demo-attributive-klein",
+		"grammar-de-adj-demo-adverbial-schnell",
+		"grammar-de-adj-demo-comparative-besser",
+		"grammar-de-adj-demo-ordinal-erste",
+		"grammar-de-adj-demo-typo-freundlcih"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-adj-accept-citation-mild",
+		"grammar-de-adj-dev-attributive-acc-fem-rot",
+		"grammar-de-adj-dev-attributive-dat-neut-kalt",
+		"grammar-de-adj-dev-attributive-gen-plur-neu",
+		"grammar-de-adj-dev-attributive-nom-plur-alt",
+		"grammar-de-adj-dev-predicative-blau",
+		"grammar-de-adj-dev-adverbial-leise",
+		"grammar-de-adj-accept-attributive-dat-fem-lang",
+		"grammar-de-adj-accept-attributive-acc-neut-gruen",
+		"grammar-de-adj-accept-attributive-gen-masc-stark",
+		"grammar-de-adj-accept-predicative-ruhig",
+		"grammar-de-adj-accept-adverbial-deutlich",
+		"grammar-de-adj-dev-attributive-comparative-teuer",
+		"grammar-de-adj-dev-attributive-superlative-hoch",
+		"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+		"grammar-de-adj-dev-predicative-comparative-nah",
+		"grammar-de-adj-accept-irregular-superlative-beste",
+		"grammar-de-adj-accept-adverbial-comparative-schnell",
+		"grammar-de-adj-dev-typo-grsser",
+		"grammar-de-adj-accept-typo-wunderschoen",
+		"grammar-de-adj-dev-participial-spannend",
+		"grammar-de-adj-dev-lexicalized-participial-verrueckt",
+		"grammar-de-adj-dev-invariant-lila",
+		"grammar-de-adj-dev-archaic-hold",
+		"grammar-de-adj-accept-participial-glaenzend",
+		"grammar-de-adj-accept-invariant-rosa",
+		"grammar-de-adj-dev-cardinal-siebenhundert",
+		"grammar-de-adj-dev-foreign-special",
+		"grammar-de-adj-dev-abbreviation-sog",
+		"grammar-de-adj-accept-ordinal-zweite",
+		"grammar-de-adj-dev-participial-geschlossen",
+		"grammar-de-adj-dev-adverbial-participle-one-lachend",
+		"grammar-de-adj-participle-attributive-gekochten",
+		"grammar-de-adj-participle-attributive-bewunderte",
+		"grammar-de-adj-participle-attributive-gelegene",
+		"grammar-de-adj-participle-attributive-umgestuerzte",
+		"grammar-de-adj-participle-attributive-spielenden",
+		"grammar-de-adj-participle-state-passive-geschlossen",
+		"grammar-de-adj-governed-stolz-auf",
+		"grammar-de-adj-governed-separated-auf-ihn",
+		"grammar-de-adj-governed-attributive-stolze"
+	],
+	"slices": {
+		"participles": [
+			"grammar-de-adj-dev-participial-geschlossen",
+			"grammar-de-adj-dev-adverbial-participle-one-lachend",
+			"grammar-de-adj-participle-attributive-gekochten",
+			"grammar-de-adj-participle-attributive-bewunderte",
+			"grammar-de-adj-participle-attributive-gelegene",
+			"grammar-de-adj-participle-attributive-umgestuerzte",
+			"grammar-de-adj-participle-attributive-spielenden",
+			"grammar-de-adj-participle-state-passive-geschlossen"
+		],
+		"governed": [
+			"grammar-de-adj-governed-stolz-auf",
+			"grammar-de-adj-governed-separated-auf-ihn",
+			"grammar-de-adj-governed-attributive-stolze"
+		]
+	},
+	"cases": {
+		"grammar-de-adj-demo-citation-sanft": {
+			"input": {
+				"markedContext": "Im Wörterbuch steht das Adjektiv <TARGET>sanft</TARGET>.",
+				"members": ["sanft"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sanft",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["sanft"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Dictionary mention. Citation Surface. No inflection bag."
+		},
+		"grammar-de-adj-accept-citation-mild": {
+			"input": {
+				"markedContext": "Als Grundform wird <TARGET>mild</TARGET> angegeben.",
+				"members": ["mild"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mild",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["mild"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-demo-attributive-klein": {
+			"input": {
+				"markedContext": "Der <TARGET>kleine</TARGET> Hund schläft.",
+				"members": ["kleine"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "klein",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["kleine"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Attributive ADJ. Context gives nominative masculine singular."
+		},
+		"grammar-de-adj-demo-adverbial-schnell": {
+			"input": {
+				"markedContext": "Der Hund läuft <TARGET>schnell</TARGET>.",
+				"members": ["schnell"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "schnell",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["schnell"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Productive adverbial ADJ, not lexical ADV. Degree Pos. No agreement."
+		},
+		"grammar-de-adj-dev-attributive-acc-fem-rot": {
+			"input": {
+				"markedContext": "Sie trägt die <TARGET>rote</TARGET> Tasche.",
+				"members": ["rote"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "rot",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["rote"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-attributive-dat-neut-kalt": {
+			"input": {
+				"markedContext": "Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drinnen.",
+				"members": ["kaltem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "kalt",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["kaltem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-attributive-gen-plur-neu": {
+			"input": {
+				"markedContext": "Wegen <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
+				"members": ["neuer"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "neu",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["neuer"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Ending syncretic. Context gives genitive plural; noun gives feminine identity."
+		},
+		"grammar-de-adj-dev-attributive-nom-plur-alt": {
+			"input": {
+				"markedContext": "Die <TARGET>alten</TARGET> Häuser stehen am Marktplatz.",
+				"members": ["alten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "alt",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["alten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-predicative-blau": {
+			"input": {
+				"markedContext": "<TARGET>Blau</TARGET> ist der Himmel über dem Meer.",
+				"members": ["Blau"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "blau",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["blau"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-adverbial-leise": {
+			"input": {
+				"markedContext": "Sie schließt die Tür <TARGET>leise</TARGET>.",
+				"members": ["leise"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "leise",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["leise"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-attributive-dat-fem-lang": {
+			"input": {
+				"markedContext": "Mit <TARGET>langer</TARGET> Geduld löste sie das Rätsel.",
+				"members": ["langer"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "lang",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["langer"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-attributive-acc-neut-gruen": {
+			"input": {
+				"markedContext": "Sie kaufte ein <TARGET>grünes</TARGET> Fahrrad.",
+				"members": ["grünes"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "grün",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["grünes"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-attributive-gen-masc-stark": {
+			"input": {
+				"markedContext": "Trotz <TARGET>starken</TARGET> Regens begann das Spiel.",
+				"members": ["starken"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "stark",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["starken"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-predicative-ruhig": {
+			"input": {
+				"markedContext": "Der See bleibt <TARGET>ruhig</TARGET>.",
+				"members": ["ruhig"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ruhig",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["ruhig"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-adverbial-deutlich": {
+			"input": {
+				"markedContext": "Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+				"members": ["deutlich"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "deutlich",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["deutlich"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-demo-comparative-besser": {
+			"input": {
+				"markedContext": "Der zweite Plan ist <TARGET>besser</TARGET>.",
+				"members": ["besser"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gut",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Cmp",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["besser"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Suppletive comparative. Surface besser. Positive Lemma gut."
+		},
+		"grammar-de-adj-dev-attributive-comparative-teuer": {
+			"input": {
+				"markedContext": "Er kaufte ein <TARGET>teureres</TARGET> Gerät.",
+				"members": ["teureres"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "teuer",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Cmp",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["teureres"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-attributive-superlative-hoch": {
+			"input": {
+				"markedContext": "Der <TARGET>höchste</TARGET> Turm steht am Fluss.",
+				"members": ["höchste"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hoch",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Sup",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["höchste"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig": {
+			"input": {
+				"markedContext": "Von allen arbeitet sie am <TARGET>sorgfältigsten</TARGET>.",
+				"members": ["sorgfältigsten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sorgfältig",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Sup",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["sorgfältigsten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-predicative-comparative-nah": {
+			"input": {
+				"markedContext": "Das neue Büro liegt <TARGET>näher</TARGET>.",
+				"members": ["näher"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "nah",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Cmp",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["näher"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-irregular-superlative-beste": {
+			"input": {
+				"markedContext": "Das war die <TARGET>beste</TARGET> Lösung.",
+				"members": ["beste"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gut",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Sup",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["beste"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-adverbial-comparative-schnell": {
+			"input": {
+				"markedContext": "Heute fährt der Zug <TARGET>schneller</TARGET>.",
+				"members": ["schneller"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "schnell",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Cmp",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["schneller"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-typo-grsser": {
+			"input": {
+				"markedContext": "Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
+				"members": ["grßer"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "groß",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["großer"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-accept-typo-wunderschoen": {
+			"input": {
+				"markedContext": "Der Garten sieht <TARGET>wundershcön</TARGET> aus.",
+				"members": ["wundershcön"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wunderschön",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["wunderschön"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-participial-spannend": {
+			"input": {
+				"markedContext": "Der <TARGET>spannende</TARGET> Vortrag dauerte eine Stunde.",
+				"members": ["spannende"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "spannend",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["spannende"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Lexicalized 'exciting' with comparison (spannender), so a participial ADJ (ADR 0033): Canonical Form spannend, not spannen."
+		},
+		"grammar-de-adj-dev-lexicalized-participial-verrueckt": {
+			"input": {
+				"markedContext": "Der Mann ist völlig <TARGET>verrückt</TARGET>.",
+				"members": ["verrückt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "verrückt",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["verrückt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Lexicalized 'crazy' comes from no sense of verrücken (ADR 0033). Predicative ADJ, not a state passive VERB."
+		},
+		"grammar-de-adj-dev-invariant-lila": {
+			"input": {
+				"markedContext": "Sie trug einen <TARGET>lila</TARGET> Schal.",
+				"members": ["lila"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "lila",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["lila"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Attributive color ADJ. Not color-name NOUN. Invariant form keeps agreement."
+		},
+		"grammar-de-adj-dev-archaic-hold": {
+			"input": {
+				"markedContext": "Ihr <TARGET>holdes</TARGET> Lächeln bezauberte die Gäste.",
+				"members": ["holdes"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hold",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["holdes"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Old poetic adjective. Mark Surface Archaic."
+		},
+		"grammar-de-adj-accept-participial-glaenzend": {
+			"input": {
+				"markedContext": "Eine <TARGET>glänzende</TARGET> Idee rettete das Projekt.",
+				"members": ["glänzende"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "glänzend",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["glänzende"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Lexicalized 'brilliant' with comparison (glänzender), so a participial ADJ (ADR 0033): Canonical Form glänzend."
+		},
+		"grammar-de-adj-accept-invariant-rosa": {
+			"input": {
+				"markedContext": "Er kaufte ein <TARGET>rosa</TARGET> Kleid.",
+				"members": ["rosa"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "rosa",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["rosa"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-demo-ordinal-erste": {
+			"input": {
+				"markedContext": "Der <TARGET>erste</TARGET> Versuch gelang.",
+				"members": ["erste"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "erst",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": "Ord",
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["erste"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Ordinal ADJ. Keep agreement. Lemma NumType Ord."
+		},
+		"grammar-de-adj-demo-typo-freundlcih": {
+			"input": {
+				"markedContext": "Die Antwort klingt <TARGET>freundlcih</TARGET>.",
+				"members": ["freundlcih"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "freundlich",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["freundlich"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Letters transposed. Mark Typo. Repair Surface and Lemma."
+		},
+		"grammar-de-adj-dev-cardinal-siebenhundert": {
+			"input": {
+				"markedContext": "Sie las die <TARGET>siebenhundert</TARGET> Seiten in einer Woche.",
+				"members": ["siebenhundert"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "siebenhundert",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": "Card",
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["siebenhundert"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Route fixed ADJ, not NUM. Cardinal identity. Invariant Surface."
+		},
+		"grammar-de-adj-dev-foreign-special": {
+			"input": {
+				"markedContext": "Das war ein <TARGET>special</TARGET> Moment für das Team.",
+				"members": ["special"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "special",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": "Yes",
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["special"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Overt English adjective in German context. Mark Foreign Yes."
+		},
+		"grammar-de-adj-dev-abbreviation-sog": {
+			"input": {
+				"markedContext": "Ein <TARGET>sog</TARGET>. Experte sagte vor Gericht aus.",
+				"members": ["sog"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sogenannt",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["sog"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Licensed abbreviation. Period outside member. Variant Surface."
+		},
+		"grammar-de-adj-accept-ordinal-zweite": {
+			"input": {
+				"markedContext": "Die <TARGET>zweite</TARGET> Sitzung begann pünktlich.",
+				"members": ["zweite"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zweit",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": "Ord",
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["zweite"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-adj-dev-participial-geschlossen": {
+			"input": {
+				"markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
+				"members": ["geschlossene"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geschlossen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["geschlossene"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An attributive participle is an ADJ (ADR 0036): Canonical Form geschlossen, the uninflected participle, not schließen."
+		},
+		"grammar-de-adj-dev-adverbial-participle-one-lachend": {
+			"input": {
+				"markedContext": "Er kam <TARGET>lachend</TARGET> herein.",
+				"members": ["lachend"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "lachend",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["lachend"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An adverbial Partizip I is an ADJ (ADR 0036): Canonical Form lachend; adverbial use has only degree."
+		},
+		"grammar-de-adj-participle-attributive-gekochten": {
+			"input": {
+				"markedContext": "Die <TARGET>gekochten</TARGET> Kartoffeln standen schon bereit.",
+				"members": ["gekochten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gekocht",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["gekochten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An attributive Partizip II is an ADJ (ADR 0036): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked. Gekochten is an attributive participle modifying Kartoffeln, so it is the ADJ gekocht with Participle Source kochen (ADR 0036)."
+		},
+		"grammar-de-adj-participle-attributive-bewunderte": {
+			"input": {
+				"markedContext": "Der von allen <TARGET>bewunderte</TARGET> Lehrer ging in den Ruhestand.",
+				"members": ["bewunderte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bewundert",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["bewunderte"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An attributive participle with a von-agent is still an ADJ (ADR 0036): Canonical Form bewundert; Nom Sing Masc. Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0036). The von-agent stays outside."
+		},
+		"grammar-de-adj-participle-attributive-gelegene": {
+			"input": {
+				"markedContext": "Das am See <TARGET>gelegene</TARGET> Haus gehört meinem Onkel.",
+				"members": ["gelegene"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gelegen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["gelegene"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Locative gelegen 'situated' is an attributive ADJ (ADR 0035), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
+		},
+		"grammar-de-adj-participle-attributive-umgestuerzte": {
+			"input": {
+				"markedContext": "Der Sturm blockierte mit dem <TARGET>umgestürzten</TARGET> Baum die Straße.",
+				"members": ["umgestürzten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "umgestürzt",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["umgestürzten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An attributive participle of a separable verb is an ADJ (ADR 0036): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
+		},
+		"grammar-de-adj-participle-attributive-spielenden": {
+			"input": {
+				"markedContext": "Sie beobachtete die im Garten <TARGET>spielenden</TARGET> Kinder.",
+				"members": ["spielenden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "spielend",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"normalizedMembers": ["spielenden"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "An attributive Partizip I is an ADJ (ADR 0036): Canonical Form spielend; Acc Plur with Kinder."
+		},
+		"grammar-de-adj-participle-state-passive-geschlossen": {
+			"input": {
+				"markedContext": "Die Tür ist <TARGET>geschlossen</TARGET>.",
+				"members": ["geschlossen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geschlossen",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["geschlossen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0036): predicative geschlossen has only degree. sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036)."
+		},
+		"grammar-de-adj-governed-stolz-auf": {
+			"input": {
+				"markedContext": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+				"members": ["stolz", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "stolz",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["stolz", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "stolz governs auf in the same sense on its own, so the preposition is a governed member of the ADJ, never of the copula (ADR 0034). The Surface projects only the Fixed member: stolz. An adjective takes in the preposition it governs, as a verb does: auf is an occurrence member, so a click on it opens stolz, and valencyEvidence names it by index with auf + Acc. It is not a Fixed member, so the normalized Surface is stolz. The copula ist stays its own VERB and forms no Collocation with the predicative adjective."
+		},
+		"grammar-de-adj-governed-separated-auf-ihn": {
+			"input": {
+				"markedContext": "<TARGET>Auf</TARGET> ihn bin ich <TARGET>stolz</TARGET>.",
+				"members": ["Auf", "stolz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "stolz",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"normalizedMembers": ["auf", "stolz"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "A fronted governed preposition stays a member of its adjective, as a separated verb particle does; sentence-initial Auf normalizes to auf."
+		},
+		"grammar-de-adj-governed-attributive-stolze": {
+			"input": {
+				"markedContext": "Der <TARGET>auf</TARGET> seinen Sohn <TARGET>stolze</TARGET> Vater lächelt.",
+				"members": ["auf", "stolze"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "stolz",
+					"coreFeatures": {
+						"abbr": null,
+						"foreign": null,
+						"numType": null,
+						"variant": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["auf", "stolze"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "An attributive adjective keeps its governed preposition across its complement; the Surface is stolze."
+		}
+	}
+}

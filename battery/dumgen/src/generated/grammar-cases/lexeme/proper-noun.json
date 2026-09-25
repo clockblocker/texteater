@@ -1,0 +1,1348 @@
+{
+	"demonstrationIds": [
+		"grammar-de-propn-demo-person-maria",
+		"grammar-de-propn-demo-place-berlin",
+		"grammar-de-propn-demo-multi-angela-merkel",
+		"grammar-de-propn-demo-genitive-hans",
+		"grammar-de-propn-demo-acronym-nato",
+		"grammar-de-propn-demo-typo-koelnn",
+		"grammar-de-propn-demo-citation-work-tonio-kroeger",
+		"grammar-de-propn-demo-org-unesco",
+		"grammar-de-propn-demo-vocative-clara",
+		"grammar-de-propn-demo-stylized-ebay",
+		"grammar-de-propn-demo-org-rotes-kreuz",
+		"grammar-de-propn-demo-work-physiker",
+		"grammar-de-propn-demo-integrated-lego"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-propn-dev-person-anna-acc",
+		"grammar-de-propn-dev-person-peters-gen",
+		"grammar-de-propn-dev-place-schweiz",
+		"grammar-de-propn-dev-place-niederlanden",
+		"grammar-de-propn-dev-org-deutsche-bank",
+		"grammar-de-propn-dev-org-spd",
+		"grammar-de-propn-dev-product-iphone",
+		"grammar-de-propn-dev-product-adidas",
+		"grammar-de-propn-dev-work-zauberfloete",
+		"grammar-de-propn-dev-work-prozess",
+		"grammar-de-propn-dev-citation-hamburg",
+		"grammar-de-propn-dev-vocative-lukas",
+		"grammar-de-propn-dev-foreign-new-york",
+		"grammar-de-propn-dev-transliteration-kyjiw",
+		"grammar-de-propn-dev-variant-pressburg",
+		"grammar-de-propn-dev-typo-muenchn",
+		"grammar-de-propn-dev-casing-berLin",
+		"grammar-de-propn-dev-multi-johann-goethe",
+		"grammar-de-propn-dev-neighbor-city-berlin",
+		"grammar-de-propn-dev-repeated-second-peter",
+		"grammar-de-propn-dev-plural-alpen",
+		"grammar-de-propn-accept-v3-person-leonie",
+		"grammar-de-propn-accept-v3-place-saarland",
+		"grammar-de-propn-accept-v3-multi-garmisch-partenkirchen",
+		"grammar-de-propn-accept-v3-org-zdf",
+		"grammar-de-propn-accept-v3-product-thermomix",
+		"grammar-de-propn-accept-v3-work-nibelungenlied",
+		"grammar-de-propn-accept-v3-citation-mainz",
+		"grammar-de-propn-accept-v3-foreign-rio-de-janeiro",
+		"grammar-de-propn-accept-v3-genitive-max",
+		"grammar-de-propn-accept-v3-typo-hannnover",
+		"grammar-de-propn-accept-v3-variant-preussen",
+		"grammar-de-propn-accept-v3-plural-balearen"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-propn-demo-person-maria": {
+			"input": {
+				"markedContext": "<TARGET>Maria</TARGET> eröffnet heute die Ausstellung.",
+				"members": ["Maria"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Maria",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["Maria"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-demo-place-berlin": {
+			"input": {
+				"markedContext": "Wir treffen uns morgen in <TARGET>Berlin</TARGET>.",
+				"members": ["Berlin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Berlin",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Berlin"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-demo-multi-angela-merkel": {
+			"input": {
+				"markedContext": "<TARGET>Angela</TARGET> <TARGET>Merkel</TARGET> hielt am Abend eine Rede.",
+				"members": ["Angela", "Merkel"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Angela Merkel",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["Angela", "Merkel"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "Both supplied members form one complete classified name; preserve their order and resolve one PROPN Surface."
+		},
+		"grammar-de-propn-demo-genitive-hans": {
+			"input": {
+				"markedContext": "<TARGET>Hans</TARGET>' Fahrrad steht noch vor dem Haus.",
+				"members": ["Hans"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Hans",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+				},
+				"normalizedMembers": ["Hans"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-demo-acronym-nato": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>NATO</TARGET> berät heute über den Antrag.",
+				"members": ["Die", "NATO"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "NATO",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["die", "NATO"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-demo-typo-koelnn": {
+			"input": {
+				"markedContext": "Der Zug hält morgen in <TARGET>Kölnn</TARGET>.",
+				"members": ["Kölnn"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Köln",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Köln"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-demo-citation-work-tonio-kroeger": {
+			"input": {
+				"markedContext": "Im Werkverzeichnis steht der Titel „<TARGET>Tonio</TARGET> <TARGET>Kröger</TARGET>“.",
+				"members": ["Tonio", "Kröger"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Tonio Kröger",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Tonio", "Kröger"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "The surrounding common noun Titel bears sentence case; the separately quoted work-name mention is Citation rather than an accusative name occurrence."
+		},
+		"grammar-de-propn-demo-org-unesco": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>UNESCO</TARGET> fördert das neue Bildungsprojekt.",
+				"members": ["Die", "UNESCO"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "UNESCO",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["die", "UNESCO"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			},
+			"explanation": "An abbreviated organization in an ordinary subject occurrence is Inflection; its acronym shape never turns the contextual use into Citation."
+		},
+		"grammar-de-propn-demo-vocative-clara": {
+			"input": {
+				"markedContext": "Hör bitte kurz zu, <TARGET>Clara</TARGET>!",
+				"members": ["Clara"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Clara",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": null, "number": "Sing" }
+				},
+				"normalizedMembers": ["Clara"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "A direct-address occurrence is contextual Inflection with singular Number and null Case, never Citation."
+		},
+		"grammar-de-propn-demo-stylized-ebay": {
+			"input": {
+				"markedContext": "Der Bericht erwähnt <TARGET>eBay</TARGET> nur am Rand.",
+				"members": ["eBay"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "eBay",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["eBay"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "Registered styling is Canonical, ordinary contextual use is Inflection, and absent reliable agreement the name's gender stays null."
+		},
+		"grammar-de-propn-demo-org-rotes-kreuz": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> <TARGET>Rote</TARGET> <TARGET>Kreuz</TARGET> eröffnete eine neue Beratungsstelle.",
+				"members": ["Das", "Rote", "Kreuz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Rotes Kreuz",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["das", "Rote", "Kreuz"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			},
+			"explanation": "An ordinary multi-member organization subject is Inflection; its contextual article and verb establish nominative singular."
+		},
+		"grammar-de-propn-demo-work-physiker": {
+			"input": {
+				"markedContext": "Das Theater zeigt heute <TARGET>Die</TARGET> <TARGET>Physiker</TARGET>.",
+				"members": ["Die", "Physiker"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Die Physiker",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Die", "Physiker"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "A supplied article inside an ordinary contextual work-title object remains a member and the title is Inflection, not a Citation mention."
+		},
+		"grammar-de-propn-demo-integrated-lego": {
+			"input": {
+				"markedContext": "Das Kind sortiert das <TARGET>LEGO</TARGET> nach Farben.",
+				"members": ["LEGO"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "LEGO",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["LEGO"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "An established product name in German is not Foreign merely because its brand origin is non-German."
+		},
+		"grammar-de-propn-dev-person-anna-acc": {
+			"input": {
+				"markedContext": "Die Redaktion interviewt <TARGET>Anna</TARGET> am Freitag.",
+				"members": ["Anna"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Anna",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Anna"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-person-peters-gen": {
+			"input": {
+				"markedContext": "<TARGET>Peters</TARGET> neuer Roman erscheint im Herbst.",
+				"members": ["Peters"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Peter",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+				},
+				"normalizedMembers": ["Peters"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-place-schweiz": {
+			"input": {
+				"markedContext": "Im Sommer besucht sie <TARGET>die</TARGET> <TARGET>Schweiz</TARGET>.",
+				"members": ["die", "Schweiz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Schweiz",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["die", "Schweiz"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-dev-place-niederlanden": {
+			"input": {
+				"markedContext": "Seit April arbeitet er in <TARGET>den</TARGET> <TARGET>Niederlanden</TARGET>.",
+				"members": ["den", "Niederlanden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Niederlande",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Plur" }
+				},
+				"normalizedMembers": ["den", "Niederlanden"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-dev-org-deutsche-bank": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>Deutsche</TARGET> <TARGET>Bank</TARGET> veröffentlichte den Bericht.",
+				"members": ["Die", "Deutsche", "Bank"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Deutsche Bank",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["die", "Deutsche", "Bank"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			},
+			"explanation": "Upstream supplied both name members; Deutsche is not reclassified as ADJ and Bank is not repaired to a common NOUN."
+		},
+		"grammar-de-propn-dev-org-spd": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> <TARGET>SPD</TARGET> beschloss ein neues Programm.",
+				"members": ["Die", "SPD"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "SPD",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["die", "SPD"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-dev-product-iphone": {
+			"input": {
+				"markedContext": "Sie testet das neue <TARGET>iPhone</TARGET> im Labor.",
+				"members": ["iPhone"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "iPhone",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["iPhone"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "Registered internal capitalization is Standard and must not be regularized."
+		},
+		"grammar-de-propn-dev-product-adidas": {
+			"input": {
+				"markedContext": "Die Kampagne stellt <TARGET>adidas</TARGET> in den Mittelpunkt.",
+				"members": ["adidas"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "adidas",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["adidas"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-work-zauberfloete": {
+			"input": {
+				"markedContext": "Am Samstag sehen wir <TARGET>Die</TARGET> <TARGET>Zauberflöte</TARGET> in der Oper.",
+				"members": ["Die", "Zauberflöte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Die Zauberflöte",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Die", "Zauberflöte"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "The article is a supplied member of the fixed work title, not a neighboring DET to remove."
+		},
+		"grammar-de-propn-dev-work-prozess": {
+			"input": {
+				"markedContext": "Der Katalog nennt den Titel „<TARGET>Der</TARGET> <TARGET>Prozess</TARGET>“.",
+				"members": ["Der", "Prozess"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Der Prozess",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Der", "Prozess"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-citation-hamburg": {
+			"input": {
+				"markedContext": "Im Register steht der Namenseintrag <TARGET>Hamburg</TARGET>.",
+				"members": ["Hamburg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Hamburg",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Hamburg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-vocative-lukas": {
+			"input": {
+				"markedContext": "Bitte komm herein, <TARGET>Lukas</TARGET>!",
+				"members": ["Lukas"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Lukas",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": null, "number": "Sing" }
+				},
+				"normalizedMembers": ["Lukas"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-foreign-new-york": {
+			"input": {
+				"markedContext": "Sie lebt seit zwei Jahren in <TARGET>New</TARGET> <TARGET>York</TARGET>.",
+				"members": ["New", "York"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "New York",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": "Yes",
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["New", "York"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-transliteration-kyjiw": {
+			"input": {
+				"markedContext": "Im ukrainischsprachigen Teil sagt die Delegation, sie reise morgen nach <TARGET>Kyjiw</TARGET>.",
+				"members": ["Kyjiw"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Kyjiw",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": "Yes",
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Kyjiw"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-variant-pressburg": {
+			"input": {
+				"markedContext": "Der Reisebericht verwendet den historischen deutschen Namen <TARGET>Pressburg</TARGET> für Bratislava.",
+				"members": ["Pressburg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Bratislava",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Pressburg"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-typo-muenchn": {
+			"input": {
+				"markedContext": "Die Konferenz findet in <TARGET>Münchn</TARGET> statt.",
+				"members": ["Münchn"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "München",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["München"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-casing-berLin": {
+			"input": {
+				"markedContext": "Die Messe wurde nach <TARGET>berLin</TARGET> verlegt.",
+				"members": ["berLin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Berlin",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Berlin"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-multi-johann-goethe": {
+			"input": {
+				"markedContext": "Die Universität ehrt <TARGET>Johann</TARGET> <TARGET>Wolfgang</TARGET> <TARGET>von</TARGET> <TARGET>Goethe</TARGET> mit einer Ausstellung.",
+				"members": ["Johann", "Wolfgang", "von", "Goethe"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Johann Wolfgang von Goethe",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Johann", "Wolfgang", "von", "Goethe"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-neighbor-city-berlin": {
+			"input": {
+				"markedContext": "Die Stadt <TARGET>Berlin</TARGET> wächst weiterhin schnell.",
+				"members": ["Berlin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Berlin",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["Berlin"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "The unmarked common NOUN Stadt is a neighbor, not a member to add."
+		},
+		"grammar-de-propn-dev-repeated-second-peter": {
+			"input": {
+				"markedContext": "Peter kam zuerst, doch <TARGET>Peter</TARGET> ging als Letzter.",
+				"members": ["Peter"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Peter",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["Peter"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-dev-plural-alpen": {
+			"input": {
+				"markedContext": "Im Winter fahren sie in <TARGET>die</TARGET> <TARGET>Alpen</TARGET>.",
+				"members": ["die", "Alpen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Alpen",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
+				},
+				"normalizedMembers": ["die", "Alpen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-accept-v3-person-leonie": {
+			"input": {
+				"markedContext": "Die Jury dankt <TARGET>Leonie</TARGET> für ihren Einsatz.",
+				"members": ["Leonie"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Leonie",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Fem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Leonie"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-place-saarland": {
+			"input": {
+				"markedContext": "<TARGET>Saarland</TARGET> meldet steigende Besucherzahlen.",
+				"members": ["Saarland"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Saarland",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["Saarland"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-multi-garmisch-partenkirchen": {
+			"input": {
+				"markedContext": "Der Bus durchquert <TARGET>Garmisch</TARGET>-<TARGET>Partenkirchen</TARGET> am Nachmittag.",
+				"members": ["Garmisch", "Partenkirchen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Garmisch-Partenkirchen",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Garmisch", "Partenkirchen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-org-zdf": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> <TARGET>ZDF</TARGET> überträgt die Debatte live.",
+				"members": ["Das", "ZDF"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ZDF",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["das", "ZDF"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-accept-v3-product-thermomix": {
+			"input": {
+				"markedContext": "Die Werkstatt repariert den <TARGET>Thermomix</TARGET> noch heute.",
+				"members": ["Thermomix"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Thermomix",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Thermomix"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-work-nibelungenlied": {
+			"input": {
+				"markedContext": "Die Klasse interpretiert <TARGET>das</TARGET> <TARGET>Nibelungenlied</TARGET>.",
+				"members": ["das", "Nibelungenlied"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Nibelungenlied",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["das", "Nibelungenlied"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-accept-v3-citation-mainz": {
+			"input": {
+				"markedContext": "Das Namenverzeichnis enthält den Ortsnamen <TARGET>Mainz</TARGET>.",
+				"members": ["Mainz"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mainz",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Mainz"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-foreign-rio-de-janeiro": {
+			"input": {
+				"markedContext": "Im portugiesischsprachigen Gespräch erzählt sie von <TARGET>Rio</TARGET> <TARGET>de</TARGET> <TARGET>Janeiro</TARGET>.",
+				"members": ["Rio", "de", "Janeiro"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Rio de Janeiro",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": "Yes",
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Rio", "de", "Janeiro"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-genitive-max": {
+			"input": {
+				"markedContext": "<TARGET>Max</TARGET>' Fahrrad lehnt an der Mauer.",
+				"members": ["Max"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Max",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+				},
+				"normalizedMembers": ["Max"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-typo-hannnover": {
+			"input": {
+				"markedContext": "Die Messe findet dieses Jahr in <TARGET>Hannnover</TARGET> statt.",
+				"members": ["Hannnover"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Hannover",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Hannover"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-variant-preussen": {
+			"input": {
+				"markedContext": "Das Wörterbuch dokumentiert <TARGET>Preussen</TARGET> als historische Schreibvariante von Preußen.",
+				"members": ["Preussen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Preußen",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["Preussen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		"grammar-de-propn-accept-v3-plural-balearen": {
+			"input": {
+				"markedContext": "Im Oktober besuchen sie <TARGET>die</TARGET> <TARGET>Balearen</TARGET>.",
+				"members": ["die", "Balearen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Balearen",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
+				},
+				"normalizedMembers": ["die", "Balearen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-regression-fused-article-rhein": {
+			"input": {
+				"markedContext": "Er badet i<TARGET>m</TARGET> <TARGET>Rhein</TARGET>.",
+				"members": ["m", "Rhein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Rhein",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["dem", "Rhein"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-regression-owned-article-struwwelpeter": {
+			"input": {
+				"markedContext": "Sieh einmal, hier steht er,\npfui, <TARGET>der</TARGET> <TARGET>Struwwelpeter</TARGET>!",
+				"members": ["der", "Struwwelpeter"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Struwwelpeter",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+				},
+				"normalizedMembers": ["der", "Struwwelpeter"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			},
+			"explanation": "Struwwelpeter is a name canonically cited with its article (der Struwwelpeter), so it is a PROPN with Core article Definite and owns der as its first member, like a common noun owns its article."
+		},
+		"grammar-de-propn-regression-bare-name-altes-berlin": {
+			"input": {
+				"markedContext": "Viele vermissen das alte <TARGET>Berlin</TARGET>.",
+				"members": ["Berlin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Berlin",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+				},
+				"normalizedMembers": ["Berlin"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"explanation": "Berlin is cited bare, so its Lemma has no article and the das before it is not its member."
+		}
+	}
+}

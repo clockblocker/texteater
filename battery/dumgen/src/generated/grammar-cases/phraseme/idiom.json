@@ -1,0 +1,1457 @@
+{
+	"demonstrationIds": [
+		"grammar-de-idiom-flinte-past-full",
+		"grammar-de-idiom-grass-citation",
+		"grammar-de-idiom-woelfe-present-full",
+		"grammar-de-idiom-teufel-wand-full",
+		"grammar-de-idiom-nase-typo-full",
+		"grammar-de-idiom-handtuch-ellipsis-partial"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-idiom-was-zum-truncation-partial",
+		"grammar-de-idiom-faeustchen-perfect-full",
+		"grammar-de-idiom-truebsal-imperative-full",
+		"grammar-de-idiom-hand-fuss-subjunctive-full",
+		"grammar-de-idiom-schneider-past-full",
+		"grammar-de-idiom-fliegen-present-full",
+		"grammar-de-idiom-loeffel-typo-full",
+		"grammar-de-idiom-kalte-schulter-future-full",
+		"grammar-de-idiom-fettnaepfchen-infinitive-full",
+		"grammar-de-idiom-tomaten-present-full",
+		"grammar-de-idiom-nagel-passive-full",
+		"grammar-de-idiom-zunge-im-zaum-infinitive-full",
+		"grammar-de-idiom-dick-duenn-past-full",
+		"grammar-de-idiom-faden-perfect-full",
+		"grammar-de-idiom-ohr-present-full",
+		"grammar-de-idiom-kuerzeren-ellipsis-partial",
+		"grammar-de-idiom-bett-literal-figurative-full",
+		"grammar-de-idiom-wolke-present-full",
+		"grammar-de-idiom-wolken-past-full",
+		"grammar-de-idiom-katze-perfect-full",
+		"grammar-de-idiom-kirche-imperative-full",
+		"grammar-de-idiom-blatt-future-full",
+		"grammar-de-idiom-kopf-sand-typo-perfect",
+		"grammar-de-idiom-licht-passive-full",
+		"grammar-de-idiom-haende-present-full",
+		"grammar-de-idiom-schlauch-present-full",
+		"grammar-de-idiom-segel-ellipsis-partial"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-idiom-flinte-past-full": {
+			"input": {
+				"markedContext": "Nach dem Rückstand <TARGET>warf</TARGET> die Trainerin <TARGET>die</TARGET> <TARGET>Flinte</TARGET> endgültig <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Korn</TARGET>.",
+				"members": ["warf", "die", "Flinte", "in", "s", "Korn"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die Flinte ins Korn werfen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"warf",
+					"die",
+					"Flinte",
+					"in",
+					"s",
+					"Korn"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"]
+		},
+		"grammar-de-idiom-grass-citation": {
+			"input": {
+				"markedContext": "Im Wörterbuch steht der Eintrag <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>.",
+				"members": ["in", "s", "Gras", "beißen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ins Gras beißen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["in", "s", "Gras", "beißen"],
+				"memberOrthographies": [
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"contaminationKeys": ["de-idiom-lemma:ins-gras-beissen"]
+		},
+		"grammar-de-idiom-woelfe-present-full": {
+			"input": {
+				"markedContext": "<TARGET>Heult</TARGET> nicht länger <TARGET>mit</TARGET> <TARGET>den</TARGET> <TARGET>Wölfen</TARGET>!",
+				"members": ["Heult", "mit", "den", "Wölfen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mit den Wölfen heulen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Plur",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["heult", "mit", "den", "Wölfen"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Heult starts sentence. Standard spelling. Normalize verb to heult. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:mit-den-woelfen-heulen"]
+		},
+		"grammar-de-idiom-teufel-wand-full": {
+			"input": {
+				"markedContext": "Kaum sprachen wir von ihr, da <TARGET>malten</TARGET> wir offenbar <TARGET>den</TARGET> <TARGET>Teufel</TARGET> <TARGET>an</TARGET> <TARGET>die</TARGET> <TARGET>Wand</TARGET>.",
+				"members": ["malten", "den", "Teufel", "an", "die", "Wand"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Teufel an die Wand malen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"malten",
+					"den",
+					"Teufel",
+					"an",
+					"die",
+					"Wand"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"]
+		},
+		"grammar-de-idiom-nase-typo-full": {
+			"input": {
+				"markedContext": "Der Praktikant <TARGET>tanzte</TARGET> dem Chef <TARGET>auf</TARGET> <TARGET>der</TARGET> <TARGET>Nahse</TARGET> <TARGET>herum</TARGET>.",
+				"members": ["tanzte", "auf", "der", "Nahse", "herum"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf der Nase herumtanzen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["tanzte", "auf", "der", "Nase", "herum"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Typo",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "dem Chef is free argument. Do not add jemandem to canonicalForm. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:auf-der-nase-herumtanzen"]
+		},
+		"grammar-de-idiom-handtuch-ellipsis-partial": {
+			"input": {
+				"markedContext": "Die erste Mannschaft hat das Handtuch geworfen, und später <TARGET>hat</TARGET> auch die zweite <TARGET>geworfen</TARGET>.",
+				"members": ["hat", "geworfen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "das Handtuch werfen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "geworfen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Partial",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:das-handtuch-werfen"]
+		},
+		"grammar-de-idiom-was-zum-truncation-partial": {
+			"input": {
+				"markedContext": "<TARGET>Was</TARGET> <TARGET>zu</TARGET><TARGET>m</TARGET> …?",
+				"members": ["Was", "zu", "m"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "was zum Teufel",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["was", "zu", "m"],
+				"memberOrthographies": ["Standard", "Fused", "Fused"],
+				"realizationCoverage": "Partial",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Conventional truncation. Was + zum identify the exact Idiom; Teufel is unrealized fixed material.",
+			"contaminationKeys": ["de-idiom-lemma:was-zum-teufel"]
+		},
+		"grammar-de-idiom-faeustchen-perfect-full": {
+			"input": {
+				"markedContext": "Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
+				"members": ["hat", "sich", "in", "s", "Fäustchen", "gelacht"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich ins Fäustchen lachen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"hat",
+					"sich",
+					"in",
+					"s",
+					"Fäustchen",
+					"gelacht"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"]
+		},
+		"grammar-de-idiom-truebsal-imperative-full": {
+			"input": {
+				"markedContext": "<TARGET>Blase</TARGET> jetzt nicht länger <TARGET>Trübsal</TARGET>!",
+				"members": ["Blase", "Trübsal"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Trübsal blasen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["blase", "Trübsal"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"]
+		},
+		"grammar-de-idiom-hand-fuss-subjunctive-full": {
+			"input": {
+				"markedContext": "Wenn der Vorschlag <TARGET>Hand</TARGET> <TARGET>und</TARGET> <TARGET>Fuß</TARGET> <TARGET>hätte</TARGET>, stimmte ich zu.",
+				"members": ["Hand", "und", "Fuß", "hätte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Hand und Fuß haben",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["Hand", "und", "Fuß", "hätte"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"]
+		},
+		"grammar-de-idiom-schneider-past-full": {
+			"input": {
+				"markedContext": "Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
+				"members": ["fror", "wie", "ein", "Schneider"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "frieren wie ein Schneider",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["fror", "wie", "ein", "Schneider"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"]
+		},
+		"grammar-de-idiom-fliegen-present-full": {
+			"input": {
+				"markedContext": "Mit derselben Maßnahme <TARGET>schlägt</TARGET> sie <TARGET>zwei</TARGET> <TARGET>Fliegen</TARGET> <TARGET>mit</TARGET> <TARGET>einer</TARGET> <TARGET>Klappe</TARGET>.",
+				"members": [
+					"schlägt",
+					"zwei",
+					"Fliegen",
+					"mit",
+					"einer",
+					"Klappe"
+				]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zwei Fliegen mit einer Klappe schlagen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"schlägt",
+					"zwei",
+					"Fliegen",
+					"mit",
+					"einer",
+					"Klappe"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"]
+		},
+		"grammar-de-idiom-loeffel-typo-full": {
+			"input": {
+				"markedContext": "Im Nachruf stand, dass er <TARGET>den</TARGET> <TARGET>Löfel</TARGET> schließlich <TARGET>abgab</TARGET>.",
+				"members": ["den", "Löfel", "abgab"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Löffel abgeben",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["den", "Löffel", "abgab"],
+				"memberOrthographies": ["Standard", "Typo", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"]
+		},
+		"grammar-de-idiom-kalte-schulter-future-full": {
+			"input": {
+				"markedContext": "Morgen <TARGET>wird</TARGET> sie ihm wohl <TARGET>die</TARGET> <TARGET>kalte</TARGET> <TARGET>Schulter</TARGET> <TARGET>zeigen</TARGET>.",
+				"members": ["wird", "die", "kalte", "Schulter", "zeigen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die kalte Schulter zeigen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"wird",
+					"die",
+					"kalte",
+					"Schulter",
+					"zeigen"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"]
+		},
+		"grammar-de-idiom-fettnaepfchen-infinitive-full": {
+			"input": {
+				"markedContext": "Er versucht, nicht wieder <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Fettnäpfchen</TARGET> zu <TARGET>treten</TARGET>.",
+				"members": ["in", "s", "Fettnäpfchen", "treten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ins Fettnäpfchen treten",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["in", "s", "Fettnäpfchen", "treten"],
+				"memberOrthographies": [
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"]
+		},
+		"grammar-de-idiom-tomaten-present-full": {
+			"input": {
+				"markedContext": "Du <TARGET>hast</TARGET> heute wohl <TARGET>Tomaten</TARGET> <TARGET>auf</TARGET> <TARGET>den</TARGET> <TARGET>Augen</TARGET>.",
+				"members": ["hast", "Tomaten", "auf", "den", "Augen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Tomaten auf den Augen haben",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hast", "Tomaten", "auf", "den", "Augen"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"]
+		},
+		"grammar-de-idiom-nagel-passive-full": {
+			"input": {
+				"markedContext": "Mit dieser Diagnose <TARGET>wurde</TARGET> <TARGET>der</TARGET> <TARGET>Nagel</TARGET> genau <TARGET>auf</TARGET> <TARGET>den</TARGET> <TARGET>Kopf</TARGET> <TARGET>getroffen</TARGET>.",
+				"members": [
+					"wurde",
+					"der",
+					"Nagel",
+					"auf",
+					"den",
+					"Kopf",
+					"getroffen"
+				]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Nagel auf den Kopf treffen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": [
+					"wurde",
+					"der",
+					"Nagel",
+					"auf",
+					"den",
+					"Kopf",
+					"getroffen"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"]
+		},
+		"grammar-de-idiom-zunge-im-zaum-infinitive-full": {
+			"input": {
+				"markedContext": "Sie versprach, künftig <TARGET>die</TARGET> <TARGET>Zunge</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Zaum</TARGET> zu <TARGET>halten</TARGET>.",
+				"members": ["die", "Zunge", "i", "m", "Zaum", "halten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die Zunge im Zaum halten",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"die",
+					"Zunge",
+					"i",
+					"m",
+					"Zaum",
+					"halten"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"]
+		},
+		"grammar-de-idiom-dick-duenn-past-full": {
+			"input": {
+				"markedContext": "Die Freunde <TARGET>gingen</TARGET> gemeinsam <TARGET>durch</TARGET> <TARGET>dick</TARGET> <TARGET>und</TARGET> <TARGET>dünn</TARGET>.",
+				"members": ["gingen", "durch", "dick", "und", "dünn"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "durch dick und dünn gehen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["gingen", "durch", "dick", "und", "dünn"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"]
+		},
+		"grammar-de-idiom-faden-perfect-full": {
+			"input": {
+				"markedContext": "Mitten in der Erklärung <TARGET>hat</TARGET> er völlig <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
+				"members": ["hat", "den", "Faden", "verloren"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Faden verlieren",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "den", "Faden", "verloren"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"]
+		},
+		"grammar-de-idiom-ohr-present-full": {
+			"input": {
+				"markedContext": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>über</TARGET><TARGET>s</TARGET> <TARGET>Ohr</TARGET>.",
+				"members": ["haut", "über", "s", "Ohr"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "übers Ohr hauen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["haut", "über", "s", "Ohr"],
+				"memberOrthographies": [
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"]
+		},
+		"grammar-de-idiom-kuerzeren-ellipsis-partial": {
+			"input": {
+				"markedContext": "Im ersten Duell hat Anna den Kürzeren gezogen; im zweiten <TARGET>hat</TARGET> auch Ben <TARGET>gezogen</TARGET>.",
+				"members": ["hat", "gezogen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Kürzeren ziehen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "gezogen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Partial",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:den-kuerzeren-ziehen"]
+		},
+		"grammar-de-idiom-bett-literal-figurative-full": {
+			"input": {
+				"markedContext": "Während der Wärter das historische Bett hütete, <TARGET>hütete</TARGET> die kranke Kuratorin <TARGET>das</TARGET> <TARGET>Bett</TARGET>.",
+				"members": ["hütete", "das", "Bett"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "das Bett hüten",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hütete", "das", "Bett"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "First phrase literal. Marked second phrase means staying in bed ill. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:das-bett-hueten"]
+		},
+		"grammar-de-idiom-wolke-present-full": {
+			"input": {
+				"markedContext": "Das Sprichwort Morgenstund hat Gold im Mund half ihm nicht; seit der Zusage <TARGET>schwebt</TARGET> er trotzdem <TARGET>auf</TARGET> <TARGET>Wolke</TARGET> <TARGET>sieben</TARGET>.",
+				"members": ["schwebt", "auf", "Wolke", "sieben"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf Wolke sieben schweben",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["schwebt", "auf", "Wolke", "sieben"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"]
+		},
+		"grammar-de-idiom-wolken-past-full": {
+			"input": {
+				"markedContext": "Nach dem Aphorismus über die Hoffnung <TARGET>fiel</TARGET> sie bei der Absage <TARGET>aus</TARGET> <TARGET>allen</TARGET> <TARGET>Wolken</TARGET>.",
+				"members": ["fiel", "aus", "allen", "Wolken"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aus allen Wolken fallen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["fiel", "aus", "allen", "Wolken"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"]
+		},
+		"grammar-de-idiom-katze-perfect-full": {
+			"input": {
+				"markedContext": "Nach der Formel „Guten Morgen“ <TARGET>hat</TARGET> sie ohne Prüfung <TARGET>die</TARGET> <TARGET>Katze</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Sack</TARGET> <TARGET>gekauft</TARGET>.",
+				"members": ["hat", "die", "Katze", "i", "m", "Sack", "gekauft"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die Katze im Sack kaufen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"hat",
+					"die",
+					"Katze",
+					"i",
+					"m",
+					"Sack",
+					"gekauft"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"]
+		},
+		"grammar-de-idiom-kirche-imperative-full": {
+			"input": {
+				"markedContext": "Nachdem der Ausschuss eine Entscheidung getroffen hat, <TARGET>lass</TARGET> bitte <TARGET>die</TARGET> <TARGET>Kirche</TARGET> <TARGET>i</TARGET><TARGET>m</TARGET> <TARGET>Dorf</TARGET>!",
+				"members": ["lass", "die", "Kirche", "i", "m", "Dorf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die Kirche im Dorf lassen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"lass",
+					"die",
+					"Kirche",
+					"i",
+					"m",
+					"Dorf"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"]
+		},
+		"grammar-de-idiom-blatt-future-full": {
+			"input": {
+				"markedContext": "Morgen <TARGET>wird</TARGET> sie wohl <TARGET>kein</TARGET> <TARGET>Blatt</TARGET> <TARGET>vor</TARGET> <TARGET>den</TARGET> <TARGET>Mund</TARGET> <TARGET>nehmen</TARGET>.",
+				"members": [
+					"wird",
+					"kein",
+					"Blatt",
+					"vor",
+					"den",
+					"Mund",
+					"nehmen"
+				]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "kein Blatt vor den Mund nehmen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"wird",
+					"kein",
+					"Blatt",
+					"vor",
+					"den",
+					"Mund",
+					"nehmen"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"
+			]
+		},
+		"grammar-de-idiom-kopf-sand-typo-perfect": {
+			"input": {
+				"markedContext": "Trotz der Warnung <TARGET>hat</TARGET> er <TARGET>den</TARGET> <TARGET>Kopf</TARGET> weiter <TARGET>in</TARGET> <TARGET>den</TARGET> <TARGET>Sant</TARGET> <TARGET>gesteckt</TARGET>.",
+				"members": [
+					"hat",
+					"den",
+					"Kopf",
+					"in",
+					"den",
+					"Sant",
+					"gesteckt"
+				]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "den Kopf in den Sand stecken",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": [
+					"hat",
+					"den",
+					"Kopf",
+					"in",
+					"den",
+					"Sand",
+					"gesteckt"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Typo",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"]
+		},
+		"grammar-de-idiom-licht-passive-full": {
+			"input": {
+				"markedContext": "Durch die Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
+				"members": ["wurde", "Licht", "in", "s", "Dunkel", "gebracht"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Licht ins Dunkel bringen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": [
+					"wurde",
+					"Licht",
+					"in",
+					"s",
+					"Dunkel",
+					"gebracht"
+				],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Fused",
+					"Fused",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"]
+		},
+		"grammar-de-idiom-haende-present-full": {
+			"input": {
+				"markedContext": "Mit dem Umzug <TARGET>hat</TARGET> die Familie <TARGET>alle</TARGET> <TARGET>Hände</TARGET> <TARGET>voll</TARGET> zu <TARGET>tun</TARGET>.",
+				"members": ["hat", "alle", "Hände", "voll", "tun"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "alle Hände voll zu tun haben",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "alle", "Hände", "voll", "tun"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"de-idiom-lemma:alle-haende-voll-zu-tun-haben"
+			]
+		},
+		"grammar-de-idiom-schlauch-present-full": {
+			"input": {
+				"markedContext": "Bei dieser Frage <TARGET>stehe</TARGET> ich völlig <TARGET>auf</TARGET> <TARGET>dem</TARGET> <TARGET>Schlauch</TARGET>.",
+				"members": ["stehe", "auf", "dem", "Schlauch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf dem Schlauch stehen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["stehe", "auf", "dem", "Schlauch"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"]
+		},
+		"grammar-de-idiom-segel-ellipsis-partial": {
+			"input": {
+				"markedContext": "Eva hat die Segel gestrichen; nach der Niederlage <TARGET>hat</TARGET> auch Tom <TARGET>gestrichen</TARGET>.",
+				"members": ["hat", "gestrichen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die Segel streichen",
+					"coreFeatures": {}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "gestrichen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Partial",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]
+		}
+	}
+}

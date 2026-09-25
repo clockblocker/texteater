@@ -11,8 +11,8 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
-import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
-import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
+import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
+import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
 import {
 	executeOutput,
 	grammarFixture,
@@ -22,7 +22,8 @@ import {
 	rejectJudgment,
 } from "../src/testing.js";
 
-const nounOutput = nounCases["grammar-de-noun-demo-citation-haus"].idealOutput;
+const nounOutput =
+	nounProjection.cases["grammar-de-noun-demo-citation-haus"].idealOutput;
 const noun: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
 	language: "de",
@@ -490,7 +491,7 @@ test("feature navigation reaches the der-series cells that were once listed as s
 });
 test("migrated finite verb evidence remains present", () => {
 	expect(
-		verbCases["grammar-de-verb-finite-liest"].idealOutput.surface
+		verbProjection.cases["grammar-de-verb-finite-liest"].idealOutput.surface
 			.inflectionalFeatures,
 	).toMatchObject({
 		mood: "Ind",

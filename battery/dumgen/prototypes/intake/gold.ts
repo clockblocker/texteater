@@ -10,17 +10,17 @@
  * sentence analysis, exactly as the click cases do.
  */
 
-import auxiliaryCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
-import { evaluationCaseIds as auxiliaryIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/evaluation-ids.js";
-import determinerCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/determiner/corpus.json";
-import { evaluationCaseIds as determinerIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/determiner/evaluation-ids.js";
-import nounCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
-import { evaluationCaseIds as nounIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/noun/evaluation-ids.js";
-import pronounCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
-import { evaluationCaseIds as pronounIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.js";
-import verbCases from "../../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
-import { evaluationCaseIds as verbIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/verb/evaluation-ids.js";
+import { evaluationCaseIds as auxiliaryIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.js";
+import { evaluationCaseIds as determinerIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/determiner/corpus.js";
+import { evaluationCaseIds as nounIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.js";
+import { evaluationCaseIds as pronounIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.js";
+import { evaluationCaseIds as verbIds } from "../../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.js";
 import { segmentGerman } from "../../src/concrete-lang/de/segmentation/segment.js";
+import auxiliaryProjection from "../../src/generated/grammar-cases/lexeme/auxiliary.json";
+import determinerProjection from "../../src/generated/grammar-cases/lexeme/determiner.json";
+import nounProjection from "../../src/generated/grammar-cases/lexeme/noun.json";
+import pronounProjection from "../../src/generated/grammar-cases/lexeme/pronoun.json";
+import verbProjection from "../../src/generated/grammar-cases/lexeme/verb.json";
 import type { ClickCase, Segment, Sentence } from "./corpus.js";
 
 type GrammarCase = {
@@ -185,9 +185,21 @@ export function loadLemmaSentences(scope: string): GoldSentence[] {
 		Record<string, GrammarCase>,
 		readonly string[],
 	][] = [
-		["PRON", pronounCases as Record<string, GrammarCase>, pronounIds],
-		["DET", determinerCases as Record<string, GrammarCase>, determinerIds],
-		["AUX", auxiliaryCases as Record<string, GrammarCase>, auxiliaryIds],
+		[
+			"PRON",
+			pronounProjection.cases as Record<string, GrammarCase>,
+			pronounIds,
+		],
+		[
+			"DET",
+			determinerProjection.cases as Record<string, GrammarCase>,
+			determinerIds,
+		],
+		[
+			"AUX",
+			auxiliaryProjection.cases as Record<string, GrammarCase>,
+			auxiliaryIds,
+		],
 	];
 	for (const [kind, cases, evaluationIds] of sources) {
 		const ids = scope === "all" ? Object.keys(cases) : evaluationIds;
@@ -356,8 +368,8 @@ export function loadGrammarSentences(scope: string): GoldSentence[] {
 		Record<string, GrammarCase>,
 		readonly string[],
 	][] = [
-		["VERB", verbCases as Record<string, GrammarCase>, verbIds],
-		["NOUN", nounCases as Record<string, GrammarCase>, nounIds],
+		["VERB", verbProjection.cases as Record<string, GrammarCase>, verbIds],
+		["NOUN", nounProjection.cases as Record<string, GrammarCase>, nounIds],
 	];
 	for (const [kind, cases, evaluationIds] of sources) {
 		const ids = scope === "all" ? Object.keys(cases) : evaluationIds;

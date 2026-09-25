@@ -1,0 +1,1450 @@
+{
+	"demonstrationIds": [
+		"grammar-de-adp-demo-prep-mit-dat",
+		"grammar-de-adp-demo-two-way-auf",
+		"grammar-de-adp-demo-post-entlang-acc",
+		"grammar-de-adp-demo-circ-von-an",
+		"grammar-de-adp-demo-typo-one",
+		"grammar-de-adp-demo-archaic-ob"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-adp-dev-prep-durch-acc",
+		"grammar-de-adp-dev-prep-zu-dat",
+		"grammar-de-adp-dev-two-way-vor-acc",
+		"grammar-de-adp-dev-post-zuliebe-dat",
+		"grammar-de-adp-dev-prep-seit-dat",
+		"grammar-de-adp-dev-wegen-local-dat-lexical-gen",
+		"grammar-de-adp-dev-circ-um-willen",
+		"grammar-de-adp-dev-circ-an-vorbei",
+		"grammar-de-adp-dev-post-gegenueber-dat",
+		"grammar-de-adp-dev-extpos-sconj-anstatt",
+		"grammar-de-adp-dev-foreign-versus-acc",
+		"grammar-de-adp-dev-prep-entlang-gen",
+		"grammar-de-adp-dev-adp-before-unmarked-particle",
+		"grammar-de-adp-dev-adp-beside-governed-verb-member",
+		"grammar-de-adp-dev-adp-beside-fusion",
+		"grammar-de-adp-dev-adp-beside-sconj",
+		"grammar-de-adp-accept-prep-fuer-acc",
+		"grammar-de-adp-accept-prep-aus-dat",
+		"grammar-de-adp-accept-prep-waehrend-gen",
+		"grammar-de-adp-accept-two-way-zwischen-dat",
+		"grammar-de-adp-accept-post-wegen-gen",
+		"grammar-de-adp-accept-circ-von-aus",
+		"grammar-de-adp-accept-circ-ueber-hinaus",
+		"grammar-de-adp-accept-post-gemaess-dat",
+		"grammar-de-adp-accept-alternating-dank",
+		"grammar-de-adp-accept-prep-bis-acc",
+		"grammar-de-adp-dev-sentence-initial-wegen",
+		"grammar-de-adp-dev-casing-typo-unter",
+		"grammar-de-adp-dev-lexical-typo-gegen",
+		"grammar-de-adp-dev-abbreviation-inkl",
+		"grammar-de-adp-dev-variant-auf-grund",
+		"grammar-de-adp-accept-typo-ohhne",
+		"grammar-de-adp-accept-archaic-behufs",
+		"grammar-de-adp-dev-two-way-auf-acc",
+		"grammar-de-adp-dev-fused-in-dat"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-adp-demo-prep-mit-dat": {
+			"input": {
+				"markedContext": "Sie fährt <TARGET>mit</TARGET> dem Bus zur Arbeit.",
+				"members": ["mit"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mit",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["mit"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Contextual ADP stays Citation; the occurrence records the dative its complement takes."
+		},
+		"grammar-de-adp-demo-two-way-auf": {
+			"input": {
+				"markedContext": "Das Buch liegt <TARGET>auf</TARGET> dem Tisch.",
+				"members": ["auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["auf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "A location (wo?) gives the two-way auf a dative complement, recorded on the occurrence, not the Lemma."
+		},
+		"grammar-de-adp-demo-post-entlang-acc": {
+			"input": {
+				"markedContext": "Wir liefen den Fluss <TARGET>entlang</TARGET> bis zur Brücke.",
+				"members": ["entlang"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "entlang",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Post",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["entlang"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Following its accusative complement establishes postpositional entlang."
+		},
+		"grammar-de-adp-demo-circ-von-an": {
+			"input": {
+				"markedContext": "<TARGET>Von</TARGET> diesem Tag <TARGET>an</TARGET> führte sie das Protokoll.",
+				"members": ["Von", "an"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "von ... an",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Circ",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["von", "an"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Two supplied members enclose one dative complement and remain positionally aligned."
+		},
+		"grammar-de-adp-dev-prep-durch-acc": {
+			"input": {
+				"markedContext": "Wir gehen <TARGET>durch</TARGET> den Park nach Hause.",
+				"members": ["durch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "durch",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["durch"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-prep-zu-dat": {
+			"input": {
+				"markedContext": "Sie geht <TARGET>zu</TARGET> ihrer Ärztin.",
+				"members": ["zu"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zu",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["zu"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-two-way-vor-acc": {
+			"input": {
+				"markedContext": "Er stellt die Kiste <TARGET>vor</TARGET> die Tür.",
+				"members": ["vor"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "vor",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["vor"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-post-zuliebe-dat": {
+			"input": {
+				"markedContext": "Den Kindern <TARGET>zuliebe</TARGET> blieb sie noch eine Stunde.",
+				"members": ["zuliebe"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zuliebe",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Post",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["zuliebe"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-prep-seit-dat": {
+			"input": {
+				"markedContext": "Sie wohnt <TARGET>seit</TARGET> einem Jahr in Bonn.",
+				"members": ["seit"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "seit",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["seit"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-wegen-local-dat-lexical-gen": {
+			"input": {
+				"markedContext": "Wir blieben <TARGET>wegen</TARGET> dem Regen zu Hause.",
+				"members": ["wegen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wegen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["wegen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "The complement is colloquially dative, so the occurrence records Dat; the ADP Case Table keeps Gen as the preferred case of the same Lemma."
+		},
+		"grammar-de-adp-dev-circ-um-willen": {
+			"input": {
+				"markedContext": "<TARGET>Um</TARGET> des Friedens <TARGET>willen</TARGET> schwiegen beide Seiten.",
+				"members": ["Um", "willen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "um ... willen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Circ",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["um", "willen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-circ-an-vorbei": {
+			"input": {
+				"markedContext": "Der Radweg führt <TARGET>an</TARGET> der Schule <TARGET>vorbei</TARGET>.",
+				"members": ["an", "vorbei"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "an ... vorbei",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Circ",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["an", "vorbei"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-post-gegenueber-dat": {
+			"input": {
+				"markedContext": "Dem Bahnhof <TARGET>gegenüber</TARGET> öffnete ein Café.",
+				"members": ["gegenüber"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gegenüber",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Post",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["gegenüber"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-extpos-sconj-anstatt": {
+			"input": {
+				"markedContext": "<TARGET>Anstatt</TARGET> dass er klagte, half er sofort.",
+				"members": ["Anstatt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "anstatt",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": "SCONJ",
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["anstatt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed ADP route keeps lexical identity while clause use supplies ExtPos SCONJ."
+		},
+		"grammar-de-adp-dev-foreign-versus-acc": {
+			"input": {
+				"markedContext": "Im Finale spielt Köln <TARGET>versus</TARGET> Berlin.",
+				"members": ["versus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "versus",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": "Yes",
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["versus"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-prep-entlang-gen": {
+			"input": {
+				"markedContext": "<TARGET>Entlang</TARGET> des Kanals stehen alte Pappeln.",
+				"members": ["Entlang"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "entlang",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["entlang"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			},
+			"explanation": "Complement position and genitive fix the prepositional entlang reading."
+		},
+		"grammar-de-adp-dev-adp-before-unmarked-particle": {
+			"input": {
+				"markedContext": "Sie blickt <TARGET>auf</TARGET> die Uhr und steht danach auf.",
+				"members": ["auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["auf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Marked auf governs a noun; later unmarked auf belongs to the verb."
+		},
+		"grammar-de-adp-dev-adp-beside-governed-verb-member": {
+			"input": {
+				"markedContext": "Sie wartet auf den Bus, geht aber <TARGET>ohne</TARGET> Schirm los.",
+				"members": ["ohne"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ohne",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ohne"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Only supplied ohne resolves here; unmarked auf belongs to warten."
+		},
+		"grammar-de-adp-dev-adp-beside-fusion": {
+			"input": {
+				"markedContext": "Im Regal liegt das Buch <TARGET>auf</TARGET> dem mittleren Brett.",
+				"members": ["auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["auf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Unmarked im is a Fusion and does not change the supplied ADP target."
+		},
+		"grammar-de-adp-dev-adp-beside-sconj": {
+			"input": {
+				"markedContext": "Obwohl es regnet, bleiben wir <TARGET>wegen</TARGET> des Windes drinnen.",
+				"members": ["wegen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wegen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["wegen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-prep-fuer-acc": {
+			"input": {
+				"markedContext": "Sie backt einen Kuchen <TARGET>für</TARGET> ihre Nachbarin.",
+				"members": ["für"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "für",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["für"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-prep-aus-dat": {
+			"input": {
+				"markedContext": "Der Tisch besteht <TARGET>aus</TARGET> massivem Holz.",
+				"members": ["aus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aus",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["aus"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-prep-waehrend-gen": {
+			"input": {
+				"markedContext": "<TARGET>Während</TARGET> des Konzerts blieb ihr Handy aus.",
+				"members": ["Während"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "während",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["während"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-two-way-zwischen-dat": {
+			"input": {
+				"markedContext": "Der Schlüssel liegt <TARGET>zwischen</TARGET> den Büchern.",
+				"members": ["zwischen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "zwischen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["zwischen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-post-wegen-gen": {
+			"input": {
+				"markedContext": "Des dichten Nebels <TARGET>wegen</TARGET> fiel der Flug aus.",
+				"members": ["wegen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wegen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Post",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["wegen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-circ-von-aus": {
+			"input": {
+				"markedContext": "<TARGET>Von</TARGET> der Terrasse <TARGET>aus</TARGET> sieht man den See.",
+				"members": ["Von", "aus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "von ... aus",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Circ",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["von", "aus"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-circ-ueber-hinaus": {
+			"input": {
+				"markedContext": "Die Wirkung reicht <TARGET>über</TARGET> das Jahr <TARGET>hinaus</TARGET>.",
+				"members": ["über", "hinaus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "über ... hinaus",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Circ",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["über", "hinaus"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-post-gemaess-dat": {
+			"input": {
+				"markedContext": "Den Regeln <TARGET>gemäß</TARGET> beginnt die Sitzung pünktlich.",
+				"members": ["gemäß"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gemäß",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Post",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["gemäß"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-alternating-dank": {
+			"input": {
+				"markedContext": "<TARGET>Dank</TARGET> des schnellen Einsatzes blieb niemand verletzt.",
+				"members": ["Dank"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dank",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["dank"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			},
+			"explanation": "Dative and genitive are both licensed; this occurrence records its genitive complement."
+		},
+		"grammar-de-adp-accept-prep-bis-acc": {
+			"input": {
+				"markedContext": "Die Sperrung gilt <TARGET>bis</TARGET> nächsten Montag.",
+				"members": ["bis"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bis",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["bis"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-demo-typo-one": {
+			"input": {
+				"markedContext": "Sie ging <TARGET>one</TARGET> Mantel hinaus.",
+				"members": ["one"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ohne",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ohne"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Missing h is a genuine typo; repair only the supplied member."
+		},
+		"grammar-de-adp-demo-archaic-ob": {
+			"input": {
+				"markedContext": "<TARGET>Ob</TARGET> des Unwetters blieb das Tor geschlossen.",
+				"members": ["Ob"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ob",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				},
+				"normalizedMembers": ["ob"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-sentence-initial-wegen": {
+			"input": {
+				"markedContext": "<TARGET>Wegen</TARGET> des Sturms blieb die Fähre im Hafen.",
+				"members": ["Wegen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wegen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["wegen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			},
+			"explanation": "Sentence-initial capitalization is Standard and normalizes to lowercase."
+		},
+		"grammar-de-adp-dev-casing-typo-unter": {
+			"input": {
+				"markedContext": "Das Paket liegt <TARGET>Unter</TARGET> dem Tisch.",
+				"members": ["Unter"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "unter",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["unter"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-lexical-typo-gegen": {
+			"input": {
+				"markedContext": "Sie protestiert <TARGET>egen</TARGET> den neuen Plan.",
+				"members": ["egen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gegen",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["gegen"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-abbreviation-inkl": {
+			"input": {
+				"markedContext": "Der Preis beträgt <TARGET>inkl</TARGET>. Versand zehn Euro.",
+				"members": ["inkl"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "inkl.",
+					"coreFeatures": {
+						"abbr": "Yes",
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["inkl"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			},
+			"explanation": "Segment supplies letters only; following period remains unmarked punctuation."
+		},
+		"grammar-de-adp-dev-variant-auf-grund": {
+			"input": {
+				"markedContext": "Die Redaktion führt „aufgrund“ als Leitform; <TARGET>auf</TARGET> <TARGET>Grund</TARGET> des Wetters bleibt zulässig.",
+				"members": ["auf", "Grund"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aufgrund",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Variant", "surfaceFeatures": null },
+				"normalizedMembers": ["auf", "Grund"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			},
+			"explanation": "Context names editorial headword; two-word standard variant stays aligned."
+		},
+		"grammar-de-adp-accept-typo-ohhne": {
+			"input": {
+				"markedContext": "Er verließ das Haus <TARGET>ohhne</TARGET> seine Schlüssel.",
+				"members": ["ohhne"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ohne",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["ohne"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-accept-archaic-behufs": {
+			"input": {
+				"markedContext": "<TARGET>Behufs</TARGET> einer Prüfung wurden die Akten versiegelt.",
+				"members": ["Behufs"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "behufs",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				},
+				"normalizedMembers": ["behufs"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
+			}
+		},
+		"grammar-de-adp-dev-two-way-auf-acc": {
+			"input": {
+				"markedContext": "Er legte das Band <TARGET>auf</TARGET> das Geschenk.",
+				"members": ["auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auf",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["auf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "A direction (wohin?) gives the two-way auf an accusative complement; the Lemma is the same auf as in auf dem Geschenk."
+		},
+		"grammar-de-adp-dev-fused-in-dat": {
+			"input": {
+				"markedContext": "Wir wohnen <TARGET>in</TARGET> dem Wald.",
+				"members": ["in"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "in",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["in"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "The adposition component of the fused im reads as in dem; a location (wo?) gives in a dative complement."
+		},
+		"grammar-de-adp-fused-piece-i": {
+			"input": {
+				"markedContext": "Ich bin <TARGET>i</TARGET>m Wald.",
+				"members": ["i"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "in",
+					"coreFeatures": {
+						"abbr": null,
+						"adpType": "Prep",
+						"extPos": null,
+						"foreign": null,
+						"partType": null
+					}
+				},
+				"surface": { "spelling": "Canonical", "surfaceFeatures": null },
+				"normalizedMembers": ["in"],
+				"memberOrthographies": ["Fused"],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "im is two Segments. i stands for the ADP in, whose complement dem Wald took the dative."
+		}
+	}
+}

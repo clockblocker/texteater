@@ -4,7 +4,7 @@ import { getExperiment } from "dumgen/development";
 import { comparisonInputSchema } from "dumgen/schemas";
 import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
-import pronounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/pronoun/corpus.json";
+import pronounProjection from "../src/generated/grammar-cases/lexeme/pronoun.json";
 import { grammarSchemas } from "../src/generated/schemas.js";
 import { grammarFixture } from "../src/testing.js";
 
@@ -51,8 +51,9 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 		pronType,
 		gender,
 	] of reviewedCases) {
-		const id = `grammar-de-pron-${suffix}` as keyof typeof pronounCases;
-		const golden = pronounCases[id];
+		const id =
+			`grammar-de-pron-${suffix}` as keyof typeof pronounProjection.cases;
+		const golden = pronounProjection.cases[id];
 		const matches = authoredMembers.filter(
 			({ lemma }) =>
 				lemma.kind === "PRON" &&
@@ -123,7 +124,7 @@ test("pronoun grammar answers hand off to the exact reviewed Reading without gen
 });
 
 test("pronoun answers keep pillar cells in Core and stem cells on the Surface", () => {
-	for (const [id, golden] of Object.entries(pronounCases)) {
+	for (const [id, golden] of Object.entries(pronounProjection.cases)) {
 		if ("decision" in golden.idealOutput) {
 			expect(["Unresolved", "MoreContextRequired"], id).toContain(
 				golden.idealOutput.decision,
@@ -154,7 +155,8 @@ test("pronoun answers keep pillar cells in Core and stem cells on the Surface", 
 
 test("alternate accusative jemand retains the reviewed jemanden identity", async () => {
 	const golden =
-		pronounCases["grammar-de-pron-fixed-jemand-jemanden"].idealOutput;
+		pronounProjection.cases["grammar-de-pron-fixed-jemand-jemanden"]
+			.idealOutput;
 	const answer = {
 		...golden,
 		normalizedMembers: ["jemand"],

@@ -1,0 +1,640 @@
+{
+	"demonstrationIds": [
+		"grammar-de-aux-demo-future-wird",
+		"grammar-de-aux-dev-perfect-hat-gegessen",
+		"grammar-de-aux-dev-passive-wurde-gesperrt",
+		"grammar-de-aux-dev-infinitive-sein",
+		"grammar-de-aux-dev-participle-worden"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-aux-dev-perfect-waren-gegangen",
+		"grammar-de-aux-dev-passive-wird-repariert",
+		"grammar-de-aux-dev-subjunctive-sei-gegangen",
+		"grammar-de-aux-dev-subjunctive-waeren-geblieben",
+		"grammar-de-aux-dev-infinitive-passive-werden",
+		"grammar-de-aux-accept-perfect-ist-gegangen",
+		"grammar-de-aux-accept-future-werden-abreisen",
+		"grammar-de-aux-accept-passive-wurden-gerufen",
+		"grammar-de-aux-accept-subjunctive-haette",
+		"grammar-de-aux-accept-infinitive-haben",
+		"grammar-de-aux-accept-archaic-ward",
+		"grammar-de-aux-dev-recipient-bekommt-geliefert",
+		"grammar-de-aux-accept-recipient-kriegt-erklaert"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-aux-demo-future-wird": {
+			"input": {
+				"markedContext": "Mara <TARGET>wird</TARGET> morgen abreisen.",
+				"members": ["wird"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-perfect-hat-gegessen": {
+			"input": {
+				"markedContext": "Nora <TARGET>hat</TARGET> bereits gegessen.",
+				"members": ["hat"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "haben",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-perfect-waren-gegangen": {
+			"input": {
+				"markedContext": "Die Gäste <TARGET>waren</TARGET> schon gegangen.",
+				"members": ["waren"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["waren"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-passive-wird-repariert": {
+			"input": {
+				"markedContext": "Die Brücke <TARGET>wird</TARGET> im Sommer repariert.",
+				"members": ["wird"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-passive-wurde-gesperrt": {
+			"input": {
+				"markedContext": "Die Straße <TARGET>wurde</TARGET> gestern gesperrt.",
+				"members": ["wurde"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wurde"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-subjunctive-sei-gegangen": {
+			"input": {
+				"markedContext": "Der Zeuge sagt, die Frau <TARGET>sei</TARGET> früh gegangen.",
+				"members": ["sei"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sei"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Konjunktiv I: tense Pres."
+		},
+		"grammar-de-aux-dev-subjunctive-waeren-geblieben": {
+			"input": {
+				"markedContext": "Ohne den Anruf <TARGET>wären</TARGET> sie länger geblieben.",
+				"members": ["wären"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wären"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Konjunktiv II: tense Past."
+		},
+		"grammar-de-aux-dev-infinitive-sein": {
+			"input": {
+				"markedContext": "Mira wird längst angekommen <TARGET>sein</TARGET>.",
+				"members": ["sein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sein"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-infinitive-passive-werden": {
+			"input": {
+				"markedContext": "Der Saal muss heute gereinigt <TARGET>werden</TARGET>.",
+				"members": ["werden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["werden"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-dev-participle-worden": {
+			"input": {
+				"markedContext": "Der Antrag ist gestern genehmigt <TARGET>worden</TARGET>.",
+				"members": ["worden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Part",
+						"participleForm": "Past",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["worden"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-perfect-ist-gegangen": {
+			"input": {
+				"markedContext": "Der Kurier <TARGET>ist</TARGET> pünktlich gegangen.",
+				"members": ["ist"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ist"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-future-werden-abreisen": {
+			"input": {
+				"markedContext": "Wir <TARGET>werden</TARGET> am Freitag abreisen.",
+				"members": ["werden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["werden"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-passive-wurden-gerufen": {
+			"input": {
+				"markedContext": "Die Helfer <TARGET>wurden</TARGET> sofort gerufen.",
+				"members": ["wurden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wurden"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-subjunctive-haette": {
+			"input": {
+				"markedContext": "Mit mehr Zeit <TARGET>hätte</TARGET> er das Ziel erreicht.",
+				"members": ["hätte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "haben",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hätte"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-infinitive-haben": {
+			"input": {
+				"markedContext": "Sie könnte den Zug verpasst <TARGET>haben</TARGET>.",
+				"members": ["haben"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "haben",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["haben"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+		},
+		"grammar-de-aux-accept-archaic-ward": {
+			"input": {
+				"markedContext": "Der Bote <TARGET>ward</TARGET> freundlich empfangen.",
+				"members": ["ward"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ward"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). Old form of werden. Standard attestation, Variant spelling, Surface Archaic."
+		},
+		"grammar-de-aux-dev-recipient-bekommt-geliefert": {
+			"input": {
+				"markedContext": "Sie <TARGET>bekommt</TARGET> das Paket geliefert.",
+				"members": ["bekommt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bekommen",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bekommt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Recipient-passive auxiliary: bekommen contributes nothing lexical, so it is an AUX member of the liefern Unit (ADR 0026). Construction features belong to the Unit."
+		},
+		"grammar-de-aux-accept-recipient-kriegt-erklaert": {
+			"input": {
+				"markedContext": "Er <TARGET>kriegt</TARGET> alles erklärt.",
+				"members": ["kriegt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bekommen",
+					"coreFeatures": { "verbType": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["kriegt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "kriegen realizes the same recipient-passive AUX Lemma and Reading as bekommen (ADR 0026)."
+		}
+	}
+}

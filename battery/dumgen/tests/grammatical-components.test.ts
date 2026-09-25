@@ -3,8 +3,8 @@ import { checkIfGrundform, parseUnit } from "dumling";
 import { Effect } from "effect";
 import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import { member as subjectEs } from "../src/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/es-subject-expletive.js";
-import cases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
 import targetCases from "../src/concrete-lang/de/target-classification/source-data.json";
+import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
 import {
 	createDumgen,
 	deriveGrammaticalComponent,
@@ -27,7 +27,10 @@ for (const name of [
 	"object-es",
 ]) {
 	test(`public grammar and component derivation: ${name}`, async () => {
-		const fixture = cases[`grammar-de-verb-${name}` as keyof typeof cases];
+		const fixture =
+			verbProjection.cases[
+				`grammar-de-verb-${name}` as keyof typeof verbProjection.cases
+			];
 		const source = Object.entries(targetCases.cases).find(
 			([id, value]) =>
 				id.startsWith(`target-de-${name}-`) &&
@@ -103,7 +106,7 @@ for (const name of [
 }
 
 test("missing exact reviewed subject es is CatalogMiss, never referential substitution", async () => {
-	const fixture = cases["grammar-de-verb-demo-exists"];
+	const fixture = verbProjection.cases["grammar-de-verb-demo-exists"];
 	const encounter = validateEncounter({
 		sentence: {
 			id: "missing",

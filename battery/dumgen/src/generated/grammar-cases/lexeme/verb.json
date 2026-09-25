@@ -1,0 +1,3876 @@
+{
+	"demonstrationIds": [
+		"grammar-de-verb-demo-exists",
+		"grammar-de-verb-demo-weather",
+		"grammar-de-verb-citation-arbeiten",
+		"grammar-de-verb-separable-imperative-aufpassen",
+		"grammar-de-verb-dw-future-beteiligen",
+		"grammar-de-verb-dw-separable-aufsetzen",
+		"grammar-de-verb-dw-modal-passive-hergestellt",
+		"grammar-de-verb-dw-perfect-passive-aufgefunden",
+		"grammar-de-verb-modal-demo-kann",
+		"grammar-de-verb-copula-ist"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-verb-subject-question",
+		"grammar-de-verb-subject-past",
+		"grammar-de-verb-subject-subordinate",
+		"grammar-de-verb-subject-weather",
+		"grammar-de-verb-subject-governed",
+		"grammar-de-verb-subject-reflexive",
+		"grammar-de-verb-referential-es",
+		"grammar-de-verb-positional-es",
+		"grammar-de-verb-anticipatory-es",
+		"grammar-de-verb-object-es",
+		"grammar-de-verb-finite-liest",
+		"grammar-de-verb-past-ging",
+		"grammar-de-verb-imperative-lauf",
+		"grammar-de-verb-infinitive-hinauszulaufen",
+		"grammar-de-verb-participle-mitgebracht",
+		"grammar-de-verb-participle-gesungen",
+		"grammar-de-verb-reflexive-erinnert",
+		"grammar-de-verb-governed-preposition-wartet",
+		"grammar-de-verb-separable-finite-aufstehen",
+		"grammar-de-verb-reflexive-schaemt",
+		"grammar-de-verb-future-wird-reisen",
+		"grammar-de-verb-passive-wurde-gebeten",
+		"grammar-de-verb-full-modal-mag",
+		"grammar-de-verb-elliptical-modal-kann",
+		"grammar-de-verb-full-werden",
+		"grammar-de-verb-full-hat",
+		"grammar-de-verb-typo-tanzd",
+		"grammar-de-verb-passive-participle-geschlossen",
+		"grammar-de-verb-provisional-zu-infinitive-warten",
+		"grammar-de-verb-dw-perfect-etabliert",
+		"grammar-de-verb-dw-perfect-eingependelt",
+		"grammar-de-verb-dw-perfect-ausgeschlossen",
+		"grammar-de-verb-dw-separable-nachwirken",
+		"grammar-de-verb-dw-passive-weitergeleitet",
+		"grammar-de-verb-dw-future-finden",
+		"grammar-de-verb-dw-pluperfect-angekuendigt",
+		"grammar-de-verb-dw-passive-aufgefressen",
+		"grammar-de-verb-dw-perfect-ausgesprochen",
+		"grammar-de-verb-dw-pluperfect-passive-verschifft",
+		"grammar-de-verb-dw-separable-vorbereiten",
+		"grammar-de-verb-prep-governed-warten-auf",
+		"grammar-de-verb-prep-free-warten-im",
+		"grammar-de-verb-prep-governed-verzichten-auf",
+		"grammar-de-verb-prep-free-sprechen-im",
+		"grammar-de-verb-prep-governed-reflexive-erinnern-an",
+		"grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+		"grammar-de-verb-prep-free-reflexive-erholen-im",
+		"grammar-de-verb-prep-governed-warnen-vor",
+		"grammar-de-verb-prep-free-arbeiten-mit",
+		"grammar-de-verb-prep-free-spielen-auf",
+		"grammar-de-verb-dev-apocope-haett-bestellt",
+		"grammar-de-verb-modal-citation-duerfen",
+		"grammar-de-verb-modal-darf-bleiben",
+		"grammar-de-verb-modal-wolltest-gehen",
+		"grammar-de-verb-modal-moechte-bleiben",
+		"grammar-de-verb-modal-sollen-syncretic",
+		"grammar-de-verb-modal-muessen",
+		"grammar-de-verb-modal-mag-infinitive",
+		"grammar-de-verb-modal-wollt",
+		"grammar-de-verb-modal-typo-sol",
+		"grammar-de-verb-modal-typo-mus",
+		"grammar-de-verb-modal-variant-muss",
+		"grammar-de-verb-modal-typo-koenen",
+		"grammar-de-verb-modal-contrast-mag",
+		"grammar-de-verb-copula-imperative-sei",
+		"grammar-de-verb-copula-bin-muede",
+		"grammar-de-verb-copula-bist-muede",
+		"grammar-de-verb-copula-sind-muede",
+		"grammar-de-verb-copula-seid-muede",
+		"grammar-de-verb-copula-war-ruhig",
+		"grammar-de-verb-copula-perfect-ist-gewesen",
+		"grammar-de-verb-copula-citation-sein",
+		"grammar-de-verb-recipient-passive-bekommt-geliefert",
+		"grammar-de-verb-recipient-passive-erhielt-ueberreicht",
+		"grammar-de-verb-lexical-bekommt-paket",
+		"grammar-de-verb-resultative-bekommt-geoeffnet"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-verb-governed-preposition-fused-aufs": {
+			"input": {
+				"markedContext": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET>s Ende.",
+				"members": ["wartet", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wartet", "auf"],
+				"memberOrthographies": ["Standard", "Fused"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "The adposition piece of the fused aufs is the governed-preposition member of warten; its s piece is the article of Ende (ADR 0035)."
+		},
+		"grammar-de-verb-demo-exists": {
+			"input": {
+				"markedContext": "<TARGET>Es</TARGET> <TARGET>gibt</TARGET> Brot.",
+				"members": ["Es", "gibt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geben",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "gibt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:demo-exists"]
+		},
+		"grammar-de-verb-demo-weather": {
+			"input": {
+				"markedContext": "<TARGET>Es</TARGET> <TARGET>regnet</TARGET> heute.",
+				"members": ["Es", "regnet"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "regnen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "regnet"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:demo-weather"]
+		},
+		"grammar-de-verb-citation-arbeiten": {
+			"input": {
+				"markedContext": "Wörterbucheintrag Vollverb: <TARGET>arbeiten</TARGET>",
+				"members": ["arbeiten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "arbeiten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["arbeiten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-verb-separable-imperative-aufpassen": {
+			"input": {
+				"markedContext": "<TARGET>Pass</TARGET> <TARGET>auf</TARGET> dich <TARGET>auf</TARGET>!",
+				"members": ["Pass", "auf", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aufpassen",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["pass", "auf", "auf"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Pass, the governed auf and the detached prefix auf are one aufpassen occurrence. valencyEvidence names the first auf by index, which tells it apart from the prefix; the normalized Surface pass auf leaves the governed preposition out."
+		},
+		"grammar-de-verb-dw-future-beteiligen": {
+			"input": {
+				"markedContext": "\"Deutschland <TARGET>wird</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> diesem Manöver <TARGET>beteiligen</TARGET>\", sagte Regierungssprecher Stefan Kornelius der Deutschen Presse-Agentur.",
+				"members": ["wird", "sich", "an", "beteiligen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich beteiligen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird", "sich", "an", "beteiligen"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
+			]
+		},
+		"grammar-de-verb-dw-separable-aufsetzen": {
+			"input": {
+				"markedContext": "Zahnärztin Shimaa Mahmoud <TARGET>setzt</TARGET> sich eine Gesichtsmaske <TARGET>auf</TARGET>.",
+				"members": ["setzt", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aufsetzen",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["setzt", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "sich ordinary object. Not member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/krieg-im-sudan-gesundheitsversorgung-im-exil/a-75817375"
+			]
+		},
+		"grammar-de-verb-dw-modal-passive-hergestellt": {
+			"input": {
+				"markedContext": "Die Impfstofflieferung für die EU soll in den Produktionsstätten von Biontech in Deutschland sowie in Pfizers Werken in Belgien <TARGET>hergestellt</TARGET> <TARGET>werden</TARGET>.",
+				"members": ["hergestellt", "werden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "herstellen",
+					"coreFeatures": {
+						"hasSepPrefix": "her",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["hergestellt", "werden"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/eu-sichert-sich-300-millionen-biontech-impfdosen-f%C3%BCr-europa/a-55566897"
+			]
+		},
+		"grammar-de-verb-dw-perfect-passive-aufgefunden": {
+			"input": {
+				"markedContext": "In Südkorea <TARGET>ist</TARGET> der junge Musiker und Schauspieler Cha In-ha (Artikelbild) tot in seinem Haus in der Hauptstadt Seoul <TARGET>aufgefunden</TARGET> <TARGET>worden</TARGET>.",
+				"members": ["ist", "aufgefunden", "worden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auffinden",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["ist", "aufgefunden", "worden"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
+			]
+		},
+		"grammar-de-verb-subject-question": {
+			"input": {
+				"markedContext": "<TARGET>Gibt</TARGET> <TARGET>es</TARGET> einen Ausweg?",
+				"members": ["Gibt", "es"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geben",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["gibt", "es"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-question"]
+		},
+		"grammar-de-verb-subject-past": {
+			"input": {
+				"markedContext": "<TARGET>Es</TARGET> <TARGET>gab</TARGET> damals Hoffnung.",
+				"members": ["Es", "gab"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geben",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "gab"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-past"]
+		},
+		"grammar-de-verb-subject-subordinate": {
+			"input": {
+				"markedContext": "weil <TARGET>es</TARGET> dort noch Möglichkeiten <TARGET>gibt</TARGET>",
+				"members": ["es", "gibt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "geben",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "gibt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-subordinate"]
+		},
+		"grammar-de-verb-subject-weather": {
+			"input": {
+				"markedContext": "Heute <TARGET>regnet</TARGET> <TARGET>es</TARGET> wieder.",
+				"members": ["regnet", "es"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "regnen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["regnet", "es"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": []
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-weather"]
+		},
+		"grammar-de-verb-subject-governed": {
+			"input": {
+				"markedContext": "<TARGET>Es</TARGET> <TARGET>geht</TARGET> heute <TARGET>um</TARGET> Geld.",
+				"members": ["Es", "geht", "um"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gehen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "geht", "um"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "um",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-governed"]
+		},
+		"grammar-de-verb-subject-reflexive": {
+			"input": {
+				"markedContext": "<TARGET>Es</TARGET> <TARGET>handelt</TARGET> <TARGET>sich</TARGET> <TARGET>um</TARGET> einen Fehler.",
+				"members": ["Es", "handelt", "sich", "um"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich handeln",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["es", "handelt", "sich", "um"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
+				"valencyEvidence": [
+					{
+						"member": 3,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "um",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
+			"contaminationKeys": ["subject-es:subject-reflexive"]
+		},
+		"grammar-de-verb-referential-es": {
+			"input": {
+				"markedContext": "Es <TARGET>liegt</TARGET> auf dem Tisch.",
+				"members": ["liegt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "liegen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["liegt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "This es is outside lexically selected subject-expletive composition.",
+			"contaminationKeys": ["subject-es:referential-es"]
+		},
+		"grammar-de-verb-positional-es": {
+			"input": {
+				"markedContext": "Es <TARGET>kamen</TARGET> Gäste.",
+				"members": ["kamen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "kommen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["kamen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "This es is outside lexically selected subject-expletive composition.",
+			"contaminationKeys": ["subject-es:positional-es"]
+		},
+		"grammar-de-verb-anticipatory-es": {
+			"input": {
+				"markedContext": "Es <TARGET>freut</TARGET> mich, dass du kommst.",
+				"members": ["freut"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "freuen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["freut"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "This es is outside lexically selected subject-expletive composition.",
+			"contaminationKeys": ["subject-es:anticipatory-es"]
+		},
+		"grammar-de-verb-object-es": {
+			"input": {
+				"markedContext": "Sie <TARGET>meint</TARGET> es gut mit dir.",
+				"members": ["meint"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "meinen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["meint"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "This es is outside lexically selected subject-expletive composition.",
+			"contaminationKeys": ["subject-es:object-es"]
+		},
+		"grammar-de-verb-finite-liest": {
+			"input": {
+				"markedContext": "Sie <TARGET>liest</TARGET> leise.",
+				"members": ["liest"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "lesen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["liest"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-past-ging": {
+			"input": {
+				"markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+				"members": ["ging"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "gehen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ging"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-imperative-lauf": {
+			"input": {
+				"markedContext": "<TARGET>Lauf</TARGET> schneller!",
+				"members": ["Lauf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "laufen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["lauf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-infinitive-hinauszulaufen": {
+			"input": {
+				"markedContext": "Er versucht, <TARGET>hinauszulaufen</TARGET>.",
+				"members": ["hinauszulaufen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "hinauslaufen",
+					"coreFeatures": {
+						"hasSepPrefix": "hinaus",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hinauszulaufen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The infinitive spelling `hinauszulaufen` directly exposes the separable verb lemma `hinauslaufen`, so this is an unambiguous verbal inflection rather than a standalone directional adverb."
+		},
+		"grammar-de-verb-participle-mitgebracht": {
+			"input": {
+				"markedContext": "Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>.",
+				"members": ["hat", "mitgebracht"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mitbringen",
+					"coreFeatures": {
+						"hasSepPrefix": "mit",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "mitgebracht"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-participle-gesungen": {
+			"input": {
+				"markedContext": "Sie <TARGET>hat</TARGET> <TARGET>gesungen</TARGET>.",
+				"members": ["hat", "gesungen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "singen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "gesungen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-reflexive-erinnert": {
+			"input": {
+				"markedContext": "Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+				"members": ["erinnert", "sich", "an"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich erinnern",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["erinnert", "sich", "an"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The inherently reflexive sich is a Fixed member; governed an stays an occurrence member recorded in valencyEvidence and out of the normalized Surface erinnert sich. The Lemma identity remains sich erinnern with the same core features."
+		},
+		"grammar-de-verb-governed-preposition-wartet": {
+			"input": {
+				"markedContext": "Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
+				"members": ["wartet", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wartet", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-separable-finite-aufstehen": {
+			"input": {
+				"markedContext": "Sie <TARGET>steht</TARGET> jeden Morgen früh <TARGET>auf</TARGET>.",
+				"members": ["steht", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "aufstehen",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["steht", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-reflexive-schaemt": {
+			"input": {
+				"markedContext": "Er <TARGET>schämt</TARGET> <TARGET>sich</TARGET>.",
+				"members": ["schämt", "sich"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich schämen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["schämt", "sich"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-future-wird-reisen": {
+			"input": {
+				"markedContext": "Sie <TARGET>wird</TARGET> <TARGET>reisen</TARGET>.",
+				"members": ["wird", "reisen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "reisen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird", "reisen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "wird member. reisen head. Head stays Inf. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-passive-wurde-gebeten": {
+			"input": {
+				"markedContext": "Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+				"members": ["wurde", "um", "gebeten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bitten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["wurde", "um", "gebeten"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "um",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Passive wurde is a Fixed member and governed um an occurrence member recorded in valencyEvidence, so the normalized Surface is wurde gebeten; the route-owning lexical head remains the ordinary participle gebeten with null tense and voice. The Nom Sie fills no preposition slot, so intake records none for it."
+		},
+		"grammar-de-verb-full-modal-mag": {
+			"input": {
+				"markedContext": "Sie <TARGET>mag</TARGET> Schokolade.",
+				"members": ["mag"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mögen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["mag"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
+		},
+		"grammar-de-verb-elliptical-modal-kann": {
+			"input": {
+				"markedContext": "Sie <TARGET>kann</TARGET> das.",
+				"members": ["kann"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "können",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["kann"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
+		},
+		"grammar-de-verb-full-werden": {
+			"input": {
+				"markedContext": "Sie <TARGET>wird</TARGET> Ärztin.",
+				"members": ["wird"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "werden",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-full-hat": {
+			"input": {
+				"markedContext": "Sie <TARGET>hat</TARGET> ein Fahrrad.",
+				"members": ["hat"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "haben",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-typo-tanzd": {
+			"input": {
+				"markedContext": "Er <TARGET>tanzd</TARGET> gern.",
+				"members": ["tanzd"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "tanzen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["tanzt"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-passive-participle-geschlossen": {
+			"input": {
+				"markedContext": "Die Tür <TARGET>wurde</TARGET> <TARGET>geschlossen</TARGET>.",
+				"members": ["wurde", "geschlossen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "schließen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["wurde", "geschlossen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-provisional-zu-infinitive-warten": {
+			"input": {
+				"markedContext": "Sie versucht zu <TARGET>warten</TARGET>.",
+				"members": ["warten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["warten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-dw-perfect-etabliert": {
+			"input": {
+				"markedContext": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+				"members": ["sich", "etabliert", "hat"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich etablieren",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sich", "etabliert", "hat"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
+			]
+		},
+		"grammar-de-verb-dw-perfect-eingependelt": {
+			"input": {
+				"markedContext": "Mittlerweile <TARGET>hat</TARGET> <TARGET>sich</TARGET> der Preis auf rund 4150 US-Dollar pro Feinunze <TARGET>eingependelt</TARGET> (Stand 27. November).",
+				"members": ["hat", "sich", "eingependelt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich einpendeln",
+					"coreFeatures": {
+						"hasSepPrefix": "ein",
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "sich", "eingependelt"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
+			]
+		},
+		"grammar-de-verb-dw-perfect-ausgeschlossen": {
+			"input": {
+				"markedContext": "Die tansanische Wahlkommission <TARGET>hat</TARGET> die CHADEMA-Partei des Oppositionsführers Tundu Lissu <TARGET>von</TARGET> den Präsidentschafts- und Parlamentswahlen 2025 <TARGET>ausgeschlossen</TARGET>.",
+				"members": ["hat", "von", "ausgeschlossen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ausschließen",
+					"coreFeatures": {
+						"hasSepPrefix": "aus",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "von", "ausgeschlossen"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "von",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
+			]
+		},
+		"grammar-de-verb-dw-separable-nachwirken": {
+			"input": {
+				"markedContext": "Die Eindrücke <TARGET>wirken</TARGET> noch <TARGET>nach</TARGET>, sagt der Historiker beim Treffen mit der DW in seiner Berliner Wohnung.",
+				"members": ["wirken", "nach"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "nachwirken",
+					"coreFeatures": {
+						"hasSepPrefix": "nach",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wirken", "nach"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
+			]
+		},
+		"grammar-de-verb-dw-passive-weitergeleitet": {
+			"input": {
+				"markedContext": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+				"members": ["an", "weitergeleitet", "werden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "weiterleiten",
+					"coreFeatures": {
+						"hasSepPrefix": "weiter",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["an", "weitergeleitet", "werden"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Someone"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
+			]
+		},
+		"grammar-de-verb-dw-future-finden": {
+			"input": {
+				"markedContext": "Auch Emilia <TARGET>wird</TARGET> vermutlich schnell einen Job <TARGET>finden</TARGET>, sobald sie fertig mit ihrem Studium der nachhaltigen Mode sein wird.",
+				"members": ["wird", "finden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "finden",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wird", "finden"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "First wird member. Last wird other verb. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/zukunft-stadtplanung-wie-werden-wir-leben-transport-nahrung-stadtentwicklung/a-74137152"
+			]
+		},
+		"grammar-de-verb-dw-pluperfect-angekuendigt": {
+			"input": {
+				"markedContext": "Die Grünen <TARGET>hatten</TARGET> in ihrem Wahlprogramm <TARGET>angekündigt</TARGET>, dass sie gegenüber der Türkei eine prinzipienfestere Politik verfolgen und stärker auf Menschenrechte und Rechtsstaatlichkeit achten wollen.",
+				"members": ["hatten", "angekündigt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ankündigen",
+					"coreFeatures": {
+						"hasSepPrefix": "an",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hatten", "angekündigt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
+			]
+		},
+		"grammar-de-verb-dw-passive-aufgefressen": {
+			"input": {
+				"markedContext": "Diese Erfolge <TARGET>werden</TARGET> jedoch von den steigenden Emissionen im Verkehrs- und Gebäudesektor <TARGET>aufgefressen</TARGET>.",
+				"members": ["werden", "aufgefressen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "auffressen",
+					"coreFeatures": {
+						"hasSepPrefix": "auf",
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["werden", "aufgefressen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
+			]
+		},
+		"grammar-de-verb-dw-perfect-ausgesprochen": {
+			"input": {
+				"markedContext": "Der Deutsche Ärztetag, die Vertretung der Mediziner in Deutschland, <TARGET>hat</TARGET> <TARGET>sich</TARGET> <TARGET>für</TARGET> ein Verbot jeder Form der organisierten Sterbehilfe <TARGET>ausgesprochen</TARGET>.",
+				"members": ["hat", "sich", "für", "ausgesprochen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich aussprechen",
+					"coreFeatures": {
+						"hasSepPrefix": "aus",
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hat", "sich", "für", "ausgesprochen"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "für",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
+			]
+		},
+		"grammar-de-verb-dw-pluperfect-passive-verschifft": {
+			"input": {
+				"markedContext": "Durch die Meerenge <TARGET>war</TARGET> zuvor fast ein Fünftel des weltweit verbrauchten Rohöls <TARGET>verschifft</TARGET> <TARGET>worden</TARGET>.",
+				"members": ["war", "verschifft", "worden"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "verschiffen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					}
+				},
+				"normalizedMembers": ["war", "verschifft", "worden"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
+			]
+		},
+		"grammar-de-verb-dw-separable-vorbereiten": {
+			"input": {
+				"markedContext": "Die Bundeswehr <TARGET>bereitet</TARGET> <TARGET>sich</TARGET> <TARGET>auf</TARGET> einen möglichen Minenräum-Einsatz in der Straße von Hormus <TARGET>vor</TARGET>.",
+				"members": ["bereitet", "sich", "auf", "vor"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich vorbereiten",
+					"coreFeatures": {
+						"hasSepPrefix": "vor",
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bereitet", "sich", "auf", "vor"],
+				"memberOrthographies": [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard"
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
+			"contaminationKeys": [
+				"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
+			]
+		},
+		"grammar-de-verb-prep-governed-warten-auf": {
+			"input": {
+				"markedContext": "Die Fahrgäste <TARGET>warten</TARGET> trotz der eisigen Kälte geduldig <TARGET>auf</TARGET> den verspäteten Nachtzug nach Hamburg.",
+				"members": ["warten", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["warten", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-free-warten-im": {
+			"input": {
+				"markedContext": "Während des schweren Gewitters <TARGET>wartet</TARGET> der Hausmeister im trockenen Keller des alten Schulgebäudes.",
+				"members": ["wartet"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wartet"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-governed-verzichten-auf": {
+			"input": {
+				"markedContext": "Die Ministerin <TARGET>verzichtet</TARGET> trotz heftiger Kritik aus der eigenen Partei <TARGET>auf</TARGET> eine erneute Kandidatur.",
+				"members": ["verzichtet", "auf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "verzichten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["verzichtet", "auf"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-free-sprechen-im": {
+			"input": {
+				"markedContext": "Nach langen Verhandlungen <TARGET>spricht</TARGET> die Ministerin im voll besetzten Parlament ruhig, langsam und mit großer Entschlossenheit.",
+				"members": ["spricht"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sprechen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["spricht"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-governed-reflexive-erinnern-an": {
+			"input": {
+				"markedContext": "Der pensionierte Lehrer <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> noch deutlich <TARGET>an</TARGET> seinen ersten Schultag in dem kleinen Bergdorf.",
+				"members": ["erinnert", "sich", "an"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich erinnern",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["erinnert", "sich", "an"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-governed-reflexive-sehnen-nach": {
+			"input": {
+				"markedContext": "Viele Bewohner <TARGET>sehnen</TARGET> <TARGET>sich</TARGET> nach Monaten voller Lärm <TARGET>nach</TARGET> etwas Ruhe und verlässlichen Nächten.",
+				"members": ["sehnen", "sich", "nach"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich sehnen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sehnen", "sich", "nach"],
+				"memberOrthographies": ["Standard", "Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "nach",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-free-reflexive-erholen-im": {
+			"input": {
+				"markedContext": "Nach der anstrengenden Sitzung <TARGET>erholt</TARGET> <TARGET>sich</TARGET> die Ministerin im stillen Garten hinter dem Kanzleramt.",
+				"members": ["erholt", "sich"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sich erholen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": "Yes",
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["erholt", "sich"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-governed-warnen-vor": {
+			"input": {
+				"markedContext": "Internationale Fachleute <TARGET>warnen</TARGET> die Küstenstädte seit Jahren <TARGET>vor</TARGET> den Folgen eines ungebremsten Meeresspiegelanstiegs.",
+				"members": ["warnen", "vor"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "warnen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["warnen", "vor"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "vor",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-free-arbeiten-mit": {
+			"input": {
+				"markedContext": "Die Ärztin <TARGET>arbeitet</TARGET> seit vielen Jahren mit einem besonders präzisen Mikroskop in der Forschungsklinik.",
+				"members": ["arbeitet"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "arbeiten",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["arbeitet"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-prep-free-spielen-auf": {
+			"input": {
+				"markedContext": "Die Kinder <TARGET>spielen</TARGET> auch bei kühlem Herbstwetter auf dem frisch renovierten Schulhof hinter der Turnhalle.",
+				"members": ["spielen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "spielen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["spielen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		},
+		"grammar-de-verb-dev-apocope-haett-bestellt": {
+			"input": {
+				"markedContext": "Für die ganze weite Welt <TARGET>hätt</TARGET> ich selbst ein Fest <TARGET>bestellt</TARGET>!",
+				"members": ["hätt", "bestellt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bestellen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["hätt", "bestellt"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Whole verbal Surface hätt bestellt: Konjunktiv II of the past (unreal past, perfect Yes with mood Sub and tense Past), finite as a whole; the Partizip II is only the shape of the head member. hätt is a licensed verse apocope of hätte, not a typo: member orthography Standard, Surface spelling Variant, the literal form kept in normalizedMembers, like muß. The auxiliary member is a Surface of the AUX Reading haben-Perfekt, reachable only from this Surface's sheet (map 487, ticket 507)."
+		},
+		"grammar-de-verb-modal-demo-kann": {
+			"input": {
+				"markedContext": "Das Kind <TARGET>kann</TARGET> schon schwimmen.",
+				"members": ["kann"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "können",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["kann"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-citation-duerfen": {
+			"input": {
+				"markedContext": "Im Wörterbuch steht das Modalverb <TARGET>dürfen</TARGET>.",
+				"members": ["dürfen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dürfen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["dürfen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026)."
+		},
+		"grammar-de-verb-modal-darf-bleiben": {
+			"input": {
+				"markedContext": "Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
+				"members": ["darf"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dürfen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["darf"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-wolltest-gehen": {
+			"input": {
+				"markedContext": "Du <TARGET>wolltest</TARGET> doch früher gehen.",
+				"members": ["wolltest"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wollen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wolltest"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-moechte-bleiben": {
+			"input": {
+				"markedContext": "Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
+				"members": ["möchte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mögen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["möchte"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-sollen-syncretic": {
+			"input": {
+				"markedContext": "In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
+				"members": ["sollen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sollen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sollen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-muessen": {
+			"input": {
+				"markedContext": "Wir <TARGET>müssen</TARGET> jetzt eintreten.",
+				"members": ["müssen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "müssen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["müssen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-mag-infinitive": {
+			"input": {
+				"markedContext": "Tobias <TARGET>mag</TARGET> später mitkommen.",
+				"members": ["mag"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mögen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["mag"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-wollt": {
+			"input": {
+				"markedContext": "Ihr <TARGET>wollt</TARGET> morgen weiterfahren.",
+				"members": ["wollt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wollen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["wollt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-typo-sol": {
+			"input": {
+				"markedContext": "Er <TARGET>sol</TARGET> jetzt warten.",
+				"members": ["sol"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sollen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["soll"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-typo-mus": {
+			"input": {
+				"markedContext": "Der Fahrer <TARGET>mus</TARGET> sofort bremsen.",
+				"members": ["mus"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "müssen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["muss"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-variant-muss": {
+			"input": {
+				"markedContext": "Im alten Brief steht: „Er <TARGET>muß</TARGET> morgen abreisen.“",
+				"members": ["muß"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "müssen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["muß"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-typo-koenen": {
+			"input": {
+				"markedContext": "Wir <TARGET>könen</TARGET> den Termin einhalten.",
+				"members": ["könen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "können",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["können"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+		},
+		"grammar-de-verb-modal-contrast-mag": {
+			"input": {
+				"markedContext": "Sie mag Schokolade, aber heute <TARGET>mag</TARGET> sie lieber kochen.",
+				"members": ["mag"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mögen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": "Mod"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["mag"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
+		},
+		"grammar-de-verb-copula-ist": {
+			"input": {
+				"markedContext": "Der Innenhof <TARGET>ist</TARGET> heute still.",
+				"members": ["ist"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ist"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-imperative-sei": {
+			"input": {
+				"markedContext": "<TARGET>Sei</TARGET> bitte vorsichtig!",
+				"members": ["Sei"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sei"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
+		},
+		"grammar-de-verb-copula-bin-muede": {
+			"input": {
+				"markedContext": "Nach der Reise <TARGET>bin</TARGET> ich müde.",
+				"members": ["bin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bin"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-bist-muede": {
+			"input": {
+				"markedContext": "Nach der Reise <TARGET>bist</TARGET> du müde.",
+				"members": ["bist"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bist"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-sind-muede": {
+			"input": {
+				"markedContext": "Nach der Reise <TARGET>sind</TARGET> wir müde.",
+				"members": ["sind"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["sind"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-seid-muede": {
+			"input": {
+				"markedContext": "Nach der Reise <TARGET>seid</TARGET> ihr müde.",
+				"members": ["seid"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["seid"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-war-ruhig": {
+			"input": {
+				"markedContext": "Der See <TARGET>war</TARGET> am Morgen ruhig.",
+				"members": ["war"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["war"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
+		},
+		"grammar-de-verb-copula-perfect-ist-gewesen": {
+			"input": {
+				"markedContext": "Der Raum <TARGET>ist</TARGET> lange leer <TARGET>gewesen</TARGET>.",
+				"members": ["ist", "gewesen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["ist", "gewesen"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Perfect of copular VERB sein: ist is its auxiliary member, gewesen the head (ADR 0026). Whole-Surface composition per ADR 0022."
+		},
+		"grammar-de-verb-copula-citation-sein": {
+			"input": {
+				"markedContext": "Der Wörterbucheintrag nennt <TARGET>sein</TARGET> als Kopula.",
+				"members": ["sein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["sein"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
+		},
+		"grammar-de-verb-recipient-passive-bekommt-geliefert": {
+			"input": {
+				"markedContext": "Sie <TARGET>bekommt</TARGET> das Paket <TARGET>geliefert</TARGET>.",
+				"members": ["bekommt", "geliefert"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "liefern",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Recipient"
+					}
+				},
+				"normalizedMembers": ["bekommt", "geliefert"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Recipient passive: bekommt is the auxiliary member, geliefert the head. voice Pass, passive Recipient (ADR 0026)."
+		},
+		"grammar-de-verb-recipient-passive-erhielt-ueberreicht": {
+			"input": {
+				"markedContext": "Der Preisträger <TARGET>erhielt</TARGET> die Urkunde <TARGET>überreicht</TARGET>.",
+				"members": ["erhielt", "überreicht"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "überreichen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": "Pass",
+						"passive": "Recipient"
+					}
+				},
+				"normalizedMembers": ["erhielt", "überreicht"],
+				"memberOrthographies": ["Standard", "Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "erhalten as recipient-passive auxiliary; finite past on the whole Surface. überreichen is inseparable, so hasSepPrefix stays null."
+		},
+		"grammar-de-verb-lexical-bekommt-paket": {
+			"input": {
+				"markedContext": "Sie <TARGET>bekommt</TARGET> ein Paket.",
+				"members": ["bekommt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bekommen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bekommt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Lexical bekommen with an object: ordinary VERB, no passive."
+		},
+		"grammar-de-verb-resultative-bekommt-geoeffnet": {
+			"input": {
+				"markedContext": "Sie <TARGET>bekommt</TARGET> das Glas endlich geöffnet.",
+				"members": ["bekommt"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "bekommen",
+					"coreFeatures": {
+						"hasSepPrefix": null,
+						"lexicallyReflexive": null,
+						"verbType": null
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"normalizedMembers": ["bekommt"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
+		}
+	}
+}

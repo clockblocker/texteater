@@ -17,8 +17,8 @@ import type { Questions, TypeSafeExecutor } from "promptsmith/typesafe";
 import { choice } from "promptsmith/typesafe";
 import { germanFusion } from "../src/concrete-lang/de/fusions.js";
 import { featureQuestion } from "../src/concrete-lang/de/grammatical-resolution/feature-questions.js";
-import corpus from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import { operationExperiment } from "../src/development.js";
+import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
 import type { DumgenOptions } from "../src/types.js";
 import {
 	type Call,
@@ -233,7 +233,7 @@ function wrappedJudge(
 }
 
 const execute = createOpenAIExecutor();
-const ids = Object.keys(corpus);
+const ids = Object.keys(nounProjection.cases);
 const experimentProbe = operationExperiment(
 	"grammatical-resolution/de/lexeme/noun",
 	{
@@ -250,7 +250,7 @@ console.error(`${evaluationIds.length} evaluation cases of ${ids.length}`);
 
 async function run(id: string): Promise<CaseResult> {
 	const c = (
-		corpus as Record<
+		nounProjection.cases as Record<
 			string,
 			{
 				input: { markedContext: string; members: string[] };

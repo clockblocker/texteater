@@ -1,0 +1,1527 @@
+{
+	"demonstrationIds": [
+		"grammar-de-det-demo-definite-article-der",
+		"grammar-de-det-demo-possessive-meinem",
+		"grammar-de-det-demo-feminine-article-die",
+		"grammar-de-det-demo-neuter-article-das",
+		"grammar-de-det-demo-uninflected-derlei",
+		"grammar-de-det-demo-variant-ne",
+		"grammar-de-det-demo-paradigm-welche",
+		"grammar-de-det-demo-paradigm-manchem",
+		"grammar-de-det-demo-quoted-archaic-etwelche"
+	],
+	"evaluationCaseIds": [
+		"grammar-de-det-dev-indefinite-article-einen",
+		"grammar-de-det-dev-demonstrative-diesem",
+		"grammar-de-det-dev-emphatic-selben",
+		"grammar-de-det-dev-exclamative-welch",
+		"grammar-de-det-dev-interrogative-welchen",
+		"grammar-de-det-dev-relative-welchem",
+		"grammar-de-det-dev-negative-kein",
+		"grammar-de-det-dev-total-alle",
+		"grammar-de-det-dev-total-beide",
+		"grammar-de-det-dev-indefinite-viele",
+		"grammar-de-det-dev-comparative-weniger",
+		"grammar-de-det-dev-superlative-meisten",
+		"grammar-de-det-dev-possessive-deinen",
+		"grammar-de-det-dev-possessive-unserem",
+		"grammar-de-det-dev-possessive-seinen-masc",
+		"grammar-de-det-dev-possessive-sein-neut",
+		"grammar-de-det-dev-possessive-ihr-fem",
+		"grammar-de-det-dev-formal-ihrem",
+		"grammar-de-det-dev-foreign-the",
+		"grammar-de-det-dev-ordinal-wievielte",
+		"grammar-de-det-accept-v4-definite-des",
+		"grammar-de-det-accept-v4-indefinite-ein",
+		"grammar-de-det-accept-v4-demonstrative-jenem",
+		"grammar-de-det-accept-v4-interrogative-welches",
+		"grammar-de-det-accept-v4-negative-keinen",
+		"grammar-de-det-accept-v4-total-jeder",
+		"grammar-de-det-accept-v4-possessive-deinem",
+		"grammar-de-det-accept-v4-formal-ihrem",
+		"grammar-de-det-accept-v4-indefinite-manches",
+		"grammar-de-det-accept-v4-typo-disem",
+		"grammar-de-det-accept-v4-variant-n",
+		"grammar-de-det-accept-v4-archaic-etwelches"
+	],
+	"slices": {},
+	"cases": {
+		"grammar-de-det-demo-definite-article-der": {
+			"input": {
+				"markedContext": "<TARGET>Der</TARGET> Hund schläft vor der Tür.",
+				"members": ["Der"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "der",
+					"coreFeatures": {
+						"case": "Nom",
+						"definite": "Def",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Masc",
+						"number": "Sing",
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["der"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-demo-possessive-meinem": {
+			"input": {
+				"markedContext": "Ich helfe <TARGET>meinem</TARGET> Bruder beim Umzug.",
+				"members": ["meinem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "1",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": "Sing"
+					}
+				},
+				"normalizedMembers": ["meinem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-demo-feminine-article-die": {
+			"input": {
+				"markedContext": "<TARGET>Die</TARGET> Ärztin beginnt gleich mit der Sprechstunde.",
+				"members": ["Die"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "die",
+					"coreFeatures": {
+						"case": "Nom",
+						"definite": "Def",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Fem",
+						"number": "Sing",
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["die"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-demo-neuter-article-das": {
+			"input": {
+				"markedContext": "<TARGET>Das</TARGET> Kind spielt im Garten.",
+				"members": ["Das"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "das",
+					"coreFeatures": {
+						"case": "Nom",
+						"definite": "Def",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Neut",
+						"number": "Sing",
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["das"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-demo-uninflected-derlei": {
+			"input": {
+				"markedContext": "<TARGET>Derlei</TARGET> Vorfälle werden sofort dokumentiert.",
+				"members": ["Derlei"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "derlei",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["derlei"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The codec has no invariant contextual Surface; use Citation for this uninflected DET while preserving its demonstrative identity."
+		},
+		"grammar-de-det-demo-variant-ne": {
+			"input": {
+				"markedContext": "Da steht <TARGET>ne</TARGET> Kiste auf dem Flur.",
+				"members": ["ne"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "eine",
+					"coreFeatures": {
+						"case": "Nom",
+						"definite": "Ind",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Fem",
+						"number": "Sing",
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["ne"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-demo-paradigm-welche": {
+			"input": {
+				"markedContext": "<TARGET>Welche</TARGET> Nachricht hat die Redaktion zuerst bestätigt?",
+				"members": ["Welche"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "welcher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Int"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Fem",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["welche"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The inflected member belongs to the welcher paradigm; canonicalForm is the full masculine nominative singular dictionary form, never the stem welch."
+		},
+		"grammar-de-det-demo-paradigm-manchem": {
+			"input": {
+				"markedContext": "Mit <TARGET>manchem</TARGET> Hinweis ließ sich das Rätsel schneller lösen.",
+				"members": ["manchem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mancher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["manchem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The inflected member belongs to the mancher paradigm; canonicalForm preserves the full dictionary form rather than the stem manch."
+		},
+		"grammar-de-det-demo-quoted-archaic-etwelche": {
+			"input": {
+				"markedContext": "Der Chronist hegte noch <TARGET>etwelche</TARGET> Zweifel an dem Bericht.",
+				"members": ["etwelche"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "etwelche",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["etwelche"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "An archaic determiner keeps its spelling literally in normalizedMembers and is marked Archaic, not repaired as a typo. Its cell comes from the noun it modifies: plural accusative Zweifel."
+		},
+		"grammar-de-det-dev-indefinite-article-einen": {
+			"input": {
+				"markedContext": "Er zählt eins und kauft danach <TARGET>einen</TARGET> Mantel.",
+				"members": ["einen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "einen",
+					"coreFeatures": {
+						"case": "Acc",
+						"definite": "Ind",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Masc",
+						"number": "Sing",
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["einen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The marked route is DET, not the earlier NUM eins."
+		},
+		"grammar-de-det-dev-demonstrative-diesem": {
+			"input": {
+				"markedContext": "Mit <TARGET>diesem</TARGET> Plan schaffen wir den Termin.",
+				"members": ["diesem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dieser",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["diesem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-emphatic-selben": {
+			"input": {
+				"markedContext": "Am <TARGET>selben</TARGET> Morgen fiel erneut der Strom aus.",
+				"members": ["selben"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "derselbe",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["selben"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Partial"
+			},
+			"explanation": "am selben is an demselben with the article fused into am: the piece realizes derselbe with Partial coverage, the article half lives in the fusion. selber is the invariant emphatic and never declines (ticket 503)."
+		},
+		"grammar-de-det-dev-exclamative-welch": {
+			"input": {
+				"markedContext": "<TARGET>Welch</TARGET> ein Glück, dass niemand verletzt wurde!",
+				"members": ["Welch"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "welch",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Exc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["welch"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The exclamative DET is invariant here, so the exact codec uses Citation."
+		},
+		"grammar-de-det-dev-interrogative-welchen": {
+			"input": {
+				"markedContext": "<TARGET>Welchen</TARGET> Weg nehmen wir nach dem Bahnhof?",
+				"members": ["Welchen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "welcher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Int"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["welchen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-relative-welchem": {
+			"input": {
+				"markedContext": "Er versprach pünktliche Lieferung, <TARGET>welchem</TARGET> Versprechen niemand glaubte.",
+				"members": ["welchem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "welcher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Rel"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["welchem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-negative-kein": {
+			"input": {
+				"markedContext": "Unter <TARGET>keinen</TARGET> Umständen geben wir das Passwort weiter.",
+				"members": ["keinen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "kein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Neg"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["keinen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The classified target is the DET member inside a larger phraseme context; preserve the fixed upstream function-word membership."
+		},
+		"grammar-de-det-dev-total-alle": {
+			"input": {
+				"markedContext": "<TARGET>Alle</TARGET> Stühle stehen schon im Saal.",
+				"members": ["Alle"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "alle",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Tot"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["alle"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-total-beide": {
+			"input": {
+				"markedContext": "Sie prüfte <TARGET>beide</TARGET> Geräte vor dem Versand.",
+				"members": ["beide"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "beide",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Tot"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["beide"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-indefinite-viele": {
+			"input": {
+				"markedContext": "<TARGET>Viele</TARGET> Bücher wurden an die Schule gespendet.",
+				"members": ["Viele"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "viel",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["viele"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The upstream route is DET, not ADJ."
+		},
+		"grammar-de-det-dev-comparative-weniger": {
+			"input": {
+				"markedContext": "Heute kamen <TARGET>weniger</TARGET> als zwanzig Besucher.",
+				"members": ["weniger"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wenig",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Cmp",
+						"gender": null,
+						"gender[psor]": null,
+						"number": null,
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["weniger"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-superlative-meisten": {
+			"input": {
+				"markedContext": "Die <TARGET>meisten</TARGET> Gäste reisten am Sonntag ab.",
+				"members": ["meisten"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "meiste",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Sup",
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["meisten"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-possessive-deinen": {
+			"input": {
+				"markedContext": "Du legst <TARGET>deinen</TARGET> Schlüssel auf den Tisch.",
+				"members": ["deinen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "2",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": "Sing"
+					}
+				},
+				"normalizedMembers": ["deinen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-possessive-unserem": {
+			"input": {
+				"markedContext": "Wir vertrauen <TARGET>unserem</TARGET> Team auch unter Zeitdruck.",
+				"members": ["unserem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "unser",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "1",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": "Plur"
+					}
+				},
+				"normalizedMembers": ["unserem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-possessive-seinen-masc": {
+			"input": {
+				"markedContext": "Paul sucht <TARGET>seinen</TARGET> Ausweis seit dem Morgen.",
+				"members": ["seinen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "3",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": ["Masc", "Neut"],
+						"number": "Sing",
+						"number[psor]": "Sing"
+					}
+				},
+				"normalizedMembers": ["seinen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-possessive-sein-neut": {
+			"input": {
+				"markedContext": "Das Kind räumt <TARGET>sein</TARGET> Zimmer vor dem Essen auf.",
+				"members": ["sein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "sein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "3",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": ["Masc", "Neut"],
+						"number": "Sing",
+						"number[psor]": "Sing"
+					}
+				},
+				"normalizedMembers": ["sein"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-possessive-ihr-fem": {
+			"input": {
+				"markedContext": "Mara repariert <TARGET>ihr</TARGET> Radio noch heute.",
+				"members": ["ihr"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ihr",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "3",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["ihr"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-formal-ihrem": {
+			"input": {
+				"markedContext": "Wir helfen <TARGET>Ihrem</TARGET> Team bei der Umstellung.",
+				"members": ["Ihrem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Ihr",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "2",
+						"polite": "Form",
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["Ihrem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-dev-foreign-the": {
+			"input": {
+				"markedContext": "Im Workshop diskutierten wir <TARGET>the</TARGET> main issue zuerst.",
+				"members": ["the"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
+		},
+		"grammar-de-det-dev-ordinal-wievielte": {
+			"input": {
+				"markedContext": "Der <TARGET>wievielte</TARGET> Versuch war schließlich erfolgreich?",
+				"members": ["wievielte"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "wievielte",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": "Ord",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Int"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["wievielte"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			},
+			"explanation": "The upstream route is DET, not ADJ or NUM."
+		},
+		"grammar-de-det-accept-v4-definite-des": {
+			"input": {
+				"markedContext": "Wegen <TARGET>des</TARGET> Lärms schloss die Bibliothek früher.",
+				"members": ["des"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "des",
+					"coreFeatures": {
+						"case": "Gen",
+						"definite": "Def",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Masc",
+						"number": "Sing",
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["des"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-indefinite-ein": {
+			"input": {
+				"markedContext": "<TARGET>Ein</TARGET> Kran hebt die schwere Kiste auf das Dach.",
+				"members": ["Ein"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ein",
+					"coreFeatures": {
+						"case": "Nom",
+						"definite": "Ind",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Masc",
+						"number": "Sing",
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["ein"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-demonstrative-jenem": {
+			"input": {
+				"markedContext": "Mit <TARGET>jenem</TARGET> Schlüssel öffnet die Hausmeisterin den Keller.",
+				"members": ["jenem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "jener",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["jenem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-interrogative-welches": {
+			"input": {
+				"markedContext": "Für <TARGET>welches</TARGET> Projekt beantragt das Institut die Mittel?",
+				"members": ["welches"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "welcher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Int"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["welches"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-negative-keinen": {
+			"input": {
+				"markedContext": "Die Ermittlerin fand <TARGET>keinen</TARGET> Zeugen für den Vorfall.",
+				"members": ["keinen"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "kein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Neg"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["keinen"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-total-jeder": {
+			"input": {
+				"markedContext": "<TARGET>Jeder</TARGET> Schritt wird im Prüfprotokoll dokumentiert.",
+				"members": ["Jeder"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "jeder",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Tot"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["jeder"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-possessive-deinem": {
+			"input": {
+				"markedContext": "Du hilfst <TARGET>deinem</TARGET> Bruder beim Aufbau des Schranks.",
+				"members": ["deinem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dein",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "2",
+						"polite": null,
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": "Sing"
+					}
+				},
+				"normalizedMembers": ["deinem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-formal-ihrem": {
+			"input": {
+				"markedContext": "Frau Roth, wir arbeiten eng mit <TARGET>Ihrem</TARGET> Büro zusammen.",
+				"members": ["Ihrem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Ihr",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": "2",
+						"polite": "Form",
+						"poss": "Yes",
+						"pronType": "Prs"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["Ihrem"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-indefinite-manches": {
+			"input": {
+				"markedContext": "Die neue Messung erklärt <TARGET>manches</TARGET> Problem der alten Studie.",
+				"members": ["manches"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "mancher",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Ind"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": "Neut",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["manches"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-typo-disem": {
+			"input": {
+				"markedContext": "Mit <TARGET>disem</TARGET> Plan erreicht das Team sein Ziel nicht.",
+				"members": ["disem"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dieser",
+					"coreFeatures": {
+						"case": null,
+						"definite": null,
+						"extPos": null,
+						"foreign": null,
+						"gender": null,
+						"number": null,
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Dem"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"gender[psor]": null,
+						"number": "Sing",
+						"number[psor]": null
+					}
+				},
+				"normalizedMembers": ["diesem"],
+				"memberOrthographies": ["Typo"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-variant-n": {
+			"input": {
+				"markedContext": "Wir brauchen für den Transport noch <TARGET>n</TARGET> Auto.",
+				"members": ["n"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "ein",
+					"coreFeatures": {
+						"case": "Acc",
+						"definite": "Ind",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Neut",
+						"number": "Sing",
+						"numType": "Card",
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Variant",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["n"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full"
+			}
+		},
+		"grammar-de-det-accept-v4-archaic-etwelches": {
+			"input": {
+				"markedContext": "Der historische Kommentar zitiert „<TARGET>etwelches</TARGET>“ und markiert die Form als veraltet.",
+				"members": ["etwelches"]
+			},
+			"idealOutput": { "decision": "Unresolved" },
+			"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved."
+		}
+	}
+}

@@ -7,7 +7,7 @@ import {
 	validateAuthoredRealizations,
 } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 import { resolveAuthoredGrammarIdentity } from "../src/concrete-lang/de/grammatical-resolution/authored-identity.js";
-import auxiliaryCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/auxiliary/corpus.json";
+import auxiliaryProjection from "../src/generated/grammar-cases/lexeme/auxiliary.json";
 import { choiceAnswers } from "../src/testing.js";
 import type { DumgenOptions, OperationTrace } from "../src/types.js";
 import { operation } from "../src/universal/trace.js";
@@ -402,7 +402,7 @@ test("Open PRON population misses copy exact headwords and generate changed text
 
 test("every AUX gold case locates its sein, haben, werden or bekommen Lemma by spelling", () => {
 	const lemmas = new Set<string>();
-	for (const [id, example] of Object.entries(auxiliaryCases)) {
+	for (const [id, example] of Object.entries(auxiliaryProjection.cases)) {
 		const output = example.idealOutput as {
 			normalizedMembers: string[];
 			lemma: { canonicalForm: string; coreFeatures: { verbType: null } };

@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import { encodedValidation as dumrelValidation } from "dumrel/validation-artifact";
@@ -109,6 +110,33 @@ await emit(
 );
 console.log(
 	`${check ? "Verified" : "Generated"} Dumgen contracts and ${routes.length} grammatical routes`,
+);
+
+// The grammar cases project from dumspec's Spec Records here, so the shipped
+// runtime reads generated JSON and never dumspec (ADR 0037).
+const { loadSpecRecords } = await import("dumspec");
+const { projectGrammarCases, readGrammarSidecar } = await import(
+	"./project-grammar-cases.js"
+);
+const specRecords = loadSpecRecords();
+let projectedRoutes = 0;
+for (const route of routes.filter(({ language }) => language === "de")) {
+	const name = route.modulePath.replace(/^de\/|\.js$/g, "");
+	const directory = new URL(
+		`../src/concrete-lang/de/grammatical-resolution/${name}/`,
+		import.meta.url,
+	);
+	if (!existsSync(new URL("sidecar.json", directory))) continue;
+	await emit(
+		`grammar-cases/${name}.json`,
+		JSON.stringify(
+			projectGrammarCases(readGrammarSidecar(directory), specRecords),
+		),
+	);
+	projectedRoutes++;
+}
+console.log(
+	`${check ? "Verified" : "Projected"} the grammar cases of ${projectedRoutes} routes from ${specRecords.length} Spec Records`,
 );
 
 const { assembleSystemPrompt } = await import("promptsmith");

@@ -12,18 +12,14 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
 import {
-	governedCaseIds as governedAdjectiveCaseIds,
-	participleCaseIds,
-} from "./concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.js";
-import { governedCaseIds as governedNounCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/noun/evaluation-ids.js";
+	corpusRegistrations,
+	grammarSlices,
+} from "./concrete-lang/de/experiments.js";
 import {
+	evaluateOpenReferent,
 	openReferentCaseIds,
-	referentContextCaseIds,
-} from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.js";
-import { evaluateOpenReferent } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluator.js";
-import { governedCaseIds as governedCollocationCaseIds } from "./concrete-lang/de/grammatical-resolution/phraseme/collocation/evaluation-ids.js";
+} from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluator.js";
 import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -66,17 +62,7 @@ const slices: Record<string, Record<string, readonly string[]>> = {
 		"participle-boundary": participleBoundaryCaseIds,
 		"governed-preposition": governedPrepositionCaseIds,
 	},
-	"grammatical-resolution/de/lexeme/adjective": {
-		participles: participleCaseIds,
-		governed: governedAdjectiveCaseIds,
-	},
-	"grammatical-resolution/de/lexeme/noun": { governed: governedNounCaseIds },
-	"grammatical-resolution/de/phraseme/collocation": {
-		governed: governedCollocationCaseIds,
-	},
-	"grammatical-resolution/de/lexeme/pronoun": {
-		"referent-context": referentContextCaseIds,
-	},
+	...grammarSlices,
 };
 const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
 	Object.entries(selections).map(([phase, ids]) => ({

@@ -1,10 +1,10 @@
 import { z } from "zod";
+import projected from "../../../../../generated/grammar-cases/lexeme/pronoun.json";
 import { grammarSchemas } from "../../../../../generated/schemas.js";
 import {
 	defineLinguisticCorpus,
 	grammarInputSchema,
 } from "../../../authoring.js";
-import cases from "./corpus.json";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
 	grammarSchemas["de/Lexeme/PRON"],
@@ -15,46 +15,8 @@ export const corpusSource = defineLinguisticCorpus({
 	route: "grammatical-resolution/de/lexeme/pronoun",
 	inputSchema,
 	outputSchema,
-	cases,
-	demonstrationIds: [
-		"grammar-de-pron-demo-personal-ihm",
-		"grammar-de-pron-demo-formal-ihnen",
-		"grammar-de-pron-demo-reflexive-sich",
-		"grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc",
-		"grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc",
-		"grammar-de-pron-fixed-jemand-jemandem",
-		"grammar-de-pron-fixed-niemand-niemandem",
-		"grammar-de-pron-fixed-keiner-nom-sing-masc",
-		"grammar-de-pron-fixed-keiner-nom-sing-neut",
-		"grammar-de-pron-fixed-keiner-nom-plur",
-		"grammar-de-pron-fixed-jedermann-acc",
-		"grammar-de-pron-fixed-jedermann-gen",
-		"grammar-de-pron-fixed-mancher-nom-sing-masc",
-		"grammar-de-pron-fixed-mancher-nom-plur",
-		"grammar-de-pron-fixed-mancher-dat-sing-neut",
-		"grammar-de-pron-demo-variant-nix",
-		"grammar-de-pron-dev-poss-meiner",
-		"grammar-de-pron-demo-archaic-meiner",
-		"grammar-de-pron-fixed-wem",
-		"grammar-de-pron-fixed-alles-acc",
-		"grammar-de-pron-fixed-alle-nom",
-		"grammar-de-pron-fixed-aller-gen",
-		"grammar-de-pron-fixed-jeder-nom-masc",
-		"grammar-de-pron-fixed-jeder-acc-fem",
-		"grammar-de-pron-fixed-jeder-dat-neut",
-		"grammar-de-pron-fixed-jeder-gen-fem",
-		"grammar-de-pron-fixed-jedweder-nom-masc",
-		"grammar-de-pron-fixed-jedweder-acc-fem",
-		"grammar-de-pron-fixed-jedweder-dat-neut",
-		"grammar-de-pron-fixed-jedweder-gen-fem",
-		"grammar-de-pron-fixed-jeglicher-nom-sing-masc",
-		"grammar-de-pron-fixed-jeglicher-acc-sing-fem",
-		"grammar-de-pron-fixed-jeglicher-dat-sing-neut",
-		"grammar-de-pron-fixed-jeglicher-gen-sing-fem",
-		"grammar-de-pron-fixed-jeglicher-nom-plur",
-		"grammar-de-pron-fixed-jeglicher-dat-plur",
-		"grammar-de-pron-fixed-mehrere-dat",
-		"grammar-de-pron-fixed-mehrere-gen",
-	],
+	cases: projected.cases,
+	demonstrationIds: projected.demonstrationIds,
 	source: import.meta.url,
 });
+export const { evaluationCaseIds, slices } = projected;
