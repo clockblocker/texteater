@@ -5,6 +5,7 @@ import { internalQuery, type QueryCtx } from "./_generated/server";
 import { lemmaValue } from "./model/occurrenceAttestations";
 import {
 	findAttestationForSegmentValue,
+	loadNeighbourSentences,
 	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
@@ -40,6 +41,11 @@ export const resolutionContextValidator = v.object({
 	),
 	/** Intake's Sentence Analysis, read before click-time classification. */
 	analysis: v.union(v.null(), storedSentenceAnalysisValidator),
+	/** The Sentences around this one, for a pronoun whose referent is outside it. */
+	neighbours: v.object({
+		before: v.optional(v.string()),
+		after: v.optional(v.string()),
+	}),
 });
 
 /** One snapshot of reuse, sentence, and bounded dictionary hints; commit rechecks ownership. */
@@ -60,6 +66,7 @@ export async function loadResolutionContext(
 			sentence: null,
 			lemmaCandidates: [],
 			analysis: null,
+			neighbours: {},
 		};
 	// A resumed Grammar still needs the Sentence to commit stored membership.
 	const sentence = await loadSentenceForResolution(ctx, input);
@@ -69,8 +76,12 @@ export async function loadResolutionContext(
 			sentence,
 			lemmaCandidates: [],
 			analysis: null,
+			neighbours: {},
 		};
-	const analysis = await loadSentenceAnalysis(ctx, input.sentenceId);
+	const [analysis, neighbours] = await Promise.all([
+		loadSentenceAnalysis(ctx, input.sentenceId),
+		loadNeighbourSentences(ctx, input.sentenceId),
+	]);
 	const words = sentence.segments.filter(
 		(segment) => segment.kind === "ResolvableText",
 	);
@@ -164,6 +175,7 @@ export async function loadResolutionContext(
 				foundUnder: [...foundUnder],
 			})),
 		analysis,
+		neighbours,
 	};
 }
 

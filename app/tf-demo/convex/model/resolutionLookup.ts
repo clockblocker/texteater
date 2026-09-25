@@ -111,6 +111,38 @@ export async function loadSentenceForResolution(
 	};
 }
 
+/** The Sentences just before and after this one in its Text, as far as they exist. */
+export async function loadNeighbourSentences(
+	ctx: QueryCtx,
+	sentenceId: Id<"sentences">,
+): Promise<{ before?: string; after?: string }> {
+	const sentence = await ctx.db.get(sentenceId);
+	if (!sentence) return {};
+	const [before, after] = await Promise.all([
+		ctx.db
+			.query("sentences")
+			.withIndex("by_text_id_and_position", (q) =>
+				q
+					.eq("textId", sentence.textId)
+					.lt("position", sentence.position),
+			)
+			.order("desc")
+			.first(),
+		ctx.db
+			.query("sentences")
+			.withIndex("by_text_id_and_position", (q) =>
+				q
+					.eq("textId", sentence.textId)
+					.gt("position", sentence.position),
+			)
+			.first(),
+	]);
+	return {
+		...(before ? { before: before.stitchedText } : {}),
+		...(after ? { after: after.stitchedText } : {}),
+	};
+}
+
 /** The stored Sentence Analysis, or null when intake produced none. */
 export async function loadSentenceAnalysis(
 	ctx: QueryCtx,

@@ -311,6 +311,72 @@ test("stored Reading candidates are compared and reused without a new Reading pl
 	expect(run.writes[0]?.readingDecision).toBe("Reuse");
 });
 
+/**
+ * A click whose Grammar first answers MoreContextRequired, then the given
+ * Attestation. Records each resolveGrammar input past its Encounter.
+ */
+function referentRun(neighbours: { before?: string; after?: string }) {
+	const inputs: Record<string, unknown>[] = [];
+	const resolveGrammar = ((
+		input: Encounter<"de"> & Record<string, unknown>,
+	) => {
+		const { sentence: _sentence, target: _target, ...rest } = input;
+		inputs.push(rest);
+		return Effect.succeed(
+			inputs.length === 1 && input.contextAvailable !== false
+				? { decision: "MoreContextRequired" as const }
+				: attestation,
+		);
+	}) as Dumgen["resolveGrammar"];
+	const run = setup(
+		[classification, "🏦"],
+		{
+			async loadResolutionContext() {
+				return {
+					reusable: null,
+					lemmaCandidates: [],
+					neighbours,
+					sentence: {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "sentence-1",
+						language: "de",
+						stitchedText: "Banken",
+						segments: [
+							{
+								index: 0,
+								kind: "ResolvableText",
+								text: "Banken",
+							},
+						],
+					},
+				};
+			},
+		},
+		[],
+		{ resolveGrammar },
+	);
+	return { run, inputs };
+}
+
+test("a Grammar that needs the referent is asked again with the neighbouring Sentences", async () => {
+	const neighbours = { before: "Maria kommt.", after: "Sie winkt." };
+	const { run, inputs } = referentRun(neighbours);
+	const result = await Effect.runPromise(
+		run.orchestrator.resolveSegment(selection),
+	);
+	expect(inputs).toEqual([{}, { context: neighbours }]);
+	expect(result).toMatchObject({ persisted: { status: "Committed" } });
+	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
+});
+
+test("a Sentence alone in its Text gets one Grammar call that must answer", async () => {
+	const { run, inputs } = referentRun({});
+	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
+	expect(inputs).toEqual([{ contextAvailable: false }]);
+	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
+});
+
 test("a globally resolved occurrence is reused without generation", async () => {
 	const run = setup([], {
 		async loadResolutionContext() {

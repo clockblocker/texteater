@@ -8,6 +8,7 @@ import type {
 	LemmaCandidate,
 	SegmentedSentence,
 	SentenceAnalysis,
+	SentenceContext,
 	Task,
 } from "dumgen/types";
 import type * as Dumling from "dumling/types";
@@ -259,6 +260,11 @@ export type ResolutionContext = {
 	readonly lemmaCandidates: readonly LemmaCandidate<"de">[];
 	/** The stored Sentence Analysis, read before click-time classification. */
 	readonly analysis?: SentenceAnalysis | null;
+	/**
+	 * The Sentences before and after this one in its Text, as far as they
+	 * exist. Grammar gets them only when it answers MoreContextRequired.
+	 */
+	readonly neighbours?: SentenceContext;
 };
 
 export type ResolutionCheckpoints = {
@@ -686,13 +692,38 @@ export function createTfDemoOrchestrator(options: {
 					}
 					const view = parseGermanSentence(stored);
 					const sentence = view.sentence;
+					const neighbours = context.neighbours ?? {};
+					/**
+					 * One call with the Sentence alone; a pronoun whose referent
+					 * lies outside it gets a second call with the Sentences
+					 * around it. A Sentence without neighbours must answer at once.
+					 */
+					const grammarOf = (encounter: Encounter<"de">) =>
+						neighbours.before || neighbours.after
+							? Effect.flatMap(
+									options.dumgen.resolveGrammar(
+										encounter,
+										context.lemmaCandidates,
+									),
+									(result) =>
+										"decision" in result
+											? options.dumgen.resolveGrammar(
+													{
+														...encounter,
+														context: neighbours,
+													},
+													context.lemmaCandidates,
+												)
+											: Effect.succeed(result),
+								)
+							: options.dumgen.resolveGrammar(
+									{ ...encounter, contextAvailable: false },
+									context.lemmaCandidates,
+								);
 					const resolve = (target: Encounter<"de">["target"]) => {
 						const encounter: Encounter<"de"> = { sentence, target };
 						return Effect.map(
-							options.dumgen.resolveGrammar(
-								encounter,
-								context.lemmaCandidates,
-							),
+							grammarOf(encounter),
 							(attestation) => ({
 								decision: "Resolved" as const,
 								language: "de" as const,
