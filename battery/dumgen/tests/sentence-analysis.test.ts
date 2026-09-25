@@ -1390,6 +1390,67 @@ test("an attributive adjective takes in its governed preposition across its comp
 		kind: "ADJ",
 		offsets: [4, 20],
 	});
+	expect(text(analysis, targetOf(analysis, 27))).toEqual([
+		"Der/Article",
+		"Vater/Head",
+	]);
+});
+
+// Input indices: Ich0 gebe2 den4 Kindern6 kleine8 Geschenke10 .11
+// Offsets: Ich0 gebe4 den9 Kindern13 kleine21 Geschenke28
+test("an article opens onto its own noun, not onto a later adjective's noun", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4, 6], [8], [10]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/ADJ",
+			10: "Lexeme/NOUN",
+		},
+		roles: { 4: "Article", 6: "Head" },
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"kinder",
+				"Ich gebe den Kindern kleine Geschenke.",
+			),
+		}),
+	);
+	expect(text(analysis, targetOf(analysis, 13))).toEqual([
+		"den/Article",
+		"Kindern/Head",
+	]);
+	expect(text(analysis, targetOf(analysis, 28))).toEqual(["Geschenke/Head"]);
+});
+
+// Input indices: Der0 auf2 dem4 Dach6 ist8 mein10 Bruder12 .13
+// Offsets: Der0 auf4 dem8 Dach12 ist17 mein21 Bruder26
+test("an article before a prepositional phrase with no adjective after it stands alone", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4, 6], [8], [10], [12]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/ADP",
+			4: "Lexeme/NOUN",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/VERB",
+			10: "Lexeme/DET",
+			12: "Lexeme/NOUN",
+		},
+		roles: { 4: "Article", 6: "Head" },
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("dach", "Der auf dem Dach ist mein Bruder."),
+		}),
+	);
+	expect(text(analysis, targetOf(analysis, 0))).toEqual(["Der/Head"]);
+	expect(text(analysis, targetOf(analysis, 26))).toEqual(["Bruder/Head"]);
 });
 
 // Input indices: Er0 weiß2 Bescheid4 über6 die8 Pläne10 .11

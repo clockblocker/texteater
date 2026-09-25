@@ -171,18 +171,51 @@ const headOffsetOf = (target: LexemeTarget) =>
 /** Kinds a preposition's complement is made of. */
 const nominal = new Set(["NOUN", "PROPN", "PRON"]);
 
-/** The first Lexeme Target after `offset` that is not prenominal: the word an article's phrase opens onto. */
+/**
+ * The word an article's phrase opens onto: the first Lexeme Target after
+ * `offset` that is not prenominal. An extended attribute is passed over: one
+ * complement phrase, an optional preposition, determiners and prenominal
+ * words, then a nominal, closed by prenominal words with an adjective among
+ * them (`der auf seinen Sohn stolze Vater`, `die ihrem Vater ähnliche
+ * Tochter`). A noun without its own article is the article's noun (`den
+ * Kindern kleine Geschenke`).
+ */
 function phraseHeadAfter(
 	targets: readonly LexemeTarget[],
 	offset: number,
 ): LexemeTarget | undefined {
-	return targets
-		.filter(
-			(target) =>
-				headOffsetOf(target) > offset &&
-				!prenominal.has(winner(target.routeMass)),
-		)
-		.sort((a, b) => headOffsetOf(a) - headOffsetOf(b))[0];
+	const after = targets
+		.filter((target) => headOffsetOf(target) > offset)
+		.sort((a, b) => headOffsetOf(a) - headOffsetOf(b));
+	const kindAt = (index: number) => {
+		const target = after[index];
+		return target ? winner(target.routeMass) : undefined;
+	};
+	let index = after.findIndex(
+		(target) => !prenominal.has(winner(target.routeMass)),
+	);
+	const head = after[index];
+	const opensAttribute =
+		head !== undefined &&
+		(kindAt(index) === "ADP" ||
+			kindAt(index) === "DET" ||
+			kindAt(index) === "PRON" ||
+			head.members.some(
+				(member) =>
+					member.role === "Article" && member.offset !== offset,
+			));
+	if (!opensAttribute) return head;
+	if (kindAt(index) === "ADP") index++;
+	while (kindAt(index) === "DET" || prenominal.has(kindAt(index) ?? ""))
+		index++;
+	if (!nominal.has(kindAt(index) ?? "")) return head;
+	index++;
+	let adjective = false;
+	while (prenominal.has(kindAt(index) ?? "")) {
+		if (kindAt(index) === "ADJ") adjective = true;
+		index++;
+	}
+	return adjective && kindAt(index) === "NOUN" ? after[index] : head;
 }
 
 function roleOf(answers: Answers, index: number): RoleAnswer {
@@ -543,11 +576,13 @@ export function assembleAnalysis(
 			(member) => member.role === "Article",
 		);
 		if (!article || winner(target.routeMass) !== "NOUN") continue;
-		const head = phraseHeadAfter(
-			targets.filter((other) => other !== target),
-			article.offset,
-		);
-		if (!head || headOffsetOf(head) > headOffsetOf(target)) continue;
+		const head = phraseHeadAfter(targets, article.offset);
+		if (
+			!head ||
+			head === target ||
+			headOffsetOf(head) > headOffsetOf(target)
+		)
+			continue;
 		const index = indexAt.get(article.offset);
 		targets[position] = {
 			...target,
