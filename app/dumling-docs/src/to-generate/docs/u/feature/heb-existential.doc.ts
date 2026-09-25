@@ -1,6 +1,8 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as einExistentialVerb } from "../../../attestations/he/attestation/אין_מקום_פנוי/[אין]_מקום_פנוי.ts";
-import { attestation as yeshExistentialVerb } from "../../../attestations/he/attestation/יש_קפה_במטבח/[יש]_קפה_במטבח.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const einExistentialVerb = specExample("he/ein-makom-panui");
+const yeshExistentialVerb = specExample("he/yesh-kafe-bamitbach");
 
 const document = defineUniversalConceptPage({
 	description:

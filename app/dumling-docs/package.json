@@ -27,7 +27,8 @@
 	"dependencies": {
 		"astro": "^7.1.3",
 		"codegen": "workspace:^",
-		"dumling": "workspace:^"
+		"dumling": "workspace:^",
+		"dumspec": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

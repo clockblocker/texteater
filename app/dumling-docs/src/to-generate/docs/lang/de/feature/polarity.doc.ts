@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as nichtNegativeParticle } from "../../../../attestations/de/attestation/Das_ist_nicht_mein_Problem/Das_ist_[nicht]_mein_Problem.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const nichtNegativeParticle = specExample("de/das-ist-nicht-mein-problem");
 
 const document = defineLanguageOverlayPage({
 	description: "German Polarity.",

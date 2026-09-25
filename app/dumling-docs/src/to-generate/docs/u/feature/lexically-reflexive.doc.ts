@@ -1,5 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as erinnertVerb } from "../../../attestations/de/attestation/Sie_erinnert_sich_an_den_Geruch/Sie_[erinnert]_sich_an_den_Geruch.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const erinnertVerb = specExample("de/sie-erinnert-sich-an-den-geruch");
 
 const document = defineUniversalConceptPage({
 	description:

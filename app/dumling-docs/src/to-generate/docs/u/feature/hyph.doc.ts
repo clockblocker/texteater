@@ -1,6 +1,9 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as unPrefixAttestation } from "../../../attestations/en/attestation/That_answer_was_unbelievable/That_answer_was_[un]believable.ts";
-import { attestation as twentyFirstHyphenatedOrdinal } from "../../../attestations/en/attestation/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const twentyFirstHyphenatedOrdinal = specExample(
+	"en/the-twenty-first-attempt-finally-passed",
+);
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Hyph feature.",
@@ -20,7 +23,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Hyph.html) featu
 
 If \`Lemma.coreFeatures.hyph\` is absent or \`undefined\`, the Lemma is treated as not marked for hyphenation.
 `,
-	examples: [twentyFirstHyphenatedOrdinal, unPrefixAttestation],
+	examples: [twentyFirstHyphenatedOrdinal],
 	subsections: [
 		{
 			heading: "Use",

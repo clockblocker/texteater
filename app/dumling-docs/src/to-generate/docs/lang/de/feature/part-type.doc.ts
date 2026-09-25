@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as zuInfinitivalParticle } from "../../../../attestations/de/attestation/Das_ist_schwer_zu_erklären/Das_ist_schwer_[zu]_erklären.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const zuInfinitivalParticle = specExample("de/das-ist-schwer-zu-erklaeren");
 
 const document = defineLanguageOverlayPage({
 	description: "German PartType.",

@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as derArticle } from "../../../../attestations/de/attestation/Viele_vermissen_das_alte_Berlin/Viele_vermissen_[das]_alte_Berlin.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const derArticle = specExample("de/viele-vermissen-das-alte-berlin");
 
 const document = defineLanguageOverlayPage({
 	description: "German Definite.",

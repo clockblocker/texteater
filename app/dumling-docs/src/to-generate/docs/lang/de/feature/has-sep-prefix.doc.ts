@@ -1,7 +1,12 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as mitgebrachtParticiple } from "../../../../attestations/de/attestation/Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht/Die_Peitsche_hat_er_[mitgebracht]und_nimmt_sie_sorglich_sehr_in_acht.ts";
-import { attestation as hinauslaufenInfinitive } from "../../../../attestations/de/attestation/Er_versucht_hinauszulaufen/Er_versucht_[hinauszulaufen].ts";
-import { attestation as passAufImperative } from "../../../../attestations/de/attestation/Pass_auf_dich_auf/[Pass]_auf_dich_auf.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const mitgebrachtParticiple = specExample(
+	"de/die-peitsche-hat-er-mitgebracht",
+	1,
+);
+const hinauslaufenInfinitive = specExample("de/er-versucht-hinauszulaufen");
+const passAufImperative = specExample("de/pass-auf-dich-auf");
 
 const document = defineLanguageOverlayPage({
 	description: "German HasSepPrefix.",

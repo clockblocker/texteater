@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as gehImperative } from "../../../../attestations/de/attestation/Geh_bitte_nicht_ohne_Jacke_raus/[Geh]_bitte_nicht_ohne_Jacke_raus.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const gehImperative = specExample("de/geh-bitte-nicht-ohne-jacke-raus");
 
 const document = defineLanguageOverlayPage({
 	description: "German Person.",

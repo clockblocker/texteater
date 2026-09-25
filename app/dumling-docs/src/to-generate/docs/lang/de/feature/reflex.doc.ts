@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as dichReflexivePronoun } from "../../../../attestations/de/attestation/Pass_auf_dich_auf/Pass_auf_[dich]_auf.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const dichReflexivePronoun = specExample("de/pass-auf-dich-auf", 1);
 
 const document = defineLanguageOverlayPage({
 	description: "German Reflex.",

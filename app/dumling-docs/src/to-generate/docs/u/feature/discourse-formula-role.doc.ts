@@ -1,7 +1,9 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as gutenTagGreeting } from "../../../attestations/de/attestation/Guten_Tag_ich_habe_einen_Termin/[Guten_Tag]_ich_habe_einen_Termin.ts";
-import { attestation as tutMirLeidApology } from "../../../attestations/de/attestation/Tut_mir_leid_das_war_mein_Fehler/[Tut_mir_leid]_das_war_mein_Fehler.ts";
-import { attestation as noWorriesAcknowledgment } from "../../../attestations/en/attestation/No_worries_I_already_fixed_it/[No_worries]_I_already_fixed_it.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const gutenTagGreeting = specExample("de/guten-tag-ich-habe-einen-termin");
+const tutMirLeidApology = specExample("de/tut-mir-leid-das-war-mein-fehler");
+const noWorriesAcknowledgment = specExample("en/no-worries-i-already-fixed-it");
 
 const document = defineUniversalConceptPage({
 	description:

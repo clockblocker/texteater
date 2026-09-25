@@ -1,6 +1,8 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as aufPreposition } from "../../../attestations/de/attestation/Das_rote_Band_lag_auf_dem_Geschenk/Das_rote_Band_lag_[auf]_dem_Geschenk.ts";
-import { attestation as entlangPostposition } from "../../../attestations/de/attestation/Wir_liefen_den_Fluss_entlang/Wir_liefen_den_Fluss_[entlang].ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const aufPreposition = specExample("de/das-rote-band-lag-auf-dem-geschenk", 2);
+const entlangPostposition = specExample("de/wir-liefen-den-fluss-entlang");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal AdpType feature.",

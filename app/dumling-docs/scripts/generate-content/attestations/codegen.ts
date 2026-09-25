@@ -2,14 +2,12 @@ import { join, relative } from "node:path";
 import { defineCodegen } from "codegen";
 import { serializeFrontmatter } from "../docs/frontmatter";
 import {
-	classificationLogbookDir,
 	generatedDocsDir,
 	generatedEntitiesDir,
 	publicDir,
 	siteRoot,
 } from "../shared/paths";
 import type { Frontmatter } from "../shared/types";
-import type { AttestationLogbookCsvOutput } from "./attestation/logbook";
 import type { AttestationsInitialOwnership } from "./initial-ownership";
 
 export type AttestationOutput = {
@@ -29,9 +27,6 @@ type AttestationArtifactMeta =
 	| {
 			kind: "public-attestation";
 			routeId: string;
-	  }
-	| {
-			kind: "attestation-logbook";
 	  };
 
 function artifactPath(root: string, path: string): string {
@@ -56,7 +51,6 @@ export function assertUniqueAttestationOutputs(
 
 export function defineAttestationsCodegen(
 	outputs: readonly AttestationOutput[],
-	logbookOutputs: readonly AttestationLogbookCsvOutput[],
 	initialOwnership: AttestationsInitialOwnership = {
 		generatedEntities: [],
 		legacyGeneratedDocs: [],
@@ -65,12 +59,6 @@ export function defineAttestationsCodegen(
 ) {
 	const codegenInputs = {} as const;
 	const codegenOutputs = {
-		classificationLogbooks: {
-			root: classificationLogbookDir,
-			ownership: {
-				manifest: join(siteRoot, ".codegen/attestations-logbooks.json"),
-			},
-		},
 		generatedEntities: {
 			root: generatedEntitiesDir,
 			ownership: {
@@ -148,24 +136,6 @@ export function defineAttestationsCodegen(
 					},
 				];
 			}),
-			...logbookOutputs.map((output) => ({
-				content: output.content,
-				id: `attestations:logbook:${artifactPath(
-					classificationLogbookDir,
-					output.path,
-				)}`,
-				meta: {
-					kind: "attestation-logbook",
-				} satisfies AttestationArtifactMeta,
-				provenance: output.sourcePaths.map((path) => ({
-					kind: "source" as const,
-					path,
-				})),
-				to: {
-					path: artifactPath(classificationLogbookDir, output.path),
-					target: "classificationLogbooks" as const,
-				},
-			})),
 		],
 	});
 }

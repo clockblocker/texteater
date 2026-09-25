@@ -1,83 +1,49 @@
 import { join } from "node:path";
 import { runCodegen } from "codegen";
-import { structuralIdentity } from "../../../src/lib/unit-presentation";
+import { allSpecExamples } from "../../../src/lib/docs/spec-examples";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
-import { generatedEntitiesDir } from "../shared/paths";
-import type { OccurrenceAttestationSource, SourcePage } from "../shared/types";
-import {
-	attestationLogbookCsvOutputs,
-	prepareAttestationLogbooks,
-} from "./attestation/logbook";
+import { generatedEntitiesDir, specRecordPath } from "../shared/paths";
+import type { SourcePage } from "../shared/types";
 import {
 	type AttestationOutput,
 	assertUniqueAttestationOutputs,
 	defineAttestationsCodegen,
 } from "./codegen";
 import { attestationSlugForSource } from "./entity/attestation-slug";
-import { entityKindFor, lemmaForEntity } from "./entity/helpers";
 import { discoverAttestationsInitialOwnership } from "./initial-ownership";
 import { generatedFrontmatterForAttestation } from "./render/generated-frontmatter";
 import { renderAttestationBody } from "./render/render-attestation-body";
-import { loadAttestationSource } from "./source/load-attestation-source";
-import { renameAttestationSources } from "./source/rename-attestation-sources";
-import { validateAttestationPath } from "./validate/validate-attestation-path";
-import {
-	isOccurrenceAttestationSource,
-	validateOccurrenceAttestation,
-} from "./validate/validate-occurrence-attestation";
 
+/** Generates one attestation page per target of every dumspec Spec Record. */
 export async function generateAttestations(): Promise<SourcePage[]> {
 	const pages: SourcePage[] = [];
-	const attestationSources: OccurrenceAttestationSource[] = [];
 	const outputs: AttestationOutput[] = [];
 	const initialOwnership = discoverAttestationsInitialOwnership();
 
-	prepareAttestationLogbooks();
-	const sourcePaths = await renameAttestationSources();
-
-	for (const sourcePath of sourcePaths) {
-		const source = await loadAttestationSource(sourcePath);
-		validateOccurrenceAttestation(source);
-		const language = lemmaForEntity(source.entity).language;
-		const attestationSlug = attestationSlugForSource(source);
-		const entityKind =
-			entityKindFor(source.entity) === "Lemma"
-				? "lemma"
-				: entityKindFor(source.entity).toLowerCase();
-		validateAttestationPath(source, attestationSlug);
-
-		const routeId = `${language}/${entityKind}/${attestationSlug}`;
+	for (const example of allSpecExamples()) {
+		const source = {
+			entity: example.attestation,
+			sentenceMarkdown: example.sentenceMarkdown,
+			sourcePath: specRecordPath(example.record),
+		};
+		const language = example.attestation.surface.language;
+		const routeId = `${language}/attestation/${attestationSlugForSource(source)}`;
 		const frontmatter = generatedFrontmatterForAttestation(source, routeId);
-		const body = renderAttestationBody(
-			source,
-			entityKind === "attestation"
-				? undefined
-				: structuralIdentity(source.entity),
-		);
 
 		outputs.push({
-			body,
+			body: renderAttestationBody(source),
 			frontmatter,
-			generatedPath: join(
-				generatedEntitiesDir,
-				language,
-				entityKind,
-				`${attestationSlug}.md`,
-			),
+			generatedPath: join(generatedEntitiesDir, `${routeId}.md`),
 			publicPath: publicMarkdownPathForRouteId(routeId),
 			routeId,
-			sourcePath,
+			sourcePath: source.sourcePath,
 		});
-		pages.push({ frontmatter, routeId, sourcePath });
-		if (isOccurrenceAttestationSource(source)) {
-			attestationSources.push(source);
-		}
+		pages.push({ frontmatter, routeId, sourcePath: source.sourcePath });
 	}
 
 	await runCodegen(
 		defineAttestationsCodegen(
 			assertUniqueAttestationOutputs(outputs),
-			attestationLogbookCsvOutputs(attestationSources),
 			initialOwnership,
 		),
 		{ mode: "write" },

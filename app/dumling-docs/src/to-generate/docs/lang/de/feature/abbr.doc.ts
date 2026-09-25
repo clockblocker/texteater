@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as bvgAbbreviation } from "../../../../attestations/de/attestation/In_Berlin_betreibt_die_BVG_die_UBahn/In_Berlin_betreibt_die_[BVG]_die_UBahn.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const bvgAbbreviation = specExample("de/in-berlin-betreibt-die-bvg-die-u-bahn");
 
 const document = defineLanguageOverlayPage({
 	description: "German Abbr.",

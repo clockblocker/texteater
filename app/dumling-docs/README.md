@@ -2,10 +2,11 @@
 
 Dumling Docs publishes Markdown and HTML from executable sources.
 
-Edit `src/to-generate/docs/**/*.doc.ts` for prose pages and
-`src/to-generate/attestations/**/*.ts` for curated examples. The CSV files in
-`src/classification-logbook/` are generated review data. Do not edit
-`src/generated/`, `public/`, or `dist/`; those are derived caches or builds.
+Edit `src/to-generate/docs/**/*.doc.ts` for prose pages. Examples are Spec
+Records of the `dumspec` battery: a page cites one with
+`specExample("<record id>", <target index>)`, and every record target gets an
+attestation page. Do not edit `src/generated/`, `public/`, or `dist/`; those
+are derived caches or builds.
 
 ```sh
 bun run generate:attestations

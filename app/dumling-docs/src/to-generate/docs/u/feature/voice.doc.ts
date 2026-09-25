@@ -1,7 +1,11 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as writtenPassiveParticiple } from "../../../attestations/en/attestation/The_note_was_written_in_pencil/The_note_was_[written]_in_pencil.ts";
-import { attestation as nichtavPassiveVerb } from "../../../attestations/he/attestation/הדוח_נכתב_אתמול/הדוח_[נכתב]_אתמול.ts";
-import { attestation as hitkatevMiddleVerb } from "../../../attestations/he/attestation/הוא_התכתב_עם_המרצה/הוא_[התכתב]_עם_המרצה.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const writtenPassiveParticiple = specExample(
+	"en/the-note-was-written-in-pencil",
+);
+const nichtavPassiveVerb = specExample("he/hadoch-nichtav-etmol");
+const hitkatevMiddleVerb = specExample("he/hu-hitkatev-im-hamartse");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Voice feature.",

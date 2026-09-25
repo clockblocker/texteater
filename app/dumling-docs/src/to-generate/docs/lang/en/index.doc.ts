@@ -1,9 +1,14 @@
 import { defineGeneratedDocPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
 const document = defineGeneratedDocPage({
 	description: "English language pack notes.",
 	order: 100,
 	title: "English",
+	examples: [
+		specExample("en/yesterday-i-ran-to-the-station"),
+		specExample("en/the-books-are-on-the-shelf"),
+	],
 	body: `
 English units use \`language: "en"\`. Validate them with \`parseUnit\`
 and import concrete schemas from \`dumling/schema/en/<family>/<kind-name>\`.
@@ -31,18 +36,12 @@ English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. A noun owns i
 
 Pieces split off a contracted word are syntactic words with \`Fused\` members: \`'ll\` in \`I'll\` is AUX \`will\`, \`n't\` in \`don't\` is PART \`not\`, and possessive \`'s\` is its own PART Lemma, which attaches to a whole phrase (\`the king of England's hat\`). English verb \`tense\` supports \`Past\` and \`Pres\`, and \`verbForm\` supports \`Fin\`, \`Ger\`, \`Inf\`, and \`Part\`.
 
-## Attestation Files
+## Attested Examples
 
-English attestation source files live in \`src/to-generate/attestations/en\`. Each file exports exactly one attested dumling object and generates exactly one Markdown attestation.
-
-Lemma and Surface attestations are generated from files under
-\`lemma/\` and \`surface/\`. Occurrence evidence lives under
-\`attestation/{sentence}/\`; its bracketed sentence is docs-only review context.
-
-- [run](/en/lemma/sha256-EBnGb-QwAVzocWLldMImNQdOZntjQLjtUjL3DNCJdT4/)
-- [book](/en/lemma/sha256-peGvpmPHvQCiqFBFNZbi36hUDI0f8IJAoerjb926bKI/)
-- [books](/en/surface/sha256-U6ImMkSY3MiZvE4wAU1T7OCbSjmixPHD4xjmFwqjsmE/)
-- [ran](/en/surface/sha256-GYKeCGoC5m4E11-NDgmpLjL2snGBdW17AnplC5xWrEo/)
+English examples are Spec Records of the \`dumspec\` package, one sentence per
+file under \`records/en/\`. Each target of a record generates one Markdown
+attestation; its bracketed sentence marks the target's members. The examples
+at the end of this page show \`ran\` and \`books\`.
 
 ## Example
 

@@ -1,8 +1,12 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as bitteFolgenSieIhremAnsprechpartnerDative } from "../../../attestations/de/attestation/Bitte_folgen_Sie_Ihrem_Ansprechpartner/Bitte_folgen_Sie_[Ihrem]_Ansprechpartner.ts";
-import { attestation as themAccusative } from "../../../attestations/en/attestation/I_emailed_them_yesterday/I_emailed_[them]_yesterday.ts";
-import { attestation as shelGenitive } from "../../../attestations/he/attestation/הספר_של_נועה_נשאר_כאן/הספר_[של]_נועה_נשאר_כאן.ts";
-import { attestation as kaasherTemporal } from "../../../attestations/he/attestation/נמשיך_כאשר_כולם_יגיעו/נמשיך_[כאשר]_כולם_יגיעו.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const bitteFolgenSieIhremAnsprechpartnerDative = specExample(
+	"de/bitte-folgen-sie-ihrem-ansprechpartner",
+);
+const themAccusative = specExample("en/i-emailed-them-yesterday");
+const shelGenitive = specExample("he/hasefer-shel-noa-nishar-kan");
+const kaasherTemporal = specExample("he/namshich-kaasher-kulam-yagiu");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Case feature.",

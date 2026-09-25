@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as mussPresentAuxiliary } from "../../../../attestations/de/attestation/Er_muss_heute_arbeiten/Er_[muss]_heute_arbeiten.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const mussPresentAuxiliary = specExample("de/er-muss-heute-arbeiten");
 
 const document = defineLanguageOverlayPage({
 	description: "German VerbType.",

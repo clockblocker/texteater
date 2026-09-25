@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as mutterNoun } from "../../../../attestations/de/attestation/Meine_Mutter_ruft_jeden_Sonntag_an/Meine_[Mutter]_ruft_jeden_Sonntag_an.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const mutterNoun = specExample("de/meine-mutter-ruft-jeden-sonntag-an");
 
 const document = defineLanguageOverlayPage({
 	description: "German Gender.",

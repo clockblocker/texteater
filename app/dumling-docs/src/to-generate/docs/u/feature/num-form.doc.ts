@@ -1,6 +1,10 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as twentyFirstOrdinal } from "../../../attestations/en/attestation/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
-import { attestation as halfFraction } from "../../../attestations/en/attestation/Use_half_the_flour_first/Use_[half]_the_flour_first.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const twentyFirstOrdinal = specExample(
+	"en/the-twenty-first-attempt-finally-passed",
+);
+const halfFraction = specExample("en/use-half-the-flour-first");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal NumForm feature.",

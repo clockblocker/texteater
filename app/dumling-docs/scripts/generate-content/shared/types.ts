@@ -15,27 +15,9 @@ export interface SourcePage {
 	sourcePath: string;
 }
 
+/** One target of a Spec Record, the source of one attestation page. */
 export type AttestationSource = {
-	classifierNotes?: string;
-	classificationMistakes?: string;
-	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation;
-	isVerified?: true;
-	order?: number;
-	sentenceMarkdown?: string;
-	sourcePath: string;
-	title?: string;
-	wrappedEntityKind?: "attestation" | "lemma" | "surface";
-};
-
-export type AttestedSentenceParts = {
-	selectedText: string;
-	sentenceText: string;
-};
-
-export type OccurrenceAttestationSource = Omit<
-	AttestationSource,
-	"entity" | "sentenceMarkdown"
-> & {
-	entity: Dumling.Attestation<Dumling.Language>;
+	entity: Dumling.Attestation;
 	sentenceMarkdown: string;
+	sourcePath: string;
 };

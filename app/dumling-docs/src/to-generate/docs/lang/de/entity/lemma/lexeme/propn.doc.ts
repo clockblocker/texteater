@@ -1,6 +1,8 @@
 import { defineLanguageOverlayPage } from "../../../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as struwwelpeter } from "../../../../../../attestations/de/attestation/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_der_[Struwwelpeter].ts";
-import { attestation as berlin } from "../../../../../../attestations/de/attestation/Viele_vermissen_das_alte_Berlin/Viele_vermissen_das_alte_[Berlin].ts";
+import { specExample } from "../../../../../../../lib/docs/spec-examples.ts";
+
+const struwwelpeter = specExample("de/sieh-einmal-hier-steht-er", 6);
+const berlin = specExample("de/viele-vermissen-das-alte-berlin", 1);
 
 const document = defineLanguageOverlayPage({
 	description: "German PROPN.",

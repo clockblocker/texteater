@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumspec from "dumspec/types";
 
 import type { Prettify } from "../../../helper-types";
 
@@ -14,13 +15,14 @@ export const generatedDocPageMarker = "generated-doc-page";
 export const universalConceptPageMarker = "universal-concept-page";
 export const languageOverlayPageMarker = "language-overlay-page";
 
-/** Docs-owned review context around a fleeting Dumling Attestation. */
+/** One target of a dumspec Spec Record, shown as a page example. */
 export type AttestedAttestation = Readonly<{
 	attestation: Dumling.Attestation;
-	classifierNotes?: string;
-	classificationMistakes?: string;
-	isVerified?: true;
+	record: Dumspec.SpecRecordId;
+	/** The record's sentence with the target's members in brackets. */
 	sentenceMarkdown: string;
+	/** The target's index in the record. */
+	target: number;
 }>;
 
 export type DocCitePageFamily =

@@ -1,8 +1,10 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as gehImperative } from "../../../attestations/de/attestation/Geh_bitte_nicht_ohne_Jacke_raus/[Geh]_bitte_nicht_ohne_Jacke_raus.ts";
-import { attestation as doesIndicative } from "../../../attestations/en/attestation/Does_this_key_open_the_archive/[Does]_this_key_open_the_archive.ts";
-import { attestation as wereSubjunctive } from "../../../attestations/en/attestation/If_I_were_you_I_would_wait/If_I_[were]_you_I_would_wait.ts";
-import { attestation as boUImperative } from "../../../attestations/he/attestation/בואו_לכאן/[בואו]_לכאן.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const gehImperative = specExample("de/geh-bitte-nicht-ohne-jacke-raus");
+const doesIndicative = specExample("en/does-this-key-open-the-archive");
+const wereSubjunctive = specExample("en/if-i-were-you-i-would-wait");
+const boUImperative = specExample("he/bou-lekan");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Mood feature.",

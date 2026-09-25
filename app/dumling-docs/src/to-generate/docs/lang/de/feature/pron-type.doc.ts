@@ -1,5 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as vieleIndefinitePronoun } from "../../../../attestations/de/attestation/Viele_kamen_zu_spät/[Viele]_kamen_zu_spät.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const vieleIndefinitePronoun = specExample("de/viele-kamen-zu-spaet");
 
 const document = defineLanguageOverlayPage({
 	description: "German PronType.",

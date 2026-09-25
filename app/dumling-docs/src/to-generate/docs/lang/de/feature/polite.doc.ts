@@ -1,5 +1,9 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as ihremPoliteDeterminer } from "../../../../attestations/de/attestation/Bitte_folgen_Sie_Ihrem_Ansprechpartner/Bitte_folgen_Sie_[Ihrem]_Ansprechpartner.ts";
+import { specExample } from "../../../../../lib/docs/spec-examples.ts";
+
+const ihremPoliteDeterminer = specExample(
+	"de/bitte-folgen-sie-ihrem-ansprechpartner",
+);
 
 const document = defineLanguageOverlayPage({
 	description: "German Polite.",

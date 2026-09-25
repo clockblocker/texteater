@@ -1,5 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as covidishForeignWord } from "../../../attestations/en/attestation/The_report_says_COVIDish_twice/The_report_says_[COVIDish]_twice.ts";
+import { specExample } from "../../../../lib/docs/spec-examples.ts";
+
+const covidishForeignWord = specExample("en/the-report-says-covid-ish-twice");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Foreign feature.",
