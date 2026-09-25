@@ -795,7 +795,7 @@
 			"expletiveEvidence": null,
 			"governedPrepositionEvidence": null
 		},
-		"explanation": "TIGER productive state passive. ist member. geschlossen head stays Part under schließen. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+		"explanation": "Productive state passive (ADR 0033). ist member. geschlossen head stays Part under schließen. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
 	"grammar-de-verb-provisional-zu-infinitive-warten": {
 		"input": {
@@ -3419,5 +3419,299 @@
 			"governedPrepositionEvidence": null
 		},
 		"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
+	},
+	"grammar-de-verb-participle-attributive-geschlossen": {
+		"input": {
+			"markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
+			"members": ["geschlossene"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["geschlossene"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Past",
+					"case": "Nom",
+					"gender": "Fem",
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "schließen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive attributive Partizip II (ADR 0033): Lemma schließen; the participial Surface agrees Nom Sing Fem with Tür."
+	},
+	"grammar-de-verb-participle-adverbial-lachend": {
+		"input": {
+			"markedContext": "Er kam <TARGET>lachend</TARGET> herein.",
+			"members": ["lachend"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lachend"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": null,
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Present",
+					"case": null,
+					"gender": null,
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lachen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive adverbial Partizip I (ADR 0033): Lemma lachen; an adverbial participle has no agreement."
+	},
+	"grammar-de-verb-participle-attributive-gekochten": {
+		"input": {
+			"markedContext": "Die <TARGET>gekochten</TARGET> Kartoffeln standen schon bereit.",
+			"members": ["gekochten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gekochten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Plur",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Past",
+					"case": "Nom",
+					"gender": null,
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "kochen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive attributive Partizip II (ADR 0033): Lemma kochen; Nom Plur agreement, plural leaves gender unmarked."
+	},
+	"grammar-de-verb-participle-attributive-bewunderte": {
+		"input": {
+			"markedContext": "Der von allen <TARGET>bewunderte</TARGET> Lehrer ging in den Ruhestand.",
+			"members": ["bewunderte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bewunderte"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Past",
+					"case": "Nom",
+					"gender": "Masc",
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bewundern",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive Partizip II with a von-agent (ADR 0033): Lemma bewundern; Nom Sing Masc agreement."
+	},
+	"grammar-de-verb-participle-attributive-gelegene": {
+		"input": {
+			"markedContext": "Das am See <TARGET>gelegene</TARGET> Haus gehört meinem Onkel.",
+			"members": ["gelegene"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gelegene"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Past",
+					"case": "Nom",
+					"gender": "Neut",
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "liegen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Locative gelegen is liegen's own sense (ADR 0033): Lemma liegen, not the lexicalized ADJ gelegen 'convenient'; Nom Sing Neut agreement."
+	},
+	"grammar-de-verb-participle-attributive-umgestuerzte": {
+		"input": {
+			"markedContext": "Der Sturm blockierte mit dem <TARGET>umgestürzten</TARGET> Baum die Straße.",
+			"members": ["umgestürzten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["umgestürzten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Sing",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Past",
+					"case": "Dat",
+					"gender": "Masc",
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "umstürzen",
+				"coreFeatures": {
+					"hasSepPrefix": "um",
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive Partizip II of a separable verb (ADR 0033): Lemma umstürzen with prefix um; Dat Sing Masc agreement after mit dem."
+	},
+	"grammar-de-verb-participle-attributive-spielenden": {
+		"input": {
+			"markedContext": "Sie beobachtete die im Garten <TARGET>spielenden</TARGET> Kinder.",
+			"members": ["spielenden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["spielenden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"verbForm": "Part",
+					"tense": null,
+					"mood": null,
+					"person": null,
+					"number": "Plur",
+					"perfect": null,
+					"future": null,
+					"voice": null,
+					"passive": null,
+					"expletive": null,
+					"participleForm": "Present",
+					"case": "Acc",
+					"gender": null,
+					"degree": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "spielen",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"governedPrepositionEvidence": null
+		},
+		"explanation": "Productive attributive Partizip I (ADR 0033): Lemma spielen; Acc Plur agreement with Kinder."
 	}
 }

@@ -41,7 +41,7 @@ Mere proximity, frequency or ordinary compositional combination never establishe
 /** The Lexeme layer's route inventory: Lexeme Kinds only (AUX is not a route, ADR 0026). */
 export const lexemeRoutes: Record<string, string> = {
 	"Lexeme/ADJ":
-		"Adjective, including adjectival participles, established property predicates, comparative and adverbially used adjectives",
+		"Adjective, including lexicalized participles, comparative and adverbially used adjectives",
 	"Lexeme/ADP":
 		"Adposition (preposition, postposition or fixed circumposition), including one that is a fixed part of a larger expression",
 	"Lexeme/ADV":
@@ -64,7 +64,7 @@ export const lexemeRoutes: Record<string, string> = {
 		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
-		"One lexical verb with its own auxiliaries, separable particle, required reflexive, governed preposition and lexically selected es; modals and copulas included; whether or not it is part of a larger expression",
+		"One lexical verb with its own auxiliaries, separable particle, required reflexive, governed preposition and lexically selected es; modals, copulas and productive participles used attributively or adverbially included; whether or not it is part of a larger expression",
 	"Lexeme/X": "Unanalyzable or foreign material",
 	Unresolved:
 		"No defensible word contains this occurrence: its exact grammatical members cannot be decided",

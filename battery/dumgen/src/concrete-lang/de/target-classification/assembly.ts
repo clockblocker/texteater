@@ -12,10 +12,11 @@ import { indexedContext } from "../../../universal/validation.js";
 
 export const routes = {
 	"Lexeme/ADJ":
-		"Adjective, including adjectival participles and adverbial adjective uses",
+		"Adjective, including lexicalized participles and adverbial adjective uses",
 	"Lexeme/ADP":
 		"Adposition (preposition, postposition or fixed circumposition)",
-	"Lexeme/ADV": "Adverb, including a whole adverbial correlator",
+	"Lexeme/ADV":
+		"Adverb that cannot inflect as an adjective (heute, dort, gern), including a whole adverbial correlator; never an adjective used adverbially",
 	"Lexeme/CCONJ":
 		"Coordinating conjunction, including a complete fixed correlator",
 	"Lexeme/DET": "Determiner modifying a noun",
@@ -30,7 +31,7 @@ export const routes = {
 		"Subordinating conjunction, including fixed multi-member conjunctions",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
-		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal or copula",
+		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal, a copula, and a productive participle used attributively or adverbially",
 	"Phraseme/Aphorism": "Established concise attributed maxim",
 	"Phraseme/Collocation":
 		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning, including Funktionsverbgefüge (eine Entscheidung treffen, zur Verfügung stellen)",

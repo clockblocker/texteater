@@ -11,32 +11,38 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
 		language: "de",
 		normalizedSurface: "geschwind",
 		spelling: "Canonical",
 
+		inflectionalFeatures: {
+			case: null,
+			degree: "Pos",
+			number: null,
+			gender: null,
+		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "geschwind",
 			family: "Lexeme",
-			kind: "ADV",
+			kind: "ADJ",
 			coreFeatures: {
+				abbr: null,
 				foreign: null,
 				numType: null,
-				pronType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "ADV">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"nahm Ranzen, Pulverhorn und Flint\nund lief hinaus ins Feld [geschwind]",
 	classifierNotes:
-		"I treated `geschwind` here as an adverb meaning `quickly`, not as an adjective, because it modifies the running event directly and shows no adjectival inflection in this use.",
+		"Geschwind means quickly and modifies the running event, but an adverbially used plain adjective stays ADJ (ADR 0033), with positive degree and no agreement.",
 	isVerified: true,
 } as const;

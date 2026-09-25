@@ -516,11 +516,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -529,11 +532,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -647,11 +653,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -660,11 +671,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -2043,11 +2059,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -2056,11 +2075,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -2182,11 +2204,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -2195,11 +2222,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3019,11 +3051,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3032,11 +3067,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3150,11 +3188,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3163,11 +3206,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3417,11 +3465,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3430,11 +3481,14 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: null;
+								number: ("Plur" | "Sing") | null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3548,11 +3602,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3561,11 +3620,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: null;
+									number: ("Plur" | "Sing") | null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;

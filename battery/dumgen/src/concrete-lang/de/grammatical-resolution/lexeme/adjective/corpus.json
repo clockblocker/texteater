@@ -745,37 +745,6 @@
 			"realizationCoverage": "Full"
 		}
 	},
-	"grammar-de-adj-dev-participial-geschlossen": {
-		"input": {
-			"markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
-			"members": ["geschlossene"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["geschlossene"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": "Pos",
-					"gender": "Fem",
-					"number": "Sing"
-				}
-			},
-			"lemma": {
-				"canonicalForm": "geschlossen",
-				"coreFeatures": {
-					"abbr": null,
-					"foreign": null,
-					"numType": null,
-					"variant": null
-				}
-			},
-			"realizationCoverage": "Full"
-		},
-		"explanation": "Established result adjective. Route fixed ADJ, not verbal participle."
-	},
 	"grammar-de-adj-dev-participial-spannend": {
 		"input": {
 			"markedContext": "Der <TARGET>spannende</TARGET> Vortrag dauerte eine Stunde.",
@@ -805,7 +774,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Established property adjective. Route fixed ADJ, not verbal participle."
+		"explanation": "Lexicalized 'exciting' with comparison (spannender), so a participial ADJ (ADR 0033): Canonical Form spannend, not spannen."
 	},
 	"grammar-de-adj-dev-lexicalized-participial-verrueckt": {
 		"input": {
@@ -836,38 +805,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "TIGER lexicalized property adjective. Predicative ADJ, not productive passive VERB."
-	},
-	"grammar-de-adj-dev-adverbial-participle-one-lachend": {
-		"input": {
-			"markedContext": "Er kam <TARGET>lachend</TARGET> herein.",
-			"members": ["lachend"]
-		},
-		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["lachend"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": null,
-					"degree": "Pos",
-					"gender": null,
-					"number": null
-				}
-			},
-			"lemma": {
-				"canonicalForm": "lachend",
-				"coreFeatures": {
-					"abbr": null,
-					"foreign": null,
-					"numType": null,
-					"variant": null
-				}
-			},
-			"realizationCoverage": "Full"
-		},
-		"explanation": "TIGER adjectivally used Partizip I. Adverbial function keeps ADJ route."
+		"explanation": "Lexicalized 'crazy' comes from no sense of verrücken (ADR 0033). Predicative ADJ, not a state passive VERB."
 	},
 	"grammar-de-adj-dev-invariant-lila": {
 		"input": {
@@ -961,7 +899,8 @@
 				}
 			},
 			"realizationCoverage": "Full"
-		}
+		},
+		"explanation": "Lexicalized 'brilliant' with comparison (glänzender), so a participial ADJ (ADR 0033): Canonical Form glänzend."
 	},
 	"grammar-de-adj-accept-invariant-rosa": {
 		"input": {

@@ -505,6 +505,21 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 };
 
+/**
+ * A productive participle stays verbal when used like an adjective (ADR 0033),
+ * so a participial verbal Surface agrees with the noun it modifies.
+ */
+const verbalQuestions: Readonly<Record<string, string>> = {
+	"surface.inflectionalFeatures.number":
+		"If the whole marked verbal target is finite, what Number does its verb form agree in? Read the actual finite morphology: third-singular sie liest differs from plural/formal sie/Sie lesen. Capitalized sentence-initial Sie alone does not establish formal address. A participle used attributively instead marks the Number of the noun it modifies (der gelobte Koch Sing, die gelobten Köche Plur). Infinitives and predicative or adverbial participles are unmarked; do not inherit agreement from a separate modal.",
+	"surface.inflectionalFeatures.case":
+		"If the whole target is a participle used attributively, inside a noun phrase before its noun, what Case does that noun phrase bear in its own clause (subject Nom, direct object Acc, after mit or von Dat)? Answer Unmarked for a participle with no noun of its own to agree with: one modifying the verb or clause (ging pfeifend davon, kam weinend nach Hause) is adverbial, and finite, infinitival and predicative targets have no Case either.",
+	"surface.inflectionalFeatures.gender":
+		"If the whole target is a singular participle used attributively, what gender does it agree in with the noun it modifies? Answer Unmarked for plural agreement, for finite and infinitival targets, and for a predicative or adverbial participle with no noun of its own.",
+	"surface.inflectionalFeatures.degree":
+		"Does this participial target itself carry comparative or superlative morphology? A productive participle, attributive or not, has unmarked degree; a separate degree adverb does not count.",
+};
+
 export const verbalKinds: ReadonlySet<string> = new Set([
 	"VERB",
 	"AUX",
@@ -521,9 +536,9 @@ export function featureQuestion(
 	if (!meaning)
 		throw Error(`Missing German feature question: ${kind}/${path}`);
 	const question =
-		verbalKinds.has(kind) && path === "surface.inflectionalFeatures.number"
-			? "If the whole marked verbal target is finite, what Number does its verb form agree in? Read the actual finite morphology: third-singular sie liest differs from plural/formal sie/Sie lesen. Capitalized sentence-initial Sie alone does not establish formal address. Nonfinite targets are unmarked; do not inherit agreement from a separate modal."
-			: (meaning.byKind?.[kind] ?? meaning.question);
+		(verbalKinds.has(kind) ? verbalQuestions[path] : undefined) ??
+		meaning.byKind?.[kind] ??
+		meaning.question;
 	const unmarked = meaning.unmarkedByKind?.[kind] ?? meaning.unmarked;
 	const criteria: Record<string, string> = {};
 	if (field.open) {

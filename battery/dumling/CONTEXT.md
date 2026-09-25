@@ -107,8 +107,12 @@ _Avoid_: Mnemonic, Gloss, Sense ID
 ### German classifications
 
 **Verbal Participle**:
-A participial Surface whose contextual use belongs to a VERB or AUX Lexeme. Its
-Canonical Form is the verbal dictionary form.
+A productive participle, which resolves to its VERB or AUX Lexeme in every
+use: attributive (`die gekochten Kartoffeln`), adverbial (`kam lachend
+herein`) or in a state passive (`Die Tür ist geschlossen`). Its Canonical Form
+is the infinitive. Its Surface records Partizip I or II and, when attributive,
+the case, number and gender it agrees in.
+_Avoid_: adjectival participle, for a productive use
 
 **Modal Verb**:
 One of `dürfen`, `können`, `mögen`, `müssen`, `sollen`, `wollen` as a VERB
@@ -125,8 +129,11 @@ Lexeme.
 _Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
 
 **Participial Adjective**:
-A participial form that resolves to an ADJ Lexeme rather than its source verb.
-Its Canonical Form is the adjectival participial form.
+A lexicalized participle, which is its own ADJ Lexeme: its meaning comes from
+no sense of the verb, or it takes `un-`, `sehr` or comparison (`spannend`,
+`gebildet`, `ungelesen`). Its Canonical Form is the participial form. The same
+spelling can be a Verbal Participle elsewhere: `ein gebildeter Mann` is
+`gebildet`, `ein aus Ton gebildeter Krug` is `bilden`.
 
 **Collocation**:
 A conventional multiword Phraseme with restricted lexical choices and a

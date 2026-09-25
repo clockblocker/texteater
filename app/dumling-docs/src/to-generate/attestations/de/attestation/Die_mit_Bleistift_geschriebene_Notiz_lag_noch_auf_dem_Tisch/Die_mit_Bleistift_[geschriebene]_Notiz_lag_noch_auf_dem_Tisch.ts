@@ -9,6 +9,8 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	expletiveEvidence: null,
+	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -16,33 +18,42 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			case: "Nom",
-			degree: "Pos",
-			gender: "Fem",
+			mood: null,
 			number: "Sing",
+			person: null,
+			tense: null,
+			verbForm: "Part",
+			participleForm: "Past",
+			case: "Nom",
+			gender: "Fem",
+			degree: null,
+			expletive: null,
+			perfect: null,
+			future: null,
+			voice: null,
+			passive: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "geschrieben",
+			canonicalForm: "schreiben",
 			family: "Lexeme",
-			kind: "ADJ",
+			kind: "VERB",
 			coreFeatures: {
-				abbr: null,
-				foreign: null,
-				numType: null,
-				variant: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.",
 	classifierNotes:
-		"Geschriebene is an attributive participial adjective modifying Notiz with nominative feminine singular agreement. The surrounding mit Bleistift phrase adds manner/instrument information but does not change the highlight from the adjectival participle classification used here.",
+		"Geschriebene keeps the writing event with its instrument mit Bleistift, a productive attributive Partizip II of schreiben (ADR 0033). It carries Nom Sing Fem agreement with Notiz.",
 	isVerified: true,
 } as const;

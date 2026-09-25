@@ -1,3 +1,14 @@
+/** Productive participles used like adjectives stay VERB and carry agreement (ADR 0033). */
+export const participleCaseIds = [
+	"grammar-de-verb-participle-attributive-geschlossen",
+	"grammar-de-verb-participle-adverbial-lachend",
+	"grammar-de-verb-participle-attributive-gekochten",
+	"grammar-de-verb-participle-attributive-bewunderte",
+	"grammar-de-verb-participle-attributive-gelegene",
+	"grammar-de-verb-participle-attributive-umgestuerzte",
+	"grammar-de-verb-participle-attributive-spielenden",
+] as const;
+
 export const evaluationCaseIds = [
 	"grammar-de-verb-subject-question",
 	"grammar-de-verb-subject-past",
@@ -78,4 +89,5 @@ export const evaluationCaseIds = [
 	"grammar-de-verb-recipient-passive-erhielt-ueberreicht",
 	"grammar-de-verb-lexical-bekommt-paket",
 	"grammar-de-verb-resultative-bekommt-geoeffnet",
+	...participleCaseIds,
 ] as const;

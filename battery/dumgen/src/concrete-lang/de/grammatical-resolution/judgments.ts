@@ -46,6 +46,12 @@ function featureValue(answer: string): unknown {
 	if (answer === unmarked) return null;
 	return answer.includes(",") ? answer.split(",") : answer;
 }
+const participleOnly: ReadonlySet<string> = new Set([
+	"participleForm",
+	"case",
+	"gender",
+	"degree",
+]);
 const normalizations = {
 	Keep: "Copy the attested member exactly, preserving licensed variants and required capitals",
 	LowerInitial:
@@ -136,7 +142,7 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb lexically selects for its complement (wartet auf, erinnert sich an, geht um) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb lexically selects for its complement (wartet auf, erinnert sich an, geht um) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone. A lone productive participle that modifies a noun or the clause (die gebratenen Zwiebeln, ging pfeifend davon) is also a supported VERB target: its Lemma is the infinitive and its Surface is participial, agreeing with the noun when attributive.";
 
 const partialCoveragePolicy =
 	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
@@ -471,17 +477,17 @@ export function resolveGrammarJudgments(
 								bag[key] = null;
 								continue;
 							}
+							// Participle agreement exists only on a participial Surface.
 							if (
 								verbal &&
-								key === "participleForm" &&
+								participleOnly.has(key) &&
 								form !== "Part"
 							)
 								continue;
 							if (
 								verbal &&
-								["tense", "mood", "person", "number"].includes(
-									key,
-								) &&
+								(["tense", "mood", "person"].includes(key) ||
+									(key === "number" && form === "Inf")) &&
 								form !== "Fin"
 							) {
 								bag[key] = null;

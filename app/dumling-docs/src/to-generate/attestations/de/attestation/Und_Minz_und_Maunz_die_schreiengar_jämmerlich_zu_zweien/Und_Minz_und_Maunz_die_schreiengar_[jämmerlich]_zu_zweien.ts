@@ -11,32 +11,38 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
 		language: "de",
 		normalizedSurface: "jämmerlich",
 		spelling: "Canonical",
 
+		inflectionalFeatures: {
+			case: null,
+			degree: "Pos",
+			number: null,
+			gender: null,
+		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
 			canonicalForm: "jämmerlich",
 			family: "Lexeme",
-			kind: "ADV",
+			kind: "ADJ",
 			coreFeatures: {
+				abbr: null,
 				foreign: null,
 				numType: null,
-				pronType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "ADV">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"Und Minz und Maunz, die schreien\ngar [jämmerlich] zu zweien",
 	classifierNotes:
-		"Jämmerlich is adjective-shaped, but in this sentence it modifies schreien adverbially. I classified the attested use as ADV to reflect the learner-facing role in context.",
+		"Jämmerlich modifies schreien adverbially, but an adverbially used plain adjective stays ADJ (ADR 0033), with positive degree and no agreement.",
 	isVerified: true,
 } as const;

@@ -41,3 +41,38 @@ test("whole perfect passive is representable without conflating finite tense or 
 			DeVerbalInflectionalFeatureBagSchema.safeParse(invalid).success,
 		).toBe(false);
 });
+
+test("only a participle Surface carries adjectival agreement", () => {
+	const participle = {
+		...infinitive,
+		verbForm: "Part",
+		participleForm: "Past",
+		perfect: null,
+		voice: null,
+		passive: null,
+		case: "Nom",
+		number: "Plur",
+		gender: null,
+		degree: null,
+	};
+	expect(
+		DeVerbalInflectionalFeatureBagSchema.safeParse(participle).success,
+	).toBe(true);
+	expect(
+		DeVerbalInflectionalFeatureBagSchema.safeParse({
+			...participle,
+			participleForm: "Present",
+			case: null,
+			number: null,
+		}).success,
+	).toBe(true);
+	for (const invalid of [
+		{ ...participle, person: "3" },
+		{ ...participle, case: "Voc" },
+		{ ...finite, case: "Nom" },
+		{ ...infinitive, gender: "Fem" },
+	])
+		expect(
+			DeVerbalInflectionalFeatureBagSchema.safeParse(invalid).success,
+		).toBe(false);
+});

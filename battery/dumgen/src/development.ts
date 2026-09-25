@@ -13,6 +13,7 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
+import { participleCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/verb/evaluation-ids.js";
 import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -45,6 +46,7 @@ const targetRoute = "target-classification/de/high-level-whole-unit";
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
 	[targetRoute]: { "participle-boundary": participleBoundaryCaseIds },
+	"grammatical-resolution/de/lexeme/verb": { participles: participleCaseIds },
 };
 const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
 	Object.entries(selections).map(([phase, ids]) => ({

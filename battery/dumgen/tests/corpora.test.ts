@@ -81,8 +81,10 @@ test("canonical target corpus survives compact representation round-trips", () =
 test("all 1109 retained grammar answers project through public operations", async () => {
 	let count = 0;
 	const verifiedRoutes = new Set<string>();
-	for (const spec of listExperiments().filter((item) =>
-		item.id.startsWith("grammatical-resolution/"),
+	for (const spec of listExperiments().filter(
+		(item) =>
+			item.id.startsWith("grammatical-resolution/") &&
+			!item.id.includes(":"),
 	)) {
 		const [, language, familyName, kindName] = spec.id.split("/");
 		const safeFamilyName = required(familyName);
@@ -175,6 +177,6 @@ test("all 1109 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1075);
+	expect(count).toBe(1080);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

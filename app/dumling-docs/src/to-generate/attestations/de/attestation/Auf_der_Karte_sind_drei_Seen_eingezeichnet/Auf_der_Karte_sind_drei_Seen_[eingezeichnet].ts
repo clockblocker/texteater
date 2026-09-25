@@ -19,6 +19,9 @@ const occurrenceAttestation = {
 
 		inflectionalFeatures: {
 			participleForm: "Past",
+			case: null,
+			gender: null,
+			degree: null,
 			verbForm: "Part",
 			mood: null,
 			number: null,

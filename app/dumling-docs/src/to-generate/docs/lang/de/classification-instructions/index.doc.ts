@@ -131,8 +131,8 @@ German \`VERB\` and \`AUX\` reuse a narrow UD-style verbal core:
 - \`tense\`: \`Past\`, \`Pres\`
 - \`verbForm\`: \`Fin\`, \`Inf\`, \`Part\`
 - \`number\`, \`person\`
-- participial \`gender\` where supported
-- \`aspect: "Perf"\` on perfect participles where needed
+- \`participleForm\`: \`Present\`, \`Past\` on a participial Surface
+- \`case\`, \`number\` and \`gender\` on an attributive participle
 
 The German pack also uses a small set of custom verbal features that matter a lot in classification:
 
@@ -142,9 +142,8 @@ The German pack also uses a small set of custom verbal features that matter a lo
 
 For participles, keep the layer distinction sharp:
 
-- attributive participles with adjectival agreement normally classify as \`ADJ\`
-- bare or predicative Partizip-II forms normally classify as \`VERB\`
-- fully lexicalized adjectives can still stay \`ADJ\` regardless of historical participial origin
+- productive participles classify as \`VERB\` in every use, attributive ones included
+- lexicalized participles (meaning from no verb sense, \`un-\`, \`sehr\` or comparison) classify as \`ADJ\`
 
 ### German-Specific And Layered Features
 

@@ -23,8 +23,12 @@ verbForm is Fin, Inf or Part for the whole construction. Finite indicative and
 subjunctive forms have mood Ind or Sub, applicable person and number, and finite
 tense Pres or Past. Konjunktiv I uses Pres, Konjunktiv II uses Past. Imperatives
 have mood Imp and null tense. Infinitives and participles have null finite
-tense, mood, person and number. Only a whole participial Surface has
-participleForm Present or Past. Do not use aspect or gender in this verbal bag.
+tense, mood and person; infinitives also have null number. Only a whole
+participial Surface has participleForm Present or Past, and only it carries
+case, number, gender and degree. A productive participle stays VERB when used
+like an adjective: attributive die gebratenen Zwiebeln is Part, Past, Nom,
+Plur with gender null; adverbial ging pfeifend davon is Part, Present with
+case, number and gender null. Its degree stays null. Never use aspect.
 
 Every marked verbal bag has independent perfect and future coordinates: Yes
 when the construction is present, null when absent. A Partizip II alone is not

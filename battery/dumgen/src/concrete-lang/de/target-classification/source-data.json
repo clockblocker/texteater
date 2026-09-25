@@ -7105,7 +7105,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4, 6]
 			},
-			"explanation": "TIGER keeps productive sein plus Partizip II verbal when the corresponding werden-passive preserves the meaning. Dumgen therefore maps sind and geöffnet to one click-invariant Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "sind geöffnet is a productive state passive of öffnen (Die Banken werden geöffnet), so sind and geöffnet form one click-invariant Lexeme/VERB target (ADR 0033)."
 		},
 		"target-de-demo-state-passive-banken-click-geoeffnet": {
 			"input": {
@@ -7150,7 +7150,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4, 6]
 			},
-			"explanation": "TIGER keeps productive sein plus Partizip II verbal when the corresponding werden-passive preserves the meaning. Dumgen therefore maps sind and geöffnet to one click-invariant Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "sind geöffnet is a productive state passive of öffnen (Die Banken werden geöffnet), so sind and geöffnet form one click-invariant Lexeme/VERB target (ADR 0033)."
 		},
 		"target-de-demo-state-passive-bauplan-click-freigegeben": {
 			"input": {
@@ -7235,7 +7235,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [6, 16]
 			},
-			"explanation": "The named agent and preserved freigeben event keep this result state verbal under TIGER. Dumgen therefore maps ist and freigegeben to one Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "The named agent and the freigeben event make this a productive state passive, so ist and freigegeben form one Lexeme/VERB target (ADR 0033)."
 		},
 		"target-de-demo-state-passive-absperrung-click-versetzt": {
 			"input": {
@@ -7360,7 +7360,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [6, 26]
 			},
-			"explanation": "The named agent and directional distance preserve the versetzen event, so TIGER keeps the result state verbal. Dumgen therefore maps ist and versetzt to one Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "The named agent and directional distance keep the versetzen event, so this productive state passive maps ist and versetzt to one Lexeme/VERB target (ADR 0033)."
 		},
 		"target-de-demo-participial-adjective-brief-click-ist": {
 			"input": {
@@ -7421,7 +7421,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "TIGER assigns an adjectival Partizip II property to ADJD. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "ungelesen is a lexicalized ADJ predicate (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-demo-participial-adjective-brief-click-ungelesen": {
 			"input": {
@@ -7482,7 +7482,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "TIGER assigns an adjectival Partizip II property to ADJD. Dumgen therefore keeps copular ist separate from ungelesen, whose un- form and coordination with unwichtig support the adjective reading. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "ungelesen has an un- form the verb lesen lacks and coordinates with unwichtig, so it is a lexicalized ADJ and copular ist stays separate (ADR 0033)."
 		},
 		"target-de-boundary-lexicalized-participle-click-ist": {
 			"input": {
@@ -7535,7 +7535,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "TIGER assigns lexicalized or idiomatized participial properties to ADJD rather than VVPP. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "verrückt 'crazy' is a lexicalized ADJ predicate (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-boundary-lexicalized-participle-click-verrueckt": {
 			"input": {
@@ -7588,7 +7588,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "TIGER assigns lexicalized or idiomatized participial properties to ADJD rather than VVPP. Dumgen therefore keeps copular ist separate from adjective verrückt. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "verrückt 'crazy' comes from no sense of verrücken and takes völlig, sehr and comparison, so it is a lexicalized ADJ and copular ist stays separate (ADR 0033)."
 		},
 		"target-de-boundary-participle-one-attributive-lachende": {
 			"input": {
@@ -7630,10 +7630,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "ADJ",
+				"kind": "VERB",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "TIGER assigns adjectivally used Partizip I forms to ADJA or ADJD. Dumgen therefore routes attributive lachende and adverbial lachend as singleton Lexeme/ADJ targets. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive attributive Partizip I resolves to its verb (ADR 0033): lachende is a singleton VERB target with Lemma lachen; the article and noun stay outside."
 		},
 		"target-de-boundary-participle-one-adverbial-lachend": {
 			"input": {
@@ -7675,10 +7675,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "ADJ",
+				"kind": "VERB",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "TIGER assigns adjectivally used Partizip I forms to ADJA or ADJD. Dumgen therefore routes attributive lachende and adverbial lachend as singleton Lexeme/ADJ targets. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive adverbial Partizip I resolves to its verb (ADR 0033): lachend is a singleton VERB target with Lemma lachen."
 		},
 		"target-de-boundary-modal-click-muss": {
 			"input": {
@@ -17078,7 +17078,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [19, 37]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-01-repariert-click-repariert": {
 			"input": {
@@ -17247,7 +17247,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [19, 37]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-02-unterschrieben-click-wird": {
 			"input": {
@@ -17404,7 +17404,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22, 34]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-02-unterschrieben-click-unterschrieben": {
 			"input": {
@@ -17561,7 +17561,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22, 34]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-03-angekommen-click-ist": {
 			"input": {
@@ -17714,7 +17714,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [15, 33]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-03-angekommen-click-angekommen": {
 			"input": {
@@ -17867,7 +17867,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [15, 33]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-04-bezahlt-click-ist": {
 			"input": {
@@ -18044,7 +18044,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [16, 26]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-04-bezahlt-click-bezahlt": {
 			"input": {
@@ -18221,7 +18221,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [16, 26]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-ist": {
 			"input": {
@@ -18370,7 +18370,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [20, 32]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-gestrichen": {
 			"input": {
@@ -18519,7 +18519,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [20, 32]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-sind": {
 			"input": {
@@ -18656,7 +18656,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [15, 29]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-eingeladen": {
 			"input": {
@@ -18793,7 +18793,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [15, 29]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-ist": {
 			"input": {
@@ -18950,7 +18950,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [24, 34]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-genehmigt": {
 			"input": {
@@ -19107,7 +19107,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [24, 34]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-ist": {
 			"input": {
@@ -19312,7 +19312,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [17, 31]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-gefuellt": {
 			"input": {
@@ -19517,7 +19517,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [17, 31]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-ist": {
 			"input": {
@@ -19698,7 +19698,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22, 40]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-verrueckt": {
 			"input": {
@@ -19879,7 +19879,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22, 40]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-ist": {
 			"input": {
@@ -20076,7 +20076,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [17, 33]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-geschlossen": {
 			"input": {
@@ -20273,7 +20273,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [17, 33]
 			},
-			"explanation": "TIGER keeps a verbal Partizip II in a perfect, werden-passive, or productive sein-passive verbal. The finite auxiliary and Partizip II therefore resolve to the same Lexeme/VERB target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
 		},
 		"target-de-participle-benchmark-11-verrueckt-click-ist": {
 			"input": {
@@ -20430,7 +20430,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "verrückt 'crazy' comes from no sense of verrücken, and it takes sehr and comparison, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-11-verrueckt-click-verrueckt": {
 			"input": {
@@ -20587,7 +20587,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [34]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "verrückt 'crazy' comes from no sense of verrücken, and it takes sehr and comparison, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-12-verheiratet-click-ist": {
 			"input": {
@@ -20748,7 +20748,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [23]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "verheiratet takes un- (unverheiratet) and Duden lists it as an Adjektiv, so it stays ADJ; it is a borderline resulting state of sich verheiraten awaiting a ruling (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-12-verheiratet-click-verheiratet": {
 			"input": {
@@ -20909,7 +20909,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [35]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "verheiratet takes un- (unverheiratet) and Duden lists it as an Adjektiv, so it stays ADJ; it is a borderline resulting state of sich verheiraten awaiting a ruling (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-13-bekannt-click-ist": {
 			"input": {
@@ -21042,7 +21042,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [16]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "bekannt 'known' takes un- (unbekannt) and comparison, and Duden separates it from bekennen, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-13-bekannt-click-bekannt": {
 			"input": {
@@ -21175,7 +21175,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [28]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "bekannt 'known' takes un- (unbekannt) and comparison, and Duden separates it from bekennen, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-14-gebildet-click-ist": {
 			"input": {
@@ -21332,7 +21332,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [24]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "gebildet 'educated' takes un- (ungebildet), degree modification (ungewöhnlich gebildet) and comparison, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-14-gebildet-click-gebildet": {
 			"input": {
@@ -21489,7 +21489,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [34]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "gebildet 'educated' takes un- (ungebildet), degree modification (ungewöhnlich gebildet) and comparison, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-15-begabt-click-ist": {
 			"input": {
@@ -21638,7 +21638,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [18]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "begabt 'talented' takes un- (unbegabt), besonders and comparison, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-15-begabt-click-begabt": {
 			"input": {
@@ -21787,7 +21787,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [32]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "begabt 'talented' takes un- (unbegabt), besonders and comparison, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-16-ungeoeffnet-click-ist": {
 			"input": {
@@ -21932,7 +21932,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [13]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "ungeöffnet has an un- form the verb öffnen lacks, so it is an ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet": {
 			"input": {
@@ -22077,7 +22077,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [31]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "ungeöffnet has an un- form the verb öffnen lacks, so it is an ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-17-ungeloest-click-bleibt": {
 			"input": {
@@ -22234,7 +22234,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [22]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "ungelöst has an un- form the verb lösen lacks, so it is an ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-17-ungeloest-click-ungeloest": {
 			"input": {
@@ -22391,7 +22391,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [34]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "ungelöst has an un- form the verb lösen lacks, so it is an ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-ist": {
 			"input": {
@@ -22586,9 +22586,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [24]
+				"memberSegmentIndices": [24, 36]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "The shop being closed on Sundays is schließen's own sense (Der Laden wird sonntags geschlossen), with no un-, sehr or comparison, so this is a productive state passive (ADR 0033): ist and geschlossen form one VERB target."
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-geschlossen": {
 			"input": {
@@ -22782,10 +22782,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "ADJ",
-				"memberSegmentIndices": [36]
+				"kind": "VERB",
+				"memberSegmentIndices": [24, 36]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "The shop being closed on Sundays is schließen's own sense (Der Laden wird sonntags geschlossen), with no un-, sehr or comparison, so this is a productive state passive (ADR 0033): ist and geschlossen form one VERB target."
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-ist": {
 			"input": {
@@ -22938,7 +22938,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [11]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "beleidigt 'sulking' takes sehr, coordinates with abweisend and Duden lists it as an Adjektiv, so it stays ADJ; like other emotional resulting states it is borderline and awaits a ruling (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-beleidigt": {
 			"input": {
@@ -23091,7 +23091,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [27]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "beleidigt 'sulking' takes sehr, coordinates with abweisend and Duden lists it as an Adjektiv, so it stays ADJ; like other emotional resulting states it is borderline and awaits a ruling (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-participle-benchmark-20-uebertrieben-click-ist": {
 			"input": {
@@ -23240,7 +23240,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [20]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"explanation": "übertrieben 'excessive' takes völlig and comparison and Duden lists it as an Adjektiv, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
 		},
 		"target-de-participle-benchmark-20-uebertrieben-click-uebertrieben": {
 			"input": {
@@ -23389,7 +23389,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [32]
 			},
-			"explanation": "TIGER assigns lexicalized or contextually adjectival participles to the adjective class. The copula therefore remains a singleton Lexeme/VERB target and the participial adjective a singleton Lexeme/ADJ target. Source: https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70"
+			"explanation": "übertrieben 'excessive' takes völlig and comparison and Duden lists it as an Adjektiv, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
 		},
 		"target-de-core-unresolved-qzxv": {
 			"input": {
@@ -40852,7 +40852,7 @@
 				},
 				"additionalMemberIndices": [3]
 			},
-			"explanation": "sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet. TIGER treats this as a state passive. Take both as one VERB target."
+			"explanation": "sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet: a state passive. Take both as one VERB target."
 		},
 		{
 			"input": {

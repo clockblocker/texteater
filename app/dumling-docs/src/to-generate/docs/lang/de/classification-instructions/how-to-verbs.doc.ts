@@ -8,29 +8,34 @@ const document = defineLanguageOverlayPage({
 	subject: "how-to-verbs",
 	title: "How To Handle Verb-Shaped Forms",
 	body: `
-Use the conservative TIGER boundary for German forms that could be verbal,
-adjectival, auxiliary, or nominal.
+A productive participle stays verbal in every use. Only a lexicalized one
+becomes an adjective.
 
 ## Participles
 
-- An adjectivally used Partizip I is \`ADJ\`, whether attributive, predicative,
-  or adverbial. Its adjective Lemma uses the participial canonical form, such
-  as \`lachend\`, rather than the source verb.
-- An attributive or adverbial Partizip II is \`ADJ\` when it behaves as an
-  adjective. Lexicalized property meanings, adjective-only intensification or
-  comparison, \`un-\` formation, and coordination with ordinary adjectives are
-  evidence for this analysis.
-- A Partizip II in a productive perfect, \`werden\`-passive, \`sein\`-perfect,
-  or perfect-passive construction is \`VERB\` and keeps the source verb Lemma.
+- A productive Partizip I or II is \`VERB\` whether it is attributive
+  (\`die gekochten Kartoffeln\`), adverbial (\`kam lachend herein\`) or part of
+  a perfect, passive or state passive. Its Canonical Form is the infinitive:
+  \`kochen\`, \`lachen\`.
+- Its Surface has \`verbForm: "Part"\` and \`participleForm\` \`Present\` or
+  \`Past\`. An attributive participle also carries the \`case\`, \`number\`
+  and \`gender\` it agrees in; a predicative or adverbial one leaves them
+  null.
+- A lexicalized participle is \`ADJ\` with the participial Canonical Form. One
+  test is enough: its meaning comes from no sense of the verb (\`spannend\`
+  'exciting', \`gebildet\` 'educated'), it takes \`un-\` (\`ungelesen\`), or it
+  takes \`sehr\` or comparison (\`sehr gebildet\`, \`spannender\`).
+- One spelling can be both: \`ein gebildeter Mann\` is \`ADJ\` \`gebildet\`, while
+  \`ein aus Ton gebildeter Krug\` is \`VERB\` \`bilden\`.
 - A participle of an auxiliary Lemma is \`AUX\`.
 
-For \`sein + Partizip II\`, first ask whether an active or
-\`werden\`-passive paraphrase preserves the contextual meaning and verbal
-participants. If it does, classify the productive state passive as \`VERB\`
-and include the fixed realized auxiliary in the same high-level Analysis
-Target. Otherwise, lexicalized or idiomatic property behavior supports
-\`ADJ\`, with the copula outside that target. Make one decision for the
-occurrence so clicks on the auxiliary and participle cannot disagree.
+For \`sein + Partizip II\`, a productive state passive (\`Die Tür ist
+geschlossen\`) is one \`VERB\` target that includes \`ist\`. A lexicalized
+predicate (\`Der Brief ist ungelesen\`) is \`ADJ\`, with the copula outside
+that target. Make one decision for the occurrence so clicks on the auxiliary
+and participle cannot disagree.
+
+Adverbially used plain adjectives stay \`ADJ\` (\`er läuft schnell\`).
 
 ## Auxiliaries And Nominalized Forms
 

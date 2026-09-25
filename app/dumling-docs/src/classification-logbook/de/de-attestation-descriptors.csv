@@ -25,27 +25,27 @@ Das wäre schön [gewesen].,gewesen,Not Grundform,Lexeme,AUX
 Der Brief ist schon [geschrieben].,ist geschrieben,Not Grundform,Lexeme,VERB
 Der dritte [Band] ist längst vergriffen.,Band,Undetermined,Lexeme,NOUN
 Der Fährmann hat uns [übergesetzt].,übergesetzt,Not Grundform,Lexeme,VERB
-Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
+Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,VERB
 Der hockte da im grünen Gras; dem [floß] der Kaffee auf die Nas.,floß,Not Grundform,Lexeme,VERB
 Der hockte da im grünen Gras; dem floß der Kaffee [auf] die Nas.,auf,Grundform,Lexeme,ADP
 Der [Kiefer] schmerzte nach der Operation.,Kiefer,Undetermined,Lexeme,NOUN
-Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,ADJ
+Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,VERB
 Der Laster [fuhr] das Schild um.,fuhr um,Not Grundform,Lexeme,VERB
 Der [Leiter] der Werkstatt kam später.,Leiter,Undetermined,Lexeme,NOUN
-Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,ADJ
+Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,VERB
 Der [Reisende] wartete draußen.,Reisende,Undetermined,Lexeme,NOUN
-Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,ADJ
+Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,VERB
 Die alte [Kiefer] steht am Hang.,Kiefer,Undetermined,Lexeme,NOUN
 Die [Angestellten] streikten gestern.,Angestellten,Not Grundform,Lexeme,NOUN
-Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,ADJ
+Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,VERB
 Die Aufgabe bleibt [ungelöst].,ungelöst,Grundform,Lexeme,ADJ
 Die [Band] spielt heute im Kellerclub.,Band,Undetermined,Lexeme,NOUN
-Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,ADJ
-Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,ADJ
+Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,VERB
+Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,VERB
 Die Kartoffeln sind bereits [gekocht].,sind gekocht,Not Grundform,Lexeme,VERB
 Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Undetermined,Lexeme,NOUN
 Die [linke] Hand zitterte.,linke,Not Grundform,Lexeme,ADJ
-Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
+Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,VERB
 Die [Mutter] passt nicht auf diese Schraube.,Mutter,Undetermined,Lexeme,NOUN
 [Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Grundform,Lexeme,DET
 Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Undetermined,Lexeme,NOUN
@@ -59,7 +59,7 @@ Die Peitsche hat er mitgebracht und nimmt sie [sorglich] sehr in acht.,sorglich,
 Die Peitsche hat er mitgebracht und nimmt sie sorglich [sehr] in acht.,sehr,Undetermined,Lexeme,ADV
 Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht,Not Grundform,Phraseme,Idiom
 Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht,Not Grundform,Phraseme,Idiom
-Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Not Grundform,Lexeme,ADJ
+Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Not Grundform,Lexeme,VERB
 Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Undetermined,Lexeme,ADJ
 Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
 Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
@@ -74,7 +74,7 @@ Einst ging er an [Ufers] Rand mit der Mappe in der Hand.,Ufers,Not Grundform,Lex
 Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Undetermined,Lexeme,NOUN
 Er lief erst nach links und dann [hinaus].,hinaus,Undetermined,Lexeme,ADV
 Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
-Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
+Er saß [schweigend] am Fenster.,schweigend,Not Grundform,Lexeme,VERB
 Er vergaß [seinen] Schlüssel im Büro.,seinen,Not Grundform,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Not Grundform,Lexeme,VERB
 Er [wartet] auf den Nachtbus.,wartet auf,Not Grundform,Lexeme,VERB
@@ -112,7 +112,7 @@ Mit [keinem] Wort erwähnte sie den Plan.,keinem,Not Grundform,Lexeme,DET
 Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Not Grundform,Lexeme,VERB
 "nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Undetermined,Lexeme,ADV
-"nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Undetermined,Lexeme,ADV
+"nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Grundform,Lexeme,ADJ
 [Pass] auf dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
 Pass [auf] dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
 Pass auf [dich] auf!,dich,Grundform,Lexeme,PRON
@@ -122,7 +122,7 @@ Sein ständiges [Meckern] nervt.,Meckern,Undetermined,Lexeme,NOUN
 Sie [erinnert] sich an den Geruch.,erinnert sich an,Not Grundform,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ
-Sie kam [lachend] herein.,lachend,Grundform,Lexeme,ADJ
+Sie kam [lachend] herein.,lachend,Not Grundform,Lexeme,VERB
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Not Grundform,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Not Grundform,Lexeme,VERB
 Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB
@@ -138,7 +138,7 @@ Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB
 "[Tut mir leid], das war mein Fehler.",tut mir leid,Grundform,Phraseme,DiscourseFormula
 "Und Minz und Maunz, [die] schreien gar jämmerlich zu zweien",die,Grundform,Lexeme,PRON
 "Und Minz und Maunz, die schreien [gar] jämmerlich zu zweien",gar,Undetermined,Lexeme,ADV
-"Und Minz und Maunz, die schreien gar [jämmerlich] zu zweien",jämmerlich,Undetermined,Lexeme,ADV
+"Und Minz und Maunz, die schreien gar [jämmerlich] zu zweien",jämmerlich,Grundform,Lexeme,ADJ
 "Und Minz und Maunz, die schreien gar jämmerlich [zu] zweien",zu,Grundform,Lexeme,ADP
 "Und Minz und Maunz, die schreien gar jämmerlich zu [zweien]",zweien,Not Grundform,Lexeme,NUM
 Unter falschem [Namen] mietete er das Zimmer.,Namen,Not Grundform,Lexeme,NOUN

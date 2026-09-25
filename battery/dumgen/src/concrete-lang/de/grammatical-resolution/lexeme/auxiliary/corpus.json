@@ -345,7 +345,10 @@
 					"future": null,
 					"passive": null,
 					"participleForm": "Past",
-					"expletive": null
+					"expletive": null,
+					"case": null,
+					"gender": null,
+					"degree": null
 				}
 			},
 			"lemma": {

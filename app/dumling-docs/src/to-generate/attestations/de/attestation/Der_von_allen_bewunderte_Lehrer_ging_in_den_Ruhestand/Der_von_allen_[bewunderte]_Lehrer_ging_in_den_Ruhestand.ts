@@ -9,6 +9,8 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
+	expletiveEvidence: null,
+	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -16,33 +18,42 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			case: "Nom",
-			degree: "Pos",
-			gender: "Masc",
+			mood: null,
 			number: "Sing",
+			person: null,
+			tense: null,
+			verbForm: "Part",
+			participleForm: "Past",
+			case: "Nom",
+			gender: "Masc",
+			degree: null,
+			expletive: null,
+			perfect: null,
+			future: null,
+			voice: null,
+			passive: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "bewundert",
+			canonicalForm: "bewundern",
 			family: "Lexeme",
-			kind: "ADJ",
+			kind: "VERB",
 			coreFeatures: {
-				abbr: null,
-				foreign: null,
-				numType: null,
-				variant: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"Der von allen [bewunderte] Lehrer ging in den Ruhestand.",
 	classifierNotes:
-		"Bewunderte is an attributive participial adjective modifying Lehrer with nominative masculine singular agreement. Despite its verbal origin, this noun-modifying participle follows the repo's German rule that attributive participles classify as ADJ rather than VERB.",
+		"Bewunderte has a von-agent, a productive attributive Partizip II of bewundern (ADR 0033). It carries Nom Sing Masc agreement with Lehrer.",
 	isVerified: true,
 } as const;
