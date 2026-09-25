@@ -28,6 +28,7 @@ import {
 } from "../src/concrete-lang/de/sentence-analysis/criteria.js";
 import { candidatesFor } from "../src/concrete-lang/de/sentence-analysis/identity.js";
 import { placeSegments } from "../src/concrete-lang/de/sentence-analysis/placement.js";
+import { analysisState } from "../src/concrete-lang/de/sentence-analysis/questions.js";
 import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
 import type {
 	LexemeTarget,
@@ -1137,6 +1138,41 @@ test("a sentence without a governable preposition asks no slot question", async 
 	);
 	expect(analysis.slots).toEqual([]);
 	expect(JSON.stringify(traces)).not.toContain("gov_");
+});
+
+test("a chunk without a slot question leaves the government rules out of its state", async () => {
+	const sentence = sentenceOf(
+		"geduldig",
+		"Der alte Lehrer wartet seit dem frühen Morgen geduldig auf seine neuen Schüler.",
+	);
+	const states: { governs: boolean; state: unknown }[] = [];
+	const judge = judgeFrom({
+		words: [],
+		routes: {},
+		roles: {},
+		expressions: [],
+	});
+	const dumgen = createDumgen({
+		judge: async (request, options) => {
+			states.push({
+				governs: Object.keys(request.questions).some((id) =>
+					id.startsWith("gov_"),
+				),
+				state: request.state,
+			});
+			return judge(request, options);
+		},
+		execute: async () => {
+			throw Error("Sentence analysis must not generate text");
+		},
+	});
+	await Effect.runPromise(dumgen.analyzeSentence({ sentence }));
+	expect(states.map(({ governs }) => governs)).toEqual([false, true]);
+	for (const { governs, state } of states)
+		expect(JSON.stringify(state)).toBe(
+			JSON.stringify(analysisState(sentence, governs)),
+		);
+	expect(states[0]?.state).not.toHaveProperty("government");
 });
 
 // Input indices: Mit0 solchem2 Unsinn4 wollten6 sie8 nichts10 zu12 tun14 haben16 .17

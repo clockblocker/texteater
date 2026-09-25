@@ -24,7 +24,7 @@ import {
 import { governmentCriteria } from "./government.js";
 import { candidatesFor, identityInstructions, rubricOf } from "./identity.js";
 
-/** `government` joins the state only when the sentence asks government questions. */
+/** `government` joins the state only when the call asks government questions. */
 export function analysisState(
 	sentence: SegmentedSentence<"de">,
 	governs = false,

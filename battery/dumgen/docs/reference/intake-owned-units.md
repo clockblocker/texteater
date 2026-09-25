@@ -157,9 +157,9 @@ call for the whole frame of a Reading that has none yet.
 One jev call per sentence (chunked at 220 questions), state is the tagged
 sentence plus two rule fields: `criteria` (the realization rules, the
 shipped `targetCriteria` minus its Phraseme and Fusion sentences) and
-`fixedness` (the fixedness rules). A sentence with a governable preposition
-adds a third, `government` (which word selects a preposition, with the
-adjunct, particle and connective exclusions).
+`fixedness` (the fixedness rules). A call that asks a governor, case,
+referent or scope question adds a third, `government` (which word selects a
+preposition, with the adjunct, particle and connective exclusions).
 
 | questions | count for n resolvable Segments | answer used as |
 | --- | --- | --- |

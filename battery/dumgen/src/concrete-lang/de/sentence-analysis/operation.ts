@@ -20,11 +20,11 @@ import {
  * Intake-time analysis of one accepted German sentence (Dumgen ADR 0006):
  * both layers' questions and the slot questions over one state,
  * chunked only when the question count exceeds the request budget, then pure
- * assembly. A sentence with no
- * resolvable Segment has an empty analysis and makes no call. A failed chunk
- * fails the analysis and interrupts its sibling chunks. The judgment reads a
- * fused word whole (`im`), and placement splits it by the fusion table again,
- * so the analysis keeps the caller's offsets.
+ * assembly. A chunk carries the `government` rules only when it asks a slot
+ * question. A sentence with no resolvable Segment has an empty analysis and
+ * makes no call. A failed chunk fails the analysis and interrupts its sibling
+ * chunks. The judgment reads a fused word whole (`im`), and placement splits
+ * it by the fusion table again, so the analysis keeps the caller's offsets.
  */
 export function analyzeGermanSentence(
 	options: DumgenOptions,
@@ -46,10 +46,6 @@ export function analyzeGermanSentence(
 		> = {};
 		if (Object.keys(questions).length) {
 			const judge = judgmentCaller(options);
-			const state = analysisState(
-				sentence,
-				Object.keys(government).length > 0,
-			);
 			const parts = chunk(questions);
 			const results = yield* Effect.forEach(
 				parts,
@@ -57,7 +53,12 @@ export function analyzeGermanSentence(
 					judge(
 						"analyzeSentence",
 						"de/sentence",
-						state,
+						analysisState(
+							sentence,
+							Object.keys(part).some((id) =>
+								Object.hasOwn(government, id),
+							),
+						),
 						part,
 						scope,
 						[],
