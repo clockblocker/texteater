@@ -133,10 +133,12 @@ exports), scored by the sentence corpus. Given a Lexeme Target:
 - Identity implies route: a Selected head's Kind replaces the vote for a
   singleton target.
 
-Given a Phraseme Target: `None` below the fixedness floor, else the best
-named Kind of the Kind Mass; `Unresolved` only when no Kind has mass.
-Collocation needs a VERB and a NOUN among its fixed words, so a copula with
-its predicative adjective is never one.
+Given a Phraseme Target: the best named Kind of the Kind Mass, even over
+`None`, since assembly admits only words at or above the fixedness floor;
+`Unresolved` only when no Kind has mass. Collocation needs a VERB and a NOUN
+among its fixed words, so a copula with its predicative adjective is never
+one, and a Phraseme whose Collocation share outweighs every Kind its words
+can take is `None`.
 
 Given an offset: `largestOf` is the Phraseme containing the word, as a fixed
 word or a governed preposition, when there is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and

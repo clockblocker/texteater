@@ -290,7 +290,7 @@ export function fusionAt(
 
 // --------------------------------------------------------- Phraseme layer
 
-/** Below this mean fixedness (0 free, 1 preferred, 2 collocation, 3 fixed) no expression is established. */
+/** A word whose own fixedness Score (0 free, 1 preferred, 2 collocation, 3 fixed) is below this joins no expression, so no Phraseme's mean falls below it. */
 export const fixednessFloor = 1.5;
 
 export type SelectedPhrasemeKind = {
@@ -318,17 +318,16 @@ function funktionsverbgefuege(
 
 /**
  * Kind under the `score` policy: the fixedness Score establishes the
- * expression and the Kind Mass only names it. Below the floor the Phraseme
- * is `None`; above it the best named Kind wins even when `None` carries
- * more mass, and `Unresolved` wins only when no Kind has any mass. Words
- * without a support verb and a predicate noun cannot be named Collocation.
+ * expression and the Kind Mass only names it, so the best named Kind wins
+ * even when `None` carries more mass, and `Unresolved` wins only when no
+ * Kind has any mass. Words without a support verb and a predicate noun
+ * cannot be named Collocation; when Collocation outweighs every Kind they
+ * can take, the vote named nothing they are and the Phraseme is `None`.
  */
 export function selectPhrasemeKind(
 	analysis: SentenceAnalysis,
 	phraseme: PhrasemeTarget,
 ): SelectedPhrasemeKind {
-	if (phraseme.fixedness < fixednessFloor)
-		return { kind: "None", share: phraseme.kindMass.None ?? 0 };
 	const collocation = funktionsverbgefuege(analysis, phraseme);
 	const named = Object.fromEntries(
 		Object.entries(phraseme.kindMass).filter(
@@ -339,6 +338,8 @@ export function selectPhrasemeKind(
 		),
 	);
 	const { key, share } = argmax(named);
+	if (!collocation && (phraseme.kindMass.Collocation ?? 0) > share)
+		return { kind: "None", share: phraseme.kindMass.None ?? 0 };
 	return { kind: key, share };
 }
 

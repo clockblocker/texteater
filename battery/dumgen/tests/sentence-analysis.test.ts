@@ -1120,7 +1120,7 @@ test("a sentence without a governable preposition asks no slot question", async 
 
 // Input indices: Mit0 solchem2 Unsinn4 wollten6 sie8 nichts10 zu12 tun14 haben16 .17
 // Offsets: Mit0 solchem4 Unsinn12 wollten19 sie27 nichts31 zu38 tun41 haben45
-test("a preposition with a free complement is no fixed word of its expression, which governs it and takes it in, and is no Collocation without a predicate noun", async () => {
+test("a preposition with a free complement is no fixed word of its expression, which governs it and takes it in", async () => {
 	const { dumgen } = dumgenWith({
 		words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
 		routes: {
@@ -1138,7 +1138,7 @@ test("a preposition with a free complement is no fixed word of its expression, w
 		expressions: [
 			{
 				heads: [0, 10, 12, 14, 16],
-				kind: { Collocation: 0.6, Idiom: 0.3, None: 0.1 },
+				kind: { Idiom: 0.6, Collocation: 0.3, None: 0.1 },
 				fixedness: 2.2,
 			},
 		],
@@ -1198,42 +1198,67 @@ test("a preposition with a free complement is no fixed word of its expression, w
 	});
 });
 
-test("wording named only Collocation without a predicate noun resolves no Phraseme", async () => {
-	const { dumgen } = dumgenWith({
-		words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
-		routes: {
-			0: "Lexeme/ADP",
-			2: "Lexeme/DET",
-			4: "Lexeme/NOUN",
-			6: "Lexeme/VERB",
-			8: "Lexeme/PRON",
-			10: "Lexeme/PRON",
-			12: "Lexeme/PART",
-			14: "Lexeme/VERB",
-			16: "Lexeme/VERB",
-		},
-		roles: {},
-		expressions: [
-			{ heads: [10, 12, 14, 16], kind: "Collocation", fixedness: 2.2 },
-		],
+// Without a predicate noun the words cannot be a Collocation. A vote that
+// puts Collocation above every Kind they can take named nothing they are;
+// a weaker Collocation share leaves the best Kind named, over None too.
+for (const [name, kindMass, kind] of [
+	["only Collocation", { Collocation: 1 }, "None"],
+	[
+		"Collocation over Idiom",
+		{ Collocation: 0.6, Idiom: 0.3, None: 0.1 },
+		"None",
+	],
+	[
+		"Idiom over Collocation, None over both",
+		{ None: 0.5, Idiom: 0.3, Collocation: 0.2 },
+		"Idiom",
+	],
+] as const)
+	test(`wording without a predicate noun voted ${name} resolves ${kind}`, async () => {
+		const { dumgen } = dumgenWith({
+			words: [[0], [2], [4], [6], [8], [10], [12], [14], [16]],
+			routes: {
+				0: "Lexeme/ADP",
+				2: "Lexeme/DET",
+				4: "Lexeme/NOUN",
+				6: "Lexeme/VERB",
+				8: "Lexeme/PRON",
+				10: "Lexeme/PRON",
+				12: "Lexeme/PART",
+				14: "Lexeme/VERB",
+				16: "Lexeme/VERB",
+			},
+			roles: {},
+			expressions: [
+				{ heads: [10, 12, 14, 16], kind: kindMass, fixedness: 2.2 },
+			],
+			government: { 0: { governor: [14, 16] } },
+		});
+		const analysis = await Effect.runPromise(
+			dumgen.analyzeSentence({
+				sentence: sentenceOf(
+					"unsinn",
+					"Mit solchem Unsinn wollten sie nichts zu tun haben.",
+				),
+			}),
+		);
+		const phraseme = analysis.phrasemes[0];
+		if (!phraseme) throw Error("Expected the expression");
+		expect(selectPhrasemeKind(analysis, phraseme).kind).toBe(kind);
+		// Only a named expression takes in the preposition it governs.
+		expect(phraseme.governedPrepositions).toEqual(
+			kind === "None" ? [] : [targetOf(analysis, 0)?.id ?? ""],
+		);
+		expect(resolvedUnitAt(analysis, 45)).toEqual(
+			kind === "None"
+				? { family: "Lexeme", kind: "VERB", offsets: [45] }
+				: {
+						family: "Phraseme",
+						kind,
+						offsets: [0, 31, 38, 41, 45],
+					},
+		);
 	});
-	const analysis = await Effect.runPromise(
-		dumgen.analyzeSentence({
-			sentence: sentenceOf(
-				"unsinn",
-				"Mit solchem Unsinn wollten sie nichts zu tun haben.",
-			),
-		}),
-	);
-	const phraseme = analysis.phrasemes[0];
-	if (!phraseme) throw Error("Expected the expression");
-	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Unresolved");
-	expect(resolvedUnitAt(analysis, 45)).toEqual({
-		family: "Lexeme",
-		kind: "VERB",
-		offsets: [45],
-	});
-});
 
 // Every governor takes in its governed preposition (ADR 0034, issue 607).
 

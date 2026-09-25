@@ -118,8 +118,7 @@ Kinds are not the Closed Routes: PRON can be a Miss, and AUX cannot.
 the one pure function that turns a Sentence Analysis's masses into resolved
 values under the current policy: the Unresolved floor, identity implies
 route, Family from Kind, Identity State from role and candidates, the
-fixedness floor and the named Kind of a Phraseme, and the largest unit at an
-offset. It ships with the package and is what the sentence corpus scores.
+named Kind of a Phraseme, and the largest unit at an offset. It ships with the package and is what the sentence corpus scores.
 _Avoid_: stored resolution, threshold migration
 
 **Grammatical Resolution**:
