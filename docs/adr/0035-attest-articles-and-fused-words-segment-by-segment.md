@@ -58,6 +58,14 @@ article. Grundform ignores the article.
 `articleEvidence` remains only for an article the noun does not own: the
 shared `der` of `der Aufstieg und Abstieg`.
 
+A proper noun owns its article only if it is canonically cited with one: `die
+Schweiz`, `der Rhein`, `der Struwwelpeter`, English `the Netherlands`, Hebrew
+`הירדן`. For them the article is the Core Feature `article: Definite`, part of
+the Lemma's identity, and its members and display follow the common noun's
+(`in [der Schweiz]`). A proper noun cited bare (`Berlin`, `Anna`) has no
+`article` feature. An article it takes in a sentence (`das alte Berlin`, a
+colloquial `der Peter`) stays its own DET.
+
 **What segmentation splits off is a syntactic word.** Each piece resolves to
 a Lexeme of its own Kind, never a Morpheme. Clitic is retired as a Morpheme
 Kind in every language: the term describes how a word attaches, not a kind of

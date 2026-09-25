@@ -60,7 +60,9 @@ It carries its normalized form, spelling status, and applicable inflectional
 features. A noun's article is the inflectional feature `article` (Definite,
 Indefinite or None) in German and English and `definite` in Hebrew; its
 normalized form is the noun's own letters, and a host adds the article when it
-displays the noun. Verbal subject expletives are composition expressed by
+displays the noun. A proper noun canonically cited with its article (`die
+Schweiz`) has `article: Definite` as a Core Feature instead; one cited bare
+(`Berlin`) has none. Verbal subject expletives are composition expressed by
 grammatical features. Component values are derived separately. The Lemma
 remains the bare noun or ordinary verb.
 
