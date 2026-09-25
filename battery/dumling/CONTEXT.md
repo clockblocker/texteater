@@ -45,6 +45,13 @@ Reading: German `mich` and `mir`, accusative and dative `uns`, `dem` and
 `den`; English `me` and `my`. Open classes keep these features on the Surface.
 _Avoid_: Paradigm form, inflected closed-class Surface
 
+**Spelling Crossroad**:
+A projection with no identity that gathers every Reading whose Lemma's
+Canonical Form has one spelling in one language, compared without case. `die`
+gathers its DET and PRON cells; `essen` gathers the verb and the noun `Essen`.
+Surface spellings, including Typo and Variant spellings, never form one.
+_Avoid_: Headword, Vocable, Page, Homograph Set
+
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional

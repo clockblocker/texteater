@@ -135,6 +135,12 @@ Lemma and Reading records it presents.
 A projection of one normalized orthographic form in one language, aggregating
 its typed Lemma analyses without assigning the Note an outer Family or Kind.
 
+**Crossroad Note**:
+A projection of one Spelling Crossroad: every Reading whose Lemma's Canonical
+Form has that spelling, across Families and Kinds. It adds no identity. The
+Surface Note answers what a clicked form can be; the Crossroad Note answers
+which words are spelled this way.
+
 **Active Surface Analysis**:
 The analysis selected by the context that opened one Surface Note Presentation.
 It belongs to that Presentation, so another Presentation may select differently.
