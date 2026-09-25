@@ -45,4 +45,4 @@ the Reading's Knowledge carries the claim, and the preposition reaches its
 Governors through the projection in ADR 0030. ADR 0030 records the governor-to-preposition link as Knowledge
 rather than as a separate Grammatical Relation.
 
-Amended by [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md): the Attestation's `governedPrepositionEvidence` is replaced by `valencyEvidence`, and the Reading's `governedPrepositions` by its Valency Frame. The rest of this ADR stands.
+Amended by [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md): the Attestation's `governedPrepositionEvidence` is replaced by `valencyEvidence`, and the Reading's `governedPrepositions` by its Valency Frame. ADJ, NOUN and Phraseme governors now take in their governed preposition as an Attestation member like verbs, which replaces "Only verbs absorb a governed preposition as a member. Intake never assembles one into an ADJ, NOUN or Phraseme target, so clicking `auf` in `stolz auf` opens the preposition, and adjective and noun government has no Attestation evidence." The rest of this ADR stands.

@@ -113,7 +113,19 @@ something:
 - A verb's `normalizedSurface` no longer contains its governed preposition,
   so docs examples such as `Er [wartet] auf den Nachtbus` change.
 - ADR 0022's expletive `es` is unchanged.
-- ADR 0029 still says only verbs absorb a governed preposition as a member.
-  Whether ADJ, NOUN and Phraseme governors do, and whether an ADP's own frame
-  replaces `governedCase`, are open questions on
+- Every governor Kind takes in its governed preposition as an Attestation
+  member: VERB, ADJ, NOUN and Phrasemes. Clicking `auf` in `Er ist stolz auf
+  seinen Sohn` opens `stolz`, and clicking `über` in `Er weiß Bescheid über
+  die Pläne` opens the Collocation `Bescheid wissen`. ADJ and NOUN get the
+  `GovernedPreposition` member role verbs already have. A Phraseme Target
+  gets a governed-preposition member whose role does not count toward
+  fixedness. `normalizedSurface` stays Fixed-only, so `stolz auf` projects
+  `stolz`. Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn
+  stolze Vater`) work the way separable verbs already do. This supersedes
+  ADR 0029's rule that only verbs absorb a governed preposition, under which
+  one relation behaved three ways. Taking it into no governor was rejected
+  too: it is consistent, but a learner who clicks a verb's preposition would
+  land on a preposition Note that only lists governors. Decided in
+  [#603](https://github.com/clockblocker/texteater/issues/603).
+- Whether an ADP's own frame replaces `governedCase` is open on
   [#595](https://github.com/clockblocker/texteater/issues/595).
