@@ -81,8 +81,9 @@ _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
 The stable dictionary-scoped semantic label that distinguishes Readings of the
-same Lemma and helps a learner recognize the intended meaning beside it.
-It is an emoji mnemonic whose associations or combinations preserve that meaning.
+same Lemma: one to four emoji that describe the meaning, compared without
+variation selectors or skin-tone modifiers.
+_Avoid_: Mnemonic, Gloss, Sense ID
 
 ### German classifications
 
