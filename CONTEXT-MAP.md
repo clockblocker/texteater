@@ -11,6 +11,8 @@
   choice, and the atoms and molecules Notes and reading text are built from.
 - [Dumling](./battery/dumling/CONTEXT.md): names the grammatical entities to
   which learner text resolves.
+- [Dumspec](./battery/dumspec/CONTEXT.md): owns the Dumling spec's Spec
+  Records and classification Rules.
 - [Dumrel](./battery/dumrel/CONTEXT.md): defines Reading Knowledge and relation
   algebra.
 - [Dumdict](./battery/dumdict/CONTEXT.md): manages dictionary records over
