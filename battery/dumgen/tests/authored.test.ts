@@ -150,8 +150,7 @@ test("same-spelling personal and possessive identities remain distinct", () => {
 });
 test("covered Knowledge and reviewed claims require no inventory preload or provider call", async () => {
 	const member = authoredMembers.find(
-		(member) =>
-			member.lemma.kind === "DET" && member.knowledge.semanticRelations,
+		(member) => member.lemma.kind === "DET",
 	);
 	if (!member) throw Error("Missing catalog fixture");
 	const encounter = validateEncounter({

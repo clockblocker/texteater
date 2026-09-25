@@ -26,61 +26,14 @@ export const member = defineAuthoredMember({
 		definition:
 			"Der bestimmte Artikel „das“ kennzeichnet einen bestimmten Bezug.",
 		translations: { en: ["the"], ru: ["определённый артикль"] },
-		semanticRelations: {
-			targetKind: "reading",
-			synonym: [
-				{
-					unitKind: "Reading",
-					lemma: {
-						language: "de",
-						family: "Lexeme",
-						kind: "DET",
-						canonicalForm: "der",
-						coreFeatures: {
-							definite: "Def",
-							extPos: null,
-							foreign: null,
-							numType: null,
-							person: null,
-							polite: null,
-							poss: null,
-							pronType: "Art",
-						},
-						unitKind: "Lemma",
-					},
-					emojiDescription: "👉",
-				},
-				{
-					unitKind: "Reading",
-					lemma: {
-						language: "de",
-						family: "Lexeme",
-						kind: "DET",
-						canonicalForm: "die",
-						coreFeatures: {
-							definite: "Def",
-							extPos: null,
-							foreign: null,
-							numType: null,
-							person: null,
-							polite: null,
-							poss: null,
-							pronType: "Art",
-						},
-						unitKind: "Lemma",
-					},
-					emojiDescription: "👉",
-				},
-			],
-		},
 	},
 	coverage: {
 		transcription: "Authored",
 		definition: "Authored",
 		translations: { en: "Authored", ru: "Authored" },
-		semanticRelationTargetKind: "reading",
+		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
-			synonym: "Authored",
+			synonym: "ReviewedEmpty",
 			nearSynonym: "ReviewedEmpty",
 			antonym: "ReviewedEmpty",
 			nearAntonym: "ReviewedEmpty",

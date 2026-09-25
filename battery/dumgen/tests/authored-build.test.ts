@@ -72,6 +72,13 @@ test("the build rejects a ReviewedEmpty claim with stored relation targets", () 
 		validateAuthoredCatalog([
 			{
 				...complete,
+				knowledge: {
+					...complete.knowledge,
+					semanticRelations: {
+						targetKind: "lemma",
+						synonym: [member.lemma],
+					},
+				},
 				coverage: {
 					...complete.coverage,
 					semanticRelations: {
