@@ -36752,6 +36752,3538 @@
 				"memberSegmentIndices": [0]
 			},
 			"explanation": "Worauf is an interrogative pronominal adverb (wo + auf) asking for the whole auf-phrase of wartest. Singleton ADV; the verb stays separate."
+		},
+		"target-de-participle-boundary-gebildet-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gebildeter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Mann"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "liest"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "viel"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "ADJ gebildet. Lexicalized: 'educated' draws on no current sense of bilden, and the form takes un- (ungebildet), sehr and comparison.",
+			"sources": [
+				{
+					"title": "Duden: gebildet",
+					"url": "https://www.duden.de/rechtschreibung/gebildet",
+					"supports": "gebildet has its own Adjektiv entry meaning 'Bildung habend'"
+				}
+			]
+		},
+		"target-de-participle-boundary-gebildet-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "aus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ton"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gebildeter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Krug"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "stand"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "dem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Regal"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB bilden. Productive Partizip II: 'formed' is bilden's own sense with its aus-phrase; ungebildet and sehr gebildet are impossible in this sense.",
+			"sources": [
+				{
+					"title": "UD German-HDT",
+					"url": "https://universaldependencies.org/treebanks/de_hdt/index.html",
+					"supports": "HDT lemmatizes a participle to its verb"
+				}
+			]
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-predicative": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ergebnis"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ausgezeichnet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ ausgezeichnet. Lexicalized: 'excellent' comes from no sense of auszeichnen and compares (ausgezeichneter); copular ist stays a separate VERB.",
+			"sources": [
+				{
+					"title": "Duden: ausgezeichnet",
+					"url": "https://www.duden.de/rechtschreibung/ausgezeichnet",
+					"supports": "ausgezeichnet has its own Adjektiv entry meaning 'sehr gut, hervorragend'"
+				}
+			]
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-predicative-click-ist": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ergebnis"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ausgezeichnet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB sein. Copular ist before the lexicalized predicate ausgezeichnet is its own VERB (ADR 0026); only a productive participle joins sein as a state passive."
+		},
+		"target-de-participle-boundary-ausgezeichnet-verb-passive": {
+			"input": {
+				"clickedSegmentIndex": 10,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wurde"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Preis"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ausgezeichnet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 10]
+			},
+			"explanation": "VERB auszeichnen. Productive werden-passive in the award sense; the passive auxiliary joins the verb it serves."
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "war"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ausgezeichneter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Vortrag"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ ausgezeichnet. Lexicalized 'excellent', gradable and comparable; no award event is meant.",
+			"sources": [
+				{
+					"title": "Duden: ausgezeichnet",
+					"url": "https://www.duden.de/rechtschreibung/ausgezeichnet",
+					"supports": "ausgezeichnet has its own Adjektiv entry meaning 'sehr gut, hervorragend'"
+				}
+			]
+		},
+		"target-de-participle-boundary-ausgezeichnet-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mehrfach"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ausgezeichnete"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Film"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "läuft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "heute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "im"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kino"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB auszeichnen. Productive Partizip II: mehrfach counts award events, so the meaning is auszeichnen's; it does not mean 'excellent'."
+		},
+		"target-de-participle-boundary-erfahren-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erfahrener"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Arzt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "untersuchte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kind"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "ADJ erfahren. Lexicalized 'experienced': it takes un- (unerfahren), sehr and comparison and no longer means 'having learned of something'.",
+			"sources": [
+				{
+					"title": "Duden: erfahren_routiniert_versiert",
+					"url": "https://www.duden.de/rechtschreibung/erfahren_routiniert_versiert",
+					"supports": "erfahren has an Adjektiv entry separate from the verb entries"
+				}
+			]
+		},
+		"target-de-participle-boundary-erfahren-verb-perfect": {
+			"input": {
+				"clickedSegmentIndex": 12,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wahrheit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erst"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gestern"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erfahren"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 12]
+			},
+			"explanation": "VERB erfahren. Productive perfect with the 'learn of' sense and an accusative object; hat joins the verb."
+		},
+		"target-de-participle-boundary-gelegen-adj-predicative": {
+			"input": {
+				"clickedSegmentIndex": 10,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Angebot"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "kommt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mir"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gelegen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [10]
+			},
+			"explanation": "ADJ gelegen. Lexicalized 'convenient': no sense of liegen gives it, and it takes un- (ungelegen) and sehr.",
+			"sources": [
+				{
+					"title": "Duden: gelegen_erwuenscht",
+					"url": "https://www.duden.de/rechtschreibung/gelegen_erwuenscht",
+					"supports": "gelegen 'erwünscht' has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-gelegen-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "am"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "See"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gelegene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Haus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gehört"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "meinem"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Onkel"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB liegen. Productive Partizip II: 'situated' is liegen's own sense (Das Haus liegt am See) with its locative complement; neither un- nor sehr fits this sense.",
+			"sources": [
+				{
+					"title": "Duden: gelegen_zu_liegen",
+					"url": "https://www.duden.de/rechtschreibung/gelegen_zu_liegen",
+					"supports": "Duden refers the locative gelegen to the verb liegen"
+				}
+			]
+		},
+		"target-de-participle-boundary-spannend-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Wir"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sahen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gestern"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spannenden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Film"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "ADJ spannend. Lexicalized 'exciting': no sense of spannen gives it, and it compares (spannender) and takes sehr.",
+			"sources": [
+				{
+					"title": "Duden: spannend",
+					"url": "https://www.duden.de/rechtschreibung/spannend",
+					"supports": "spannend has its own Adjektiv entry meaning 'fesselnd'"
+				}
+			]
+		},
+		"target-de-participle-boundary-spannend-verb-adverbial": {
+			"input": {
+				"clickedSegmentIndex": 23,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Männer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hielten"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Boot"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "fest"
+					},
+					{
+						"kind": "Punctuation",
+						"text": ","
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Seil"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "mit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "aller"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kraft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spannend"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [23]
+			},
+			"explanation": "VERB spannen. Productive Partizip I with an accusative object das Seil: 'tightening' is spannen's own sense.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "A non-lexicalized Partizip I keeps its verbal valency"
+				}
+			]
+		},
+		"target-de-participle-boundary-reizend-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "eine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "reizende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tochter"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ reizend. Lexicalized 'charming': no sense of reizen gives it, and it takes sehr and comparison.",
+			"sources": [
+				{
+					"title": "Duden: reizend",
+					"url": "https://www.duden.de/rechtschreibung/reizend",
+					"supports": "reizend has its own Adjektiv entry meaning 'besonders hübsch, sehr angenehm'"
+				}
+			]
+		},
+		"target-de-participle-boundary-reizend-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Augen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "reizende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Rauch"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zog"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "durch"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Zimmer"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB reizen. Productive Partizip I with an accusative object die Augen: 'irritating' is reizen's own sense.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "A non-lexicalized Partizip I keeps its verbal valency"
+				}
+			]
+		},
+		"target-de-participle-boundary-verrueckt-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "war"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "eine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verrückte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Idee"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ verrückt. Lexicalized 'crazy': no sense of verrücken gives it, and it takes sehr and comparison.",
+			"sources": [
+				{
+					"title": "Duden: verrueckt",
+					"url": "https://www.duden.de/rechtschreibung/verrueckt",
+					"supports": "verrückt is an Adjektiv entry separate from the verb verrücken"
+				}
+			]
+		},
+		"target-de-participle-boundary-verrueckt-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "um"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zwei"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Meter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verrückte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Schrank"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "passt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "jetzt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "besser"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "VERB verrücken. Productive Partizip II: 'moved' is verrücken's own sense with a distance complement."
+		},
+		"target-de-participle-boundary-verlegen-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verlegene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kind"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schaute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Boden"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "ADJ verlegen. Lexicalized 'embarrassed': no sense of the verb verlegen gives it, and it takes un- (unverlegen) and sehr.",
+			"sources": [
+				{
+					"title": "Duden: verlegen_befangen_schuechtern",
+					"url": "https://www.duden.de/rechtschreibung/verlegen_befangen_schuechtern",
+					"supports": "verlegen 'befangen' has an Adjektiv entry separate from the verb"
+				}
+			]
+		},
+		"target-de-participle-boundary-verlegen-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "neu"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verlegten"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kabel"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "funktionieren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einwandfrei"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB verlegen. Productive Partizip II: 'laid' is the verb's own sense; neu dates the laying event."
+		},
+		"target-de-participle-boundary-bedeutend-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "eine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bedeutende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Forscherin"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ bedeutend. Lexicalized 'important': it no longer means 'signifying', and it takes un- (unbedeutend) and comparison.",
+			"sources": [
+				{
+					"title": "Duden: bedeutend",
+					"url": "https://www.duden.de/rechtschreibung/bedeutend",
+					"supports": "bedeutend has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-begabt-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "eine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "begabte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Pianistin"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ begabt. Lexicalized 'talented': no live sense of begaben gives it, and it takes un- (unbegabt), sehr and comparison.",
+			"sources": [
+				{
+					"title": "Duden: begabt",
+					"url": "https://www.duden.de/rechtschreibung/begabt",
+					"supports": "begabt has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-gespannt-adj-predicative": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bin"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gespannt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "auf"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "deine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Antwort"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ gespannt. Lexicalized 'eager to know': no sense of spannen gives it, and it takes sehr; its auf-phrase stays a separate ADP.",
+			"sources": [
+				{
+					"title": "Duden: gespannt",
+					"url": "https://www.duden.de/rechtschreibung/gespannt",
+					"supports": "gespannt has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-gespannt-verb-state-passive": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Seil"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "straff"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gespannt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 8]
+			},
+			"explanation": "VERB spannen. Productive Zustandspassiv: the rope is in the state spannen produces (Das Seil wurde gespannt); ist joins the verb.",
+			"sources": [
+				{
+					"title": "grammis: Partizip II",
+					"url": "https://grammis.ids-mannheim.de/terminologie/181",
+					"supports": "Partizip II is a verb form"
+				}
+			]
+		},
+		"target-de-participle-boundary-gekocht-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gekochten"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kartoffeln"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "standen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schon"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bereit"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "VERB kochen. Productive attributive Partizip II with kochen's own sense; no un-, sehr or comparison.",
+			"sources": [
+				{
+					"title": "UD German-HDT",
+					"url": "https://universaldependencies.org/treebanks/de_hdt/index.html",
+					"supports": "HDT lemmatizes an attributive participle to its verb"
+				}
+			]
+		},
+		"target-de-participle-boundary-bewundert-verb-agent": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "von"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "allen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bewunderte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Lehrer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ging"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "in"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "den"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Ruhestand"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB bewundern. Productive Partizip II with a von-agent phrase, a verbal property."
+		},
+		"target-de-participle-boundary-repariert-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gestern"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "reparierte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Maschine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "läuft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wieder"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB reparieren. Productive Partizip II; gestern dates the repair event."
+		},
+		"target-de-participle-boundary-umgestuerzt-verb-agent": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vom"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sturm"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "umgestürzte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Baum"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "blockierte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Straße"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB umstürzen. Productive Partizip II of a separable verb with a vom-cause phrase."
+		},
+		"target-de-participle-boundary-gestrichen-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "frisch"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gestrichene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wand"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "glänzte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "in"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sonne"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB streichen. Productive Partizip II in the painting sense; frisch dates the event."
+		},
+		"target-de-participle-boundary-entworfen-verb-agent": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "vom"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Architekten"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "entworfene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Haus"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "steht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "am"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hang"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB entwerfen. Productive Partizip II with a vom-agent phrase."
+		},
+		"target-de-participle-boundary-lachend-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Das"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "lachende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kind"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "rannte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "über"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Wiese"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "VERB lachen. Productive attributive Partizip I: lachen's own sense, not comparable and without un-.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "Only lexicalized Partizip I forms compare or take un-"
+				}
+			]
+		},
+		"target-de-participle-boundary-spielend-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "im"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Garten"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spielenden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kinder"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "waren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "laut"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "VERB spielen. Productive attributive Partizip I with a locative adjunct inside its phrase.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "Only lexicalized Partizip I forms compare or take un-"
+				}
+			]
+		},
+		"target-de-participle-boundary-singend-verb-adverbial": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ging"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "singend"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "nach"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Hause"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "VERB singen. Productive adverbial Partizip I: the walking happens while singing.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "Only lexicalized Partizip I forms compare or take un-"
+				}
+			]
+		},
+		"target-de-participle-boundary-schlafend-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schlafenden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kinder"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wurden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "nicht"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geweckt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "VERB schlafen. Productive attributive Partizip I with schlafen's own sense."
+		},
+		"target-de-participle-boundary-reisend-verb-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "reisende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Händler"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartete"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "draußen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "VERB reisen. Productive attributive Partizip I 'travelling'; the substantivized der Reisende is a NOUN."
+		},
+		"target-de-participle-boundary-geschlossen-verb-state-passive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tür"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschlossen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "VERB schließen. Productive Zustandspassiv (Die Tür wurde geschlossen); ist joins the verb.",
+			"sources": [
+				{
+					"title": "Duden: geschlossen_zu_schlieszen",
+					"url": "https://www.duden.de/rechtschreibung/geschlossen_zu_schlieszen",
+					"supports": "Duden treats this geschlossen as a form of schließen"
+				}
+			]
+		},
+		"target-de-participle-boundary-geschlossen-verb-state-passive-click-ist": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tür"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschlossen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "VERB schließen. The state-passive auxiliary ist selects the same target as its participle."
+		},
+		"target-de-participle-boundary-gekocht-verb-state-passive": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Kartoffeln"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sind"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bereits"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gekocht"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 8]
+			},
+			"explanation": "VERB kochen. Productive Zustandspassiv; bereits marks the completed cooking event."
+		},
+		"target-de-participle-boundary-ungelesen-adj-predicative": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brief"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "blieb"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ungelesen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ ungelesen. The un- test: lesen has no un- form, so ungelesen is an adjective; copular blieb stays a separate VERB.",
+			"sources": [
+				{
+					"title": "Duden: ungelesen",
+					"url": "https://www.duden.de/rechtschreibung/ungelesen",
+					"supports": "ungelesen has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-unbekannt-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "unbekannter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Mann"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "klopfte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "an"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tür"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "ADJ unbekannt. The un- test; bekannt itself is lexicalized."
+		},
+		"target-de-participle-boundary-ungeloest-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ungelöste"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Aufgabe"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bereitete"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ihr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sorgen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "ADJ ungelöst. The un- test: lösen has no un- form."
+		},
+		"target-de-participle-boundary-gebildet-adj-sehr": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gebildet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ gebildet. The sehr test: degree modification marks the lexicalized adjective; copular ist stays separate.",
+			"sources": [
+				{
+					"title": "Duden: gebildet",
+					"url": "https://www.duden.de/rechtschreibung/gebildet",
+					"supports": "gebildet has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-spannend-adj-comparative": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zweite"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Film"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "war"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "spannender"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "als"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "erste"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "ADJ spannend. The comparison test: spannender is a comparative, which a verb form cannot build.",
+			"sources": [
+				{
+					"title": "grammis: Partizip I",
+					"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+					"supports": "Only lexicalized Partizip I forms compare"
+				}
+			]
+		},
+		"target-de-participle-boundary-bekannt-adj-superlative": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bekannteste"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Sänger"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "des"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Landes"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ bekannt. The comparison test: a superlative; bekannt 'known' also takes un- (unbekannt).",
+			"sources": [
+				{
+					"title": "Duden: bekannt",
+					"url": "https://www.duden.de/rechtschreibung/bekannt",
+					"supports": "bekannt is an Adjektiv entry separate from bekennen"
+				}
+			]
+		},
+		"target-de-participle-boundary-interessiert-adj-sehr": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Ein"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "interessierter"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Leser"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "fragte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "nach"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "ADJ interessiert. The sehr test, plus un- (uninteressiert) and comparison.",
+			"sources": [
+				{
+					"title": "Duden: interessiert",
+					"url": "https://www.duden.de/rechtschreibung/interessiert",
+					"supports": "interessiert has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-schnell-adj-adverbial": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "läuft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schnell"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "ADJ schnell. An adverbially used plain adjective stays ADJ; adverbial use never makes an ADV."
+		},
+		"target-de-participle-boundary-jaemmerlich-adj-adverbial": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Katzen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schreien"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gar"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "jämmerlich"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "ADJ jämmerlich. An adverbially used plain adjective stays ADJ; adverbial use never makes an ADV."
+		},
+		"target-de-participle-boundary-reisende-noun": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Reisende"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wartete"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "draußen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0, 2]
+			},
+			"explanation": "NOUN Reisender. A substantivized participle is a NOUN with its article, outside the VERB/ADJ boundary."
+		},
+		"target-de-participle-boundary-borderline-verheiratet": {
+			"input": {
+				"clickedSegmentIndex": 10,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "seit"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zwei"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Jahren"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verheiratet"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [10]
+			},
+			"explanation": "Borderline; proposed ADJ verheiratet. Takes un- (unverheiratet) and Duden lists an Adjektiv, but it is also the resulting state of sich verheiraten.",
+			"sources": [
+				{
+					"title": "Duden: verheiratet",
+					"url": "https://www.duden.de/rechtschreibung/verheiratet",
+					"supports": "verheiratet has its own Adjektiv entry, and unverheiratet exists"
+				}
+			]
+		},
+		"target-de-participle-boundary-borderline-betrunken": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "betrunkene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Fahrer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verursachte"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "einen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Unfall"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [2]
+			},
+			"explanation": "Borderline; proposed ADJ betrunken. Takes sehr and comparison and Duden lists an Adjektiv, but it is also the resulting state of sich betrinken, and it has no un- form.",
+			"sources": [
+				{
+					"title": "Duden: betrunken",
+					"url": "https://www.duden.de/rechtschreibung/betrunken",
+					"supports": "betrunken has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-borderline-verliebt": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "beiden"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sind"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "schrecklich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verliebt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "Borderline; proposed ADJ verliebt. Takes sehr and comparison and Duden lists an Adjektiv, but it is also the resulting state of sich verlieben.",
+			"sources": [
+				{
+					"title": "Duden: verliebt",
+					"url": "https://www.duden.de/rechtschreibung/verliebt",
+					"supports": "verliebt has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-borderline-aufgeregt": {
+			"input": {
+				"clickedSegmentIndex": 12,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Vor"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Prüfung"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "war"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sie"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sehr"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "aufgeregt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [12]
+			},
+			"explanation": "Borderline; proposed ADJ aufgeregt. Takes sehr and Duden lists an Adjektiv, but it is also the resulting state of sich aufregen.",
+			"sources": [
+				{
+					"title": "Duden: aufgeregt",
+					"url": "https://www.duden.de/rechtschreibung/aufgeregt",
+					"supports": "aufgeregt has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-borderline-beleidigt": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "noch"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "immer"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "beleidigt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "Borderline; proposed ADJ beleidigt. 'Sulking' takes sehr and Duden lists an Adjektiv, but a Zustandspassiv of beleidigen reads the same.",
+			"sources": [
+				{
+					"title": "Duden: beleidigt",
+					"url": "https://www.duden.de/rechtschreibung/beleidigt",
+					"supports": "beleidigt has its own Adjektiv entry"
+				}
+			]
+		},
+		"target-de-participle-boundary-borderline-geschlossene-gesellschaft": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Heute"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Abend"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "findet"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "eine"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschlossene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Gesellschaft"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "statt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
+			},
+			"explanation": "Borderline; proposed ADJ geschlossen. 'Private' comes from no sense of schließen and Duden lists geschlossene Gesellschaft under the Adjektiv; the phrase may itself be a Collocation.",
+			"sources": [
+				{
+					"title": "Duden: geschlossen_verschlossen",
+					"url": "https://www.duden.de/rechtschreibung/geschlossen_verschlossen",
+					"supports": "The geschlossen Adjektiv entry lists geschlossene Gesellschaft"
+				}
+			]
 		}
 	},
 	"demonstrationIds": [

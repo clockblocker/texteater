@@ -25,6 +25,7 @@ import {
 import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
 import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
+import { participleBoundaryCaseIds } from "./concrete-lang/de/target-classification/evaluation-ids.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
 import { grammarOperationExperiment } from "./evaluation/grammar-operation.js";
 import type { DumgenOptions } from "./types.js";
@@ -39,13 +40,21 @@ type Registration = {
 	readonly evaluationCaseIds: readonly string[];
 };
 const registrations: readonly Registration[] = corpusRegistrations;
-const phaseEntries = Object.entries(phases).flatMap(([route, selections]) =>
+const targetRoute = "target-classification/de/high-level-whole-unit";
+/** Named slices of one corpus, run as their own experiments as `route:slice`. */
+const slices: Record<string, Record<string, readonly string[]>> = {
+	...phases,
+	[targetRoute]: { "participle-boundary": participleBoundaryCaseIds },
+};
+const phaseEntries = Object.entries(slices).flatMap(([route, selections]) =>
 	Object.entries(selections).map(([phase, ids]) => ({
 		id: `${route}:${phase}`,
 		route,
 		ids,
 	})),
 );
+const routeOf = (id: string) =>
+	phaseEntries.find((entry) => entry.id === id)?.route ?? id;
 export function listExperiments() {
 	const metadataOnly: DumgenOptions = {
 		execute: async () => {
@@ -159,8 +168,11 @@ export function operationExperiment(id: string, options: DumgenOptions) {
 		return draftTranslationOperationExperiment(options);
 	if (id.startsWith("knowledge-analysis/de/"))
 		return knowledgeOperationExperiment(getExperiment(id), options);
-	if (id === "target-classification/de/high-level-whole-unit")
-		return targetOperationExperiment(options);
+	if (routeOf(id) === targetRoute)
+		return targetOperationExperiment(
+			options,
+			phaseEntries.find((entry) => entry.id === id)?.ids,
+		);
 	if (id === "sentence-analysis/de")
 		return sentenceOperationExperiment(options);
 	throw Error(`No production operation for ${id}`);
@@ -177,8 +189,7 @@ export async function evaluateExperiment(args: {
 	signal?: AbortSignal;
 }) {
 	if (
-		args.experimentId ===
-			"target-classification/de/high-level-whole-unit" ||
+		routeOf(args.experimentId) === targetRoute ||
 		args.experimentId === "sentence-analysis/de" ||
 		args.experimentId.startsWith("grammatical-resolution/") ||
 		args.experimentId.startsWith("reading-") ||

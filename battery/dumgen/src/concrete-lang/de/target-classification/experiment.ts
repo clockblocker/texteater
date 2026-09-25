@@ -37,6 +37,7 @@ const corpus = defineGoldenCorpus({
 });
 export function targetOperationExperiment(
 	options: DumgenOptions,
+	caseIds: readonly string[] = evaluationCaseIds,
 ): OperationExperiment<
 	typeof targetInputSchema,
 	typeof outputSchema,
@@ -46,7 +47,7 @@ export function targetOperationExperiment(
 	return {
 		corpus,
 		demonstrations,
-		evaluation: corpus.select(evaluationCaseIds).difference(demonstrations),
+		evaluation: corpus.select(caseIds).difference(demonstrations),
 		run: async (input, { signal, recordTrace }) => {
 			const dumgen = createDumgen({
 				...options,
