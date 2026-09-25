@@ -111,7 +111,8 @@ what the Resolution Selector says about a Member: Selected (the head has a
 winning candidate), Derived (a non-head role whose identity follows from the
 target's shape and grammar, such as an Auxiliary's AUX Reading or an
 Article's surface), Open (no candidates; generation continues), or Miss (a
-closed-class route with no candidate).
+DET or PRON route whose head's spelling enumerates no candidate). The Miss
+Kinds are not the Closed Routes: PRON can be a Miss, and AUX cannot.
 
 **Resolution Selector**:
 the one pure function that turns a Sentence Analysis's masses into resolved
@@ -147,7 +148,8 @@ reviewed Authored Content within an Open Route. A miss
 continues through generation.
 
 **Closed Route**:
-a production route that resolves only within its Fixed Catalog.
+a production route that resolves only within its Fixed Catalog. The German
+Closed Routes are Lexeme AUX and DET.
 
 **Catalog Miss**:
 absence of a required authored value on a Closed Route or for an exact authored
