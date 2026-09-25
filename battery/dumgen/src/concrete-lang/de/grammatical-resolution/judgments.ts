@@ -146,6 +146,13 @@ const sharedPolicy = {
 	inflection:
 		"Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Structural null is not uncertainty.",
 };
+/** The shared policy for the AUX route, which has no `canonical` question. */
+const nonCanonicalPolicy = {
+	target: sharedPolicy.target,
+	identity: sharedPolicy.identity,
+	orthography: sharedPolicy.orthography,
+	inflection: sharedPolicy.inflection,
+};
 
 const nounPolicy = {
 	suspension:
@@ -702,26 +709,37 @@ export function resolveGrammarJudgments(
 			);
 		if (referent) questions.referent = referent.question;
 		const judge = judgmentCaller(options);
+		// The AUX identity question reads no canonical-form text.
 		const state = {
 			...input,
 			...(memberSpellings.length ? { memberSpellings } : {}),
 			route,
-			canonicalFormCandidate,
-			canonicalFormAlternatives,
-			storedLemmas,
+			...(auxiliary
+				? {}
+				: {
+						canonicalFormCandidate,
+						canonicalFormAlternatives,
+						storedLemmas,
+					}),
 			...(questions.attachment ? nounArticleState(encounter) : {}),
 			...(Object.keys(lexicalStringCandidates).length
 				? { lexicalStringCandidates }
 				: {}),
 			policy: {
-				...sharedPolicy,
-				...(verbal
+				...(auxiliary ? nonCanonicalPolicy : sharedPolicy),
+				// An Idiom or Collocation reads verbalIdentity for its governed
+				// preposition; the AUX route has no question that reads it.
+				...(verbal && !auxiliary
+					? { verbalIdentity: verbalIdentityPolicy }
+					: {}),
+				...(verbal && !auxiliary
 					? {
-							verbalIdentity: verbalIdentityPolicy,
 							canonicalExample:
 								"In Wir gehen ins Haus, finite gehen has Canonical Form gehen.",
-							verbalComposition: verbalCompositionGuidance,
 						}
+					: {}),
+				...(verbal
+					? { verbalComposition: verbalCompositionGuidance }
 					: {}),
 				...(encounter.target.kind === "NOUN"
 					? { noun: nounPolicy }
@@ -730,7 +748,15 @@ export function resolveGrammarJudgments(
 				...(partial ? { coverage: partialCoveragePolicy } : {}),
 				route: routeGuidance[encounter.target.kind] ?? "",
 			},
-			reviewedIdentities: identities.map((member) => member.lemma),
+			// Only AUX has reviewed identities; other verbal calls sent an
+			// empty list (S8).
+			...(verbal && !auxiliary
+				? {}
+				: {
+						reviewedIdentities: identities.map(
+							(member) => member.lemma,
+						),
+					}),
 			...referent?.state,
 		};
 		const features = yield* judge(

@@ -137,3 +137,56 @@ test("without injection the request is the one production sends with no candidat
 		direct.map((request) => JSON.stringify(request)),
 	);
 });
+
+/** The first features request of one retained case, answered from its gold. */
+async function featuresRequest(experiment: string, id: string) {
+	const golden = operationExperiment(experiment, grammarFixture(null)).corpus
+		.cases[id];
+	if (!golden) throw Error(`Missing ${id}`);
+	const fixture = grammarFixture(golden.idealOutput);
+	const requests: SentRequest[] = [];
+	await operationExperiment(experiment, {
+		...fixture,
+		judge: async (request) => {
+			requests.push(request);
+			return fixture.judge(request);
+		},
+	}).run(golden.input, {
+		signal: new AbortController().signal,
+		recordTrace: () => {},
+	});
+	const [request] = requests;
+	if (!request) throw Error(`No request for ${id}`);
+	return {
+		questions: Object.keys(request.questions),
+		state: request.state as Record<string, unknown> & {
+			policy: Record<string, unknown>;
+		},
+	};
+}
+
+test("the AUX route gets reviewed identities but no verbal identity or canonical text", async () => {
+	const verb = await featuresRequest(
+		"grammatical-resolution/de/lexeme/verb",
+		"grammar-de-verb-finite-liest",
+	);
+	expect(verb.state.policy).toHaveProperty("verbalIdentity");
+	expect(verb.state.policy).toHaveProperty("verbalComposition");
+	expect(verb.state).not.toHaveProperty("reviewedIdentities");
+	const idiom = await featuresRequest(
+		"grammatical-resolution/de/phraseme/idiom",
+		"grammar-de-idiom-blatt-future-full",
+	);
+	expect(idiom.state.policy).toHaveProperty("verbalIdentity");
+	expect(idiom.state.policy).toHaveProperty("canonicalExample");
+	expect(idiom.state).not.toHaveProperty("reviewedIdentities");
+	const auxiliary = await featuresRequest(
+		"grammatical-resolution/de/lexeme/auxiliary",
+		"grammar-de-aux-accept-archaic-ward",
+	);
+	expect(auxiliary.state.policy).not.toHaveProperty("verbalIdentity");
+	expect(auxiliary.state.policy).not.toHaveProperty("canonicalExample");
+	expect(auxiliary.state.policy).not.toHaveProperty("canonicalForm");
+	expect(auxiliary.state.policy).toHaveProperty("verbalComposition");
+	expect(auxiliary.state).toHaveProperty("reviewedIdentities");
+});
