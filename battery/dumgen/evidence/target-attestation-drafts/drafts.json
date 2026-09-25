@@ -1,0 +1,1072 @@
+{
+	"configuration": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"service_tier": "fast"
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	},
+	"drafts": {
+		"target-de-demo-perfect-arbeiten-click-habe": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-governed-rechnen-click-rechnet": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-adjunct-rechnen-click-mit": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-idiom-faden-click-den": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-aphorism-zeit-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-literal-gras-click-biss": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-idiom-katze-click-dem": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-paired-einerseits-click-lokal": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-inherent-reflexive-click-beeile": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-optional-reflexive-click-dich": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-modal-arbeiten-click-kann": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-passive-briefe-click-werden": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-state-passive-banken-click-sind": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-state-passive-banken-click-geoeffnet": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-state-passive-bauplan-click-freigegeben": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-state-passive-absperrung-click-versetzt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-participial-adjective-brief-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-participial-adjective-brief-click-ungelesen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-repeated-anfangen-click-first-an": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-diagnostic-repeated-click-final-an": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-typo-mitmachen-click-mit": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-predicative-cringe-click-cringe": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-discourse-herzliche-gruesse-click-herzliche": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-paired-sowohl-click-robust": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-idiom-kragen-click-der": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-symbol-percent": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-diagnostic-idiom-oel-click-ins": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-owner-article": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-shared-first": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-exists-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-exists-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-weather-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-demo-weather-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-question-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-question-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-past-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-past-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-subordinate-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-subordinate-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-weather-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-weather-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-governed-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-governed-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-governed-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-reflexive-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-reflexive-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-reflexive-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-subject-reflexive-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-referential-es-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-referential-es-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-positional-es-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-positional-es-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-anticipatory-es-0": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-anticipatory-es-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-object-es-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-object-es-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-owner-noun": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-adjective-article": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-long-coordination": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-repeated-article": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-nested-head": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-nested-complement": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-der-of-aufstieg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-aufstieg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-die-of-wanderführerin": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-wanderführerin": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-der-of-gipfel": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-quoted-click-gipfel": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-der-of-aufstieg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-aufstieg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-die-of-wanderführerin": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-wanderführerin": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-dem-of-jungen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-jungen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-die-of-flasche": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-hike-click-flasche": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-weather-click-der-of-weg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-weather-click-weg": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-weather-click-das-of-wetter": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-weather-click-wetter": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-der-of-lehrer": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-lehrer": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-der-of-vater": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-vater": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-des-of-mädchens": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-noun-article-cross-predicate-click-mädchens": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-01-group-0-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-02-group-0-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-02-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-03-group-0-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-03-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-04-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-04-group-1-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-05-group-0-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-05-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-05-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-06-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-06-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-06-group-1-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-07-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-07-group-1-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-07-group-1-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-08-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-08-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-08-group-1-click-2": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-08-group-1-click-12": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-09-group-0-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-09-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-10-group-0-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-10-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-10-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-11-group-0-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-11-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-11-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-12-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-12-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-12-group-1-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-13-group-0-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-13-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-13-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-13-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-14-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-14-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-14-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-14-group-1-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-15-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-15-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-15-group-1-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-15-group-1-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-16-group-0-click-6": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-16-group-0-click-8": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-16-group-0-click-10": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-16-group-1-click-4": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-ids-verbal-16-group-1-click-12": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-adj": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-adp": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-adv": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-aux": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-cconj": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-det": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-intj": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-noun": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-num": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-part": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-pron": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-propn": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-sconj": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-sconj-um-zu-click-um": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-sconj-um-zu-click-zu": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-part-infinitive-zu-click-zu": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-part-infinitive-zu-click-schreiben": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-adv-teils-teils-click-first": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-adv-teils-teils-click-second": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-sym": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-verb": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-aphorism-click-wissen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-aphorism-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-aphorism-click-macht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-discourse-click-herzlichen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-discourse-click-dank": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-proverb-click-morgenstund": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-proverb-click-hat": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-proverb-click-gold": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-proverb-click-im": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-phraseme-proverb-click-mund": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-core-entscheidung-click-entscheidung": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-core-entscheidung-click-trifft": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-core-entscheidung-click-eine": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-construction-fusion": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-fused-article-im-wald-click-m": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-fused-article-im-wald-click-wald": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-fused-article-im-wald-click-i": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-fused-article-aufs-ende-click-s": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-cconj-click-je": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-cconj-click-desto": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-cconj-near-frueher": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-route-lexeme-cconj-near-besser": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-idiom-click-brach": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-idiom-click-das": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-idiom-click-eis": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-idiom-near-endlich": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-literal-eis-click-brach": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-literal-eis-click-eis": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-governed-click-wartet": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-governed-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-governed-near-bus": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-adjunct-click-laeuft": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-adjunct-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-adjunct-click-wiese": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-inherent-reflexive-click-schaemt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-inherent-reflexive-click-sich": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-optional-reflexive-click-waescht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-optional-reflexive-click-sich": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-separable-click-steht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-separable-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-separable-near-heute": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-perfect-click-hat": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-perfect-click-gelacht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-perfect-near-laut": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-future-click-wird": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-future-click-lachen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-passive-click-wird": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-passive-click-gelobt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-lexicalized-participle-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-lexicalized-participle-click-verrueckt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-participle-one-attributive-lachende": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-participle-one-adverbial-lachend": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-modal-click-muss": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-modal-click-schlafen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-modal-main-predicate-click-kann": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-lexical-werden-click-wird": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-auxiliary-participle-click-gewesen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-copula-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-copula-click-muede": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-collocation-click-trifft": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-collocation-click-eine": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-collocation-click-entscheidung": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-collocation-near-heute": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-free-object-click-bringt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-free-object-click-cola": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-fixed-function-click-heult": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-fixed-function-click-mit": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-fixed-function-click-den": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-fixed-function-click-woelfen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-fixed-function-near-hungrigen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-repeated-click-steht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-repeated-click-final-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-repeated-near-first-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-collocation-click-stellt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-collocation-click-eine": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-collocation-click-frage": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-separable-click-stellt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-separable-click-ab": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-overlap-near-vase": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-partial-click-brach": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-partial-click-das": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-typo-click-stet": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-typo-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-slang": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-opaque-surroundings": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-punctuation-click-steht": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-punctuation-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-long-click-wird": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-robust-long-click-verstanden": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-recipient-passive-click-bekommt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-recipient-passive-click-geliefert": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-lexical-bekommen-click-bekommt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-boundary-resultative-bekommen-click-bekommt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zb-click-zb": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zum-beispiel-click-beispiel": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zum-beispiel-click-zum": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-dh-click-dh": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-das-heisst-click-heißt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-das-heisst-click-das": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-usw-click-usw": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-usw-final-click-usw": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-und-so-weiter-click-weiter": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-und-so-weiter-click-und": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-ua-click-ua": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-unter-anderem-click-anderem": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-unter-anderem-click-unter": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-oae-click-oä": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-oder-aehnliches-click-ähnliches": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-oder-aehnliches-click-oder": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zt-click-zt": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zum-teil-click-teil": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-zum-teil-click-zum": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-va-click-va": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-vor-allem-click-allem": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-vor-allem-click-vor": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-im-allgemeinen-click-allgemeinen": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-im-allgemeinen-click-im": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-und-zwar-click-zwar": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-und-zwar-click-und": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-sowie-click-sowie": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-abbreviation-dipl-ing-click-dipling": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-pronominal-adverb-stolz-click-stolz": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-pronominal-adverb-stolz-click-darauf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-pronominal-adverb-warten-click-warte": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-pronominal-adverb-warten-click-darauf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-pronominal-adverb-worauf-click-worauf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gebildet-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gebildet-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gebildet-adj-sehr": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-predicative-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ausgezeichnet-verb-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ausgezeichnet-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-erfahren-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-erfahren-verb-perfect": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gelegen-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gelegen-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-spannend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-spannend-adj-productive-adverbial": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-spannend-adj-comparative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-reizend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-reizend-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verrueckt-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verrueckt-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verlegen-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verlegt-adj-productive-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-bedeutend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-begabt-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gespannt-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gespannt-adj-state-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gekocht-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gekocht-adj-state-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-bewundert-adj-agent": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-repariert-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-umgestuerzt-adj-agent": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gestrichen-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-entworfen-adj-agent": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-lachend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-spielend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-singend-adj-adverbial": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-schlafend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-reisend-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschlossen-adj-state-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschlossen-adj-state-passive-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschlossen-adj-geschlossene-gesellschaft": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschlossen-verb-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschlossen-verb-perfect": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gekommen-verb-perfect": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gekommen-verb-perfect-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-gekommen-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verliebt-adj-predicative-intensified": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verliebt-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verliebt-verb-perfect": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschrieben-adj-state-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-geschrieben-verb-passive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ungelesen-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-unbekannt-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-ungeloest-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-bekannt-adj-superlative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-interessiert-adj-sehr": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-schnell-adj-adverbial": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-jaemmerlich-adj-adverbial": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-reisende-noun": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-verheiratet-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-betrunken-adj-attributive": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-aufgeregt-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-participle-boundary-beleidigt-adj-predicative": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-adjective-copula-click-ist": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-adjective-copula-click-stolz": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-adjective-copula-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-adjective-fronted-click-auf": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-noun-click-vor": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-collocation-angst-haben-click-vor": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		},
+		"target-de-governed-collocation-bescheid-click-ueber": {
+			"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+		}
+	}
+}
