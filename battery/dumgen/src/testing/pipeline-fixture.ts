@@ -49,9 +49,10 @@ export function pipelineFixture(
 				return intake.execute(request);
 			}
 			if (
-				request.input &&
-				typeof request.input === "object" &&
-				"needed" in request.input
+				request.stage === "generateCanonicalForm" ||
+				(request.input &&
+					typeof request.input === "object" &&
+					"needed" in request.input)
 			) {
 				if (!grammar) throw Error("Unexpected text generation");
 				return grammar.execute(request);

@@ -168,13 +168,9 @@ test("missing headword text still generates and its trace preserves the actual r
 		(call) => call.executor === "Luna",
 	);
 	expect(generation).toHaveLength(1);
-	expect(generation?.[0]?.request.input).toMatchObject({
-		needed: { canonicalForm: expect.any(String) },
-		judgedCore: expect.any(Object),
-		canonicalFormPolicy: expect.any(String),
+	expect(generation?.[0]?.request).toMatchObject({
+		stage: "generateCanonicalForm",
+		input: "den Aufstiegen",
+		outputFormat: "text",
 	});
-	expect(generation?.[0]?.request.input).not.toHaveProperty("judgedSurface");
-	expect(generation?.[0]?.request.input).not.toHaveProperty(
-		"memberOrthographies",
-	);
 });

@@ -42,7 +42,13 @@ export function fakeProviders(
 									typeof input === "object" &&
 									"sourceText" in input
 										? "segment"
-										: "fixture",
+										: String(
+													body.input[0].content,
+												).includes(
+													"Reply with its Canonical Form",
+												)
+											? "generateCanonicalForm"
+											: "fixture",
 								input,
 							} as ModelRequest)
 						).output;

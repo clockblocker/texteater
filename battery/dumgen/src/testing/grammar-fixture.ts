@@ -169,6 +169,8 @@ export function grammarFixture(
 			});
 		},
 		execute: async (request) => {
+			if (request.stage === "generateCanonicalForm")
+				return { output: output.lemma.canonicalForm };
 			const needed = (request.input as { needed: Record<string, string> })
 				.needed;
 			if (!needed)

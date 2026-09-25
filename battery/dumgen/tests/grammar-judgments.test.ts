@@ -451,14 +451,7 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			if (!generation) throw Error("Expected headword generation");
 			expect(generation.executor).toBe("Luna");
 			expect(generation.request.stage).toBe("generateCanonicalForm");
-			expect(generation.request.input).toMatchObject({
-				needed: { canonicalForm: expect.any(String) },
-			});
-			expect(
-				Object.keys(
-					(generation.request.input as { needed: object }).needed,
-				),
-			).toEqual(["canonicalForm"]);
+			expect(generation.request.input).toBe(normalized);
 		}
 	});
 
@@ -553,7 +546,7 @@ for (const [id, rejected] of [
 		);
 		const generation = traces[0]?.calls[1]?.request;
 		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
-		expect(generation).toHaveProperty("input.needed.canonicalForm");
+		expect(generation).toHaveProperty("outputFormat", "text");
 		expect(traces[0]?.events).toContainEqual({
 			kind: "NonInfinitiveCanonicalForm",
 			data: { rejected, answer: "CandidateIsCanonical" },
@@ -638,7 +631,7 @@ for (const [id, example, rejected] of [
 		);
 		const generation = traces[0]?.calls[1]?.request;
 		expect(generation).toHaveProperty("stage", "generateCanonicalForm");
-		expect(generation).toHaveProperty("input.needed.canonicalForm");
+		expect(generation).toHaveProperty("outputFormat", "text");
 		expect(traces[0]?.events).toContainEqual({
 			kind: "InflectedNounCanonicalForm",
 			data: { rejected, answer: "candidate_1" },

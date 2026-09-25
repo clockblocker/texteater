@@ -85,7 +85,10 @@ for (const [route, kind, id] of examples)
 		const trace = traces[0];
 		expect(trace?.calls[0]?.executor).toBe("TypeSafe");
 		for (const call of trace?.calls ?? [])
-			if (call.executor === "Luna") {
+			if (call.request.stage === "generateCanonicalForm") {
+				expect(call.request.input).toBeString();
+				expect(call.output).toBe(expected.lemma.canonicalForm);
+			} else if (call.executor === "Luna") {
 				const requested = (
 					call.request.input as { needed: Record<string, string> }
 				).needed;

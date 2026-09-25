@@ -34,6 +34,7 @@ import type { GrammarOutput } from "./project.js";
 import { routeGuidance } from "./route-guidance.js";
 import {
 	canonicalFormGuidance,
+	canonicalFormPrompt,
 	normalizedMemberGuidance,
 	textSystemPrompt,
 } from "./text-guidance.js";
@@ -510,6 +511,7 @@ export function resolveGrammarJudgments(
 				attested: string;
 				orthography: "Standard" | "Typo";
 			} | null = null;
+			let governedPrepositionPosition: number | undefined;
 			if (governedPreposition) {
 				const answer = selected("governedPreposition");
 				if (answer !== "Absent") {
@@ -519,6 +521,7 @@ export function resolveGrammarJudgments(
 					if (attested === undefined || orthography === undefined)
 						return fail("Unaligned governed-preposition evidence");
 					governedPrepositionEvidence = { attested, orthography };
+					governedPrepositionPosition = position;
 				}
 			}
 			const normalizedMembers = input.members.map((text, index) =>
@@ -698,14 +701,49 @@ export function resolveGrammarJudgments(
 					"Applicable grammatical answers do not compose into a legal analysis",
 				);
 			}
-			if (Object.keys(needed).length) {
+			if (Object.keys(needed).length === 1 && needed.canonicalForm) {
+				// The route already fixes the Kind, so the headword needs only
+				// the occurrence's words: besaß in, besitzen out. A governed
+				// preposition never belongs to the headword, so it stays out.
+				const generation = yield* executeGeneration(
+					options,
+					scope,
+					{
+						stage: "generateCanonicalForm",
+						route: `${route}/text`,
+						input: normalizedMembers
+							.filter(
+								(_, index) =>
+									index !== governedPrepositionPosition,
+							)
+							.join(" "),
+						systemPrompt: canonicalFormPrompt(
+							encounter.target.kind,
+						),
+						outputFormat: "text",
+						configuration: effectiveConfiguration(options, route),
+					},
+					(raw) => {
+						const text = typeof raw === "string" ? raw.trim() : "";
+						if (!text || /\n/u.test(text))
+							throw new DumgenFailure(
+								"InvalidModelOutput",
+								"generateCanonicalForm",
+								"Expected one Canonical Form",
+								`${route}/text`,
+							);
+						return text;
+					},
+					[...upstream],
+				);
+				upstream.push(generation.id);
+				lemma.canonicalForm = generation.output;
+			} else if (Object.keys(needed).length) {
 				const wantsCanonical = Boolean(needed.canonicalForm);
 				const wantsMembers =
 					Object.keys(needed).length > (wantsCanonical ? 1 : 0);
 				const textStage = wantsCanonical
-					? wantsMembers
-						? "generateCanonicalFormAndNormalizedMembers"
-						: "generateCanonicalForm"
+					? "generateCanonicalFormAndNormalizedMembers"
 					: "generateNormalizedMembers";
 				const invalidText = (message: string) =>
 					new DumgenFailure(
