@@ -1,0 +1,115 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die schoß das Häschen ganz entzwei;\nda rief die Frau: »O wei! O wei!«",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schoß" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Häschen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entzwei" },
+		{ "kind": "Punctuation", "text": ";" },
+		{ "kind": "Whitespace", "text": "\n" },
+		{ "kind": "ResolvableText", "text": "da" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "rief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frau" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "»" },
+		{ "kind": "ResolvableText", "text": "O" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wei" },
+		{ "kind": "Punctuation", "text": "!" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "O" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wei" },
+		{ "kind": "Punctuation", "text": "!" },
+		{ "kind": "Punctuation", "text": "«" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": {
+		"kind": "Quoted",
+		"work": "Der Struwwelpeter",
+		"author": "Heinrich Hoffmann",
+		"year": 1845
+	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [10],
+			"notes": {
+				"rationale": "I treated entzwei as a lexical adjective, following dictionary treatment, even though in this resultative use it feels adverb-like on the surface. Because there is no overt inflection here, the surface is stored as a citation-shaped ADJ rather than as an inflected form."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "entzwei", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "entzwei",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "entzwei",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [23, 25],
+			"notes": {
+				"rationale": "The Full Attestation records both members O and wei of the reaction formula; the docs review span on wei does not make it an independent Lexeme. I linked the selected O to the whole exclamation o wei as a discourse formula, not to a standalone interjection token. That follows the dumling preference for preserving the meaning-bearing multiword formula when a learner highlights only one part of it."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "O", "orthography": "Standard" },
+					{ "attested": "wei", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "o wei",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "o wei",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"coreFeatures": { "discourseFormulaRole": "Reaction" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

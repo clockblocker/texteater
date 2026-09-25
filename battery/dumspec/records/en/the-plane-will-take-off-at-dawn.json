@@ -1,0 +1,62 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The plane will take off at dawn.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "plane" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "will" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "take" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "off" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "at" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dawn" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 8],
+			"notes": {
+				"rationale": "Only the verb component is selected, but the Lemma and surface are the phrasal verb take off."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "take", "orthography": "Standard" },
+					{ "attested": "off", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "en",
+					"normalizedSurface": "take off",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "take off",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"phrasal": "Yes",
+							"abbr": null,
+							"extPos": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

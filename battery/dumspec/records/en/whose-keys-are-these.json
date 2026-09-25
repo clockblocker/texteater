@@ -1,0 +1,58 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Whose keys are these?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Whose" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "keys" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "are" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "these" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "Whose is its own Lemma, with genitive case, possessive and interrogative Core Features; it is not a form of who."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Whose", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "whose",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "whose",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"poss": "Yes",
+							"pronType": "Int",
+							"abbr": null,
+							"extPos": null,
+							"person": null,
+							"style": null,
+							"case": "Gen",
+							"gender": null,
+							"number": null,
+							"reflex": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

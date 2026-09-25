@@ -1,0 +1,58 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "I emailed them yesterday.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "emailed" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "them" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "yesterday" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "Them is its own Lemma: English pronoun case and number are Core Features, so them is not a form of they. Singular-they readings are not separately encoded."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "them", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "them",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "them",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "3",
+							"pronType": "Prs",
+							"abbr": null,
+							"extPos": null,
+							"poss": null,
+							"style": null,
+							"case": "Acc",
+							"gender": null,
+							"number": "Plur",
+							"reflex": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

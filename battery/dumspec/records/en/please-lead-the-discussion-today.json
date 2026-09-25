@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Please lead the discussion today.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Please" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lead" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "discussion" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "today" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Verb lead is kept separate from noun lead despite identical spelling."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "lead", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "en",
+					"normalizedSurface": "lead",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "lead",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"phrasal": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

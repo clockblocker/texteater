@@ -1,0 +1,52 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "תפסת מרובה לא תפסת.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "תפסת" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מרובה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "לא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "תפסת" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Full",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 6],
+			"notes": {
+				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on תפסת does not make it a standalone verb Attestation."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "תפסת", "orthography": "Standard" },
+					{ "attested": "מרובה", "orthography": "Standard" },
+					{ "attested": "לא", "orthography": "Standard" },
+					{ "attested": "תפסת", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "תפסת מרובה לא תפסת",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "תפסת מרובה לא תפסת",
+						"family": "Phraseme",
+						"kind": "Proverb",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

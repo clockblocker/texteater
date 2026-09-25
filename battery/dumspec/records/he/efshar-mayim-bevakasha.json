@@ -1,0 +1,46 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אפשר מים, בבקשה?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אפשר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מים" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בבקשה" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [5],
+			"notes": {
+				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "בבקשה", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "בבקשה",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "בבקשה",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

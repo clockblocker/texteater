@@ -1,0 +1,62 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Yesterday, I ran to the station.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Yesterday" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ran" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "to" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "station" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [5],
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "ran", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "ran",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": "Sing",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"voice": null
+					},
+					"surfaceFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "run",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"phrasal": null,
+							"style": null
+						}
+					}
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

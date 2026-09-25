@@ -1,0 +1,58 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Use half the flour first.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Use" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "half" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "flour" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "first" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Half before a noun phrase is DET with fractional number features, not NUM."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "half", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "en",
+					"normalizedSurface": "half",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "half",
+						"family": "Lexeme",
+						"kind": "DET",
+						"coreFeatures": {
+							"numForm": "Word",
+							"numType": "Frac",
+							"abbr": null,
+							"definite": null,
+							"extPos": null,
+							"pronType": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

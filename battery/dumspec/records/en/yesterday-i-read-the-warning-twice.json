@@ -1,0 +1,64 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Yesterday I read the warning twice.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Yesterday" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "read" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "warning" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "twice" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "Past-tense read is orthographically identical to the citation form; the Past tense in inflectionalFeatures makes this Surface non-Grundform despite the matching spelling."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "read", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "read",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"tense": "Past",
+						"verbForm": "Fin",
+						"mood": null,
+						"number": null,
+						"person": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "read",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"phrasal": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

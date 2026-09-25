@@ -1,0 +1,57 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אמרת שתבוא.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אמרת" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ש" },
+		{ "kind": "ResolvableText", "text": "תבוא" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "ש is the SCONJ that introducing the complement clause, its own Lexeme and the Fused first piece of שתבוא."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ש",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "שתבוא",
+							"components": [
+								{ "span": "ש", "surface": "ש" },
+								{ "span": "תבוא", "surface": "תבוא" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "ש",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "ש",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": { "case": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

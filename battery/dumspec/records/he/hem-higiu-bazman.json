@@ -1,0 +1,54 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הם הגיעו בזמן.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הם" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "הגיעו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בזמן" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "הם is a third-person masculine plural pronoun."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "הם", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "הם",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Masc",
+						"number": "Plur",
+						"person": "3"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "הם",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"pronType": "Prs",
+							"definite": null,
+							"reflex": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

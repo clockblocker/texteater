@@ -1,0 +1,54 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אני לא בטוחה.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אני" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "לא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בטוחה" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "The first-person pronoun has person and number but no gender feature."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "אני", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "אני",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"number": "Sing",
+						"person": "1",
+						"gender": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "אני",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"pronType": "Prs",
+							"definite": null,
+							"reflex": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

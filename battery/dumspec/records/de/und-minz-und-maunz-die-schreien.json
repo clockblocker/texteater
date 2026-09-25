@@ -1,0 +1,226 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Und Minz und Maunz, die schreien\ngar jämmerlich zu zweien",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Minz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Maunz" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schreien" },
+		{ "kind": "Whitespace", "text": "\n" },
+		{ "kind": "ResolvableText", "text": "gar" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "jämmerlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zweien" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": {
+		"kind": "Quoted",
+		"work": "Der Struwwelpeter",
+		"author": "Heinrich Hoffmann",
+		"year": 1845
+	},
+	"sources": { "adrs": ["ADR-0033"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [9],
+			"notes": {
+				"rationale": "Die links the relative clause back to Minz und Maunz, so this is the nominative plural relative pronoun, not the article."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "die", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "die",
+					"spelling": "Canonical",
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "die",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"pronType": "Rel",
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Plur",
+							"gender": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [13],
+			"notes": {
+				"rationale": "Gar functions as an intensifier here. Dumling does not currently split German focus or degree particles into a separate subtype, so I classified it as ADV rather than PART."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "gar", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "gar",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "gar",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [15],
+			"notes": {
+				"rationale": "Jämmerlich modifies schreien adverbially, but an adverbially used plain adjective stays ADJ (ADR 0033), with positive degree and no agreement."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "jämmerlich", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "jämmerlich",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"number": null,
+						"gender": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "jämmerlich",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [17],
+			"notes": {
+				"rationale": "Here zu is the preposition heading the fixed adverbial phrase zu zweien, so I kept it as ADP rather than reading it as infinitival or separable-particle zu."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "zu", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zu",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zu",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"adpType": "Prep",
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [19],
+			"notes": {
+				"rationale": "I treated zweien as the dative inflected form of the cardinal numeral zwei inside the fixed phrase zu zweien, rather than as a pronoun-like item."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "zweien", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zweien",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zwei",
+						"family": "Lexeme",
+						"kind": "NUM",
+						"coreFeatures": {
+							"numType": "Card",
+							"abbr": null,
+							"foreign": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

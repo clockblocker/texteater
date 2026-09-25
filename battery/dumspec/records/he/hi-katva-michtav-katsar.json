@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "היא כתבה מכתב קצר.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "היא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "כתבה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מכתב" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "קצר" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "כתבה is the past feminine-singular verb from כתב despite the homographic noun article."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "כתבה", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "כתבה",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Fem",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"definite": null,
+						"mood": null,
+						"polarity": null,
+						"verbForm": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "כתב",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebBinyan": "PAAL",
+							"hebExistential": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "These scissors are blunt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "These" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "scissors" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "are" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blunt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Scissors uses Number=Ptan to stress plurale-tantum support."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "scissors", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "scissors",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"article": "None",
+						"number": "Ptan"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "scissors",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"numForm": null,
+							"numType": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,58 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The Smiths invited everyone over.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Smiths" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "invited" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "everyone" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "over" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Family-name plural is PROPN with inflectional number rather than a common noun."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Smiths", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "Smiths",
+					"spelling": "Canonical",
+					"inflectionalFeatures": { "number": "Plur" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "Smith",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"extPos": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

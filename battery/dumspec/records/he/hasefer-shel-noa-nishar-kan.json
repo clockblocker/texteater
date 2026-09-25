@@ -1,0 +1,49 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הספר של נועה נשאר כאן.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הספר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "של" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "נועה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "נשאר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "כאן" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "של is the genitive relation marker here, modeled as ADP."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "של", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "של",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "של",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "case": "Gen", "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

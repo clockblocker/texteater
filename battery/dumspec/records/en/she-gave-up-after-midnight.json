@@ -1,0 +1,65 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "She gave up after midnight.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "She" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gave" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "up" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "after" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "midnight" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 4],
+			"notes": {
+				"rationale": "Clicking the particle resolves the complete phrasal-verb occurrence `gave up`; the click is one member of that Surface."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "gave", "orthography": "Standard" },
+					{ "attested": "up", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "gave up",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": "Past",
+						"verbForm": "Fin",
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "give up",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"phrasal": "Yes",
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

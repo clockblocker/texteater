@@ -1,0 +1,66 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "עברתי לתל אביב.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "עברתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ל" },
+		{ "kind": "ResolvableText", "text": "תל" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "אביב" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [3, 5],
+			"notes": {
+				"rationale": "תל אביב is a multiword proper-noun citation with no additional inflectional surface features."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "תל",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "לתל",
+							"components": [
+								{ "span": "ל", "surface": "ל" },
+								{ "span": "תל", "surface": "תל" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "אביב", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "he",
+					"normalizedSurface": "תל אביב",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "תל אביב",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"abbr": null,
+							"article": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

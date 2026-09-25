@@ -1,0 +1,46 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "שלום, מה שלומך?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "שלום" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "שלומך" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "שלום is treated as a discourse formula rather than as the noun peace because the sentence is a greeting."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "שלום", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "שלום",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "שלום",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,49 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אין מקום פנוי.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אין" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מקום" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "פנוי" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "אין is the negative existential verb; its negativity is lexical here, not an inflectional polarity feature."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "אין", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "he",
+					"normalizedSurface": "אין",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "אין",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebExistential": "Yes",
+							"hebBinyan": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

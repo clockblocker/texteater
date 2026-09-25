@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אנחנו הולכים עכשיו.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אנחנו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "הולכים" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "עכשיו" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "Present-like verbal forms are represented as verbForm Part rather than tense Pres."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "הולכים", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "הולכים",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Masc",
+						"number": "Plur",
+						"verbForm": "Part",
+						"definite": null,
+						"mood": null,
+						"person": null,
+						"polarity": null,
+						"tense": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "הלך",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebBinyan": "PAAL",
+							"hebExistential": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

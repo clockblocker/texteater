@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The books are on the shelf.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "books" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "are" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "on" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "shelf" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "The", "orthography": "Standard" },
+					{ "attested": "books", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "books",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"number": "Plur"
+					},
+					"surfaceFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "book",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"numForm": null,
+							"numType": null,
+							"style": null
+						}
+					}
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

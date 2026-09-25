@@ -1,0 +1,54 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "רק את יודעת.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "רק" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "את" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "יודעת" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "את is the pronoun homograph here, modeled with feminine second-person features."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "את", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "את",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Fem",
+						"number": "Sing",
+						"person": "2"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "את",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"pronType": "Prs",
+							"definite": null,
+							"reflex": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

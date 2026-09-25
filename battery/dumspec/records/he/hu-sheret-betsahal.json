@@ -1,0 +1,65 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הוא שירת בצה\"ל.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הוא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "שירת" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "צה\"ל" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [5],
+			"notes": {
+				"rationale": "צה\"ל is an abbreviated proper noun with the quote mark retained and abbr Yes."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "צה\"ל",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "בצה\"ל",
+							"components": [
+								{ "span": "ב", "surface": "ב" },
+								{ "span": "צה\"ל", "surface": "צה\"ל" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "he",
+					"normalizedSurface": "צה\"ל",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "צה\"ל",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"coreFeatures": {
+							"abbr": "Yes",
+							"article": null,
+							"gender": "Masc"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,226 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Verbrannt ist alles ganz und gar,\ndas arme Kind mit Haut und Haar;",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Verbrannt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alles" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gar" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": "\n" },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "arme" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kind" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haut" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haar" },
+		{ "kind": "Punctuation", "text": ";" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": {
+		"kind": "Quoted",
+		"work": "Der Struwwelpeter",
+		"author": "Heinrich Hoffmann",
+		"year": 1845
+	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "I treated Verbrannt as the participial verb form of verbrennen rather than as a plain adjective. A predicative-adjective reading is possible in German, but dumling-wise the learner-facing meaning here still points most directly to the lexical verb and its result-state participle."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Verbrannt", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "verbrannt",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"participleForm": "Past",
+						"verbForm": "Part",
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "verbrennen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8, 10],
+			"notes": {
+				"rationale": "The Full Attestation records ganz, und, and gar as the fixed intensifying idiom rather than a standalone adjective or adverb Lexeme. The learner-relevant unit is the whole phrase meaning completely. The Full Attestation records ganz, und, and gar as the frozen intensifier; the docs review span on und does not make it a standalone CCONJ Lemma. Gar can often be a standalone intensifying adverb, and another Attestation in the repo uses that analysis. Here the Full Attestation records ganz, und, and gar because the fixed phrase as a whole carries the intended meaning."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "ganz", "orthography": "Standard" },
+					{ "attested": "und", "orthography": "Standard" },
+					{ "attested": "gar", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "ganz und gar",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "ganz und gar",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [21],
+			"notes": {
+				"rationale": "Haut is classified word-by-word here because this occurrence is used literally, not idiomatically. The noun is dative singular after mit, even though the attested form is identical to the citation form.",
+				"knownMistakes": [
+					"Do not keep a literally used idiom as a phraseme. The earlier mistake here was classifying Haut as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone noun Haut in dative singular."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Haut", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Haut",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Dat",
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Haut",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [23],
+			"notes": {
+				"rationale": "Und is classified word-by-word here because the phrase is being used literally, not as an idiom. In this line it is the ordinary coordinating conjunction linking the two literal nouns Haut and Haar.",
+				"knownMistakes": [
+					"Do not keep a literally used idiom as a phraseme. The earlier mistake here was classifying und as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone coordinating conjunction und."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "und",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "und",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"coreFeatures": { "conjType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [25],
+			"notes": {
+				"rationale": "Haar is classified word-by-word here because the line uses the body-part phrase literally. The noun is dative singular after mit, although the surface form is syncretic with the citation form.",
+				"knownMistakes": [
+					"Do not keep a literally used idiom as a phraseme. The earlier mistake here was classifying Haar as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone noun Haar in dative singular."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Haar", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Haar",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Dat",
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Haar",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

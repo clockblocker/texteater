@@ -1,0 +1,66 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Running before breakfast clears my head.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Running" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "before" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "breakfast" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "clears" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "my" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "head" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "Gerund running is a VERB inflection, not a noun, despite occupying a nominal clause position."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Running", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "running",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"verbForm": "Ger",
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "run",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"phrasal": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

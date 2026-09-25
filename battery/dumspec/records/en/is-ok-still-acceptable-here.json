@@ -1,0 +1,54 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Is OK still acceptable here?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Is" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "OK" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "still" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "acceptable" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "here" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "OK is treated as a standard spelling variant of the canonical lemma okay."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "OK", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "OK",
+					"spelling": "Variant",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "okay",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"polarity": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

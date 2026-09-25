@@ -1,0 +1,51 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "החדרים גדולים.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "החדרים" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "גדולים" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "גדולים is a masculine plural adjective inflection."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "גדולים", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "גדולים",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Masc",
+						"number": "Plur",
+						"definite": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "גדול",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": { "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

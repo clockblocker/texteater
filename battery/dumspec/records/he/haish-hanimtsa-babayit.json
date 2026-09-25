@@ -1,0 +1,59 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "האיש הנמצא בבית.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "האיש" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "נמצא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בבית" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "ה introduces the relative participle נמצא, so it is the SCONJ that, not the article; the article ה of האיש belongs to the noun איש."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ה",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "הנמצא",
+							"components": [
+								{ "span": "ה", "surface": "ה" },
+								{ "span": "נמצא", "surface": "נמצא" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "ה",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "ה",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": { "case": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

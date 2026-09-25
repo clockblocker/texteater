@@ -1,0 +1,57 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "She performed best under pressure.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "She" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "performed" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "best" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "under" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "pressure" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "Best is modeled as a superlative adverb here, not an adjective, because it modifies performed."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "best", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "best",
+					"spelling": "Canonical",
+					"inflectionalFeatures": { "degree": "Sup" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "well",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"numForm": null,
+							"numType": null,
+							"pronType": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "חס וחלילה שנאחר שוב.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "חס" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ו" },
+		{ "kind": "ResolvableText", "text": "חלילה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "שנאחר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "שוב" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 3],
+			"notes": {
+				"rationale": "חס וחלילה is treated as an idiom because the literal pieces are not the learner-facing meaning."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "חס", "orthography": "Standard" },
+					{
+						"attested": "ו",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "וחלילה",
+							"components": [
+								{ "span": "ו", "surface": "ו" },
+								{ "span": "חלילה", "surface": "חלילה" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "חלילה",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "וחלילה",
+							"components": [
+								{ "span": "ו", "surface": "ו" },
+								{ "span": "חלילה", "surface": "חלילה" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "חס וחלילה",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "חס וחלילה",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הוא התכתב עם המרצה.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הוא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "התכתב" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "עם" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "המרצה" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "התכתב is analyzed as HITPAEL with voice Mid to expose reflexive or reciprocal middle behavior."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "התכתב", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "התכתב",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Masc",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"voice": "Mid",
+						"definite": null,
+						"mood": null,
+						"polarity": null,
+						"verbForm": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "כתב",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebBinyan": "HITPAEL",
+							"hebExistential": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

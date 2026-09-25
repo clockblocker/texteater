@@ -1,0 +1,50 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "איזה רחוב זה?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "איזה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "רחוב" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "זה" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "איזה is an interrogative determiner rather than a pronoun because it modifies רחוב."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "איזה", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "איזה",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Masc",
+						"number": "Sing",
+						"definite": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "איזה",
+						"family": "Lexeme",
+						"kind": "DET",
+						"coreFeatures": { "pronType": "Int" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

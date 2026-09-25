@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Remember, the early bird catches the worm.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Remember" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "early" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "catches" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "worm" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [3, 5, 7, 9, 11, 13],
+			"notes": {
+				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span remains on the salient fragment early bird."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "the", "orthography": "Standard" },
+					{ "attested": "early", "orthography": "Standard" },
+					{ "attested": "bird", "orthography": "Standard" },
+					{ "attested": "catches", "orthography": "Standard" },
+					{ "attested": "the", "orthography": "Standard" },
+					{ "attested": "worm", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "the early bird catches the worm",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "the early bird catches the worm",
+						"family": "Phraseme",
+						"kind": "Proverb",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

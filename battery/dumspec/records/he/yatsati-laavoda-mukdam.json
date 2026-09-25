@@ -1,0 +1,60 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "יצאתי לעבודה מוקדם.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "יצאתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ל" },
+		{ "kind": "ResolvableText", "text": "עבודה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מוקדם" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "ל is the ADP to, its own Lexeme and the Fused first piece of לעבודה (la-avoda). The Fusion lists the hidden article ה, which belongs to the noun עבודה."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ל",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "לעבודה",
+							"components": [
+								{ "span": "ל", "surface": "ל" },
+								{ "span": "", "surface": "ה" },
+								{ "span": "עבודה", "surface": "עבודה" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "ל",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "ל",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "abbr": null, "case": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

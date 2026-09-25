@@ -1,0 +1,49 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "יש קפה במטבח.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "יש" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "קפה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "במטבח" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "יש is modeled as an existential verb, not as an adverb or particle."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "יש", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "he",
+					"normalizedSurface": "יש",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "יש",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebExistential": "Yes",
+							"hebBinyan": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

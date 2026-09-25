@@ -1,0 +1,51 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "זו טעות גדולה.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "זו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "טעות" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "גדולה" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "גדולה is a feminine singular adjective inflection."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "גדולה", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "גדולה",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"gender": "Fem",
+						"number": "Sing",
+						"definite": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "גדול",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": { "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

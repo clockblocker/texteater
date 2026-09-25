@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The sign advertised acommodation nearby.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sign" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "advertised" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "acommodation" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nearby" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "Acommodation is represented as Typo with normalized surface accommodation; no edit-distance metadata exists."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "acommodation", "orthography": "Typo" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": {
+						"article": "None",
+						"number": "Sing"
+					},
+					"language": "en",
+					"normalizedSurface": "accommodation",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "accommodation",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"numForm": null,
+							"numType": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,57 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "בואו לכאן.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "בואו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "לכאן" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "בואו is an imperative plural form with mood Imp and no tense."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "בואו", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "בואו",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Plur",
+						"person": "2",
+						"definite": null,
+						"gender": null,
+						"polarity": null,
+						"tense": null,
+						"verbForm": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "בוא",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebBinyan": "PAAL",
+							"hebExistential": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

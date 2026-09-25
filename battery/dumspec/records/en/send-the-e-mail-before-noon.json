@@ -1,0 +1,64 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Send the e-mail before noon.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Send" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "e-mail" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "before" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noon" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 4],
+			"notes": {
+				"rationale": "Hyphenated e-mail is a standard variant of email, not a typo."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "the", "orthography": "Standard" },
+					{ "attested": "e-mail", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": {
+						"article": "Definite",
+						"number": "Sing"
+					},
+					"language": "en",
+					"normalizedSurface": "e-mail",
+					"spelling": "Variant",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "email",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"numForm": null,
+							"numType": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

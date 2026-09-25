@@ -1,0 +1,76 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "אין חדש תחת השמש.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "אין" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "חדש" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "תחת" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "שמש" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Full",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 4, 6, 7],
+			"notes": {
+				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on חדש does not make it an adjective Surface."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "אין", "orthography": "Standard" },
+					{ "attested": "חדש", "orthography": "Standard" },
+					{ "attested": "תחת", "orthography": "Standard" },
+					{
+						"attested": "ה",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "השמש",
+							"components": [
+								{ "span": "ה", "surface": "ה" },
+								{ "span": "שמש", "surface": "שמש" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "שמש",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "השמש",
+							"components": [
+								{ "span": "ה", "surface": "ה" },
+								{ "span": "שמש", "surface": "שמש" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "אין חדש תחת השמש",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "אין חדש תחת השמש",
+						"family": "Phraseme",
+						"kind": "Proverb",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

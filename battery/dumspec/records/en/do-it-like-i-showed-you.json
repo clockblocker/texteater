@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Do it like I showed you.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Do" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "it" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "like" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "showed" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "you" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "Like as a subordinator is marked SCONJ with vernacular style because many registers prefer as."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "like", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "like",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "like",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": {
+							"style": "Vrnc",
+							"abbr": null,
+							"extPos": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

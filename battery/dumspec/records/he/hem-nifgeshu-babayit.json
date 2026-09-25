@@ -1,0 +1,60 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הם נפגשו בבית.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הם" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "נפגשו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "בית" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "ב is the ADP in, its own Lexeme and the Fused first piece of בבית (ba-bayit). The Fusion lists the hidden article ה between ב and בית; that component belongs to the noun בית."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ב",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "בבית",
+							"components": [
+								{ "span": "ב", "surface": "ב" },
+								{ "span": "", "surface": "ה" },
+								{ "span": "בית", "surface": "בית" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "ב",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "ב",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "abbr": null, "case": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

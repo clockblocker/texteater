@@ -1,0 +1,52 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "בתי הספר נסגרו מוקדם.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "בתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "הספר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "נסגרו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מוקדם" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "בתי is the construct plural of בית, using definite Cons and number Plur."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "בתי", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "בתי",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"definite": "Cons",
+						"number": "Plur"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "בית",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc", "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

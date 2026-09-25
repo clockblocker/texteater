@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "השאלות הטובות נשארו לסוף.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "השאלות" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "טובות" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "נשארו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "לסוף" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 3],
+			"notes": {
+				"rationale": "הטובות is a definite feminine plural adjective agreeing with השאלות. The adjective owns its own article ה as a Fused member; normalizedSurface is טובות."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ה",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "הטובות",
+							"components": [
+								{ "span": "ה", "surface": "ה" },
+								{ "span": "טובות", "surface": "טובות" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "טובות",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "הטובות",
+							"components": [
+								{ "span": "ה", "surface": "ה" },
+								{ "span": "טובות", "surface": "טובות" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "טובות",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"definite": "Def",
+						"gender": "Fem",
+						"number": "Plur"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "טוב",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": { "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

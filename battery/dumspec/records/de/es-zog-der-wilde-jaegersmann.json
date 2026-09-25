@@ -38,6 +38,43 @@
 	},
 	"targets": [
 		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "I treated sentence-initial `Es` as the personal pronoun lemma `es` with nominative neuter singular inflection. In this poetic inversion it may function as expletive or presentational `es`, but the current schema has no dedicated expletive feature, so plain PRON is the closest Dumling fit."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Es", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "es",
+					"spelling": "Canonical",
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "es",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "3",
+							"pronType": "Prs",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Sing",
+							"gender": "Neut"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
 			"memberSegmentIndices": [2, 18],
 			"grundform": false,
 			"notes": {

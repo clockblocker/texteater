@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "הבטיחו דרמה, אבל לא דובים ולא יער.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "הבטיחו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "דרמה" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "אבל" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "לא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "דובים" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ו" },
+		{ "kind": "ResolvableText", "text": "לא" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "יער" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [7, 9, 11, 12, 14],
+			"notes": {
+				"rationale": "לא דובים ולא יער is classified as an idiom; it is proverb-like, but used here as a fixed idiomatic denial."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "לא", "orthography": "Standard" },
+					{ "attested": "דובים", "orthography": "Standard" },
+					{
+						"attested": "ו",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ולא",
+							"components": [
+								{ "span": "ו", "surface": "ו" },
+								{ "span": "לא", "surface": "לא" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "לא",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ולא",
+							"components": [
+								{ "span": "ו", "surface": "ו" },
+								{ "span": "לא", "surface": "לא" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "יער", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "לא דובים ולא יער",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "לא דובים ולא יער",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

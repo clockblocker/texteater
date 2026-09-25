@@ -1,0 +1,60 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "Please look it up before replying.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Please" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "look" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "it" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "up" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "before" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "replying" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 6],
+			"notes": {
+				"rationale": "The Full Attestation records both source-ordered members of the discontinuous phrasal verb look ... up; the docs review span remains on look only."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "look", "orthography": "Standard" },
+					{ "attested": "up", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "en",
+					"normalizedSurface": "look up",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "look up",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"phrasal": "Yes",
+							"abbr": null,
+							"extPos": null,
+							"style": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

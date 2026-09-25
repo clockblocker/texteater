@@ -1,0 +1,48 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "רחצתי ידיים.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "רחצתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ידיים" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "ידיים is a dual-number surface for a paired body part."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "ידיים", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "ידיים",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"number": "Dual",
+						"definite": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "יד",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Fem", "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

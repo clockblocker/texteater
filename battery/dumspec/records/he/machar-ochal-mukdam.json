@@ -1,0 +1,59 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "מחר אוכל מוקדם.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "מחר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "אוכל" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מוקדם" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "אוכל is the future first-person verb from אכל, separated from the noun homograph."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "אוכל", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "אוכל",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"number": "Sing",
+						"person": "1",
+						"tense": "Fut",
+						"definite": null,
+						"gender": null,
+						"mood": null,
+						"polarity": null,
+						"verbForm": null,
+						"voice": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "אכל",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hebBinyan": "PAAL",
+							"hebExistential": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,50 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "קניתי שתי מחברות.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "קניתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "שתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "מחברות" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "שתי is the construct or feminine form of שתיים and is intentionally awkward for feature-boundary testing."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "שתי", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "שתי",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"definite": "Cons",
+						"gender": "Fem",
+						"number": "Dual"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "שתיים",
+						"family": "Lexeme",
+						"kind": "NUM",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

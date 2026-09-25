@@ -1,0 +1,45 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "ראיתי את הסרט.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "ראיתי" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "את" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "הסרט" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "את is the accusative marker here, modeled as ADP and kept separate from the pronoun homograph."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "את", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "את",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "את",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "case": "Acc", "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,47 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "נמשיך כאשר כולם יגיעו.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "נמשיך" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "כאשר" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "כולם" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "יגיעו" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "כאשר is SCONJ with temporal case because the schema exposes that feature for Hebrew subordinators."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "כאשר", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "כאשר",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "כאשר",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": { "case": "Tem" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

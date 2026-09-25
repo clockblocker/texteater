@@ -1,0 +1,47 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "נשארנו בבית בגלל הגשם.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "נשארנו" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בבית" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "בגלל" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "הגשם" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "בגלל is a causal adposition without an additional case feature in the current schema."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "בגלל", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "בגלל",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "בגלל",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "abbr": null, "case": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

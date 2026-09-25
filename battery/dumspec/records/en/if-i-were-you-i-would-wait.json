@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "If I were you, I would wait.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "If" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "were" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "you" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "I" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "would" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wait" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "Were in if I were you is AUX with Mood=Sub; the schema allows mood without forcing person or number."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "were", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "en",
+					"normalizedSurface": "were",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"number": null,
+						"person": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "en",
+						"canonicalForm": "be",
+						"family": "Lexeme",
+						"kind": "AUX",
+						"coreFeatures": { "abbr": null, "style": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

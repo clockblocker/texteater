@@ -1,0 +1,45 @@
+{
+	"$schema": "../../schema/spec-record.he.json",
+	"sentence": "תודה על העזרה.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "תודה" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "על" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "העזרה" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "תודה is treated as a thanks formula rather than as a standalone noun."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "תודה", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "he",
+					"normalizedSurface": "תודה",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "he",
+						"canonicalForm": "תודה",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}
