@@ -26,12 +26,12 @@ import { routeGuidance } from "../../src/concrete-lang/de/grammatical-resolution
 import { verbalCompositionGuidance } from "../../src/concrete-lang/de/grammatical-resolution/verbal-guidance.js";
 import { examples as emojiExamples } from "../../src/concrete-lang/de/reading-emoji-description/generate/cases.js";
 import readingCases from "../../src/concrete-lang/de/reading-emoji-description/operation-cases.json";
+import { sentenceCases } from "../../src/concrete-lang/de/sentence-analysis/cases.js";
 import {
 	lexemeRoutes,
 	realizationCriteria,
 } from "../../src/concrete-lang/de/sentence-analysis/criteria.js";
 import { candidatesFor } from "../../src/concrete-lang/de/sentence-analysis/identity.js";
-import sentenceData from "../../src/concrete-lang/de/sentence-analysis/source-data.json";
 import { routes as classificationRoutes } from "../../src/concrete-lang/de/target-classification/assembly.js";
 import { targetCases } from "../../src/concrete-lang/de/target-classification/cases.js";
 import { targetCriteria } from "../../src/concrete-lang/de/target-classification/judgments.js";
@@ -356,11 +356,11 @@ function grammarCorpora() {
 async function measureIntake() {
 	const dumgen = createDumgen(options({}));
 	const sentences = new Map<string, SegmentedSentence<"de">>();
-	for (const [id, golden] of Object.entries(sentenceData.cases))
+	for (const [id, golden] of Object.entries(sentenceCases))
 		sentences.set(id, {
 			id,
 			language: "de",
-			segments: golden.input.segments,
+			segments: (golden.input as { segments: unknown }).segments,
 		} as unknown as SegmentedSentence<"de">);
 	// Every distinct classification-corpus sentence widens the length spread.
 	const seen = new Set(

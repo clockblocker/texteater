@@ -8,14 +8,17 @@ experiment and saves a Promptsmith run in `<output>/<runId>/`: `manifest.json`,
 ## Spec-backed experiments
 
 An experiment is spec-backed when its cases project from dumspec Spec Records
-(ADR 0037). Today that is every `grammatical-resolution/*` experiment and its
-slices. Codegen writes each projected case's origin into the route's
-`src/generated/grammar-cases/<family>/<kind>.json` as
+(ADR 0037). Today that is every `grammatical-resolution/*` experiment,
+`sentence-analysis/de`, and their slices. Codegen writes each projected case's
+origin into the route's `src/generated/grammar-cases/<family>/<kind>.json`,
+or `src/generated/sentence-cases.json`, as
 `origins[caseId] = { record, target, status }`: the record id, the target's
-index in `targets`, and its Review Status. A case
-the sidecar owns, such as an `Unresolved` answer, has no origin. To make
-another stage spec-backed, emit `origins` with `codegen/case-origin.ts` and
-add the route's origins to `caseOrigins` in `src/development.ts`.
+index in `targets`, and its Review Status. A sentence-analysis case analyses
+a whole Full record, so its `target` is null and it is Reviewed only when
+every target of the record is. A case the sidecar owns, such as an
+`Unresolved` answer, or a case still in a `source-data.json`, has no origin.
+To make another stage spec-backed, emit `origins` with `codegen/case-origin.ts`
+and add the route's origins to `caseOrigins` in `src/development.ts`.
 
 For a spec-backed run, `evaluate` also prints `review`:
 
@@ -47,7 +50,8 @@ is review input: either the pipeline or the record is wrong.
 {"record":"de/aus-angst-vor-hunden-bleibt-sie-zu-hause","target":0,"caseId":"grammar-de-noun-governed-angst-vor","expected":{"$.surface.inflectionalFeatures.case":"Dat"},"produced":{"$.surface.inflectionalFeatures.case":"Acc"}}
 ```
 
-- `record`, `target`: the Spec Record id and target index.
+- `record`, `target`: the Spec Record id and target index, null for a
+  sentence-analysis case.
 - `caseId`: the Dumgen case id in `cases.jsonl`.
 - `expected`, `produced`: only the paths where the gold answer and the
   pipeline's answer differ. `$` is the whole answer and `$.a.b` a key below

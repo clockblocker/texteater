@@ -1,0 +1,121 @@
+{
+	"slices": {
+		"governed": "Every governor takes in its governed preposition (ADR 0034)."
+	},
+	"cases": {
+		"sentence-de-kakao": {
+			"evaluation": true
+		},
+		"sentence-de-kino": {
+			"evaluation": true
+		},
+		"sentence-de-aufstehen": {
+			"evaluation": true
+		},
+		"sentence-de-erinnert": {
+			"evaluation": true
+		},
+		"sentence-de-ausweg": {
+			"evaluation": true
+		},
+		"sentence-de-relativ": {
+			"evaluation": true
+		},
+		"sentence-de-passiv": {
+			"evaluation": true
+		},
+		"sentence-de-faden": {
+			"evaluation": true
+		},
+		"sentence-de-usw": {
+			"evaluation": true
+		},
+		"sentence-de-museum": {
+			"evaluation": true
+		},
+		"sentence-de-genitiv": {
+			"evaluation": true
+		},
+		"sentence-de-typo": {
+			"evaluation": true
+		},
+		"sentence-de-klitik": {
+			"evaluation": true
+		},
+		"sentence-de-verfuegung": {
+			"evaluation": true
+		},
+		"sentence-de-manche": {
+			"evaluation": true
+		},
+		"sentence-de-fremd": {
+			"evaluation": true
+		},
+		"sentence-de-government-warten-auf": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-government-warten-adjunct": {
+			"evaluation": true
+		},
+		"sentence-de-government-bestehen-auf": {
+			"evaluation": true
+		},
+		"sentence-de-government-bestehen-aus": {
+			"evaluation": true
+		},
+		"sentence-de-government-bestehen-none": {
+			"evaluation": true
+		},
+		"sentence-de-government-stolz-auf": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-copula-stolz-auf": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-government-abhaengig-von": {
+			"evaluation": true
+		},
+		"sentence-de-government-angst-vor": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-government-interesse-an": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-government-bedanken-two": {
+			"evaluation": true
+		},
+		"sentence-de-government-freuen-darauf": {
+			"evaluation": true
+		},
+		"sentence-de-government-denken-an": {
+			"evaluation": true
+		},
+		"sentence-de-government-teilnehmen-an": {
+			"evaluation": true
+		},
+		"sentence-de-government-bescheid-wissen": {
+			"evaluation": true,
+			"slices": ["governed"]
+		},
+		"sentence-de-government-spielen-adjunct": {
+			"evaluation": true
+		},
+		"sentence-de-government-schneiden-adjunct": {
+			"evaluation": true
+		},
+		"sentence-de-government-abfahren-adjunct": {
+			"evaluation": true
+		},
+		"sentence-de-government-gross-none": {
+			"evaluation": true
+		},
+		"sentence-de-government-tisch-adjunct": {
+			"evaluation": true
+		}
+	}
+}

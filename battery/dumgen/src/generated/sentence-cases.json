@@ -1,0 +1,268 @@
+{
+	"caseIds": [
+		"sentence-de-kakao",
+		"sentence-de-kino",
+		"sentence-de-aufstehen",
+		"sentence-de-erinnert",
+		"sentence-de-ausweg",
+		"sentence-de-relativ",
+		"sentence-de-passiv",
+		"sentence-de-faden",
+		"sentence-de-usw",
+		"sentence-de-museum",
+		"sentence-de-genitiv",
+		"sentence-de-typo",
+		"sentence-de-klitik",
+		"sentence-de-verfuegung",
+		"sentence-de-manche",
+		"sentence-de-fremd",
+		"sentence-de-government-warten-auf",
+		"sentence-de-government-warten-adjunct",
+		"sentence-de-government-bestehen-auf",
+		"sentence-de-government-bestehen-aus",
+		"sentence-de-government-bestehen-none",
+		"sentence-de-government-stolz-auf",
+		"sentence-de-copula-stolz-auf",
+		"sentence-de-government-abhaengig-von",
+		"sentence-de-government-angst-vor",
+		"sentence-de-government-interesse-an",
+		"sentence-de-government-bedanken-two",
+		"sentence-de-government-freuen-darauf",
+		"sentence-de-government-denken-an",
+		"sentence-de-government-teilnehmen-an",
+		"sentence-de-government-bescheid-wissen",
+		"sentence-de-government-spielen-adjunct",
+		"sentence-de-government-schneiden-adjunct",
+		"sentence-de-government-abfahren-adjunct",
+		"sentence-de-government-gross-none",
+		"sentence-de-government-tisch-adjunct",
+		"sentence-de-das-wetter-ist-xqzt",
+		"sentence-de-die-peitsche-hat-er-mitgebracht",
+		"sentence-de-pass-auf-dich-auf",
+		"sentence-de-sieh-einmal-hier-steht-er"
+	],
+	"demonstrationIds": [],
+	"evaluationCaseIds": [
+		"sentence-de-kakao",
+		"sentence-de-kino",
+		"sentence-de-aufstehen",
+		"sentence-de-erinnert",
+		"sentence-de-ausweg",
+		"sentence-de-relativ",
+		"sentence-de-passiv",
+		"sentence-de-faden",
+		"sentence-de-usw",
+		"sentence-de-museum",
+		"sentence-de-genitiv",
+		"sentence-de-typo",
+		"sentence-de-klitik",
+		"sentence-de-verfuegung",
+		"sentence-de-manche",
+		"sentence-de-fremd",
+		"sentence-de-government-warten-auf",
+		"sentence-de-government-warten-adjunct",
+		"sentence-de-government-bestehen-auf",
+		"sentence-de-government-bestehen-aus",
+		"sentence-de-government-bestehen-none",
+		"sentence-de-government-stolz-auf",
+		"sentence-de-copula-stolz-auf",
+		"sentence-de-government-abhaengig-von",
+		"sentence-de-government-angst-vor",
+		"sentence-de-government-interesse-an",
+		"sentence-de-government-bedanken-two",
+		"sentence-de-government-freuen-darauf",
+		"sentence-de-government-denken-an",
+		"sentence-de-government-teilnehmen-an",
+		"sentence-de-government-bescheid-wissen",
+		"sentence-de-government-spielen-adjunct",
+		"sentence-de-government-schneiden-adjunct",
+		"sentence-de-government-abfahren-adjunct",
+		"sentence-de-government-gross-none",
+		"sentence-de-government-tisch-adjunct"
+	],
+	"slices": {
+		"governed": [
+			"sentence-de-government-warten-auf",
+			"sentence-de-government-stolz-auf",
+			"sentence-de-copula-stolz-auf",
+			"sentence-de-government-angst-vor",
+			"sentence-de-government-interesse-an",
+			"sentence-de-government-bescheid-wissen"
+		]
+	},
+	"cases": {
+		"sentence-de-das-wetter-ist-xqzt": {
+			"input": {
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Das" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Wetter" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "ist" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "xqzt" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{ "offset": 0, "role": "Article" },
+							{ "offset": 4, "role": "Head" }
+						]
+					},
+					{ "kind": "VERB", "members": [{ "offset": 11 }] }
+				],
+				"phrasemes": []
+			}
+		},
+		"sentence-de-die-peitsche-hat-er-mitgebracht": {
+			"input": {
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Die" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Peitsche" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "hat" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "er" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "mitgebracht" },
+					{ "kind": "Whitespace", "text": "\n" },
+					{ "kind": "ResolvableText", "text": "und" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "nimmt" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "sie" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "sorglich" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "sehr" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "in" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "acht" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "NOUN",
+						"members": [
+							{ "offset": 0, "role": "Article" },
+							{ "offset": 4, "role": "Head" }
+						]
+					},
+					{
+						"kind": "VERB",
+						"members": [
+							{ "offset": 13, "role": "Auxiliary" },
+							{ "offset": 20, "role": "Head" }
+						]
+					},
+					{ "kind": "PRON", "members": [{ "offset": 17 }] },
+					{ "kind": "CCONJ", "members": [{ "offset": 32 }] },
+					{ "kind": "PRON", "members": [{ "offset": 42 }] },
+					{ "kind": "ADV", "members": [{ "offset": 46 }] },
+					{ "kind": "ADV", "members": [{ "offset": 55 }] }
+				]
+			}
+		},
+		"sentence-de-pass-auf-dich-auf": {
+			"input": {
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Pass" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "auf" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "dich" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "auf" },
+					{ "kind": "Punctuation", "text": "!" }
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{
+						"kind": "VERB",
+						"members": [
+							{ "offset": 0, "role": "Head" },
+							{ "offset": 5, "role": "GovernedPreposition" },
+							{ "offset": 14, "role": "SeparableParticle" }
+						]
+					},
+					{ "kind": "PRON", "members": [{ "offset": 9 }] }
+				],
+				"phrasemes": []
+			}
+		},
+		"sentence-de-sieh-einmal-hier-steht-er": {
+			"input": {
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Sieh" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "einmal" },
+					{ "kind": "Punctuation", "text": "," },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "hier" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "steht" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "er" },
+					{ "kind": "Punctuation", "text": "," },
+					{ "kind": "Whitespace", "text": "\n" },
+					{ "kind": "ResolvableText", "text": "pfui" },
+					{ "kind": "Punctuation", "text": "," },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "der" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Struwwelpeter" },
+					{ "kind": "Punctuation", "text": "!" }
+				]
+			},
+			"idealOutput": {
+				"targets": [
+					{ "kind": "VERB", "members": [{ "offset": 0 }] },
+					{ "kind": "ADV", "members": [{ "offset": 5 }] },
+					{ "kind": "ADV", "members": [{ "offset": 13 }] },
+					{ "kind": "VERB", "members": [{ "offset": 18 }] },
+					{ "kind": "PRON", "members": [{ "offset": 24 }] },
+					{ "kind": "INTJ", "members": [{ "offset": 28 }] },
+					{
+						"kind": "PROPN",
+						"members": [
+							{ "offset": 34, "role": "Article" },
+							{ "offset": 38, "role": "Head" }
+						]
+					}
+				],
+				"phrasemes": []
+			}
+		}
+	},
+	"origins": {
+		"sentence-de-das-wetter-ist-xqzt": {
+			"record": "de/das-wetter-ist-xqzt",
+			"target": null,
+			"status": "Draft"
+		},
+		"sentence-de-die-peitsche-hat-er-mitgebracht": {
+			"record": "de/die-peitsche-hat-er-mitgebracht",
+			"target": null,
+			"status": "Draft"
+		},
+		"sentence-de-pass-auf-dich-auf": {
+			"record": "de/pass-auf-dich-auf",
+			"target": null,
+			"status": "Draft"
+		},
+		"sentence-de-sieh-einmal-hier-steht-er": {
+			"record": "de/sieh-einmal-hier-steht-er",
+			"target": null,
+			"status": "Draft"
+		}
+	}
+}

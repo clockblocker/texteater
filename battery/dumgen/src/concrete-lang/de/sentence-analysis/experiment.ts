@@ -20,8 +20,12 @@ import {
 	selectPhrasemeKind,
 	slotOffset,
 } from "./analysis.js";
-import { evaluationCaseIds } from "./evaluation-ids.js";
-import data from "./source-data.json";
+import {
+	demonstrationIds,
+	evaluationCaseIds,
+	sentenceCases,
+	sentenceRoute,
+} from "./cases.js";
 
 /**
  * The sentence corpus (issue 495): gold keyed by character offset in the
@@ -273,13 +277,13 @@ function scoreSlots(
 }
 
 const corpus = defineGoldenCorpus({
-	route: data.route,
+	route: sentenceRoute,
 	inputSchema,
 	outputSchema: goldSchema,
 	collections: {
 		canonical: defineGoldenCaseCollection(import.meta.url, {
 			cases: Object.fromEntries(
-				Object.entries(data.cases).map(([id, value]) => [
+				Object.entries(sentenceCases).map(([id, value]) => [
 					id,
 					{
 						input: inputSchema.parse(value.input),
@@ -306,7 +310,7 @@ export function sentenceOperationExperiment(
 	options: DumgenOptions,
 	caseIds: readonly string[] = evaluationCaseIds,
 ): OperationExperiment<typeof inputSchema, typeof goldSchema, SentenceScore> {
-	const demonstrations = corpus.select(data.demonstrationIds);
+	const demonstrations = corpus.select(demonstrationIds);
 	const analyses = new Map<string, SentenceAnalysis>();
 	return {
 		corpus,

@@ -34,7 +34,10 @@ import {
 } from "./concrete-lang/de/reading-emoji-description/evaluator.js";
 import { readingOperationExperiment } from "./concrete-lang/de/reading-emoji-description/experiment.js";
 import { intakeOperationExperiment } from "./concrete-lang/de/segmentation/experiment.js";
-import { governedSentenceCaseIds } from "./concrete-lang/de/sentence-analysis/evaluation-ids.js";
+import {
+	origins as sentenceCaseOrigins,
+	sentenceSlices,
+} from "./concrete-lang/de/sentence-analysis/cases.js";
 import { sentenceOperationExperiment } from "./concrete-lang/de/sentence-analysis/experiment.js";
 import { targetSlices } from "./concrete-lang/de/target-classification/cases.js";
 import { targetOperationExperiment } from "./concrete-lang/de/target-classification/experiment.js";
@@ -61,7 +64,7 @@ const sentenceRoute = "sentence-analysis/de";
 /** Named slices of one corpus, run as their own experiments as `route:slice`. */
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
-	[sentenceRoute]: { governed: governedSentenceCaseIds },
+	[sentenceRoute]: sentenceSlices,
 	[targetRoute]: targetSlices,
 	...grammarSlices,
 };
@@ -77,7 +80,7 @@ const routeOf = (id: string) =>
 /** The case origins of every route whose cases project from Spec Records. */
 const caseOrigins: Readonly<
 	Record<string, Readonly<Record<string, CaseOrigin>>>
-> = { ...grammarCaseOrigins };
+> = { ...grammarCaseOrigins, [sentenceRoute]: sentenceCaseOrigins };
 
 /**
  * A spec-backed run's scores by Review Status and its Reviewed disagreements

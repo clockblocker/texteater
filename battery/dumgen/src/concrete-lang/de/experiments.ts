@@ -151,8 +151,8 @@ import { corpusSource as p27 } from "./reading-emoji-description/resolve/corpus.
 import { evaluationCaseIds as e27 } from "./reading-emoji-description/resolve/evaluation-ids.js";
 import { corpusSource as p28 } from "./segmentation/corpus.js";
 import { evaluationCaseIds as e28 } from "./segmentation/evaluation-ids.js";
+import { evaluationCaseIds as e35 } from "./sentence-analysis/cases.js";
 import { corpusSource as p35 } from "./sentence-analysis/corpus.js";
-import { evaluationCaseIds as e35 } from "./sentence-analysis/evaluation-ids.js";
 import { evaluationCaseIds as e29 } from "./target-classification/cases.js";
 import { corpusSource as p29 } from "./target-classification/corpus.js";
 export const corpusRegistrations = [

@@ -206,9 +206,11 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 
 ## Corpora and evaluation
 
-- Sentence gold is keyed by offset (`sentence-analysis/de`, source
-  `src/concrete-lang/de/sentence-analysis/source-data.json`): Lexeme
-  Targets with members `{ offset, role? }`, a Kind, and for closed-class
+- Sentence gold is keyed by offset (`sentence-analysis/de`, projected by
+  `codegen/project-sentence-cases.ts` from the Full dumspec Spec Records its
+  `sidecar.json` keys, and from
+  `src/concrete-lang/de/sentence-analysis/source-data.json` for the rest;
+  every other Full record adds an unscored case): Lexeme Targets with members `{ offset, role? }`, a Kind, and for closed-class
   heads the headword group `Kind:headword`; Phraseme Targets as a Kind, the
   head offsets of their member words and, where authored, the offsets of the
   prepositions they govern; Slots as the offset of the Segment

@@ -5,12 +5,13 @@ import { summarizeQuality } from "promptsmith/evaluation";
 
 /**
  * The Spec Record target a case was projected from, and the Review Status
- * (`Reviewed` or `Draft`) it had. Codegen writes it beside the case, so the
- * runtime never reads dumspec.
+ * (`Reviewed` or `Draft`) it had; `target` is null for a case projected from
+ * a whole record, such as a sentence analysis. Codegen writes it beside the
+ * case, so the runtime never reads dumspec.
  */
 export type CaseOrigin = {
 	readonly record: string;
-	readonly target: number;
+	readonly target: number | null;
 	readonly status: string;
 };
 
@@ -35,7 +36,7 @@ type Scores = ReturnType<typeof summarizeQuality> & { total: number };
  */
 export type Disagreement = {
 	record: string;
-	target: number;
+	target: number | null;
 	caseId: string;
 	expected: Record<string, unknown>;
 	produced: Record<string, unknown>;

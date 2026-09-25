@@ -185,6 +185,8 @@ describe("case origins", () => {
 		for (const experimentId of [
 			"grammatical-resolution/de/lexeme/noun",
 			"grammatical-resolution/de/lexeme/noun:governed",
+			"sentence-analysis/de",
+			"sentence-analysis/de:governed",
 		])
 			expect(
 				reviewEvaluationRun({ manifest: { experimentId }, cases }),

@@ -154,6 +154,24 @@ await emit("target-cases.json", JSON.stringify(targetCases));
 console.log(
 	`${check ? "Verified" : "Projected"} ${Object.keys(targetCases.cases).length} of ${targetCases.caseIds.length} target-classification cases from Spec Records`,
 );
+const { projectSentenceCases, readSentenceSidecar } = await import(
+	"./project-sentence-cases.js"
+);
+const sentenceStage = new URL(
+	"../src/concrete-lang/de/sentence-analysis/",
+	import.meta.url,
+);
+const sentenceCases = projectSentenceCases(
+	readSentenceSidecar(sentenceStage),
+	specRecords,
+	JSON.parse(
+		await readFile(new URL("source-data.json", sentenceStage), "utf8"),
+	).cases,
+);
+await emit("sentence-cases.json", JSON.stringify(sentenceCases));
+console.log(
+	`${check ? "Verified" : "Projected"} ${Object.keys(sentenceCases.cases).length} of ${sentenceCases.caseIds.length} sentence-analysis cases from Spec Records`,
+);
 
 const { assembleSystemPrompt } = await import("promptsmith");
 const { corpusRegistrations } = await import(
