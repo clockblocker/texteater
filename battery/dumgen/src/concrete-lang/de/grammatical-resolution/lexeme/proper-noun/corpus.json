@@ -715,7 +715,7 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
+					"case": "Dat",
 					"number": "Sing"
 				}
 			},
@@ -798,7 +798,7 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
+					"case": "Dat",
 					"number": "Sing"
 				}
 			},
