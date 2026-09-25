@@ -1,8 +1,10 @@
 // Guidance for the text-generation follow-up. Grammar is already judged when
 // this runs, so each snippet says only how to spell the requested text.
 
-export const textSystemPrompt =
-	"Supply exactly the requested missing German text fields. All grammatical judgments and target membership are fixed and are not restated here; never emit bounded labels, add attested members, modernize a licensed variant, or use a different identity.";
+const currentSpelling =
+	"A Canonical Form uses current spelling, even where the occurrence keeps a licensed older one.";
+
+export const textSystemPrompt = `Supply exactly the requested missing German text fields. The supplied judgments and target membership are fixed; never emit bounded labels, add attested members, or use a different identity. ${currentSpelling}`;
 
 export const canonicalFormGuidance: Readonly<Record<string, string>> = {
 	VERB: "Canonical Form is the lexical infinitive with required reflexive/prefix material (besaß -> besitzen, stand auf -> aufstehen, handelt sich -> sich handeln), never the whole auxiliary chain. Governed prepositions stay out of the headword: es geht um -> gehen, erinnert sich an -> sich erinnern. A subject expletive keeps the ordinary verb Lemma: geben for es gibt/es gab/gibt es, regnen for es regnet; never prefix a headword with es. Lowercase.",
@@ -40,8 +42,8 @@ export const canonicalFormGuidance: Readonly<Record<string, string>> = {
  * input rather than working around it in the prompt.
  */
 export function canonicalFormPrompt(kind: string): string {
-	return `The input is one German ${kind} as written in a sentence, its words separated by spaces. Reply with its Canonical Form and nothing else: no quotes, no explanation. ${canonicalFormGuidance[kind] ?? "Canonical Form is the exact dictionary headword."}`;
+	return `The input is one German ${kind} as written in a sentence, its words separated by spaces. Reply with its Canonical Form and nothing else: no quotes, no explanation. ${currentSpelling} ${canonicalFormGuidance[kind] ?? "Canonical Form is the exact dictionary headword."}`;
 }
 
 export const normalizedMemberGuidance =
-	"A normalized member keeps the occurrence morphology, position and casing rules of the source member; correct only the judged typo. A licensed noun suspension completes the one trailing-hyphen member with the literal shared suffix of the binary right conjunct. Lowercase ordinary sentence-initial capitalization; preserve formal Sie forms and noun capitals.";
+	"A normalized member keeps the occurrence morphology, position and casing rules of the source member; correct only the judged typo and never modernize a licensed variant. A licensed noun suspension completes the one trailing-hyphen member with the literal shared suffix of the binary right conjunct. Lowercase ordinary sentence-initial capitalization; preserve formal Sie forms and noun capitals.";
