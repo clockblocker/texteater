@@ -1,3 +1,15 @@
+/** Adjectival participles are ADJ with the uninflected participle as Canonical Form (ADR 0034). */
+export const participleCaseIds = [
+	"grammar-de-adj-dev-participial-geschlossen",
+	"grammar-de-adj-dev-adverbial-participle-one-lachend",
+	"grammar-de-adj-participle-attributive-gekochten",
+	"grammar-de-adj-participle-attributive-bewunderte",
+	"grammar-de-adj-participle-attributive-gelegene",
+	"grammar-de-adj-participle-attributive-umgestuerzte",
+	"grammar-de-adj-participle-attributive-spielenden",
+	"grammar-de-adj-participle-state-passive-geschlossen",
+] as const;
+
 export const evaluationCaseIds = [
 	"grammar-de-adj-accept-citation-mild",
 	"grammar-de-adj-dev-attributive-acc-fem-rot",
@@ -29,4 +41,5 @@ export const evaluationCaseIds = [
 	"grammar-de-adj-dev-foreign-special",
 	"grammar-de-adj-dev-abbreviation-sog",
 	"grammar-de-adj-accept-ordinal-zweite",
+	...participleCaseIds,
 ] as const;

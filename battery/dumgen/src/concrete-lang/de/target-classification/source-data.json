@@ -7103,9 +7103,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [4, 6]
+				"memberSegmentIndices": [4]
 			},
-			"explanation": "sind geöffnet is a productive state passive of öffnen (Die Banken werden geöffnet), so sind and geöffnet form one click-invariant Lexeme/VERB target (ADR 0033)."
+			"explanation": "Die Banken sind geöffnet is a state passive: copular sind is its own VERB target and geöffnet a separate ADJ (ADR 0034)."
 		},
 		"target-de-demo-state-passive-banken-click-geoeffnet": {
 			"input": {
@@ -7147,10 +7147,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4, 6]
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
 			},
-			"explanation": "sind geöffnet is a productive state passive of öffnen (Die Banken werden geöffnet), so sind and geöffnet form one click-invariant Lexeme/VERB target (ADR 0033)."
+			"explanation": "Die Banken sind geöffnet is a state passive: geöffnet is an ADJ with Participle Source öffnen, and copular sind stays a separate VERB (ADR 0034)."
 		},
 		"target-de-demo-state-passive-bauplan-click-freigegeben": {
 			"input": {
@@ -7232,10 +7232,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [6, 16]
+				"kind": "ADJ",
+				"memberSegmentIndices": [16]
 			},
-			"explanation": "The named agent and the freigeben event make this a productive state passive, so ist and freigegeben form one Lexeme/VERB target (ADR 0033)."
+			"explanation": "A state passive, even with a named agent, is the copula plus an ADJ: freigegeben is an ADJ with Participle Source freigeben, and ist stays a separate VERB (ADR 0034)."
 		},
 		"target-de-demo-state-passive-absperrung-click-versetzt": {
 			"input": {
@@ -7357,10 +7357,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [6, 26]
+				"kind": "ADJ",
+				"memberSegmentIndices": [26]
 			},
-			"explanation": "The named agent and directional distance keep the versetzen event, so this productive state passive maps ist and versetzt to one Lexeme/VERB target (ADR 0033)."
+			"explanation": "A state passive, even with an agent and a distance, is the copula plus an ADJ: versetzt is an ADJ with Participle Source versetzen, and ist stays a separate VERB (ADR 0034)."
 		},
 		"target-de-demo-participial-adjective-brief-click-ist": {
 			"input": {
@@ -7630,10 +7630,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "A productive attributive Partizip I resolves to its verb (ADR 0033): lachende is a singleton VERB target with Lemma lachen; the article and noun stay outside."
+			"explanation": "An attributive participle is adjectival (ADR 0034): lachende is a singleton ADJ with Canonical Form lachend and Participle Source lachen; the article and noun stay outside."
 		},
 		"target-de-boundary-participle-one-adverbial-lachend": {
 			"input": {
@@ -7675,10 +7675,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "A productive adverbial Partizip I resolves to its verb (ADR 0033): lachend is a singleton VERB target with Lemma lachen."
+			"explanation": "An adverbial participle is adjectival (ADR 0034): lachend is a singleton ADJ with Participle Source lachen."
 		},
 		"target-de-boundary-modal-click-muss": {
 			"input": {
@@ -18042,9 +18042,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [16, 26]
+				"memberSegmentIndices": [16]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and bezahlt a separate ADJ."
 		},
 		"target-de-participle-benchmark-04-bezahlt-click-bezahlt": {
 			"input": {
@@ -18218,10 +18218,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [16, 26]
+				"kind": "ADJ",
+				"memberSegmentIndices": [26]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): bezahlt is a singleton ADJ with Participle Source bezahlen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-ist": {
 			"input": {
@@ -18368,9 +18368,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [20, 32]
+				"memberSegmentIndices": [20]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and gestrichen a separate ADJ."
 		},
 		"target-de-participle-benchmark-05-gestrichen-click-gestrichen": {
 			"input": {
@@ -18516,10 +18516,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [20, 32]
+				"kind": "ADJ",
+				"memberSegmentIndices": [32]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): gestrichen is a singleton ADJ with Participle Source streichen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-sind": {
 			"input": {
@@ -18654,9 +18654,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [15, 29]
+				"memberSegmentIndices": [15]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): sind is its own VERB target and eingeladen a separate ADJ."
 		},
 		"target-de-participle-benchmark-06-eingeladen-click-eingeladen": {
 			"input": {
@@ -18790,10 +18790,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [15, 29]
+				"kind": "ADJ",
+				"memberSegmentIndices": [29]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): eingeladen is a singleton ADJ with Participle Source einladen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-ist": {
 			"input": {
@@ -18948,9 +18948,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [24, 34]
+				"memberSegmentIndices": [24]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and genehmigt a separate ADJ."
 		},
 		"target-de-participle-benchmark-07-genehmigt-click-genehmigt": {
 			"input": {
@@ -19104,10 +19104,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [24, 34]
+				"kind": "ADJ",
+				"memberSegmentIndices": [34]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): genehmigt is a singleton ADJ with Participle Source genehmigen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-ist": {
 			"input": {
@@ -19310,9 +19310,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [17, 31]
+				"memberSegmentIndices": [17]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and gefüllt a separate ADJ."
 		},
 		"target-de-participle-benchmark-08-gefuellt-click-gefuellt": {
 			"input": {
@@ -19514,10 +19514,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [17, 31]
+				"kind": "ADJ",
+				"memberSegmentIndices": [31]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): gefüllt is a singleton ADJ with Participle Source füllen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-ist": {
 			"input": {
@@ -19696,9 +19696,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [22, 40]
+				"memberSegmentIndices": [22]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and verrückt a separate ADJ."
 		},
 		"target-de-participle-benchmark-09-verrueckt-click-verrueckt": {
 			"input": {
@@ -19876,10 +19876,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [22, 40]
+				"kind": "ADJ",
+				"memberSegmentIndices": [40]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): verrückt is a singleton ADJ with Participle Source verrücken, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-ist": {
 			"input": {
@@ -20074,9 +20074,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [17, 33]
+				"memberSegmentIndices": [17]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and geschlossen a separate ADJ."
 		},
 		"target-de-participle-benchmark-10-geschlossen-click-geschlossen": {
 			"input": {
@@ -20270,10 +20270,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [17, 33]
+				"kind": "ADJ",
+				"memberSegmentIndices": [33]
 			},
-			"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-11-verrueckt-click-ist": {
 			"input": {
@@ -22586,9 +22586,9 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [24, 36]
+				"memberSegmentIndices": [24]
 			},
-			"explanation": "The shop being closed on Sundays is schließen's own sense (Der Laden wird sonntags geschlossen), with no un-, sehr or comparison, so this is a productive state passive (ADR 0033): ist and geschlossen form one VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): ist is its own VERB target and geschlossen a separate ADJ."
 		},
 		"target-de-participle-benchmark-18-geschlossen-click-geschlossen": {
 			"input": {
@@ -22782,10 +22782,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [24, 36]
+				"kind": "ADJ",
+				"memberSegmentIndices": [36]
 			},
-			"explanation": "The shop being closed on Sundays is schließen's own sense (Der Laden wird sonntags geschlossen), with no un-, sehr or comparison, so this is a productive state passive (ADR 0033): ist and geschlossen form one VERB target."
+			"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): geschlossen is a singleton ADJ with Participle Source schließen, and the copula stays a separate VERB."
 		},
 		"target-de-participle-benchmark-19-beleidigt-click-ist": {
 			"input": {
@@ -36804,7 +36804,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "ADJ gebildet. Lexicalized: 'educated' draws on no current sense of bilden, and the form takes un- (ungebildet), sehr and comparison.",
+			"explanation": "ADJ gebildet, Participle Source bilden. Attributive, so adjectival; here the lexicalized sense 'educated'.",
 			"sources": [
 				{
 					"title": "Duden: gebildet",
@@ -36813,7 +36813,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-gebildet-verb-attributive": {
+		"target-de-participle-boundary-gebildet-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -36893,10 +36893,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB bilden. Productive Partizip II: 'formed' is bilden's own sense with its aus-phrase; ungebildet and sehr gebildet are impossible in this sense.",
+			"explanation": "ADJ gebildet, Participle Source bilden. Attributive, so adjectival even in bilden's own sense 'formed'; the same Lemma as 'educated' gebildet, another Reading.",
 			"sources": [
 				{
 					"title": "UD German-HDT",
@@ -36948,7 +36948,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ ausgezeichnet. Lexicalized: 'excellent' comes from no sense of auszeichnen and compares (ausgezeichneter); copular ist stays a separate VERB.",
+			"explanation": "ADJ ausgezeichnet, Participle Source auszeichnen. Predicative after sein; copular ist stays a separate VERB.",
 			"sources": [
 				{
 					"title": "Duden: ausgezeichnet",
@@ -37000,7 +37000,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB sein. Copular ist before the lexicalized predicate ausgezeichnet is its own VERB (ADR 0026); only a productive participle joins sein as a state passive."
+			"explanation": "VERB sein. Outside the perfect, ist before a participle is the copula, its own VERB target; the participle is a separate ADJ."
 		},
 		"target-de-participle-boundary-ausgezeichnet-verb-passive": {
 			"input": {
@@ -37061,7 +37061,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [2, 10]
 			},
-			"explanation": "VERB auszeichnen. Productive werden-passive in the award sense; the passive auxiliary joins the verb it serves."
+			"explanation": "VERB auszeichnen. A werden-passive is verbal; the passive auxiliary joins the verb it serves."
 		},
 		"target-de-participle-boundary-ausgezeichnet-adj-attributive": {
 			"input": {
@@ -37114,7 +37114,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ ausgezeichnet. Lexicalized 'excellent', gradable and comparable; no award event is meant.",
+			"explanation": "ADJ ausgezeichnet, Participle Source auszeichnen. Attributive, in the lexicalized sense 'excellent'.",
 			"sources": [
 				{
 					"title": "Duden: ausgezeichnet",
@@ -37123,7 +37123,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-ausgezeichnet-verb-attributive": {
+		"target-de-participle-boundary-ausgezeichnet-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -37195,10 +37195,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB auszeichnen. Productive Partizip II: mehrfach counts award events, so the meaning is auszeichnen's; it does not mean 'excellent'."
+			"explanation": "ADJ ausgezeichnet, Participle Source auszeichnen. Attributive, so adjectival even though mehrfach counts award events."
 		},
 		"target-de-participle-boundary-erfahren-adj-attributive": {
 			"input": {
@@ -37259,7 +37259,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "ADJ erfahren. Lexicalized 'experienced': it takes un- (unerfahren), sehr and comparison and no longer means 'having learned of something'.",
+			"explanation": "ADJ erfahren, Participle Source erfahren. Attributive, in the lexicalized sense 'experienced'.",
 			"sources": [
 				{
 					"title": "Duden: erfahren_routiniert_versiert",
@@ -37335,7 +37335,7 @@
 				"kind": "VERB",
 				"memberSegmentIndices": [2, 12]
 			},
-			"explanation": "VERB erfahren. Productive perfect with the 'learn of' sense and an accusative object; hat joins the verb."
+			"explanation": "VERB erfahren. A haben-perfect is verbal; hat joins the verb."
 		},
 		"target-de-participle-boundary-gelegen-adj-predicative": {
 			"input": {
@@ -37396,7 +37396,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [10]
 			},
-			"explanation": "ADJ gelegen. Lexicalized 'convenient': no sense of liegen gives it, and it takes un- (ungelegen) and sehr.",
+			"explanation": "ADJ gelegen, Participle Source liegen. Predicative after kommen, in the lexicalized sense 'convenient'.",
 			"sources": [
 				{
 					"title": "Duden: gelegen_erwuenscht",
@@ -37405,7 +37405,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-gelegen-verb-attributive": {
+		"target-de-participle-boundary-gelegen-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -37477,10 +37477,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB liegen. Productive Partizip II: 'situated' is liegen's own sense (Das Haus liegt am See) with its locative complement; neither un- nor sehr fits this sense.",
+			"explanation": "ADJ gelegen, Participle Source liegen. Attributive, so adjectival even in liegen's own sense 'situated'.",
 			"sources": [
 				{
 					"title": "Duden: gelegen_zu_liegen",
@@ -37548,7 +37548,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "ADJ spannend. Lexicalized 'exciting': no sense of spannen gives it, and it compares (spannender) and takes sehr.",
+			"explanation": "ADJ spannend, Participle Source spannen. Attributive, in the lexicalized sense 'exciting'.",
 			"sources": [
 				{
 					"title": "Duden: spannend",
@@ -37557,7 +37557,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-spannend-verb-adverbial": {
+		"target-de-participle-boundary-spannend-adj-productive-adverbial": {
 			"input": {
 				"clickedSegmentIndex": 23,
 				"segments": [
@@ -37665,10 +37665,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [23]
 			},
-			"explanation": "VERB spannen. Productive Partizip I with an accusative object das Seil: 'tightening' is spannen's own sense.",
+			"explanation": "ADJ spannend, Participle Source spannen. An adverbial participle is adjectival even with its own object das Seil.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -37728,7 +37728,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ reizend. Lexicalized 'charming': no sense of reizen gives it, and it takes sehr and comparison.",
+			"explanation": "ADJ reizend, Participle Source reizen. Attributive, in the lexicalized sense 'charming'.",
 			"sources": [
 				{
 					"title": "Duden: reizend",
@@ -37737,7 +37737,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-reizend-verb-attributive": {
+		"target-de-participle-boundary-reizend-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -37817,10 +37817,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB reizen. Productive Partizip I with an accusative object die Augen: 'irritating' is reizen's own sense.",
+			"explanation": "ADJ reizend, Participle Source reizen. Attributive, so adjectival even with its own object die Augen.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -37880,7 +37880,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ verrückt. Lexicalized 'crazy': no sense of verrücken gives it, and it takes sehr and comparison.",
+			"explanation": "ADJ verrückt, Participle Source verrücken. Attributive, in the lexicalized sense 'crazy'.",
 			"sources": [
 				{
 					"title": "Duden: verrueckt",
@@ -37889,7 +37889,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-verrueckt-verb-attributive": {
+		"target-de-participle-boundary-verrueckt-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -37969,10 +37969,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "VERB verrücken. Productive Partizip II: 'moved' is verrücken's own sense with a distance complement."
+			"explanation": "ADJ verrückt, Participle Source verrücken. Attributive, so adjectival even in the sense 'moved' with a distance."
 		},
 		"target-de-participle-boundary-verlegen-adj-attributive": {
 			"input": {
@@ -38033,7 +38033,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "ADJ verlegen. Lexicalized 'embarrassed': no sense of the verb verlegen gives it, and it takes un- (unverlegen) and sehr.",
+			"explanation": "ADJ verlegen 'embarrassed', with no Participle Source: the verb verlegen forms verlegt, so verlegen is no participle of it.",
 			"sources": [
 				{
 					"title": "Duden: verlegen_befangen_schuechtern",
@@ -38042,7 +38042,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-verlegen-verb-attributive": {
+		"target-de-participle-boundary-verlegt-adj-productive-attributive": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -38098,10 +38098,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB verlegen. Productive Partizip II: 'laid' is the verb's own sense; neu dates the laying event."
+			"explanation": "ADJ verlegt, Participle Source verlegen. Attributive, so adjectival; its Canonical Form is the participle verlegt, not the adjective verlegen."
 		},
 		"target-de-participle-boundary-bedeutend-adj-attributive": {
 			"input": {
@@ -38154,7 +38154,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ bedeutend. Lexicalized 'important': it no longer means 'signifying', and it takes un- (unbedeutend) and comparison.",
+			"explanation": "ADJ bedeutend, Participle Source bedeuten. Attributive, in the lexicalized sense 'important'.",
 			"sources": [
 				{
 					"title": "Duden: bedeutend",
@@ -38214,7 +38214,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ begabt. Lexicalized 'talented': no live sense of begaben gives it, and it takes un- (unbegabt), sehr and comparison.",
+			"explanation": "ADJ begabt, Participle Source begaben. Attributive, in the lexicalized sense 'talented'.",
 			"sources": [
 				{
 					"title": "Duden: begabt",
@@ -38290,7 +38290,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ gespannt. Lexicalized 'eager to know': no sense of spannen gives it, and it takes sehr; its auf-phrase stays a separate ADP.",
+			"explanation": "ADJ gespannt, Participle Source spannen. Predicative after sein; its auf-phrase stays a separate ADP and copular bin a separate VERB.",
 			"sources": [
 				{
 					"title": "Duden: gespannt",
@@ -38299,7 +38299,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-gespannt-verb-state-passive": {
+		"target-de-participle-boundary-gespannt-adj-state-passive": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -38347,10 +38347,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4, 8]
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
 			},
-			"explanation": "VERB spannen. Productive Zustandspassiv: the rope is in the state spannen produces (Das Seil wurde gespannt); ist joins the verb.",
+			"explanation": "ADJ gespannt, Participle Source spannen. sein with a participle outside the perfect is the copula plus an ADJ, so ist stays a separate VERB and straff is free.",
 			"sources": [
 				{
 					"title": "grammis: Partizip II",
@@ -38359,7 +38359,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-gekocht-verb-attributive": {
+		"target-de-participle-boundary-gekocht-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 2,
 				"segments": [
@@ -38415,10 +38415,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "VERB kochen. Productive attributive Partizip II with kochen's own sense; no un-, sehr or comparison.",
+			"explanation": "ADJ gekocht, Participle Source kochen. Attributive, so adjectival; its Canonical Form is the uninflected participle.",
 			"sources": [
 				{
 					"title": "UD German-HDT",
@@ -38427,7 +38427,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-bewundert-verb-agent": {
+		"target-de-participle-boundary-bewundert-adj-agent": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -38507,12 +38507,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB bewundern. Productive Partizip II with a von-agent phrase, a verbal property."
+			"explanation": "ADJ bewundert, Participle Source bewundern. Attributive, so adjectival even with a von-agent; von and allen stay outside."
 		},
-		"target-de-participle-boundary-repariert-verb-attributive": {
+		"target-de-participle-boundary-repariert-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -38568,12 +38568,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB reparieren. Productive Partizip II; gestern dates the repair event."
+			"explanation": "ADJ repariert, Participle Source reparieren. Attributive; gestern stays outside."
 		},
-		"target-de-participle-boundary-umgestuerzt-verb-agent": {
+		"target-de-participle-boundary-umgestuerzt-adj-agent": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -38645,12 +38645,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB umstürzen. Productive Partizip II of a separable verb with a vom-cause phrase."
+			"explanation": "ADJ umgestürzt, Participle Source umstürzen. Attributive participle of a separable verb with a vom-cause phrase that stays outside."
 		},
-		"target-de-participle-boundary-gestrichen-verb-attributive": {
+		"target-de-participle-boundary-gestrichen-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -38722,12 +38722,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB streichen. Productive Partizip II in the painting sense; frisch dates the event."
+			"explanation": "ADJ gestrichen, Participle Source streichen. Attributive; frisch stays outside."
 		},
-		"target-de-participle-boundary-entworfen-verb-agent": {
+		"target-de-participle-boundary-entworfen-adj-agent": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -38799,12 +38799,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB entwerfen. Productive Partizip II with a vom-agent phrase."
+			"explanation": "ADJ entworfen, Participle Source entwerfen. Attributive with a vom-agent phrase that stays outside."
 		},
-		"target-de-participle-boundary-lachend-verb-attributive": {
+		"target-de-participle-boundary-lachend-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 2,
 				"segments": [
@@ -38868,10 +38868,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "VERB lachen. Productive attributive Partizip I: lachen's own sense, not comparable and without un-.",
+			"explanation": "ADJ lachend, Participle Source lachen. Attributive Partizip I; its Canonical Form is lachend, not lachen.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -38880,7 +38880,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-spielend-verb-attributive": {
+		"target-de-participle-boundary-spielend-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -38944,10 +38944,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB spielen. Productive attributive Partizip I with a locative adjunct inside its phrase.",
+			"explanation": "ADJ spielend, Participle Source spielen. Attributive Partizip I; im Garten stays outside.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -38956,7 +38956,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-singend-verb-adverbial": {
+		"target-de-participle-boundary-singend-adj-adverbial": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -39004,10 +39004,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB singen. Productive adverbial Partizip I: the walking happens while singing.",
+			"explanation": "ADJ singend, Participle Source singen. An adverbial Partizip I is adjectival.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -39016,7 +39016,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-schlafend-verb-attributive": {
+		"target-de-participle-boundary-schlafend-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 2,
 				"segments": [
@@ -39072,12 +39072,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "VERB schlafen. Productive attributive Partizip I with schlafen's own sense."
+			"explanation": "ADJ schlafend, Participle Source schlafen. Attributive Partizip I."
 		},
-		"target-de-participle-boundary-reisend-verb-attributive": {
+		"target-de-participle-boundary-reisend-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 2,
 				"segments": [
@@ -39125,12 +39125,12 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
+				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "VERB reisen. Productive attributive Partizip I 'travelling'; the substantivized der Reisende is a NOUN."
+			"explanation": "ADJ reisend, Participle Source reisen. Attributive Partizip I; the substantivized der Reisende is a NOUN."
 		},
-		"target-de-participle-boundary-geschlossen-verb-state-passive": {
+		"target-de-participle-boundary-geschlossen-adj-state-passive": {
 			"input": {
 				"clickedSegmentIndex": 6,
 				"segments": [
@@ -39170,10 +39170,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4, 6]
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
 			},
-			"explanation": "VERB schließen. Productive Zustandspassiv (Die Tür wurde geschlossen); ist joins the verb.",
+			"explanation": "ADJ geschlossen, Participle Source schließen. A state passive is the copula sein plus an ADJ; ist stays a separate VERB.",
 			"sources": [
 				{
 					"title": "Duden: geschlossen_zu_schlieszen",
@@ -39182,7 +39182,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-geschlossen-verb-state-passive-click-ist": {
+		"target-de-participle-boundary-geschlossen-adj-state-passive-click-ist": {
 			"input": {
 				"clickedSegmentIndex": 4,
 				"segments": [
@@ -39223,11 +39223,11 @@
 			"idealOutput": {
 				"family": "Lexeme",
 				"kind": "VERB",
-				"memberSegmentIndices": [4, 6]
+				"memberSegmentIndices": [4]
 			},
-			"explanation": "VERB schließen. The state-passive auxiliary ist selects the same target as its participle."
+			"explanation": "VERB sein. In a state passive ist is the copula, a singleton VERB; geschlossen is a separate ADJ."
 		},
-		"target-de-participle-boundary-gekocht-verb-state-passive": {
+		"target-de-participle-boundary-gekocht-adj-state-passive": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -39275,10 +39275,10 @@
 			},
 			"idealOutput": {
 				"family": "Lexeme",
-				"kind": "VERB",
-				"memberSegmentIndices": [4, 8]
+				"kind": "ADJ",
+				"memberSegmentIndices": [8]
 			},
-			"explanation": "VERB kochen. Productive Zustandspassiv; bereits marks the completed cooking event."
+			"explanation": "ADJ gekocht, Participle Source kochen. A state passive is the copula sein plus an ADJ; sind and bereits stay outside."
 		},
 		"target-de-participle-boundary-ungelesen-adj-predicative": {
 			"input": {
@@ -39323,7 +39323,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ ungelesen. The un- test: lesen has no un- form, so ungelesen is an adjective; copular blieb stays a separate VERB.",
+			"explanation": "ADJ ungelesen, with no Participle Source: an un- adjective is no participle of any verb. Copular blieb stays a separate VERB.",
 			"sources": [
 				{
 					"title": "Duden: ungelesen",
@@ -39399,7 +39399,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "ADJ unbekannt. The un- test; bekannt itself is lexicalized."
+			"explanation": "ADJ unbekannt, with no Participle Source: an un- adjective is no participle of any verb."
 		},
 		"target-de-participle-boundary-ungeloest-adj-attributive": {
 			"input": {
@@ -39460,7 +39460,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "ADJ ungelöst. The un- test: lösen has no un- form."
+			"explanation": "ADJ ungelöst, with no Participle Source: an un- adjective is no participle of any verb."
 		},
 		"target-de-participle-boundary-gebildet-adj-sehr": {
 			"input": {
@@ -39505,7 +39505,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ gebildet. The sehr test: degree modification marks the lexicalized adjective; copular ist stays separate.",
+			"explanation": "ADJ gebildet, Participle Source bilden. Predicative after sein with sehr; copular ist stays separate.",
 			"sources": [
 				{
 					"title": "Duden: gebildet",
@@ -39589,7 +39589,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "ADJ spannend. The comparison test: spannender is a comparative, which a verb form cannot build.",
+			"explanation": "ADJ spannend, Participle Source spannen. The comparative spannender is a Surface of the positive spannend.",
 			"sources": [
 				{
 					"title": "grammis: Partizip I",
@@ -39665,7 +39665,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [6]
 			},
-			"explanation": "ADJ bekannt. The comparison test: a superlative; bekannt 'known' also takes un- (unbekannt).",
+			"explanation": "ADJ bekannt, Participle Source bekennen. The superlative bekannteste is a Surface of bekannt, whose form is the participle of bekennen although 'known' is no sense of it.",
 			"sources": [
 				{
 					"title": "Duden: bekannt",
@@ -39733,7 +39733,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "ADJ interessiert. The sehr test, plus un- (uninteressiert) and comparison.",
+			"explanation": "ADJ interessiert, Participle Source interessieren. Attributive with sehr.",
 			"sources": [
 				{
 					"title": "Duden: interessiert",
@@ -39777,7 +39777,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [4]
 			},
-			"explanation": "ADJ schnell. An adverbially used plain adjective stays ADJ; adverbial use never makes an ADV."
+			"explanation": "ADJ schnell, a plain adjective with no Participle Source. Adverbial use never makes an ADV."
 		},
 		"target-de-participle-boundary-jaemmerlich-adj-adverbial": {
 			"input": {
@@ -39830,7 +39830,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "ADJ jämmerlich. An adverbially used plain adjective stays ADJ; adverbial use never makes an ADV."
+			"explanation": "ADJ jämmerlich, a plain adjective with no Participle Source. Adverbial use never makes an ADV."
 		},
 		"target-de-participle-boundary-reisende-noun": {
 			"input": {
@@ -39877,7 +39877,7 @@
 			},
 			"explanation": "NOUN Reisender. A substantivized participle is a NOUN with its article, outside the VERB/ADJ boundary."
 		},
-		"target-de-participle-boundary-borderline-verheiratet": {
+		"target-de-participle-boundary-verheiratet-adj-predicative": {
 			"input": {
 				"clickedSegmentIndex": 10,
 				"segments": [
@@ -39936,7 +39936,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [10]
 			},
-			"explanation": "Borderline; proposed ADJ verheiratet. Takes un- (unverheiratet) and Duden lists an Adjektiv, but it is also the resulting state of sich verheiraten.",
+			"explanation": "ADJ verheiratet, Participle Source sich verheiraten. Predicative after sein, so the copula plus an ADJ.",
 			"sources": [
 				{
 					"title": "Duden: verheiratet",
@@ -39945,7 +39945,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-borderline-betrunken": {
+		"target-de-participle-boundary-betrunken-adj-attributive": {
 			"input": {
 				"clickedSegmentIndex": 2,
 				"segments": [
@@ -40004,7 +40004,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [2]
 			},
-			"explanation": "Borderline; proposed ADJ betrunken. Takes sehr and comparison and Duden lists an Adjektiv, but it is also the resulting state of sich betrinken, and it has no un- form.",
+			"explanation": "ADJ betrunken, Participle Source sich betrinken. Attributive.",
 			"sources": [
 				{
 					"title": "Duden: betrunken",
@@ -40013,7 +40013,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-borderline-verliebt": {
+		"target-de-participle-boundary-verliebt-adj-predicative-intensified": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -40064,7 +40064,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "Borderline; proposed ADJ verliebt. Takes sehr and comparison and Duden lists an Adjektiv, but it is also the resulting state of sich verlieben.",
+			"explanation": "ADJ verliebt, Participle Source sich verlieben. Predicative after sein with schrecklich.",
 			"sources": [
 				{
 					"title": "Duden: verliebt",
@@ -40073,7 +40073,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-borderline-aufgeregt": {
+		"target-de-participle-boundary-aufgeregt-adj-predicative": {
 			"input": {
 				"clickedSegmentIndex": 12,
 				"segments": [
@@ -40140,7 +40140,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [12]
 			},
-			"explanation": "Borderline; proposed ADJ aufgeregt. Takes sehr and Duden lists an Adjektiv, but it is also the resulting state of sich aufregen.",
+			"explanation": "ADJ aufgeregt, Participle Source sich aufregen. Predicative after sein with sehr.",
 			"sources": [
 				{
 					"title": "Duden: aufgeregt",
@@ -40149,7 +40149,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-borderline-beleidigt": {
+		"target-de-participle-boundary-beleidigt-adj-predicative": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -40200,7 +40200,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "Borderline; proposed ADJ beleidigt. 'Sulking' takes sehr and Duden lists an Adjektiv, but a Zustandspassiv of beleidigen reads the same.",
+			"explanation": "ADJ beleidigt, Participle Source beleidigen. Predicative after sein, so the copula plus an ADJ.",
 			"sources": [
 				{
 					"title": "Duden: beleidigt",
@@ -40209,7 +40209,7 @@
 				}
 			]
 		},
-		"target-de-participle-boundary-borderline-geschlossene-gesellschaft": {
+		"target-de-participle-boundary-geschlossen-adj-geschlossene-gesellschaft": {
 			"input": {
 				"clickedSegmentIndex": 8,
 				"segments": [
@@ -40276,7 +40276,7 @@
 				"kind": "ADJ",
 				"memberSegmentIndices": [8]
 			},
-			"explanation": "Borderline; proposed ADJ geschlossen. 'Private' comes from no sense of schließen and Duden lists geschlossene Gesellschaft under the Adjektiv; the phrase may itself be a Collocation.",
+			"explanation": "ADJ geschlossen, Participle Source schließen. geschlossene Gesellschaft 'private party' is an attributive ADJ and a NOUN, not a Collocation.",
 			"sources": [
 				{
 					"title": "Duden: geschlossen_verschlossen",
@@ -40284,6 +40284,427 @@
 					"supports": "The geschlossen Adjektiv entry lists geschlossene Gesellschaft"
 				}
 			]
+		},
+		"target-de-participle-boundary-geschlossen-verb-passive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tür"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wurde"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschlossen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 6]
+			},
+			"explanation": "VERB schließen. A werden-passive is verbal; wurde joins the verb. Contrast the state passive Die Tür ist geschlossen."
+		},
+		"target-de-participle-boundary-geschlossen-verb-perfect": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "die"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Tür"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschlossen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 8]
+			},
+			"explanation": "VERB schließen. A haben-perfect is verbal; hat joins the verb."
+		},
+		"target-de-participle-boundary-gekommen-verb-perfect": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gekommen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 4]
+			},
+			"explanation": "VERB kommen. A sein-perfect is verbal (Er kam), unlike a state passive; ist joins the verb."
+		},
+		"target-de-participle-boundary-gekommen-verb-perfect-click-ist": {
+			"input": {
+				"clickedSegmentIndex": 2,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gekommen"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 4]
+			},
+			"explanation": "VERB kommen. The perfect auxiliary ist selects the same target as its participle."
+		},
+		"target-de-participle-boundary-gekommen-adj-attributive": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "zuletzt"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gekommene"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Gast"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "bekam"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "keinen"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Platz"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "ADJ gekommen, Participle Source kommen. Attributive, so adjectival; zuletzt stays outside."
+		},
+		"target-de-participle-boundary-verliebt-adj-predicative": {
+			"input": {
+				"clickedSegmentIndex": 4,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verliebt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [4]
+			},
+			"explanation": "ADJ verliebt, Participle Source sich verlieben. Predicative after sein, so the copula plus an ADJ; no reflexive joins it."
+		},
+		"target-de-participle-boundary-verliebt-verb-perfect": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Er"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "hat"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "sich"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "verliebt"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [2, 4, 6]
+			},
+			"explanation": "VERB sich verlieben. A haben-perfect is verbal; hat and the required reflexive sich join the verb."
+		},
+		"target-de-participle-boundary-geschrieben-adj-state-passive": {
+			"input": {
+				"clickedSegmentIndex": 6,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brief"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "ist"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschrieben"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "ADJ",
+				"memberSegmentIndices": [6]
+			},
+			"explanation": "ADJ geschrieben, Participle Source schreiben. A state passive is the copula sein plus an ADJ; ist stays a separate VERB."
+		},
+		"target-de-participle-boundary-geschrieben-verb-passive": {
+			"input": {
+				"clickedSegmentIndex": 8,
+				"segments": [
+					{
+						"kind": "ResolvableText",
+						"text": "Der"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "Brief"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "wird"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "gerade"
+					},
+					{
+						"kind": "Whitespace",
+						"text": " "
+					},
+					{
+						"kind": "ResolvableText",
+						"text": "geschrieben"
+					},
+					{
+						"kind": "Punctuation",
+						"text": "."
+					}
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "VERB",
+				"memberSegmentIndices": [4, 8]
+			},
+			"explanation": "VERB schreiben. A werden-passive is verbal; wird joins the verb and gerade stays outside. Contrast the state passive Der Brief ist geschrieben."
 		}
 	},
 	"demonstrationIds": [
@@ -40850,9 +41271,9 @@
 					"family": "Lexeme",
 					"kind": "VERB"
 				},
-				"additionalMemberIndices": [3]
+				"additionalMemberIndices": []
 			},
-			"explanation": "sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet: a state passive. Take both as one VERB target."
+			"explanation": "sind is the copula here. geöffnet is a separate ADJ. VERB alone."
 		},
 		{
 			"input": {
@@ -40881,11 +41302,11 @@
 				"decision": "Resolved",
 				"target": {
 					"family": "Lexeme",
-					"kind": "VERB"
+					"kind": "ADJ"
 				},
-				"additionalMemberIndices": [2]
+				"additionalMemberIndices": []
 			},
-			"explanation": "The marked participle belongs to the same productive state passive as sind. Take sind + geöffnet as the identical VERB target for either click."
+			"explanation": "sein + participle outside the perfect = copula + ADJ. geöffnet/ADJ alone. Leave sind out."
 		},
 		{
 			"input": {
@@ -40934,11 +41355,11 @@
 				"decision": "Resolved",
 				"target": {
 					"family": "Lexeme",
-					"kind": "VERB"
+					"kind": "ADJ"
 				},
-				"additionalMemberIndices": [3]
+				"additionalMemberIndices": []
 			},
-			"explanation": "Architekt did freigeben. ist + freigegeben. VERB. Take both."
+			"explanation": "A state after sein, even with an agent. freigegeben/ADJ alone. Leave ist out."
 		},
 		{
 			"input": {
@@ -41007,11 +41428,11 @@
 				"decision": "Resolved",
 				"target": {
 					"family": "Lexeme",
-					"kind": "VERB"
+					"kind": "ADJ"
 				},
-				"additionalMemberIndices": [3]
+				"additionalMemberIndices": []
 			},
-			"explanation": "Helfer moved barrier. zwei Meter nach Osten. ist + versetzt. VERB. Take both."
+			"explanation": "A state after sein, even with an agent. versetzt/ADJ alone. Leave ist out."
 		},
 		{
 			"input": {

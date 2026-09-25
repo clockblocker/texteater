@@ -1085,5 +1085,253 @@
 			},
 			"realizationCoverage": "Full"
 		}
+	},
+	"grammar-de-adj-dev-participial-geschlossen": {
+		"input": {
+			"markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
+			"members": ["geschlossene"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["geschlossene"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Fem",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "geschlossen",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An attributive participle is an ADJ (ADR 0034): Canonical Form geschlossen, the uninflected participle, not schließen."
+	},
+	"grammar-de-adj-dev-adverbial-participle-one-lachend": {
+		"input": {
+			"markedContext": "Er kam <TARGET>lachend</TARGET> herein.",
+			"members": ["lachend"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["lachend"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "lachend",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An adverbial Partizip I is an ADJ (ADR 0034): Canonical Form lachend; adverbial use has only degree."
+	},
+	"grammar-de-adj-participle-attributive-gekochten": {
+		"input": {
+			"markedContext": "Die <TARGET>gekochten</TARGET> Kartoffeln standen schon bereit.",
+			"members": ["gekochten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gekochten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": null,
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gekocht",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An attributive Partizip II is an ADJ (ADR 0034): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked."
+	},
+	"grammar-de-adj-participle-attributive-bewunderte": {
+		"input": {
+			"markedContext": "Der von allen <TARGET>bewunderte</TARGET> Lehrer ging in den Ruhestand.",
+			"members": ["bewunderte"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["bewunderte"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "bewundert",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An attributive participle with a von-agent is still an ADJ (ADR 0034): Canonical Form bewundert; Nom Sing Masc."
+	},
+	"grammar-de-adj-participle-attributive-gelegene": {
+		"input": {
+			"markedContext": "Das am See <TARGET>gelegene</TARGET> Haus gehört meinem Onkel.",
+			"members": ["gelegene"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["gelegene"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"degree": "Pos",
+					"gender": "Neut",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "gelegen",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "Locative gelegen 'situated' is an attributive ADJ (ADR 0034), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
+	},
+	"grammar-de-adj-participle-attributive-umgestuerzte": {
+		"input": {
+			"markedContext": "Der Sturm blockierte mit dem <TARGET>umgestürzten</TARGET> Baum die Straße.",
+			"members": ["umgestürzten"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["umgestürzten"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"degree": "Pos",
+					"gender": "Masc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "umgestürzt",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An attributive participle of a separable verb is an ADJ (ADR 0034): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
+	},
+	"grammar-de-adj-participle-attributive-spielenden": {
+		"input": {
+			"markedContext": "Sie beobachtete die im Garten <TARGET>spielenden</TARGET> Kinder.",
+			"members": ["spielenden"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["spielenden"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"degree": "Pos",
+					"gender": null,
+					"number": "Plur"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "spielend",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "An attributive Partizip I is an ADJ (ADR 0034): Canonical Form spielend; Acc Plur with Kinder."
+	},
+	"grammar-de-adj-participle-state-passive-geschlossen": {
+		"input": {
+			"markedContext": "Die Tür ist <TARGET>geschlossen</TARGET>.",
+			"members": ["geschlossen"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["geschlossen"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": null,
+					"degree": "Pos",
+					"gender": null,
+					"number": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "geschlossen",
+				"coreFeatures": {
+					"abbr": null,
+					"foreign": null,
+					"numType": null,
+					"variant": null
+				}
+			},
+			"realizationCoverage": "Full"
+		},
+		"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): predicative geschlossen has only degree."
 	}
 }

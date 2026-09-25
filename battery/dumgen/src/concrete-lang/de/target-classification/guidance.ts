@@ -29,13 +29,13 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 		"target-de-demo-passive-briefe-click-werden":
 			"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
 		"target-de-demo-state-passive-banken-click-sind":
-			"sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet: a state passive. Take both as one VERB target.",
+			"sind is the copula here. geöffnet is a separate ADJ. VERB alone.",
 		"target-de-demo-state-passive-banken-click-geoeffnet":
-			"The marked participle belongs to the same productive state passive as sind. Take sind + geöffnet as the identical VERB target for either click.",
+			"sein + participle outside the perfect = copula + ADJ. geöffnet/ADJ alone. Leave sind out.",
 		"target-de-demo-state-passive-bauplan-click-freigegeben":
-			"Architekt did freigeben. ist + freigegeben. VERB. Take both.",
+			"A state after sein, even with an agent. freigegeben/ADJ alone. Leave ist out.",
 		"target-de-demo-state-passive-absperrung-click-versetzt":
-			"Helfer moved barrier. zwei Meter nach Osten. ist + versetzt. VERB. Take both.",
+			"A state after sein, even with an agent. versetzt/ADJ alone. Leave ist out.",
 		"target-de-demo-participial-adjective-brief-click-ist":
 			"ungelesen is property here. ist is the copula verb sein. VERB alone.",
 		"target-de-demo-participial-adjective-brief-click-ungelesen":

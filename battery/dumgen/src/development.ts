@@ -13,12 +13,12 @@ import {
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
 import { corpusRegistrations } from "./concrete-lang/de/experiments.js";
+import { participleCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/adjective/evaluation-ids.js";
 import {
 	openReferentCaseIds,
 	referentContextCaseIds,
 } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluation-ids.js";
 import { evaluateOpenReferent } from "./concrete-lang/de/grammatical-resolution/lexeme/pronoun/evaluator.js";
-import { participleCaseIds } from "./concrete-lang/de/grammatical-resolution/lexeme/verb/evaluation-ids.js";
 import { draftTranslationOperationExperiment } from "./concrete-lang/de/knowledge-production/draft-translations/experiment.js";
 import { relationCorpusAdjudications } from "./concrete-lang/de/knowledge-production/evaluation/adjudications.js";
 import { evaluateCombinedGermanKnowledge } from "./concrete-lang/de/knowledge-production/evaluation/evaluator.js";
@@ -51,7 +51,9 @@ const targetRoute = "target-classification/de/high-level-whole-unit";
 const slices: Record<string, Record<string, readonly string[]>> = {
 	...phases,
 	[targetRoute]: { "participle-boundary": participleBoundaryCaseIds },
-	"grammatical-resolution/de/lexeme/verb": { participles: participleCaseIds },
+	"grammatical-resolution/de/lexeme/adjective": {
+		participles: participleCaseIds,
+	},
 	"grammatical-resolution/de/lexeme/pronoun": {
 		"referent-context": referentContextCaseIds,
 	},
