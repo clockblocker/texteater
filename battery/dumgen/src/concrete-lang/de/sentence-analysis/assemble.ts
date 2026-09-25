@@ -24,10 +24,16 @@ import type {
 	PhrasemeTarget,
 	SentenceAnalysis,
 } from "./analysis.js";
-import { fixednessFloor } from "./analysis.js";
+import { fixednessFloor, selectIdentity } from "./analysis.js";
 import type { RoleAnswer } from "./criteria.js";
 import { assembleGovernment } from "./government.js";
-import { candidateOf, candidatesFor, headwordGroups } from "./identity.js";
+import {
+	candidateKey,
+	candidateOf,
+	candidatesFor,
+	headwordGroups,
+	surfaceRealizing,
+} from "./identity.js";
 import type { Placement } from "./placement.js";
 
 export type Answers = SystemOneResult<Questions>["answers"];
@@ -654,9 +660,37 @@ export function assembleAnalysis(
 			...phraseme,
 			id: `p${position + 1}`,
 		}));
+	// The analysis decides between an entry's candidate surfaces: an article
+	// member stands for its article (das in 's Wetter), a Selected identity
+	// for its own (es in geht's). Undecided, the first stays.
+	const surfaceOf = (offset: number, surfaces: readonly string[]) => {
+		const target = targets.find((entry) =>
+			entry.members.some((member) => member.offset === offset),
+		);
+		const member = target?.members.find((entry) => entry.offset === offset);
+		if (!target || !member) return undefined;
+		if (member.role === "Article")
+			return surfaceRealizing(
+				surfaces,
+				(candidate) => candidate.lemma.kind === "DET",
+			);
+		const identity = selectIdentity(target, member);
+		return identity.state === "Selected"
+			? surfaceRealizing(
+					surfaces,
+					(candidate) =>
+						candidateKey(candidate) === identity.candidate.key,
+				)
+			: undefined;
+	};
+	const segments = placement.segments.map((segment) => {
+		const surfaces = placement.choices.get(segment.offset);
+		const surface = surfaces && surfaceOf(segment.offset, surfaces);
+		return surface ? { ...segment, surface } : segment;
+	});
 	return {
 		stitchedText: placement.stitchedText,
-		segments: placement.segments,
+		segments,
 		targets,
 		phrasemes: expressions,
 		fusions: placement.fusions,

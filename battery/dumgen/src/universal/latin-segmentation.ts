@@ -1,5 +1,11 @@
 import type { Segment, SegmentKind } from "../types.js";
 import {
+	type FusionTable,
+	leadingAbbreviation,
+	leadingFreeClitic,
+	splitClitic,
+} from "./fusion-table.js";
+import {
 	assertStitchedText,
 	finalizeSegmentation,
 	pushSegment,
@@ -9,12 +15,8 @@ import {
 
 const graphemes = new Intl.Segmenter("de", { granularity: "grapheme" });
 const abbreviation = /^(?:[\p{L}]\.){2,}|^[\p{L}]\.(?: [\p{L}]\.)+/u;
-const commonAbbreviations = {
-	de: /^(?:Abb|bzw|ca|Dr|Nr|Prof|usw|Dipl\.-Ing)\./iu,
-	en: /^(?:Mr|Mrs|Ms|Dr|Prof|St|etc|vs)\./iu,
-};
-const contraction = /^([\p{L}\p{M}]{2,})([’'])([ms])(?=$|[^\p{L}\p{M}])/iu;
-const internalApostrophe = /^[\p{L}\p{M}]+[’'][\p{L}\p{M}]+/u;
+const englishAbbreviations = /^(?:Mr|Mrs|Ms|Dr|Prof|St|etc|vs)\./iu;
+const internalApostrophe = /^[\p{L}\p{M}]+(?:[’'][\p{L}\p{M}]+)+/u;
 const trailingApostrophe = /^[\p{L}\p{M}]+[’']/u;
 const word = /^[\p{L}\p{M}\p{N}]+(?:[-‐‑][\p{L}\p{M}\p{N}]+)*[-‐‑]?/u;
 const alphaNumeric = /^[\p{L}\p{M}\p{N}]+/u;
@@ -30,10 +32,15 @@ const number = /^\d+/u;
 const emoticon = /^(?::[-^]?[)(]|;[-^]?\))/u;
 const punctuationRun = /^(?:[?!]+|\.{3}|…+)/u;
 
-/** Shared Latin-script scanner; language-specific contractions and abbreviations stay explicit. */
+/**
+ * Shared Latin-script scanner. A language with a fusion table cuts its
+ * abbreviations and apostrophe clitics where the table says (Dumgen ADR
+ * 0004); English keeps its own abbreviation list and whole contractions.
+ */
 export function segmentLatin(
 	stitchedText: string,
 	language: "de" | "en",
+	table?: FusionTable,
 ): SourceSegmentation {
 	assertStitchedText(stitchedText);
 	const segments: Segment[] = [];
@@ -131,9 +138,11 @@ export function segmentLatin(
 			continue;
 		}
 
-		const abbreviationValue =
-			rest.match(abbreviation)?.[0] ??
-			rest.match(commonAbbreviations[language])?.[0];
+		const abbreviationValue = table
+			? (leadingAbbreviation(table, rest) ??
+				rest.match(abbreviation)?.[0])
+			: (rest.match(abbreviation)?.[0] ??
+				rest.match(englishAbbreviations)?.[0]);
 		if (abbreviationValue) {
 			pushSegment(
 				segments,
@@ -146,36 +155,38 @@ export function segmentLatin(
 			continue;
 		}
 
-		const contractionValue =
-			language === "de" ? rest.match(contraction) : null;
-		if (contractionValue) {
-			const [whole, host, apostrophe, suffix] = contractionValue;
+		const freeClitic = table ? leadingFreeClitic(table, rest) : undefined;
+		if (freeClitic) {
 			pushSegment(
 				segments,
 				trace,
 				"ResolvableText",
-				host ?? "",
-				"apostrophe-host",
+				freeClitic,
+				"free-clitic",
 			);
-			pushSegment(
-				segments,
-				trace,
-				"Punctuation",
-				apostrophe ?? "",
-				"apostrophe-seam",
-			);
-			pushSegment(
-				segments,
-				trace,
-				"ResolvableText",
-				suffix ?? "",
-				"apostrophe-exponent",
-			);
-			offset += whole.length;
+			offset += freeClitic.length;
 			continue;
 		}
 
 		const lexicalApostrophe = rest.match(internalApostrophe)?.[0];
+		const attached =
+			table && lexicalApostrophe
+				? splitClitic(table, lexicalApostrophe)
+				: undefined;
+		if (lexicalApostrophe && attached) {
+			// The apostrophe belongs to the clitic: geht's is geht + 's.
+			const { host } = attached;
+			pushSegment(segments, trace, "ResolvableText", host, "clitic-host");
+			pushSegment(
+				segments,
+				trace,
+				"ResolvableText",
+				lexicalApostrophe.slice(host.length),
+				"attached-clitic",
+			);
+			offset += lexicalApostrophe.length;
+			continue;
+		}
 		if (lexicalApostrophe) {
 			pushSegment(
 				segments,

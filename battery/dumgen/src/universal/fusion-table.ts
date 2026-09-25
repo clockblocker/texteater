@@ -2,8 +2,8 @@
  * Reviewed data for splitting one source word into several Segments at
  * intake (Dumgen ADR 0004). Each language authors a table of closed entries;
  * open patterns (Hebrew prefix stacks) are enumerated in code and are not
- * tables. The tables are data the intake lab and playground fixtures consume;
- * production segmentation still runs the regex scanner.
+ * tables. A language's segmenter reads its table to cut abbreviations and
+ * apostrophe clitics, and placement reads it for the surfaces.
  */
 
 /** One Segment of a fused word: the letters shown and the surface they stand for. */
@@ -128,12 +128,58 @@ export function fusionEntry(
 	return table.fusions.find((entry) => entry.form === normalized);
 }
 
-/** Lookup of an abbreviation by its exact text, dots included. */
+/** Written as authored, or with its first letter capitalized to open a sentence. */
+function spells(table: FusionTable, authored: string, written: string) {
+	return (
+		written === authored ||
+		written ===
+			authored.charAt(0).toLocaleUpperCase(table.language) +
+				authored.slice(1)
+	);
+}
+
+/** Lookup of an abbreviation by its text, dots included; `Vgl.` finds `vgl.`. */
 export function abbreviationEntry(
 	table: FusionTable,
 	text: string,
 ): AbbreviationEntry | undefined {
-	return table.abbreviations.find((entry) => entry.text === text);
+	return table.abbreviations.find((entry) => spells(table, entry.text, text));
+}
+
+/** The longest abbreviation the text starts with, as written there. */
+export function leadingAbbreviation(
+	table: FusionTable,
+	text: string,
+): string | undefined {
+	let longest: string | undefined;
+	for (const entry of table.abbreviations) {
+		const written = text.slice(0, entry.text.length);
+		if (
+			spells(table, entry.text, written) &&
+			written.length > (longest?.length ?? 0)
+		)
+			longest = written;
+	}
+	return longest;
+}
+
+/** Lookup of a clitic Segment by its text; typographic apostrophes are normalized. */
+export function cliticEntry(
+	table: FusionTable,
+	text: string,
+): CliticEntry | undefined {
+	const normalized = text.replaceAll(/[’‘´`]/g, "'");
+	return table.clitics.find((entry) => entry.clitic === normalized);
+}
+
+/** A clitic the text starts with that stands free before the next word ('s Wetter, 'ne Frage). */
+export function leadingFreeClitic(
+	table: FusionTable,
+	text: string,
+): string | undefined {
+	const written = text.match(/^[’‘´`'][\p{L}\p{M}]+/u)?.[0];
+	const entry = written ? cliticEntry(table, written) : undefined;
+	return entry && entry.attachment !== "Attached" ? written : undefined;
 }
 
 /**

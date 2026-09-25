@@ -3,8 +3,13 @@
  * spelling can realize, offered as per-cell rubric options whose mass is
  * summed per headword group (Dumgen ADR 0005, issue 509).
  */
+import {
+	abbreviationEntry,
+	cliticEntry,
+} from "../../../universal/fusion-table.js";
 import type { AuthoredMember } from "../authored-closed-sets/member.js";
 import { authoredRealizations } from "../authored-closed-sets/realizations.js";
+import { germanFusionTable } from "../fusion-entries.js";
 import type { IdentityCandidate } from "./analysis.js";
 
 const key = (text: string) => text.normalize("NFC").toLowerCase();
@@ -20,9 +25,23 @@ for (const realization of authoredRealizations) {
 const core = (member: AuthoredMember) =>
 	member.lemma.coreFeatures as Record<string, unknown>;
 
-/** Every authored member this spelling can realize, in a stable order. */
+/** The surfaces a spelling stands for: a table clitic's or abbreviation's, else itself. */
+function surfacesOf(text: string): readonly string[] {
+	const entry =
+		abbreviationEntry(germanFusionTable, text) ??
+		cliticEntry(germanFusionTable, text);
+	if (!entry) return [text];
+	return typeof entry.surface === "string" ? [entry.surface] : entry.surface;
+}
+
+/** Every authored member this spelling can realize, in a stable order; `'s` realizes es and das. */
 export function candidatesFor(text: string): AuthoredMember[] {
-	return [...(bySpelling.get(key(text)) ?? [])].sort((a, b) =>
+	const members = new Set(
+		surfacesOf(text).flatMap(
+			(surface) => bySpelling.get(key(surface)) ?? [],
+		),
+	);
+	return [...members].sort((a, b) =>
 		`${a.lemma.kind} ${a.lemma.canonicalForm} ${JSON.stringify(a.lemma.coreFeatures)} ${a.knowledge.definition}`.localeCompare(
 			`${b.lemma.kind} ${b.lemma.canonicalForm} ${JSON.stringify(b.lemma.coreFeatures)} ${b.knowledge.definition}`,
 		),
@@ -45,6 +64,16 @@ export function headwordGroups(
 
 export function candidateKey(member: AuthoredMember): string {
 	return `${member.lemma.kind}:${member.lemma.canonicalForm}:${String(core(member).pronType ?? "")}`;
+}
+
+/** The first candidate surface that realizes an authored member the predicate accepts. */
+export function surfaceRealizing(
+	surfaces: readonly string[],
+	accepts: (member: AuthoredMember) => boolean,
+): string | undefined {
+	return surfaces.find((surface) =>
+		(bySpelling.get(key(surface)) ?? []).some(accepts),
+	);
 }
 
 export function candidateOf(

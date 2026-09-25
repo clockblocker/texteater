@@ -18,6 +18,7 @@ import {
 	selectPhrasemeKind,
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
+import { candidatesFor } from "../src/concrete-lang/de/sentence-analysis/identity.js";
 import { placeSegments } from "../src/concrete-lang/de/sentence-analysis/placement.js";
 import type {
 	LexemeTarget,
@@ -43,6 +44,8 @@ type Plan = {
 	readonly words: readonly (readonly number[])[];
 	readonly routes: Readonly<Record<number, string>>;
 	readonly roles: Readonly<Record<number, string>>;
+	/** Identity option per input index; every other identity question is NoMatch. */
+	readonly identities?: Readonly<Record<number, string>>;
 	/** Phraseme groups by head index with their Kind and fixedness. */
 	readonly expressions: readonly {
 		readonly heads: readonly number[];
@@ -140,7 +143,9 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 						chosen = plan.routes[numbers[0] ?? -1] ?? "Unresolved";
 					else if (prefix === "role")
 						chosen = plan.roles[numbers[0] ?? -1] ?? "Free";
-					else if (prefix === "id") chosen = "NoMatch";
+					else if (prefix === "id")
+						chosen =
+							plan.identities?.[numbers[0] ?? -1] ?? "NoMatch";
 					else if (prefix === "pk") {
 						const kind = expression(numbers[0] ?? -1)?.kind;
 						if (typeof kind === "object") split = kind;
@@ -719,6 +724,119 @@ test("placed Segments keep the source casing of a fused word and spell the Stitc
 				),
 			).toBe(component.span);
 	}
+});
+
+test("German abbreviations and apostrophe clitics are cut where the fusion table says", () => {
+	const resolvable = (text: string) =>
+		segmentGerman(text)
+			.segments.filter((segment) => segment.kind === "ResolvableText")
+			.map((segment) => segment.text);
+	expect(
+		resolvable("Das ist evtl. falsch, vgl. Tel. und 3 Mio. Euro."),
+	).toEqual([
+		"Das",
+		"ist",
+		"evtl.",
+		"falsch",
+		"vgl.",
+		"Tel.",
+		"und",
+		"3",
+		"Mio.",
+		"Euro",
+	]);
+	expect(resolvable("Vgl. Abb. 3.")).toEqual(["Vgl.", "Abb.", "3"]);
+	expect(resolvable("Wie geht’s dir?")).toEqual(["Wie", "geht", "’s", "dir"]);
+	expect(resolvable("'s Wetter ist schön.")).toEqual([
+		"'s",
+		"Wetter",
+		"ist",
+		"schön",
+	]);
+	expect(resolvable("Er ist auf'm Dach mit 'ner Freundin.")).toEqual([
+		"Er",
+		"ist",
+		"auf",
+		"'m",
+		"Dach",
+		"mit",
+		"'ner",
+		"Freundin",
+	]);
+	expect(resolvable("Rock'n'Roll")).toEqual(["Rock'n'Roll"]);
+	expect(
+		segmentGerman("Wie geht's dir?").segments.some(
+			(segment) => segment.kind === "Punctuation" && segment.text === "'",
+		),
+	).toBe(false);
+});
+
+test("placed abbreviations and clitics stand for their table surfaces", () => {
+	const placement = placeSegments(
+		sentenceOf("table", "Vgl. evtl. 3 Mio. und geht's"),
+	);
+	expect(
+		placement.segments
+			.filter((segment) => segment.text !== segment.surface)
+			.map((segment) => [segment.text, segment.surface]),
+	).toEqual([
+		["Vgl.", "vergleiche"],
+		["evtl.", "eventuell"],
+		["Mio.", "Million"],
+		["'s", "es"],
+	]);
+	const clitic = placement.segments.find((segment) => segment.text === "'s");
+	expect(placement.choices.get(clitic?.offset ?? -1)).toEqual(["es", "das"]);
+});
+
+test("the analysis decides what 's stands for: its Selected identity, or das as an article", async () => {
+	// Wie0 geht2 's3 dir5 ?6
+	const esOption = `c${candidatesFor("'s").findIndex(
+		(member) => member.lemma.canonicalForm === "es",
+	)}`;
+	const geht = await Effect.runPromise(
+		dumgenWith({
+			words: [[0], [2], [3], [5]],
+			routes: {
+				0: "Lexeme/ADV",
+				2: "Lexeme/VERB",
+				3: "Lexeme/PRON",
+				5: "Lexeme/PRON",
+			},
+			roles: {},
+			identities: { 3: esOption },
+			expressions: [],
+		}).dumgen.analyzeSentence({
+			sentence: sentenceOf("geht", "Wie geht's dir?"),
+		}),
+	);
+	const clitic = geht.segments.find((segment) => segment.text === "'s");
+	expect(clitic?.surface).toBe("es");
+	const target = geht.targets.find((entry) =>
+		entry.members.some((member) => member.offset === clitic?.offset),
+	);
+	expect(
+		new Set(target?.identity?.candidates.map((entry) => entry.headword)),
+	).toEqual(new Set(["es", "das"]));
+	// 's0 Wetter2 ist4 schön6 .7
+	const wetter = await Effect.runPromise(
+		dumgenWith({
+			words: [[0, 2], [4], [6]],
+			routes: {
+				0: "Lexeme/NOUN",
+				2: "Lexeme/NOUN",
+				4: "Lexeme/VERB",
+				6: "Lexeme/ADJ",
+			},
+			roles: { 0: "Article", 2: "Head" },
+			expressions: [],
+		}).dumgen.analyzeSentence({
+			sentence: sentenceOf("wetter", "'s Wetter ist schön."),
+		}),
+	);
+	expect(
+		wetter.segments.find((segment) => segment.text === "'s")?.surface,
+	).toBe("das");
 });
 
 test("an NFD umlaut fusion is cut after its combining mark", () => {

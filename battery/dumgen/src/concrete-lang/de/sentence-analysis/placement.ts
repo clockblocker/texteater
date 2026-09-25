@@ -2,15 +2,17 @@
  * Segment placement: the input sentence's Segments become offset-keyed
  * analysed Segments, with fused words split by the German fusion table,
  * apostrophe clitics expanded and abbreviations given their expansion as
- * surface (Dumgen ADR 0004). Concatenated, the placed Segments give the
+ * surface (Dumgen ADR 0004). An entry with candidate surfaces places the
+ * first; assembly replaces it with the one the Selected identity realizes.
+ * Concatenated, the placed Segments give the
  * Stitched Text back: fused components keep the source letters and casing
  * (`Im` places `I` + `m`) while their surface stays the authored one.
  */
 import type { SegmentedSentence } from "../../../types.js";
 import {
 	abbreviationEntry,
+	cliticEntry,
 	fusionEntry,
-	splitClitic,
 } from "../../../universal/fusion-table.js";
 import { germanFusionTable } from "../fusion-entries.js";
 import type { AnalyzedSegment, Fusion } from "./analysis.js";
@@ -23,6 +25,8 @@ export type Placement = {
 	readonly pieces: ReadonlyMap<number, readonly AnalyzedSegment[]>;
 	/** Input Segment indices that are ResolvableText, in order. */
 	readonly resolvable: readonly number[];
+	/** Candidate surfaces per placed offset whose entry authors several ('s: es or das). */
+	readonly choices: ReadonlyMap<number, readonly string[]>;
 };
 
 const first = (surface: string | readonly string[]) => {
@@ -59,6 +63,7 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 	const fusions: Fusion[] = [];
 	const pieces = new Map<number, AnalyzedSegment[]>();
 	const resolvable: number[] = [];
+	const choices = new Map<number, readonly string[]>();
 	let offset = 0;
 	for (const [index, segment] of sentence.segments.entries()) {
 		const own: AnalyzedSegment[] = [];
@@ -72,7 +77,6 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 			own.push(placed);
 			offset += text.length;
 		};
-		const previous = sentence.segments[index - 1];
 		if (segment.kind !== "ResolvableText") {
 			push(segment.kind, segment.text, segment.text);
 			pieces.set(index, own);
@@ -80,11 +84,9 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 		}
 		resolvable.push(index);
 		const fusion = fusionEntry(germanFusionTable, segment.text);
-		const abbreviation = abbreviationEntry(germanFusionTable, segment.text);
-		const clitic =
-			previous && /^[’']$/u.test(previous.text)
-				? splitClitic(germanFusionTable, `x'${segment.text}`)
-				: null;
+		const entry =
+			abbreviationEntry(germanFusionTable, segment.text) ??
+			cliticEntry(germanFusionTable, segment.text);
 		if (fusion) {
 			const start = offset;
 			const texts = componentTexts(
@@ -111,11 +113,10 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 					};
 				}),
 			});
-		} else if (abbreviation) {
-			push("ResolvableText", segment.text, first(abbreviation.surface));
-		} else if (clitic) {
-			// The segmenter already cut `geht's` into host, apostrophe and `s`.
-			push("ResolvableText", segment.text, first(clitic.entry.surface));
+		} else if (entry) {
+			if (typeof entry.surface !== "string")
+				choices.set(offset, entry.surface);
+			push("ResolvableText", segment.text, first(entry.surface));
 		} else {
 			push("ResolvableText", segment.text, segment.text);
 		}
@@ -127,5 +128,6 @@ export function placeSegments(sentence: SegmentedSentence<"de">): Placement {
 		fusions,
 		pieces,
 		resolvable,
+		choices,
 	};
 }
