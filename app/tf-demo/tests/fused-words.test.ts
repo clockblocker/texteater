@@ -40,7 +40,7 @@ const analysis = {
 			],
 		},
 	],
-	government: [],
+	slots: [],
 } as unknown as SentenceAnalysis;
 
 test("a fused word is stored split, each component keeping its surface; an abbreviation stays the word it is", () => {

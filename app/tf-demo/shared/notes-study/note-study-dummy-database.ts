@@ -295,7 +295,7 @@ function occurrenceFor(
 		realizationCoverage: "Full",
 		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
 		...(["VERB", "AUX", "Idiom", "Collocation"].includes(reading.lemma.kind)
-			? { expletiveEvidence: null, governedPrepositionEvidence: null }
+			? { expletiveEvidence: null, valencyEvidence: [] }
 			: {}),
 		surface: citationSurface,
 	});

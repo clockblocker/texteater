@@ -14,11 +14,36 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
-	governedPrepositionEvidence: { attested: "auf", orthography: "Standard" },
+	valencyEvidence: [
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "auf",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: null,
+						partType: null,
+					},
+				},
+				case: "Acc",
+				referent: "Something",
+			},
+			realizedCase: "Acc",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "wartet auf",
+		normalizedSurface: "wartet",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
@@ -53,6 +78,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er [wartet] auf den Nachtbus.",
 	classifierNotes:
-		"The realized governed preposition auf is a fixed occurrence member and is recorded as governedPrepositionEvidence on the Attestation, not as a Lemma feature.",
+		"The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature.",
 	isVerified: true,
 } as const;

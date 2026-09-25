@@ -1118,7 +1118,7 @@ function verfuegungAnalysis(options: {
 				],
 			},
 		],
-		government: [],
+		slots: [],
 	};
 }
 

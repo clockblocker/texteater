@@ -20,7 +20,7 @@ type SentenceAnalysis = {
   targets: LexemeTarget[];       // the Lexeme layer: a flat partition of the ResolvableText Segments
   phrasemes: PhrasemeTarget[];   // the Phraseme layer: a partition of a subset of targets
   fusions: Fusion[];             // listed once, components point at Segments
-  government: Government[];      // one per governed preposition (ADR 0030)
+  slots: Slot[];                 // one per preposition slot the sentence realizes (ADR 0034)
 };
 
 type AnalyzedSegment = { offset: number; kind: SegmentKind; text: string; surface: string };
@@ -54,11 +54,17 @@ type Fusion = {
   components: { offset: number; span: string; surface: string; role: string }[];
 };
 
-type Government = {
-  offset: number;                  // the preposition, fused adposition or pronominal adverb Segment
-  preposition: GovernablePreposition;  // its ADP headword: `auf` for darauf, `von` for vom
-  case: "Acc" | "Dat" | "Gen";     // fixed by the ADP Lemma, else the vote
-  governor: LexemeTarget["id"];
+type Slot = {
+  governor: LexemeTarget["id"] | PhrasemeTarget["id"];
+  marker: number | null;           // the preposition or fused adposition Segment; null for a pronominal adverb
+  filler: LexemeTarget["id"] | null;  // the pronominal adverb (`darauf`) that realizes preposition and filler
+  complement: {
+    kind: "Preposition";
+    preposition: Lemma<"de", "Lexeme", "ADP">;  // `auf` for darauf, `von` for vom
+    case: "Acc" | "Dat" | "Gen";   // fixed by the ADP Lemma, else the vote
+    referent: "Someone" | "Something" | "Either";  // a pronominal adverb's is Something
+  };
+  realizedCase: "Acc" | "Dat" | "Gen";  // a preposition keeps its case, passive included
 };
 ```
 
@@ -91,7 +97,7 @@ Invariants enforced in code, never asked:
   and the word reaching 0.6 governs. Without one, a preposition the Lexeme
   layer made a verb's `GovernedPreposition` member is governed by that verb.
   A preposition voted to govern itself and a two-way preposition whose case
-  vote is Unresolved yield no Government.
+  vote is Unresolved yield no Slot. An Unresolved referent is `Either`.
 
 ## The Resolution Selector
 
@@ -121,12 +127,11 @@ is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
 Segment span, or null when it is Unresolved or `None`, or when the word's
 head Identity State is Miss.
 
-Given a unit's offsets: `governedPrepositionsAt` lists the preposition and
-case of every Government whose governor has a member among them, so a
-Phraseme reaches its member words' government. The host requests the
-`valency` Knowledge aspect only when this list holds a preposition and case
-the Reading's Valency Frame lacks; each becomes an Optional Preposition Slot
-with no model call.
+Given a unit's offsets: `slotsAt` lists every Slot whose governor has a
+member among them, so a Phraseme reaches its member words' slots. The host
+requests the `valency` Knowledge aspect only when these hold a preposition
+and case the Reading's Valency Frame lacks; each becomes an Optional
+Preposition Slot with no model call.
 
 ## The intake call, German
 
@@ -147,7 +152,8 @@ adjunct, particle and connective exclusions).
 | Phraseme Kind Choice | n | Kind Mass, summed per expression |
 | same-expression Noul per unordered pair | n(n-1)/2 | components over Heads at 0.5 |
 | governor Choice over the other occurrences plus None, under `government` | one per Segment realizing a governable preposition | mass summed per word, governor at 0.6 |
-| case Choice Acc/Dat | one per two-way preposition among those | argmax, Unresolved drops the Government |
+| case Choice Acc/Dat | one per two-way preposition among those | argmax, Unresolved drops the Slot |
+| referent Choice Someone/Something | one per preposition among those, never a pronominal adverb | argmax, Unresolved is `Either` |
 
 Cost, measured: 16.2k input tokens per sentence, p50 about 370 ms per call;
 the 28-occurrence sentence needs several chunked calls.
@@ -177,13 +183,15 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
   `src/concrete-lang/de/sentence-analysis/source-data.json`): Lexeme
   Targets with members `{ offset, role? }`, a Kind, and for closed-class
   heads the headword group `Kind:headword`; Phraseme Targets as a Kind and
-  the head offsets of their member words; Government as the preposition's
-  offset, its headword, its case and the offsets of the words that may
-  govern it. Roles are scored only where authored, and a layer a case leaves
-  out is not scored: the `sentence-de-government-*` cases score government
-  alone. The scorer (`scoreAnalysis`) reports members found, route, roles,
-  identity, Phrasemes found and correct, extra Phrasemes, and government
-  correct and extra; `contractPass` is all of them right and nothing extra.
+  the head offsets of their member words; Slots as the offset of the Segment
+  realizing the preposition (marker or pronominal adverb), its headword, its
+  case, where authored its referent, and the offsets of the words that may
+  govern it. Roles and referents are scored only where authored, and a layer
+  a case leaves out is not scored: the `sentence-de-government-*` cases
+  score slots alone. The scorer (`scoreAnalysis`) reports members found,
+  route, roles, identity, Phrasemes found and correct, extra Phrasemes, and
+  slots correct and extra; `contractPass` is all of them right and nothing
+  extra.
 - The click corpus keeps scoring per click; its support-verb sentences are
   Collocation (ADR 0028) and its fused-word sentences ADP (ADR 0027).
 - Held-out split: tau 0.6 was chosen on the evaluation clicks. The authoring

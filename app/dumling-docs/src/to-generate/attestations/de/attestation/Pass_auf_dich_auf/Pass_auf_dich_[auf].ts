@@ -18,11 +18,36 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
-	governedPrepositionEvidence: { attested: "auf", orthography: "Standard" },
+	valencyEvidence: [
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "auf",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: null,
+						partType: null,
+					},
+				},
+				case: "Acc",
+				referent: "Someone",
+			},
+			realizedCase: "Acc",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "pass auf auf",
+		normalizedSurface: "pass auf",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {

@@ -187,7 +187,7 @@ export const surfaceValueValidator = v.object({
 export const attestationValueValidator = v.object({
 	articleEvidence: v.optional(v.any()),
 	expletiveEvidence: v.optional(v.any()),
-	governedPrepositionEvidence: v.optional(v.any()),
+	valencyEvidence: v.optional(v.any()),
 	unitKind: v.literal("Attestation"),
 	members: v.array(
 		v.object({
@@ -217,6 +217,12 @@ const memberRoleValues = [
  */
 export const storedMassValidator = v.array(
 	v.object({ key: v.string(), share: v.number() }),
+);
+
+const governedCaseValidator = v.union(
+	v.literal("Acc"),
+	v.literal("Dat"),
+	v.literal("Gen"),
 );
 
 /** The Sentence Analysis intake stores with one Sentence (Dumgen ADR 0006). */
@@ -288,20 +294,24 @@ export const storedSentenceAnalysisValidator = v.object({
 			),
 		}),
 	),
-	/** Absent on analyses stored before intake resolved government. */
-	government: v.optional(
-		v.array(
-			v.object({
-				offset: v.number(),
-				preposition: v.string(),
-				case: v.union(
-					v.literal("Acc"),
-					v.literal("Dat"),
-					v.literal("Gen"),
+	/** The preposition slots the sentence realizes (ADR 0034). */
+	slots: v.array(
+		v.object({
+			governor: v.string(),
+			marker: v.union(v.null(), v.number()),
+			filler: v.union(v.null(), v.string()),
+			complement: v.object({
+				kind: v.literal("Preposition"),
+				preposition: lemmaValueValidator,
+				case: governedCaseValidator,
+				referent: v.union(
+					v.literal("Someone"),
+					v.literal("Something"),
+					v.literal("Either"),
 				),
-				governor: v.string(),
 			}),
-		),
+			realizedCase: governedCaseValidator,
+		}),
 	),
 });
 

@@ -202,7 +202,9 @@ import type * as Unsupported from "dumling/schema/en/phraseme/collocation";
 	}
 }, 30_000);
 
-test("a noun schema imports only its noun route", async () => {
+// Valency complements name an ADP Lemma (ADR 0034), so the ADP route is the
+// one other route every schema module shares.
+test("a noun schema imports only its noun route and the ADP route", async () => {
 	const result = await build({
 		entryPoints: [
 			join(packageRoot, "src/generated/schemas/de/lexeme/noun.ts"),
@@ -222,6 +224,7 @@ test("a noun schema imports only its noun route", async () => {
 		),
 	);
 	expect(routes.map((path) => path.split("/de/")[1]).sort()).toEqual([
+		"lexeme/adposition.ts",
 		"lexeme/noun.ts",
 	]);
 });

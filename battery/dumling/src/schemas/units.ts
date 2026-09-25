@@ -16,6 +16,7 @@ import {
 	nonEmptyFeatureBagError,
 	normalizeForm,
 } from "../validation/semantics.js";
+import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
 
 export const UnitKindSchema = z.enum([
 	"Lemma",
@@ -89,10 +90,50 @@ function buildBaseUnitSchemas<
 	return { Lemma, Surface, Reading, Attestation };
 }
 
+const germanCaseSchema = z.enum(["Nom", "Acc", "Dat", "Gen"]);
+const germanReferentSchema = z.enum(["Someone", "Something", "Either"]);
+
+/**
+ * German valency complements (ADR 0034), after E-VALBU: a bare case, or a
+ * preposition's ADP Lemma with the case it takes in this construction.
+ * `referent` says whether the complement names a person, a thing, or either.
+ */
+const germanComplementSchema = z.union([
+	z.strictObject({
+		kind: z.literal("Case"),
+		case: germanCaseSchema,
+		referent: germanReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Preposition"),
+		preposition: buildBaseUnitSchemas(
+			{ language: "de", family: "Lexeme", kind: "ADP" },
+			DeAdpositionFeatureBagsSchema.shape.core,
+			undefined,
+		).Lemma,
+		case: germanCaseSchema.exclude(["Nom"]),
+		referent: germanReferentSchema,
+	}),
+]);
+
+/**
+ * The valency slots one occurrence realizes (ADR 0034). `member` indexes the
+ * owned member realizing the slot's marker, such as a governed preposition,
+ * and is null when no member does. `realizedCase` is the case the occurrence
+ * shows.
+ */
+const valencyEvidenceSchema = z.array(
+	z.strictObject({
+		member: z.number().int().nonnegative().nullable(),
+		complement: germanComplementSchema,
+		realizedCase: germanCaseSchema,
+	}),
+);
+
 /**
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German verbal Attestation names its owned subject-expletive
- * and lexically governed preposition members as evidence (ADR 0022, ADR 0029).
+ * member and the valency slots it realizes as evidence (ADR 0022, ADR 0034).
  */
 export function buildUnitSchemas<
 	L extends string,
@@ -134,7 +175,7 @@ export function buildUnitSchemas<
 		...(verbal
 			? {
 					expletiveEvidence: memberSchema.nullable(),
-					governedPrepositionEvidence: memberSchema.nullable(),
+					valencyEvidence: valencyEvidenceSchema,
 				}
 			: {}),
 	}) as unknown as z.ZodObject<
@@ -157,9 +198,7 @@ export function buildUnitSchemas<
 							expletiveEvidence: z.ZodNullable<
 								typeof memberSchema
 							>;
-							governedPrepositionEvidence: z.ZodNullable<
-								typeof memberSchema
-							>;
+							valencyEvidence: typeof valencyEvidenceSchema;
 						}
 					: Record<never, never>
 				: Record<never, never>)

@@ -22,7 +22,7 @@ for (const construction of review.constructions) {
 			const result = parseUnit({
 				unitKind: "Attestation",
 				expletiveEvidence: null,
-				governedPrepositionEvidence: null,
+				valencyEvidence: [],
 				members: target.members.map((attested) => ({
 					attested,
 					orthography: "Standard",

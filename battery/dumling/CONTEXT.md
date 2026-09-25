@@ -77,8 +77,11 @@ article is included. A shared article gives Partial coverage without becoming
 a second owned member; a fused article is an owned Fused member with Full
 coverage, and a component with no letters of its own leaves the unit Partial
 with evidence pointing at the Fusion. German verbal Attestations retain
-subject-expletive source orthography as evidence for an owned member, and name
-the owned member the verb lexically governs as governed-preposition evidence.
+subject-expletive source orthography as evidence for an owned member, and
+record the valency slots the occurrence realizes as valency evidence, each
+naming by index the owned member that realizes it, such as the governed
+preposition. A governed preposition is an owned member but not a Fixed one,
+so the normalized Surface leaves it out: `wartet`, not `wartet auf`.
 _Avoid_: Selection, click result, selected Surface
 
 **Fusion**:

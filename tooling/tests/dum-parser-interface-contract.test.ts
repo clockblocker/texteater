@@ -40,7 +40,6 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"familyOf",
 		"fixednessFloor",
 		"fusionAt",
-		"governedPrepositionsAt",
 		"governorTargets",
 		"headOf",
 		"largestOf",
@@ -59,6 +58,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"selectNounHeadingArticle",
 		"selectPhrasemeKind",
 		"selectRoute",
+		"slotsAt",
 		"targetOf",
 		"validateEncounter",
 	]);

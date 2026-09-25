@@ -5,10 +5,12 @@ import type {
 	SystemOneResult,
 	TypeSafeExecutor,
 } from "promptsmith/typesafe";
-import { governablePrepositionIn } from "../src/concrete-lang/de/governable-prepositions.js";
+import {
+	governablePrepositionIn,
+	governablePrepositionLemma,
+} from "../src/concrete-lang/de/governable-prepositions.js";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 import {
-	governedPrepositionsAt,
 	headOf,
 	largestOf,
 	offsetsOf,
@@ -16,6 +18,7 @@ import {
 	resolvedWordAt,
 	selectIdentity,
 	selectPhrasemeKind,
+	slotsAt,
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
 import { candidatesFor } from "../src/concrete-lang/de/sentence-analysis/identity.js";
@@ -25,6 +28,7 @@ import type {
 	OperationTrace,
 	SegmentedSentence,
 	SentenceAnalysis,
+	Slot,
 } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 
@@ -64,6 +68,7 @@ type Plan = {
 			{
 				readonly governor?: number | readonly number[];
 				readonly case?: string;
+				readonly referent?: string;
 			}
 		>
 	>;
@@ -174,6 +179,10 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 					} else if (prefix === "case")
 						chosen =
 							plan.government?.[numbers[0] ?? -1]?.case ??
+							"Unresolved";
+					else if (prefix === "ref")
+						chosen =
+							plan.government?.[numbers[0] ?? -1]?.referent ??
 							"Unresolved";
 					else throw Error(`Unexpected question ${id}`);
 					if (!options.includes(chosen))
@@ -459,7 +468,7 @@ test("a governor with only the prepositions it governs is no Phraseme", async ()
 		}),
 	);
 	expect(analysis.phrasemes).toEqual([]);
-	expect(analysis.government).toHaveLength(1);
+	expect(analysis.slots).toHaveLength(1);
 });
 
 test("an article grouped with a noun past another word is split off", async () => {
@@ -887,7 +896,7 @@ test("a closed-class word whose spelling enumerated no candidate is a Miss and r
 		targets: [singleton("xyz", 0, "PRON"), singleton("an", 4, "ADP")],
 		phrasemes: [],
 		fusions: [],
-		government: [],
+		slots: [],
 	};
 	const [pron, adp] = analysis.targets;
 	if (!pron || !adp) throw Error("Expected two targets");
@@ -958,19 +967,31 @@ test("intake links a governed preposition to its governor and leaves an adjunct 
 	);
 	const angst = targetOf(analysis, 23);
 	if (!angst) throw Error("Expected the Angst target");
-	expect(analysis.government).toEqual([
-		{ offset: 29, preposition: "vor", case: "Dat", governor: angst.id },
-	]);
+	// No referent answer: the slot does not narrow it.
+	const slot: Slot = {
+		governor: angst.id,
+		marker: 29,
+		filler: null,
+		complement: {
+			kind: "Preposition",
+			preposition: governablePrepositionLemma("vor"),
+			case: "Dat",
+			referent: "Either",
+		},
+		realizedCase: "Dat",
+	};
+	expect(analysis.slots).toEqual([slot]);
 	expect(
-		governedPrepositionsAt(
+		slotsAt(
 			analysis,
 			angst.members.map((member) => member.offset),
 		),
-	).toEqual([{ preposition: "vor", case: "Dat" }]);
+	).toEqual([slot]);
 	const hat = analysis.segments.find((s) => s.text === "hat");
-	expect(governedPrepositionsAt(analysis, [hat?.offset ?? -1])).toEqual([]);
+	expect(slotsAt(analysis, [hat?.offset ?? -1])).toEqual([]);
 	expect(JSON.stringify(traces)).toContain("gov_12");
 	expect(JSON.stringify(traces)).toContain("case_12");
+	expect(JSON.stringify(traces)).toContain("ref_12");
 });
 
 // Input indices: Er0 wartet2 auf4 den6 Bus8; offsets: Er0 wartet3 auf10 den14 Bus18
@@ -986,7 +1007,7 @@ test("a verb's GovernedPreposition member falls back to its verb when no word wi
 		},
 		roles: { 2: "Head", 4: "GovernedPreposition", 6: "Article", 8: "Head" },
 		expressions: [],
-		government: { 4: { case: "Acc" } },
+		government: { 4: { case: "Acc", referent: "Something" } },
 	});
 	const analysis = await Effect.runPromise(
 		dumgen.analyzeSentence({
@@ -999,12 +1020,63 @@ test("a verb's GovernedPreposition member falls back to its verb when no word wi
 		"Head",
 		"GovernedPreposition",
 	]);
-	expect(analysis.government).toEqual([
-		{ offset: 10, preposition: "auf", case: "Acc", governor: verb.id },
+	expect(analysis.slots).toEqual([
+		{
+			governor: verb.id,
+			marker: 10,
+			filler: null,
+			complement: {
+				kind: "Preposition",
+				preposition: governablePrepositionLemma("auf"),
+				case: "Acc",
+				referent: "Something",
+			},
+			realizedCase: "Acc",
+		},
 	]);
 });
 
-test("a sentence without a governable preposition asks no government question", async () => {
+// Input indices: Ich0 warte2 darauf4 .5; offsets: Ich0 warte4 darauf10
+test("a pronominal adverb stays its own unit and fills the slot of its governor", async () => {
+	const { dumgen, traces } = dumgenWith({
+		words: [[0], [2], [4]],
+		routes: { 0: "Lexeme/PRON", 2: "Lexeme/VERB", 4: "Lexeme/ADV" },
+		roles: {},
+		expressions: [],
+		government: { 4: { governor: 2, case: "Acc" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("warte", "Ich warte darauf."),
+		}),
+	);
+	const verb = targetOf(analysis, 4);
+	const adverb = targetOf(analysis, 10);
+	if (!verb || !adverb) throw Error("Expected the verb and the adverb");
+	expect(resolvedUnitAt(analysis, 10)).toEqual({
+		family: "Lexeme",
+		kind: "ADV",
+		offsets: [10],
+	});
+	expect(analysis.slots).toEqual([
+		{
+			governor: verb.id,
+			marker: null,
+			filler: adverb.id,
+			complement: {
+				kind: "Preposition",
+				preposition: governablePrepositionLemma("auf"),
+				case: "Acc",
+				referent: "Something",
+			},
+			realizedCase: "Acc",
+		},
+	]);
+	// A pronominal adverb's filler is a thing; intake does not ask.
+	expect(JSON.stringify(traces)).not.toContain("ref_4");
+});
+
+test("a sentence without a governable preposition asks no slot question", async () => {
 	const { dumgen, traces } = dumgenWith({
 		words: [[0, 2], [4], [6]],
 		routes: {
@@ -1021,7 +1093,7 @@ test("a sentence without a governable preposition asks no government question", 
 			sentence: sentenceOf("banken", "Die Banken sind geöffnet."),
 		}),
 	);
-	expect(analysis.government).toEqual([]);
+	expect(analysis.slots).toEqual([]);
 	expect(JSON.stringify(traces)).not.toContain("gov_");
 });
 
@@ -1065,13 +1137,21 @@ test("a preposition with a free complement leaves its expression, which governs 
 	if (!phraseme) throw Error("Expected the expression");
 	expect(offsetsOf(analysis, phraseme)).toEqual([31, 38, 41, 45]);
 	expect(selectPhrasemeKind(analysis, phraseme).kind).toBe("Idiom");
-	expect(analysis.government).toEqual([
-		{ offset: 0, preposition: "mit", case: "Dat", governor: phraseme.id },
-	]);
-	expect(governedPrepositionsAt(analysis, [31, 38, 41, 45])).toEqual([
-		{ preposition: "mit", case: "Dat" },
-	]);
-	expect(governedPrepositionsAt(analysis, [45])).toEqual([]);
+	const slot: Slot = {
+		governor: phraseme.id,
+		marker: 0,
+		filler: null,
+		complement: {
+			kind: "Preposition",
+			preposition: governablePrepositionLemma("mit"),
+			case: "Dat",
+			referent: "Either",
+		},
+		realizedCase: "Dat",
+	};
+	expect(analysis.slots).toEqual([slot]);
+	expect(slotsAt(analysis, [31, 38, 41, 45])).toEqual([slot]);
+	expect(slotsAt(analysis, [45])).toEqual([]);
 	expect(resolvedUnitAt(analysis, 0)).toEqual({
 		family: "Lexeme",
 		kind: "ADP",

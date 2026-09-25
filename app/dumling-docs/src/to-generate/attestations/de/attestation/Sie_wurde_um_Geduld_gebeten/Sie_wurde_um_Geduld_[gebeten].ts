@@ -18,11 +18,36 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
-	governedPrepositionEvidence: { attested: "um", orthography: "Standard" },
+	valencyEvidence: [
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "um",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: "Acc",
+						partType: null,
+					},
+				},
+				case: "Acc",
+				referent: "Something",
+			},
+			realizedCase: "Acc",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "wurde um gebeten",
+		normalizedSurface: "wurde gebeten",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
@@ -57,6 +82,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Sie wurde um Geduld [gebeten].",
 	classifierNotes:
-		"Passive wurde and governed um are fixed members, while the route-owning lexical head remains the ordinary participle gebeten with null tense and voice.",
+		"Passive wurde is a Fixed member and governed um an occurrence member recorded in valencyEvidence, so the normalized Surface is wurde gebeten; the route-owning lexical head remains the ordinary participle gebeten with null tense and voice. The Nom Sie fills no preposition slot, so intake records none for it.",
 	isVerified: true,
 } as const;

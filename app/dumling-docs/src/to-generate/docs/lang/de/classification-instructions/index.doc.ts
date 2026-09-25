@@ -95,7 +95,7 @@ The classifier should keep the payload split cleanly:
 
 This split matters in German because many tempting distinctions belong in different places.
 
-\`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it as \`governedPrepositionEvidence\`.
+\`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts. A governed preposition is not: the German verbal \`Attestation\` records it in \`valencyEvidence\`, and its normalized Surface leaves it out.
 
 \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form, except on German \`DET\` and \`PRON\` pillars, whose cells are Core.
 

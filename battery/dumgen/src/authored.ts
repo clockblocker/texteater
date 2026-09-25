@@ -1,6 +1,6 @@
 /**
  * Reviewed authored content, model-free grammatical derivation and the
- * government selector over a stored Sentence Analysis.
+ * slot selector over a stored Sentence Analysis.
  *
  * This entry point exists for hosts that run inside a database transaction or
  * another short-lived isolate: it reaches the authored catalog and the pure
@@ -20,5 +20,5 @@ export {
 	nounArticleReference,
 	selectNounHeadingArticle,
 } from "./concrete-lang/de/grammatical-resolution/noun-article-reference.js";
-export { governedPrepositionsAt } from "./concrete-lang/de/sentence-analysis/analysis.js";
+export { slotsAt } from "./concrete-lang/de/sentence-analysis/analysis.js";
 export { DumgenFailure, type DumgenFailureTag } from "./universal/failure.js";

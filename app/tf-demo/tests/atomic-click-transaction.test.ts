@@ -898,7 +898,7 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 				],
 				realizationCoverage: "Full",
 				expletiveEvidence: { attested: "Es", orthography: "Standard" },
-				governedPrepositionEvidence: null,
+				valencyEvidence: [],
 			},
 		},
 	});
@@ -908,7 +908,7 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 	expect(attestations).toHaveLength(1);
 	expect(attestations[0]).toMatchObject({
 		expletiveEvidence: { attested: "Es", orthography: "Standard" },
-		governedPrepositionEvidence: null,
+		valencyEvidence: [],
 	});
 	const componentLemma = (await rows(t, "lemmas")).find(
 		(row) => row.kind === "PRON",

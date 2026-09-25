@@ -100,24 +100,17 @@ export function grammarFixture(
 						? "Marked"
 						: "Citation";
 				if (id === "coverage") return output.realizationCoverage;
-				if (id === "governedPreposition") {
-					const evidence = (
-						output as {
-							governedPrepositionEvidence?: {
-								attested: string;
-								orthography: string;
-							} | null;
-						}
-					).governedPrepositionEvidence;
-					if (!evidence) return "Absent";
-					const index = state.members.findIndex(
-						(member: string, position: number) =>
-							member === evidence.attested &&
-							output.memberOrthographies[position] ===
-								evidence.orthography,
-					);
-					return index === -1 ? "Unresolved" : `member_${index}`;
-				}
+				const governed = output.valencyEvidence?.find(
+					(slot) => slot.member !== null,
+				);
+				if (id === "governedPreposition")
+					return governed ? `member_${governed.member}` : "Absent";
+				if (id === "governedCase")
+					return governed?.complement.case ?? "Unresolved";
+				if (id === "governedReferent")
+					return governed?.complement.referent === "Either"
+						? "Unresolved"
+						: (governed?.complement.referent ?? "Unresolved");
 				if (id === "identity") {
 					const index = state.reviewedIdentities.findIndex(
 						(lemma) =>

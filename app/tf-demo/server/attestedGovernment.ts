@@ -1,4 +1,4 @@
-import { governedPrepositionsAt } from "dumgen/authored";
+import { slotsAt } from "dumgen/authored";
 import type { GovernedPrepositionDraft } from "dumgen/types";
 import {
 	fromStoredSentenceAnalysis,
@@ -13,8 +13,8 @@ type StoredSentence = {
 
 /**
  * The governed prepositions one stored occurrence attests (ADR 0034): intake
- * government whose governor has a member inside the occurrence's Segments.
- * Empty without an analysis, before intake resolved government, or when the
+ * slots whose governor has a member inside the occurrence's Segments.
+ * Empty without an analysis, when intake realized no slot, or when the
  * analysis no longer matches the stored Sentence.
  */
 export function attestedGovernment(
@@ -23,7 +23,7 @@ export function attestedGovernment(
 	memberSegmentIndices: readonly number[],
 ): GovernedPrepositionDraft[] {
 	if (
-		!analysis?.government?.length ||
+		!analysis?.slots.length ||
 		analysis.stitchedText !== stored.stitchedText
 	)
 		return [];
@@ -41,10 +41,20 @@ export function attestedGovernment(
 			),
 		)
 		.map((segment) => segment.offset);
-	return governedPrepositionsAt(
+	const found = new Map<string, GovernedPrepositionDraft>();
+	for (const { complement } of slotsAt(
 		fromStoredSentenceAnalysis(analysis),
 		offsets,
-	);
+	)) {
+		// Intake builds every slot from a governable preposition's Lemma.
+		const preposition = complement.preposition
+			.canonicalForm as GovernedPrepositionDraft["preposition"];
+		found.set(`${preposition}/${complement.case}`, {
+			preposition,
+			case: complement.case,
+		});
+	}
+	return [...found.values()];
 }
 
 /**

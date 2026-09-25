@@ -35,7 +35,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:flinte-ins-korn-werfen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -59,7 +59,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:ins-gras-beissen"]
 	},
@@ -98,7 +98,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Heult starts sentence. Standard spelling. Normalize verb to heult. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:mit-den-woelfen-heulen"]
@@ -147,7 +147,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:teufel-an-die-wand-malen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -188,7 +188,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "dem Chef is free argument. Do not add jemandem to canonicalForm. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:auf-der-nase-herumtanzen"]
@@ -223,7 +223,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-handtuch-werfen"]
@@ -247,7 +247,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Conventional truncation. Was + zum identify the exact Idiom; Teufel is unrealized fixed material.",
 		"contaminationKeys": ["de-idiom-lemma:was-zum-teufel"]
@@ -288,7 +288,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:sich-ins-faeustchen-lachen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -323,7 +323,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:truebsal-blasen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -363,7 +363,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:hand-und-fuss-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -403,7 +403,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:frieren-wie-ein-schneider"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -452,7 +452,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:zwei-fliegen-eine-klappe"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -487,7 +487,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:den-loeffel-abgeben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -528,7 +528,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:kalte-schulter-zeigen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -563,7 +563,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:ins-fettnaepfchen-treten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -604,7 +604,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:tomaten-auf-den-augen-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -663,7 +663,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:nagel-auf-den-kopf-treffen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -704,7 +704,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:zunge-im-zaum-halten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -745,7 +745,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:durch-dick-und-duenn-gehen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -785,7 +785,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:den-faden-verlieren"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -820,7 +820,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:uebers-ohr-hauen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -855,7 +855,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:den-kuerzeren-ziehen"]
@@ -890,7 +890,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "First phrase literal. Marked second phrase means staying in bed ill. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:das-bett-hueten"]
@@ -930,7 +930,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:auf-wolke-sieben-schweben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -970,7 +970,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:aus-allen-wolken-fallen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1019,7 +1019,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:katze-im-sack-kaufen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1060,7 +1060,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:kirche-im-dorf-lassen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1111,7 +1111,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:kein-blatt-vor-den-mund-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1162,7 +1162,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:kopf-in-den-sand-stecken"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1209,7 +1209,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:licht-ins-dunkel-bringen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1250,7 +1250,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:alle-haende-voll-zu-tun-haben"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1290,7 +1290,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-idiom-lemma:auf-dem-schlauch-stehen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -1325,7 +1325,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]

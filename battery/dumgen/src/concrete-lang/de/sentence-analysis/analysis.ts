@@ -9,17 +9,14 @@
  * one Route Mass over Lexeme Kinds and, for a closed-class head, an Identity
  * Mass over authored headword groups. The Phraseme layer partitions a subset
  * of the Lexeme Targets into Phraseme Targets, whose members are words, never
- * Segments, with one Kind Mass and a fixedness score. Government links each
+ * Segments, with one Kind Mass and a fixedness score. Slots link each
  * governed preposition to the Lexeme or Phraseme Target that selects it (ADR
- * 0030).
+ * 0030, ADR 0034).
  * Nothing resolved is stored; the Resolution Selector below is the one pure
  * function that applies the policy.
  */
 
-import type {
-	GovernablePreposition,
-	GovernedPrepositionDraft,
-} from "../governable-prepositions.js";
+import type * as Dumling from "dumling/types";
 
 export type AnalyzedSegmentKind =
 	| "ResolvableText"
@@ -101,18 +98,30 @@ export type Fusion = {
 	readonly components: readonly FusionComponent[];
 };
 
-/**
- * One governed preposition: the Segment realizing it (the preposition, a
- * fused word's adposition or a pronominal adverb), its ADP headword, the case
- * the government requires and the governing Lexeme Target's id, or a Phraseme
- * Target's id when the expression governs and no one word does (`mit … zu tun
- * haben`).
- */
-export type Government = {
-	readonly offset: number;
-	readonly preposition: GovernablePreposition;
+/** A Preposition complement (ADR 0034): the ADP Lemma, its case and referent. */
+export type PrepositionComplement = {
+	readonly kind: "Preposition";
+	readonly preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
 	readonly case: "Acc" | "Dat" | "Gen";
+	readonly referent: "Someone" | "Something" | "Either";
+};
+
+/**
+ * One preposition slot the sentence realizes (ADR 0034). `governor` is the
+ * Lexeme Target that selects the preposition, or a Phraseme Target when the
+ * expression governs and no one word does (`mit … zu tun haben`). `marker` is
+ * the Segment realizing the preposition (the preposition or a fused word's
+ * adposition). A pronominal adverb (`darauf`) realizes the preposition and
+ * its filler at once; the filler wins, so its slot has no marker and names
+ * the adverb's Lexeme Target as `filler`. A preposition keeps its case under
+ * passive, so `realizedCase` is the complement's case.
+ */
+export type Slot = {
 	readonly governor: string;
+	readonly marker: number | null;
+	readonly filler: string | null;
+	readonly complement: PrepositionComplement;
+	readonly realizedCase: "Acc" | "Dat" | "Gen";
 };
 
 export type SentenceAnalysis = {
@@ -125,7 +134,8 @@ export type SentenceAnalysis = {
 	/** The Phraseme layer: a partition of a subset of `targets`. */
 	readonly phrasemes: readonly PhrasemeTarget[];
 	readonly fusions: readonly Fusion[];
-	readonly government: readonly Government[];
+	/** Only preposition slots; case slots come from the Knowledge call's frame. */
+	readonly slots: readonly Slot[];
 };
 
 // ------------------------------------------------------- Resolution Selector
@@ -427,9 +437,9 @@ function lexemeUnit(target: LexemeTarget) {
 	};
 }
 
-// ------------------------------------------------------------- Government
+// ------------------------------------------------------------------ Slots
 
-/** The Lexeme Targets behind a Government's governor: one word, or a Phraseme's words. */
+/** The Lexeme Targets behind a Slot's governor: one word, or a Phraseme's words. */
 export function governorTargets(
 	analysis: SentenceAnalysis,
 	governor: string,
@@ -440,35 +450,41 @@ export function governorTargets(
 }
 
 /**
- * The governed prepositions a unit attests in this sentence: every
- * Government whose governing word has a member among the unit's offsets. A
- * Phraseme reaches the government of its member words; a Phraseme's own
- * government reaches only a unit covering the whole Phraseme.
+ * The Segment realizing a Slot's preposition: its marker, or the pronominal
+ * adverb that fills it.
  */
-export function governedPrepositionsAt(
+export function slotOffset(
+	analysis: SentenceAnalysis,
+	slot: Slot,
+): number | undefined {
+	if (slot.marker !== null) return slot.marker;
+	const filler = analysis.targets.find((target) => target.id === slot.filler);
+	return filler ? headOf(filler).offset : undefined;
+}
+
+/**
+ * The preposition slots a unit attests in this sentence: every Slot whose
+ * governing word has a member among the unit's offsets. A Phraseme reaches
+ * the slots of its member words; a Phraseme's own slot reaches only a unit
+ * covering the whole Phraseme.
+ */
+export function slotsAt(
 	analysis: SentenceAnalysis,
 	offsets: readonly number[],
-): GovernedPrepositionDraft[] {
+): Slot[] {
 	const covered = new Set(offsets);
-	const found = new Map<string, GovernedPrepositionDraft>();
-	for (const entry of analysis.government) {
+	return analysis.slots.filter((slot) => {
 		const phraseme = analysis.phrasemes.find(
-			(candidate) => candidate.id === entry.governor,
+			(candidate) => candidate.id === slot.governor,
 		);
 		const governor = analysis.targets.find(
-			(target) => target.id === entry.governor,
+			(target) => target.id === slot.governor,
 		);
-		if (
-			phraseme
-				? offsetsOf(analysis, phraseme).every((offset) =>
-						covered.has(offset),
-					)
-				: governor?.members.some((member) => covered.has(member.offset))
-		)
-			found.set(`${entry.preposition}/${entry.case}`, {
-				preposition: entry.preposition,
-				case: entry.case,
-			});
-	}
-	return [...found.values()];
+		return phraseme
+			? offsetsOf(analysis, phraseme).every((offset) =>
+					covered.has(offset),
+				)
+			: (governor?.members.some((member) => covered.has(member.offset)) ??
+					false);
+	});
 }

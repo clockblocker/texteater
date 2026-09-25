@@ -18,11 +18,36 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
-	governedPrepositionEvidence: { attested: "auf", orthography: "Standard" },
+	valencyEvidence: [
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "auf",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: null,
+						partType: null,
+					},
+				},
+				case: "Acc",
+				referent: "Someone",
+			},
+			realizedCase: "Acc",
+		},
+	],
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "pass auf auf",
+		normalizedSurface: "pass auf",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
@@ -57,6 +82,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[Pass] auf dich auf!",
 	classifierNotes:
-		"Pass, governed auf, and detached-prefix auf are three fixed members distinguished by source position; free reflexive object dich remains separate.",
+		"Pass, governed auf, and detached-prefix auf are three members distinguished by source position; governed auf is valency evidence rather than a Fixed member, and free reflexive object dich remains separate.",
 	isVerified: true,
 } as const;

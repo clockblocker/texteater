@@ -11,13 +11,14 @@ import { createDumgen } from "../../../universal/dumgen.js";
 import { segmentSchema } from "../../../universal/schemas.js";
 import {
 	effectiveRoute,
-	type Government,
 	governorTargets,
 	headOf,
 	membersOf,
 	type SentenceAnalysis,
+	type Slot,
 	selectIdentity,
 	selectPhrasemeKind,
+	slotOffset,
 } from "./analysis.js";
 import { evaluationCaseIds } from "./evaluation-ids.js";
 import data from "./source-data.json";
@@ -26,7 +27,7 @@ import data from "./source-data.json";
  * The sentence corpus (issue 495): gold keyed by character offset in the
  * Segmented Sentence's Stitched Text, a Lexeme layer of targets with members
  * and, where authored, roles and the closed-class headword group, a Phraseme
- * layer naming member words by head offset, and government naming each
+ * layer naming member words by head offset, and slots naming each
  * governed preposition's Segment with the words that may govern it. A layer
  * a case leaves out is not scored.
  */
@@ -55,14 +56,17 @@ export const goldSchema = z.strictObject({
 			}),
 		)
 		.optional(),
-	government: z
+	slots: z
 		.array(
 			z.strictObject({
 				/** Any member offset of an acceptable governing word. */
 				governors: z.array(z.number().int().nonnegative()).min(1),
+				/** The Segment realizing the preposition: the marker, or a pronominal adverb filler. */
 				offset: z.number().int().nonnegative(),
 				preposition: z.string().min(1),
 				case: z.enum(["Acc", "Dat", "Gen"]),
+				/** Scored only where authored. */
+				referent: z.enum(["Someone", "Something", "Either"]).optional(),
 			}),
 		)
 		.optional(),
@@ -83,9 +87,9 @@ export type SentenceScore = {
 	readonly phrasemesFound: number;
 	readonly phrasemesCorrect: number;
 	readonly phrasemesExtra: number;
-	readonly government: number;
-	readonly governmentCorrect: number;
-	readonly governmentExtra: number;
+	readonly slots: number;
+	readonly slotsCorrect: number;
+	readonly slotsExtra: number;
 	readonly failures: readonly string[];
 };
 
@@ -182,8 +186,8 @@ export function scoreAnalysis(
 				.map((target) => text(headOf(target).offset))
 				.join(" ")}}`,
 		);
-	const government = scoreGovernment(analysis, gold, text);
-	failures.push(...government.failures);
+	const slots = scoreSlots(analysis, gold, text);
+	failures.push(...slots.failures);
 	return {
 		contractPass: failures.length === 0,
 		targets: gold.targets?.length ?? 0,
@@ -197,41 +201,47 @@ export function scoreAnalysis(
 		phrasemesFound,
 		phrasemesCorrect,
 		phrasemesExtra: extra.length,
-		government: gold.government?.length ?? 0,
-		governmentCorrect: government.correct,
-		governmentExtra: government.extra,
+		slots: gold.slots?.length ?? 0,
+		slotsCorrect: slots.correct,
+		slotsExtra: slots.extra,
 		failures,
 	};
 }
 
-/** A gold entry matches the Government on its Segment with its preposition, case and one of its governors. */
-function scoreGovernment(
+/**
+ * A gold entry matches the Slot on its Segment with its preposition, case,
+ * one of its governors and, where authored, its referent.
+ */
+function scoreSlots(
 	analysis: SentenceAnalysis,
 	gold: SentenceGold,
 	text: (offset: number) => string,
 ) {
 	const failures: string[] = [];
-	if (!gold.government) return { correct: 0, extra: 0, failures };
+	if (!gold.slots) return { correct: 0, extra: 0, failures };
 	const governorLabel = (id: string) =>
 		governorTargets(analysis, id)
 			.map((target) => text(headOf(target).offset))
 			.join(" ") || "?";
-	const matched = new Set<Government>();
+	const matched = new Set<Slot>();
 	let correct = 0;
-	for (const expected of gold.government) {
-		const label = `${expected.governors.map(text).join("/")} + ${expected.preposition} ${expected.case}`;
-		const found = analysis.government.find(
-			(entry) => entry.offset === expected.offset,
+	for (const expected of gold.slots) {
+		const label = `${expected.governors.map(text).join("/")} + ${expected.preposition} ${expected.case}${expected.referent ? ` ${expected.referent}` : ""}`;
+		const found = analysis.slots.find(
+			(slot) => slotOffset(analysis, slot) === expected.offset,
 		);
 		if (!found) {
-			failures.push(`${label}: no government`);
+			failures.push(`${label}: no slot`);
 			continue;
 		}
 		matched.add(found);
-		const actual = `${governorLabel(found.governor)} + ${found.preposition} ${found.case}`;
+		const { complement } = found;
+		const actual = `${governorLabel(found.governor)} + ${complement.preposition.canonicalForm} ${complement.case} ${complement.referent}`;
 		if (
-			found.preposition === expected.preposition &&
-			found.case === expected.case &&
+			complement.preposition.canonicalForm === expected.preposition &&
+			complement.case === expected.case &&
+			(expected.referent === undefined ||
+				complement.referent === expected.referent) &&
 			governorTargets(analysis, found.governor).some((governor) =>
 				governor.members.some((member) =>
 					expected.governors.includes(member.offset),
@@ -241,10 +251,10 @@ function scoreGovernment(
 			correct += 1;
 		else failures.push(`${label}: got ${actual}`);
 	}
-	const extra = analysis.government.filter((entry) => !matched.has(entry));
-	for (const entry of extra)
+	const extra = analysis.slots.filter((slot) => !matched.has(slot));
+	for (const slot of extra)
 		failures.push(
-			`extra government ${governorLabel(entry.governor)} + ${text(entry.offset)} ${entry.case}`,
+			`extra slot ${governorLabel(slot.governor)} + ${text(slotOffset(analysis, slot) ?? -1)} ${slot.complement.case}`,
 		);
 	return { correct, extra: extra.length, failures };
 }
@@ -350,13 +360,14 @@ export function projectGold(analysis: SentenceAnalysis): SentenceGold {
 				.map((target) => headOf(target).offset)
 				.sort((a, b) => a - b),
 		})),
-		government: analysis.government.map((entry) => ({
-			governors: governorTargets(analysis, entry.governor).map(
+		slots: analysis.slots.map((slot) => ({
+			governors: governorTargets(analysis, slot.governor).map(
 				(target) => headOf(target).offset,
 			),
-			offset: entry.offset,
-			preposition: entry.preposition,
-			case: entry.case,
+			offset: slotOffset(analysis, slot) ?? 0,
+			preposition: slot.complement.preposition.canonicalForm,
+			case: slot.complement.case,
+			referent: slot.complement.referent,
 		})),
 	};
 }
@@ -375,9 +386,9 @@ function emptyScore(gold: SentenceGold): SentenceScore {
 		phrasemesFound: 0,
 		phrasemesCorrect: 0,
 		phrasemesExtra: 0,
-		government: gold.government?.length ?? 0,
-		governmentCorrect: 0,
-		governmentExtra: 0,
+		slots: gold.slots?.length ?? 0,
+		slotsCorrect: 0,
+		slotsExtra: 0,
 		failures: ["no analysis recorded"],
 	};
 }

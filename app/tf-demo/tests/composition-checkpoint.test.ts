@@ -61,10 +61,7 @@ test("legacy verbal checkpoints default absent composition without absorbing adj
 		checkpoint.attestation.members,
 	);
 	expect(restored?.attestation).toHaveProperty("expletiveEvidence", null);
-	expect(restored?.attestation).toHaveProperty(
-		"governedPrepositionEvidence",
-		null,
-	);
+	expect(restored?.attestation).toHaveProperty("valencyEvidence", []);
 	expect(restored?.attestation.surface).toHaveProperty(
 		"inflectionalFeatures.expletive",
 		null,

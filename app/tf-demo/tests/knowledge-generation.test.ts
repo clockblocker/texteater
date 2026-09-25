@@ -144,12 +144,32 @@ function governedAnalysis(segmentedSentenceId: string) {
 		],
 		phrasemes: [],
 		fusions: [],
-		government: [
+		slots: [
 			{
-				offset: 6,
-				preposition: "vor",
-				case: "Dat" as const,
 				governor: "t1",
+				marker: 6,
+				filler: null,
+				complement: {
+					kind: "Preposition" as const,
+					preposition: {
+						unitKind: "Lemma" as const,
+						language: "de" as const,
+						family: "Lexeme",
+						kind: "ADP",
+						canonicalForm: "vor",
+						coreFeatures: {
+							abbr: null,
+							adpType: "Prep",
+							extPos: null,
+							foreign: null,
+							governedCase: null,
+							partType: null,
+						},
+					},
+					case: "Dat" as const,
+					referent: "Something" as const,
+				},
+				realizedCase: "Dat" as const,
 			},
 		],
 	};

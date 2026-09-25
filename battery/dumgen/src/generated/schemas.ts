@@ -3837,8 +3837,7 @@ export const grammarSchemas = {
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R3.attestationSchema.shape.expletiveEvidence,
-		governedPrepositionEvidence:
-			R3.attestationSchema.shape.governedPrepositionEvidence,
+		valencyEvidence: R3.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Lexeme/CCONJ": z.strictObject({
 		lemma: R4.lemmaSchema.omit({
@@ -4062,8 +4061,7 @@ export const grammarSchemas = {
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R16.attestationSchema.shape.expletiveEvidence,
-		governedPrepositionEvidence:
-			R16.attestationSchema.shape.governedPrepositionEvidence,
+		valencyEvidence: R16.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Morpheme/Circumfix": z.strictObject({
 		lemma: R17.lemmaSchema.omit({
@@ -4269,8 +4267,7 @@ export const grammarSchemas = {
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R28.attestationSchema.shape.expletiveEvidence,
-		governedPrepositionEvidence:
-			R28.attestationSchema.shape.governedPrepositionEvidence,
+		valencyEvidence: R28.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Phraseme/DiscourseFormula": z.strictObject({
 		lemma: R29.lemmaSchema.omit({
@@ -4306,8 +4303,7 @@ export const grammarSchemas = {
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R30.attestationSchema.shape.expletiveEvidence,
-		governedPrepositionEvidence:
-			R30.attestationSchema.shape.governedPrepositionEvidence,
+		valencyEvidence: R30.attestationSchema.shape.valencyEvidence,
 	}),
 	"de/Phraseme/Proverb": z.strictObject({
 		lemma: R31.lemmaSchema.omit({

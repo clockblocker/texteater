@@ -16,7 +16,6 @@ export {
 	familyOf,
 	fixednessFloor,
 	fusionAt,
-	governedPrepositionsAt,
 	governorTargets,
 	headOf,
 	largestOf,
@@ -29,6 +28,7 @@ export {
 	selectIdentity,
 	selectPhrasemeKind,
 	selectRoute,
+	slotsAt,
 	targetOf,
 } from "./concrete-lang/de/sentence-analysis/analysis.js";
 export type {

@@ -10,8 +10,8 @@
  * a Phraseme's members are words, projected by Head, only a word whose own
  * fixedness Score reaches the floor joins one, one pair alone never ties two
  * expressions together, a preposition joins only with its complement, and a
- * governor with only what it governs is valency, not a Phraseme. Government
- * is read over the finished Lexeme Targets and Phraseme Targets.
+ * governor with only what it governs is valency, not a Phraseme. Slots are
+ * read over the finished Lexeme Targets and Phraseme Targets.
  */
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
@@ -26,7 +26,7 @@ import type {
 } from "./analysis.js";
 import { fixednessFloor, selectIdentity } from "./analysis.js";
 import type { RoleAnswer } from "./criteria.js";
-import { assembleGovernment } from "./government.js";
+import { assembleSlots } from "./government.js";
 import {
 	candidateKey,
 	candidateOf,
@@ -640,18 +640,19 @@ export function assembleAnalysis(
 			provenance: `score@${policy.phrasemeTau}`,
 		});
 	}
-	// A governor with only the prepositions it governs is valency, which
-	// government already records (ADR 0030), not an expression.
-	const wordGovernment = assembleGovernment(placement, targets, answers);
+	// A governor with only the prepositions it governs is valency, which its
+	// slots already record (ADR 0030, ADR 0034), not an expression.
+	const wordSlots = assembleSlots(placement, targets, answers);
 	const valencyOnly = (phraseme: PhrasemeTarget) =>
 		phraseme.members.every((id) => {
 			const target = targets.find((candidate) => candidate.id === id);
-			return wordGovernment.some(
-				(link) =>
-					phraseme.members.includes(link.governor) &&
-					(link.governor === id ||
+			return wordSlots.some(
+				(slot) =>
+					phraseme.members.includes(slot.governor) &&
+					(slot.governor === id ||
+						slot.filler === id ||
 						target?.members.some(
-							(member) => member.offset === link.offset,
+							(member) => member.offset === slot.marker,
 						)),
 			);
 		});
@@ -695,11 +696,6 @@ export function assembleAnalysis(
 		targets,
 		phrasemes: expressions,
 		fusions: placement.fusions,
-		government: assembleGovernment(
-			placement,
-			targets,
-			answers,
-			expressions,
-		),
+		slots: assembleSlots(placement, targets, answers, expressions),
 	};
 }

@@ -33,7 +33,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -60,7 +60,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		}
 	},
 	"grammar-de-verb-past-ging": {
@@ -97,7 +97,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -135,7 +135,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -173,7 +173,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -211,7 +211,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -249,7 +249,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -287,10 +287,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "auf",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Someone"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Two auf. First governed preposition. Second separable prefix. dich free. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -328,10 +350,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "an",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "an",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -369,10 +413,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "auf",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -410,7 +476,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -448,7 +514,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -486,7 +552,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "wird member. reisen head. Head stays Inf. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -524,10 +590,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "um",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "um",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Acc",
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -565,7 +653,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
@@ -603,7 +691,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
 	},
@@ -641,7 +729,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -679,7 +767,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -717,7 +805,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -755,7 +843,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Productive werden-passive. wurde member. geschlossen head stays Part. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -793,7 +881,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -836,10 +924,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "an",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "an",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/deutschland-nimmt-an-ukraine-man%C3%B6ver-teil-koalition-der-willigen-drohnen-abkommen-eu-von-der-leyen/a-77967914"
@@ -880,7 +990,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "sich ordinary object. Not member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -921,7 +1031,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/das-entstehen-einer-neuen-weltordnung/a-77552455"
@@ -962,7 +1072,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/goldpreis-hype-um-papiergold-heizt-spekulation-an/a-74885073"
@@ -1003,10 +1113,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "von",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "von",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Dat",
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/welche-rolle-spielen-digital-natives-bei-tansanias-wahlen/a-72886910"
@@ -1047,7 +1179,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/ukraine-historiker-schl%C3%B6gel-warnt-vor-spaltung-europas/a-74248079"
@@ -1088,10 +1220,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "an",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 0,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "an",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Someone"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/europa-ringt-um-die-zukunft-der-rente/a-74925391"
@@ -1132,7 +1286,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "First wird member. Last wird other verb. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1173,7 +1327,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": [
@@ -1214,7 +1368,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/%C3%A4g%C3%A4is-konflikt-die-t%C3%BCrkei-schafft-fakten/a-62910995"
@@ -1255,7 +1409,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/klimamassnahmen-co2-deutschland-klimaschutz-reicht-nicht-aus-klimaklage-w%C3%A4rmepumpe-verkehr/a-76527298"
@@ -1301,10 +1455,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "für",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "für",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Acc",
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"contaminationKeys": [
 			"source:https://www.dw.com/de/kein-europ%C3%A4isches-urteil-zur-sterbehilfe/a-16100150"
@@ -1345,7 +1521,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/wieder-ersch%C3%BCttert-todesfall-die-k-pop-szene/a-51524053"
@@ -1386,7 +1562,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/usa-lockern-weiter-sanktionen-gegen-russischen-oel/a-76841076"
@@ -1432,10 +1608,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "auf",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"contaminationKeys": [
 			"source:https://amp.dw.com/de/bundeswehr-bereitet-einsatz-in-der-stra%C3%9Fe-von-hormus-vor/a-77604603"
@@ -1476,10 +1674,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "auf",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1517,7 +1737,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1555,10 +1775,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "auf",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1596,7 +1838,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1634,10 +1876,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "an",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "an",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1675,10 +1939,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "nach",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "nach",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Dat",
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1716,7 +2002,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1754,10 +2040,32 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": {
-				"attested": "vor",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "vor",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": null,
+								"partType": null
+							}
+						},
+						"case": "Dat",
+						"referent": "Something"
+					},
+					"realizedCase": "Dat"
+				}
+			]
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1795,7 +2103,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1833,7 +2141,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
@@ -1874,7 +2182,7 @@
 				"attested": "Es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:demo-exists"]
@@ -1916,7 +2224,7 @@
 				"attested": "Es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:demo-weather"]
@@ -1958,7 +2266,7 @@
 				"attested": "es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-question"]
@@ -2000,7 +2308,7 @@
 				"attested": "Es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-past"]
@@ -2042,7 +2350,7 @@
 				"attested": "es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-subordinate"]
@@ -2084,7 +2392,7 @@
 				"attested": "es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-weather"]
@@ -2126,10 +2434,32 @@
 				"attested": "Es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": {
-				"attested": "um",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 2,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "um",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Acc",
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-governed"]
@@ -2176,10 +2506,32 @@
 				"attested": "Es",
 				"orthography": "Standard"
 			},
-			"governedPrepositionEvidence": {
-				"attested": "um",
-				"orthography": "Standard"
-			}
+			"valencyEvidence": [
+				{
+					"member": 3,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "um",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"governedCase": "Acc",
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
 		},
 		"explanation": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate.",
 		"contaminationKeys": ["subject-es:subject-reflexive"]
@@ -2218,7 +2570,7 @@
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:referential-es"]
@@ -2257,7 +2609,7 @@
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:positional-es"]
@@ -2296,7 +2648,7 @@
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:anticipatory-es"]
@@ -2335,7 +2687,7 @@
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "This es is outside lexically selected subject-expletive composition.",
 		"contaminationKeys": ["subject-es:object-es"]
@@ -2374,7 +2726,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Whole verbal Surface hätt bestellt: Konjunktiv II of the past (unreal past, perfect Yes with mood Sub and tense Past), finite as a whole; the Partizip II is only the shape of the head member. hätt is a licensed verse apocope of hätte, not a typo: member orthography Standard, Surface spelling Variant, the literal form kept in normalizedMembers, like muß. The auxiliary member is a Surface of the AUX Reading haben-Perfekt, reachable only from this Surface's sheet (map 487, ticket 507)."
 	},
@@ -2412,7 +2764,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2439,7 +2791,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026)."
 	},
@@ -2477,7 +2829,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2515,7 +2867,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2553,7 +2905,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2591,7 +2943,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2629,7 +2981,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2667,7 +3019,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2705,7 +3057,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2743,7 +3095,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2781,7 +3133,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2819,7 +3171,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2857,7 +3209,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 	},
@@ -2895,7 +3247,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
 	},
@@ -2933,7 +3285,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -2971,7 +3323,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
 	},
@@ -3009,7 +3361,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3047,7 +3399,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3085,7 +3437,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3123,7 +3475,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3161,7 +3513,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Copular sein is the VERB with its own meaning, not an auxiliary (ADR 0026). The predicate stays a separate target."
 	},
@@ -3199,7 +3551,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Perfect of copular VERB sein: ist is its auxiliary member, gewesen the head (ADR 0026). Whole-Surface composition per ADR 0022."
 	},
@@ -3226,7 +3578,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
 	},
@@ -3264,7 +3616,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Recipient passive: bekommt is the auxiliary member, geliefert the head. voice Pass, passive Recipient (ADR 0026)."
 	},
@@ -3302,7 +3654,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "erhalten as recipient-passive auxiliary; finite past on the whole Surface. überreichen is inseparable, so hasSepPrefix stays null."
 	},
@@ -3340,7 +3692,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Lexical bekommen with an object: ordinary VERB, no passive."
 	},
@@ -3378,7 +3730,7 @@
 			},
 			"realizationCoverage": "Full",
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
 	}

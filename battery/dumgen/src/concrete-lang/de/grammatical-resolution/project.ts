@@ -1,4 +1,5 @@
 import { germanArticleForm } from "dumling";
+import type * as Dumling from "dumling/types";
 
 type DeMemberOrthography = "Standard" | "Typo";
 type GrammaticalResolutionInput = {
@@ -11,10 +12,11 @@ export type GrammarOutput = {
 		attested: string;
 		orthography: DeMemberOrthography;
 	} | null;
-	governedPrepositionEvidence?: {
-		attested: string;
-		orthography: DeMemberOrthography;
-	} | null;
+	valencyEvidence?: Dumling.Attestation<
+		"de",
+		"Lexeme",
+		"VERB"
+	>["valencyEvidence"];
 	articleEvidence?: {
 		attested: string;
 		orthography: DeMemberOrthography;
@@ -70,6 +72,11 @@ export function normalizeGrammarSurface(
 					attestedMembers: input.members,
 					memberOrthographies: output.memberOrthographies,
 					normalizedMembers: output.normalizedMembers,
+					valencyMembers: new Set(
+						(output.valencyEvidence ?? []).flatMap((slot) =>
+							slot.member === null ? [] : [slot.member],
+						),
+					),
 				});
 	if (route.kind === "NOUN" && output.realizationCoverage === "Partial") {
 		if (!articleForm || !output.articleEvidence)
@@ -83,10 +90,16 @@ export function normalizeGrammarSurface(
 	}
 	return normalized;
 }
+/**
+ * The normalized Surface projects only Fixed members: a member realizing a
+ * valency slot, such as a governed preposition, stays an Attestation member
+ * but leaves the Surface (`wartet`, not `wartet auf`; ADR 0034).
+ */
 function constructNormalizedSurface(args: {
 	readonly attestedMembers: readonly string[];
 	readonly memberOrthographies: readonly DeMemberOrthography[];
 	readonly normalizedMembers: readonly string[];
+	readonly valencyMembers?: ReadonlySet<number>;
 }): string {
 	const { attestedMembers, memberOrthographies, normalizedMembers } = args;
 	assertAlignedMembers(args);
@@ -110,7 +123,14 @@ function constructNormalizedSurface(args: {
 		}
 	}
 
-	return normalizedMembers.join(" ");
+	const fixed = normalizedMembers.filter(
+		(_, position) => !args.valencyMembers?.has(position),
+	);
+	if (fixed.length === 0)
+		throw new DeGrammaticalResolutionProjectionError(
+			"A Surface needs at least one Fixed member.",
+		);
+	return fixed.join(" ");
 }
 
 const trailingErgaenzungsstrich = /[-‐‑]$/u;

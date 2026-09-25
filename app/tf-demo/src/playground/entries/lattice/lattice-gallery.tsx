@@ -55,14 +55,14 @@ type Fixture = {
 	readonly produced: { readonly design: string; readonly at: string };
 };
 
-// The lab fixtures predate intake government; they attest none.
+// The lab fixtures predate intake slots; they attest none.
 const fixtures: readonly Fixture[] = (
 	latticeFixtures as readonly (Omit<Fixture, "analysis"> & {
-		readonly analysis: Omit<SegmentedSentence, "government">;
+		readonly analysis: Omit<SegmentedSentence, "slots">;
 	})[]
 ).map((fixture) => ({
 	...fixture,
-	analysis: { ...fixture.analysis, government: [] },
+	analysis: { ...fixture.analysis, slots: [] },
 }));
 
 /**

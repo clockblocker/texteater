@@ -18,7 +18,6 @@ export type {
 	AnalyzedSegment,
 	Fusion,
 	FusionComponent,
-	Government,
 	IdentityCandidate,
 	IdentityMass,
 	IdentityState,
@@ -27,9 +26,11 @@ export type {
 	Member,
 	MemberRole,
 	PhrasemeTarget,
+	PrepositionComplement,
 	SelectedPhrasemeKind,
 	SelectedRoute,
 	SentenceAnalysis,
+	Slot,
 } from "./concrete-lang/de/sentence-analysis/analysis.js";
 export type {
 	KnowledgeFailure,

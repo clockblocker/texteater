@@ -34,7 +34,7 @@ export const registrations = [
 		implementation: isGermanVerbalAttestation,
 		error: germanVerbalAttestationError,
 		name: "dumling.de-verbal.attestation",
-		version: 1,
+		version: 2,
 	},
 	{
 		construct: "custom",

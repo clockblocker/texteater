@@ -79,7 +79,7 @@ export function produceKnowledge(
 		encounter: Encounter;
 		reading: Dumling.Reading;
 		request: KnowledgeRequest;
-		/** What intake attested for this occurrence (`governedPrepositionsAt`). */
+		/** What intake attested for this occurrence (`slotsAt`). */
 		attestedGovernment?: readonly {
 			preposition: string;
 			case: Dumrel.GovernedCase;

@@ -204,8 +204,7 @@ export async function loadOccurrenceAttestation(
 		["VERB", "AUX", "Idiom", "Collocation"].includes(lemma.kind)
 			? {
 					expletiveEvidence: attestation.expletiveEvidence ?? null,
-					governedPrepositionEvidence:
-						attestation.governedPrepositionEvidence ?? null,
+					valencyEvidence: attestation.valencyEvidence ?? [],
 				}
 			: {}),
 		...(attestation.articleEvidence === undefined

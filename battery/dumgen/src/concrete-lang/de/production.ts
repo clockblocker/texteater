@@ -265,9 +265,8 @@ export function createGermanOperations(
 									? {
 											expletiveEvidence:
 												output.expletiveEvidence,
-											governedPrepositionEvidence:
-												output.governedPrepositionEvidence ??
-												null,
+											valencyEvidence:
+												output.valencyEvidence ?? [],
 										}
 									: {}),
 								...(lemma.kind === "NOUN"

@@ -121,7 +121,7 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 			realizationCoverage: "Full",
 			members: [evidence, { attested: "gibt", orthography: "Standard" }],
 			expletiveEvidence: evidence,
-			governedPrepositionEvidence: null,
+			valencyEvidence: [],
 		};
 		expect(parseUnit(attestation).success).toBe(true);
 		expect(
@@ -139,41 +139,89 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 		).toBe(false);
 	}
 });
-test("governed-preposition evidence must be an owned member of the verbal Attestation", () => {
-	const auf = { attested: "auf", orthography: "Standard" };
+test("valency evidence names the owned member realizing its preposition", () => {
+	const preposition = (
+		canonicalForm: string,
+		governedCase: string | null,
+	) => ({
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm,
+		coreFeatures: {
+			abbr: null,
+			adpType: "Prep",
+			extPos: null,
+			foreign: null,
+			governedCase,
+			partType: null,
+		},
+	});
+	const slot = {
+		member: 1,
+		complement: {
+			kind: "Preposition",
+			preposition: preposition("auf", null),
+			case: "Acc",
+			referent: "Something",
+		},
+		realizedCase: "Acc",
+	};
 	const attestation = {
 		unitKind: "Attestation",
 		surface: {
 			...verb,
-			normalizedSurface: "wartet auf",
+			normalizedSurface: "wartet",
 			inflectionalFeatures: {
 				...verb.inflectionalFeatures,
 				expletive: null,
 			},
 		},
 		realizationCoverage: "Full",
-		members: [{ attested: "wartet", orthography: "Standard" }, auf],
+		members: [
+			{ attested: "wartet", orthography: "Standard" },
+			{ attested: "auf", orthography: "Standard" },
+		],
 		expletiveEvidence: null,
-		governedPrepositionEvidence: auf,
+		valencyEvidence: [slot],
 	};
 	expect(parseUnit(attestation).success).toBe(true);
-	expect(
-		parseUnit({ ...attestation, governedPrepositionEvidence: null })
-			.success,
-	).toBe(true);
-	expect(
-		parseUnit({
-			...attestation,
-			governedPrepositionEvidence: {
-				attested: "an",
-				orthography: "Standard",
+	for (const valid of [[], [{ ...slot, member: null }]])
+		expect(
+			parseUnit({ ...attestation, valencyEvidence: valid }).success,
+		).toBe(true);
+	for (const invalid of [
+		[{ ...slot, member: 0 }],
+		[{ ...slot, member: 2 }],
+		[slot, slot],
+		[{ ...slot, realizedCase: "Dat" }],
+		[
+			{
+				...slot,
+				complement: {
+					...slot.complement,
+					preposition: preposition("auf", "Dat"),
+				},
 			},
-		}).success,
-	).toBe(false);
+		],
+		[
+			{
+				...slot,
+				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+			},
+		],
+	])
+		expect(
+			parseUnit({ ...attestation, valencyEvidence: invalid }).success,
+		).toBe(false);
 	expect(
 		parseUnit({
 			...attestation,
-			governedPrepositionEvidence: { ...auf, orthography: "Typo" },
+			members: [
+				{ attested: "wartet", orthography: "Standard" },
+				{ attested: "uaf", orthography: "Typo" },
+			],
 		}).success,
-	).toBe(false);
+	).toBe(true);
 });

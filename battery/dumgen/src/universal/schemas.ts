@@ -1,3 +1,4 @@
+import { lemmaSchema as adpositionLemmaSchema } from "dumling/schema/de/lexeme/adposition";
 import {
 	knowledgeChangeSchema,
 	knowledgeRequestMaskSchema,
@@ -27,6 +28,7 @@ export const analyzeInputSchema = z.strictObject({
 	sentence: segmentedSentenceSchema.extend({ language: z.literal("de") }),
 });
 const offsetSchema = z.number().int().nonnegative();
+const governedCaseSchema = z.enum(["Acc", "Dat", "Gen"]);
 const massSchema = z.record(z.string().min(1), z.number().min(0).max(1));
 const memberRoleSchema = z.enum([
 	"Head",
@@ -108,12 +110,18 @@ export const sentenceAnalysisSchema = z.strictObject({
 				.min(2),
 		}),
 	),
-	government: z.array(
+	slots: z.array(
 		z.strictObject({
-			offset: offsetSchema,
-			preposition: z.string().min(1),
-			case: z.enum(["Acc", "Dat", "Gen"]),
 			governor: z.string().min(1),
+			marker: offsetSchema.nullable(),
+			filler: z.string().min(1).nullable(),
+			complement: z.strictObject({
+				kind: z.literal("Preposition"),
+				preposition: adpositionLemmaSchema,
+				case: governedCaseSchema,
+				referent: z.enum(["Someone", "Something", "Either"]),
+			}),
+			realizedCase: governedCaseSchema,
 		}),
 	),
 });

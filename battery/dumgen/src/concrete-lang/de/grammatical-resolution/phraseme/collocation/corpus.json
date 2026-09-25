@@ -29,7 +29,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:entscheidung-treffen"]
@@ -53,7 +53,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "An explicit dictionary entry is Citation rather than a contextual Inflection.",
 		"contaminationKeys": ["de-coll-lemma:frage-stellen"]
@@ -88,7 +88,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:verfuegung-stellen"]
@@ -123,7 +123,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"explanation": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 		"contaminationKeys": ["de-coll-lemma:anerkennung-finden"]
@@ -158,7 +158,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -193,7 +193,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:antrag-stellen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -228,7 +228,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:vereinbarung-treffen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -263,7 +263,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -298,7 +298,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -333,7 +333,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:zustimmung-erteilen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -368,7 +368,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:ende-kommen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -408,7 +408,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:anspruch-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -443,7 +443,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:ausdruck-bringen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -478,7 +478,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:einfluss-nehmen"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -513,7 +513,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:erscheinung-treten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
@@ -537,7 +537,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:abschied-nehmen"]
 	},
@@ -571,7 +571,7 @@
 				"coreFeatures": {}
 			},
 			"expletiveEvidence": null,
-			"governedPrepositionEvidence": null
+			"valencyEvidence": []
 		},
 		"contaminationKeys": ["de-coll-lemma:abbitte-leisten"],
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."

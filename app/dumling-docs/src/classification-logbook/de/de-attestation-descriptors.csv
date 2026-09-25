@@ -77,7 +77,7 @@ Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
 Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
 Er vergaß [seinen] Schlüssel im Büro.,seinen,Not Grundform,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Not Grundform,Lexeme,VERB
-Er [wartet] auf den Nachtbus.,wartet auf,Not Grundform,Lexeme,VERB
+Er [wartet] auf den Nachtbus.,wartet,Not Grundform,Lexeme,VERB
 Er [wog] vielleicht ein halbes Lot – und war am fünften Tage tot. ,wog,Not Grundform,Lexeme,VERB
 Er wog vielleicht ein halbes [Lot] – und war am fünften Tage tot. ,Lot,Not Grundform,Lexeme,NOUN
 Er wog vielleicht ein halbes Lot – und [war] am fünften Tage tot. ,war,Not Grundform,Lexeme,AUX
@@ -113,19 +113,19 @@ Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Not Grundform,Lexeme,VERB
 "nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Undetermined,Lexeme,ADV
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Grundform,Lexeme,ADJ
-[Pass] auf dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
-Pass [auf] dich auf!,pass auf auf,Not Grundform,Lexeme,VERB
+[Pass] auf dich auf!,pass auf,Not Grundform,Lexeme,VERB
+Pass [auf] dich auf!,pass auf,Not Grundform,Lexeme,VERB
 Pass auf [dich] auf!,dich,Grundform,Lexeme,PRON
-Pass auf dich [auf]!,pass auf auf,Not Grundform,Lexeme,VERB
+Pass auf dich [auf]!,pass auf,Not Grundform,Lexeme,VERB
 [Schwimmen] ist gesund.,Schwimmen,Undetermined,Lexeme,NOUN
 Sein ständiges [Meckern] nervt.,Meckern,Undetermined,Lexeme,NOUN
-Sie [erinnert] sich an den Geruch.,erinnert sich an,Not Grundform,Lexeme,VERB
+Sie [erinnert] sich an den Geruch.,erinnert sich,Not Grundform,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ
 Sie kam [lachend] herein.,lachend,Grundform,Lexeme,ADJ
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Not Grundform,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Not Grundform,Lexeme,VERB
-Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB
+Sie wurde um Geduld [gebeten].,wurde gebeten,Not Grundform,Lexeme,VERB
 "[Sieh] einmal, hier steht er, pfui, der Struwwelpeter!",sieh,Not Grundform,Lexeme,VERB
 "Sieh [einmal], hier steht er, pfui, der Struwwelpeter!",einmal,Undetermined,Lexeme,ADV
 "Sieh einmal, [hier] steht er, pfui, der Struwwelpeter!",hier,Undetermined,Lexeme,ADV

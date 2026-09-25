@@ -6,7 +6,7 @@ import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { parse } from "../../../universal/validation.js";
 import type { SentenceAnalysis } from "./analysis.js";
 import { assembleAnalysis } from "./assemble.js";
-import { governmentQuestions } from "./government.js";
+import { slotQuestions } from "./government.js";
 import { placeSegments } from "./placement.js";
 import {
 	analysisState,
@@ -17,7 +17,7 @@ import {
 
 /**
  * Intake-time analysis of one accepted German sentence (Dumgen ADR 0006):
- * both layers' questions and the government questions over one state,
+ * both layers' questions and the slot questions over one state,
  * chunked only when the question count exceeds the request budget, then pure
  * assembly. A sentence with no
  * resolvable Segment has an empty analysis and makes no call. A failed chunk
@@ -30,7 +30,7 @@ export function analyzeGermanSentence(
 ) {
 	return Effect.gen(function* () {
 		const placement = placeSegments(sentence);
-		const government = governmentQuestions(sentence, placement);
+		const government = slotQuestions(sentence, placement);
 		const questions: Questions = {
 			...lexemeQuestions(sentence, placement.resolvable),
 			...phrasemeQuestions(sentence, placement.resolvable),

@@ -16,6 +16,11 @@ import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
+import {
+	governablePrepositionLemma,
+	governablePrepositions,
+	isGovernablePreposition,
+} from "../governable-prepositions.js";
 import { resolveAuthoredGrammarIdentity } from "./authored-identity.js";
 import {
 	featureQuestion,
@@ -371,14 +376,25 @@ export function resolveGrammarJudgments(
 			: speculativeLexicalStringCandidates(catalog, input.members);
 		for (const [key, candidates] of Object.entries(lexicalStringCandidates))
 			questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
-		const governedPreposition =
-			verbal && !auxiliary && input.members.length > 1;
-		if (governedPreposition)
+		// Only a member spelling a governable preposition can be the one the
+		// verb governs; its complement's case and referent ride along and are
+		// consumed only when a member is chosen.
+		const governable =
+			verbal && !auxiliary && input.members.length > 1
+				? input.members.flatMap((text, index) => {
+						const form = text.toLocaleLowerCase("de");
+						return isGovernablePreposition(form)
+							? [{ index, text, form }]
+							: [];
+					})
+				: [];
+		const governedPreposition = governable.length > 0;
+		if (governedPreposition) {
 			questions.governedPreposition = choice(
 				"Under `policy.verbalIdentity`, which supplied member is the preposition this verbal target lexically selects for its complement? A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is not governed.",
 				{
 					...Object.fromEntries(
-						input.members.map((text, index) => [
+						governable.map(({ index, text }) => [
 							`member_${index}`,
 							`\`members[${index}]\` (${text}) is the lexically governed preposition`,
 						]),
@@ -387,6 +403,29 @@ export function resolveGrammarJudgments(
 					Unresolved: "Government cannot be defensibly decided",
 				},
 			);
+			if (
+				governable.some(
+					({ form }) => governablePrepositions[form] === null,
+				)
+			)
+				questions.governedCase = choice(
+					"If a supplied member is the preposition this verbal target lexically governs, which case does that preposition's complement take in `markedContext`? Read it from the complement's form when the form shows it; otherwise give the case the verb requires with this preposition.",
+					{
+						Acc: "Accusative",
+						Dat: "Dative",
+						Unresolved: "The case cannot be defensibly decided",
+					},
+				);
+			questions.governedReferent = choice(
+				"If a supplied member is the preposition this verbal target lexically governs, does that preposition's complement in `markedContext` name a person or a thing?",
+				{
+					Someone: "A person or a group of people",
+					Something:
+						"A thing, place, event, fact, idea or anything that is not a person",
+					Unresolved: "What it names cannot be defensibly decided",
+				},
+			);
+		}
 		if (referent) questions.referent = referent.question;
 		const judge = judgmentCaller(options);
 		const state = {
@@ -577,20 +616,37 @@ export function resolveGrammarJudgments(
 				if (formal && normalizationModes[0] === "LowerInitial")
 					normalizationModes[0] = "Keep";
 			}
-			let governedPrepositionEvidence: {
-				attested: string;
-				orthography: "Standard" | "Typo";
-			} | null = null;
+			const valencyEvidence: NonNullable<
+				GrammarOutput["valencyEvidence"]
+			> = [];
 			let governedPrepositionPosition: number | undefined;
 			if (governedPreposition) {
 				const answer = selected("governedPreposition");
 				if (answer !== "Absent") {
 					const position = Number(answer.slice("member_".length));
-					const attested = input.members[position];
-					const orthography = memberOrthographies[position];
-					if (attested === undefined || orthography === undefined)
+					const form = governable.find(
+						(member) => member.index === position,
+					)?.form;
+					if (form === undefined)
 						return fail("Unaligned governed-preposition evidence");
-					governedPrepositionEvidence = { attested, orthography };
+					const governedCase =
+						governablePrepositions[form] ??
+						(selected("governedCase") as "Acc" | "Dat");
+					const referent = speculative("governedReferent");
+					valencyEvidence.push({
+						member: position,
+						complement: {
+							kind: "Preposition",
+							preposition: governablePrepositionLemma(form),
+							case: governedCase,
+							referent:
+								referent === "Someone" ||
+								referent === "Something"
+									? referent
+									: "Either",
+						},
+						realizedCase: governedCase,
+					});
 					governedPrepositionPosition = position;
 				}
 			}
@@ -746,7 +802,7 @@ export function resolveGrammarJudgments(
 						...(verbal
 							? {
 									expletiveEvidence: null,
-									governedPrepositionEvidence: null,
+									valencyEvidence: [],
 								}
 							: {}),
 						...(encounter.target.kind === "NOUN"
@@ -830,10 +886,13 @@ export function resolveGrammarJudgments(
 							...(wantsCanonical
 								? {
 										judgedCore: core,
-										...(governedPrepositionEvidence
+										...(governedPrepositionPosition !==
+										undefined
 											? {
 													governedPreposition:
-														governedPrepositionEvidence.attested,
+														input.members[
+															governedPrepositionPosition
+														],
 												}
 											: {}),
 										canonicalFormPolicy:
@@ -1031,9 +1090,7 @@ export function resolveGrammarJudgments(
 				};
 			}
 			const output = {
-				...(verbal
-					? { expletiveEvidence, governedPrepositionEvidence }
-					: {}),
+				...(verbal ? { expletiveEvidence, valencyEvidence } : {}),
 				...(encounter.target.kind === "NOUN"
 					? { articleEvidence: article?.evidence ?? null }
 					: {}),

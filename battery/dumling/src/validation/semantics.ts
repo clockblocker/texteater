@@ -34,7 +34,8 @@ export function isGermanPronounCore(core: Record<string, unknown>): boolean {
 	if ((core.gender ?? null) === null) return true;
 	if (core.number === "Plur") return false;
 	return (
-		core.pronType !== "Prs" || (core.person === "3" && core.number === "Sing")
+		core.pronType !== "Prs" ||
+		(core.person === "3" && core.number === "Sing")
 	);
 }
 export function germanPronounCoreError(): string {
@@ -183,14 +184,11 @@ export function isGermanVerbalAttestation(input: unknown): boolean {
 			} | null;
 		};
 		expletiveEvidence: { attested: string; orthography: string } | null;
-		governedPrepositionEvidence: {
-			attested: string;
-			orthography: string;
-		} | null;
+		valencyEvidence: ValencyEvidence[];
 		members: { attested: string; orthography: string }[];
 		realizationCoverage: string;
 	};
-	if (!isOwnedEvidence(value.governedPrepositionEvidence, value.members))
+	if (!isOwnedValencyEvidence(value.valencyEvidence, value.members))
 		return false;
 	const bag = value.surface.inflectionalFeatures;
 	if (!bag?.expletive) return value.expletiveEvidence === null;
@@ -210,22 +208,55 @@ export function isGermanVerbalAttestation(input: unknown): boolean {
 	);
 }
 export function germanVerbalAttestationError(): string {
-	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization; governed-preposition evidence must be an owned member";
+	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, in a case the preposition allows";
 }
 
-/** Null evidence is fine; present evidence must equal one owned member. */
-function isOwnedEvidence(
-	evidence: { attested: string; orthography: string } | null,
+type ValencyEvidence = {
+	member: number | null;
+	complement:
+		| { kind: "Case"; case: string }
+		| {
+				kind: "Preposition";
+				preposition: {
+					canonicalForm: string;
+					coreFeatures: { governedCase: string | null };
+				};
+				case: string;
+		  };
+	realizedCase: string;
+};
+
+/**
+ * Each slot names a distinct owned member, or none. A preposition slot's
+ * member spells its preposition unless it is a Typo, takes a case the ADP
+ * Lemma allows, and keeps that case in the occurrence. A bare-case slot has
+ * no marker member.
+ */
+function isOwnedValencyEvidence(
+	evidence: readonly ValencyEvidence[],
 	members: readonly { attested: string; orthography: string }[],
 ): boolean {
-	return (
-		evidence === null ||
-		members.some(
-			(member) =>
-				member.attested === evidence.attested &&
-				member.orthography === evidence.orthography,
-		)
+	const named = evidence.flatMap((slot) =>
+		slot.member === null ? [] : [slot.member],
 	);
+	if (new Set(named).size !== named.length) return false;
+	return evidence.every(({ member: index, complement, realizedCase }) => {
+		if (complement.kind === "Case") return index === null;
+		const { canonicalForm, coreFeatures } = complement.preposition;
+		if (
+			realizedCase !== complement.case ||
+			(coreFeatures.governedCase !== null &&
+				coreFeatures.governedCase !== complement.case)
+		)
+			return false;
+		if (index === null) return true;
+		const member = members[index];
+		return (
+			member !== undefined &&
+			(member.orthography === "Typo" ||
+				member.attested.toLocaleLowerCase("de") === canonicalForm)
+		);
+	});
 }
 
 export function isGermanVerbalSurface(input: unknown): boolean {

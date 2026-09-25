@@ -448,13 +448,11 @@ export const persistResolvedClick = internalMutation({
 						expletiveEvidence:
 							args.occurrence.attestation.expletiveEvidence,
 					}),
-			...(args.occurrence.attestation.governedPrepositionEvidence ===
-			undefined
+			...(args.occurrence.attestation.valencyEvidence === undefined
 				? {}
 				: {
-						governedPrepositionEvidence:
-							args.occurrence.attestation
-								.governedPrepositionEvidence,
+						valencyEvidence:
+							args.occurrence.attestation.valencyEvidence,
 					}),
 			...(args.occurrence.attestation.articleEvidence === undefined
 				? {}

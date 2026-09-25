@@ -30,7 +30,7 @@ const occurrenceAttestation = {
 	],
 	realizationCoverage: "Full",
 	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
+	valencyEvidence: [],
 	surface: {
 		unitKind: "Surface",
 		inflectionalFeatures: null,

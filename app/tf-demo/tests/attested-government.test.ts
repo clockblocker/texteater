@@ -68,8 +68,33 @@ const analysis: StoredSentenceAnalysis = {
 	],
 	phrasemes: [],
 	fusions: [],
-	government: [
-		{ offset: 16, preposition: "von", case: "Dat", governor: "t3" },
+	slots: [
+		{
+			governor: "t3",
+			marker: 16,
+			filler: null,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "von",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: "Dat",
+						partType: null,
+					},
+				},
+				case: "Dat",
+				referent: "Something",
+			},
+			realizedCase: "Dat",
+		},
 	],
 };
 
@@ -82,10 +107,11 @@ test("an occurrence attests the government of the words inside it, bridged throu
 	expect(attestedGovernment(analysis, stored, [6])).toEqual([]);
 });
 
-test("a stale or pre-government analysis attests nothing", () => {
+test("a stale or slotless analysis attests nothing", () => {
 	expect(attestedGovernment(null, stored, [4])).toEqual([]);
-	const { government: _government, ...old } = analysis;
-	expect(attestedGovernment(old, stored, [4])).toEqual([]);
+	expect(attestedGovernment({ ...analysis, slots: [] }, stored, [4])).toEqual(
+		[],
+	);
 	expect(
 		attestedGovernment(
 			analysis,

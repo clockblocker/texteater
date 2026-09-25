@@ -1255,22 +1255,254 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
-					governedPrepositionEvidence: {
-						anyOf: [
-							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
-									},
+					valencyEvidence: {
+						type: "array",
+						items: {
+							type: "object",
+							properties: {
+								member: {
+									anyOf: [
+										{
+											type: "integer",
+											minimum: 0,
+											maximum: 9007199254740991,
+										},
+										{ type: "null" },
+									],
 								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+								complement: {
+									anyOf: [
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Case",
+												},
+												case: {
+													type: "string",
+													enum: [
+														"Nom",
+														"Acc",
+														"Dat",
+														"Gen",
+													],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Preposition",
+												},
+												preposition: {
+													type: "object",
+													properties: {
+														unitKind: {
+															type: "string",
+															const: "Lemma",
+														},
+														language: {
+															type: "string",
+															const: "de",
+														},
+														family: {
+															type: "string",
+															const: "Lexeme",
+														},
+														kind: {
+															type: "string",
+															const: "ADP",
+														},
+														canonicalForm: {
+															type: "string",
+															minLength: 1,
+														},
+														coreFeatures: {
+															type: "object",
+															properties: {
+																abbr: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																adpType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Circ",
+																				"Post",
+																				"Prep",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																extPos: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"ADV",
+																				"SCONJ",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																foreign: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																governedCase: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Acc",
+																				"Abe",
+																				"Ben",
+																				"Cau",
+																				"Cmp",
+																				"Cns",
+																				"Com",
+																				"Dat",
+																				"Dis",
+																				"Equ",
+																				"Gen",
+																				"Ins",
+																				"Par",
+																				"Tem",
+																				"Abl",
+																				"Add",
+																				"Ade",
+																				"All",
+																				"Del",
+																				"Ela",
+																				"Ess",
+																				"Ill",
+																				"Ine",
+																				"Lat",
+																				"Loc",
+																				"Nom",
+																				"Per",
+																				"Sbe",
+																				"Sbl",
+																				"Spl",
+																				"Sub",
+																				"Sup",
+																				"Ter",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																partType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Vbp",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+															},
+															required: [
+																"abbr",
+																"adpType",
+																"extPos",
+																"foreign",
+																"governedCase",
+																"partType",
+															],
+															additionalProperties: false,
+														},
+													},
+													required: [
+														"unitKind",
+														"language",
+														"family",
+														"kind",
+														"canonicalForm",
+														"coreFeatures",
+													],
+													additionalProperties: false,
+												},
+												case: {
+													type: "string",
+													enum: ["Acc", "Dat", "Gen"],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"preposition",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+									],
+								},
+								realizedCase: {
+									type: "string",
+									enum: ["Nom", "Acc", "Dat", "Gen"],
+								},
 							},
-							{ type: "null" },
-						],
+							required: ["member", "complement", "realizedCase"],
+							additionalProperties: false,
+						},
 					},
 				},
 				required: [
@@ -1280,7 +1512,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
-					"governedPrepositionEvidence",
+					"valencyEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -4026,22 +4258,254 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
-					governedPrepositionEvidence: {
-						anyOf: [
-							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
-									},
+					valencyEvidence: {
+						type: "array",
+						items: {
+							type: "object",
+							properties: {
+								member: {
+									anyOf: [
+										{
+											type: "integer",
+											minimum: 0,
+											maximum: 9007199254740991,
+										},
+										{ type: "null" },
+									],
 								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+								complement: {
+									anyOf: [
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Case",
+												},
+												case: {
+													type: "string",
+													enum: [
+														"Nom",
+														"Acc",
+														"Dat",
+														"Gen",
+													],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Preposition",
+												},
+												preposition: {
+													type: "object",
+													properties: {
+														unitKind: {
+															type: "string",
+															const: "Lemma",
+														},
+														language: {
+															type: "string",
+															const: "de",
+														},
+														family: {
+															type: "string",
+															const: "Lexeme",
+														},
+														kind: {
+															type: "string",
+															const: "ADP",
+														},
+														canonicalForm: {
+															type: "string",
+															minLength: 1,
+														},
+														coreFeatures: {
+															type: "object",
+															properties: {
+																abbr: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																adpType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Circ",
+																				"Post",
+																				"Prep",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																extPos: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"ADV",
+																				"SCONJ",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																foreign: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																governedCase: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Acc",
+																				"Abe",
+																				"Ben",
+																				"Cau",
+																				"Cmp",
+																				"Cns",
+																				"Com",
+																				"Dat",
+																				"Dis",
+																				"Equ",
+																				"Gen",
+																				"Ins",
+																				"Par",
+																				"Tem",
+																				"Abl",
+																				"Add",
+																				"Ade",
+																				"All",
+																				"Del",
+																				"Ela",
+																				"Ess",
+																				"Ill",
+																				"Ine",
+																				"Lat",
+																				"Loc",
+																				"Nom",
+																				"Per",
+																				"Sbe",
+																				"Sbl",
+																				"Spl",
+																				"Sub",
+																				"Sup",
+																				"Ter",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																partType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Vbp",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+															},
+															required: [
+																"abbr",
+																"adpType",
+																"extPos",
+																"foreign",
+																"governedCase",
+																"partType",
+															],
+															additionalProperties: false,
+														},
+													},
+													required: [
+														"unitKind",
+														"language",
+														"family",
+														"kind",
+														"canonicalForm",
+														"coreFeatures",
+													],
+													additionalProperties: false,
+												},
+												case: {
+													type: "string",
+													enum: ["Acc", "Dat", "Gen"],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"preposition",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+									],
+								},
+								realizedCase: {
+									type: "string",
+									enum: ["Nom", "Acc", "Dat", "Gen"],
+								},
 							},
-							{ type: "null" },
-						],
+							required: ["member", "complement", "realizedCase"],
+							additionalProperties: false,
+						},
 					},
 				},
 				required: [
@@ -4051,7 +4515,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
-					"governedPrepositionEvidence",
+					"valencyEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -5747,22 +6211,254 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
-					governedPrepositionEvidence: {
-						anyOf: [
-							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
-									},
+					valencyEvidence: {
+						type: "array",
+						items: {
+							type: "object",
+							properties: {
+								member: {
+									anyOf: [
+										{
+											type: "integer",
+											minimum: 0,
+											maximum: 9007199254740991,
+										},
+										{ type: "null" },
+									],
 								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+								complement: {
+									anyOf: [
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Case",
+												},
+												case: {
+													type: "string",
+													enum: [
+														"Nom",
+														"Acc",
+														"Dat",
+														"Gen",
+													],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Preposition",
+												},
+												preposition: {
+													type: "object",
+													properties: {
+														unitKind: {
+															type: "string",
+															const: "Lemma",
+														},
+														language: {
+															type: "string",
+															const: "de",
+														},
+														family: {
+															type: "string",
+															const: "Lexeme",
+														},
+														kind: {
+															type: "string",
+															const: "ADP",
+														},
+														canonicalForm: {
+															type: "string",
+															minLength: 1,
+														},
+														coreFeatures: {
+															type: "object",
+															properties: {
+																abbr: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																adpType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Circ",
+																				"Post",
+																				"Prep",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																extPos: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"ADV",
+																				"SCONJ",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																foreign: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																governedCase: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Acc",
+																				"Abe",
+																				"Ben",
+																				"Cau",
+																				"Cmp",
+																				"Cns",
+																				"Com",
+																				"Dat",
+																				"Dis",
+																				"Equ",
+																				"Gen",
+																				"Ins",
+																				"Par",
+																				"Tem",
+																				"Abl",
+																				"Add",
+																				"Ade",
+																				"All",
+																				"Del",
+																				"Ela",
+																				"Ess",
+																				"Ill",
+																				"Ine",
+																				"Lat",
+																				"Loc",
+																				"Nom",
+																				"Per",
+																				"Sbe",
+																				"Sbl",
+																				"Spl",
+																				"Sub",
+																				"Sup",
+																				"Ter",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																partType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Vbp",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+															},
+															required: [
+																"abbr",
+																"adpType",
+																"extPos",
+																"foreign",
+																"governedCase",
+																"partType",
+															],
+															additionalProperties: false,
+														},
+													},
+													required: [
+														"unitKind",
+														"language",
+														"family",
+														"kind",
+														"canonicalForm",
+														"coreFeatures",
+													],
+													additionalProperties: false,
+												},
+												case: {
+													type: "string",
+													enum: ["Acc", "Dat", "Gen"],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"preposition",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+									],
+								},
+								realizedCase: {
+									type: "string",
+									enum: ["Nom", "Acc", "Dat", "Gen"],
+								},
 							},
-							{ type: "null" },
-						],
+							required: ["member", "complement", "realizedCase"],
+							additionalProperties: false,
+						},
 					},
 				},
 				required: [
@@ -5772,7 +6468,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
-					"governedPrepositionEvidence",
+					"valencyEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -6632,22 +7328,254 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 							{ type: "null" },
 						],
 					},
-					governedPrepositionEvidence: {
-						anyOf: [
-							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
-									},
+					valencyEvidence: {
+						type: "array",
+						items: {
+							type: "object",
+							properties: {
+								member: {
+									anyOf: [
+										{
+											type: "integer",
+											minimum: 0,
+											maximum: 9007199254740991,
+										},
+										{ type: "null" },
+									],
 								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+								complement: {
+									anyOf: [
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Case",
+												},
+												case: {
+													type: "string",
+													enum: [
+														"Nom",
+														"Acc",
+														"Dat",
+														"Gen",
+													],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+										{
+											type: "object",
+											properties: {
+												kind: {
+													type: "string",
+													const: "Preposition",
+												},
+												preposition: {
+													type: "object",
+													properties: {
+														unitKind: {
+															type: "string",
+															const: "Lemma",
+														},
+														language: {
+															type: "string",
+															const: "de",
+														},
+														family: {
+															type: "string",
+															const: "Lexeme",
+														},
+														kind: {
+															type: "string",
+															const: "ADP",
+														},
+														canonicalForm: {
+															type: "string",
+															minLength: 1,
+														},
+														coreFeatures: {
+															type: "object",
+															properties: {
+																abbr: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																adpType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Circ",
+																				"Post",
+																				"Prep",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																extPos: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"ADV",
+																				"SCONJ",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																foreign: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Yes",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																governedCase: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Acc",
+																				"Abe",
+																				"Ben",
+																				"Cau",
+																				"Cmp",
+																				"Cns",
+																				"Com",
+																				"Dat",
+																				"Dis",
+																				"Equ",
+																				"Gen",
+																				"Ins",
+																				"Par",
+																				"Tem",
+																				"Abl",
+																				"Add",
+																				"Ade",
+																				"All",
+																				"Del",
+																				"Ela",
+																				"Ess",
+																				"Ill",
+																				"Ine",
+																				"Lat",
+																				"Loc",
+																				"Nom",
+																				"Per",
+																				"Sbe",
+																				"Sbl",
+																				"Spl",
+																				"Sub",
+																				"Sup",
+																				"Ter",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+																partType: {
+																	anyOf: [
+																		{
+																			type: "string",
+																			enum: [
+																				"Vbp",
+																			],
+																		},
+																		{
+																			type: "null",
+																		},
+																	],
+																},
+															},
+															required: [
+																"abbr",
+																"adpType",
+																"extPos",
+																"foreign",
+																"governedCase",
+																"partType",
+															],
+															additionalProperties: false,
+														},
+													},
+													required: [
+														"unitKind",
+														"language",
+														"family",
+														"kind",
+														"canonicalForm",
+														"coreFeatures",
+													],
+													additionalProperties: false,
+												},
+												case: {
+													type: "string",
+													enum: ["Acc", "Dat", "Gen"],
+												},
+												referent: {
+													type: "string",
+													enum: [
+														"Someone",
+														"Something",
+														"Either",
+													],
+												},
+											},
+											required: [
+												"kind",
+												"preposition",
+												"case",
+												"referent",
+											],
+											additionalProperties: false,
+										},
+									],
+								},
+								realizedCase: {
+									type: "string",
+									enum: ["Nom", "Acc", "Dat", "Gen"],
+								},
 							},
-							{ type: "null" },
-						],
+							required: ["member", "complement", "realizedCase"],
+							additionalProperties: false,
+						},
 					},
 				},
 				required: [
@@ -6657,7 +7585,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"memberOrthographies",
 					"realizationCoverage",
 					"expletiveEvidence",
-					"governedPrepositionEvidence",
+					"valencyEvidence",
 				],
 				additionalProperties: false,
 			},

@@ -72,13 +72,18 @@ Auxiliary, or Unresolved. Roles say what a member is inside its target; they
 do not move membership.
 _Avoid_: role mass, Free member
 
-**Government**:
-intake's link from a governed preposition's Segment (a preposition, a fused
-word's adposition, or a pronominal adverb) to the Lexeme Target that
-lexically selects it, with the case the government requires. Each one gives
-the governor's Valency Frame an Optional Preposition Slot. Until the Knowledge
-call proposes the whole frame, it is the frame's only source (ADR 0034).
-_Avoid_: valency guess, governed-preposition prompt
+**Realized Slot**:
+a preposition slot the sentence realizes, linked to the Lexeme or Phraseme
+Target that lexically selects the preposition. Its marker is the Segment
+realizing the preposition (a preposition or a fused word's adposition); a
+pronominal adverb realizes the preposition and its filler at once, so it
+stays its own unit and is the slot's filler instead. The complement names
+the preposition's Lemma, its case and its referent. Intake records only
+preposition slots; bare-case slots come from the Knowledge call's frame.
+Each preposition and case gives the governor's Valency Frame an Optional
+Preposition Slot. Until the Knowledge call proposes the whole frame, realized
+slots are the frame's only source (ADR 0034).
+_Avoid_: government list, valency guess, governed-preposition prompt
 
 **Route Mass**:
 the Lexeme Target's distribution over Lexeme Kinds, including Unresolved.

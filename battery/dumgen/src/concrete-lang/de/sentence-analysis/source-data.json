@@ -185,7 +185,7 @@
 					}
 				],
 				"phrasemes": [],
-				"government": []
+				"slots": []
 			},
 			"explanation": "A fused word: `ins` is `in` plus `s` standing for `das`, and the article piece joins the noun."
 		},
@@ -325,7 +325,7 @@
 					}
 				],
 				"phrasemes": [],
-				"government": []
+				"slots": []
 			},
 			"explanation": "A discontinuous separable verb; two determiners with authored identities."
 		},
@@ -457,12 +457,13 @@
 					}
 				],
 				"phrasemes": [],
-				"government": [
+				"slots": [
 					{
 						"governors": [37],
 						"offset": 20,
 						"preposition": "an",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Someone"
 					}
 				]
 			},
@@ -989,7 +990,7 @@
 					}
 				],
 				"phrasemes": [],
-				"government": []
+				"slots": []
 			},
 			"explanation": "An abbreviation is one Segment whose surface is its expansion."
 		},
@@ -1148,7 +1149,7 @@
 					}
 				],
 				"phrasemes": [],
-				"government": []
+				"slots": []
 			},
 			"explanation": "A dotted abbreviation and the fusion `am`."
 		},
@@ -1835,12 +1836,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [3],
 						"offset": 10,
 						"preposition": "auf",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Something"
 					}
 				]
 			},
@@ -1908,7 +1910,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "seit and am are free adjuncts of time and place; the sentence attests no government."
 		},
@@ -1958,12 +1960,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4],
 						"offset": 12,
 						"preposition": "auf",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2023,12 +2026,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [9],
 						"offset": 17,
 						"preposition": "aus",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Someone"
 					}
 				]
 			},
@@ -2088,7 +2092,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "No preposition, so no government question is asked."
 		},
@@ -2154,12 +2158,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [13],
 						"offset": 19,
 						"preposition": "auf",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Someone"
 					}
 				]
 			},
@@ -2219,12 +2224,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [16],
 						"offset": 25,
 						"preposition": "von",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2284,7 +2290,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [13],
 						"offset": 19,
@@ -2349,12 +2355,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [16],
 						"offset": 26,
 						"preposition": "an",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2430,18 +2437,20 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4],
 						"offset": 17,
 						"preposition": "bei",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Someone"
 					},
 					{
 						"governors": [4],
 						"offset": 25,
 						"preposition": "für",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2501,12 +2510,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4],
 						"offset": 26,
 						"preposition": "auf",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2558,12 +2568,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4],
 						"offset": 14,
 						"preposition": "an",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Someone"
 					}
 				]
 			},
@@ -2623,12 +2634,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4, 22],
 						"offset": 10,
 						"preposition": "an",
-						"case": "Dat"
+						"case": "Dat",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2696,12 +2708,13 @@
 				]
 			},
 			"idealOutput": {
-				"government": [
+				"slots": [
 					{
 						"governors": [4, 30],
 						"offset": 9,
 						"preposition": "über",
-						"case": "Acc"
+						"case": "Acc",
+						"referent": "Something"
 					}
 				]
 			},
@@ -2753,7 +2766,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "im is a free place adjunct."
 		},
@@ -2819,7 +2832,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "mit is a free instrument adjunct."
 		},
@@ -2885,7 +2898,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "um is a time adjunct and ab a separable particle."
 		},
@@ -2935,7 +2948,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "No preposition, so no government question is asked."
 		},
@@ -2985,7 +2998,7 @@
 				]
 			},
 			"idealOutput": {
-				"government": []
+				"slots": []
 			},
 			"explanation": "am is a free place adjunct."
 		}

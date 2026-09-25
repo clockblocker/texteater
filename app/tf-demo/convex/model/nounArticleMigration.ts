@@ -59,15 +59,14 @@ export async function migrateCompositionAttestation(
 		surface.redirectedTo ||
 		(verbal &&
 			(row.expletiveEvidence === undefined ||
-				row.governedPrepositionEvidence === undefined))
+				row.valencyEvidence === undefined))
 	)
 		await ctx.db.patch(row._id, {
 			surfaceId: surface.redirectedTo ?? row.surfaceId,
 			...(verbal
 				? {
 						expletiveEvidence: row.expletiveEvidence ?? null,
-						governedPrepositionEvidence:
-							row.governedPrepositionEvidence ?? null,
+						valencyEvidence: row.valencyEvidence ?? [],
 					}
 				: {}),
 		});

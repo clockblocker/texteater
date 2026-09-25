@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
@@ -145,7 +146,7 @@ export function grammarOperationExperiment(
 					"articleEvidence" in attestation &&
 					attestation.realizationCoverage === "Partial"
 						? normalizedSurface.split(" ").slice(1)
-						: normalizedSurface.split(" "),
+						: withValencyMembers(attestation, normalizedSurface),
 				memberOrthographies: attestation.members.map(
 					(member) => member.orthography,
 				),
@@ -156,11 +157,32 @@ export function grammarOperationExperiment(
 				...("expletiveEvidence" in attestation
 					? {
 							expletiveEvidence: attestation.expletiveEvidence,
-							governedPrepositionEvidence:
-								attestation.governedPrepositionEvidence,
+							valencyEvidence: attestation.valencyEvidence,
 						}
 					: {}),
 			};
 		},
 	};
+}
+
+/**
+ * The normalized members behind a Surface that projects only Fixed members:
+ * a member realizing a preposition slot is normalized to its preposition.
+ */
+function withValencyMembers(
+	attestation: Dumling.Attestation,
+	normalizedSurface: string,
+): string[] {
+	const fixed = normalizedSurface.split(" ");
+	if (!("valencyEvidence" in attestation)) return fixed;
+	const prepositions = new Map(
+		attestation.valencyEvidence.flatMap((slot) =>
+			slot.member !== null && slot.complement.kind === "Preposition"
+				? [[slot.member, slot.complement.preposition.canonicalForm]]
+				: [],
+		),
+	);
+	return attestation.members.map(
+		(_, position) => prepositions.get(position) ?? fixed.shift() ?? "",
+	);
 }

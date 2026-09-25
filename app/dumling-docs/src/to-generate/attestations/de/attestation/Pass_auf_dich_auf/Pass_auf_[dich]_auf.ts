@@ -48,6 +48,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Pass auf [dich] auf!",
 	classifierNotes:
-		"Dich is a free contextual reflexive object, not an inherent member of aufpassen; its independent pronoun Attestation remains separate from the verbal Surface `pass auf auf`.",
+		"Dich is a free contextual reflexive object, not an inherent member of aufpassen; its independent pronoun Attestation remains separate from the verbal Surface `pass auf`.",
 	isVerified: true,
 } as const;

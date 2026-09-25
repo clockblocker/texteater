@@ -55,8 +55,21 @@ for (const name of [
 		expect(result.members.map((member) => member.attested)).toEqual(
 			fixture.input.members,
 		);
+		// The Surface projects only Fixed members: a governed preposition stays
+		// a member but leaves the normalized Surface.
+		const { valencyEvidence } = fixture.idealOutput as {
+			valencyEvidence: { member: number | null }[];
+		};
+		expect(result).toHaveProperty("valencyEvidence", valencyEvidence);
 		expect(result.surface.normalizedSurface).toBe(
-			fixture.idealOutput.normalizedMembers.join(" "),
+			fixture.idealOutput.normalizedMembers
+				.filter(
+					(_, position) =>
+						!valencyEvidence.some(
+							(slot) => slot.member === position,
+						),
+				)
+				.join(" "),
 		);
 		expect(result).toHaveProperty(
 			"expletiveEvidence",
