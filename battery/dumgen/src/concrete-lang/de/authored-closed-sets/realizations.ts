@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
@@ -10,71 +11,16 @@ export type AuthoredRealization = {
 	/** Additional occurrence coordinates needed to distinguish a syncretic realization. */
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
-const declined = (stem: string) =>
-	["", "e", "er", "es", "em", "en"].map((ending) => stem + ending);
-const strong = (stem: string) =>
-	["e", "er", "es", "em", "en"].map((ending) => stem + ending);
-/** Reviewed realization paradigms for existing identities, independent of evaluation corpora. */
-// LEO: licensed reductions and plural was für, not spelling errors.
-// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
-// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
-const determinerForms: Readonly<Record<string, readonly string[]>> = {
-	// Apostrophe clitics 'n, 'ne, 'nen, 'nem, 'ner (fusion Entry table).
-	ein: [...declined("ein"), "n", "ne", "nen", "nem", "ner"],
-	mein: declined("mein"),
-	dein: declined("dein"),
-	sein: declined("sein"),
-	ihr: declined("ihr"),
-	Ihr: declined("Ihr"),
-	unser: [...declined("unser"), ...strong("unsr"), "unsern", "unserm"],
-	euer: [...declined("euer"), ...strong("eur"), "euern", "euerm"],
-	derjenige: [
-		"derjenige",
-		"diejenige",
-		"dasjenige",
-		"denjenigen",
-		"demjenigen",
-		"desjenigen",
-		"derjenigen",
-		"diejenigen",
-	],
-	derselbe: [
-		"derselbe",
-		"dieselbe",
-		"dasselbe",
-		"denselben",
-		"demselben",
-		"desselben",
-		"derselben",
-		"dieselben",
-		// Pieces left after a fused article (am selben, im selben): Partial coverage.
-		"selbe",
-		"selben",
-	],
-	dieser: strong("dies"),
-	jener: strong("jen"),
-	solcher: strong("solch"),
-	welcher: strong("welch"),
-	mancher: strong("manch"),
-	etwelcher: strong("etwelch"),
-	irgendwelcher: strong("irgendwelch"),
-	wieviel: declined("wieviel"),
-	wievielte: declined("wievielt"),
-	"was für ein": [...declined("was für ein"), "was für"],
-	einige: declined("einig"),
-	etliche: declined("etlich"),
-	irgendein: declined("irgendein"),
-	mehrere: ["mehrere", "mehreren", "mehrerer"],
-	viel: declined("viel"),
-	wenig: [...declined("wenig"), ...declined("weniger")],
-	meist: declined("meist"),
-	kein: declined("kein"),
-	alle: declined("all"),
-	jeder: declined("jed"),
-	jedweder: declined("jedwed"),
-	jeglicher: declined("jeglich"),
-	sämtlich: declined("sämtlich"),
-	beide: declined("beid"),
+/** Licensed alternate spellings of authored determiner cells, keyed by Canonical Form. */
+// Free clitic article forms (fusion Entry table) and the comparative of
+// uninflected wenig.
+const determinerAliases: Readonly<Record<string, readonly string[]>> = {
+	ein: ["n"],
+	eine: ["ne"],
+	einen: ["nen"],
+	einem: ["nem"],
+	einer: ["ner"],
+	wenig: ["weniger"],
 };
 /** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
 const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
@@ -208,7 +154,12 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 			return [];
 		const forms =
 			lemma.kind === "DET"
-				? (determinerForms[lemma.canonicalForm] ?? [])
+				? [
+						...(determinerAliases[lemma.canonicalForm] ?? []),
+						...(reviewedDeterminers.find(
+							(entry) => entry.member === member,
+						)?.variants ?? []),
+					]
 				: lemma.kind === "AUX"
 					? (auxiliaryForms[lemma.canonicalForm] ?? [])
 					: [

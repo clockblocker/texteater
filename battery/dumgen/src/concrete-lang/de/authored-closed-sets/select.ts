@@ -48,17 +48,27 @@ export function closedRoute(lemma: {
 		(lemma.kind === "AUX" || lemma.kind === "DET")
 	);
 }
-/** Preserves all unvaried Core Features, compares null literally, and returns only reviewed alternatives. */
+type NavigableLemma =
+	| Dumling.Lemma<"de", "Lexeme", "PRON">
+	| Dumling.Lemma<"de", "Lexeme", "DET">;
+type NavigableFeature =
+	| keyof Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"]
+	| keyof Dumling.Lemma<"de", "Lexeme", "DET">["coreFeatures"];
+
+/**
+ * Other Paradigm Cells of a reviewed PRON or DET: members of the same Kind that
+ * differ only in the varied Core Features. Preserves every other Core Feature,
+ * compares null literally, and returns only reviewed alternatives.
+ */
 export function selectGrammaticalAlternatives(input: {
-	readonly source: Dumling.Lemma<"de", "Lexeme", "PRON">;
-	readonly vary: readonly (keyof Dumling.Lemma<
-		"de",
-		"Lexeme",
-		"PRON"
-	>["coreFeatures"])[];
+	readonly source: NavigableLemma;
+	readonly vary: readonly NavigableFeature[];
 }): readonly Dumling.Reading<"de">[] {
 	const source = authoredFor(input.source);
-	if (!source)
+	if (
+		!source ||
+		(input.source.kind !== "PRON" && input.source.kind !== "DET")
+	)
 		throw new DumgenFailure(
 			"InvalidInput",
 			"grammatical-navigation",
@@ -72,17 +82,15 @@ export function selectGrammaticalAlternatives(input: {
 			"grammatical-navigation",
 			"Unknown feature coordinate",
 		);
-	const varied = new Set(input.vary);
+	const varied = new Set<string>(input.vary);
 	return authoredMembers
 		.filter(
 			(member) =>
-				member.lemma.kind === "PRON" &&
+				member.lemma.kind === input.source.kind &&
 				!sameValue(member.lemma, input.source) &&
 				Object.entries(input.source.coreFeatures).every(
 					([key, value]) =>
-						varied.has(
-							key as keyof typeof input.source.coreFeatures,
-						) ||
+						varied.has(key) ||
 						sameValue(
 							value,
 							(

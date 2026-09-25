@@ -34,9 +34,9 @@ establish Grundform. For example, English past-tense *read* has the same spellin
 as its infinitive.
 
 Whether a feature is Core or inflectional is chosen per language, Family and
-Kind. German and English PRON put case, number and gender in Lemma identity,
-so each paradigm cell is its own Lemma: German \`mich\` and \`mir\`, English
-\`me\` and \`my\`. German contextual reflexiveness belongs to the Surface's
+Kind. German PRON and DET and English PRON put case, number and gender in
+Lemma identity, so each paradigm cell is its own Lemma: German \`mich\` and
+\`mir\`, \`dem\` and \`den\`, English \`me\` and \`my\`. German contextual reflexiveness belongs to the Surface's
 inflectional features; English \`myself\` is its own Lemma.
 
 ## Reading

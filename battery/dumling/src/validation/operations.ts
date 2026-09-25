@@ -1,6 +1,7 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	germanDeterminerCoreError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
@@ -8,6 +9,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanDeterminerCore,
 	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanPronounCore,
@@ -49,6 +51,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-pronoun.core": check(
 		isGermanPronounCore,
 		germanPronounCoreError,
+	),
+	"dumling.de-determiner.core": check(
+		isGermanDeterminerCore,
+		germanDeterminerCoreError,
 	),
 	"dumling.feature-bag.marked": check(
 		hasMarkedFeature,

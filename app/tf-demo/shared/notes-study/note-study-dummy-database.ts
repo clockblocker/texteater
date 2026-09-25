@@ -70,9 +70,12 @@ const NULL_CORE_FEATURES_BY_KIND = {
 	AUX: { verbType: null },
 	CCONJ: { conjType: null },
 	DET: {
+		case: null,
 		definite: null,
 		extPos: null,
 		foreign: null,
+		gender: null,
+		number: null,
 		numType: null,
 		person: null,
 		polite: null,

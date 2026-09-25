@@ -101,9 +101,11 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		byKind: {
 			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Plural-only names have unmarked gender.",
 			PRON: "What grammatical gender belongs to this exact pronoun identity? For a possessive, judge the possessed item's gender; for a nonpossessive personal pronoun, mark gender only with third-person singular reference. Plural agreement has no marked gender. Never infer gender from a name alone.",
+			DET: "What grammatical gender belongs to the Paradigm Cell of this determiner? It is the lexical gender of the noun the determiner modifies, never the possessor's. Plural agreement has no marked gender.",
 		},
 		unmarkedByKind: {
 			PRON: "Gender is inapplicable: first/second-person nonpossessive identity, plural agreement, or an invariant identity without gender",
+			DET: "Plural agreement, or an invariant determiner such as derlei or uninflected viel with no cell to decide",
 		},
 	},
 	"lemma.coreFeatures.hyph": {
@@ -270,6 +272,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		values: grammaticalCase,
 		unmarked:
 			"Invariant identity without marked Case, such as etwas or einander; not uncertainty between possible cases",
+		byKind: {
+			DET: "Which Case does this determiner share with the noun it modifies? Case is a Core coordinate: dem Mann and den Mann are different determiner Lemmas. Judge the noun phrase's role and government in the sentence.",
+		},
+		unmarkedByKind: {
+			DET: "Invariant determiner without a cell to decide, such as derlei, manch or uninflected viel; not uncertainty between possible cases",
+		},
 	},
 	"lemma.coreFeatures.number": {
 		question:
@@ -277,6 +285,12 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		values: number,
 		unmarked:
 			"No marked agreement Number under the pronoun policy, including dedicated sich and wer/wen/wem/wessen",
+		byKind: {
+			DET: "What Number does this determiner share with the noun it modifies? Number is a Core coordinate: der Tisch and die Tische use different determiner Lemmas. Do not confuse it with possessor Number.",
+		},
+		unmarkedByKind: {
+			DET: "Invariant determiner without a cell to decide, such as derlei, manch or uninflected viel",
+		},
 	},
 	"lemma.coreFeatures.gender[psor]": {
 		question:
@@ -331,7 +345,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			"Case is not marked here, including direct address or an inapplicable nominal-inflection premise",
 		byKind: {
 			ADJ: "If this adjective is attributive, what Case does it agree in with its modified noun? Predicative/adverbial adjectives have unmarked Case.",
-			DET: "If this determiner has contextual inflection, what Case does it agree in with its modified noun? Dictionary mention or an invariant determiner has no contextual Case bag.",
 			NUM: "If this numeral itself has supported nominal inflection, what Case does it bear? An invariant cardinal or digit does not inherit a neighboring noun's Case.",
 			SYM: "If this symbol itself fills a nominal phrase, what Case does it bear? A label noun or neighboring quantity does not lend the symbol its Case.",
 		},
@@ -343,7 +356,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		unmarked: "No applicable marked gender agreement",
 		byKind: {
 			ADJ: "If this adjective is attributive, what gender does it agree in? Predicative/adverbial use and plural agreement have unmarked Gender.",
-			DET: "If this determiner has contextual agreement, what is its modified noun's lexical grammatical gender, including in plural? This feature concerns the possessed or modified item, not the possessor.",
 			NUM: "If this numeral has visible nominal agreement, what gender is established? Ordinary invariant cardinals and digits do not inherit gender from a neighboring noun.",
 			SYM: "If the symbol itself fills a nominal phrase with gender agreement, what gender is established? Do not use the gender of a label noun that merely names the symbol.",
 		},
@@ -356,7 +368,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		byKind: {
 			ADJ: "If this adjective is attributive, what Number does it agree in with its modified noun? Predicative/adverbial adjectives have unmarked Number.",
 			PROPN: "What grammatical Number does this contextual name bear? One named person, place or organization is singular even without a visible ending or article; plural-only names or multiple bearers can be plural.",
-			DET: "If this determiner has contextual agreement, what is the modified or possessed item's Number? Do not confuse it with possessor Number.",
 			NUM: "If this numeral itself has visible nominal agreement, what Number does it bear? Numerical quantity is not grammatical Number; an invariant digit/cardinal has no agreement bag.",
 			SYM: "If this symbol itself fills a nominal phrase, what Number does it bear? A neighboring numerical amount does not establish grammatical agreement.",
 			X: "If this residual target has transparent nominal inflection or is a finite nonce verb, what grammatical Number is established? Otherwise leave it unmarked.",
@@ -557,9 +568,9 @@ const inflectionPolicies: Readonly<
 		citation: "Ordinary invariant adverb or dictionary mention",
 	},
 	DET: {
-		marked: "Contextual declining determiner with agreement or comparison features",
+		marked: "Comparison degree (weniger, meisten) or possessor features (seinen, unserem); case, number and gender are Core, not Surface inflection",
 		citation:
-			"Dictionary mention or genuinely invariant determiner such as derlei",
+			"Any other determiner, including every article, demonstrative and quantifier without comparison",
 	},
 	PRON: {
 		marked: "Reflexive occurrence: the pronoun refers to its clause subject acting on or for itself",

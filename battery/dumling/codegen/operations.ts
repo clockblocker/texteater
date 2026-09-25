@@ -1,6 +1,7 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
+	germanDeterminerCoreError,
 	germanNounAttestationError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
@@ -8,6 +9,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	isEmojiDescription,
+	isGermanDeterminerCore,
 	isGermanNounAttestation,
 	isGermanNounSurface,
 	isGermanPronounCore,
@@ -51,6 +53,13 @@ export const registrations = [
 		implementation: isGermanPronounCore,
 		error: germanPronounCoreError,
 		name: "dumling.de-pronoun.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanDeterminerCore,
+		error: germanDeterminerCoreError,
+		name: "dumling.de-determiner.core",
 		version: 1,
 	},
 	{

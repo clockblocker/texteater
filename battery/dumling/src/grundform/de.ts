@@ -34,19 +34,19 @@ function noun(surface: Surface): GrundformRule {
 		};
 	return { features: { ...features, number: ["Sing"] } };
 }
-// German PRON Case, Gender and Number distinguish the Lemma itself.
+// German PRON and DET Case, Gender and Number distinguish the Lemma itself.
 // Valid realizations need no separate inflectional citation-form requirement.
-const germanPronoun: GrundformRule = { features: {} };
+const germanParadigmCell: GrundformRule = { features: {} };
 
 export const germanRules = {
 	"de/Lexeme/ADJ": adjective,
 	"de/Lexeme/ADV": { features: { degree: ["Pos"] } },
 	"de/Lexeme/AUX": infinitive,
-	"de/Lexeme/DET": lexicalConvention,
+	"de/Lexeme/DET": germanParadigmCell,
 	"de/Lexeme/NOUN": noun,
 	"de/Lexeme/NUM": lexicalConvention,
 	"de/Lexeme/X": lexicalConvention,
-	"de/Lexeme/PRON": germanPronoun,
+	"de/Lexeme/PRON": germanParadigmCell,
 	"de/Lexeme/PROPN": noun,
 	"de/Lexeme/SYM": lexicalConvention,
 	"de/Lexeme/VERB": infinitive,

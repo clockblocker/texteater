@@ -1,3 +1,4 @@
+import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { member as aux6 } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
 import { member as aux8 } from "./members/lexeme/auxiliary/haben-obligation.js";
 import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
@@ -8,50 +9,43 @@ import { member as aux1 } from "./members/lexeme/auxiliary/sein-zustandspassiv.j
 import { member as aux3 } from "./members/lexeme/auxiliary/werden-futur.js";
 import { member as aux4 } from "./members/lexeme/auxiliary/werden-vorgangspassiv.js";
 import { member as aux5 } from "./members/lexeme/auxiliary/werden-wuerde-konjunktiv.js";
-import { member as m2 } from "./members/lexeme/determiner/article/das-definite.js";
-import { member as m0 } from "./members/lexeme/determiner/article/der-definite.js";
-import { member as m1 } from "./members/lexeme/determiner/article/die-definite.js";
-import { member as m3 } from "./members/lexeme/determiner/article/ein-indefinite.js";
-import { member as m11 } from "./members/lexeme/determiner/demonstrative/derjenige.js";
+import { member as article_das_neuter_singular_accusative } from "./members/lexeme/determiner/article/das-neuter-singular-accusative.js";
+import { member as article_das_neuter_singular_nominative } from "./members/lexeme/determiner/article/das-neuter-singular-nominative.js";
+import { member as article_dem_masculine_singular_dative } from "./members/lexeme/determiner/article/dem-masculine-singular-dative.js";
+import { member as article_dem_neuter_singular_dative } from "./members/lexeme/determiner/article/dem-neuter-singular-dative.js";
+import { member as article_den_masculine_singular_accusative } from "./members/lexeme/determiner/article/den-masculine-singular-accusative.js";
+import { member as article_den_plural_dative } from "./members/lexeme/determiner/article/den-plural-dative.js";
+import { member as article_der_feminine_singular_dative } from "./members/lexeme/determiner/article/der-feminine-singular-dative.js";
+import { member as article_der_feminine_singular_genitive } from "./members/lexeme/determiner/article/der-feminine-singular-genitive.js";
+import { member as article_der_masculine_singular_nominative } from "./members/lexeme/determiner/article/der-masculine-singular-nominative.js";
+import { member as article_der_plural_genitive } from "./members/lexeme/determiner/article/der-plural-genitive.js";
+import { member as article_des_masculine_singular_genitive } from "./members/lexeme/determiner/article/des-masculine-singular-genitive.js";
+import { member as article_des_neuter_singular_genitive } from "./members/lexeme/determiner/article/des-neuter-singular-genitive.js";
+import { member as article_die_feminine_singular_accusative } from "./members/lexeme/determiner/article/die-feminine-singular-accusative.js";
+import { member as article_die_feminine_singular_nominative } from "./members/lexeme/determiner/article/die-feminine-singular-nominative.js";
+import { member as article_die_plural_accusative } from "./members/lexeme/determiner/article/die-plural-accusative.js";
+import { member as article_die_plural_nominative } from "./members/lexeme/determiner/article/die-plural-nominative.js";
+import { member as article_ein_masculine_singular_nominative } from "./members/lexeme/determiner/article/ein-masculine-singular-nominative.js";
+import { member as article_ein_neuter_singular_accusative } from "./members/lexeme/determiner/article/ein-neuter-singular-accusative.js";
+import { member as article_ein_neuter_singular_nominative } from "./members/lexeme/determiner/article/ein-neuter-singular-nominative.js";
+import { member as article_eine_feminine_singular_accusative } from "./members/lexeme/determiner/article/eine-feminine-singular-accusative.js";
+import { member as article_eine_feminine_singular_nominative } from "./members/lexeme/determiner/article/eine-feminine-singular-nominative.js";
+import { member as article_einem_masculine_singular_dative } from "./members/lexeme/determiner/article/einem-masculine-singular-dative.js";
+import { member as article_einem_neuter_singular_dative } from "./members/lexeme/determiner/article/einem-neuter-singular-dative.js";
+import { member as article_einen_masculine_singular_accusative } from "./members/lexeme/determiner/article/einen-masculine-singular-accusative.js";
+import { member as article_einer_feminine_singular_dative } from "./members/lexeme/determiner/article/einer-feminine-singular-dative.js";
+import { member as article_einer_feminine_singular_genitive } from "./members/lexeme/determiner/article/einer-feminine-singular-genitive.js";
+import { member as article_eines_masculine_singular_genitive } from "./members/lexeme/determiner/article/eines-masculine-singular-genitive.js";
+import { member as article_eines_neuter_singular_genitive } from "./members/lexeme/determiner/article/eines-neuter-singular-genitive.js";
 import { member as m16 } from "./members/lexeme/determiner/demonstrative/derlei.js";
-import { member as m12 } from "./members/lexeme/determiner/demonstrative/derselbe.js";
-import { member as m13 } from "./members/lexeme/determiner/demonstrative/dieser.js";
-import { member as m14 } from "./members/lexeme/determiner/demonstrative/jener.js";
-import { member as m15 } from "./members/lexeme/determiner/demonstrative/solcher.js";
 import { member as m17 } from "./members/lexeme/determiner/emphatic/selber.js";
 import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js";
-import { member as m22 } from "./members/lexeme/determiner/interrogative/was-fur-ein.js";
-import { member as m18 } from "./members/lexeme/determiner/interrogative/welcher.js";
 import { member as m21 } from "./members/lexeme/determiner/interrogative/wieviel.js";
-import { member as m23 } from "./members/lexeme/determiner/interrogative/wievielte.js";
-import { member as m37 } from "./members/lexeme/determiner/negative/kein.js";
-import { member as m5 } from "./members/lexeme/determiner/possessive/dein-second-person.js";
-import { member as m10 } from "./members/lexeme/determiner/possessive/euer-second-person.js";
-import { member as m6 } from "./members/lexeme/determiner/possessive/ihr-second-person-formal.js";
-import { member as m8 } from "./members/lexeme/determiner/possessive/ihr-third-person.js";
-import { member as m4 } from "./members/lexeme/determiner/possessive/mein-first-person.js";
-import { member as m7 } from "./members/lexeme/determiner/possessive/sein-third-person.js";
-import { member as m9 } from "./members/lexeme/determiner/possessive/unser-first-person.js";
-import { member as m24 } from "./members/lexeme/determiner/quantifying/einige.js";
-import { member as m25 } from "./members/lexeme/determiner/quantifying/etliche.js";
-import { member as m32 } from "./members/lexeme/determiner/quantifying/etwelcher.js";
-import { member as m26 } from "./members/lexeme/determiner/quantifying/irgendein.js";
-import { member as m27 } from "./members/lexeme/determiner/quantifying/irgendwelcher.js";
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
 import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
-import { member as m28 } from "./members/lexeme/determiner/quantifying/mancher.js";
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
-import { member as m29 } from "./members/lexeme/determiner/quantifying/mehrere.js";
-import { member as m34 } from "./members/lexeme/determiner/quantifying/meist.js";
 import { member as m33 } from "./members/lexeme/determiner/quantifying/viel.js";
 import { member as m36 } from "./members/lexeme/determiner/quantifying/wenig.js";
-import { member as m19 } from "./members/lexeme/determiner/relative/welcher.js";
-import { member as m38 } from "./members/lexeme/determiner/total/alle.js";
-import { member as m42 } from "./members/lexeme/determiner/total/beide.js";
-import { member as m39 } from "./members/lexeme/determiner/total/jeder.js";
-import { member as m40 } from "./members/lexeme/determiner/total/jedweder.js";
-import { member as m170 } from "./members/lexeme/determiner/total/jeglicher.js";
-import { member as m41 } from "./members/lexeme/determiner/total/samtlich.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
 import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-masculine-singular-dative.js";
@@ -137,50 +131,43 @@ import { member as m158 } from "./members/lexeme/pronoun/relative/die-plural-nom
 import { pronominalAdverbs } from "./pronominal-adverbs.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
 export const authoredMembers = [
-	m0,
-	m1,
-	m2,
-	m3,
-	m4,
-	m5,
-	m6,
-	m7,
-	m8,
-	m9,
-	m10,
-	m11,
-	m12,
-	m13,
-	m14,
-	m15,
+	article_das_neuter_singular_accusative,
+	article_das_neuter_singular_nominative,
+	article_dem_masculine_singular_dative,
+	article_dem_neuter_singular_dative,
+	article_den_masculine_singular_accusative,
+	article_den_plural_dative,
+	article_der_feminine_singular_dative,
+	article_der_feminine_singular_genitive,
+	article_der_masculine_singular_nominative,
+	article_der_plural_genitive,
+	article_des_masculine_singular_genitive,
+	article_des_neuter_singular_genitive,
+	article_die_feminine_singular_accusative,
+	article_die_feminine_singular_nominative,
+	article_die_plural_accusative,
+	article_die_plural_nominative,
+	article_ein_masculine_singular_nominative,
+	article_ein_neuter_singular_accusative,
+	article_ein_neuter_singular_nominative,
+	article_eine_feminine_singular_accusative,
+	article_eine_feminine_singular_nominative,
+	article_einem_masculine_singular_dative,
+	article_einem_neuter_singular_dative,
+	article_einen_masculine_singular_accusative,
+	article_einer_feminine_singular_dative,
+	article_einer_feminine_singular_genitive,
+	article_eines_masculine_singular_genitive,
+	article_eines_neuter_singular_genitive,
 	m16,
 	m17,
-	m18,
-	m19,
 	m20,
 	m21,
-	m22,
-	m23,
-	m24,
-	m25,
-	m26,
-	m27,
-	m28,
-	m29,
 	m30,
 	m31,
-	m32,
 	m33,
-	m34,
 	m35,
 	m36,
-	m37,
-	m38,
-	m39,
-	m40,
-	m170,
-	m41,
-	m42,
 	aux0,
 	aux1,
 	aux2,
@@ -273,6 +260,7 @@ export const authoredMembers = [
 	m168,
 	m169,
 	subjectEs,
+	...reviewedDeterminers.map(({ member }) => member),
 	...reviewedPronouns.map(({ member }) => member),
 	...pronominalAdverbs,
 ];

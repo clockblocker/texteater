@@ -228,10 +228,11 @@ test("noun composition creates its article Reading with authored Knowledge befor
 	const lemmaId = await insertLemma(t, noun);
 	const reference = nounArticleReference({
 		article: "Definite",
-		case: "Dat",
+		// The heading article is the nominative singular cell of the noun's gender.
+		case: "Nom",
 		number: "Sing",
 		gender: "Fem",
-		spelled: "der",
+		spelled: "die",
 	});
 	await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
 	expect(await rows(t, "accumulatedKnowledge")).toHaveLength(1);
@@ -255,7 +256,7 @@ for (const [article, gender, spelled, canonical] of [
 	["Definite", "Masc", "der", "der"],
 	["Definite", "Fem", "die", "die"],
 	["Definite", "Neut", "das", "das"],
-	["Indefinite", "Fem", "eine", "ein"],
+	["Indefinite", "Fem", "eine", "eine"],
 ] as const) {
 	test(`noun composition immediately stores authored Knowledge for ${canonical}`, async () => {
 		const t = createTestConvex();
@@ -270,7 +271,7 @@ for (const [article, gender, spelled, canonical] of [
 		const knowledge = (await knowledgeRows(t))[0]?.knowledge;
 		expect(knowledge?.definition).toContain(`„${canonical}“`);
 		expect(knowledge?.translations.en).toEqual(
-			canonical === "ein" ? ["a", "an"] : ["the"],
+			article === "Indefinite" ? ["a", "an"] : ["the"],
 		);
 		expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(
 			"knowledge",
@@ -309,7 +310,8 @@ test("authored article completion repairs empty entries and preserves existing K
 	});
 	expect(await complete()).toBe(true);
 	const [restored] = await knowledgeRows(t);
-	expect(restored?.knowledge.definition).toContain("„die“");
+	// Dative feminine der is its own article cell (system ADR 0032).
+	expect(restored?.knowledge.definition).toContain("„der“");
 	expect((await rows(t, "readingEntries"))[0]?.record).toHaveProperty(
 		"notes",
 		"Keep my notes",

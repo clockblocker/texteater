@@ -54,6 +54,14 @@ export function germanPronounCoreError(): string {
 	return "German pronoun gender must agree with its subtype, person and number; possessor gender requires a third-person singular personal possessive";
 }
 
+/** Plural agreement has no marked gender; a cell never guesses one. */
+export function isGermanDeterminerCore(core: Record<string, unknown>): boolean {
+	return core.gender === null || core.number !== "Plur";
+}
+export function germanDeterminerCoreError(): string {
+	return "German determiner plural agreement has no marked gender";
+}
+
 /** Composition is reusable grammar; both component values must identify the same article. */
 type NounComposition = {
 	inflectionalFeatures: {

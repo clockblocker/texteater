@@ -392,6 +392,57 @@ test("feature navigation preserves Case and compares unmarked values literally",
 		[],
 	);
 });
+test("feature navigation walks German article cells like pronoun cells", () => {
+	const dem = required(
+		authoredMembers.find(
+			(member) =>
+				member.lemma.kind === "DET" &&
+				member.lemma.canonicalForm === "dem" &&
+				member.lemma.coreFeatures.pronType === "Art" &&
+				member.lemma.coreFeatures.gender === "Masc",
+		),
+		"Expected the dative masculine definite article",
+	).lemma as Dumling.Lemma<"de", "Lexeme", "DET">;
+	const cells = (
+		vary: Parameters<typeof selectGrammaticalAlternatives>[0]["vary"],
+	) =>
+		selectGrammaticalAlternatives({ source: dem, vary }).map((reading) => {
+			const core = (reading.lemma as Dumling.Lemma<"de", "Lexeme", "DET">)
+				.coreFeatures;
+			return `${reading.lemma.canonicalForm}/${core.case}.${core.gender}.${core.number}`;
+		});
+	expect(cells(["case"]).sort()).toEqual([
+		"den/Acc.Masc.Sing",
+		"der/Nom.Masc.Sing",
+		"des/Gen.Masc.Sing",
+	]);
+	expect(cells(["gender"]).sort()).toEqual([
+		"dem/Dat.Neut.Sing",
+		"der/Dat.Fem.Sing",
+	]);
+	expect(cells(["number", "gender"])).toContain("den/Dat.null.Plur");
+});
+test("feature navigation reaches the der-series cells that were once listed as synonyms", () => {
+	const dem = required(
+		authoredMembers.find(
+			(member) =>
+				member.lemma.kind === "PRON" &&
+				member.lemma.canonicalForm === "dem" &&
+				member.lemma.coreFeatures.pronType === "Dem" &&
+				member.lemma.coreFeatures.gender === "Masc",
+		),
+		"Expected the dative masculine demonstrative pronoun",
+	);
+	expect(dem.knowledge.semanticRelations).toBeUndefined();
+	const reached = new Set(
+		selectGrammaticalAlternatives({
+			source: dem.lemma as Dumling.Lemma<"de", "Lexeme", "PRON">,
+			vary: ["case", "number", "gender"],
+		}).map((reading) => reading.lemma.canonicalForm),
+	);
+	for (const form of ["der", "die", "das", "den", "dessen", "deren", "denen"])
+		expect(reached.has(form), form).toBe(true);
+});
 test("migrated finite verb evidence remains present", () => {
 	expect(
 		verbCases["grammar-de-verb-finite-liest"].idealOutput.surface

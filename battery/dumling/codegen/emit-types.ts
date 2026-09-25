@@ -19,6 +19,7 @@ export function outputType(
 						!new Set([
 							"dumling.feature-bag.marked",
 							"dumling.de-pronoun.core",
+							"dumling.de-determiner.core",
 							"dumling.de-noun.surface",
 							"dumling.de-noun.attestation",
 							"dumling.de-verbal.attestation",

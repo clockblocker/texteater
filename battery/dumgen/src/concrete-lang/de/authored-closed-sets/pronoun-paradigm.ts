@@ -53,6 +53,21 @@ const caseNames = {
 };
 const genderNames = { Masc: "Maskulinum", Neut: "Neutrum", Fem: "Femininum" };
 
+/** The learner-facing German name of a Paradigm Cell, such as "Dativ, Singular, Maskulinum". */
+export function cellCoordinates(core: Partial<PronounCell>): string {
+	return [
+		core.case && caseNames[core.case],
+		core.number === "Sing"
+			? "Singular"
+			: core.number === "Plur"
+				? "Plural"
+				: null,
+		core.gender && genderNames[core.gender],
+	]
+		.filter(Boolean)
+		.join(", ");
+}
+
 /** Each occupied, reviewed table cell is an identity; null cells are intentionally absent.
  * ADR 0018, not LEO, determines this project's Lemma granularity.
  * https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/index.xml?lang=de
@@ -71,17 +86,7 @@ export function pronounMember(
 		canonicalForm: form.text,
 		coreFeatures,
 	};
-	const coordinates = [
-		coreFeatures.case && caseNames[coreFeatures.case],
-		coreFeatures.number === "Sing"
-			? "Singular"
-			: coreFeatures.number === "Plur"
-				? "Plural"
-				: null,
-		coreFeatures.gender && genderNames[coreFeatures.gender],
-	]
-		.filter(Boolean)
-		.join(", ");
+	const coordinates = cellCoordinates(coreFeatures);
 	return {
 		member: defineAuthoredMember({
 			lemma,

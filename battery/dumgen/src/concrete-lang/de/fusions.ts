@@ -3,7 +3,6 @@ import { germanFusions } from "./fusion-entries.js";
 type Fusion = {
 	adposition: string;
 	articleForm: string;
-	articleLemma: string;
 	articleCase: "Dat" | "Acc";
 };
 
@@ -24,7 +23,6 @@ export function germanFusion(form: string): Fusion | undefined {
 	return {
 		adposition: adposition.surface as string,
 		articleForm: article.surface as string,
-		articleLemma: entry.article.lemma,
 		articleCase: entry.article.case,
 	};
 }

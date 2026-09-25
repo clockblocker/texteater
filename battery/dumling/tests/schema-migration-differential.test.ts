@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { DeDeterminerFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/determiner.js";
 import { DeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/de/lexeme/verb.js";
 import { HeAdjectiveFeatureBagsSchema } from "../src/schemas/concrete-language/he/lexeme/adjective.js";
 import { HeVerbFeatureBagsSchema } from "../src/schemas/concrete-language/he/lexeme/verb.js";
@@ -196,75 +195,6 @@ describe("Feature Bag schemas preserve retained acceptance cases", () => {
 						tense: null,
 						verbForm: null,
 						voice: null,
-					},
-				},
-			],
-		);
-	});
-
-	test("German Lexeme/DET", () => {
-		expectSameAcceptance(
-			"DeDeterminerFeatureBagsSchema",
-			DeDeterminerFeatureBagsSchema,
-			[
-				{
-					core: {
-						definite: "Def",
-						extPos: "DET",
-						foreign: null,
-						numType: "Card",
-						person: "3",
-						polite: null,
-						poss: "Yes",
-						pronType: "Art",
-					},
-					inflectional: {
-						case: "Nom",
-						degree: null,
-						gender: "Masc",
-						"gender[psor]": ["Fem", "Masc"],
-						number: "Sing",
-						"number[psor]": null,
-					},
-				},
-				{
-					core: {
-						definite: null,
-						extPos: null,
-						foreign: null,
-						numType: null,
-						person: null,
-						polite: null,
-						poss: null,
-						pronType: null,
-					},
-					inflectional: {
-						case: null,
-						degree: null,
-						gender: null,
-						"gender[psor]": null,
-						number: null,
-						"number[psor]": null,
-					},
-				},
-				{
-					core: {
-						definite: "Cons",
-						extPos: "PRON",
-						foreign: null,
-						numType: null,
-						person: null,
-						polite: null,
-						poss: null,
-						pronType: "Rcp",
-					},
-					inflectional: {
-						case: "Loc",
-						degree: null,
-						gender: null,
-						"gender[psor]": [],
-						number: null,
-						"number[psor]": null,
 					},
 				},
 			],

@@ -79,7 +79,7 @@ Invariants enforced in code, never asked:
 - A fused word never joins a group as a whole, whatever the matrix said about
   the source word. Its adposition component is a singleton ADP target; its
   article component joins the next NOUN target that has no article, with
-  role Article (ADR 0024). An unattached fused article is a DET singleton.
+  role Article (system ADR 0032). An unattached fused article is a DET singleton.
 - An abbreviation is one Segment; its surface is the expansion from the
   fusion table.
 - A Phraseme Target's members are words, projected by Head from the pair
@@ -105,7 +105,8 @@ exports), scored by the sentence corpus. Given a Lexeme Target:
   candidates; Unresolved when `Unresolved` wins; Miss when the route is
   DET or PRON and no candidate exists.
 - Identity State of a non-head: Derived. Its identity comes from the head:
-  the article's DET Lemma and surface by agreement (ADR 0024); the
+  the article's DET cell from the noun's case, number, gender and
+  definiteness (system ADR 0032); the
   auxiliary's AUX Reading from the head's form and the other auxiliaries;
   particle, governed preposition, reflexive and expletive project the head's
   lexical Core Features.

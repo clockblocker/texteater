@@ -565,9 +565,12 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		kind: "DET",
 		canonicalForm: "die",
 		coreFeatures: {
+			case: "Nom",
 			definite: "Def",
 			extPos: null,
 			foreign: null,
+			gender: null,
+			number: "Plur",
 			numType: null,
 			person: null,
 			polite: null,

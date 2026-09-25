@@ -497,6 +497,9 @@ test("a Closed route miss records its typed outcome without dictionary writes or
 			lemma: {
 				canonicalForm: "unreviewed",
 				coreFeatures: {
+					case: "Nom",
+					gender: null,
+					number: "Plur",
 					definite: "Def",
 					extPos: null,
 					foreign: null,

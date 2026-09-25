@@ -3,6 +3,27 @@ import type * as Dumling from "dumling/types";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { authoredMembers } from "../authored-closed-sets/inventory.js";
 
+/** The reviewed article Paradigm Cell with exactly these coordinates. */
+function articleCell(cell: {
+	definite: string;
+	case: string;
+	number: string;
+	gender: string | null;
+}) {
+	return (
+		authoredMembers.find(
+			({ lemma }) =>
+				lemma.kind === "DET" &&
+				"pronType" in lemma.coreFeatures &&
+				lemma.coreFeatures.pronType === "Art" &&
+				lemma.coreFeatures.definite === cell.definite &&
+				lemma.coreFeatures.case === cell.case &&
+				lemma.coreFeatures.number === cell.number &&
+				lemma.coreFeatures.gender === cell.gender,
+		) ?? null
+	);
+}
+
 /** Exact reviewed identity plus contextual morphology, without any occurrence or database identity. */
 export function nounArticleReference(input: {
 	article: string;
@@ -21,26 +42,19 @@ export function nounArticleReference(input: {
 			"resolveGrammar",
 			"Article form and noun agreement are incompatible",
 		);
-	const canonical =
-		input.article === "Indefinite"
-			? "ein"
-			: input.number === "Plur" || input.gender === "Fem"
-				? "die"
-				: input.gender === "Neut"
-					? "das"
-					: "der";
-	const member = authoredMembers.find(
-		({ lemma }) =>
-			lemma.kind === "DET" &&
-			lemma.canonicalForm === canonical &&
-			"pronType" in lemma.coreFeatures &&
-			lemma.coreFeatures.pronType === "Art",
-	);
+	// Each article Paradigm Cell is its own Lemma (system ADR 0032): the noun's
+	// case, number, gender and definiteness name exactly one of them.
+	const member = articleCell({
+		definite: input.article === "Indefinite" ? "Ind" : "Def",
+		case: input.case,
+		number: input.number,
+		gender: input.number === "Plur" ? null : input.gender,
+	});
 	if (!member || member.lemma.kind !== "DET")
 		throw new DumgenFailure(
 			"CatalogMiss",
 			"resolveGrammar",
-			`Missing reviewed article ${canonical}`,
+			`Missing reviewed article ${expected}`,
 			"de/Lexeme/DET",
 		);
 	const surface = {
@@ -50,14 +64,7 @@ export function nounArticleReference(input: {
 		normalizedSurface: expected,
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		inflectionalFeatures: {
-			case: input.case,
-			number: input.number,
-			gender: input.gender,
-			degree: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
+		inflectionalFeatures: null,
 	};
 	const parsed = parseUnit(surface);
 	if (!parsed.success) throw parsed.error;
@@ -75,7 +82,7 @@ export function nounArticleReference(input: {
 	return { surface: parsed.chain.value, reading };
 }
 
-/** The reviewed citation article for a German noun heading, independent of its encounters. */
+/** The reviewed nominative singular definite article for a German noun heading, independent of its encounters. */
 export function selectNounHeadingArticle(lemma: {
 	language: string;
 	family: string;
@@ -89,24 +96,13 @@ export function selectNounHeadingArticle(lemma: {
 	)
 		return null;
 	const gender = lemma.coreFeatures.gender;
-	const canonical =
-		gender === "Masc"
-			? "der"
-			: gender === "Fem"
-				? "die"
-				: gender === "Neut"
-					? "das"
-					: null;
-	if (!canonical) return null;
-	return (
-		authoredMembers.find(
-			({ lemma: candidate }) =>
-				candidate.kind === "DET" &&
-				candidate.canonicalForm === canonical &&
-				"pronType" in candidate.coreFeatures &&
-				candidate.coreFeatures.pronType === "Art",
-		) ?? null
-	);
+	if (gender !== "Masc" && gender !== "Fem" && gender !== "Neut") return null;
+	return articleCell({
+		definite: "Def",
+		case: "Nom",
+		number: "Sing",
+		gender,
+	});
 }
 
 /** Derives a contextual article from resolved noun grammar without model execution. */

@@ -10,21 +10,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "der",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": "Def",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -47,20 +43,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Dat",
 					"degree": null,
-					"gender": "Masc",
 					"gender[psor]": null,
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "mein",
+				"canonicalForm": "meinem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": "1",
 					"polite": null,
@@ -82,21 +78,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Fem",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "die",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": "Def",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Fem",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -118,21 +110,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "das",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": "Def",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -159,9 +147,12 @@
 			"lemma": {
 				"canonicalForm": "derlei",
 				"coreFeatures": {
+					"case": null,
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": null,
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -184,21 +175,17 @@
 			"surface": {
 				"spelling": "Variant",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Fem",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "ein",
+				"canonicalForm": "eine",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": "Ind",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Fem",
+					"number": "Sing",
 					"numType": "Card",
 					"person": null,
 					"polite": null,
@@ -220,21 +207,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Fem",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "welcher",
+				"canonicalForm": "welche",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Fem",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -257,21 +240,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manchem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -285,7 +264,7 @@
 	},
 	"grammar-de-det-demo-quoted-archaic-etwelche": {
 		"input": {
-			"markedContext": "Das Wörterbuch kennzeichnet „<TARGET>etwelche</TARGET>“ ausdrücklich als veraltet.",
+			"markedContext": "Der Chronist hegte noch <TARGET>etwelche</TARGET> Zweifel an dem Bericht.",
 			"members": ["etwelche"]
 		},
 		"idealOutput": {
@@ -299,11 +278,14 @@
 				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "etwelcher",
+				"canonicalForm": "etwelche",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -313,7 +295,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "The quoted archaic spelling is authoritative lexical material: preserve it literally in normalizedMembers and do not invent a modernizing typo repair."
+		"explanation": "An archaic determiner keeps its spelling literally in normalizedMembers and is marked Archaic, not repaired as a typo. Its cell comes from the noun it modifies: plural accusative Zweifel."
 	},
 	"grammar-de-det-dev-indefinite-article-einen": {
 		"input": {
@@ -326,21 +308,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "ein",
+				"canonicalForm": "einen",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": "Ind",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": "Card",
 					"person": null,
 					"polite": null,
@@ -363,21 +341,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "dieser",
+				"canonicalForm": "diesem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -399,21 +373,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "derselbe",
+				"canonicalForm": "demselben",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -441,9 +411,12 @@
 			"lemma": {
 				"canonicalForm": "welch",
 				"coreFeatures": {
+					"case": null,
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": null,
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -466,21 +439,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "welcher",
+				"canonicalForm": "welchen",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -502,21 +471,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "welcher",
+				"canonicalForm": "welchem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -538,21 +503,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Plur",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "kein",
+				"canonicalForm": "keinen",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -575,21 +536,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Plur",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "alle",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -611,21 +568,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Plur",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "beide",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": "Card",
 					"person": null,
 					"polite": null,
@@ -647,21 +600,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Plur",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "viel",
+				"canonicalForm": "viele",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -685,20 +634,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": null,
 					"degree": "Cmp",
-					"gender": null,
 					"gender[psor]": null,
-					"number": null,
 					"number[psor]": null
 				}
 			},
 			"lemma": {
 				"canonicalForm": "wenig",
 				"coreFeatures": {
+					"case": null,
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": null,
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -721,20 +670,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Nom",
 					"degree": "Sup",
-					"gender": "Masc",
 					"gender[psor]": null,
-					"number": "Plur",
 					"number[psor]": null
 				}
 			},
 			"lemma": {
-				"canonicalForm": "meist",
+				"canonicalForm": "meisten",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": null,
+					"number": "Plur",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -757,20 +706,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
 					"degree": null,
-					"gender": "Masc",
 					"gender[psor]": null,
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "dein",
+				"canonicalForm": "deinen",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": "2",
 					"polite": null,
@@ -793,20 +742,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Dat",
 					"degree": null,
-					"gender": "Neut",
 					"gender[psor]": null,
-					"number": "Sing",
 					"number[psor]": "Plur"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "unser",
+				"canonicalForm": "unserem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": "1",
 					"polite": null,
@@ -829,20 +778,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
 					"degree": null,
-					"gender": "Masc",
 					"gender[psor]": "Masc",
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "sein",
+				"canonicalForm": "seinen",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": "3",
 					"polite": null,
@@ -865,20 +814,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
 					"degree": null,
-					"gender": "Neut",
 					"gender[psor]": "Neut",
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
 				"canonicalForm": "sein",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": "3",
 					"polite": null,
@@ -901,20 +850,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Acc",
 					"degree": null,
-					"gender": "Neut",
 					"gender[psor]": "Fem",
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
 				"canonicalForm": "ihr",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": "3",
 					"polite": null,
@@ -936,21 +885,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "Ihr",
+				"canonicalForm": "Ihrem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": "2",
 					"polite": "Form",
@@ -982,21 +927,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "wievielte",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": "Ord",
 					"person": null,
 					"polite": null,
@@ -1019,21 +960,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Gen",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "der",
+				"canonicalForm": "des",
 				"coreFeatures": {
+					"case": "Gen",
 					"definite": "Def",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1055,21 +992,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "ein",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": "Ind",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": "Card",
 					"person": null,
 					"polite": null,
@@ -1091,21 +1024,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "jener",
+				"canonicalForm": "jenem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1127,21 +1056,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "welcher",
+				"canonicalForm": "welches",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1163,21 +1088,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "kein",
+				"canonicalForm": "keinen",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1199,21 +1120,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Nom",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "jeder",
 				"coreFeatures": {
+					"case": "Nom",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1236,20 +1153,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Dat",
 					"degree": null,
-					"gender": "Masc",
 					"gender[psor]": null,
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "dein",
+				"canonicalForm": "deinem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": "2",
 					"polite": null,
@@ -1272,20 +1189,20 @@
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
 				"inflectionalFeatures": {
-					"case": "Dat",
 					"degree": null,
-					"gender": "Neut",
 					"gender[psor]": null,
-					"number": "Sing",
 					"number[psor]": "Sing"
 				}
 			},
 			"lemma": {
-				"canonicalForm": "Ihr",
+				"canonicalForm": "Ihrem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": "2",
 					"polite": "Form",
@@ -1307,21 +1224,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "mancher",
+				"canonicalForm": "manches",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1343,21 +1256,17 @@
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Dat",
-					"degree": null,
-					"gender": "Masc",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
-				"canonicalForm": "dieser",
+				"canonicalForm": "diesem",
 				"coreFeatures": {
+					"case": "Dat",
 					"definite": null,
 					"extPos": null,
 					"foreign": null,
+					"gender": "Masc",
+					"number": "Sing",
 					"numType": null,
 					"person": null,
 					"polite": null,
@@ -1379,21 +1288,17 @@
 			"surface": {
 				"spelling": "Variant",
 				"surfaceFeatures": null,
-				"inflectionalFeatures": {
-					"case": "Acc",
-					"degree": null,
-					"gender": "Neut",
-					"gender[psor]": null,
-					"number": "Sing",
-					"number[psor]": null
-				}
+				"inflectionalFeatures": null
 			},
 			"lemma": {
 				"canonicalForm": "ein",
 				"coreFeatures": {
+					"case": "Acc",
 					"definite": "Ind",
 					"extPos": null,
 					"foreign": null,
+					"gender": "Neut",
+					"number": "Sing",
 					"numType": "Card",
 					"person": null,
 					"polite": null,
@@ -1410,29 +1315,8 @@
 			"members": ["etwelches"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["etwelches"],
-			"surface": {
-				"spelling": "Canonical",
-				"surfaceFeatures": {
-					"historicalStatus": "Archaic"
-				},
-				"inflectionalFeatures": null
-			},
-			"lemma": {
-				"canonicalForm": "etwelcher",
-				"coreFeatures": {
-					"definite": null,
-					"extPos": null,
-					"foreign": null,
-					"numType": null,
-					"person": null,
-					"polite": null,
-					"poss": null,
-					"pronType": "Ind"
-				}
-			},
-			"realizationCoverage": "Full"
-		}
+			"decision": "Unresolved"
+		},
+		"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved."
 	}
 }

@@ -72,13 +72,14 @@ test("authored realization mappings preserve exact Core coordinates, spelling id
 	).toEqual([]);
 });
 test("a map gap and ambiguous maps make one dependent selection over compatible identities", async () => {
-	const der = member("der", "DET"),
-		die = member("die", "DET");
+	// Nominative masculine singular cells of two paradigms share every Core Feature.
+	const der = member("dieser", "DET"),
+		die = member("jener", "DET");
 	for (const mappings of [
 		[],
 		[
-			{ member: der, spelled: "der" },
-			{ member: die, spelled: "der" },
+			{ member: der, spelled: "dieser" },
+			{ member: die, spelled: "dieser" },
 		],
 	]) {
 		const traces: OperationTrace[] = [];
@@ -100,7 +101,7 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 				return choiceAnswers(
 					request.questions,
 					() =>
-						`identity_${state.reviewedIdentities.findIndex((lemma) => lemma.canonicalForm === "der")}`,
+						`identity_${state.reviewedIdentities.findIndex((lemma) => lemma.canonicalForm === "dieser")}`,
 				);
 			},
 			onOperation: (trace) => traces.push(trace),
@@ -111,10 +112,10 @@ test("a map gap and ambiguous maps make one dependent selection over compatible 
 					options,
 					{
 						kind: "DET",
-						spelled: "der",
+						spelled: "dieser",
 						core: der.lemma.coreFeatures,
 						inflection: null,
-						markedContext: "<TARGET>der</TARGET> Mann",
+						markedContext: "<TARGET>dieser</TARGET> Mann",
 						sentenceInitial: false,
 					},
 					scope,
@@ -226,11 +227,13 @@ test("a sentence-initial capital retries its lowercase spelling; a mid-sentence 
 	const welcher = authoredMembers.find(
 		(value) =>
 			value.lemma.kind === "DET" &&
-			value.lemma.canonicalForm === "welcher" &&
+			value.lemma.canonicalForm === "welchen" &&
 			(value.lemma.coreFeatures as Record<string, unknown>).pronType ===
-				"Int",
+				"Int" &&
+			(value.lemma.coreFeatures as Record<string, unknown>).case ===
+				"Acc",
 	);
-	if (!welcher) throw Error("Missing fixture welcher");
+	if (!welcher) throw Error("Missing fixture welchen");
 	for (const [spelled, expected] of [
 		["Er", member("er", "PRON")],
 		["Wer", member("wer", "PRON")],

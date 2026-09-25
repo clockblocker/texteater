@@ -1,6 +1,6 @@
 {
 	"sourceCommit": "b0070e35",
-	"note": "Frozen legacy acceptance before retirement; German PRON and English PRON deliberately covered by current identity tests.",
+	"note": "Frozen legacy acceptance before retirement; German PRON and DET and English PRON deliberately covered by current identity tests.",
 	"all": [
 		{
 			"route": "de/lexeme/adjective.ts",
@@ -282,83 +282,6 @@
 			"input": {
 				"core": {
 					"conjType": "Comp"
-				},
-				"unexpected": true
-			},
-			"accepted": false
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": {
-				"core": {
-					"definite": "Def",
-					"extPos": "ADV",
-					"foreign": "Yes",
-					"numType": "Card",
-					"person": "1",
-					"polite": "Form",
-					"poss": "Yes",
-					"pronType": "Art"
-				},
-				"inflectional": {
-					"case": "Acc",
-					"degree": "Cmp",
-					"gender": "Fem",
-					"gender[psor]": "Fem",
-					"number": "Plur",
-					"number[psor]": "Plur"
-				}
-			},
-			"accepted": true
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": null,
-			"accepted": false
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": {},
-			"accepted": false
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": {
-				"core": {},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": {
-				"core": {
-					"unexpected": true
-				},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "de/lexeme/determiner.ts",
-			"input": {
-				"core": {
-					"definite": "Def",
-					"extPos": "ADV",
-					"foreign": "Yes",
-					"numType": "Card",
-					"person": "1",
-					"polite": "Form",
-					"poss": "Yes",
-					"pronType": "Art"
-				},
-				"inflectional": {
-					"case": "Acc",
-					"degree": "Cmp",
-					"gender": "Fem",
-					"gender[psor]": "Fem",
-					"number": "Plur",
-					"number[psor]": "Plur"
 				},
 				"unexpected": true
 			},
@@ -4898,80 +4821,6 @@
 							"tense": null,
 							"verbForm": null,
 							"voice": null
-						}
-					},
-					"accepted": false
-				}
-			]
-		},
-		{
-			"name": "DeDeterminerFeatureBagsSchema",
-			"cases": [
-				{
-					"input": {
-						"core": {
-							"definite": "Def",
-							"extPos": "DET",
-							"foreign": null,
-							"numType": "Card",
-							"person": "3",
-							"polite": null,
-							"poss": "Yes",
-							"pronType": "Art"
-						},
-						"inflectional": {
-							"case": "Nom",
-							"degree": null,
-							"gender": "Masc",
-							"gender[psor]": ["Fem", "Masc"],
-							"number": "Sing",
-							"number[psor]": null
-						}
-					},
-					"accepted": true
-				},
-				{
-					"input": {
-						"core": {
-							"definite": null,
-							"extPos": null,
-							"foreign": null,
-							"numType": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": null
-						},
-						"inflectional": {
-							"case": null,
-							"degree": null,
-							"gender": null,
-							"gender[psor]": null,
-							"number": null,
-							"number[psor]": null
-						}
-					},
-					"accepted": false
-				},
-				{
-					"input": {
-						"core": {
-							"definite": "Cons",
-							"extPos": "PRON",
-							"foreign": null,
-							"numType": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Rcp"
-						},
-						"inflectional": {
-							"case": "Loc",
-							"degree": null,
-							"gender": null,
-							"gender[psor]": [],
-							"number": null,
-							"number[psor]": null
 						}
 					},
 					"accepted": false

@@ -570,7 +570,7 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 		});
 		const articleLemmaId = await ctx.db.insert("lemmas", {
 			...articleLemma,
-			lemmaKey: "lemma-die",
+			lemmaKey: "lemma-der-dat-fem",
 		});
 		await ctx.db.insert("surfaces", {
 			surfaceKey: "surface-der-frau",
@@ -614,8 +614,10 @@ test("noun Surface article opens the exact DET analysis, including feminine der"
 						activeAnalysisKey: articleSurfaceId,
 					},
 					presented: {
-						lemma: { canonicalForm: "die" },
-						inflectionalFeatures: { gender: "Fem", case: "Dat" },
+						lemma: {
+							canonicalForm: "der",
+							coreFeatures: { gender: "Fem", case: "Dat" },
+						},
 					},
 				},
 			},

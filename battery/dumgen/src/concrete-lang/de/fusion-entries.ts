@@ -11,12 +11,11 @@ import type {
  * ones, the apostrophe clitics, and the abbreviation table. One-liners are
  * learner-facing German, like authored Knowledge definitions.
  *
- * Article components carry the DET headword the fused form belongs to under
- * ADR 0024 (dem is a Surface of der, das of das, der in zur of die) and the
- * case the preposition governs in the fusion.
+ * Article components carry the case the preposition governs in the fusion.
+ * The article's Paradigm Cell also depends on the noun's gender (dem Wald,
+ * dem Haus), so the noun derives it (system ADR 0032).
  */
 export type GermanArticleComponent = {
-	readonly lemma: "der" | "die" | "das" | "ein";
 	readonly case: "Dat" | "Acc";
 };
 
@@ -28,7 +27,6 @@ const fusion = (
 	form: string,
 	adposition: readonly [span: string, surface: string],
 	article: readonly [span: string, surface: string],
-	lemma: GermanArticleComponent["lemma"],
 	grammaticalCase: GermanArticleComponent["case"],
 	oneLiner: string,
 	register: FusionEntry["register"] = "Standard",
@@ -40,7 +38,7 @@ const fusion = (
 	],
 	oneLiner,
 	register,
-	article: { lemma, case: grammaticalCase },
+	article: { case: grammaticalCase },
 });
 
 /** Preposition plus definite article written as one word. */
@@ -49,7 +47,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"im",
 		["i", "in"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„im“ ist „in dem“: Präposition und bestimmter Artikel im Dativ, zu einem Wort verschmolzen (im Wald).",
 	),
@@ -57,7 +54,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"ins",
 		["in", "in"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„ins“ ist „in das“: Präposition und bestimmter Artikel im Akkusativ, zu einem Wort verschmolzen (ins Haus).",
 	),
@@ -65,7 +61,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"zum",
 		["zu", "zu"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„zum“ ist „zu dem“: Präposition und bestimmter Artikel im Dativ (zum Bahnhof).",
 	),
@@ -73,7 +68,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"zur",
 		["zu", "zu"],
 		["r", "der"],
-		"die",
 		"Dat",
 		"„zur“ ist „zu der“: Präposition und weiblicher bestimmter Artikel im Dativ (zur Schule).",
 	),
@@ -81,7 +75,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"am",
 		["a", "an"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„am“ ist „an dem“: Präposition und bestimmter Artikel im Dativ (am Fenster). Vor einem Superlativ (am besten) ist es keine Verschmelzung.",
 	),
@@ -89,7 +82,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"ans",
 		["an", "an"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„ans“ ist „an das“: Präposition und bestimmter Artikel im Akkusativ (ans Meer).",
 	),
@@ -97,7 +89,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"beim",
 		["bei", "bei"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„beim“ ist „bei dem“: Präposition und bestimmter Artikel im Dativ (beim Arzt).",
 	),
@@ -105,7 +96,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"vom",
 		["vo", "von"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„vom“ ist „von dem“: Präposition und bestimmter Artikel im Dativ (vom Bahnhof).",
 	),
@@ -115,7 +105,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"aufs",
 		["auf", "auf"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„aufs“ ist umgangssprachlich „auf das“ (aufs Dach).",
 		"Colloquial",
@@ -124,7 +113,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"durchs",
 		["durch", "durch"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„durchs“ ist umgangssprachlich „durch das“ (durchs Fenster).",
 		"Colloquial",
@@ -133,7 +121,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"fürs",
 		["für", "für"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„fürs“ ist umgangssprachlich „für das“ (fürs Erste).",
 		"Colloquial",
@@ -142,7 +129,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"ums",
 		["um", "um"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„ums“ ist umgangssprachlich „um das“ (ums Haus).",
 		"Colloquial",
@@ -151,7 +137,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"übers",
 		["über", "über"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„übers“ ist umgangssprachlich „über das“ (übers Wochenende).",
 		"Colloquial",
@@ -160,7 +145,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"unters",
 		["unter", "unter"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„unters“ ist umgangssprachlich „unter das“ (unters Bett).",
 		"Colloquial",
@@ -169,7 +153,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"hinters",
 		["hinter", "hinter"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„hinters“ ist umgangssprachlich „hinter das“ (hinters Haus).",
 		"Colloquial",
@@ -178,7 +161,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"vors",
 		["vor", "vor"],
 		["s", "das"],
-		"das",
 		"Acc",
 		"„vors“ ist umgangssprachlich „vor das“ (vors Tor).",
 		"Colloquial",
@@ -187,7 +169,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"überm",
 		["über", "über"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„überm“ ist umgangssprachlich „über dem“ (überm Tisch).",
 		"Colloquial",
@@ -196,7 +177,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"unterm",
 		["unter", "unter"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„unterm“ ist umgangssprachlich „unter dem“ (unterm Bett).",
 		"Colloquial",
@@ -205,7 +185,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"hinterm",
 		["hinter", "hinter"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„hinterm“ ist umgangssprachlich „hinter dem“ (hinterm Haus).",
 		"Colloquial",
@@ -214,7 +193,6 @@ export const germanFusions: readonly GermanFusion[] = [
 		"vorm",
 		["vor", "vor"],
 		["m", "dem"],
-		"der",
 		"Dat",
 		"„vorm“ ist umgangssprachlich „vor dem“ (vorm Fenster).",
 		"Colloquial",

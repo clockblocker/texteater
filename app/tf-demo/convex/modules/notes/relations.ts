@@ -40,12 +40,13 @@ export const grammaticalAlternativeValidator = v.object({
 		v.literal("case"),
 		v.literal("person"),
 		v.literal("number"),
+		v.literal("gender"),
 	),
 	readingKey: v.string(),
 	canonicalForm: v.string(),
 });
 export type GrammaticalAlternative = {
-	readonly feature: "case" | "person" | "number";
+	readonly feature: "case" | "person" | "number" | "gender";
 	readonly readingKey: string;
 	readonly canonicalForm: string;
 };
@@ -516,22 +517,45 @@ export async function loadGrammaticalAlternatives(
 		}),
 	);
 }
+/** The Paradigm Cells a learner can step to from a reviewed pronoun or determiner. */
 export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
-	if (lemma.family !== "Lexeme" || lemma.kind !== "PRON") return [];
+	if (lemma.family !== "Lexeme") return [];
 	try {
-		return (["case", "person", "number"] as const).flatMap((feature) =>
-			selectGrammaticalAlternatives({
-				source: lemma,
-				vary:
-					feature === "number"
-						? ["number", "referenceNumber"]
-						: [feature],
-			}).map((reading) => ({ feature, reading })),
-		);
+		if (lemma.kind === "PRON")
+			return (["case", "person", "number"] as const).flatMap((feature) =>
+				selectGrammaticalAlternatives({
+					source: lemma,
+					vary:
+						feature === "number"
+							? ["number", "referenceNumber"]
+							: [feature],
+				}).map((reading) => ({ feature, reading })),
+			);
+		if (lemma.kind === "DET")
+			// Plural cells have no gender, so a number step also frees gender;
+			// only the cells that change number belong to that step.
+			return (["case", "gender", "number"] as const).flatMap((feature) =>
+				selectGrammaticalAlternatives({
+					source: lemma,
+					vary:
+						feature === "number" ? ["number", "gender"] : [feature],
+				})
+					.filter(
+						(reading) =>
+							feature !== "number" ||
+							readingNumber(reading) !==
+								lemma.coreFeatures.number,
+					)
+					.map((reading) => ({ feature, reading })),
+			);
+		return [];
 	} catch (error) {
 		if (error instanceof Error && error.name === "InvalidInput") return [];
 		throw error;
 	}
+}
+function readingNumber(reading: Dumling.Reading<"de">) {
+	return (reading.lemma.coreFeatures as { number?: string | null }).number;
 }
 
 export type PresentedRelations =

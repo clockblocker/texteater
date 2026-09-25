@@ -709,7 +709,7 @@ function DerivedNotes({
 						<li key={member.offset} className="list-disc">
 							<Mono>{segment?.text}</Mono>{" "}
 							{member.role === "Article"
-								? `is the article of this ${routeKind}: its DET identity and surface (${segment?.surface}) derive from the noun by agreement (ADR 0024).`
+								? `is the article of this ${routeKind}: its DET cell and surface (${segment?.surface}) derive from the noun's case, number and gender (ADR 0032).`
 								: member.role === "Auxiliary"
 									? "is an Auxiliary: its AUX Reading derives from the head's form and the other auxiliaries, no distribution stored."
 									: member.role === "Expletive"

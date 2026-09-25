@@ -441,7 +441,7 @@ test("Fusion morphology determines Case before any independent Case judgment", a
 	);
 	expect(result.surface).toHaveProperty("inflectionalFeatures.case", "Dat");
 	expect(deriveNounArticle(result.surface)).toHaveProperty(
-		"surface.inflectionalFeatures.case",
+		"surface.lemma.coreFeatures.case",
 		"Dat",
 	);
 });
@@ -561,14 +561,14 @@ for (const [text, caseValue] of [
 	});
 }
 
-for (const [form, caseValue, number, gender, owner] of [
-	["der", "Dat", "Sing", "Fem", "die"],
-	["der", "Gen", "Sing", "Fem", "die"],
-	["dem", "Dat", "Sing", "Neut", "das"],
-	["den", "Acc", "Sing", "Masc", "der"],
-	["der", "Gen", "Plur", "Masc", "die"],
+for (const [form, caseValue, number, gender] of [
+	["der", "Dat", "Sing", "Fem"],
+	["der", "Gen", "Sing", "Fem"],
+	["dem", "Dat", "Sing", "Neut"],
+	["den", "Acc", "Sing", "Masc"],
+	["der", "Gen", "Plur", "Masc"],
 ] as const) {
-	test(`${form} (${gender} ${number} ${caseValue}) belongs to authored ${owner}`, () => {
+	test(`${form} (${gender} ${number} ${caseValue}) is its own article cell`, () => {
 		const reference = nounArticleReference({
 			article: "Definite",
 			case: caseValue,
@@ -576,12 +576,14 @@ for (const [form, caseValue, number, gender, owner] of [
 			gender,
 			spelled: form,
 		});
-		expect(reference.surface.lemma.canonicalForm).toBe(owner);
+		expect(reference.surface.lemma.canonicalForm).toBe(form);
 		expect(reference.reading.lemma).toEqual(reference.surface.lemma);
-		expect(reference.surface.inflectionalFeatures).toMatchObject({
+		// Plural agreement has no gender, whatever the noun's lexical gender.
+		expect(reference.surface.lemma.coreFeatures).toMatchObject({
 			case: caseValue,
 			number,
-			gender,
+			gender: number === "Plur" ? null : gender,
 		});
+		expect(reference.surface.inflectionalFeatures).toBeNull();
 	});
 }

@@ -7,9 +7,12 @@ const lemma = {
 	kind: "DET",
 	canonicalForm: "manch",
 	coreFeatures: {
+		case: null,
 		definite: null,
 		extPos: null,
 		foreign: null,
+		gender: null,
+		number: null,
 		numType: null,
 		person: null,
 		polite: null,

@@ -1842,9 +1842,12 @@
 						"family": "Lexeme",
 						"kind": "DET",
 						"coreFeatures": {
+							"case": "Nom",
 							"definite": null,
 							"extPos": null,
 							"foreign": null,
+							"gender": "Masc",
+							"number": "Sing",
 							"numType": null,
 							"person": null,
 							"polite": null,

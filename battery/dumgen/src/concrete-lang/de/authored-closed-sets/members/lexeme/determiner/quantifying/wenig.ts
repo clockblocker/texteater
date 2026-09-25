@@ -7,9 +7,12 @@ const lemma = {
 	kind: "DET",
 	canonicalForm: "wenig",
 	coreFeatures: {
+		case: null,
 		definite: null,
 		extPos: null,
 		foreign: null,
+		gender: null,
+		number: null,
 		numType: null,
 		person: null,
 		polite: null,
@@ -24,7 +27,7 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		transcription: "ˈveːnɪç",
 		definition:
-			"Der quantifizierende Determinierer „wenig“ grenzt die Menge der bezeichneten Bezüge ein.",
+			"Der quantifizierende Determinierer „wenig“ grenzt die Menge der bezeichneten Bezüge ein. Die unflektierte Form steht vor einem Nomen im Singular (wenig Zeit); „weniger“ ist ihr Komparativ.",
 		translations: { en: ["little", "few"], ru: ["мало"] },
 	},
 	coverage: {

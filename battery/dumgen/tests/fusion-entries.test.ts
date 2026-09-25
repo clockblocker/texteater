@@ -44,13 +44,11 @@ test("the eight standard German fusions keep their attachment shape", () => {
 	expect(germanFusion("Im")).toEqual({
 		adposition: "in",
 		articleForm: "dem",
-		articleLemma: "der",
 		articleCase: "Dat",
 	});
 	expect(germanFusion("zur")).toEqual({
 		adposition: "zu",
 		articleForm: "der",
-		articleLemma: "die",
 		articleCase: "Dat",
 	});
 	expect(germanFusion("aufs")).toBeUndefined();
@@ -72,7 +70,7 @@ const articleForms = new Set([
 	"eines",
 ]);
 
-test("every German article component is a true article form of an authored DET headword, and clitic expansions are authored spellings", () => {
+test("every German article component is an authored article cell spelling, and clitic expansions are authored spellings", () => {
 	const determiners = authoredSpellings("DET");
 	const pronouns = authoredSpellings("PRON");
 	for (const entry of germanFusions) {
@@ -81,7 +79,9 @@ test("every German article component is a true article form of an authored DET h
 		expect(articleForms.has(article.surface as string), entry.form).toBe(
 			true,
 		);
-		expect(determiners.has(entry.article.lemma), entry.form).toBe(true);
+		expect(determiners.has(article.surface as string), entry.form).toBe(
+			true,
+		);
 		expect(article.span.length, entry.form).toBeGreaterThan(0);
 	}
 	for (const entry of germanClitics) {

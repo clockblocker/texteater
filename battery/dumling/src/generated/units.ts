@@ -763,9 +763,12 @@ export interface UnitMap {
 			kind: "DET";
 			canonicalForm: string;
 			coreFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				definite: ("Def" | "Ind") | null;
 				extPos: ("ADV" | "DET") | null;
 				foreign: "Yes" | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
 				numType: ("Card" | "Ord") | null;
 				person: ("1" | "2" | "3") | null;
 				polite: ("Form" | "Infm") | null;
@@ -796,9 +799,12 @@ export interface UnitMap {
 				kind: "DET";
 				canonicalForm: string;
 				coreFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					definite: ("Def" | "Ind") | null;
 					extPos: ("ADV" | "DET") | null;
 					foreign: "Yes" | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
 					numType: ("Card" | "Ord") | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
@@ -823,9 +829,7 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
-				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				degree: ("Cmp" | "Pos" | "Sup") | null;
-				gender: ("Fem" | "Masc" | "Neut") | null;
 				"gender[psor]":
 					| (
 							| ("Fem" | "Masc" | "Neut")
@@ -835,7 +839,6 @@ export interface UnitMap {
 							  ]
 					  )
 					| null;
-				number: ("Plur" | "Sing") | null;
 				"number[psor]": ("Plur" | "Sing") | null;
 			} | null;
 		};
@@ -848,9 +851,12 @@ export interface UnitMap {
 				kind: "DET";
 				canonicalForm: string;
 				coreFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					definite: ("Def" | "Ind") | null;
 					extPos: ("ADV" | "DET") | null;
 					foreign: "Yes" | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
 					numType: ("Card" | "Ord") | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
@@ -885,9 +891,12 @@ export interface UnitMap {
 					kind: "DET";
 					canonicalForm: string;
 					coreFeatures: {
+						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 						definite: ("Def" | "Ind") | null;
 						extPos: ("ADV" | "DET") | null;
 						foreign: "Yes" | null;
+						gender: ("Fem" | "Masc" | "Neut") | null;
+						number: ("Plur" | "Sing") | null;
 						numType: ("Card" | "Ord") | null;
 						person: ("1" | "2" | "3") | null;
 						polite: ("Form" | "Infm") | null;
@@ -912,9 +921,7 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
-					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					degree: ("Cmp" | "Pos" | "Sup") | null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
 					"gender[psor]":
 						| (
 								| ("Fem" | "Masc" | "Neut")
@@ -924,7 +931,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					number: ("Plur" | "Sing") | null;
 					"number[psor]": ("Plur" | "Sing") | null;
 				} | null;
 			};

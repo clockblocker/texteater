@@ -364,7 +364,7 @@ describe("Grundform assessment", () => {
 				?._tag,
 		).toBe("InsufficientFeatures");
 		expect(
-			errorOf(surface("de/Lexeme/DET", { features: null })).issues[0]
+			errorOf(surface("de/Lexeme/NUM", { features: null })).issues[0]
 				?._tag,
 		).toBe("LemmaRuleRequired");
 	});

@@ -4,7 +4,7 @@ Am nächsten Morgen war alles [anders].,anders,Undetermined,Lexeme,ADJ
 Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Not Grundform,Lexeme,NOUN
 Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Not Grundform,Lexeme,VERB
 Bei dieser Formel verstehe ich nur [Bahnhof].,verstehe nur Bahnhof,Not Grundform,Phraseme,Idiom
-Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Not Grundform,Lexeme,DET
+Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Grundform,Lexeme,DET
 Damit triffst du den [Nagel] auf den Kopf.,den nagel auf den kopf,Not Grundform,Phraseme,Idiom
 Das ist [nicht] mein Problem.,nicht,Grundform,Lexeme,PART
 Das ist schwer [zu] erklären.,zu,Grundform,Lexeme,PART
@@ -47,7 +47,7 @@ Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Undetermined,Lexeme,NOUN
 Die [linke] Hand zitterte.,linke,Not Grundform,Lexeme,ADJ
 Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
 Die [Mutter] passt nicht auf diese Schraube.,Mutter,Undetermined,Lexeme,NOUN
-[Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Not Grundform,Lexeme,DET
+[Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Grundform,Lexeme,DET
 Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Undetermined,Lexeme,NOUN
 Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat mitgebracht,Not Grundform,Lexeme,VERB
 Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Grundform,Lexeme,PRON
@@ -75,7 +75,7 @@ Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Undetermined,Lexem
 Er lief erst nach links und dann [hinaus].,hinaus,Undetermined,Lexeme,ADV
 Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
 Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
-Er vergaß [seinen] Schlüssel im Büro.,seinen,Not Grundform,Lexeme,DET
+Er vergaß [seinen] Schlüssel im Büro.,seinen,Grundform,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Not Grundform,Lexeme,VERB
 Er [wartet] auf den Nachtbus.,wartet auf,Not Grundform,Lexeme,VERB
 Er [wog] vielleicht ein halbes Lot – und war am fünften Tage tot. ,wog,Not Grundform,Lexeme,VERB
@@ -105,11 +105,11 @@ In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge t,Grundform,Morpheme
 "Jetzt schien die Sonne gar zu sehr, da [ward] ihm sein Gewehr zu schwer.",ward,Not Grundform,Lexeme,VERB
 Meine [Mutter] ruft jeden Sonntag an.,Mutter,Undetermined,Lexeme,NOUN
 Mit den [Kindern] ist es nie langweilig.,Kindern,Not Grundform,Lexeme,NOUN
-Mit [keinem] Wort erwähnte sie den Plan.,keinem,Not Grundform,Lexeme,DET
+Mit [keinem] Wort erwähnte sie den Plan.,keinem,Grundform,Lexeme,DET
 "[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",morgenstund hat gold im mund,Not Grundform,Phraseme,Proverb
 "[Na ja], ganz überzeugt bin ich nicht.",na ja,Grundform,Phraseme,DiscourseFormula
 "Na [ja], ganz überzeugt bin ich nicht.",na ja,Grundform,Phraseme,DiscourseFormula
-Nach [manchem] Fehler lernt man schneller.,manchem,Not Grundform,Lexeme,DET
+Nach [manchem] Fehler lernt man schneller.,manchem,Grundform,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und [lief] hinaus ins Feld geschwind",lief,Not Grundform,Lexeme,VERB
 "nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Undetermined,Lexeme,ADV
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Undetermined,Lexeme,ADV
@@ -132,7 +132,7 @@ Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB
 "Sieh einmal, hier [steht] er, pfui, der Struwwelpeter!",steht,Not Grundform,Lexeme,VERB
 "Sieh einmal, hier steht [er], pfui, der Struwwelpeter!",er,Grundform,Lexeme,PRON
 "Sieh einmal, hier steht er, [pfui], der Struwwelpeter!",pfui,Grundform,Lexeme,INTJ
-"Sieh einmal, hier steht er, pfui, [der] Struwwelpeter!",der,Undetermined,Lexeme,DET
+"Sieh einmal, hier steht er, pfui, [der] Struwwelpeter!",der,Grundform,Lexeme,DET
 "Sieh einmal, hier steht er, pfui, der [Struwwelpeter]!",Struwwelpeter,Undetermined,Lexeme,PROPN
 "Sieh [mal] an, die Kleine von nebenan.",mal,Undetermined,Lexeme,ADV
 "[Tut mir leid], das war mein Fehler.",tut mir leid,Grundform,Phraseme,DiscourseFormula

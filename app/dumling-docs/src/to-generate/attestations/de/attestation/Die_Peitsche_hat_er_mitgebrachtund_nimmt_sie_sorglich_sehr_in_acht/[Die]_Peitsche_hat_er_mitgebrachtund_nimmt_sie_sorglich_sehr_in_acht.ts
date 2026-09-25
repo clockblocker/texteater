@@ -14,22 +14,17 @@ const occurrenceAttestation = {
 		language: "de",
 		normalizedSurface: "die",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Nom",
-			number: "Sing",
-			degree: null,
-			gender: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
+		inflectionalFeatures: null,
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "der",
+			canonicalForm: "die",
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
+				case: "Acc",
+				gender: "Fem",
+				number: "Sing",
 				definite: "Def",
 				pronType: "Art",
 				extPos: null,
@@ -49,7 +44,7 @@ export const attestation = {
 	sentenceMarkdown:
 		"[Die] Peitsche hat er mitgebracht\nund nimmt sie sorglich sehr in acht.",
 	classifierNotes:
-		"Sentence-initial Die is the capitalized article form of der, not a pronoun; the determiner surface stays nominative singular here without encoding feminine gender.",
+		"Sentence-initial Die is the definite article, not a pronoun. Die Peitsche is the fronted accusative object of hat mitgebracht, with er as subject, so the Lemma is the accusative feminine singular article cell die.",
 	classificationMistakes:
 		"Do not mark ordinary sentence-initial capitalization as a spelling variant. `Die` is a Standard click on a Canonical Surface.",
 	isVerified: true,

@@ -14,15 +14,7 @@ const occurrenceAttestation = {
 		language: "de",
 		normalizedSurface: "der",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Nom",
-			gender: "Masc",
-			number: "Sing",
-			degree: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
+		inflectionalFeatures: null,
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
@@ -30,6 +22,9 @@ const occurrenceAttestation = {
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
+				case: "Nom",
+				gender: "Masc",
+				number: "Sing",
 				definite: "Def",
 				pronType: "Art",
 				extPos: null,

@@ -7,9 +7,12 @@ const lemma = {
 	kind: "DET",
 	canonicalForm: "wieviel",
 	coreFeatures: {
+		case: null,
 		definite: null,
 		extPos: null,
 		foreign: null,
+		gender: null,
+		number: null,
 		numType: null,
 		person: null,
 		polite: null,
@@ -24,7 +27,7 @@ export const member = defineAuthoredMember({
 	knowledge: {
 		transcription: "viːˈfiːl",
 		definition:
-			"Der interrogative Determinierer „wieviel“ fragt nach Auswahl oder Menge.",
+			"Der interrogative Determinierer „wieviel“ fragt nach einer Menge. Die unflektierte Form steht vor einem Nomen im Singular (wieviel Geld).",
 		translations: { en: ["how much", "how many"], ru: ["сколько"] },
 	},
 	coverage: {

@@ -267,7 +267,7 @@
 								"offset": 0
 							}
 						],
-						"identity": "DET:mein"
+						"identity": "DET:meine"
 					},
 					{
 						"kind": "NOUN",
@@ -297,7 +297,7 @@
 								"offset": 22
 							}
 						],
-						"identity": "DET:jeder"
+						"identity": "DET:jeden"
 					},
 					{
 						"kind": "NOUN",
@@ -445,7 +445,7 @@
 								"offset": 23
 							}
 						],
-						"identity": "DET:sein"
+						"identity": "DET:seinen"
 					},
 					{
 						"kind": "NOUN",
@@ -527,7 +527,7 @@
 								"offset": 8
 							}
 						],
-						"identity": "DET:kein"
+						"identity": "DET:keinen"
 					},
 					{
 						"kind": "NOUN",
@@ -1332,7 +1332,7 @@
 								"offset": 16
 							}
 						],
-						"identity": "DET:kein"
+						"identity": "DET:keine"
 					},
 					{
 						"kind": "NOUN",

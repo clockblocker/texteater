@@ -464,7 +464,7 @@ export function assembleAnalysis(
 	}
 	// Every article no noun holds yet, fused or standalone, takes one path:
 	// it joins the noun its phrase opens onto when that noun has no article
-	// yet (ADR 0024); a name, a later noun past another word or an unresolved
+	// yet (system ADR 0032); a name, a later noun past another word or an unresolved
 	// word leaves it standing alone as DET. Later articles go first, so an
 	// earlier one never reaches past a later one's noun.
 	const orphans = targets.filter(

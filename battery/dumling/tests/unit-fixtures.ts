@@ -39,6 +39,8 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		sample.core = Object.fromEntries(
 			Object.keys(sample.core).map((key) => [key, null]),
 		);
+	// The first German number value is plural, whose agreement has no gender.
+	if (route.key === "de/Lexeme/DET") sample.core.gender = null;
 	const bag = route.bag.parse(sample);
 	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
 		Object.assign(bag.inflectional, { article: null });

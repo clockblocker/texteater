@@ -14,22 +14,17 @@ const occurrenceAttestation = {
 		language: "de",
 		normalizedSurface: "manchem",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Dat",
-			gender: "Masc",
-			number: "Sing",
-			degree: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
+		inflectionalFeatures: null,
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "manch",
+			canonicalForm: "manchem",
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
+				case: "Dat",
+				gender: "Masc",
+				number: "Sing",
 				pronType: "Ind",
 				definite: null,
 				extPos: null,

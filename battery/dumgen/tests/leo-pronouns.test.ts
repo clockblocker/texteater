@@ -504,13 +504,13 @@ test("same-spelling forms preserve case, possessor gender and article function",
 	);
 });
 
-test("DET reductions and plural was für retain their existing identities", () => {
+test("DET reductions and plural was für realize their own Paradigm Cells", () => {
 	for (const [canonical, spelled] of [
-		["unser", "unsre"],
-		["unser", "unserm"],
-		["euer", "euere"],
-		["euer", "euerm"],
-		["was für ein", "was für"],
+		["unsere", "unsre"],
+		["unserem", "unserm"],
+		["eure", "euere"],
+		["eurem", "euerm"],
+		["was für", "was für"],
 	]) {
 		const member = authoredMembers.find(
 			({ lemma }) =>

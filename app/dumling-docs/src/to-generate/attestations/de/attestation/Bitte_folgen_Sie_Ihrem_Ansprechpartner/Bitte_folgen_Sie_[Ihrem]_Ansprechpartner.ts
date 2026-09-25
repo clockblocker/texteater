@@ -14,22 +14,17 @@ const occurrenceAttestation = {
 		language: "de",
 		normalizedSurface: "Ihrem",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Dat",
-			gender: "Masc",
-			number: "Sing",
-			degree: null,
-			"gender[psor]": null,
-			"number[psor]": null,
-		},
+		inflectionalFeatures: null,
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "Ihr",
+			canonicalForm: "Ihrem",
 			family: "Lexeme",
 			kind: "DET",
 			coreFeatures: {
+				case: "Dat",
+				gender: "Masc",
+				number: "Sing",
 				person: "2",
 				polite: "Form",
 				poss: "Yes",
