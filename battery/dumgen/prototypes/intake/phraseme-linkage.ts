@@ -37,7 +37,7 @@ import {
 	assembleAnalysis,
 	productionPolicy,
 } from "../../src/concrete-lang/de/sentence-analysis/assemble.js";
-import { governmentQuestions } from "../../src/concrete-lang/de/sentence-analysis/government.js";
+import { slotQuestions } from "../../src/concrete-lang/de/sentence-analysis/government.js";
 import {
 	type Placement,
 	placeSegments,
@@ -164,7 +164,7 @@ async function collect(wanted: readonly Sentence[]): Promise<Stored> {
 			if (!sentence) return;
 			const german = segmented(sentence);
 			const placement = placeSegments(german);
-			const government = governmentQuestions(german, placement);
+			const government = slotQuestions(german, placement);
 			const questions: Questions = {
 				...lexemeQuestions(german, placement.resolvable),
 				...phrasemeQuestions(german, placement.resolvable),
@@ -457,12 +457,13 @@ function phrasemeLayer(
 		(phraseme) =>
 			!phraseme.members.every((id) => {
 				const target = analysis.targets.find((t) => t.id === id);
-				return analysis.government.some(
-					(link) =>
-						phraseme.members.includes(link.governor) &&
-						(link.governor === id ||
+				return analysis.slots.some(
+					(slot) =>
+						phraseme.members.includes(slot.governor) &&
+						(slot.governor === id ||
+							slot.filler === id ||
 							target?.members.some(
-								(m) => m.offset === link.offset,
+								(m) => m.offset === slot.marker,
 							)),
 				);
 			}),
