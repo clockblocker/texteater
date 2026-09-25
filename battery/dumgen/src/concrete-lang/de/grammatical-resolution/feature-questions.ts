@@ -84,17 +84,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		},
 		unmarked: "No subject-expletive composition in this Surface",
 	},
-	"surface.inflectionalFeatures.article": {
-		question:
-			"Does this common noun have a definite or indefinite article, owned as its first member (standalone der, the article piece m of a fused im, shortened 'ne) or licensed by compatible coordination? mein, dieser and kein do not supply an article. Ordinary bare nouns stay bare.",
-		values: {
-			Definite: "Owned or shared definite article",
-			Indefinite: "Owned or shared indefinite article",
-			None: "No article: a bare noun, or a noun with a non-article determiner such as mein, dieser or kein; not uncertainty and not semantic indefiniteness",
-		},
-		unmarked:
-			"No included article; not uncertainty and not semantic indefiniteness",
-	},
 	"lemma.coreFeatures.article": {
 		question:
 			"Is this name canonically cited with the definite article, as a dictionary gives it (die Schweiz, der Rhein, die Niederlande, die NATO, das Saarland, der Struwwelpeter)? Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz).",
@@ -275,14 +264,6 @@ const meanings: Readonly<Record<string, Meaning>> = {
 			Pos: "The particle explicitly expresses positive polarity",
 		},
 		unmarked: "The particle does not mark polarity",
-	},
-	"lemma.coreFeatures.lexicallyReflexive": {
-		question:
-			"Does this verb's lexical identity require a reflexive member? Distinguish an inherently required reflexive from an optional reflexive object or a free contextual pronoun.",
-		values: {
-			Yes: "Reflexive membership is required by the lexical identity",
-		},
-		unmarked: "No lexically required reflexive member",
 	},
 	"lemma.coreFeatures.verbType": {
 		question:

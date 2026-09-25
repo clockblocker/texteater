@@ -162,11 +162,11 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-	"For VERB, hasSepPrefix is only a separable lexical prefix; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb or expression lexically selects for its complement (wartet auf, erinnert sich an, geht um, weiß Bescheid über) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+	"For VERB, hasSepPrefix is only a separable lexical prefix; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb or expression lexically selects for its complement (wartet auf, erinnert sich an, geht um, weiß Bescheid über) is a supported complete target: that owned member is recorded as valency evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never recorded as valency evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
 
 /** ADJ and NOUN take in their governed preposition like verbs (ADR 0034). */
 const governmentPolicy =
-	"An adjective or noun target that includes the preposition it lexically selects for its complement (stolz auf, abhängig von, Angst vor, Interesse an) is a supported complete target, also when the preposition stands apart from it (Auf ihn bin ich stolz, der auf seinen Sohn stolze Vater, die Angst der Kinder vor Hunden): that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition or an adposition with its own nominal complement is never governed-preposition evidence.";
+	"An adjective or noun target that includes the preposition it lexically selects for its complement (stolz auf, abhängig von, Angst vor, Interesse an) is a supported complete target, also when the preposition stands apart from it (Auf ihn bin ich stolz, der auf seinen Sohn stolze Vater, die Angst der Kinder vor Hunden): that owned member is recorded as valency evidence and stays out of the Lemma. A free adjunct preposition or an adposition with its own nominal complement is never recorded as valency evidence.";
 
 /** The Kinds that name a governed preposition among their members (ADR 0034). */
 const adnominalGovernors: ReadonlySet<string> = new Set(["ADJ", "NOUN"]);
@@ -187,7 +187,7 @@ const reflexivePronouns: ReadonlySet<string> = new Set([
 ]);
 
 const partialCoveragePolicy =
-	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
+	"Partial coverage is allowed for Idiom, DiscourseFormula, Proverb and Aphorism only when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
 
 /**
  * Each round trip depends on every earlier one: the follow-ups ask only what

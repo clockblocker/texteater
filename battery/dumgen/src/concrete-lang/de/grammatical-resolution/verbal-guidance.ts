@@ -3,13 +3,13 @@ Analyze the complete supplied verbal target. A fixed nonreferential subject es
 plus its verb is a supported VERB target in this domain, even though es is a
 pronoun when analyzed alone. es gibt, gibt es and es gab have Lemma geben;
 es regnet has regnen. es geht um has gehen, es handelt sich um has sich
-handeln; in both, um is the owned member named as
-governed-preposition evidence, never a Lemma feature. These are
+handeln; in both, um is the owned member recorded as
+valency evidence, never a Lemma feature. These are
 not unsupported mixed-POS groups and do not require a new es-prefixed Lemma.
 Use person 3 and number Sing for these complete targets
 when finite. Retain tense from the verb. Normalize ordinary sentence-initial verb
 capitalization to lowercase (Gibt es -> gibt es).
- Its grammatical auxiliaries
+The target's grammatical auxiliaries
 contribute to the whole Surface; a separate modal or other unmarked target
 contributes no finite features. Membership and the VERB/ADJ route are fixed.
 A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB Lemma with

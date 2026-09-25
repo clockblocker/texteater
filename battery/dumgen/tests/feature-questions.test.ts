@@ -46,6 +46,12 @@ test("every enabled German grammatical feature has explicit meanings for all sch
 				continue;
 			if (kind === "AUX" && path.startsWith("lemma.")) continue;
 			if (verbal.has(kind) && path.endsWith(".voice")) continue;
+			// Membership settles these; they are never asked.
+			if (
+				path.endsWith(".lexicallyReflexive") ||
+				(kind === "NOUN" && path.endsWith(".article"))
+			)
+				continue;
 			const question = featureQuestion(kind, path, field);
 			// A contextual common noun always has Number: no Unmarked choice.
 			const nounNumber =
