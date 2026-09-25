@@ -25,3 +25,8 @@ Partial coverage, and member `[Wald]`. The same rule applies through licensed
 coordination, as in `im Wald und Feld`. The Fusion keeps its own click target
 and exposes its components through lexical breakdown. Its source spelling is
 article evidence, while its expanded DET form enters the noun Surface.
+
+Amended on 2026-09-25 by [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md):
+`normalizedSurface` is the noun's own letters and never prepends an article.
+A Fusion's article piece is an owned `Fused` member of the noun: `im Wald`
+attests `[m, Wald]`, and `i` is the ADP `in`.

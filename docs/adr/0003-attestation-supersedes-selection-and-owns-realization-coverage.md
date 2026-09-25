@@ -18,3 +18,8 @@ coverage elsewhere. A governing Fusion can also supply the article with Partial
 coverage: `im Wald` attests `[Wald]`, retains `im` as article evidence, and
 derives DET Surface `dem` from the grammar of noun Surface `dem Wald`. The expanded article
 is not a separately attested word. Sentence coordinates remain application-owned.
+
+Amended on 2026-09-25 by [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md):
+a fused article is an owned `Fused` member of its noun, so `im Wald` attests
+`[m, Wald]` with Full coverage. `articleEvidence` remains only for a shared
+article.

@@ -32,3 +32,7 @@ Ruled on
 [Piece production for fused words](https://github.com/clockblocker/texteater/issues/492)
 and confirmed on
 [the Sentence DTO decision](https://github.com/clockblocker/texteater/issues/493).
+
+Amended on 2026-09-25 by [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md):
+a `Fused` member carries its Fusion and component index, a standalone
+shortened spelling is `Shorthand`, and Clitic is retired as a Morpheme Kind.

@@ -57,9 +57,12 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
-features. German common-noun articles and verbal subject expletives are
-composition expressed by grammatical features. Their component values are
-derived separately. The Lemma remains the bare noun or ordinary verb.
+features. A noun's article is the inflectional feature `article` (Definite,
+Indefinite or None) in German and English and `definite` in Hebrew; its
+normalized form is the noun's own letters, and a host adds the article when it
+displays the noun. Verbal subject expletives are composition expressed by
+grammatical features. Component values are derived separately. The Lemma
+remains the bare noun or ordinary verb.
 
 **Grundform**:
 A Surface's realization of its particular Lemma's canonical grammatical form.
@@ -71,12 +74,12 @@ _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members
 and Full or Partial Realization Coverage. It has value equality but no durable
-identity. A member's orthography is Standard, Typo, or Fused. German noun Attestations
-retain article source orthography separately from their members when an
-article is included. A shared article gives Partial coverage without becoming
-a second owned member; a fused article is an owned Fused member with Full
-coverage, and a component with no letters of its own leaves the unit Partial
-with evidence pointing at the Fusion. German verbal Attestations retain
+identity. A member's orthography is Standard, Typo, Fused or Shorthand. A
+noun's article is an owned member, fused or not: `im Wald` attests `[m, Wald]`
+with Full coverage. A shared article gives Partial coverage and stays article
+evidence, not a member. A component with no letters of its own, such as the
+hidden article in Hebrew `בבית`, leaves its owner Partial, pointing at the
+Fusion component. German verbal Attestations retain
 subject-expletive source orthography as evidence for an owned member. Every
 German governor (verb, adjective, noun, Idiom, Collocation) records the
 valency slots the occurrence realizes as valency evidence, each naming by
@@ -95,8 +98,20 @@ a surface plus the Attestation member it realizes or a marker that it has no
 letters of its own. `im` is `in` realized by `i` and `dem` realized by `m`.
 It has value equality and no durable identity; Attestations in different
 units may reference the same Fusion, and nothing targets it with Knowledge or
-relations.
-_Avoid_: Construction, contraction Lemma, fused route
+relations. A Fused member carries its Fusion and component index, so the
+learner can open the Fusion from any piece. Every component belongs to exactly
+one Attestation, and each is a syntactic word with a Lexeme Kind: `'ll` is
+`will`, `n't` is `not`, Hebrew `ב` is an ADP.
+_Avoid_: Construction, contraction Lemma, fused route, Clitic
+
+**Fused**:
+The orthography of a member whose letters are one piece of a written word
+holding several words: `m` in `im`, `'s` in `geht's`, `'ll` in `I'll`.
+
+**Shorthand**:
+The orthography of a member written as a standalone shortened spelling of one
+word: `'ne Frage`, `z.B.`, `e.g.`. A piece that is also attached is Fused.
+_Avoid_: Variant, for a shortened article
 
 ### Semantic identity
 
