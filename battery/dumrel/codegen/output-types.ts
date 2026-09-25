@@ -21,7 +21,10 @@ export const dumrelOutputTypeExports = {
 	SemanticRelation: "semanticRelation",
 	SemanticRelationProjection: "semanticRelationProjection",
 	GovernedCase: "governedCase",
-	GovernedPreposition: "governedPreposition",
+	ValencySlotStatus: "valencySlotStatus",
+	ValencyReferent: "valencyReferent",
+	ValencyComplement: "valencyComplement",
+	ValencySlot: "valencySlot",
 	GovernmentRelation: "governmentRelation",
 	GovernmentProjection: "governmentProjection",
 };

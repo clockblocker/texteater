@@ -95,7 +95,7 @@ describe("public Dumgen types read as their Domain names", () => {
 		expect(
 			await inferred("GermanNounKnowledgeInput"),
 		).toMatchInlineSnapshot(
-			`"type GermanNounKnowledgeInput = { readonly encounter: { readonly sentence: SegmentedSentence<"de">; readonly target: { readonly family: "Lexeme"; readonly kind: "NOUN"; readonly memberSegmentIndices: readonly [number, ...number[]]; }; }; readonly reading: { unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "NOUN"; canonicalForm: string; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; }; emojiDescription: string; }; readonly request: KnowledgeRequestMask; readonly governedPrepositions?: { preposition: string; case: GovernedCase; }[] | undefined; }"`,
+			`"type GermanNounKnowledgeInput = { readonly encounter: { readonly sentence: SegmentedSentence<"de">; readonly target: { readonly family: "Lexeme"; readonly kind: "NOUN"; readonly memberSegmentIndices: readonly [number, ...number[]]; }; }; readonly reading: { unitKind: "Reading"; lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "NOUN"; canonicalForm: string; coreFeatures: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; }; emojiDescription: string; }; readonly request: KnowledgeRequestMask; readonly attestedGovernment?: { preposition: string; case: GovernedCase; }[] | undefined; }"`,
 		);
 	}, 30_000);
 
@@ -104,12 +104,12 @@ describe("public Dumgen types read as their Domain names", () => {
 			`"type GermanKnowledgeFailures = readonly KnowledgeFailure[]"`,
 		);
 		expect(await inferred("PublicKnowledgeFailure")).toMatchInlineSnapshot(
-			`"type PublicKnowledgeFailure = { aspect: "definition" | "governedPrepositions" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations"; leaf?: string | undefined; candidate?: string | undefined; code: "CatalogMiss" | "InvalidInput" | "InvalidModelOutput" | "NotImplemented" | "ProviderFailure" | "Unresolved"; message: string; }"`,
+			`"type PublicKnowledgeFailure = { aspect: "definition" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations" | "valency"; leaf?: string | undefined; candidate?: string | undefined; code: "CatalogMiss" | "InvalidInput" | "InvalidModelOutput" | "NotImplemented" | "ProviderFailure" | "Unresolved"; message: string; }"`,
 		);
 		expect(
 			await inferred("GermanKnowledgeChangeAspects"),
 		).toMatchInlineSnapshot(
-			`"type GermanKnowledgeChangeAspects = "definition" | "governedPrepositions" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations""`,
+			`"type GermanKnowledgeChangeAspects = "definition" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations" | "valency""`,
 		);
 		expect(await inferred("GermanPendingRelations")).toMatchInlineSnapshot(
 			`"type GermanPendingRelations = readonly (PendingSemanticRelation & { target: { language: "de"; }; })[]"`,

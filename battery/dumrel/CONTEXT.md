@@ -29,12 +29,13 @@ a direct relation proposal whose target is a
 Unit Shadow awaiting downstream matching.
 
 **Governed Preposition**:
-a preposition a Reading lexically selects, stored in the Reading's Knowledge
-as an ADP Lemma with the case it assigns in that construction (`warten`:
-`auf` + Acc). An adjunct the sentence happens to contain is not one.
+a preposition a Reading lexically selects: a Preposition Slot of the Reading's
+Valency Frame, naming an ADP Lemma and the case it assigns in that
+construction (`warten`: `auf` + Acc). An adjunct the sentence happens to
+contain is not one.
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
-the Reading whose Knowledge stores a Governed Preposition. The preposition's
-side of the link is projected, never stored.
+the Reading whose Valency Frame holds a Governed Preposition. The
+preposition's side of the link is projected, never stored.
 _Avoid_: governing verb (adjectives, nouns and Phrasemes govern too)

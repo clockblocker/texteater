@@ -99,12 +99,7 @@ function knowledgeUsesLanguage(
 		!visitMorphologyNode(knowledge.morphologicalTree.root)
 	)
 		return false;
-	if (
-		(knowledge.governedPrepositions ?? []).some(
-			({ preposition }) => !lemmaUsesLanguage(preposition, language),
-		)
-	)
-		return false;
+	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
 	return (knowledge.lexicalBreakdown ?? []).every(
 		(shadow) => shadow.language === language,
 	);
@@ -127,11 +122,26 @@ function knowledgeChangeUsesLanguage(
 		);
 	if (change.aspect === "lexicalBreakdown" && "value" in change)
 		return change.value.every((shadow) => shadow.language === language);
-	if (change.aspect === "governedPrepositions" && "value" in change)
-		return change.value.every(({ preposition }) =>
-			lemmaUsesLanguage(preposition, language),
-		);
+	if (change.aspect === "valency")
+		return "value" in change
+			? valencyUsesLanguage(change.value, language)
+			: !change.complement ||
+					valencyUsesLanguage(
+						[{ status: "Optional", complement: change.complement }],
+						language,
+					);
 	return true;
+}
+
+function valencyUsesLanguage(
+	frame: readonly Dumrel.ValencySlot[],
+	language: Dumling.Language,
+): boolean {
+	return frame.every(
+		({ complement }) =>
+			complement.kind !== "Preposition" ||
+			lemmaUsesLanguage(complement.preposition, language),
+	);
 }
 
 type ReadingEntryLike = {

@@ -4,8 +4,6 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 	"dumrel/schema": [
 		"directSemanticRelationSchema",
 		"governedCaseSchema",
-		"governedPrepositionSchema",
-		"governedPrepositionsSchema",
 		"governmentProjectionSchema",
 		"governmentRelationSchema",
 		"knowledgeChangeSchema",
@@ -26,6 +24,11 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"semanticRelationsSchema",
 		"translationLanguageSchema",
 		"unitShadowSchema",
+		"valencyComplementSchema",
+		"valencyFrameSchema",
+		"valencyReferentSchema",
+		"valencySlotSchema",
+		"valencySlotStatusSchema",
 	],
 	"dumdict/schema": [
 		"changePreconditionSchema",

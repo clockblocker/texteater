@@ -104,6 +104,26 @@ same Lemma: one to four emoji that describe the meaning, compared without
 variation selectors or skin-tone modifiers.
 _Avoid_: Mnemonic, Gloss, Sense ID
 
+### Valency
+
+**Valency Frame**:
+The governed complements of one Reading, stored as an ordered list of Slots
+in its Knowledge: what a learner must memorize to use the word in that sense.
+A Reading has at most one. Free adjuncts are not in it, and neither are fixed
+parts, which come from Lemma identity: a separable prefix, a lexical
+reflexive, a Phraseme's wording. A frame never creates a Lemma or a Reading:
+`warten` with and without `auf` is one Reading whose `auf` Slot is Optional.
+_Avoid_: valency pattern, Satzbauplan, argument structure, governed
+prepositions
+
+**Slot**:
+One complement in a Valency Frame, Required or Optional. Each language
+defines its complements, and each route chooses which it allows. German
+marks them by case: a bare case (`jemandem`, Dat) or a governed preposition
+with the case it assigns (`auf` + Acc), each with a referent of Someone,
+Something or Either. The subject is a Slot too.
+_Avoid_: argument, valent, complement slot, Ergänzung
+
 ### German classifications
 
 **Verbal Participle**:

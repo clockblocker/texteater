@@ -399,7 +399,7 @@ test("a Full Reading still tops up government its new sentence attests, and only
 			kind: "Generate",
 			topUpOnly: true,
 			translationLanguages: [],
-			governedPrepositions: [{ preposition: "vor", case: "Dat" }],
+			government: [{ preposition: "vor", case: "Dat" }],
 		}),
 	);
 
@@ -408,8 +408,16 @@ test("a Full Reading still tops up government its new sentence attests, and only
 	await insertAccumulatedKnowledge(covered, coveredOccurrence, {
 		knowledge: {
 			translations: { en: ["fear"], ru: ["страх"] },
-			governedPrepositions: [
-				{ preposition: { canonicalForm: "vor" }, case: "Dat" },
+			valency: [
+				{
+					status: "Optional",
+					complement: {
+						kind: "Preposition",
+						preposition: { canonicalForm: "vor" },
+						case: "Dat",
+						referent: "Either",
+					},
+				},
 			],
 		},
 		status: "Full",
@@ -687,7 +695,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
-		governedPrepositions: null,
+		valency: null,
 	});
 	expect(
 		generationRequestFor(angst, [], {
@@ -695,7 +703,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 			topUpOnly: true,
 			attestsGovernment: true,
 		}),
-	).toEqual({ governedPrepositions: null });
+	).toEqual({ valency: null });
 });
 
 test("production publication remains empty without a reviewed verdict", () => {
@@ -908,7 +916,7 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			kind: "Generate",
 			translationLanguages: ["ru"],
 			topUpOnly: true,
-			governedPrepositions: [],
+			government: [],
 		}),
 	);
 

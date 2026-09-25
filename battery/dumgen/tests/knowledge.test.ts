@@ -463,7 +463,7 @@ const governor = {
 		},
 		emojiDescription: "⏳",
 	},
-	request: { definition: null, governedPrepositions: null },
+	request: { definition: null, valency: null },
 } as const satisfies KnowledgeInput<"de">;
 const adposition = (
 	canonicalForm: string,
@@ -484,7 +484,7 @@ const adposition = (
 	},
 });
 
-test("governed prepositions come from intake without a model call, resolve to ADP Lemmas, keep fixed cases and publish only at the end", async () => {
+test("attested government becomes Optional Preposition Slots without a model call, resolves to ADP Lemmas, keeps fixed cases and publishes only at the end", async () => {
 	const incremental: unknown[] = [];
 	const aspects: unknown[] = [];
 	const result = await Effect.runPromise(
@@ -500,25 +500,39 @@ test("governed prepositions come from intake without a model call, resolve to AD
 				incremental.push(...changes.map((change) => change.aspect)),
 		}).produceKnowledge({
 			...governor,
-			governedPrepositions: [
+			attestedGovernment: [
 				{ preposition: "auf", case: "Acc" },
 				{ preposition: "für", case: "Dat" },
 				{ preposition: "auf", case: "Acc" },
 			],
 		}),
 	);
-	expect(aspects).not.toContain("governedPrepositions");
+	expect(aspects).not.toContain("valency");
 	expect(result.failures).toEqual([]);
 	expect(
-		result.changes.find(
-			(change) => change.aspect === "governedPrepositions",
-		),
+		result.changes.find((change) => change.aspect === "valency"),
 	).toEqual({
 		kind: "Contribute",
-		aspect: "governedPrepositions",
+		aspect: "valency",
 		value: [
-			{ preposition: adposition("auf", null), case: "Acc" },
-			{ preposition: adposition("für", "Acc"), case: "Acc" },
+			{
+				status: "Optional",
+				complement: {
+					kind: "Preposition",
+					preposition: adposition("auf", null),
+					case: "Acc",
+					referent: "Either",
+				},
+			},
+			{
+				status: "Optional",
+				complement: {
+					kind: "Preposition",
+					preposition: adposition("für", "Acc"),
+					case: "Acc",
+					referent: "Either",
+				},
+			},
 		],
 	});
 	expect(incremental).toEqual(["definition"]);
@@ -526,7 +540,7 @@ test("governed prepositions come from intake without a model call, resolve to AD
 
 test("no attested government is no contribution, and an unlisted preposition is an attributable failure", async () => {
 	const run = (
-		governedPrepositions: KnowledgeInput<"de">["governedPrepositions"],
+		attestedGovernment: KnowledgeInput<"de">["attestedGovernment"],
 	) =>
 		Effect.runPromise(
 			createDumgen({
@@ -538,8 +552,8 @@ test("no attested government is no contribution, and an unlisted preposition is 
 				},
 			}).produceKnowledge({
 				...governor,
-				request: { governedPrepositions: null },
-				governedPrepositions,
+				request: { valency: null },
+				attestedGovernment,
 			}),
 		);
 	expect(await run([])).toEqual({
@@ -550,6 +564,6 @@ test("no attested government is no contribution, and an unlisted preposition is 
 	const invalid = await run([{ preposition: "wegen", case: "Gen" }]);
 	expect(invalid.changes).toEqual([]);
 	expect(invalid.failures).toMatchObject([
-		{ aspect: "governedPrepositions", code: "InvalidInput" },
+		{ aspect: "valency", code: "InvalidInput" },
 	]);
 });

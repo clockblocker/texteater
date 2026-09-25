@@ -75,8 +75,9 @@ _Avoid_: role mass, Free member
 **Government**:
 intake's link from a governed preposition's Segment (a preposition, a fused
 word's adposition, or a pronominal adverb) to the Lexeme Target that
-lexically selects it, with the case the government requires. It is the only
-source of the `governedPrepositions` Knowledge aspect (ADR 0030).
+lexically selects it, with the case the government requires. Each one gives
+the governor's Valency Frame an Optional Preposition Slot. Until the Knowledge
+call proposes the whole frame, it is the frame's only source (ADR 0034).
 _Avoid_: valency guess, governed-preposition prompt
 
 **Route Mass**:

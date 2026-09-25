@@ -3792,7 +3792,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "ADJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3811,7 +3811,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "ADP">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3830,7 +3830,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "ADV">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3849,7 +3849,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "AUX">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3868,7 +3868,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "CCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3887,7 +3887,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "DET">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3906,7 +3906,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "INTJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3925,7 +3925,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "NOUN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3944,7 +3944,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "NUM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3963,7 +3963,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "X">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -3982,7 +3982,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "PART">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4001,7 +4001,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "PRON">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4020,7 +4020,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "PROPN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4039,7 +4039,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "PUNCT">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4058,7 +4058,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "SCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4077,7 +4077,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "SYM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4096,7 +4096,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Lexeme", "VERB">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4115,7 +4115,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Circumfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4134,7 +4134,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Clitic">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4153,7 +4153,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Duplifix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4172,7 +4172,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Infix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4191,7 +4191,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Interfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4210,7 +4210,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Prefix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4229,7 +4229,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Root">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4248,7 +4248,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Suffix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4267,7 +4267,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Suffixoid">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4286,7 +4286,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Transfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4305,7 +4305,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Phraseme", "Aphorism">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4324,7 +4324,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Phraseme", "Collocation">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4343,7 +4343,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Phraseme", "DiscourseFormula">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4362,7 +4362,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Phraseme", "Idiom">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4381,7 +4381,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"de", "Phraseme", "Proverb">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4400,7 +4400,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "ADJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4419,7 +4419,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "ADP">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4438,7 +4438,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "ADV">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4457,7 +4457,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "AUX">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4476,7 +4476,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "CCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4495,7 +4495,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "DET">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4514,7 +4514,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "INTJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4533,7 +4533,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "NOUN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4552,7 +4552,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "NUM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4571,7 +4571,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "X">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4590,7 +4590,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "PART">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4609,7 +4609,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "PRON">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4628,7 +4628,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "PROPN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4647,7 +4647,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "PUNCT">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4666,7 +4666,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "SCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4685,7 +4685,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "SYM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4704,7 +4704,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Lexeme", "VERB">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4723,7 +4723,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Circumfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4742,7 +4742,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Clitic">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4761,7 +4761,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Duplifix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4780,7 +4780,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Infix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4799,7 +4799,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Interfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4818,7 +4818,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Prefix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4837,7 +4837,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Root">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4856,7 +4856,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Suffix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4875,7 +4875,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Suffixoid">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4894,7 +4894,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "ToneMarking">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4913,7 +4913,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Morpheme", "Transfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4932,7 +4932,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Phraseme", "Aphorism">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4951,7 +4951,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Phraseme", "DiscourseFormula">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4970,7 +4970,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Phraseme", "Idiom">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -4989,7 +4989,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"en", "Phraseme", "Proverb">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5008,7 +5008,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "ADJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5027,7 +5027,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "ADP">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5046,7 +5046,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "ADV">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5065,7 +5065,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "AUX">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5084,7 +5084,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "CCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5103,7 +5103,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "DET">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5122,7 +5122,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "INTJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5141,7 +5141,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "NOUN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5160,7 +5160,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "NUM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5179,7 +5179,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "X">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5198,7 +5198,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "PART">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5217,7 +5217,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "PRON">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5236,7 +5236,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "PROPN">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5255,7 +5255,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "PUNCT">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5274,7 +5274,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "SCONJ">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5293,7 +5293,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "SYM">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5312,7 +5312,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Lexeme", "VERB">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5331,7 +5331,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Circumfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5350,7 +5350,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Clitic">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5369,7 +5369,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Duplifix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5388,7 +5388,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Infix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5407,7 +5407,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Interfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5426,7 +5426,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Prefix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5445,7 +5445,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Root">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5464,7 +5464,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Suffix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5483,7 +5483,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Suffixoid">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5502,7 +5502,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "ToneMarking">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5521,7 +5521,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Transfix">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5540,7 +5540,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Phraseme", "Aphorism">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5559,7 +5559,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Phraseme", "DiscourseFormula">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5578,7 +5578,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Phraseme", "Idiom">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  }
@@ -5597,7 +5597,7 @@ export type KnowledgeInput =
 			};
 			reading: Dumling.Reading<"he", "Phraseme", "Proverb">;
 			request: Dumrel.KnowledgeRequestMask;
-			governedPrepositions?:
+			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
 	  };
@@ -5608,7 +5608,7 @@ export type KnowledgeFailure = {
 		| "definition"
 		| "translations"
 		| "semanticRelations"
-		| "governedPrepositions"
+		| "valency"
 		| "morphologicalTree"
 		| "lexicalBreakdown";
 	leaf?: string | undefined;

@@ -10,7 +10,6 @@ import type {
 export type {
 	DirectSemanticRelation,
 	GovernedCase,
-	GovernedPreposition,
 	GovernmentProjection,
 	GovernmentRelation,
 	LexemeUnitShadow,
@@ -22,9 +21,15 @@ export type {
 	SemanticRelationProjection,
 	TranslationLanguage,
 	UnitShadow,
+	ValencyComplement,
+	ValencyReferent,
+	ValencySlot,
+	ValencySlotStatus,
 } from "./generated/types.js";
 
 export type MorphologicalTreeStructure = MorphologicalTree["root"];
+/** A Reading's governed complements in order; never empty. */
+export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
 export type NonEmptyStrings = [string, ...string[]];
 export type RelatedLemma<R extends Dumling.Reading> = Extract<
 	Dumling.Lemma,

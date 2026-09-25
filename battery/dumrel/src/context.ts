@@ -1,11 +1,15 @@
 import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { fingerprint } from "./fingerprint.js";
 import type {
-	GovernedPreposition,
 	KnowledgeChange,
 	ReadingKnowledge,
+	ValencyComplement,
+	ValencyFrame,
+	ValencySlot,
 } from "./types.js";
+import { allowedComplementKinds } from "./valency-policy.js";
 
 type Path = (number | string)[];
 
@@ -58,52 +62,80 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 }
 
 /**
- * A governed preposition shares the source Language. A preposition whose Lemma
- * fixes its case (`für` + Acc) cannot be claimed with another case; a two-way
- * preposition (`auf`, governed case null) takes the construction's case.
+ * A complement the source's route allows. A Preposition complement names an
+ * ADP Lemma of the source Language; one whose Lemma fixes its case (`für` +
+ * Acc) cannot take another case, while a two-way preposition (`auf`, governed
+ * case null) takes the construction's case.
  */
-function parseGovernedPrepositions<R extends Dumling.Reading>(
+function parseValencyComplement<R extends Dumling.Reading>(
 	source: R,
-	values: readonly GovernedPreposition[],
+	complement: ValencyComplement,
 	path: Path,
-): GovernedPreposition[] | ParsingError {
-	const result: GovernedPreposition[] = [];
-	for (const [index, value] of values.entries()) {
-		const parsed = parseUnit(value.preposition);
-		if (!parsed.success)
-			return new ParsingError(
-				parsed.error.issues.map((entry) => ({
-					...entry,
-					path: [...path, index, "preposition", ...entry.path],
-				})),
-			);
-		const preposition = parsed.chain.value as Dumling.Lemma;
-		if (
-			parsed.chain.unitKind !== "Lemma" ||
-			preposition.family !== "Lexeme" ||
-			preposition.kind !== "ADP"
-		)
+): ValencyComplement | ParsingError {
+	const { family, kind } = source.lemma;
+	if (!allowedComplementKinds(source.lemma).includes(complement.kind))
+		return issue(
+			[...path, "kind"],
+			`${family} ${kind} Readings take no ${complement.kind} complement`,
+		);
+	if (complement.kind !== "Preposition") return complement;
+	const parsed = parseUnit(complement.preposition);
+	if (!parsed.success)
+		return new ParsingError(
+			parsed.error.issues.map((entry) => ({
+				...entry,
+				path: [...path, "preposition", ...entry.path],
+			})),
+		);
+	const preposition = parsed.chain.value as Dumling.Lemma;
+	if (
+		parsed.chain.unitKind !== "Lemma" ||
+		preposition.family !== "Lexeme" ||
+		preposition.kind !== "ADP"
+	)
+		return issue(
+			[...path, "preposition"],
+			"A governed preposition must be an ADP Lemma",
+		);
+	if (preposition.language !== source.lemma.language)
+		return issue(
+			[...path, "preposition", "language"],
+			"A governed preposition must use the source Language",
+		);
+	const fixed = Reflect.get(preposition.coreFeatures, "governedCase");
+	if (fixed != null && fixed !== complement.case)
+		return issue(
+			[...path, "case"],
+			`${preposition.canonicalForm} always governs ${fixed}`,
+		);
+	return { ...complement, preposition } as ValencyComplement;
+}
+
+/** A frame whose Slots the source's route allows, each complement listed once. */
+function parseValencyFrame<R extends Dumling.Reading>(
+	source: R,
+	frame: ValencyFrame,
+	path: Path,
+): ValencyFrame | ParsingError {
+	const slots: ValencySlot[] = [];
+	const seen = new Set<string>();
+	for (const [index, slot] of frame.entries()) {
+		const complement = parseValencyComplement(source, slot.complement, [
+			...path,
+			index,
+			"complement",
+		]);
+		if (complement instanceof ParsingError) return complement;
+		const identity = fingerprint(complement);
+		if (seen.has(identity))
 			return issue(
-				[...path, index, "preposition"],
-				"A governed preposition must be an ADP Lemma",
+				[...path, index, "complement"],
+				"A Valency Frame lists each complement once",
 			);
-		if (preposition.language !== source.lemma.language)
-			return issue(
-				[...path, index, "preposition", "language"],
-				"A governed preposition must use the source Language",
-			);
-		const fixed = Reflect.get(preposition.coreFeatures, "governedCase");
-		if (fixed != null && fixed !== value.case)
-			return issue(
-				[...path, index, "case"],
-				`${preposition.canonicalForm} always governs ${fixed}`,
-			);
-		result.push({
-			preposition,
-			case: value.case,
-		} as GovernedPreposition);
+		seen.add(identity);
+		slots.push({ status: slot.status, complement });
 	}
-	return result;
+	return slots as ValencyFrame;
 }
 
 export function contextualizeKnowledge<R extends Dumling.Reading>(
@@ -111,15 +143,13 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge<R> | ParsingError {
 	const result = structuredClone(knowledge) as ReadingKnowledge;
-	if (result.governedPrepositions) {
-		const governed = parseGovernedPrepositions(
-			source,
-			result.governedPrepositions,
-			["knowledge", "governedPrepositions"],
-		);
-		if (governed instanceof ParsingError) return governed;
-		result.governedPrepositions =
-			governed as typeof result.governedPrepositions;
+	if (result.valency) {
+		const frame = parseValencyFrame(source, result.valency, [
+			"knowledge",
+			"valency",
+		]);
+		if (frame instanceof ParsingError) return frame;
+		result.valency = frame;
 	}
 	const relations = result.semanticRelations;
 	if (!relations) return result as ReadingKnowledge<R>;
@@ -144,13 +174,22 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange<R> | ParsingError {
-	if (change.aspect === "governedPrepositions" && change.kind !== "Retract") {
-		const governed = parseGovernedPrepositions(source, change.value, [
+	if (change.aspect === "valency") {
+		if (change.kind !== "Retract") {
+			const frame = parseValencyFrame(source, change.value, [
+				"change",
+				"value",
+			]);
+			if (frame instanceof ParsingError) return frame;
+			return { ...change, value: frame } as KnowledgeChange<R>;
+		}
+		if (!change.complement) return change as KnowledgeChange<R>;
+		const complement = parseValencyComplement(source, change.complement, [
 			"change",
-			"value",
+			"complement",
 		]);
-		if (governed instanceof ParsingError) return governed;
-		return { ...change, value: governed } as KnowledgeChange<R>;
+		if (complement instanceof ParsingError) return complement;
+		return { ...change, complement } as KnowledgeChange<R>;
 	}
 	if (change.aspect !== "semanticRelations" || change.kind === "Retract")
 		return change as KnowledgeChange<R>;

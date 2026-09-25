@@ -8,12 +8,12 @@ const select = (
 	...relations: readonly SemanticRelation[]
 ): readonly SemanticRelation[] => relations;
 
-/** Kinds that lexically select a preposition: `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
-const governs = { governedPrepositions: null } as const;
+/** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
+const framed = { valency: null } as const;
 
 function request(
 	relations: readonly SemanticRelation[],
-	extra: Pick<KnowledgeRequestMask, "governedPrepositions"> = {},
+	extra: Pick<KnowledgeRequestMask, "valency"> = {},
 ): KnowledgeRequestMask {
 	const base = {
 		transcription: null,
@@ -35,7 +35,7 @@ const makeDeRelMap = () =>
 		Lexeme: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				governs,
+				framed,
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
@@ -62,7 +62,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
-				governs,
+				framed,
 			),
 			NUM: request(select("synonym")),
 			PART: request(
@@ -87,7 +87,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
-				governs,
+				framed,
 			),
 			X: request(select()),
 		},
@@ -97,14 +97,14 @@ const makeDeRelMap = () =>
 			),
 			Collocation: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				governs,
+				framed,
 			),
 			DiscourseFormula: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 			),
 			Idiom: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				governs,
+				framed,
 			),
 			Proverb: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),

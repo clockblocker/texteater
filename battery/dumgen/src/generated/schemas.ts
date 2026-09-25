@@ -2523,7 +2523,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[0],
 		reading: R0.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2536,7 +2536,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[1],
 		reading: R1.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2549,7 +2549,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[2],
 		reading: R2.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2562,7 +2562,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[3],
 		reading: R3.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2575,7 +2575,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[4],
 		reading: R4.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2588,7 +2588,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[5],
 		reading: R5.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2601,7 +2601,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[6],
 		reading: R6.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2614,7 +2614,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[7],
 		reading: R7.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2627,7 +2627,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[8],
 		reading: R8.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2640,7 +2640,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[9],
 		reading: R9.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2653,7 +2653,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[10],
 		reading: R10.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2666,7 +2666,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[11],
 		reading: R11.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2679,7 +2679,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[12],
 		reading: R12.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2692,7 +2692,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[13],
 		reading: R13.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2705,7 +2705,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[14],
 		reading: R14.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2718,7 +2718,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[15],
 		reading: R15.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2731,7 +2731,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[16],
 		reading: R16.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2744,7 +2744,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[17],
 		reading: R17.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2757,7 +2757,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[18],
 		reading: R18.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2770,7 +2770,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[19],
 		reading: R19.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2783,7 +2783,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[20],
 		reading: R20.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2796,7 +2796,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[21],
 		reading: R21.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2809,7 +2809,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[22],
 		reading: R22.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2822,7 +2822,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[23],
 		reading: R23.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2835,7 +2835,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[24],
 		reading: R24.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2848,7 +2848,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[25],
 		reading: R25.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2861,7 +2861,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[26],
 		reading: R26.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2874,7 +2874,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[27],
 		reading: R27.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2887,7 +2887,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[28],
 		reading: R28.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2900,7 +2900,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[29],
 		reading: R29.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2913,7 +2913,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[30],
 		reading: R30.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2926,7 +2926,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[31],
 		reading: R31.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2939,7 +2939,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[32],
 		reading: R32.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2952,7 +2952,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[33],
 		reading: R33.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2965,7 +2965,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[34],
 		reading: R34.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2978,7 +2978,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[35],
 		reading: R35.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -2991,7 +2991,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[36],
 		reading: R36.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3004,7 +3004,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[37],
 		reading: R37.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3017,7 +3017,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[38],
 		reading: R38.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3030,7 +3030,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[39],
 		reading: R39.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3043,7 +3043,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[40],
 		reading: R40.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3056,7 +3056,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[41],
 		reading: R41.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3069,7 +3069,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[42],
 		reading: R42.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3082,7 +3082,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[43],
 		reading: R43.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3095,7 +3095,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[44],
 		reading: R44.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3108,7 +3108,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[45],
 		reading: R45.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3121,7 +3121,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[46],
 		reading: R46.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3134,7 +3134,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[47],
 		reading: R47.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3147,7 +3147,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[48],
 		reading: R48.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3160,7 +3160,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[49],
 		reading: R49.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3173,7 +3173,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[50],
 		reading: R50.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3186,7 +3186,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[51],
 		reading: R51.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3199,7 +3199,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[52],
 		reading: R52.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3212,7 +3212,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[53],
 		reading: R53.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3225,7 +3225,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[54],
 		reading: R54.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3238,7 +3238,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[55],
 		reading: R55.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3251,7 +3251,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[56],
 		reading: R56.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3264,7 +3264,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[57],
 		reading: R57.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3277,7 +3277,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[58],
 		reading: R58.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3290,7 +3290,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[59],
 		reading: R59.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3303,7 +3303,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[60],
 		reading: R60.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3316,7 +3316,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[61],
 		reading: R61.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3329,7 +3329,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[62],
 		reading: R62.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3342,7 +3342,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[63],
 		reading: R63.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3355,7 +3355,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[64],
 		reading: R64.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3368,7 +3368,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[65],
 		reading: R65.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3381,7 +3381,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[66],
 		reading: R66.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3394,7 +3394,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[67],
 		reading: R67.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3407,7 +3407,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[68],
 		reading: R68.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3420,7 +3420,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[69],
 		reading: R69.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3433,7 +3433,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[70],
 		reading: R70.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3446,7 +3446,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[71],
 		reading: R71.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3459,7 +3459,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[72],
 		reading: R72.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3472,7 +3472,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[73],
 		reading: R73.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3485,7 +3485,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[74],
 		reading: R74.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3498,7 +3498,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[75],
 		reading: R75.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3511,7 +3511,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[76],
 		reading: R76.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3524,7 +3524,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[77],
 		reading: R77.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3537,7 +3537,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[78],
 		reading: R78.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3550,7 +3550,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[79],
 		reading: R79.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3563,7 +3563,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[80],
 		reading: R80.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3576,7 +3576,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[81],
 		reading: R81.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3589,7 +3589,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[82],
 		reading: R82.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3602,7 +3602,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[83],
 		reading: R83.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3615,7 +3615,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[84],
 		reading: R84.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3628,7 +3628,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[85],
 		reading: R85.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3641,7 +3641,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[86],
 		reading: R86.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3654,7 +3654,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[87],
 		reading: R87.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3667,7 +3667,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[88],
 		reading: R88.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3680,7 +3680,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[89],
 		reading: R89.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3693,7 +3693,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[90],
 		reading: R90.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3706,7 +3706,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[91],
 		reading: R91.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3719,7 +3719,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[92],
 		reading: R92.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3732,7 +3732,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[93],
 		reading: R93.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3745,7 +3745,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[94],
 		reading: R94.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),
@@ -3758,7 +3758,7 @@ export const knowledgeInputSchema = z.union([
 		encounter: encounterSchema.options[95],
 		reading: R95.readingSchema,
 		request: knowledgeRequestMaskSchema,
-		governedPrepositions: z
+		attestedGovernment: z
 			.array(
 				z.strictObject({
 					preposition: z.string().min(1),

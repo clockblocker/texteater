@@ -124,9 +124,9 @@ head Identity State is Miss.
 Given a unit's offsets: `governedPrepositionsAt` lists the preposition and
 case of every Government whose governor has a member among them, so a
 Phraseme reaches its member words' government. The host requests the
-`governedPrepositions` Knowledge aspect only when this list holds something
-the Reading does not store yet; the claim is projected from it with no model
-call.
+`valency` Knowledge aspect only when this list holds a preposition and case
+the Reading's Valency Frame lacks; each becomes an Optional Preposition Slot
+with no model call.
 
 ## The intake call, German
 

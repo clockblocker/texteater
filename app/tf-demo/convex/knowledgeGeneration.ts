@@ -128,8 +128,8 @@ const generationInputValidator = v.union(
 		translationLanguages: v.array(translationLanguageValidator),
 		/** Knowledge is Full: ask only for what this occurrence adds. */
 		topUpOnly: v.boolean(),
-		/** Attested government the Reading does not store yet. */
-		governedPrepositions: v.array(
+		/** Attested government the Reading's Valency Frame lacks. */
+		government: v.array(
 			v.object({
 				preposition: v.string(),
 				case: v.union(
@@ -196,7 +196,7 @@ export const begin = internalMutation({
 			runNumber,
 			translationLanguages: [...missing.translationLanguages],
 			topUpOnly: !missing.base,
-			governedPrepositions: [...missing.governedPrepositions],
+			government: [...missing.government],
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
@@ -338,9 +338,7 @@ export const publish = internalMutation({
 					attestedGovernment: [],
 				}),
 			) &&
-			!args.changes.some(
-				(change) => change?.aspect === "governedPrepositions",
-			)
+			!args.changes.some((change) => change?.aspect === "valency")
 		) {
 			await endKnowledgeRun(ctx, attempt, runNumber, {
 				kind: "LostRace",

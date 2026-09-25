@@ -10,7 +10,6 @@ import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import {
 	directSemanticRelationSchema,
 	governedCaseSchema,
-	governedPrepositionSchema,
 	governmentProjectionSchema,
 	governmentRelationSchema,
 	knowledgeChangeSchema,
@@ -26,6 +25,10 @@ import {
 	semanticRelationsSchema,
 	translationLanguageSchema,
 	unitShadowSchema,
+	valencyComplementSchema,
+	valencyReferentSchema,
+	valencySlotSchema,
+	valencySlotStatusSchema,
 } from "../src/schemas.js";
 import {
 	knowledgeRequestMaskSchema,
@@ -68,7 +71,10 @@ const compiled = compileZodValidationArtifacts({
 		semanticRelation: semanticRelationSchema,
 		semanticRelationProjection: semanticRelationProjectionSchema,
 		governedCase: governedCaseSchema,
-		governedPreposition: governedPrepositionSchema,
+		valencySlotStatus: valencySlotStatusSchema,
+		valencyReferent: valencyReferentSchema,
+		valencyComplement: valencyComplementSchema,
+		valencySlot: valencySlotSchema,
 		governmentRelation: governmentRelationSchema,
 		governmentProjection: governmentProjectionSchema,
 	},

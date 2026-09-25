@@ -1,7 +1,10 @@
 import {
 	directSemanticRelationSchema,
+	governedCaseSchema,
 	knowledgeRequestMaskSchema,
 	lexicalBreakdownSchema,
+	valencyReferentSchema,
+	valencySlotStatusSchema,
 } from "dumrel/schema";
 import { z } from "zod";
 import {
@@ -94,6 +97,23 @@ export const knowledgeInputSchema = z.strictObject({
 	request: knowledgeRequestMaskSchema,
 });
 const targets = z.array(targetProposalSchema).nullable().optional();
+/** A Valency Frame Slot with its preposition still spelled as text. */
+const valencySlotDraftSchema = z.strictObject({
+	status: valencySlotStatusSchema,
+	complement: z.union([
+		z.strictObject({
+			kind: z.literal("Case"),
+			case: z.enum(["Nom", "Acc", "Dat", "Gen"]),
+			referent: valencyReferentSchema,
+		}),
+		z.strictObject({
+			kind: z.literal("Preposition"),
+			preposition: z.string().min(1),
+			case: governedCaseSchema,
+			referent: valencyReferentSchema,
+		}),
+	]),
+});
 export const knowledgeOutputSchema = z.strictObject({
 	lexicalBreakdown: lexicalBreakdownSchema.nullable().optional(),
 	transcription: z.string().min(1).nullable().optional(),
@@ -114,14 +134,6 @@ export const knowledgeOutputSchema = z.strictObject({
 			holonym: targets,
 		})
 		.optional(),
-	governedPrepositions: z
-		.array(
-			z.strictObject({
-				preposition: z.string().min(1),
-				case: z.enum(["Acc", "Dat", "Gen"]),
-			}),
-		)
-		.nullable()
-		.optional(),
+	valency: z.array(valencySlotDraftSchema).nullable().optional(),
 });
 export { directSemanticRelationSchema };

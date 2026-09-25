@@ -24,9 +24,10 @@ const relationOrder = ["governs", "governedBy"];
 
 /**
  * Projects Prepositional Government over a finite dictionary inventory. Each
- * stored governed preposition yields a direct `governs` edge from the governor
- * Reading to the ADP Lemma, and an inferred `governedBy` edge from every
- * supplied Reading of that ADP Lemma back to the exact governor Reading, so a
+ * Preposition Slot of a stored Valency Frame yields a direct `governs` edge
+ * from the governor Reading to the ADP Lemma, and an inferred `governedBy`
+ * edge from every supplied Reading of that ADP Lemma back to the exact
+ * governor Reading, so a
  * preposition's page can list `warten`, `stolz` and `Angst` without storing
  * anything on the preposition.
  *
@@ -84,7 +85,8 @@ export function projectPrepositionalGovernment(
 		if (!edges.has(identity)) edges.set(identity, edge);
 	}
 	for (const { reading, knowledge } of governors)
-		for (const governed of knowledge.governedPrepositions ?? []) {
+		for (const { complement: governed } of knowledge.valency ?? []) {
+			if (governed.kind !== "Preposition") continue;
 			add({
 				source: reading,
 				relation: "governs",

@@ -95,10 +95,22 @@ test("a stale or pre-government analysis attests nothing", () => {
 	).toEqual([]);
 });
 
-test("stored government covers the same preposition and case only", () => {
+test("a Preposition Slot covers the same preposition and case only", () => {
 	const knowledge = {
-		governedPrepositions: [
-			{ preposition: { canonicalForm: "von" }, case: "Dat" },
+		valency: [
+			{
+				status: "Required",
+				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+			},
+			{
+				status: "Optional",
+				complement: {
+					kind: "Preposition",
+					preposition: { canonicalForm: "von" },
+					case: "Dat",
+					referent: "Either",
+				},
+			},
 		],
 	};
 	expect(

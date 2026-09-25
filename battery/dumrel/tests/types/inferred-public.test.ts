@@ -13,7 +13,8 @@ export type ReadingKnowledge = Dumrel.ReadingKnowledge;
 export type KnowledgeSettings = Dumrel.KnowledgeSettings;
 export type KnowledgeRequestMask = Dumrel.KnowledgeRequestMask;
 export type MorphologicalTree = Dumrel.MorphologicalTree;
-export type GovernedPreposition = Dumrel.GovernedPreposition;
+export type ValencySlot = Dumrel.ValencySlot;
+export type ValencyComplement = Dumrel.ValencyComplement;
 export type KnowledgeChange = Dumrel.KnowledgeChange;
 export type ScalarKnowledgeChange = Exclude<
 	Dumrel.KnowledgeChange,
@@ -49,22 +50,25 @@ describe("public Dumrel types read as their Domain names", () => {
 
 	test("Reading Knowledge lists its aspects by their public types", async () => {
 		expect(await inferred("ReadingKnowledge")).toMatchInlineSnapshot(
-			`"type ReadingKnowledge = { transcription?: string | undefined; definition?: string | undefined; translations?: { en?: string[] | undefined; ru?: string[] | undefined; } | undefined; morphologicalTree?: MorphologicalTree | undefined; lexicalBreakdown?: [LexemeUnitShadow, LexemeUnitShadow, ...LexemeUnitShadow[]] | undefined; semanticRelations?: SemanticRelations | undefined; governedPrepositions?: GovernedPreposition[] | undefined; }"`,
+			`"type ReadingKnowledge = { transcription?: string | undefined; definition?: string | undefined; translations?: { en?: string[] | undefined; ru?: string[] | undefined; } | undefined; morphologicalTree?: MorphologicalTree | undefined; lexicalBreakdown?: [LexemeUnitShadow, LexemeUnitShadow, ...LexemeUnitShadow[]] | undefined; semanticRelations?: SemanticRelations | undefined; valency?: ValencySlot[] | undefined; }"`,
 		);
 		expect(await inferred("MorphologicalTree")).toMatchInlineSnapshot(
 			`"type MorphologicalTree = { root: { nodeKind: "structure"; children: MorphologicalTreeNode[]; }; }"`,
 		);
-		expect(await inferred("GovernedPreposition")).toMatchInlineSnapshot(
-			`"type GovernedPreposition = { preposition: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; adpType: "Circ" | "Post" | "Prep" | null; extPos: "ADV" | "SCONJ" | null; foreign: "Yes" | null; governedCase: "Abe" | "Abl" | "Acc" | "Add" | "Ade" | "All" | "Ben" | "Cau" | "Cmp" | "Cns" | "Com" | "Dat" | "Del" | "Dis" | "Ela" | "Equ" | "Ess" | "Gen" | "Ill" | "Ine" | "Ins" | "Lat" | "Loc" | "Nom" | "Par" | "Per" | "Sbe" | "Sbl" | "Spl" | "Sub" | "Sup" | "Tem" | "Ter" | null; partType: "Vbp" | null; }; } | { unitKind: "Lemma"; language: "en"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; extPos: "ADP" | "ADV" | "SCONJ" | null; }; } | { unitKind: "Lemma"; language: "he"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; case: "Acc" | "Gen" | null; }; }; case: GovernedCase; }"`,
+		expect(await inferred("ValencySlot")).toMatchInlineSnapshot(
+			`"type ValencySlot = { status: ValencySlotStatus; complement: ValencyComplement; }"`,
+		);
+		expect(await inferred("ValencyComplement")).toMatchInlineSnapshot(
+			`"type ValencyComplement = { kind: "Case"; case: "Acc" | "Dat" | "Gen" | "Nom"; referent: ValencyReferent; } | { kind: "Preposition"; preposition: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; adpType: "Circ" | "Post" | "Prep" | null; extPos: "ADV" | "SCONJ" | null; foreign: "Yes" | null; governedCase: "Abe" | "Abl" | "Acc" | "Add" | "Ade" | "All" | "Ben" | "Cau" | "Cmp" | "Cns" | "Com" | "Dat" | "Del" | "Dis" | "Ela" | "Equ" | "Ess" | "Gen" | "Ill" | "Ine" | "Ins" | "Lat" | "Loc" | "Nom" | "Par" | "Per" | "Sbe" | "Sbl" | "Spl" | "Sub" | "Sup" | "Tem" | "Ter" | null; partType: "Vbp" | null; }; } | { unitKind: "Lemma"; language: "en"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; extPos: "ADP" | "ADV" | "SCONJ" | null; }; } | { unitKind: "Lemma"; language: "he"; family: "Lexeme"; kind: "ADP"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; case: "Acc" | "Gen" | null; }; }; case: GovernedCase; referent: ValencyReferent; }"`,
 		);
 	}, 30_000);
 
 	test("Knowledge Settings and Request Masks spell out every aspect", async () => {
 		expect(await inferred("KnowledgeSettings")).toMatchInlineSnapshot(
-			`"type KnowledgeSettings = { transcription?: boolean | undefined; definition?: boolean | undefined; morphologicalTree?: boolean | undefined; lexicalBreakdown?: boolean | undefined; governedPrepositions?: boolean | undefined; translations?: { en?: boolean | undefined; ru?: boolean | undefined; } | undefined; semanticRelations?: { synonym?: boolean | undefined; nearSynonym?: boolean | undefined; antonym?: boolean | undefined; nearAntonym?: boolean | undefined; hypernym?: boolean | undefined; hyponym?: boolean | undefined; meronym?: boolean | undefined; holonym?: boolean | undefined; } | undefined; }"`,
+			`"type KnowledgeSettings = { transcription?: boolean | undefined; definition?: boolean | undefined; morphologicalTree?: boolean | undefined; lexicalBreakdown?: boolean | undefined; valency?: boolean | undefined; translations?: { en?: boolean | undefined; ru?: boolean | undefined; } | undefined; semanticRelations?: { synonym?: boolean | undefined; nearSynonym?: boolean | undefined; antonym?: boolean | undefined; nearAntonym?: boolean | undefined; hypernym?: boolean | undefined; hyponym?: boolean | undefined; meronym?: boolean | undefined; holonym?: boolean | undefined; } | undefined; }"`,
 		);
 		expect(await inferred("KnowledgeRequestMask")).toMatchInlineSnapshot(
-			`"type KnowledgeRequestMask = { transcription?: null | undefined; definition?: null | undefined; morphologicalTree?: null | undefined; lexicalBreakdown?: null | undefined; governedPrepositions?: null | undefined; translations?: { en?: null | undefined; ru?: null | undefined; } | undefined; semanticRelations?: { synonym?: null | undefined; nearSynonym?: null | undefined; antonym?: null | undefined; nearAntonym?: null | undefined; hypernym?: null | undefined; hyponym?: null | undefined; meronym?: null | undefined; holonym?: null | undefined; } | undefined; }"`,
+			`"type KnowledgeRequestMask = { transcription?: null | undefined; definition?: null | undefined; morphologicalTree?: null | undefined; lexicalBreakdown?: null | undefined; valency?: null | undefined; translations?: { en?: null | undefined; ru?: null | undefined; } | undefined; semanticRelations?: { synonym?: null | undefined; nearSynonym?: null | undefined; antonym?: null | undefined; nearAntonym?: null | undefined; hypernym?: null | undefined; hyponym?: null | undefined; meronym?: null | undefined; holonym?: null | undefined; } | undefined; }"`,
 		);
 	}, 30_000);
 
@@ -73,7 +77,7 @@ describe("public Dumrel types read as their Domain names", () => {
 			`"type KnowledgeChange = { kind: "Contribute" | "Correct"; aspect: "definition" | "transcription"; value: string; } | { kind: "Retract"; aspect: "definition" | "transcription"; } | { kind: "Contribute" | "Correct"; aspect: "translations"; language: TranslationLanguage; value: string[]; } | ... 9 more ... | { ...; }"`,
 		);
 		expect(await inferred("ScalarKnowledgeChange")).toMatchInlineSnapshot(
-			`"type ScalarKnowledgeChange = { kind: "Contribute" | "Correct"; aspect: "definition" | "transcription"; value: string; } | { kind: "Retract"; aspect: "definition" | "transcription"; } | { kind: "Contribute" | "Correct"; aspect: "translations"; language: TranslationLanguage; value: string[]; } | { kind: "Retract"; aspect: "translations"; language: TranslationLanguage; } | { kind: "Contribute" | "Correct"; aspect: "governedPrepositions"; value: GovernedPreposition[]; } | { kind: "Retract"; aspect: "governedPrepositions"; } | { kind: "Contribute" | "Correct"; aspect: "morphologicalTree"; value: MorphologicalTree; } | { kind: "Contribute" | "Correct"; aspect: "lexicalBreakdown"; value: [LexemeUnitShadow, LexemeUnitShadow, ...LexemeUnitShadow[]]; } | { kind: "Retract"; aspect: "lexicalBreakdown" | "morphologicalTree"; }"`,
+			`"type ScalarKnowledgeChange = { kind: "Contribute" | "Correct"; aspect: "definition" | "transcription"; value: string; } | { kind: "Retract"; aspect: "definition" | "transcription"; } | { kind: "Contribute" | "Correct"; aspect: "translations"; language: TranslationLanguage; value: string[]; } | { kind: "Retract"; aspect: "translations"; language: TranslationLanguage; } | { kind: "Contribute" | "Correct"; aspect: "valency"; value: ValencySlot[]; } | { kind: "Retract"; aspect: "valency"; complement?: ValencyComplement | undefined; } | { kind: "Contribute" | "Correct"; aspect: "morphologicalTree"; value: MorphologicalTree; } | { kind: "Contribute" | "Correct"; aspect: "lexicalBreakdown"; value: [LexemeUnitShadow, LexemeUnitShadow, ...LexemeUnitShadow[]]; } | { kind: "Retract"; aspect: "lexicalBreakdown" | "morphologicalTree"; }"`,
 		);
 		expect(
 			await inferred("NounSynonymTargetCoordinates"),

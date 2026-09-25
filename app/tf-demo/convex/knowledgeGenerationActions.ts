@@ -133,7 +133,7 @@ export const runKnowledgeGeneration = internalAction({
 				const request = generationRequestFor(reading, qualifiedKinds, {
 					translationLanguages: input.translationLanguages,
 					topUpOnly: input.topUpOnly,
-					attestsGovernment: input.governedPrepositions.length > 0,
+					attestsGovernment: input.government.length > 0,
 				});
 				requested = request;
 				const requestedKinds = requestedRelationKinds(
@@ -214,11 +214,11 @@ export const runKnowledgeGeneration = internalAction({
 										input.checkedRelationKinds,
 								}),
 								// Coverage is per occurrence: stored government may miss this sentence's.
-								...("governedPrepositions" in request
-									? { governedPrepositions: null }
+								...("valency" in request
+									? { valency: null }
 									: {}),
 							},
-							governedPrepositions: input.governedPrepositions,
+							attestedGovernment: input.government,
 						} as KnowledgeInput<"de">)
 						.pipe(
 							Effect.catchTag("CatalogMiss", (failure) =>

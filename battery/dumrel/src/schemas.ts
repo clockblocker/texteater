@@ -19,8 +19,11 @@ import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
 	directSemanticRelationValues,
+	germanComplementCaseValues,
 	governedCaseValues,
 	translationLanguageValues,
+	valencyReferentValues,
+	valencySlotStatusValues,
 } from "./vocabulary.js";
 
 const normalizedTextSchema = z.string().overwrite(normalizeText).min(1);
@@ -34,19 +37,45 @@ export const translationLanguageSchema = z.enum(translationLanguageValues);
 export { lexemeUnitShadowSchema, unitShadowSchema };
 
 export const governedCaseSchema = z.enum(governedCaseValues);
+export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
+export const valencyReferentSchema = z.enum(valencyReferentValues);
+
 /**
- * One lexically governed preposition of the owning Reading: the ADP Lemma it
- * selects and the case that preposition assigns in this construction
- * (`warten auf` + Acc, `bestehen auf` + Dat). The governor owns the claim; the
- * preposition's side is a read-time projection.
+ * German complements, marked by case as in E-VALBU: a bare case (`jemandem`,
+ * Dat) or a governed preposition with the ADP Lemma it selects and the case it
+ * assigns in this construction (`warten auf` + Acc, `bestehen auf` + Dat).
  */
-export const governedPrepositionSchema = z.strictObject({
-	preposition: adpositionLemmaSchema,
-	case: governedCaseSchema,
+const germanValencyComplementSchema = z.union([
+	z.strictObject({
+		kind: z.literal("Case"),
+		case: z.enum(germanComplementCaseValues),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Preposition"),
+		preposition: adpositionLemmaSchema,
+		case: governedCaseSchema,
+		referent: valencyReferentSchema,
+	}),
+]);
+/**
+ * The Slot skeleton is shared; each language brings its own complement
+ * vocabulary. Only German defines one so far; another language joins this
+ * union with its own complements, and the source-aware check keeps each
+ * Reading to its language's.
+ */
+export const valencyComplementSchema = germanValencyComplementSchema;
+export const valencySlotSchema = z.strictObject({
+	status: valencySlotStatusSchema,
+	complement: valencyComplementSchema,
 });
-export const governedPrepositionsSchema = z
-	.array(governedPrepositionSchema)
-	.min(1);
+/**
+ * The owning Reading's Valency Frame: its governed complements in order. The
+ * governor owns every claim; a preposition's side is a read-time projection.
+ * Fixed parts (a separable prefix, a lexical reflexive, a Phraseme's wording)
+ * come from Lemma identity and are never Slots.
+ */
+export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 
 type MorphologicalNode =
 	| {
@@ -118,7 +147,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	morphologicalTree: morphologicalTreeSchema.optional(),
 	lexicalBreakdown: lexicalBreakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
-	governedPrepositions: governedPrepositionsSchema.optional(),
+	valency: valencyFrameSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -176,12 +205,14 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
-		aspect: z.literal("governedPrepositions"),
-		value: governedPrepositionsSchema,
+		aspect: z.literal("valency"),
+		value: valencyFrameSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Retract"),
-		aspect: z.literal("governedPrepositions"),
+		aspect: z.literal("valency"),
+		/** Retracts only the Slot with this complement; without it, the frame. */
+		complement: valencyComplementSchema.optional(),
 	}),
 	z.strictObject({
 		kind: setKinds,
@@ -229,8 +260,9 @@ export const semanticRelationProjectionSchema = z.strictObject({
 export const governmentRelationSchema = z.enum(["governs", "governedBy"]);
 /**
  * One edge of Prepositional Government. `governs` runs from the governor
- * Reading to the ADP Lemma it stores; `governedBy` is the inferred inverse from
- * each supplied Reading of that ADP Lemma back to the exact governor Reading.
+ * Reading to the ADP Lemma of a Preposition Slot in its Valency Frame;
+ * `governedBy` is the inferred inverse from each supplied Reading of that ADP
+ * Lemma back to the exact governor Reading.
  */
 export const governmentProjectionSchema = z.strictObject({
 	source: readingSchema,

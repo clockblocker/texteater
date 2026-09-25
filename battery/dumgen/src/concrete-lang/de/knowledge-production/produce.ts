@@ -27,7 +27,6 @@ import {
 	closedRoute,
 } from "../authored-closed-sets/select.js";
 import {
-	type GovernedPrepositionDraft,
 	governedCaseFor,
 	isGovernablePreposition,
 } from "../governable-prepositions.js";
@@ -40,6 +39,7 @@ import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
 	authoredKnowledge,
 	projectKnowledge,
+	type ValencySlotDraft,
 	validateRequest,
 } from "./project.js";
 
@@ -75,7 +75,7 @@ export function produceKnowledge(
 		reading: Dumling.Reading;
 		request: KnowledgeRequest;
 		/** What intake attested for this occurrence (`governedPrepositionsAt`). */
-		governedPrepositions?: readonly {
+		attestedGovernment?: readonly {
 			preposition: string;
 			case: Dumrel.GovernedCase;
 		}[];
@@ -152,15 +152,18 @@ export function produceKnowledge(
 			failures: KnowledgeFailure[];
 		};
 		/**
-		 * Valency comes from intake, never from a model call: the governed
-		 * prepositions this sentence attests. Published with the final batch.
+		 * Until the Knowledge call proposes the whole frame, Slots come only
+		 * from the governed prepositions this sentence attests, with no model
+		 * call. The sentence shows neither whether the word needs the
+		 * preposition nor what fills it, so each Slot is Optional with an
+		 * Either referent. Published with the final batch.
 		 */
-		const governedPrepositions = () => {
-			const drafts = new Map<string, GovernedPrepositionDraft>();
+		const valency = () => {
+			const drafts = new Map<string, ValencySlotDraft>();
 			for (const {
 				preposition,
 				case: governedCase,
-			} of input.governedPrepositions ?? []) {
+			} of input.attestedGovernment ?? []) {
 				if (!isGovernablePreposition(preposition))
 					throw new DumgenFailure(
 						"InvalidInput",
@@ -168,16 +171,21 @@ export function produceKnowledge(
 						`${preposition} is not a governable preposition`,
 						route,
 					);
-				const draft = {
+				const complement = {
+					kind: "Preposition",
 					preposition,
 					case: governedCaseFor(preposition, governedCase),
-				};
-				drafts.set(`${draft.preposition}/${draft.case}`, draft);
+					referent: "Either",
+				} as const;
+				drafts.set(`${complement.preposition}/${complement.case}`, {
+					status: "Optional",
+					complement,
+				});
 			}
 			const contribution = projectKnowledge(
 				reading,
-				{ governedPrepositions: null },
-				{ governedPrepositions: [...drafts.values()] },
+				{ valency: null },
+				{ valency: [...drafts.values()] },
 			);
 			return contribution.changes.length ? contribution : null;
 		};
@@ -208,10 +216,7 @@ export function produceKnowledge(
 					expected<TextOutcome, never>(
 						Effect.gen(function* () {
 							// Intake attests government for authored Readings too.
-							if (
-								(closed || exact) &&
-								aspect !== "governedPrepositions"
-							)
+							if ((closed || exact) && aspect !== "valency")
 								throw new DumgenFailure(
 									"CatalogMiss",
 									stage,
@@ -222,7 +227,7 @@ export function produceKnowledge(
 								aspect !== "definition" &&
 								aspect !== "transcription" &&
 								aspect !== "translations" &&
-								aspect !== "governedPrepositions"
+								aspect !== "valency"
 							)
 								throw new DumgenFailure(
 									"NotImplemented",
@@ -262,8 +267,8 @@ export function produceKnowledge(
 								`${aspect}/${leaf ?? ""}`,
 							);
 							const contribution =
-								aspect === "governedPrepositions"
-									? governedPrepositions()
+								aspect === "valency"
+									? valency()
 									: draftText !== undefined
 										? validateText({ text: draftText })
 										: (yield* executeGeneration(
@@ -337,10 +342,7 @@ export function produceKnowledge(
 						Effect.tap((outcome) => {
 							textOutcomes[outcomeIndex] = outcome;
 							publishOutcomes();
-							if (
-								outcome.changes.length &&
-								aspect !== "governedPrepositions"
-							)
+							if (outcome.changes.length && aspect !== "valency")
 								options.onKnowledgeContribution?.(
 									outcome.changes,
 								);

@@ -1,11 +1,15 @@
 import { ParsingError } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { conflict, contextualizeChange, parseSource } from "./context.js";
+import { fingerprint } from "./fingerprint.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	KnowledgeChange,
 	ReadingKnowledge,
 	SemanticRelations,
+	ValencyComplement,
+	ValencyFrame,
+	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
 
@@ -13,8 +17,10 @@ import { parseChangeShape } from "./validation.js";
  * Applies one source-aware change atomically. Contribute adds absent atomic
  * aspects or distinct bucket values; Correct replaces; Retract removes. Exact
  * Reading targets support synonym only and require targetKind: "reading",
- * including retractions. Governed prepositions form one bucket: Contribute
- * adds distinct preposition-and-case pairs, Correct replaces the list. Failure returns ParsingError without a partial value.
+ * including retractions. The Valency Frame: Contribute appends the Slots whose
+ * complement the frame lacks, Correct replaces the frame, and Retract removes
+ * the frame or, given a complement, that one Slot. Failure returns ParsingError
+ * without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
@@ -52,8 +58,8 @@ function apply<R extends Dumling.Reading>(
 			return;
 		case "semanticRelations":
 			return applyRelation(knowledge, canonical);
-		case "governedPrepositions":
-			applyGovernedPrepositions(knowledge, canonical);
+		case "valency":
+			applyValency(knowledge, canonical);
 			return;
 		case "transcription":
 		case "definition":
@@ -81,19 +87,51 @@ function applyTranslation<R extends Dumling.Reading>(
 	else knowledge.translations = translations;
 }
 
-function applyGovernedPrepositions<R extends Dumling.Reading>(
+function applyValency<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge<R>,
-	change: Extract<KnowledgeChange, { aspect: "governedPrepositions" }>,
+	change: Extract<KnowledgeChange, { aspect: "valency" }>,
 ): void {
-	if (change.kind === "Retract") delete knowledge.governedPrepositions;
-	else
-		knowledge.governedPrepositions =
-			change.kind === "Correct"
-				? unique(change.value)
-				: unique([
-						...(knowledge.governedPrepositions ?? []),
-						...change.value,
-					]);
+	const frame = knowledge.valency ?? [];
+	let next: ValencySlot[];
+	if (change.kind === "Retract") {
+		const retracted = change.complement && fingerprint(change.complement);
+		next = retracted
+			? frame.filter(
+					({ complement }) => fingerprint(complement) !== retracted,
+				)
+			: [];
+	} else if (change.kind === "Correct") next = structuredClone(change.value);
+	else {
+		next = [...frame];
+		for (const slot of change.value)
+			if (
+				!next.some(({ complement }) =>
+					fills(complement, slot.complement),
+				)
+			)
+				next.push(structuredClone(slot));
+	}
+	if (next.length === 0) delete knowledge.valency;
+	else knowledge.valency = next as ValencyFrame;
+}
+
+/**
+ * A stored complement already covers a contributed one when both name the same
+ * case, and the same preposition, and their referents agree or one is Either:
+ * an attested `auf` + Acc adds nothing to a proposed `auf` + Acc Someone.
+ */
+function fills(
+	stored: ValencyComplement,
+	contributed: ValencyComplement,
+): boolean {
+	const { referent: storedReferent, ...storedRest } = stored;
+	const { referent: contributedReferent, ...contributedRest } = contributed;
+	return (
+		fingerprint(storedRest) === fingerprint(contributedRest) &&
+		(storedReferent === contributedReferent ||
+			storedReferent === "Either" ||
+			contributedReferent === "Either")
+	);
 }
 
 function applyRelation<R extends Dumling.Reading>(
@@ -168,17 +206,4 @@ function unique<T>(values: readonly T[]): [T, ...T[]] {
 		result.push(structuredClone(value));
 	}
 	return result as [T, ...T[]];
-}
-function fingerprint(value: unknown): string {
-	return JSON.stringify(sort(value));
-}
-function sort(value: unknown): unknown {
-	if (Array.isArray(value)) return value.map(sort);
-	if (value !== null && typeof value === "object")
-		return Object.fromEntries(
-			Object.entries(value)
-				.toSorted(([left], [right]) => left.localeCompare(right))
-				.map(([key, child]) => [key, sort(child)]),
-		);
-	return value;
 }

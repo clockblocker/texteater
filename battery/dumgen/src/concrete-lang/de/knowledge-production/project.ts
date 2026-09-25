@@ -6,8 +6,8 @@ import { DumgenFailure } from "../../../universal/failure.js";
 import { parse } from "../../../universal/validation.js";
 import type { AuthoredMember } from "../authored-closed-sets/member.js";
 import {
-	type GovernedPrepositionDraft,
 	governablePrepositionLemma,
+	isGovernablePreposition,
 } from "../governable-prepositions.js";
 import { assertRequestShape } from "./request-shape.js";
 
@@ -61,9 +61,31 @@ export type KnowledgeAnalysis = {
 			{ canonicalForm: string; kind: string }[] | null
 		>
 	>;
-	/** An empty list or null means no governed preposition was found. */
-	governedPrepositions?: readonly GovernedPrepositionDraft[] | null;
+	/** An empty list or null means no Slot was found. */
+	valency?: readonly ValencySlotDraft[] | null;
 };
+/** A Valency Frame Slot whose preposition is still its German spelling. */
+export type ValencySlotDraft = {
+	readonly status: Dumrel.ValencySlotStatus;
+	readonly complement:
+		| Extract<Dumrel.ValencyComplement, { kind: "Case" }>
+		| {
+				readonly kind: "Preposition";
+				readonly preposition: string;
+				readonly case: Dumrel.GovernedCase;
+				readonly referent: Dumrel.ValencyReferent;
+		  };
+};
+function prepositionLemma(form: string) {
+	if (!isGovernablePreposition(form))
+		throw new DumgenFailure(
+			"InvalidModelOutput",
+			"produceKnowledge",
+			`${form} is not a governable preposition`,
+		);
+	return governablePrepositionLemma(form);
+}
+
 export function projectKnowledge(
 	reading: Dumling.Reading,
 	request: KnowledgeRequest,
@@ -82,17 +104,23 @@ export function projectKnowledge(
 		if (aspect === "transcription" || aspect === "definition") {
 			if (value !== null)
 				changes.push({ kind: "Contribute", aspect, value });
-		} else if (aspect === "governedPrepositions") {
-			const drafts = analysis.governedPrepositions ?? [];
+		} else if (aspect === "valency") {
+			const drafts = analysis.valency ?? [];
 			if (drafts.length)
 				changes.push({
 					kind: "Contribute",
 					aspect,
-					value: drafts.map((draft) => ({
-						preposition: governablePrepositionLemma(
-							draft.preposition,
-						),
-						case: draft.case,
+					value: drafts.map(({ status, complement }) => ({
+						status,
+						complement:
+							complement.kind === "Case"
+								? complement
+								: {
+										...complement,
+										preposition: prepositionLemma(
+											complement.preposition,
+										),
+									},
 					})),
 				});
 		} else if (aspect === "translations")

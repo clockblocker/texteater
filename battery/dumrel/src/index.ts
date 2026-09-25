@@ -11,7 +11,6 @@ export { normalizeText } from "./semantics.js";
 export type {
 	DirectSemanticRelation,
 	GovernedCase,
-	GovernedPreposition,
 	GovernmentProjection,
 	GovernmentRelation,
 	KnowledgeChange,
@@ -33,6 +32,11 @@ export type {
 	SemanticRelations,
 	TranslationLanguage,
 	UnitShadow,
+	ValencyComplement,
+	ValencyFrame,
+	ValencyReferent,
+	ValencySlot,
+	ValencySlotStatus,
 } from "./types.js";
 export {
 	directSemanticRelationValues,

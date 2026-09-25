@@ -12,7 +12,7 @@ type StoredSentence = {
 };
 
 /**
- * The governed prepositions one stored occurrence attests (ADR 0030): intake
+ * The governed prepositions one stored occurrence attests (ADR 0034): intake
  * government whose governor has a member inside the occurrence's Segments.
  * Empty without an analysis, before intake resolved government, or when the
  * analysis no longer matches the stored Sentence.
@@ -47,21 +47,32 @@ export function attestedGovernment(
 	);
 }
 
-/** The attested government a Reading's Knowledge does not store yet. */
+/**
+ * The attested government a Reading's Valency Frame lacks: a preposition and
+ * case no Preposition Slot holds yet.
+ */
 export function uncoveredGovernment(
 	attested: readonly GovernedPrepositionDraft[],
 	knowledge: unknown,
 ): GovernedPrepositionDraft[] {
-	const stored =
+	const frame =
 		knowledge && typeof knowledge === "object"
-			? Reflect.get(knowledge, "governedPrepositions")
+			? Reflect.get(knowledge, "valency")
 			: undefined;
 	const covered = new Set(
-		(Array.isArray(stored) ? stored : []).map(
-			(entry: {
-				preposition?: { canonicalForm?: string };
-				case?: string;
-			}) => `${entry.preposition?.canonicalForm}/${entry.case}`,
+		(Array.isArray(frame) ? frame : []).flatMap(
+			(slot: {
+				complement?: {
+					kind?: string;
+					preposition?: { canonicalForm?: string };
+					case?: string;
+				};
+			}) =>
+				slot.complement?.kind === "Preposition"
+					? [
+							`${slot.complement.preposition?.canonicalForm}/${slot.complement.case}`,
+						]
+					: [],
 		),
 	);
 	return attested.filter(

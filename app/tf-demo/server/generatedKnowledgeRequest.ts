@@ -3,10 +3,10 @@ import { directSemanticRelationValues, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
 /**
- * The Knowledge one occurrence asks for. `governedPrepositions` is requested
- * only when intake attested a governed preposition the Reading does not
- * store yet (ADR 0030); a Reading whose Knowledge is already Full asks only
- * for missing translation languages and that government (`topUpOnly`).
+ * The Knowledge one occurrence asks for. `valency` is requested only when
+ * intake attested a governed preposition the Reading's Valency Frame lacks
+ * (ADR 0034); a Reading whose Knowledge is already Full asks only for missing
+ * translation languages and that government (`topUpOnly`).
  */
 export function generationRequestFor(
 	reading: { readonly lemma: Dumling.Lemma<"de"> },
@@ -37,8 +37,8 @@ export function generationRequestFor(
 	if (!selected.success) throw selected.error;
 	const applicable = selected.value;
 	const government =
-		options.attestsGovernment && applicable.governedPrepositions === null
-			? { governedPrepositions: null }
+		options.attestsGovernment && applicable.valency === null
+			? { valency: null }
 			: {};
 	if (options.topUpOnly) {
 		return {
@@ -51,7 +51,7 @@ export function generationRequestFor(
 	const {
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,
-		governedPrepositions: _governedPrepositions,
+		valency: _valency,
 		...rest
 	} = applicable;
 	const request = { ...rest, ...government };

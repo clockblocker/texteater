@@ -5,7 +5,7 @@ export type KnowledgeSettings = {
 	definition?: boolean | undefined;
 	morphologicalTree?: boolean | undefined;
 	lexicalBreakdown?: boolean | undefined;
-	governedPrepositions?: boolean | undefined;
+	valency?: boolean | undefined;
 	translations?:
 		| { en?: boolean | undefined; ru?: boolean | undefined }
 		| undefined;
@@ -27,7 +27,7 @@ export type KnowledgeRequestMask = {
 	definition?: null | undefined;
 	morphologicalTree?: null | undefined;
 	lexicalBreakdown?: null | undefined;
-	governedPrepositions?: null | undefined;
+	valency?: null | undefined;
 	translations?: { en?: null | undefined; ru?: null | undefined } | undefined;
 	semanticRelations?:
 		| {
@@ -1678,7 +1678,7 @@ export type ReadingKnowledge = {
 	morphologicalTree?: MorphologicalTree | undefined;
 	lexicalBreakdown?: LexicalBreakdown | undefined;
 	semanticRelations?: SemanticRelations | undefined;
-	governedPrepositions?: Array<GovernedPreposition> | undefined;
+	valency?: Array<ValencySlot> | undefined;
 };
 export type KnowledgeChange =
 	| {
@@ -1916,10 +1916,14 @@ export type KnowledgeChange =
 	  }
 	| {
 			kind: "Contribute" | "Correct";
-			aspect: "governedPrepositions";
-			value: Array<GovernedPreposition>;
+			aspect: "valency";
+			value: Array<ValencySlot>;
 	  }
-	| { kind: "Retract"; aspect: "governedPrepositions" }
+	| {
+			kind: "Retract";
+			aspect: "valency";
+			complement?: ValencyComplement | undefined;
+	  }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "morphologicalTree";
@@ -2239,12 +2243,26 @@ export type SemanticRelationProjection = {
 	provenance: "direct" | "inferred";
 };
 export type GovernedCase = "Acc" | "Dat" | "Gen";
-export type GovernedPreposition = {
-	preposition:
-		| Dumling.Lemma<"de", "Lexeme", "ADP">
-		| Dumling.Lemma<"en", "Lexeme", "ADP">
-		| Dumling.Lemma<"he", "Lexeme", "ADP">;
-	case: GovernedCase;
+export type ValencySlotStatus = "Required" | "Optional";
+export type ValencyReferent = "Someone" | "Something" | "Either";
+export type ValencyComplement =
+	| {
+			kind: "Case";
+			case: "Nom" | "Acc" | "Dat" | "Gen";
+			referent: ValencyReferent;
+	  }
+	| {
+			kind: "Preposition";
+			preposition:
+				| Dumling.Lemma<"de", "Lexeme", "ADP">
+				| Dumling.Lemma<"en", "Lexeme", "ADP">
+				| Dumling.Lemma<"he", "Lexeme", "ADP">;
+			case: GovernedCase;
+			referent: ValencyReferent;
+	  };
+export type ValencySlot = {
+	status: ValencySlotStatus;
+	complement: ValencyComplement;
 };
 export type GovernmentRelation = "governs" | "governedBy";
 export type GovernmentProjection = {

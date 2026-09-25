@@ -26,8 +26,8 @@ export type MissingKnowledge = {
 	/** The Reading's base request has not been covered yet. */
 	readonly base: boolean;
 	readonly translationLanguages: readonly Dumrel.TranslationLanguage[];
-	/** Government this occurrence attests that the Reading does not store. */
-	readonly governedPrepositions: readonly GovernedPrepositionDraft[];
+	/** Government this occurrence attests that the Reading's Valency Frame lacks. */
+	readonly government: readonly GovernedPrepositionDraft[];
 };
 
 export function findAccumulatedKnowledge(
@@ -55,7 +55,7 @@ export function coveredTranslationLanguages(
 	});
 }
 
-/** The governed prepositions intake attested for this occurrence (ADR 0030). */
+/** The governed prepositions intake attested for this occurrence (ADR 0034). */
 export async function occurrenceGovernment(
 	ctx: MutationCtx,
 	occurrence: Occurrence,
@@ -85,7 +85,7 @@ export function missingKnowledge(
 		translationLanguages: demand.translationLanguages.filter(
 			(language) => !covered.has(language),
 		),
-		governedPrepositions: uncoveredGovernment(
+		government: uncoveredGovernment(
 			demand.attestedGovernment,
 			accumulated?.knowledge,
 		),
@@ -96,7 +96,7 @@ export function nothingMissing(missing: MissingKnowledge): boolean {
 	return (
 		!missing.base &&
 		missing.translationLanguages.length === 0 &&
-		missing.governedPrepositions.length === 0
+		missing.government.length === 0
 	);
 }
 

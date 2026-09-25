@@ -17,7 +17,27 @@ export const samples: Record<string, unknown[]> = {
 		{},
 		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
 		{ semanticRelations: { synonym: [houseLemma] } },
-		{ governedPrepositions: [{ preposition: aufLemma, case: "Acc" }] },
+		{
+			valency: [
+				{
+					status: "Required",
+					complement: {
+						kind: "Case",
+						case: "Nom",
+						referent: "Someone",
+					},
+				},
+				{
+					status: "Optional",
+					complement: {
+						kind: "Preposition",
+						preposition: aufLemma,
+						case: "Acc",
+						referent: "Either",
+					},
+				},
+			],
+		},
 		{
 			semanticRelations: {
 				targetKind: "reading",
@@ -54,13 +74,49 @@ export const samples: Record<string, unknown[]> = {
 		},
 		{
 			kind: "Contribute",
-			aspect: "governedPrepositions",
-			value: [{ preposition: aufLemma, case: "Acc" }],
+			aspect: "valency",
+			value: [
+				{
+					status: "Optional",
+					complement: {
+						kind: "Preposition",
+						preposition: aufLemma,
+						case: "Acc",
+						referent: "Either",
+					},
+				},
+			],
 		},
-		{ kind: "Retract", aspect: "governedPrepositions" },
+		{ kind: "Retract", aspect: "valency" },
+		{
+			kind: "Retract",
+			aspect: "valency",
+			complement: { kind: "Case", case: "Dat", referent: "Someone" },
+		},
 	],
 	governedCase: ["Acc", "Gen"],
-	governedPreposition: [{ preposition: aufLemma, case: "Dat" }],
+	valencySlotStatus: ["Required", "Optional"],
+	valencyReferent: ["Someone", "Something", "Either"],
+	valencyComplement: [
+		{ kind: "Case", case: "Gen", referent: "Something" },
+		{
+			kind: "Preposition",
+			preposition: aufLemma,
+			case: "Dat",
+			referent: "Either",
+		},
+	],
+	valencySlot: [
+		{
+			status: "Optional",
+			complement: {
+				kind: "Preposition",
+				preposition: aufLemma,
+				case: "Acc",
+				referent: "Either",
+			},
+		},
+	],
 	governmentRelation: ["governs", "governedBy"],
 	governmentProjection: [
 		{
