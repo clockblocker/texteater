@@ -42,7 +42,7 @@ Partial Attestations may include only the verbal component, as in \`take\` from 
 		{
 			heading: "Distinguish From Other Features",
 			body: `
-Do not use \`phrasal\` for ordinary verb-plus-preposition government. A governed preposition is not a Lemma feature; it is recorded as \`governedPrepositionEvidence\` on the [\`Attestation\`](/u/entity/attestation/).
+Do not use \`phrasal\` for ordinary verb-plus-preposition government. A governed preposition is valency, not identity, so it stays out of the Lemma and its Canonical Form. In "We depend on accurate labels." the Lemma is \`depend\`, not a phrasal \`depend on\`: \`on\` stays an [\`Attestation\`](/u/entity/attestation/) member, and its government belongs to the Reading's Valency Frame, not to a Lemma feature.
 
 Do not use it for German separable prefixes either. Those are modeled by [\`HasSepPrefix\`](/u/feature/has-sep-prefix/).
 `,

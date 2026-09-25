@@ -17,13 +17,13 @@ const occurrenceAttestation = {
 		unitKind: "Surface",
 		inflectionalFeatures: null,
 		language: "en",
-		normalizedSurface: "depend on",
+		normalizedSurface: "depend",
 		spelling: "Canonical",
 
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
-			canonicalForm: "depend on",
+			canonicalForm: "depend",
 			family: "Lexeme",
 			kind: "VERB",
 			coreFeatures: {
@@ -41,5 +41,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "We [depend] on accurate labels.",
 	classifierNotes:
-		"Depend on does not use phrasal: on is a preposition the verb governs, not a particle, and government is not a Lemma feature.",
+		"The Lemma is depend, not a phrasal depend on: on is a preposition the verb governs, not a particle. Government is valency, not identity (ADR 0029), so on stays out of the Lemma and its Canonical Form; it is government recorded per ADR 0034, in the Reading's Valency Frame. On stays an Attestation member, so clicking it opens depend. English has no complement vocabulary yet, so the Attestation records no valencyEvidence entry for on.",
 } as const;
