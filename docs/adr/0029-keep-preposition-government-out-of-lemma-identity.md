@@ -44,3 +44,5 @@ Intake's Sentence Analysis still links such a preposition to its governor,
 the Reading's Knowledge carries the claim, and the preposition reaches its
 Governors through the projection in ADR 0030. ADR 0030 records the governor-to-preposition link as Knowledge
 rather than as a separate Grammatical Relation.
+
+Amended by [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md): the Attestation's `governedPrepositionEvidence` is replaced by `valencyEvidence`, and the Reading's `governedPrepositions` by its Valency Frame. The rest of this ADR stands.

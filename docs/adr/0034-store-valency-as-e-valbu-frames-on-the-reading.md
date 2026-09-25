@@ -1,0 +1,119 @@
+---
+status: accepted
+---
+
+# Store valency as E-VALBU frames on the Reading
+
+A Reading records the governed complements of its word: what a learner must
+memorize to use this word in this sense. Free adjuncts are not recorded, and
+neither are patterns whose marker is free (`wohnen in`, `wohnen bei`,
+`wohnen auf`). The Note's Source Contexts Block already shows how the word was
+used. Recording free valency as well was rejected because it heads into full
+syntactic analysis to produce a copy of Source Contexts.
+
+## The Valency Frame
+
+Each Reading owns one Valency Frame, modelled on E-VALBU, the IDS Mannheim
+valency dictionary, where each Lesart has one Satzbauplan and optional
+complements are parenthesised. A frame is an ordered list of Slots. Each Slot
+has `status: "Required" | "Optional"` and a complement.
+
+A frame never creates a Lemma or a Reading. Only the Emoji Description splits
+Readings ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
+`warten` with and without `auf` is one Reading with an Optional `auf` slot.
+`sich gewöhnen an` has a Required `an` slot. `bestehen auf` and `bestehen aus`
+are two Readings because their senses differ, and each has its own frame.
+
+Fixed parts are not slots. A separable prefix, a lexical reflexive and a
+Phraseme's wording come from Lemma identity.
+
+The frame skeleton is universal. Each language defines its complement
+vocabulary. German follows E-VALBU and marks complements by case:
+
+```ts
+{ kind: "Case", case: "Nom" | "Acc" | "Dat" | "Gen", referent }
+{ kind: "Preposition", preposition: /* ADP Lemma */, case: "Acc" | "Dat" | "Gen", referent }
+// referent: "Someone" | "Something" | "Either"
+```
+
+Hebrew marks function and preposition, with no case: Subject, DirectObject
+and Preposition. Each language × Family × Kind route chooses which complements
+it allows, as [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
+does for Core Features.
+
+The subject is a slot too, so its case is recorded: `mir graut`, `mich
+friert`. Collocations and Idioms have frames on their Readings like Lexemes.
+A Required slot is how an expression states the valency it demands:
+`jemandem auf den Keks gehen` has a Required Dat slot, which is exactly what
+the learner error *Du gehst mich auf den Keks* gets wrong.
+
+## Where a frame comes from
+
+The Knowledge call proposes the whole frame, statuses included, when it
+creates a Reading. Later sentences add slots it missed, and mistakes go
+through Knowledge's Correct.
+
+Statuses taken only from attestations were rejected. An imperative, a passive
+or an object dropped by context looks the same as an Optional slot, and the
+first click on a word would show half its frame. Frames authored only by hand
+were rejected as well, since a Reading created at intake would have no frame
+until someone wrote one.
+
+## An occurrence
+
+The Attestation replaces `governedPrepositionEvidence` with
+`valencyEvidence: { member: index | null, complement, realizedCase }[]`. The
+member index says which member realizes the slot. `Pass auf dich auf` has two
+members spelled `auf`, and only the index tells them apart.
+
+A governed preposition stays an Attestation member, so clicking it still
+routes to the governor. `normalizedSurface` projects only Fixed members:
+`wartet`, not `wartet auf`; `pass auf`, not `pass auf auf`.
+
+Intake's Sentence Analysis replaces `government` with the realized
+`slots: { governor, marker: offset | null, filler: target id | null, complement, realizedCase }[]`.
+It lists only slots the sentence realizes. A passive clause is converted back
+to the active frame through the Surface's `passive`
+([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)). In
+`Sie wurde um Geduld gebeten`, the Nom `Sie` fills the Acc slot of `bitten`.
+
+Some words realize a governed preposition and its filler at once: German
+`darauf` and `dafür`, Hebrew `לו` and `עליו`. The filler wins. The word stays
+its own unit, and the slot links it as `filler`, with the preposition's Lemma
+as the complement. German pronominal adverbs stay ADV Lexemes
+([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
+How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
+[#595](https://github.com/clockblocker/texteater/issues/595).
+
+## Rendering
+
+A Valency Block shows the learner the Lemma with its frame. Optional slots
+are in parentheses. `jN` is an Acc person, `jM` a Dat person and `etw`
+something:
+
+```text
+>passen (auf `jN/etw`) auf<             aufpassen
+>gehen `jM` auf den Keks<               jemandem auf den Keks gehen
+>stellen (`jM`) `etw` zur Verfügung<    (jemandem) etwas zur Verfügung stellen
+```
+
+## Consequences
+
+- This supersedes the Attestation's `governedPrepositionEvidence` from ADR
+  0029, and from [ADR 0030](./0030-store-preposition-government-as-reading-knowledge.md)
+  the `governedPrepositions` aspect and its rule that no valency comes from
+  the sense alone. The rest of both stands: government stays out of Lemma
+  identity, lives on the Reading as Knowledge rather than as a Relation, and
+  pronominal adverbs stay ADV Lexemes.
+- ADR 0030 rejected a per-Reading call that guessed valency from the sense.
+  That call ran in every sentence. The frame is proposed once, by the
+  Knowledge call that creates the Reading, so a guess can be wrong and is
+  fixed through Correct.
+- The `governedBy` view of a preposition is projected from Preposition slots.
+- A verb's `normalizedSurface` no longer contains its governed preposition,
+  so docs examples such as `Er [wartet] auf den Nachtbus` change.
+- ADR 0022's expletive `es` is unchanged.
+- ADR 0029 still says only verbs absorb a governed preposition as a member.
+  Whether ADJ, NOUN and Phraseme governors do, and whether an ADP's own frame
+  replaces `governedCase`, are open questions on
+  [#595](https://github.com/clockblocker/texteater/issues/595).

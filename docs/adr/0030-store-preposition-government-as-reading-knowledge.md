@@ -54,3 +54,5 @@ it a member of the verbal unit. Clicking the preposition of an adjective,
 noun or Phraseme opens the preposition, whose `governedBy` view lists that
 Governor. A pronominal adverb such as `darauf` reaches its
 governors through its preposition, while government stays on the governor.
+
+Amended by [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md): the `governedPrepositions` aspect, its intake-only source and the rejection of valency from the sense alone are replaced by the Reading's Valency Frame, which the Knowledge call proposes when it creates the Reading. The rest of this ADR stands.
