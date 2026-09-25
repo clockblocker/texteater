@@ -908,6 +908,14 @@ export function resolveGrammarJudgments(
 				if (formal && normalizationModes[0] === "LowerInitial")
 					normalizationModes[0] = "Keep";
 			}
+			// A saying's capital initial is part of its wording, not ordinary
+			// sentence-initial capitalization, and its Canonical Form keeps it.
+			if (
+				(encounter.target.kind === "Proverb" ||
+					encounter.target.kind === "Aphorism") &&
+				normalizationModes[0] === "LowerInitial"
+			)
+				normalizationModes[0] = "Keep";
 			const valencyEvidence: NonNullable<
 				GrammarOutput["valencyEvidence"]
 			> = [];

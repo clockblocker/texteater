@@ -5,6 +5,7 @@ import { infinitiveShaped } from "../src/concrete-lang/de/grammatical-resolution
 import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resolution/inflected-noun.js";
 import nounCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/noun/corpus.json";
 import verbCases from "../src/concrete-lang/de/grammatical-resolution/lexeme/verb/corpus.json";
+import proverbCases from "../src/concrete-lang/de/grammatical-resolution/phraseme/proverb/corpus.json";
 import review from "../src/evaluation/redesign/review-cases.json";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
@@ -500,7 +501,7 @@ test("uncertain headword judgment stops without copying or generating", async ()
 function markedEncounter(
 	id: string,
 	markedContext: string,
-	kind: "VERB" | "NOUN" = "VERB",
+	kind: "VERB" | "NOUN" | "Proverb" = "VERB",
 ) {
 	const segments: { text: string; kind: string }[] = [];
 	const members: number[] = [];
@@ -525,12 +526,33 @@ function markedEncounter(
 	return validateEncounter({
 		sentence: { id, language: "de", segments },
 		target: {
-			family: "Lexeme",
+			family: kind === "Proverb" ? "Phraseme" : "Lexeme",
 			kind,
 			memberSegmentIndices: members,
 		},
 	});
 }
+
+test("a saying keeps its capital initial against LowerInitial", async () => {
+	const id = "grammar-de-proverb-dev-andere-laender";
+	const example = proverbCases[id];
+	const output = await Effect.runPromise(
+		createDumgen(
+			grammarFixture(example.idealOutput, {
+				normalization_0: "LowerInitial",
+			}),
+		).resolveGrammar({
+			...markedEncounter(id, example.input.markedContext, "Proverb"),
+			contextAvailable: false,
+		}),
+	);
+	expect(output.surface.normalizedSurface).toBe(
+		"Andere Länder andere Sitten",
+	);
+	expect(output.surface.lemma.canonicalForm).toBe(
+		"Andere Länder andere Sitten",
+	);
+});
 
 for (const [id, rejected] of [
 	["grammar-de-verb-prep-free-reflexive-erholen-im", "erholt sich"],
