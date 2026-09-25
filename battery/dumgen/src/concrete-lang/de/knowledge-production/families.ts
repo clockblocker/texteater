@@ -8,8 +8,7 @@
  * Dumling Kind inventories per relation-bearing Family. Only Lexeme and
  * Phraseme Readings request Semantic Relations, so only those inventories
  * accept relation targets. Must stay aligned with Dumling's Lemma registry;
- * the authoring tests cross-check it against
- * `relationTargetWithinFamilySchema` from dumrel/schema.
+ * no test checks the alignment.
  */
 export const germanRelationTargetKindsByFamily: Readonly<
 	Record<"Lexeme" | "Phraseme", readonly string[]>
