@@ -394,6 +394,41 @@ test("Surface Note includes an active analysis beyond the initial page", async (
 	]);
 });
 
+test("Surface Note keys a redirected active analysis the same way on every page", async () => {
+	const t = createTestConvex();
+	const surfaceIds = await insertBankHomographs(t, 101);
+	const canonical = surfaceIds[100];
+	if (!canonical) throw new Error("Expected 101 Surfaces.");
+	const lemmaId = await t.run(
+		async (ctx) => (await ctx.db.get(canonical))?.lemmaId,
+	);
+	if (!lemmaId) throw new Error("Expected a Lemma.");
+	const redirected = await insertSurface(t, lemmaId, "Bank");
+	await t.run((ctx) => ctx.db.patch(redirected, { redirectedTo: canonical }));
+	const active = { ...bankSurface, activeAnalysisKey: redirected };
+
+	const first = noteOfKind(await routeNote(t, active), "Surface");
+	const second = noteOfKind(
+		await routeNote(t, { ...active, contextCursor: first.continueCursor }),
+		"Surface",
+	);
+
+	expect(
+		first.analyses.find(({ surfaceId }) => surfaceId === canonical)
+			?.analysisKey,
+	).toBe(redirected);
+	expect(second.analyses.map(({ analysisKey }) => analysisKey)).toEqual([
+		redirected,
+	]);
+	expect(
+		new Set(
+			[...first.analyses, ...second.analyses].map(
+				({ analysisKey }) => analysisKey,
+			),
+		).size,
+	).toBe(101);
+});
+
 test("Surface Note does not inject an active analysis from another aggregate", async () => {
 	const t = createTestConvex();
 	const [bankId, bankenId] = await insertLemmas(t, [

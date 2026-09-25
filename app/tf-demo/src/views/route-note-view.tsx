@@ -88,6 +88,10 @@ function PaginatedSurfaceNote({
 					kind: "Surface",
 					language: initialNote.target.language,
 					normalizedSurface: initialNote.target.normalizedSurface,
+					// Keeps a redirected active analysis under one key on every page.
+					...(activeAnalysisKey !== undefined
+						? { activeAnalysisKey }
+						: {}),
 					contextCursor: cursor,
 				},
 			});
@@ -103,6 +107,7 @@ function PaginatedSurfaceNote({
 			convex,
 			initialNote.target.language,
 			initialNote.target.normalizedSurface,
+			activeAnalysisKey,
 		],
 	);
 	const pagination = usePaginatedNoteLoading(initialNote, loadSurfacePage);

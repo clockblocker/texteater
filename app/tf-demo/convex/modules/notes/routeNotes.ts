@@ -244,13 +244,17 @@ async function loadSurfaceRouteNote(
 		});
 	let activeRedirect: Id<"surfaces"> | undefined;
 	let surfaces = page.page.filter((surface) => !surface.redirectedTo);
-	if (contextCursor === undefined && activeAnalysisKey !== undefined) {
+	// Every page keys a redirected active analysis by the saved key, so the
+	// client's cross-page dedupe sees one analysis. Only the first page adds
+	// the active analysis when its own page lacks it.
+	if (activeAnalysisKey !== undefined) {
 		const savedSurface = await ctx.db.get(activeAnalysisKey);
 		activeRedirect = savedSurface?.redirectedTo;
 		const activeSurface = savedSurface?.redirectedTo
 			? await ctx.db.get(savedSurface.redirectedTo)
 			: savedSurface;
 		if (
+			contextCursor === undefined &&
 			activeSurface?.language === language &&
 			activeSurface.normalizedSurface === normalizedSurface &&
 			!surfaces.some((surface) => surface._id === activeSurface._id)
