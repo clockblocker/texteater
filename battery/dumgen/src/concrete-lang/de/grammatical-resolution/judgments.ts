@@ -32,6 +32,11 @@ import { grammarFeatureFields } from "./feature-schema.js";
 import { infinitiveShaped } from "./infinitive-shape.js";
 import { possiblyInflectedNoun } from "./inflected-noun.js";
 import {
+	attestedMember,
+	type MemberOrthography,
+	tableSpelling,
+} from "./member-spelling.js";
+import {
 	nounArticleCandidates,
 	nounArticleQuestions,
 	nounArticleState,
@@ -136,7 +141,7 @@ const sharedPolicy = {
 	canonicalForm:
 		"Canonical Form is the exact dictionary headword, not necessarily the Surface. The concrete `canonicalFormCandidate` is the attested members joined with single spaces; accept it only when that exact text already is the headword, otherwise select an exact headword from `canonicalFormAlternatives` when available. These include stored dictionary headwords and, for nouns, individual source members without the article. Candidates are suggestions, not proof: preserve contextual identity and Core Features; select missing text only when no candidate is the exact headword. Inflection does not prevent identical spelling. Selection requires exact headword text and casing; the headword may omit compositional articles even though Attestation membership stays fixed.",
 	orthography:
-		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
+		"Standard orthography includes licensed variants and ordinary sentence-initial capitalization. A piece of a fused word (i and m in im, geht and 's in geht's) or a shortened word ('ne, z.B.) is spelled as `memberSpellings` says, and code sets its orthography. Typo means a real spelling/casing error. Never modernize licensed variants in normalized members. Keep source members positionally aligned; no added or deleted member. Surface spelling is Variant only for a licensed spelling/abbreviation of the same Lemma, never simply an inflection or typo repair. Historical status concerns archaic grammatical use, not merely old spelling or surrounding context.",
 	inflection:
 		"Citation has null inflection only for a dictionary/citation use or genuinely unmarked invariant use under the route's policy. Structural null is not uncertainty.",
 };
@@ -145,7 +150,7 @@ const nounPolicy = {
 	suspension:
 		"For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.",
 	articles:
-		"German NOUN article features describe an owned, licensed shared, or Fusion-supplied article: Definite, Indefinite, or null for bare nouns/non-article determiners. A separate governing Fusion supplies its DET component: im Wald has Surface dem Wald with only Wald attested as a member and im retained as article evidence. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is null. Partial nouns are allowed for licensed shared articles in compatible coordination or articles supplied by a governing Fusion; membership stays fixed.",
+		"German NOUN article features describe the article the noun owns or shares: Definite, Indefinite, or None for bare nouns and nouns with a non-article determiner. The noun owns an overt article as its first member, whether standalone (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or shortened ('ne Frage); the fused word's other piece belongs to its own unit. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is None. Partial nouns are allowed only for a licensed shared article in compatible coordination; membership stays fixed.",
 };
 
 const verbalIdentityPolicy =
@@ -195,11 +200,36 @@ export function resolveGrammarJudgments(
 			);
 		};
 		const input = markedContext(encounter);
-		const canonicalFormCandidate = input.members.join(" ");
+		// A piece of a fused word or a shortened word stands for what the fusion
+		// table says (ADR 0035): i in im is in, 'ne is eine. Code sets its
+		// orthography and, when the table names one word, its normalization.
+		const spellings = encounter.target.memberSegmentIndices.map((index) =>
+			tableSpelling(encounter, index),
+		);
+		const spelledMembers = input.members.map((text, position) => {
+			const surfaces = spellings[position]?.surfaces ?? [];
+			return surfaces.length === 1 ? (surfaces[0] ?? text) : text;
+		});
+		const memberSpellings = spellings.flatMap((spelling, position) =>
+			spelling
+				? [
+						`members[${position}] ${input.members[position]}: ${
+							spelling.orthography === "Fused"
+								? `a piece of the fused word ${spelling.piece.pieces.map((piece) => piece.span).join("")}`
+								: "a shortened spelling"
+						}${spelling.surfaces.length ? `, standing for ${spelling.surfaces.join(" or ")}` : ""}`,
+					]
+				: [],
+		);
+		const canonicalFormCandidate = spelledMembers.join(" ");
 		// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
 		// 102 → 0/154), so a stored Lemma of the same route found under another
 		// word would become this target's Lemma: "stolz" for "normal".
-		const targetTexts = new Set([...input.members, canonicalFormCandidate]);
+		const targetTexts = new Set([
+			...input.members,
+			...spelledMembers,
+			canonicalFormCandidate,
+		]);
 		const storedLemmas = lemmaCandidates
 			.filter(({ foundUnder }) =>
 				foundUnder.some((text) => targetTexts.has(text)),
@@ -212,13 +242,15 @@ export function resolveGrammarJudgments(
 					lemma.kind === encounter.target.kind,
 			);
 		// Every source here sets Lemma precision. A preposition is never a
-		// noun's headword, so a governed one is not offered.
+		// noun's headword, so a governed one is not offered, nor is a fused or
+		// shortened article.
 		const canonicalFormAlternatives = [
 			...new Set([
 				...storedLemmas.map((lemma) => lemma.canonicalForm),
 				...(encounter.target.kind === "NOUN"
 					? input.members.filter(
-							(text) =>
+							(text, position) =>
+								!spellings[position] &&
 								!isGovernablePreposition(
 									text.toLocaleLowerCase("de"),
 								),
@@ -264,7 +296,7 @@ export function resolveGrammarJudgments(
 		const referent =
 			encounter.target.kind === "PRON"
 				? referentChoice(
-						input.members.join(" "),
+						spelledMembers.join(" "),
 						sentenceInitial,
 						referentMode,
 					)
@@ -315,15 +347,32 @@ export function resolveGrammarJudgments(
 			);
 		}
 		for (const [index] of input.members.entries()) {
-			questions[`orthography_${index}`] = choice(
-				`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
-				{
-					Standard:
-						"Licensed spelling/capitalization, including variants",
-					Typo: "Actual local spelling or casing error",
-					Unresolved: null,
-				},
-			);
+			const spelling = spellings[index];
+			const surfaces = spelling?.surfaces ?? [];
+			if (surfaces.length > 1)
+				questions[`surface_${index}`] = choice(
+					`Which word does \`members[${index}]\` stand for in \`markedContext\`?`,
+					{
+						...Object.fromEntries(
+							surfaces.map((surface, position) => [
+								`surface_${position}`,
+								surface,
+							]),
+						),
+						Unresolved: null,
+					},
+				);
+			if (spelling && surfaces.length) continue;
+			if (!spelling)
+				questions[`orthography_${index}`] = choice(
+					`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
+					{
+						Standard:
+							"Licensed spelling/capitalization, including variants",
+						Typo: "Actual local spelling or casing error",
+						Unresolved: null,
+					},
+				);
 			questions[`normalization_${index}`] = choice(
 				`Under \`policy\`, how should \`members[${index}]\` be positionally normalized in \`markedContext\`?`,
 				normalizations,
@@ -390,7 +439,7 @@ export function resolveGrammarJudgments(
 			);
 		const lexicalStringCandidates = auxiliary
 			? {}
-			: speculativeLexicalStringCandidates(catalog, input.members);
+			: speculativeLexicalStringCandidates(catalog, spelledMembers);
 		for (const [key, candidates] of Object.entries(lexicalStringCandidates))
 			questions[`text.${key}`] = lexicalStringQuestion(key, candidates);
 		// Only a member spelling a governable preposition can be the one the
@@ -403,7 +452,7 @@ export function resolveGrammarJudgments(
 				: { name: "noun", policy: "policy.government" };
 		const governable =
 			(verbal || adnominal) && !auxiliary && input.members.length > 1
-				? input.members.flatMap((text, index) => {
+				? spelledMembers.flatMap((text, index) => {
 						const form = text.toLocaleLowerCase("de");
 						return isGovernablePreposition(form)
 							? [{ index, text, form }]
@@ -476,6 +525,7 @@ export function resolveGrammarJudgments(
 		const judge = judgmentCaller(options);
 		const state = {
 			...input,
+			...(memberSpellings.length ? { memberSpellings } : {}),
 			route,
 			canonicalFormCandidate,
 			canonicalFormAlternatives,
@@ -596,11 +646,13 @@ export function resolveGrammarJudgments(
 							const key = path.slice(
 								"surface.inflectionalFeatures.".length,
 							);
+							// Article attachment settles both after the features;
+							// None holds the article's place until then.
 							if (
 								encounter.target.kind === "NOUN" &&
 								(key === "article" || key === "case")
 							) {
-								bag[key] = null;
+								bag[key] = key === "article" ? "None" : null;
 								continue;
 							}
 							if (verbal && key === "voice") continue;
@@ -647,12 +699,23 @@ export function resolveGrammarJudgments(
 					surface.inflectionalFeatures = bag;
 				}
 			}
-			const memberOrthographies = input.members.map(
+			const memberOrthographies: MemberOrthography[] = input.members.map(
 				(_, index) =>
-					selected(`orthography_${index}`) as "Standard" | "Typo",
+					spellings[index]?.orthography ??
+					(selected(`orthography_${index}`) as "Standard" | "Typo"),
 			);
+			// A member the table spells stands for its one surface, or the one
+			// the judgment picks; a host or an abbreviation normalizes as usual.
+			const tableSurfaces = input.members.map((_, index) => {
+				const surfaces = spellings[index]?.surfaces ?? [];
+				if (surfaces.length < 2) return surfaces[0];
+				const answer = selected(`surface_${index}`);
+				return surfaces[Number(answer.slice("surface_".length))];
+			});
 			const normalizationModes = input.members.map((_, index) =>
-				selected(`normalization_${index}`),
+				tableSurfaces[index] === undefined
+					? selected(`normalization_${index}`)
+					: "Keep",
 			);
 			// The referent's cell settles a sentence-initial capital: formal Sie
 			// keeps it, any other cell has ordinary capitalization.
@@ -697,8 +760,10 @@ export function resolveGrammarJudgments(
 					governedPrepositionPosition = position;
 				}
 			}
-			const normalizedMembers = input.members.map((text, index) =>
-				transformed(text, normalizationModes[index]!),
+			const normalizedMembers = input.members.map(
+				(text, index) =>
+					tableSurfaces[index] ??
+					transformed(text, normalizationModes[index]!),
 			);
 			const needed: Record<string, string> = {};
 			for (const [index, mode] of normalizationModes.entries())
@@ -1131,7 +1196,7 @@ export function resolveGrammarJudgments(
 			if (article) {
 				coverage = article.coverage;
 			}
-			let expletiveEvidence = null;
+			let expletiveEvidence: GrammarOutput["expletiveEvidence"] = null;
 			if (
 				verbal &&
 				(surface.inflectionalFeatures as Record<string, unknown> | null)
@@ -1145,15 +1210,17 @@ export function resolveGrammarJudgments(
 					return fail(
 						"Subject es needs one unambiguous owned occurrence",
 					);
-				const attested = input.members[position];
+				const index = encounter.target.memberSegmentIndices[position];
 				const orthography = memberOrthographies[position];
-				if (attested === undefined || orthography === undefined)
+				if (index === undefined || orthography === undefined)
 					return fail("Unaligned subject es evidence");
 				normalizedMembers[position] = "es";
-				expletiveEvidence = {
-					attested,
+				expletiveEvidence = attestedMember(
+					encounter,
+					index,
 					orthography,
-				};
+					"es",
+				);
 			}
 			if (adposition) {
 				// A one-case adposition (`mit` Dat) takes that case whatever the

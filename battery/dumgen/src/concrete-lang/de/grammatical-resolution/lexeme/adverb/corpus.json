@@ -1047,7 +1047,7 @@
 			"members": ["z.B."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["z.B."],
 			"surface": {
 				"spelling": "Variant",
@@ -1097,7 +1097,7 @@
 			"members": ["usw."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["usw."],
 			"surface": {
 				"spelling": "Variant",
@@ -1122,7 +1122,7 @@
 			"members": ["usw."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["usw."],
 			"surface": {
 				"spelling": "Variant",
@@ -1172,7 +1172,7 @@
 			"members": ["u.a."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["u.a."],
 			"surface": {
 				"spelling": "Variant",
@@ -1222,7 +1222,7 @@
 			"members": ["o.Ä."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["o.Ä."],
 			"surface": {
 				"spelling": "Variant",
@@ -1272,7 +1272,7 @@
 			"members": ["z.T."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["z.T."],
 			"surface": {
 				"spelling": "Variant",
@@ -1322,7 +1322,7 @@
 			"members": ["v.a."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["v.a."],
 			"surface": {
 				"spelling": "Variant",

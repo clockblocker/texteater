@@ -33,7 +33,7 @@ const expected = {
 	normalizedMembers: ["der", "Aufstieg"],
 	memberOrthographies: ["Standard", "Standard"],
 	realizationCoverage: "Full",
-	articleEvidence: { attested: "der", orthography: "Standard" },
+	articleEvidence: { kind: "Owned", member: 0 },
 };
 test("article+noun selects the supplied headword without text generation", async () => {
 	const output = await Effect.runPromise(
@@ -47,7 +47,7 @@ test("article+noun selects the supplied headword without text generation", async
 		}).resolveGrammar({ ...encounter, contextAvailable: false }),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("Aufstieg");
-	expect(output.surface.normalizedSurface).toBe("der Aufstieg");
+	expect(output.surface.normalizedSurface).toBe("Aufstieg");
 	expect(output.members.map((member) => member.attested)).toEqual([
 		"der",
 		"Aufstieg",
@@ -69,7 +69,7 @@ test("an inflected noun can select a stored headword without generating text", a
 	const fixture = {
 		...expected,
 		normalizedMembers: ["den", "Aufstiegen"],
-		articleEvidence: { attested: "den", orthography: "Standard" },
+		articleEvidence: { kind: "Owned", member: 0 },
 		surface: {
 			...expected.surface,
 			inflectionalFeatures: {
@@ -100,7 +100,7 @@ test("an inflected noun can select a stored headword without generating text", a
 		]),
 	);
 	expect(output.surface.lemma.canonicalForm).toBe("Aufstieg");
-	expect(output.surface.normalizedSurface).toBe("den Aufstiegen");
+	expect(output.surface.normalizedSurface).toBe("Aufstiegen");
 });
 
 test("uncertain headword selection never falls through to generation", async () => {
@@ -139,7 +139,7 @@ test("missing headword text still generates and its trace preserves the actual r
 	const fixture = {
 		...expected,
 		normalizedMembers: ["den", "Aufstiegen"],
-		articleEvidence: { attested: "den", orthography: "Standard" },
+		articleEvidence: { kind: "Owned", member: 0 },
 		surface: {
 			...expected.surface,
 			inflectionalFeatures: {

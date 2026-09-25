@@ -1092,7 +1092,7 @@
 			"members": ["bzw."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["bzw."],
 			"surface": {
 				"spelling": "Variant",
@@ -1180,7 +1180,7 @@
 			"members": ["Bzw."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["bzw."],
 			"surface": {
 				"spelling": "Variant",
@@ -1245,7 +1245,7 @@
 			"members": ["d.h."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["d.h."],
 			"surface": {
 				"spelling": "Variant",

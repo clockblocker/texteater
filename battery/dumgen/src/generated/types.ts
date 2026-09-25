@@ -178,14 +178,6 @@ export type Encounter =
 			sentence: { id: string; language: "de"; segments: Array<Segment> };
 			target: {
 				family: "Morpheme";
-				kind: "Clitic";
-				memberSegmentIndices: [number, ...Array<number>];
-			};
-	  }
-	| {
-			sentence: { id: string; language: "de"; segments: Array<Segment> };
-			target: {
-				family: "Morpheme";
 				kind: "Duplifix";
 				memberSegmentIndices: [number, ...Array<number>];
 			};
@@ -434,14 +426,6 @@ export type Encounter =
 			sentence: { id: string; language: "en"; segments: Array<Segment> };
 			target: {
 				family: "Morpheme";
-				kind: "Clitic";
-				memberSegmentIndices: [number, ...Array<number>];
-			};
-	  }
-	| {
-			sentence: { id: string; language: "en"; segments: Array<Segment> };
-			target: {
-				family: "Morpheme";
 				kind: "Duplifix";
 				memberSegmentIndices: [number, ...Array<number>];
 			};
@@ -683,14 +667,6 @@ export type Encounter =
 			target: {
 				family: "Morpheme";
 				kind: "Circumfix";
-				memberSegmentIndices: [number, ...Array<number>];
-			};
-	  }
-	| {
-			sentence: { id: string; language: "he"; segments: Array<Segment> };
-			target: {
-				family: "Morpheme";
-				kind: "Clitic";
 				memberSegmentIndices: [number, ...Array<number>];
 			};
 	  }
@@ -1068,21 +1044,6 @@ export type GenerationInput =
 				};
 			};
 			lemma: Dumling.Lemma<"de", "Morpheme", "Circumfix">;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "de";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"de", "Morpheme", "Clitic">;
 	  }
 	| {
 			encounter: {
@@ -1558,21 +1519,6 @@ export type GenerationInput =
 				};
 				target: {
 					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"en", "Morpheme", "Clitic">;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "en";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
 					kind: "Duplifix";
 					memberSegmentIndices: [number, ...Array<number>];
 				};
@@ -2028,21 +1974,6 @@ export type GenerationInput =
 				};
 			};
 			lemma: Dumling.Lemma<"he", "Morpheme", "Circumfix">;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "he";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"he", "Morpheme", "Clitic">;
 	  }
 	| {
 			encounter: {
@@ -2537,22 +2468,6 @@ export type ComparisonInput =
 				};
 				target: {
 					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"de", "Morpheme", "Clitic">;
-			candidates: Array<string>;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "de";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
 					kind: "Duplifix";
 					memberSegmentIndices: [number, ...Array<number>];
 				};
@@ -3049,22 +2964,6 @@ export type ComparisonInput =
 				};
 				target: {
 					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"en", "Morpheme", "Clitic">;
-			candidates: Array<string>;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "en";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
 					kind: "Duplifix";
 					memberSegmentIndices: [number, ...Array<number>];
 				};
@@ -3550,22 +3449,6 @@ export type ComparisonInput =
 				};
 			};
 			lemma: Dumling.Lemma<"he", "Morpheme", "Circumfix">;
-			candidates: Array<string>;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "he";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			lemma: Dumling.Lemma<"he", "Morpheme", "Clitic">;
 			candidates: Array<string>;
 	  }
 	| {
@@ -4114,25 +3997,6 @@ export type KnowledgeInput =
 				};
 			};
 			reading: Dumling.Reading<"de", "Morpheme", "Circumfix">;
-			request: Dumrel.KnowledgeRequestMask;
-			attestedGovernment?:
-				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
-				| undefined;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "de";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			reading: Dumling.Reading<"de", "Morpheme", "Clitic">;
 			request: Dumrel.KnowledgeRequestMask;
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
@@ -4736,25 +4600,6 @@ export type KnowledgeInput =
 				};
 				target: {
 					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			reading: Dumling.Reading<"en", "Morpheme", "Clitic">;
-			request: Dumrel.KnowledgeRequestMask;
-			attestedGovernment?:
-				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
-				| undefined;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "en";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
 					kind: "Duplifix";
 					memberSegmentIndices: [number, ...Array<number>];
 				};
@@ -5330,25 +5175,6 @@ export type KnowledgeInput =
 				};
 			};
 			reading: Dumling.Reading<"he", "Morpheme", "Circumfix">;
-			request: Dumrel.KnowledgeRequestMask;
-			attestedGovernment?:
-				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
-				| undefined;
-	  }
-	| {
-			encounter: {
-				sentence: {
-					id: string;
-					language: "he";
-					segments: Array<Segment>;
-				};
-				target: {
-					family: "Morpheme";
-					kind: "Clitic";
-					memberSegmentIndices: [number, ...Array<number>];
-				};
-			};
-			reading: Dumling.Reading<"he", "Morpheme", "Clitic">;
 			request: Dumrel.KnowledgeRequestMask;
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>

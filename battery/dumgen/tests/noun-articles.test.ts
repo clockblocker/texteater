@@ -1,31 +1,56 @@
 import { expect, test } from "bun:test";
 import { checkIfGrundform, parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
+import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { deriveNounArticle, nounArticleReference } from "../src/index.js";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
+import { fusedWordPieces, fusionEntry } from "../src/universal/fusion-table.js";
 import { validateEncounter } from "../src/universal/validation.js";
+
+/**
+ * Whitespace, words and punctuation, with every fused word split into its
+ * pieces as intake does (ADR 0035): `im` is `i` and `m`.
+ */
+function segmentsOf(text: string) {
+	return (
+		text.match(/\s+|[\p{L}\p{N}'’.-]+|[^\s\p{L}\p{N}]/gu) ?? []
+	).flatMap((word) => {
+		const fusion = fusionEntry(germanFusionTable, word);
+		return (fusion ? fusedWordPieces(fusion, word) : [word]).map(
+			(piece) => ({
+				text: piece,
+				kind: /^\s+$/u.test(piece)
+					? "Whitespace"
+					: /[\p{L}\p{N}]/u.test(piece)
+						? "ResolvableText"
+						: "Punctuation",
+			}),
+		);
+	});
+}
+
+type ArticleEvidence = Dumling.Attestation<
+	"de",
+	"Lexeme",
+	"NOUN"
+>["articleEvidence"];
 
 function example(
 	text: string,
 	members: string[],
 	noun: string,
 	form: string,
-	article: string | null,
+	article: "Definite" | "Indefinite" | "None",
 	caseValue = "Nom",
 	number = "Sing",
 	gender = "Masc",
-	shared = false,
-	articleSource = form,
+	shared: ArticleEvidence = null,
+	articleOrthography: "Standard" | "Fused" | "Shorthand" = "Standard",
 ) {
-	const segments = text
-		.split(/(\s+)/u)
-		.filter(Boolean)
-		.map((text) => ({
-			text,
-			kind: /^\s+$/u.test(text) ? "Whitespace" : "ResolvableText",
-		}));
+	const segments = segmentsOf(text);
 	let previous = -1;
 	const indices = members.map((member) => {
 		previous = segments.findIndex(
@@ -41,6 +66,7 @@ function example(
 			memberSegmentIndices: indices,
 		},
 	});
+	const owned = article !== "None" && !shared;
 	const golden = {
 		lemma: { canonicalForm: noun, coreFeatures: { gender, hyph: null } },
 		surface: {
@@ -48,12 +74,14 @@ function example(
 			surfaceFeatures: null,
 			inflectionalFeatures: { case: caseValue, number, article },
 		},
-		normalizedMembers: members,
-		memberOrthographies: members.map(() => "Standard"),
+		normalizedMembers: members.map((member, position) =>
+			owned && position === 0 ? form : member,
+		),
+		memberOrthographies: members.map((_, position) =>
+			owned && position === 0 ? articleOrthography : "Standard",
+		),
 		realizationCoverage: shared ? "Partial" : "Full",
-		articleEvidence: article
-			? { attested: articleSource, orthography: "Standard" }
-			: null,
+		articleEvidence: owned ? { kind: "Owned", member: 0 } : shared,
 	};
 	return {
 		encounter,
@@ -68,6 +96,11 @@ function example(
 	};
 }
 
+const sharedDer: ArticleEvidence = {
+	kind: "Shared",
+	article: { attested: "der", orthography: "Standard" },
+};
+
 for (const [text, members, noun, form, article, caseValue, number, shared] of [
 	[
 		"der Aufstieg",
@@ -77,7 +110,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Nom",
 		"Sing",
-		false,
+		null,
 	],
 	[
 		"den Aufstiegen",
@@ -87,7 +120,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Dat",
 		"Plur",
-		false,
+		null,
 	],
 	[
 		"einem Aufstieg",
@@ -97,7 +130,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Indefinite",
 		"Dat",
 		"Sing",
-		false,
+		null,
 	],
 	[
 		"den Hund",
@@ -107,7 +140,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Acc",
 		"Sing",
-		false,
+		null,
 	],
 	[
 		"der steile Aufstieg",
@@ -117,7 +150,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Nom",
 		"Sing",
-		false,
+		null,
 	],
 	[
 		"der Aufstieg und Abstieg",
@@ -127,7 +160,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Nom",
 		"Sing",
-		true,
+		sharedDer,
 	],
 	[
 		"der Aufstieg und Abstieg und Umstieg",
@@ -137,7 +170,7 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 		"Definite",
 		"Nom",
 		"Sing",
-		true,
+		sharedDer,
 	],
 ] as const)
 	test(`direct grammar preserves owned members: ${text} -> ${noun}`, async () => {
@@ -156,18 +189,17 @@ for (const [text, members, noun, form, article, caseValue, number, shared] of [
 			...members,
 		]);
 		expect(result.realizationCoverage).toBe(shared ? "Partial" : "Full");
-		expect(result.surface.normalizedSurface).toBe(
-			`${form} ${members.at(-1)}`,
-		);
+		// The Surface is the noun's own letters; the article is a member.
+		expect(result.surface.normalizedSurface).toBe(members.at(-1) ?? "");
 		expect(result.surface.lemma.canonicalForm).toBe(noun);
-		expect(checkIfGrundform(result.surface)).toEqual({
-			success: true,
-			value: false,
-		});
-		expect(result).toHaveProperty("articleEvidence", {
-			attested: form,
-			orthography: "Standard",
-		});
+		expect(deriveNounArticle(result.surface)).toHaveProperty(
+			"surface.normalizedSurface",
+			form,
+		);
+		expect(result).toHaveProperty(
+			"articleEvidence",
+			shared ?? { kind: "Owned", member: 0 },
+		);
 	});
 
 test("shared noun resolves first without resolving or claiming the article owner", async () => {
@@ -180,7 +212,7 @@ test("shared noun resolves first without resolving or claiming the article owner
 		"Nom",
 		"Sing",
 		"Masc",
-		true,
+		sharedDer,
 	).resolve();
 	const first = await example(
 		"der Aufstieg und Abstieg",
@@ -203,7 +235,7 @@ for (const determiner of ["mein", "dieser", "kein"])
 			["Haus"],
 			"Haus",
 			"",
-			null,
+			"None",
 			"Dat",
 			"Sing",
 			"Neut",
@@ -212,10 +244,25 @@ for (const determiner of ["mein", "dieser", "kein"])
 		expect(deriveNounArticle(result.surface)).toBeNull();
 		expect(result.surface).toHaveProperty(
 			"inflectionalFeatures.article",
-			null,
+			"None",
 		);
+		expect(result).toHaveProperty("articleEvidence", null);
 		expect(result.surface.normalizedSurface).toBe("Haus");
 	});
+
+test("an owned article leaves the noun a Grundform: der Aufstieg", async () => {
+	const result = await example(
+		"der Aufstieg",
+		["der", "Aufstieg"],
+		"Aufstieg",
+		"der",
+		"Definite",
+	).resolve();
+	expect(checkIfGrundform(result.surface)).toEqual({
+		success: true,
+		value: true,
+	});
+});
 
 test("article agreement and reference identity are validated", async () => {
 	expect(() =>
@@ -238,57 +285,77 @@ test("article agreement and reference identity are validated", async () => {
 	expect(
 		parseUnit({ ...result.surface, articleReference: null }).success,
 	).toBe(false);
-	expect(
-		parseUnit({ ...result.surface, normalizedSurface: "das Hund" }).success,
-	).toBe(false);
 	expect(parseUnit(result.surface).success).toBe(true);
 	expect(parseUnit({ ...result, articleEvidence: null }).success).toBe(false);
 });
 
-test("sentence-initial article casing stays source evidence while the noun Surface uses the contextual article form", async () => {
-	const fixture = example(
+test("sentence-initial article casing stays source evidence while the article cell uses its contextual form", async () => {
+	const result = await example(
 		"Der Aufstieg",
 		["Der", "Aufstieg"],
 		"Aufstieg",
 		"der",
 		"Definite",
-	);
-	const result = await fixture.resolve();
-	expect(result.surface.normalizedSurface).toBe("der Aufstieg");
+	).resolve();
+	expect(result.surface.normalizedSurface).toBe("Aufstieg");
 	expect(result.members[0]).toEqual({
 		attested: "Der",
 		orthography: "Standard",
 	});
 	expect(result).toHaveProperty("articleEvidence", {
-		attested: "Der",
-		orthography: "Standard",
+		kind: "Owned",
+		member: 0,
 	});
+	expect(deriveNounArticle(result.surface)).toHaveProperty(
+		"surface.normalizedSurface",
+		"der",
+	);
 });
 
-for (const [text, noun, form, caseValue, gender, source] of [
-	["Wir bleiben im Wald", "Wald", "dem", "Dat", "Masc", "im"],
-	["Wir gehen zum Wald", "Wald", "dem", "Dat", "Masc", "zum"],
-	["Wir gehen ins Haus", "Haus", "das", "Acc", "Neut", "ins"],
-	["Im Wald bleiben wir", "Wald", "dem", "Dat", "Masc", "Im"],
-	["Wir bleiben im dichten Wald", "Wald", "dem", "Dat", "Masc", "im"],
-	["Wir bleiben im Wald und Feld", "Feld", "dem", "Dat", "Neut", "im"],
-	["Wir gehen zur Schule", "Schule", "der", "Dat", "Fem", "zur"],
+const fused = (spelling: string, surfaces: [string, string]) => {
+	// The article piece is the last letter: m, s or r.
+	const piece = spelling.length - 1;
+	return {
+		attested: spelling.slice(piece),
+		orthography: "Fused" as const,
+		fusion: {
+			spelling,
+			components: [
+				{ span: spelling.slice(0, piece), surface: surfaces[0] },
+				{ span: spelling.slice(piece), surface: surfaces[1] },
+			] as [
+				{ span: string; surface: string },
+				{ span: string; surface: string },
+			],
+		},
+		component: 1,
+	};
+};
+
+for (const [text, noun, form, caseValue, gender, spelling, adposition] of [
+	["Wir bleiben im Wald", "Wald", "dem", "Dat", "Masc", "im", "in"],
+	["Wir gehen zum Wald", "Wald", "dem", "Dat", "Masc", "zum", "zu"],
+	["Wir gehen ins Haus", "Haus", "das", "Acc", "Neut", "ins", "in"],
+	["Im Wald bleiben wir", "Wald", "dem", "Dat", "Masc", "Im", "in"],
+	["Wir bleiben im dichten Wald", "Wald", "dem", "Dat", "Masc", "im", "in"],
+	["Wir gehen zur Schule", "Schule", "der", "Dat", "Fem", "zur", "zu"],
+	["Er wartet aufs Ende", "Ende", "das", "Acc", "Neut", "aufs", "auf"],
 ] as const) {
-	test(`Fusion supplies DET without owning the source: ${text}`, async () => {
-		const fixture = example(
+	test(`a fused article piece is an owned Fused member: ${text}`, async () => {
+		const piece = fused(spelling, [adposition, form]);
+		const result = await example(
 			text,
-			[noun],
+			[piece.attested, noun],
 			noun,
 			form,
 			"Definite",
 			caseValue,
 			"Sing",
 			gender,
-			true,
-			source,
-		);
-		const result = await fixture.resolve();
-		expect(result.surface.normalizedSurface).toBe(`${form} ${noun}`);
+			null,
+			"Fused",
+		).resolve();
+		expect(result.surface.normalizedSurface).toBe(noun);
 		expect(result.surface).toHaveProperty(
 			"inflectionalFeatures.article",
 			"Definite",
@@ -298,29 +365,84 @@ for (const [text, noun, form, caseValue, gender, source] of [
 			form,
 		);
 		expect(result.members).toEqual([
+			piece,
 			{ attested: noun, orthography: "Standard" },
 		]);
-		expect(result.realizationCoverage).toBe("Partial");
+		expect(result.realizationCoverage).toBe("Full");
 		expect(result).toHaveProperty("articleEvidence", {
-			attested: source,
-			orthography: "Standard",
+			kind: "Owned",
+			member: 0,
 		});
 		expect(parseUnit(result).success).toBe(true);
 	});
 }
 
-test("Fusion and standalone article produce the same reusable noun Surface", async () => {
-	const fused = await example(
+test("a noun coordinated after a fused article shares it: im Wald und Feld", async () => {
+	const shared: ArticleEvidence = {
+		kind: "Shared",
+		article: fused("im", ["in", "dem"]),
+	};
+	const result = await example(
+		"Wir bleiben im Wald und Feld",
+		["Feld"],
+		"Feld",
+		"dem",
+		"Definite",
+		"Dat",
+		"Sing",
+		"Neut",
+		shared,
+	).resolve();
+	expect(result.surface.normalizedSurface).toBe("Feld");
+	expect(result.members).toEqual([
+		{ attested: "Feld", orthography: "Standard" },
+	]);
+	expect(result.realizationCoverage).toBe("Partial");
+	expect(result).toHaveProperty("articleEvidence", shared);
+	expect(parseUnit(result).success).toBe(true);
+});
+
+test("a shortened article is an owned Shorthand member: Hast du 'ne Frage?", async () => {
+	const result = await example(
+		"Hast du 'ne Frage?",
+		["'ne", "Frage"],
+		"Frage",
+		"eine",
+		"Indefinite",
+		"Acc",
+		"Sing",
+		"Fem",
+		null,
+		"Shorthand",
+	).resolve();
+	expect(result.members).toEqual([
+		{ attested: "'ne", orthography: "Shorthand" },
+		{ attested: "Frage", orthography: "Standard" },
+	]);
+	expect(result.surface.normalizedSurface).toBe("Frage");
+	expect(result.surface).toHaveProperty(
+		"inflectionalFeatures.article",
+		"Indefinite",
+	);
+	expect(result.realizationCoverage).toBe("Full");
+	expect(deriveNounArticle(result.surface)).toHaveProperty(
+		"surface.normalizedSurface",
+		"eine",
+	);
+});
+
+test("Fused and standalone article produce the same reusable noun Surface", async () => {
+	const fusedArticle = await example(
 		"im Wald",
-		["Wald"],
+		["m", "Wald"],
 		"Wald",
 		"dem",
 		"Definite",
 		"Dat",
 		"Sing",
 		"Masc",
-		true,
-		"im",
+		null,
+		"Fused",
 	).resolve();
 	const standalone = await example(
 		"in dem Wald",
@@ -330,23 +452,66 @@ test("Fusion and standalone article produce the same reusable noun Surface", asy
 		"Definite",
 		"Dat",
 	).resolve();
-	expect(fused.surface).toEqual(standalone.surface);
-	expect(fused.realizationCoverage).toBe("Partial");
+	expect(fusedArticle.surface).toEqual(standalone.surface);
+	expect(fusedArticle.realizationCoverage).toBe("Full");
 	expect(standalone.realizationCoverage).toBe("Full");
+});
+
+test("an unsplit fused word supplies no article", async () => {
+	const fixture = example(
+		"Wir bleiben im Wald",
+		["Wald"],
+		"Wald",
+		"",
+		"None",
+		"Dat",
+	);
+	const segments = fixture.encounter.sentence.segments.flatMap((segment) =>
+		segment.text === "i"
+			? [{ ...segment, text: "im" }]
+			: segment.text === "m"
+				? []
+				: [segment],
+	);
+	const options = grammarFixture(fixture.golden);
+	const judge = options.judge;
+	if (!judge) throw Error("Missing fixture judge");
+	const offered: string[][] = [];
+	await Effect.runPromise(
+		createDumgen({
+			...options,
+			judge: async (request, settings) => {
+				const question = request.questions.attachment;
+				if (question?.type === "choice")
+					offered.push(Object.keys(question.criteria));
+				return judge(request, settings);
+			},
+		}).resolveGrammar({
+			...validateEncounter({
+				sentence: { ...fixture.encounter.sentence, segments },
+				target: {
+					...fixture.encounter.target,
+					memberSegmentIndices: [6],
+				},
+			}),
+			contextAvailable: false,
+		}),
+	);
+	expect(offered).toEqual([["None", "Unresolved"]]);
 });
 
 test("article attachment offers only complete lexical candidates", async () => {
 	const fixture = example(
 		"Wir bleiben im Wald",
-		["Wald"],
+		["m", "Wald"],
 		"Wald",
 		"dem",
 		"Definite",
 		"Dat",
 		"Sing",
 		"Masc",
-		true,
-		"im",
+		null,
+		"Fused",
 	);
 	const options = grammarFixture(fixture.golden);
 	const judge = options.judge;
@@ -363,36 +528,43 @@ test("article attachment offers only complete lexical candidates", async () => {
 					expect(Object.keys(request.questions)).toContain(
 						"surface.inflectionalFeatures.case",
 					);
+					// Code sets a Fused member's orthography and normalization.
+					expect(Object.keys(request.questions)).not.toContain(
+						"orthography_0",
+					);
+					expect(Object.keys(request.questions)).not.toContain(
+						"normalization_0",
+					);
 					const question = request.questions.attachment;
 					if (question.type !== "choice")
 						throw Error("Expected attachment choice");
 					expect(Object.keys(question.criteria)).toEqual([
-						"Fusion_s4",
+						"Owned_s5",
 						"None",
 						"Unresolved",
 					]);
-					expect(question.criteria.Fusion_s4).toContain("dem");
+					expect(question.criteria.Owned_s5).toContain("dem");
 				}
 				return judge(request, settings);
 			},
 		}).resolveGrammar({ ...fixture.encounter, contextAvailable: false }),
 	);
 	expect(inspected).toBe(true);
-	expect(result.surface.normalizedSurface).toBe("dem Wald");
+	expect(result.surface.normalizedSurface).toBe("Wald");
 });
 
 test("Fusion agreement contradictions remain Unresolved", async () => {
 	const fixture = example(
 		"ins Wald",
-		["Wald"],
+		["s", "Wald"],
 		"Wald",
 		"dem",
 		"Definite",
 		"Dat",
 		"Sing",
 		"Masc",
-		true,
-		"ins",
+		null,
+		"Fused",
 	);
 	await expect(fixture.resolve()).rejects.toThrow(
 		"Article form and noun agreement are incompatible",
@@ -405,7 +577,7 @@ test("unrelated Fusion evidence is optional and uncertainty is not a bare noun",
 		["Holz"],
 		"Holz",
 		"",
-		null,
+		"None",
 		"Nom",
 		"Sing",
 		"Neut",
@@ -426,15 +598,15 @@ test("unrelated Fusion evidence is optional and uncertainty is not a bare noun",
 test("Fusion morphology determines Case before any independent Case judgment", async () => {
 	const fixture = example(
 		"Wir gehen zur Schule",
-		["Schule"],
+		["r", "Schule"],
 		"Schule",
 		"der",
 		"Definite",
 		"Dat",
 		"Sing",
 		"Fem",
-		true,
-		"zur",
+		null,
+		"Fused",
 	);
 	const options = grammarFixture(fixture.golden, {
 		"surface.inflectionalFeatures.case": "Gen",

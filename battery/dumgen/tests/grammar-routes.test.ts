@@ -72,12 +72,20 @@ for (const [route, kind, id] of examples)
 			lemma: { canonicalForm: string };
 			normalizedMembers: string[];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence?: { kind: string; member?: number } | null;
 		};
 		expect(output.surface.lemma.canonicalForm).toBe(
 			expected.lemma.canonicalForm,
 		);
+		// An owned article is a member, never part of the Surface (ADR 0035).
+		const article =
+			expected.articleEvidence?.kind === "Owned"
+				? expected.articleEvidence.member
+				: undefined;
 		expect(output.surface.normalizedSurface).toBe(
-			expected.normalizedMembers.join(" "),
+			expected.normalizedMembers
+				.filter((_, position) => position !== article)
+				.join(" "),
 		);
 		expect(output.realizationCoverage).toBe(expected.realizationCoverage);
 		expect(output.members.map((member) => member.attested)).toEqual(

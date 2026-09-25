@@ -163,7 +163,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -496,7 +499,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -846,7 +852,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -1596,7 +1605,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -1605,16 +1617,122 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					expletiveEvidence: {
 						anyOf: [
 							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												enum: [
+													"Standard",
+													"Typo",
+													"Shorthand",
+												],
+											},
+										},
+										required: ["attested", "orthography"],
+										additionalProperties: false,
 									},
-								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												const: "Fused",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"attested",
+											"orthography",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
 							},
 							{ type: "null" },
 						],
@@ -1911,7 +2029,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -2238,7 +2359,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -2331,7 +2455,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -2427,15 +2554,11 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 										type: "object",
 										properties: {
 											article: {
-												anyOf: [
-													{
-														type: "string",
-														enum: [
-															"Definite",
-															"Indefinite",
-														],
-													},
-													{ type: "null" },
+												type: "string",
+												enum: [
+													"Definite",
+													"Indefinite",
+													"None",
 												],
 											},
 											case: {
@@ -2484,7 +2607,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -2493,16 +2619,257 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					articleEvidence: {
 						anyOf: [
 							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Owned",
+											},
+											member: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: ["kind", "member"],
+										additionalProperties: false,
 									},
-								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Shared",
+											},
+											article: {
+												anyOf: [
+													{
+														type: "object",
+														properties: {
+															attested: {
+																type: "string",
+																minLength: 1,
+															},
+															orthography: {
+																type: "string",
+																enum: [
+																	"Standard",
+																	"Typo",
+																	"Shorthand",
+																],
+															},
+														},
+														required: [
+															"attested",
+															"orthography",
+														],
+														additionalProperties: false,
+													},
+													{
+														type: "object",
+														properties: {
+															attested: {
+																type: "string",
+																minLength: 1,
+															},
+															orthography: {
+																type: "string",
+																const: "Fused",
+															},
+															fusion: {
+																type: "object",
+																properties: {
+																	spelling: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																	components:
+																		{
+																			type: "array",
+																			prefixItems:
+																				[
+																					{
+																						type: "object",
+																						properties:
+																							{
+																								span: {
+																									type: "string",
+																								},
+																								surface:
+																									{
+																										type: "string",
+																										minLength: 1,
+																									},
+																							},
+																						required:
+																							[
+																								"span",
+																								"surface",
+																							],
+																						additionalProperties: false,
+																					},
+																					{
+																						type: "object",
+																						properties:
+																							{
+																								span: {
+																									type: "string",
+																								},
+																								surface:
+																									{
+																										type: "string",
+																										minLength: 1,
+																									},
+																							},
+																						required:
+																							[
+																								"span",
+																								"surface",
+																							],
+																						additionalProperties: false,
+																					},
+																				],
+																			items: {
+																				type: "object",
+																				properties:
+																					{
+																						span: {
+																							type: "string",
+																						},
+																						surface:
+																							{
+																								type: "string",
+																								minLength: 1,
+																							},
+																					},
+																				required:
+																					[
+																						"span",
+																						"surface",
+																					],
+																				additionalProperties: false,
+																			},
+																		},
+																},
+																required: [
+																	"spelling",
+																	"components",
+																],
+																additionalProperties: false,
+															},
+															component: {
+																type: "integer",
+																minimum: 0,
+																maximum: 9007199254740991,
+															},
+														},
+														required: [
+															"attested",
+															"orthography",
+															"fusion",
+															"component",
+														],
+														additionalProperties: false,
+													},
+												],
+											},
+										},
+										required: ["kind", "article"],
+										additionalProperties: false,
+									},
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Hidden",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"kind",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
 							},
 							{ type: "null" },
 						],
@@ -2871,7 +3238,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3074,7 +3444,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3193,7 +3566,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3491,7 +3867,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3638,7 +4017,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3744,7 +4126,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3837,7 +4222,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -3991,7 +4379,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -4757,7 +5148,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -4766,16 +5160,122 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					expletiveEvidence: {
 						anyOf: [
 							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												enum: [
+													"Standard",
+													"Typo",
+													"Shorthand",
+												],
+											},
+										},
+										required: ["attested", "orthography"],
+										additionalProperties: false,
 									},
-								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												const: "Fused",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"attested",
+											"orthography",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
 							},
 							{ type: "null" },
 						],
@@ -5064,92 +5564,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
-					},
-					realizationCoverage: {
-						type: "string",
-						enum: ["Full", "Partial"],
-					},
-				},
-				required: [
-					"lemma",
-					"surface",
-					"normalizedMembers",
-					"memberOrthographies",
-					"realizationCoverage",
-				],
-				additionalProperties: false,
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-				},
-				required: ["decision"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"grammar/de/Morpheme/Clitic": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				type: "object",
-				properties: {
-					lemma: {
-						type: "object",
-						properties: {
-							canonicalForm: { type: "string", minLength: 1 },
-							coreFeatures: {
-								type: "object",
-								properties: {},
-								additionalProperties: false,
-							},
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
 						},
-						required: ["canonicalForm", "coreFeatures"],
-						additionalProperties: false,
-					},
-					surface: {
-						type: "object",
-						properties: {
-							spelling: {
-								type: "string",
-								enum: ["Canonical", "Variant"],
-							},
-							surfaceFeatures: {
-								anyOf: [
-									{
-										type: "object",
-										properties: {
-											historicalStatus: {
-												anyOf: [
-													{
-														type: "string",
-														const: "Archaic",
-													},
-													{ type: "null" },
-												],
-											},
-										},
-										required: ["historicalStatus"],
-										additionalProperties: false,
-									},
-									{ type: "null" },
-								],
-							},
-						},
-						required: ["spelling", "surfaceFeatures"],
-						additionalProperties: false,
-					},
-					normalizedMembers: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", minLength: 1 },
-					},
-					memberOrthographies: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5234,7 +5652,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5319,7 +5740,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5404,7 +5828,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5497,7 +5924,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5582,7 +6012,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5667,7 +6100,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5752,7 +6188,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5837,7 +6276,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -5922,7 +6364,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -6664,7 +7109,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -6673,16 +7121,122 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					expletiveEvidence: {
 						anyOf: [
 							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												enum: [
+													"Standard",
+													"Typo",
+													"Shorthand",
+												],
+											},
+										},
+										required: ["attested", "orthography"],
+										additionalProperties: false,
 									},
-								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												const: "Fused",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"attested",
+											"orthography",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
 							},
 							{ type: "null" },
 						],
@@ -6993,7 +7547,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -7735,7 +8292,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -7744,16 +8304,122 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					expletiveEvidence: {
 						anyOf: [
 							{
-								type: "object",
-								properties: {
-									attested: { type: "string", minLength: 1 },
-									orthography: {
-										type: "string",
-										enum: ["Standard", "Typo"],
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												enum: [
+													"Standard",
+													"Typo",
+													"Shorthand",
+												],
+											},
+										},
+										required: ["attested", "orthography"],
+										additionalProperties: false,
 									},
-								},
-								required: ["attested", "orthography"],
-								additionalProperties: false,
+									{
+										type: "object",
+										properties: {
+											attested: {
+												type: "string",
+												minLength: 1,
+											},
+											orthography: {
+												type: "string",
+												const: "Fused",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"attested",
+											"orthography",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
 							},
 							{ type: "null" },
 						],
@@ -8042,7 +8708,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -8203,7 +8872,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -8305,7 +8977,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -8519,7 +9194,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -8696,7 +9374,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -8795,7 +9476,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9010,7 +9694,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9129,7 +9816,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9268,6 +9958,14 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									{
 										type: "object",
 										properties: {
+											article: {
+												type: "string",
+												enum: [
+													"Definite",
+													"Indefinite",
+													"None",
+												],
+											},
 											number: {
 												anyOf: [
 													{
@@ -9282,7 +9980,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												],
 											},
 										},
-										required: ["number"],
+										required: ["article", "number"],
 										additionalProperties: false,
 									},
 									{ type: "null" },
@@ -9304,7 +10002,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9430,7 +10131,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9529,7 +10233,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9634,7 +10341,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -9866,7 +10576,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10000,7 +10713,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10085,7 +10801,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10193,7 +10912,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10320,7 +11042,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10528,7 +11253,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10613,92 +11341,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
-					},
-					realizationCoverage: {
-						type: "string",
-						enum: ["Full", "Partial"],
-					},
-				},
-				required: [
-					"lemma",
-					"surface",
-					"normalizedMembers",
-					"memberOrthographies",
-					"realizationCoverage",
-				],
-				additionalProperties: false,
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-				},
-				required: ["decision"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"grammar/en/Morpheme/Clitic": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				type: "object",
-				properties: {
-					lemma: {
-						type: "object",
-						properties: {
-							canonicalForm: { type: "string", minLength: 1 },
-							coreFeatures: {
-								type: "object",
-								properties: {},
-								additionalProperties: false,
-							},
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
 						},
-						required: ["canonicalForm", "coreFeatures"],
-						additionalProperties: false,
-					},
-					surface: {
-						type: "object",
-						properties: {
-							spelling: {
-								type: "string",
-								enum: ["Canonical", "Variant"],
-							},
-							surfaceFeatures: {
-								anyOf: [
-									{
-										type: "object",
-										properties: {
-											historicalStatus: {
-												anyOf: [
-													{
-														type: "string",
-														const: "Archaic",
-													},
-													{ type: "null" },
-												],
-											},
-										},
-										required: ["historicalStatus"],
-										additionalProperties: false,
-									},
-									{ type: "null" },
-								],
-							},
-						},
-						required: ["spelling", "surfaceFeatures"],
-						additionalProperties: false,
-					},
-					normalizedMembers: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", minLength: 1 },
-					},
-					memberOrthographies: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10783,7 +11429,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10868,7 +11517,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -10953,7 +11605,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11038,7 +11693,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11123,7 +11781,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11208,7 +11869,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11293,7 +11957,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11378,7 +12045,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11463,7 +12133,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11548,7 +12221,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11655,7 +12331,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11740,7 +12419,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11825,7 +12507,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -11991,7 +12676,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12093,7 +12781,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12186,7 +12877,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12414,7 +13108,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12499,7 +13196,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12668,7 +13368,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12753,7 +13456,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -12945,7 +13651,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13129,7 +13838,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13214,7 +13926,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13299,7 +14014,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13485,7 +14203,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13635,7 +14356,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13720,7 +14444,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13813,7 +14540,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -13898,7 +14628,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14174,7 +14907,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14259,92 +14995,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
-					},
-					realizationCoverage: {
-						type: "string",
-						enum: ["Full", "Partial"],
-					},
-				},
-				required: [
-					"lemma",
-					"surface",
-					"normalizedMembers",
-					"memberOrthographies",
-					"realizationCoverage",
-				],
-				additionalProperties: false,
-			},
-			{
-				type: "object",
-				properties: {
-					decision: { type: "string", const: "Unresolved" },
-				},
-				required: ["decision"],
-				additionalProperties: false,
-			},
-		],
-	},
-	"grammar/he/Morpheme/Clitic": {
-		$schema: "https://json-schema.org/draft/2020-12/schema",
-		anyOf: [
-			{
-				type: "object",
-				properties: {
-					lemma: {
-						type: "object",
-						properties: {
-							canonicalForm: { type: "string", minLength: 1 },
-							coreFeatures: {
-								type: "object",
-								properties: {},
-								additionalProperties: false,
-							},
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
 						},
-						required: ["canonicalForm", "coreFeatures"],
-						additionalProperties: false,
-					},
-					surface: {
-						type: "object",
-						properties: {
-							spelling: {
-								type: "string",
-								enum: ["Canonical", "Variant"],
-							},
-							surfaceFeatures: {
-								anyOf: [
-									{
-										type: "object",
-										properties: {
-											historicalStatus: {
-												anyOf: [
-													{
-														type: "string",
-														const: "Archaic",
-													},
-													{ type: "null" },
-												],
-											},
-										},
-										required: ["historicalStatus"],
-										additionalProperties: false,
-									},
-									{ type: "null" },
-								],
-							},
-						},
-						required: ["spelling", "surfaceFeatures"],
-						additionalProperties: false,
-					},
-					normalizedMembers: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", minLength: 1 },
-					},
-					memberOrthographies: {
-						minItems: 1,
-						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14429,7 +15083,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14514,7 +15171,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14599,7 +15259,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14684,7 +15347,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14769,7 +15435,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14854,7 +15523,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -14939,7 +15611,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15024,7 +15699,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15109,7 +15787,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15194,7 +15875,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15279,7 +15963,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15364,7 +16051,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",
@@ -15449,7 +16139,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					memberOrthographies: {
 						minItems: 1,
 						type: "array",
-						items: { type: "string", enum: ["Standard", "Typo"] },
+						items: {
+							type: "string",
+							enum: ["Standard", "Typo", "Fused", "Shorthand"],
+						},
 					},
 					realizationCoverage: {
 						type: "string",

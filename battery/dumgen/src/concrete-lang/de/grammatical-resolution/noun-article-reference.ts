@@ -115,7 +115,7 @@ export function deriveNounArticle(surface: Dumling.Surface) {
 		return null;
 	const noun = surface as Dumling.Surface<"de", "Lexeme", "NOUN">;
 	const bag = noun.inflectionalFeatures;
-	if (!bag?.article) return null;
+	if (!bag || bag.article === "None") return null;
 	if (!bag.case || !bag.number)
 		throw new DumgenFailure(
 			"Unresolved",

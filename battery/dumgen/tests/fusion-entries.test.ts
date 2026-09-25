@@ -10,7 +10,9 @@ import { germanFusion } from "../src/concrete-lang/de/fusions.js";
 import { englishFusionTable } from "../src/concrete-lang/en/fusion-entries.js";
 import {
 	abbreviationEntry,
+	fusedPieceAt,
 	fusionEntry,
+	shorthandSurfaces,
 	splitClitic,
 	validateFusionTable,
 } from "../src/universal/fusion-table.js";
@@ -27,7 +29,7 @@ test("both fusion tables satisfy the table invariants", () => {
 	validateFusionTable(englishFusionTable);
 });
 
-test("the eight standard German fusions keep their attachment shape", () => {
+test("the German fusions keep their attachment shape", () => {
 	const standard = germanFusions.filter(
 		(entry) => entry.register === "Standard",
 	);
@@ -51,7 +53,12 @@ test("the eight standard German fusions keep their attachment shape", () => {
 		articleForm: "der",
 		articleCase: "Dat",
 	});
-	expect(germanFusion("aufs")).toBeUndefined();
+	// Intake splits colloquial fusions too, so their article attaches.
+	expect(germanFusion("aufs")).toEqual({
+		adposition: "auf",
+		articleForm: "das",
+		articleCase: "Acc",
+	});
 	expect(fusionEntry(germanFusionTable, "Aufs")?.register).toBe("Colloquial");
 });
 
@@ -116,9 +123,17 @@ test("attached clitics split off their host and the apostrophe stays on the clit
 	expect(splitClitic(germanFusionTable, "'ne")).toBeUndefined();
 	expect(splitClitic(englishFusionTable, "it's")).toMatchObject({
 		host: "it",
-		entry: { surface: ["is", "has"] },
+		entry: { surface: ["is", "has", "'s"] },
 	});
-	expect(splitClitic(englishFusionTable, "John's")).toBeUndefined();
+	// Possessive 's is its own word on any host, a phrase included (ADR 0035).
+	expect(splitClitic(englishFusionTable, "England's")).toMatchObject({
+		host: "England",
+		entry: { clitic: "'s", role: ["Verb", "Verb", "Possessive"] },
+	});
+	expect(splitClitic(englishFusionTable, "boys'")).toMatchObject({
+		host: "boys",
+		entry: { clitic: "'", surface: "'s", role: "Possessive" },
+	});
 	expect(splitClitic(englishFusionTable, "didn't")).toMatchObject({
 		host: "did",
 		entry: { surface: "not" },
@@ -156,4 +171,45 @@ test("abbreviations expand to a surface and the ruled multi-word Kinds hold", ()
 	);
 	expect(germanAbbreviations.length).toBeGreaterThanOrEqual(12);
 	expect(abbreviationEntry(germanFusionTable, "bzw")).toBeUndefined();
+});
+
+const words = (...texts: string[]) =>
+	texts.map((text) => ({
+		kind: text === " " ? "Whitespace" : "ResolvableText",
+		text,
+	}));
+
+test("a Segment is a piece of the fused word its neighbours spell", () => {
+	const im = words("Ich", " ", "bin", " ", "I", "m", " ", "Wald");
+	expect(fusedPieceAt(germanFusionTable, im, 5)).toEqual({
+		pieces: [
+			{ span: "I", surfaces: ["in"] },
+			{ span: "m", surfaces: ["dem"] },
+		],
+		component: 1,
+	});
+	expect(fusedPieceAt(germanFusionTable, im, 4)?.component).toBe(0);
+	expect(fusedPieceAt(germanFusionTable, im, 7)).toBeUndefined();
+	// A host keeps its own letters beside its attached clitic.
+	expect(
+		fusedPieceAt(germanFusionTable, words("geht", "'s", " ", "gut"), 1),
+	).toEqual({
+		pieces: [
+			{ span: "geht", surfaces: [] },
+			{ span: "'s", surfaces: ["es", "das"] },
+		],
+		component: 1,
+	});
+	// A fused word left whole is no piece.
+	expect(
+		fusedPieceAt(germanFusionTable, words("im", " ", "Wald"), 0),
+	).toBeUndefined();
+});
+
+test("free clitics and abbreviations are Shorthand spellings", () => {
+	expect(shorthandSurfaces(germanFusionTable, "'ne")).toEqual(["eine"]);
+	expect(shorthandSurfaces(germanFusionTable, "’s")).toEqual(["es", "das"]);
+	expect(shorthandSurfaces(germanFusionTable, "z.B.")).toEqual([]);
+	expect(shorthandSurfaces(germanFusionTable, "'m")).toBeUndefined();
+	expect(shorthandSurfaces(germanFusionTable, "Frage")).toBeUndefined();
 });

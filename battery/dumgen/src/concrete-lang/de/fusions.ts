@@ -7,16 +7,14 @@ type Fusion = {
 };
 
 /**
- * The standard preposition-article fusions as grammatical attachment and
- * breakdown Knowledge consume them, derived from the reviewed Entry table.
- * Colloquial fusions stay out of production attachment until the Segment
- * split of ADR 0004 lands.
+ * A preposition-article fusion as grammatical attachment consumes it, derived
+ * from the reviewed Entry table. Colloquial fusions (aufs, übers) count too:
+ * intake splits every one into its pieces (ADR 0004, ADR 0035).
  */
 export function germanFusion(form: string): Fusion | undefined {
 	const normalized = form.normalize("NFC").toLocaleLowerCase("de");
 	const entry = germanFusions.find(
-		(candidate) =>
-			candidate.register === "Standard" && candidate.form === normalized,
+		(candidate) => candidate.form === normalized,
 	);
 	if (!entry) return undefined;
 	const [adposition, article] = entry.components;

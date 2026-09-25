@@ -13,14 +13,19 @@ import {
 import { germanFusion } from "../fusions.js";
 import { featureQuestion } from "./feature-questions.js";
 import { grammarFeatureFields } from "./feature-schema.js";
+import {
+	attestedMember,
+	type MemberOrthography,
+	tableSpelling,
+} from "./member-spelling.js";
 import { nounArticleReference } from "./noun-article-reference.js";
 import type { GrammarOutput } from "./project.js";
 
 type ArticleCandidate = {
 	segmentIndex: number;
 	attested: string;
-	orthography: "Standard" | "Typo";
-	realization: "Owned" | "Shared" | "Fusion";
+	orthography: MemberOrthography;
+	realization: "Owned" | "Shared";
 	article: "Definite" | "Indefinite";
 	form: string;
 	case: "Dat" | "Acc" | null;
@@ -39,12 +44,14 @@ const indefiniteSpellings = new Set([
 const casePath = "surface.inflectionalFeatures.case";
 
 export const nounArticlePolicy =
-	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means an overt true article in this noun's supplied members. Shared means a standalone article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg. A Fusion candidate supplies its internal DET form to its nominal complement, including compatible coordinated complements: im Wald gives dem Wald, ins Haus gives das Haus, and im Wald und Feld permits dem Feld. The fused word never becomes a noun member. Distinguish actual governing Fusions from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or Fusion, choose Unresolved.";
+	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling or a fused word left whole, choose Unresolved.";
 
 /**
  * Candidate spelling establishes possible analyses from raw source text, so the
  * attachment question can travel in the same round trip as the feature
- * questions; the judgment still decides contextual attachment. Owned
+ * questions; the judgment still decides contextual attachment. A piece of a
+ * fused word or a shortened article stands for what the fusion table says
+ * (m in im is dem, 'ne is eine); an unsplit fused word supplies nothing. Owned
  * orthography is patched from the judged member orthography afterwards.
  */
 export function nounArticleCandidates(
@@ -61,26 +68,40 @@ export function nounArticleCandidates(
 		if (owned ? position !== 0 || members.length < 2 : index >= firstMember)
 			continue;
 		const form = segment.text.normalize("NFC").toLocaleLowerCase("de");
-		const fusion = germanFusion(form);
-		// A Fusion's source Segment always remains outside the noun target.
-		if (fusion && owned) continue;
-		const article =
-			fusion || definiteSpellings.has(form)
+		if (germanFusion(form)) continue;
+		const spelling = tableSpelling(encounter, index);
+		const forms = spelling ? spelling.surfaces : [form];
+		const articleCase =
+			spelling?.orthography === "Fused"
+				? (germanFusion(
+						spelling.piece.pieces
+							.map((piece) => piece.span)
+							.join(""),
+					)?.articleCase ?? null)
+				: null;
+		const realization = owned ? "Owned" : "Shared";
+		for (const surface of forms) {
+			const article = definiteSpellings.has(surface)
 				? "Definite"
-				: indefiniteSpellings.has(form)
+				: indefiniteSpellings.has(surface)
 					? "Indefinite"
 					: undefined;
-		if (!article) continue;
-		const realization = fusion ? "Fusion" : owned ? "Owned" : "Shared";
-		candidates.set(`${realization}_s${index}`, {
-			segmentIndex: index,
-			attested: segment.text,
-			orthography: "Standard",
-			realization,
-			article,
-			form: fusion?.articleForm ?? form,
-			case: fusion?.articleCase ?? null,
-		});
+			if (!article) continue;
+			candidates.set(
+				forms.length > 1
+					? `${realization}_s${index}_${surface}`
+					: `${realization}_s${index}`,
+				{
+					segmentIndex: index,
+					attested: segment.text,
+					orthography: spelling?.orthography ?? "Standard",
+					realization,
+					article,
+					form: surface,
+					case: articleCase,
+				},
+			);
+		}
 	}
 	return candidates;
 }
@@ -107,7 +128,7 @@ export function nounArticleQuestions(
 						`${candidate.realization}: source <s${candidate.segmentIndex}> ${candidate.attested} supplies ${candidate.article} DET form ${candidate.form}. Select only if this source grammatically supplies this noun's article.`,
 					]),
 				),
-				None: "No owned, shared, or Fusion-supplied article belongs to this noun",
+				None: "No owned or shared article belongs to this noun",
 				Unresolved:
 					"Attachment is ambiguous, incompatible, or required evidence has no supported candidate",
 			},
@@ -240,7 +261,7 @@ export function resolveNounArticle(
 			bag.case = selected === "Unmarked" ? null : selected;
 		}
 		if (!candidate) {
-			bag.article = null;
+			bag.article = "None";
 			return { article: null, calls };
 		}
 		if (!bag.case || !bag.number)
@@ -261,13 +282,26 @@ export function resolveNounArticle(
 			articleForm: candidate.form,
 			case: bag.case,
 		});
+		// An owned article is the noun's first member, normalized to the form
+		// it stands for; the Surface is the noun's own letters (ADR 0035).
+		if (candidate.realization === "Owned")
+			output.normalizedMembers[0] = candidate.form;
+		const evidence: NonNullable<GrammarOutput["articleEvidence"]> =
+			candidate.realization === "Owned"
+				? { kind: "Owned", member: 0 }
+				: {
+						kind: "Shared",
+						article: attestedMember(
+							encounter,
+							candidate.segmentIndex,
+							candidate.orthography,
+							candidate.form,
+						),
+					};
 		return {
 			article: {
 				reference,
-				evidence: {
-					attested: candidate.attested,
-					orthography: candidate.orthography,
-				},
+				evidence,
 				coverage:
 					candidate.realization === "Owned"
 						? ("Full" as const)

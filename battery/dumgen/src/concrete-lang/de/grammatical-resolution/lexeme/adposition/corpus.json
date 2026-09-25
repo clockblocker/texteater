@@ -1485,5 +1485,42 @@
 			]
 		},
 		"explanation": "The adposition component of the fused im reads as in dem; a location (wo?) gives in a dative complement."
+	},
+	"grammar-de-adp-fused-piece-i": {
+		"input": {
+			"markedContext": "Ich bin <TARGET>i</TARGET>m Wald.",
+			"members": ["i"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Fused"],
+			"normalizedMembers": ["in"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null
+			},
+			"lemma": {
+				"canonicalForm": "in",
+				"coreFeatures": {
+					"abbr": null,
+					"adpType": "Prep",
+					"extPos": null,
+					"foreign": null,
+					"partType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"valencyEvidence": [
+				{
+					"member": null,
+					"complement": {
+						"kind": "Case",
+						"case": "Dat",
+						"referent": "Either"
+					},
+					"realizedCase": "Dat"
+				}
+			]
+		},
+		"explanation": "The adposition piece of the fused im is a Fused member standing for in; the m piece belongs to Wald (ADR 0035)."
 	}
 }

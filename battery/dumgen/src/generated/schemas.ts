@@ -18,84 +18,81 @@ import * as R14 from "dumling/schema/de/lexeme/subordinating-conjunction";
 import * as R15 from "dumling/schema/de/lexeme/symbol";
 import * as R16 from "dumling/schema/de/lexeme/verb";
 import * as R17 from "dumling/schema/de/morpheme/circumfix";
-import * as R18 from "dumling/schema/de/morpheme/clitic";
-import * as R19 from "dumling/schema/de/morpheme/duplifix";
-import * as R20 from "dumling/schema/de/morpheme/infix";
-import * as R21 from "dumling/schema/de/morpheme/interfix";
-import * as R22 from "dumling/schema/de/morpheme/prefix";
-import * as R23 from "dumling/schema/de/morpheme/root";
-import * as R24 from "dumling/schema/de/morpheme/suffix";
-import * as R25 from "dumling/schema/de/morpheme/suffixoid";
-import * as R26 from "dumling/schema/de/morpheme/transfix";
-import * as R27 from "dumling/schema/de/phraseme/aphorism";
-import * as R28 from "dumling/schema/de/phraseme/collocation";
-import * as R29 from "dumling/schema/de/phraseme/discourse-formula";
-import * as R30 from "dumling/schema/de/phraseme/idiom";
-import * as R31 from "dumling/schema/de/phraseme/proverb";
-import * as R32 from "dumling/schema/en/lexeme/adjective";
-import * as R33 from "dumling/schema/en/lexeme/adposition";
-import * as R34 from "dumling/schema/en/lexeme/adverb";
-import * as R35 from "dumling/schema/en/lexeme/auxiliary";
-import * as R36 from "dumling/schema/en/lexeme/coordinating-conjunction";
-import * as R37 from "dumling/schema/en/lexeme/determiner";
-import * as R38 from "dumling/schema/en/lexeme/interjection";
-import * as R39 from "dumling/schema/en/lexeme/noun";
-import * as R40 from "dumling/schema/en/lexeme/numeral";
-import * as R41 from "dumling/schema/en/lexeme/other";
-import * as R42 from "dumling/schema/en/lexeme/particle";
-import * as R43 from "dumling/schema/en/lexeme/pronoun";
-import * as R44 from "dumling/schema/en/lexeme/proper-noun";
-import * as R45 from "dumling/schema/en/lexeme/punctuation";
-import * as R46 from "dumling/schema/en/lexeme/subordinating-conjunction";
-import * as R47 from "dumling/schema/en/lexeme/symbol";
-import * as R48 from "dumling/schema/en/lexeme/verb";
-import * as R49 from "dumling/schema/en/morpheme/circumfix";
-import * as R50 from "dumling/schema/en/morpheme/clitic";
-import * as R51 from "dumling/schema/en/morpheme/duplifix";
-import * as R52 from "dumling/schema/en/morpheme/infix";
-import * as R53 from "dumling/schema/en/morpheme/interfix";
-import * as R54 from "dumling/schema/en/morpheme/prefix";
-import * as R55 from "dumling/schema/en/morpheme/root";
-import * as R56 from "dumling/schema/en/morpheme/suffix";
-import * as R57 from "dumling/schema/en/morpheme/suffixoid";
-import * as R58 from "dumling/schema/en/morpheme/tone-marking";
-import * as R59 from "dumling/schema/en/morpheme/transfix";
-import * as R60 from "dumling/schema/en/phraseme/aphorism";
-import * as R61 from "dumling/schema/en/phraseme/discourse-formula";
-import * as R62 from "dumling/schema/en/phraseme/idiom";
-import * as R63 from "dumling/schema/en/phraseme/proverb";
-import * as R64 from "dumling/schema/he/lexeme/adjective";
-import * as R65 from "dumling/schema/he/lexeme/adposition";
-import * as R66 from "dumling/schema/he/lexeme/adverb";
-import * as R67 from "dumling/schema/he/lexeme/auxiliary";
-import * as R68 from "dumling/schema/he/lexeme/coordinating-conjunction";
-import * as R69 from "dumling/schema/he/lexeme/determiner";
-import * as R70 from "dumling/schema/he/lexeme/interjection";
-import * as R71 from "dumling/schema/he/lexeme/noun";
-import * as R72 from "dumling/schema/he/lexeme/numeral";
-import * as R73 from "dumling/schema/he/lexeme/other";
-import * as R74 from "dumling/schema/he/lexeme/particle";
-import * as R75 from "dumling/schema/he/lexeme/pronoun";
-import * as R76 from "dumling/schema/he/lexeme/proper-noun";
-import * as R77 from "dumling/schema/he/lexeme/punctuation";
-import * as R78 from "dumling/schema/he/lexeme/subordinating-conjunction";
-import * as R79 from "dumling/schema/he/lexeme/symbol";
-import * as R80 from "dumling/schema/he/lexeme/verb";
-import * as R81 from "dumling/schema/he/morpheme/circumfix";
-import * as R82 from "dumling/schema/he/morpheme/clitic";
-import * as R83 from "dumling/schema/he/morpheme/duplifix";
-import * as R84 from "dumling/schema/he/morpheme/infix";
-import * as R85 from "dumling/schema/he/morpheme/interfix";
-import * as R86 from "dumling/schema/he/morpheme/prefix";
-import * as R87 from "dumling/schema/he/morpheme/root";
-import * as R88 from "dumling/schema/he/morpheme/suffix";
-import * as R89 from "dumling/schema/he/morpheme/suffixoid";
-import * as R90 from "dumling/schema/he/morpheme/tone-marking";
-import * as R91 from "dumling/schema/he/morpheme/transfix";
-import * as R92 from "dumling/schema/he/phraseme/aphorism";
-import * as R93 from "dumling/schema/he/phraseme/discourse-formula";
-import * as R94 from "dumling/schema/he/phraseme/idiom";
-import * as R95 from "dumling/schema/he/phraseme/proverb";
+import * as R18 from "dumling/schema/de/morpheme/duplifix";
+import * as R19 from "dumling/schema/de/morpheme/infix";
+import * as R20 from "dumling/schema/de/morpheme/interfix";
+import * as R21 from "dumling/schema/de/morpheme/prefix";
+import * as R22 from "dumling/schema/de/morpheme/root";
+import * as R23 from "dumling/schema/de/morpheme/suffix";
+import * as R24 from "dumling/schema/de/morpheme/suffixoid";
+import * as R25 from "dumling/schema/de/morpheme/transfix";
+import * as R26 from "dumling/schema/de/phraseme/aphorism";
+import * as R27 from "dumling/schema/de/phraseme/collocation";
+import * as R28 from "dumling/schema/de/phraseme/discourse-formula";
+import * as R29 from "dumling/schema/de/phraseme/idiom";
+import * as R30 from "dumling/schema/de/phraseme/proverb";
+import * as R31 from "dumling/schema/en/lexeme/adjective";
+import * as R32 from "dumling/schema/en/lexeme/adposition";
+import * as R33 from "dumling/schema/en/lexeme/adverb";
+import * as R34 from "dumling/schema/en/lexeme/auxiliary";
+import * as R35 from "dumling/schema/en/lexeme/coordinating-conjunction";
+import * as R36 from "dumling/schema/en/lexeme/determiner";
+import * as R37 from "dumling/schema/en/lexeme/interjection";
+import * as R38 from "dumling/schema/en/lexeme/noun";
+import * as R39 from "dumling/schema/en/lexeme/numeral";
+import * as R40 from "dumling/schema/en/lexeme/other";
+import * as R41 from "dumling/schema/en/lexeme/particle";
+import * as R42 from "dumling/schema/en/lexeme/pronoun";
+import * as R43 from "dumling/schema/en/lexeme/proper-noun";
+import * as R44 from "dumling/schema/en/lexeme/punctuation";
+import * as R45 from "dumling/schema/en/lexeme/subordinating-conjunction";
+import * as R46 from "dumling/schema/en/lexeme/symbol";
+import * as R47 from "dumling/schema/en/lexeme/verb";
+import * as R48 from "dumling/schema/en/morpheme/circumfix";
+import * as R49 from "dumling/schema/en/morpheme/duplifix";
+import * as R50 from "dumling/schema/en/morpheme/infix";
+import * as R51 from "dumling/schema/en/morpheme/interfix";
+import * as R52 from "dumling/schema/en/morpheme/prefix";
+import * as R53 from "dumling/schema/en/morpheme/root";
+import * as R54 from "dumling/schema/en/morpheme/suffix";
+import * as R55 from "dumling/schema/en/morpheme/suffixoid";
+import * as R56 from "dumling/schema/en/morpheme/tone-marking";
+import * as R57 from "dumling/schema/en/morpheme/transfix";
+import * as R58 from "dumling/schema/en/phraseme/aphorism";
+import * as R59 from "dumling/schema/en/phraseme/discourse-formula";
+import * as R60 from "dumling/schema/en/phraseme/idiom";
+import * as R61 from "dumling/schema/en/phraseme/proverb";
+import * as R62 from "dumling/schema/he/lexeme/adjective";
+import * as R63 from "dumling/schema/he/lexeme/adposition";
+import * as R64 from "dumling/schema/he/lexeme/adverb";
+import * as R65 from "dumling/schema/he/lexeme/auxiliary";
+import * as R66 from "dumling/schema/he/lexeme/coordinating-conjunction";
+import * as R67 from "dumling/schema/he/lexeme/determiner";
+import * as R68 from "dumling/schema/he/lexeme/interjection";
+import * as R69 from "dumling/schema/he/lexeme/noun";
+import * as R70 from "dumling/schema/he/lexeme/numeral";
+import * as R71 from "dumling/schema/he/lexeme/other";
+import * as R72 from "dumling/schema/he/lexeme/particle";
+import * as R73 from "dumling/schema/he/lexeme/pronoun";
+import * as R74 from "dumling/schema/he/lexeme/proper-noun";
+import * as R75 from "dumling/schema/he/lexeme/punctuation";
+import * as R76 from "dumling/schema/he/lexeme/subordinating-conjunction";
+import * as R77 from "dumling/schema/he/lexeme/symbol";
+import * as R78 from "dumling/schema/he/lexeme/verb";
+import * as R79 from "dumling/schema/he/morpheme/circumfix";
+import * as R80 from "dumling/schema/he/morpheme/duplifix";
+import * as R81 from "dumling/schema/he/morpheme/infix";
+import * as R82 from "dumling/schema/he/morpheme/interfix";
+import * as R83 from "dumling/schema/he/morpheme/prefix";
+import * as R84 from "dumling/schema/he/morpheme/root";
+import * as R85 from "dumling/schema/he/morpheme/suffix";
+import * as R86 from "dumling/schema/he/morpheme/suffixoid";
+import * as R87 from "dumling/schema/he/morpheme/tone-marking";
+import * as R88 from "dumling/schema/he/morpheme/transfix";
+import * as R89 from "dumling/schema/he/phraseme/aphorism";
+import * as R90 from "dumling/schema/he/phraseme/discourse-formula";
+import * as R91 from "dumling/schema/he/phraseme/idiom";
+import * as R92 from "dumling/schema/he/phraseme/proverb";
 import { knowledgeRequestMaskSchema } from "dumrel/schema";
 import { z } from "zod";
 import {
@@ -197,9 +194,6 @@ export const lemmaSchema = z.union([
 	R90.lemmaSchema,
 	R91.lemmaSchema,
 	R92.lemmaSchema,
-	R93.lemmaSchema,
-	R94.lemmaSchema,
-	R95.lemmaSchema,
 ]);
 export const readingSchema = z.union([
 	R0.readingSchema,
@@ -295,9 +289,6 @@ export const readingSchema = z.union([
 	R90.readingSchema,
 	R91.readingSchema,
 	R92.readingSchema,
-	R93.readingSchema,
-	R94.readingSchema,
-	R95.readingSchema,
 ]);
 export const attestationSchema = z.union([
 	R0.attestationSchema,
@@ -393,9 +384,6 @@ export const attestationSchema = z.union([
 	R90.attestationSchema,
 	R91.attestationSchema,
 	R92.attestationSchema,
-	R93.attestationSchema,
-	R94.attestationSchema,
-	R95.attestationSchema,
 ]);
 export const emojiDescriptionSchema = R0.readingSchema.shape.emojiDescription;
 export const analysisTargetSchema = z.union([
@@ -864,21 +852,6 @@ export const analysisTargetSchema = z.union([
 		kind: R92.lemmaSchema.shape.kind,
 		memberSegmentIndices,
 	}),
-	z.strictObject({
-		family: R93.lemmaSchema.shape.family,
-		kind: R93.lemmaSchema.shape.kind,
-		memberSegmentIndices,
-	}),
-	z.strictObject({
-		family: R94.lemmaSchema.shape.family,
-		kind: R94.lemmaSchema.shape.kind,
-		memberSegmentIndices,
-	}),
-	z.strictObject({
-		family: R95.lemmaSchema.shape.family,
-		kind: R95.lemmaSchema.shape.kind,
-		memberSegmentIndices,
-	}),
 ]);
 export const encounterSchema = z.union([
 	z.strictObject({
@@ -1130,7 +1103,7 @@ export const encounterSchema = z.union([
 		}),
 	}),
 	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("de") }),
+		sentence: segmentedSentenceSchema.extend({ language: z.literal("en") }),
 		target: z.strictObject({
 			family: R31.lemmaSchema.shape.family,
 			kind: R31.lemmaSchema.shape.kind,
@@ -1378,7 +1351,7 @@ export const encounterSchema = z.union([
 		}),
 	}),
 	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("en") }),
+		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
 		target: z.strictObject({
 			family: R62.lemmaSchema.shape.family,
 			kind: R62.lemmaSchema.shape.kind,
@@ -1386,7 +1359,7 @@ export const encounterSchema = z.union([
 		}),
 	}),
 	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("en") }),
+		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
 		target: z.strictObject({
 			family: R63.lemmaSchema.shape.family,
 			kind: R63.lemmaSchema.shape.kind,
@@ -1622,30 +1595,6 @@ export const encounterSchema = z.union([
 		target: z.strictObject({
 			family: R92.lemmaSchema.shape.family,
 			kind: R92.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-	}),
-	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
-		target: z.strictObject({
-			family: R93.lemmaSchema.shape.family,
-			kind: R93.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-	}),
-	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
-		target: z.strictObject({
-			family: R94.lemmaSchema.shape.family,
-			kind: R94.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-	}),
-	z.strictObject({
-		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
-		target: z.strictObject({
-			family: R95.lemmaSchema.shape.family,
-			kind: R95.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
 	}),
@@ -2022,18 +1971,6 @@ export const generationInputSchema = z.union([
 	z.strictObject({
 		encounter: encounterSchema.options[92],
 		lemma: R92.lemmaSchema,
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[93],
-		lemma: R93.lemmaSchema,
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[94],
-		lemma: R94.lemmaSchema,
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[95],
-		lemma: R95.lemmaSchema,
 	}),
 ]);
 export const comparisonInputSchema = z.union([
@@ -2500,21 +2437,6 @@ export const comparisonInputSchema = z.union([
 	z.strictObject({
 		encounter: encounterSchema.options[92],
 		lemma: R92.lemmaSchema,
-		candidates: z.array(emojiDescriptionSchema),
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[93],
-		lemma: R93.lemmaSchema,
-		candidates: z.array(emojiDescriptionSchema),
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[94],
-		lemma: R94.lemmaSchema,
-		candidates: z.array(emojiDescriptionSchema),
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[95],
-		lemma: R95.lemmaSchema,
 		candidates: z.array(emojiDescriptionSchema),
 	}),
 ]);
@@ -3728,45 +3650,6 @@ export const knowledgeInputSchema = z.union([
 			)
 			.optional(),
 	}),
-	z.strictObject({
-		encounter: encounterSchema.options[93],
-		reading: R93.readingSchema,
-		request: knowledgeRequestMaskSchema,
-		attestedGovernment: z
-			.array(
-				z.strictObject({
-					preposition: z.string().min(1),
-					case: z.enum(["Acc", "Dat", "Gen"]),
-				}),
-			)
-			.optional(),
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[94],
-		reading: R94.readingSchema,
-		request: knowledgeRequestMaskSchema,
-		attestedGovernment: z
-			.array(
-				z.strictObject({
-					preposition: z.string().min(1),
-					case: z.enum(["Acc", "Dat", "Gen"]),
-				}),
-			)
-			.optional(),
-	}),
-	z.strictObject({
-		encounter: encounterSchema.options[95],
-		reading: R95.readingSchema,
-		request: knowledgeRequestMaskSchema,
-		attestedGovernment: z
-			.array(
-				z.strictObject({
-					preposition: z.string().min(1),
-					case: z.enum(["Acc", "Dat", "Gen"]),
-				}),
-			)
-			.optional(),
-	}),
 ]);
 export const grammarSchemas = {
 	"de/Lexeme/ADJ": z.strictObject({
@@ -3783,7 +3666,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		valencyEvidence: R0.attestationSchema.shape.valencyEvidence,
 	}),
@@ -3801,7 +3686,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		valencyEvidence: R1.attestationSchema.shape.valencyEvidence,
 	}),
@@ -3819,7 +3706,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/AUX": z.strictObject({
@@ -3836,7 +3725,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R3.attestationSchema.shape.expletiveEvidence,
 		valencyEvidence: R3.attestationSchema.shape.valencyEvidence,
@@ -3855,7 +3746,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/DET": z.strictObject({
@@ -3872,7 +3765,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/INTJ": z.strictObject({
@@ -3889,7 +3784,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/NOUN": z.strictObject({
@@ -3906,7 +3803,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		articleEvidence: R7.attestationSchema.shape.articleEvidence,
 		valencyEvidence: R7.attestationSchema.shape.valencyEvidence,
@@ -3925,7 +3824,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/X": z.strictObject({
@@ -3942,7 +3843,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/PART": z.strictObject({
@@ -3959,7 +3862,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/PRON": z.strictObject({
@@ -3976,7 +3881,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/PROPN": z.strictObject({
@@ -3993,7 +3900,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/PUNCT": z.strictObject({
@@ -4010,7 +3919,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/SCONJ": z.strictObject({
@@ -4027,7 +3938,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/SYM": z.strictObject({
@@ -4044,7 +3957,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 	"de/Lexeme/VERB": z.strictObject({
@@ -4061,7 +3976,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		expletiveEvidence: R16.attestationSchema.shape.expletiveEvidence,
 		valencyEvidence: R16.attestationSchema.shape.valencyEvidence,
@@ -4080,10 +3997,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Clitic": z.strictObject({
+	"de/Morpheme/Duplifix": z.strictObject({
 		lemma: R18.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4097,10 +4016,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Duplifix": z.strictObject({
+	"de/Morpheme/Infix": z.strictObject({
 		lemma: R19.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4114,10 +4035,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Infix": z.strictObject({
+	"de/Morpheme/Interfix": z.strictObject({
 		lemma: R20.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4131,10 +4054,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Interfix": z.strictObject({
+	"de/Morpheme/Prefix": z.strictObject({
 		lemma: R21.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4148,10 +4073,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Prefix": z.strictObject({
+	"de/Morpheme/Root": z.strictObject({
 		lemma: R22.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4165,10 +4092,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Root": z.strictObject({
+	"de/Morpheme/Suffix": z.strictObject({
 		lemma: R23.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4182,10 +4111,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Suffix": z.strictObject({
+	"de/Morpheme/Suffixoid": z.strictObject({
 		lemma: R24.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4199,10 +4130,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Suffixoid": z.strictObject({
+	"de/Morpheme/Transfix": z.strictObject({
 		lemma: R25.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4216,10 +4149,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Morpheme/Transfix": z.strictObject({
+	"de/Phraseme/Aphorism": z.strictObject({
 		lemma: R26.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4233,10 +4168,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"de/Phraseme/Aphorism": z.strictObject({
+	"de/Phraseme/Collocation": z.strictObject({
 		lemma: R27.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4250,10 +4187,14 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R27.attestationSchema.shape.expletiveEvidence,
+		valencyEvidence: R27.attestationSchema.shape.valencyEvidence,
 	}),
-	"de/Phraseme/Collocation": z.strictObject({
+	"de/Phraseme/DiscourseFormula": z.strictObject({
 		lemma: R28.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4267,12 +4208,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
-		expletiveEvidence: R28.attestationSchema.shape.expletiveEvidence,
-		valencyEvidence: R28.attestationSchema.shape.valencyEvidence,
 	}),
-	"de/Phraseme/DiscourseFormula": z.strictObject({
+	"de/Phraseme/Idiom": z.strictObject({
 		lemma: R29.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4286,10 +4227,14 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		expletiveEvidence: R29.attestationSchema.shape.expletiveEvidence,
+		valencyEvidence: R29.attestationSchema.shape.valencyEvidence,
 	}),
-	"de/Phraseme/Idiom": z.strictObject({
+	"de/Phraseme/Proverb": z.strictObject({
 		lemma: R30.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4303,12 +4248,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
-		expletiveEvidence: R30.attestationSchema.shape.expletiveEvidence,
-		valencyEvidence: R30.attestationSchema.shape.valencyEvidence,
 	}),
-	"de/Phraseme/Proverb": z.strictObject({
+	"en/Lexeme/ADJ": z.strictObject({
 		lemma: R31.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4322,10 +4267,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/ADJ": z.strictObject({
+	"en/Lexeme/ADP": z.strictObject({
 		lemma: R32.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4339,10 +4286,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/ADP": z.strictObject({
+	"en/Lexeme/ADV": z.strictObject({
 		lemma: R33.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4356,10 +4305,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/ADV": z.strictObject({
+	"en/Lexeme/AUX": z.strictObject({
 		lemma: R34.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4373,10 +4324,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/AUX": z.strictObject({
+	"en/Lexeme/CCONJ": z.strictObject({
 		lemma: R35.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4390,10 +4343,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/CCONJ": z.strictObject({
+	"en/Lexeme/DET": z.strictObject({
 		lemma: R36.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4407,10 +4362,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/DET": z.strictObject({
+	"en/Lexeme/INTJ": z.strictObject({
 		lemma: R37.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4424,10 +4381,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/INTJ": z.strictObject({
+	"en/Lexeme/NOUN": z.strictObject({
 		lemma: R38.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4441,10 +4400,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/NOUN": z.strictObject({
+	"en/Lexeme/NUM": z.strictObject({
 		lemma: R39.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4458,10 +4419,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/NUM": z.strictObject({
+	"en/Lexeme/X": z.strictObject({
 		lemma: R40.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4475,10 +4438,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/X": z.strictObject({
+	"en/Lexeme/PART": z.strictObject({
 		lemma: R41.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4492,10 +4457,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/PART": z.strictObject({
+	"en/Lexeme/PRON": z.strictObject({
 		lemma: R42.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4509,10 +4476,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/PRON": z.strictObject({
+	"en/Lexeme/PROPN": z.strictObject({
 		lemma: R43.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4526,10 +4495,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/PROPN": z.strictObject({
+	"en/Lexeme/PUNCT": z.strictObject({
 		lemma: R44.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4543,10 +4514,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/PUNCT": z.strictObject({
+	"en/Lexeme/SCONJ": z.strictObject({
 		lemma: R45.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4560,10 +4533,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/SCONJ": z.strictObject({
+	"en/Lexeme/SYM": z.strictObject({
 		lemma: R46.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4577,10 +4552,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/SYM": z.strictObject({
+	"en/Lexeme/VERB": z.strictObject({
 		lemma: R47.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4594,10 +4571,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Lexeme/VERB": z.strictObject({
+	"en/Morpheme/Circumfix": z.strictObject({
 		lemma: R48.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4611,10 +4590,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Circumfix": z.strictObject({
+	"en/Morpheme/Duplifix": z.strictObject({
 		lemma: R49.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4628,10 +4609,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Clitic": z.strictObject({
+	"en/Morpheme/Infix": z.strictObject({
 		lemma: R50.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4645,10 +4628,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Duplifix": z.strictObject({
+	"en/Morpheme/Interfix": z.strictObject({
 		lemma: R51.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4662,10 +4647,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Infix": z.strictObject({
+	"en/Morpheme/Prefix": z.strictObject({
 		lemma: R52.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4679,10 +4666,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Interfix": z.strictObject({
+	"en/Morpheme/Root": z.strictObject({
 		lemma: R53.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4696,10 +4685,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Prefix": z.strictObject({
+	"en/Morpheme/Suffix": z.strictObject({
 		lemma: R54.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4713,10 +4704,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Root": z.strictObject({
+	"en/Morpheme/Suffixoid": z.strictObject({
 		lemma: R55.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4730,10 +4723,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Suffix": z.strictObject({
+	"en/Morpheme/ToneMarking": z.strictObject({
 		lemma: R56.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4747,10 +4742,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Suffixoid": z.strictObject({
+	"en/Morpheme/Transfix": z.strictObject({
 		lemma: R57.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4764,10 +4761,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/ToneMarking": z.strictObject({
+	"en/Phraseme/Aphorism": z.strictObject({
 		lemma: R58.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4781,10 +4780,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Morpheme/Transfix": z.strictObject({
+	"en/Phraseme/DiscourseFormula": z.strictObject({
 		lemma: R59.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4798,10 +4799,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Phraseme/Aphorism": z.strictObject({
+	"en/Phraseme/Idiom": z.strictObject({
 		lemma: R60.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4815,10 +4818,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Phraseme/DiscourseFormula": z.strictObject({
+	"en/Phraseme/Proverb": z.strictObject({
 		lemma: R61.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4832,10 +4837,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Phraseme/Idiom": z.strictObject({
+	"he/Lexeme/ADJ": z.strictObject({
 		lemma: R62.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4849,10 +4856,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"en/Phraseme/Proverb": z.strictObject({
+	"he/Lexeme/ADP": z.strictObject({
 		lemma: R63.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4866,10 +4875,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/ADJ": z.strictObject({
+	"he/Lexeme/ADV": z.strictObject({
 		lemma: R64.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4883,10 +4894,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/ADP": z.strictObject({
+	"he/Lexeme/AUX": z.strictObject({
 		lemma: R65.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4900,10 +4913,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/ADV": z.strictObject({
+	"he/Lexeme/CCONJ": z.strictObject({
 		lemma: R66.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4917,10 +4932,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/AUX": z.strictObject({
+	"he/Lexeme/DET": z.strictObject({
 		lemma: R67.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4934,10 +4951,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/CCONJ": z.strictObject({
+	"he/Lexeme/INTJ": z.strictObject({
 		lemma: R68.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4951,10 +4970,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/DET": z.strictObject({
+	"he/Lexeme/NOUN": z.strictObject({
 		lemma: R69.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4968,10 +4989,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/INTJ": z.strictObject({
+	"he/Lexeme/NUM": z.strictObject({
 		lemma: R70.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -4985,10 +5008,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/NOUN": z.strictObject({
+	"he/Lexeme/X": z.strictObject({
 		lemma: R71.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5002,10 +5027,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/NUM": z.strictObject({
+	"he/Lexeme/PART": z.strictObject({
 		lemma: R72.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5019,10 +5046,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/X": z.strictObject({
+	"he/Lexeme/PRON": z.strictObject({
 		lemma: R73.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5036,10 +5065,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/PART": z.strictObject({
+	"he/Lexeme/PROPN": z.strictObject({
 		lemma: R74.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5053,10 +5084,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/PRON": z.strictObject({
+	"he/Lexeme/PUNCT": z.strictObject({
 		lemma: R75.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5070,10 +5103,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/PROPN": z.strictObject({
+	"he/Lexeme/SCONJ": z.strictObject({
 		lemma: R76.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5087,10 +5122,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/PUNCT": z.strictObject({
+	"he/Lexeme/SYM": z.strictObject({
 		lemma: R77.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5104,10 +5141,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/SCONJ": z.strictObject({
+	"he/Lexeme/VERB": z.strictObject({
 		lemma: R78.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5121,10 +5160,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/SYM": z.strictObject({
+	"he/Morpheme/Circumfix": z.strictObject({
 		lemma: R79.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5138,10 +5179,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Lexeme/VERB": z.strictObject({
+	"he/Morpheme/Duplifix": z.strictObject({
 		lemma: R80.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5155,10 +5198,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Circumfix": z.strictObject({
+	"he/Morpheme/Infix": z.strictObject({
 		lemma: R81.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5172,10 +5217,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Clitic": z.strictObject({
+	"he/Morpheme/Interfix": z.strictObject({
 		lemma: R82.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5189,10 +5236,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Duplifix": z.strictObject({
+	"he/Morpheme/Prefix": z.strictObject({
 		lemma: R83.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5206,10 +5255,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Infix": z.strictObject({
+	"he/Morpheme/Root": z.strictObject({
 		lemma: R84.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5223,10 +5274,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Interfix": z.strictObject({
+	"he/Morpheme/Suffix": z.strictObject({
 		lemma: R85.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5240,10 +5293,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Prefix": z.strictObject({
+	"he/Morpheme/Suffixoid": z.strictObject({
 		lemma: R86.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5257,10 +5312,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Root": z.strictObject({
+	"he/Morpheme/ToneMarking": z.strictObject({
 		lemma: R87.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5274,10 +5331,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Suffix": z.strictObject({
+	"he/Morpheme/Transfix": z.strictObject({
 		lemma: R88.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5291,10 +5350,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Suffixoid": z.strictObject({
+	"he/Phraseme/Aphorism": z.strictObject({
 		lemma: R89.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5308,10 +5369,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/ToneMarking": z.strictObject({
+	"he/Phraseme/DiscourseFormula": z.strictObject({
 		lemma: R90.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5325,10 +5388,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Morpheme/Transfix": z.strictObject({
+	"he/Phraseme/Idiom": z.strictObject({
 		lemma: R91.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5342,10 +5407,12 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
-	"he/Phraseme/Aphorism": z.strictObject({
+	"he/Phraseme/Proverb": z.strictObject({
 		lemma: R92.lemmaSchema.omit({
 			unitKind: true,
 			language: true,
@@ -5359,58 +5426,9 @@ export const grammarSchemas = {
 			normalizedSurface: true,
 		}),
 		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-		realizationCoverage: z.enum(["Full", "Partial"]),
-	}),
-	"he/Phraseme/DiscourseFormula": z.strictObject({
-		lemma: R93.lemmaSchema.omit({
-			unitKind: true,
-			language: true,
-			family: true,
-			kind: true,
-		}),
-		surface: z.strictObject(R93.surfaceSchema.shape).omit({
-			unitKind: true,
-			language: true,
-			lemma: true,
-			normalizedSurface: true,
-		}),
-		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-		realizationCoverage: z.enum(["Full", "Partial"]),
-	}),
-	"he/Phraseme/Idiom": z.strictObject({
-		lemma: R94.lemmaSchema.omit({
-			unitKind: true,
-			language: true,
-			family: true,
-			kind: true,
-		}),
-		surface: z.strictObject(R94.surfaceSchema.shape).omit({
-			unitKind: true,
-			language: true,
-			lemma: true,
-			normalizedSurface: true,
-		}),
-		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-		realizationCoverage: z.enum(["Full", "Partial"]),
-	}),
-	"he/Phraseme/Proverb": z.strictObject({
-		lemma: R95.lemmaSchema.omit({
-			unitKind: true,
-			language: true,
-			family: true,
-			kind: true,
-		}),
-		surface: z.strictObject(R95.surfaceSchema.shape).omit({
-			unitKind: true,
-			language: true,
-			lemma: true,
-			normalizedSurface: true,
-		}),
-		normalizedMembers: z.array(z.string().min(1)).min(1),
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+		memberOrthographies: z
+			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
+			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 	}),
 };
@@ -5571,13 +5589,13 @@ export const targetsByLanguage = {
 			kind: R30.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
+	]),
+	en: z.union([
 		z.strictObject({
 			family: R31.lemmaSchema.shape.family,
 			kind: R31.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
-	]),
-	en: z.union([
 		z.strictObject({
 			family: R32.lemmaSchema.shape.family,
 			kind: R32.lemmaSchema.shape.kind,
@@ -5728,6 +5746,8 @@ export const targetsByLanguage = {
 			kind: R61.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
+	]),
+	he: z.union([
 		z.strictObject({
 			family: R62.lemmaSchema.shape.family,
 			kind: R62.lemmaSchema.shape.kind,
@@ -5738,8 +5758,6 @@ export const targetsByLanguage = {
 			kind: R63.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
-	]),
-	he: z.union([
 		z.strictObject({
 			family: R64.lemmaSchema.shape.family,
 			kind: R64.lemmaSchema.shape.kind,
@@ -5883,21 +5901,6 @@ export const targetsByLanguage = {
 		z.strictObject({
 			family: R92.lemmaSchema.shape.family,
 			kind: R92.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-		z.strictObject({
-			family: R93.lemmaSchema.shape.family,
-			kind: R93.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-		z.strictObject({
-			family: R94.lemmaSchema.shape.family,
-			kind: R94.lemmaSchema.shape.kind,
-			memberSegmentIndices,
-		}),
-		z.strictObject({
-			family: R95.lemmaSchema.shape.family,
-			kind: R95.lemmaSchema.shape.kind,
 			memberSegmentIndices,
 		}),
 	]),

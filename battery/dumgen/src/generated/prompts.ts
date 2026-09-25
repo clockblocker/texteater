@@ -24,7 +24,6 @@ export const grammarPromptRoutes: Readonly<Record<string, string>> = {
 	"de/Lexeme/SYM": "grammatical-resolution/de/lexeme/symbol",
 	"de/Lexeme/VERB": "grammatical-resolution/de/lexeme/verb",
 	"de/Morpheme/Circumfix": "grammatical-resolution/de/morpheme/circumfix",
-	"de/Morpheme/Clitic": "grammatical-resolution/de/morpheme/clitic",
 	"de/Morpheme/Duplifix": "grammatical-resolution/de/morpheme/duplifix",
 	"de/Morpheme/Infix": "grammatical-resolution/de/morpheme/infix",
 	"de/Morpheme/Interfix": "grammatical-resolution/de/morpheme/interfix",

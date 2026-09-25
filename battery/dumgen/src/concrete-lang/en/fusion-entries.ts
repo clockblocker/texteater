@@ -8,9 +8,9 @@ import type {
 /**
  * English fusion Entries (Dumgen ADR 0004, issue 498): contractions as
  * clitics on a host, full entries for contractions whose host is mangled,
- * and the abbreviation table. The possessive 's on a noun (John's) is
- * inflection, not a clitic here; the 's entry lists its pronoun and
- * adverb hosts so a noun host never matches.
+ * and the abbreviation table. Each piece is a word of its own (ADR 0035):
+ * 'll is AUX will, n't is PART not, and possessive 's is its own PART 's,
+ * which attaches to the whole phrase before it (the king of England's hat).
  */
 const pronounHosts = [
 	"i",
@@ -55,25 +55,22 @@ const negatedHosts = [
 export const englishClitics: readonly CliticEntry[] = [
 	{
 		clitic: "'s",
-		surface: ["is", "has"],
-		role: "Verb",
+		surface: ["is", "has", "'s"],
+		role: ["Verb", "Verb", "Possessive"],
 		attachment: "Attached",
-		hosts: [
-			"he",
-			"she",
-			"it",
-			"that",
-			"there",
-			"who",
-			"what",
-			"where",
-			"when",
-			"how",
-			"here",
-			"this",
-		],
+		hosts: null,
 		oneLiner:
-			"'s is a shortened verb: \"is\" (it's late) or \"has\" (it's been a while); the sentence decides. On a noun, 's is the possessive ending instead.",
+			"'s is a shortened verb, \"is\" (it's late) or \"has\" (it's been a while), or the possessive 's, which belongs to the whole phrase before it (the king of England's hat); the sentence decides.",
+		register: "Standard",
+	},
+	{
+		clitic: "'",
+		surface: "'s",
+		role: "Possessive",
+		attachment: "Attached",
+		hosts: null,
+		oneLiner:
+			"' after a plural in -s is the possessive 's (the boys' room).",
 		register: "Standard",
 	},
 	{
@@ -121,7 +118,7 @@ export const englishClitics: readonly CliticEntry[] = [
 		role: "Verb",
 		attachment: "Attached",
 		hosts: [...pronounHosts],
-		oneLiner: "'ll is the shortened verb \"will\" (she'll call).",
+		oneLiner: "'ll is the shortened auxiliary \"will\" (she'll call).",
 		register: "Standard",
 	},
 	{
@@ -141,7 +138,7 @@ export const englishClitics: readonly CliticEntry[] = [
 		attachment: "Attached",
 		hosts: negatedHosts,
 		oneLiner:
-			"n't is the shortened \"not\" on a helping verb (isn't, didn't).",
+			"n't is the particle \"not\", shortened onto a helping verb (isn't, didn't).",
 		register: "Standard",
 	},
 ];

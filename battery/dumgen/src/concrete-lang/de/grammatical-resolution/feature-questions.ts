@@ -86,10 +86,11 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"surface.inflectionalFeatures.article": {
 		question:
-			"Does this whole common-noun Surface include a definite or indefinite article, overtly owned, licensed by compatible coordination, or supplied by a governing Fusion? A Fusion contributes its internal DET without joining noun membership; mein, dieser and kein do not supply an article. Ordinary bare nouns stay bare.",
+			"Does this common noun have a definite or indefinite article, owned as its first member (standalone der, the article piece m of a fused im, shortened 'ne) or licensed by compatible coordination? mein, dieser and kein do not supply an article. Ordinary bare nouns stay bare.",
 		values: {
-			Definite: "Included definite article",
-			Indefinite: "Included indefinite article",
+			Definite: "Owned or shared definite article",
+			Indefinite: "Owned or shared indefinite article",
+			None: "No article: a bare noun, or a noun with a non-article determiner such as mein, dieser or kein; not uncertainty and not semantic indefiniteness",
 		},
 		unmarked:
 			"No included article; not uncertainty and not semantic indefiniteness",

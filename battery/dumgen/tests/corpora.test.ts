@@ -4,6 +4,7 @@ import { createDumgen, validateEncounter } from "dumgen";
 import { getExperiment, listExperiments } from "dumgen/development";
 import { Effect } from "effect";
 import { assembleSystemPrompt } from "promptsmith";
+import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
 import { targetInputSchema } from "../src/concrete-lang/de/model-schemas.js";
 import type { GermanHighLevelTargetClassificationTarget } from "../src/concrete-lang/de/target-classification/projection.js";
 import { createGermanHighLevelTargetClassificationProjection } from "../src/concrete-lang/de/target-classification/projection.js";
@@ -12,6 +13,7 @@ import { prompts } from "../src/generated/prompts.js";
 import { grammarSchemas } from "../src/generated/schemas.js";
 import { grammarFixture } from "../src/testing.js";
 import type { SentenceContext } from "../src/types.js";
+import { fusedWordPieces, fusionEntry } from "../src/universal/fusion-table.js";
 
 const kinds: Record<string, string> = {
 	"proper-noun": "PROPN",
@@ -122,12 +124,17 @@ test("all 1130 retained grammar answers project through public operations", asyn
 					for (const text of chunk.match(
 						/\p{L}[\p{L}\p{M}\p{N}’-]*|\s+|[^\p{L}\s]+/gu,
 					) ?? []) {
-						segments.push({
-							kind: /\p{L}/u.test(text)
-								? "ResolvableText"
-								: "OpaqueText",
-							text,
-						});
+						// Intake splits a fused word into its pieces (ADR 0035).
+						const fusion = fusionEntry(germanFusionTable, text);
+						for (const piece of fusion
+							? fusedWordPieces(fusion, text)
+							: [text])
+							segments.push({
+								kind: /\p{L}/u.test(piece)
+									? "ResolvableText"
+									: "OpaqueText",
+								text: piece,
+							});
 					}
 			}
 			const encounter = validateEncounter({
@@ -174,7 +181,12 @@ test("all 1130 retained grammar answers project through public operations", asyn
 				if ("decision" in result.right)
 					throw Error(`${id}: unexpected ${result.right.decision}`);
 				const output = grammarSchemas[route].parse(golden.idealOutput);
-				expect([...result.right.members]).toEqual(
+				expect(
+					result.right.members.map(({ attested, orthography }) => ({
+						attested,
+						orthography,
+					})),
+				).toEqual(
 					input.members.map((attested, index) => ({
 						attested,
 						orthography: required(
@@ -199,6 +211,6 @@ test("all 1130 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1101);
+	expect(count).toBe(1105);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

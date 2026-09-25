@@ -78,7 +78,7 @@ const examples = [
 		"lexeme/noun",
 		"NOUN",
 		"grammar-de-noun-governed-article-angst-vor",
-		"die Angst",
+		"Angst",
 		2,
 		"vor",
 		"Dat",

@@ -1,98 +1,87 @@
-import { germanArticleForm } from "dumling";
 import type * as Dumling from "dumling/types";
+import type { MemberOrthography } from "./member-spelling.js";
 
-type DeMemberOrthography = "Standard" | "Typo";
+type DeMemberOrthography = MemberOrthography;
 type GrammaticalResolutionInput = {
 	readonly markedContext: string;
 	readonly members: readonly string[];
 };
 class DeGrammaticalResolutionProjectionError extends Error {}
 export type GrammarOutput = {
-	expletiveEvidence?: {
-		attested: string;
-		orthography: DeMemberOrthography;
-	} | null;
+	expletiveEvidence?: Dumling.Attestation<
+		"de",
+		"Lexeme",
+		"VERB"
+	>["expletiveEvidence"];
 	valencyEvidence?: Dumling.Attestation<
 		"de",
 		"Lexeme",
 		"VERB"
 	>["valencyEvidence"];
-	articleEvidence?: {
-		attested: string;
-		orthography: DeMemberOrthography;
-	} | null;
+	articleEvidence?: Dumling.Attestation<
+		"de",
+		"Lexeme",
+		"NOUN"
+	>["articleEvidence"];
 	lemma: Record<string, unknown>;
 	surface: Record<string, unknown>;
 	memberOrthographies: DeMemberOrthography[];
 	normalizedMembers: string[];
 	realizationCoverage: "Full" | "Partial";
 };
+/**
+ * A noun's Surface is its own letters (ADR 0035): an owned article stays an
+ * Attestation member but leaves the Surface, like a governed preposition.
+ */
 export function normalizeGrammarSurface(
 	input: GrammaticalResolutionInput,
 	output: GrammarOutput,
 	route: { family: string; kind: string },
 ): string {
-	const bag = output.surface.inflectionalFeatures as {
-		article: string | null;
-		case: string | null;
-		number: string | null;
-	} | null;
-	const core = output.lemma.coreFeatures as { gender: string | null };
-	const articleForm =
-		route.kind === "NOUN" && bag?.article
-			? germanArticleForm({ ...bag, gender: core.gender })
-			: null;
-	const ownedArticle =
-		route.kind === "NOUN" &&
-		articleForm &&
-		output.realizationCoverage === "Full";
 	const valencyMembers = new Set(
 		(output.valencyEvidence ?? []).flatMap((slot) =>
 			slot.member === null ? [] : [slot.member],
 		),
 	);
-	if (ownedArticle)
-		constructNormalizedSurface({
-			attestedMembers: input.members.slice(0, 1),
-			normalizedMembers: output.normalizedMembers.slice(0, 1),
-			memberOrthographies: output.memberOrthographies.slice(0, 1),
+	if (route.family !== "Lexeme" || route.kind !== "NOUN")
+		return constructNormalizedSurface({
+			attestedMembers: input.members,
+			memberOrthographies: output.memberOrthographies,
+			normalizedMembers: output.normalizedMembers,
+			valencyMembers,
 		});
-	const normalized =
-		route.family === "Lexeme" && route.kind === "NOUN"
-			? constructNounNormalizedSurface({
-					input: ownedArticle
-						? { ...input, members: input.members.slice(1) }
-						: input,
-					memberOrthographies: ownedArticle
-						? output.memberOrthographies.slice(1)
-						: output.memberOrthographies,
-					normalizedMembers: ownedArticle
-						? output.normalizedMembers.slice(1)
-						: output.normalizedMembers,
-					valencyMembers: ownedArticle
-						? new Set([...valencyMembers].map((index) => index - 1))
-						: valencyMembers,
-					surfaceKind: output.surface.inflectionalFeatures
-						? "Inflection"
-						: "Citation",
-				})
-			: constructNormalizedSurface({
-					attestedMembers: input.members,
-					memberOrthographies: output.memberOrthographies,
-					normalizedMembers: output.normalizedMembers,
-					valencyMembers,
-				});
-	if (route.kind === "NOUN" && output.realizationCoverage === "Partial") {
-		if (!articleForm || !output.articleEvidence)
-			throw new DeGrammaticalResolutionProjectionError(
-				"Partial noun requires shared or Fusion article evidence",
-			);
-		return `${articleForm} ${normalized}`;
-	}
-	if (ownedArticle) {
-		return `${articleForm} ${normalized}`;
-	}
-	return normalized;
+	const owned =
+		output.articleEvidence?.kind === "Owned"
+			? output.articleEvidence.member
+			: undefined;
+	if (owned !== undefined && owned !== 0)
+		throw new DeGrammaticalResolutionProjectionError(
+			"An owned noun article is the noun's first member",
+		);
+	if (owned === undefined)
+		return constructNounNormalizedSurface({
+			input,
+			memberOrthographies: output.memberOrthographies,
+			normalizedMembers: output.normalizedMembers,
+			valencyMembers,
+			surfaceKind: output.surface.inflectionalFeatures
+				? "Inflection"
+				: "Citation",
+		});
+	constructNormalizedSurface({
+		attestedMembers: input.members.slice(0, 1),
+		normalizedMembers: output.normalizedMembers.slice(0, 1),
+		memberOrthographies: output.memberOrthographies.slice(0, 1),
+	});
+	return constructNounNormalizedSurface({
+		input: { ...input, members: input.members.slice(1) },
+		memberOrthographies: output.memberOrthographies.slice(1),
+		normalizedMembers: output.normalizedMembers.slice(1),
+		valencyMembers: new Set([...valencyMembers].map((index) => index - 1)),
+		surfaceKind: output.surface.inflectionalFeatures
+			? "Inflection"
+			: "Citation",
+	});
 }
 /**
  * The normalized Surface projects only Fixed members: a member realizing a
@@ -271,8 +260,9 @@ function isLicensedNormalization(
 		return true;
 	}
 	// Typo repair is a linguistic judgment made by the route prompt. Do not add
-	// an edit-distance policy here.
-	return orthography === "Typo";
+	// an edit-distance policy here. A Fused or Shorthand member normalizes to
+	// the word the fusion table says it stands for (m is dem, 'ne is eine).
+	return orthography !== "Standard";
 }
 
 function longestCommonSuffix(left: string, right: string): string {

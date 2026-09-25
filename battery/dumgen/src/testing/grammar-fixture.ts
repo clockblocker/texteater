@@ -67,27 +67,51 @@ export function grammarFixture(
 						: "Supported";
 				if ("decision" in output) return "Unresolved";
 				if (id === "attachment") {
-					if (!output.articleEvidence) return "None";
-					const target = state.target;
+					const evidence = output.articleEvidence;
+					if (!evidence) return "None";
 					const sourceIndex =
-						output.realizationCoverage === "Full"
-							? target?.memberSegmentIndices[0]
-							: [
-									...(state.sentence ?? "").matchAll(
-										/<s(\d+)>(.*?)<\/s\d+>/gu,
-									),
-								].find(
-									(match) =>
-										match[2] ===
-										output.articleEvidence?.attested,
-								)?.[1];
+						evidence.kind === "Owned"
+							? state.target?.memberSegmentIndices[
+									evidence.member
+								]
+							: evidence.kind === "Shared"
+								? [
+										...(state.sentence ?? "").matchAll(
+											/<s(\d+)>(.*?)<\/s\d+>/gu,
+										),
+									].find(
+										(match) =>
+											match[2] ===
+											evidence.article.attested,
+									)?.[1]
+								: undefined;
 					const question = request.questions[id];
 					if (question?.type !== "choice")
 						throw Error("Expected attachment choice");
+					// A spelling standing for several articles ('n) names its form.
+					const keys = Object.keys(question.criteria).filter((key) =>
+						new RegExp(`_s${sourceIndex}(?:_|$)`, "u").test(key),
+					);
 					return (
-						Object.keys(question.criteria).find((key) =>
-							key.endsWith(`_s${sourceIndex}`),
-						) ?? "Unresolved"
+						(keys.length > 1
+							? keys.find((key) =>
+									output.normalizedMembers.some((member) =>
+										key.endsWith(`_${member}`),
+									),
+								)
+							: keys[0]) ?? "Unresolved"
+					);
+				}
+				if (id.startsWith("surface_")) {
+					const question = request.questions[id];
+					if (question?.type !== "choice")
+						throw Error("Expected surface choice");
+					const normalized =
+						output.normalizedMembers[Number(id.slice(8))];
+					return (
+						Object.entries(question.criteria).find(
+							([, surface]) => surface === normalized,
+						)?.[0] ?? "Unresolved"
 					);
 				}
 				if (id === "spelling") return String(output.surface.spelling);

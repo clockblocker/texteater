@@ -50,8 +50,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "den",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -82,8 +82,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "den",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -114,8 +114,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -146,8 +146,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -178,8 +178,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "des",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -210,8 +210,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -230,7 +230,7 @@
 				"inflectionalFeatures": {
 					"case": null,
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -271,8 +271,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -303,8 +303,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Das",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -335,8 +335,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -367,8 +367,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "dem",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -399,8 +399,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -419,7 +419,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -461,8 +461,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		},
@@ -494,8 +494,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -526,8 +526,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -558,8 +558,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "den",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -590,8 +590,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -610,7 +610,7 @@
 				"inflectionalFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -651,8 +651,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -683,8 +683,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -705,7 +705,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Sing",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -746,8 +746,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -778,8 +778,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		},
@@ -811,8 +811,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -845,8 +845,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -877,8 +877,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -909,8 +909,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "Die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -941,8 +941,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -973,8 +973,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1005,8 +1005,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "den",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1025,7 +1025,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1055,7 +1055,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1096,8 +1096,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "des",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1116,7 +1116,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1145,7 +1145,7 @@
 				"inflectionalFeatures": {
 					"case": "Acc",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1186,8 +1186,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "ein",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1206,7 +1206,7 @@
 				"inflectionalFeatures": {
 					"case": "Dat",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1235,7 +1235,7 @@
 				"inflectionalFeatures": {
 					"case": "Nom",
 					"number": "Plur",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1276,8 +1276,11 @@
 			},
 			"realizationCoverage": "Partial",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Shared",
+				"article": {
+					"attested": "der",
+					"orthography": "Standard"
+				}
 			},
 			"valencyEvidence": []
 		}
@@ -1308,8 +1311,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1340,8 +1343,11 @@
 			},
 			"realizationCoverage": "Partial",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Shared",
+				"article": {
+					"attested": "der",
+					"orthography": "Standard"
+				}
 			},
 			"valencyEvidence": []
 		}
@@ -1372,8 +1378,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1404,8 +1410,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "des",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1436,8 +1442,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "der",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1453,8 +1459,8 @@
 	},
 	"grammar-de-noun-regression-fusion-im-wald": {
 		"input": {
-			"markedContext": "Wir bleiben im <TARGET>Wald</TARGET>.",
-			"members": ["Wald"]
+			"markedContext": "Wir bleiben i<TARGET>m</TARGET> <TARGET>Wald</TARGET>.",
+			"members": ["m", "Wald"]
 		},
 		"idealOutput": {
 			"lemma": {
@@ -1473,20 +1479,20 @@
 					"article": "Definite"
 				}
 			},
-			"normalizedMembers": ["Wald"],
-			"memberOrthographies": ["Standard"],
-			"realizationCoverage": "Partial",
+			"normalizedMembers": ["dem", "Wald"],
+			"memberOrthographies": ["Fused", "Standard"],
+			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "im",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-zum-wald": {
 		"input": {
-			"markedContext": "Wir gehen zum <TARGET>Wald</TARGET>.",
-			"members": ["Wald"]
+			"markedContext": "Wir gehen zu<TARGET>m</TARGET> <TARGET>Wald</TARGET>.",
+			"members": ["m", "Wald"]
 		},
 		"idealOutput": {
 			"lemma": {
@@ -1505,20 +1511,20 @@
 					"article": "Definite"
 				}
 			},
-			"normalizedMembers": ["Wald"],
-			"memberOrthographies": ["Standard"],
-			"realizationCoverage": "Partial",
+			"normalizedMembers": ["dem", "Wald"],
+			"memberOrthographies": ["Fused", "Standard"],
+			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "zum",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-ins-haus": {
 		"input": {
-			"markedContext": "Wir gehen ins <TARGET>Haus</TARGET>.",
-			"members": ["Haus"]
+			"markedContext": "Wir gehen in<TARGET>s</TARGET> <TARGET>Haus</TARGET>.",
+			"members": ["s", "Haus"]
 		},
 		"idealOutput": {
 			"lemma": {
@@ -1537,12 +1543,12 @@
 					"article": "Definite"
 				}
 			},
-			"normalizedMembers": ["Haus"],
-			"memberOrthographies": ["Standard"],
-			"realizationCoverage": "Partial",
+			"normalizedMembers": ["das", "Haus"],
+			"memberOrthographies": ["Fused", "Standard"],
+			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "ins",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
@@ -1573,16 +1579,33 @@
 			"memberOrthographies": ["Standard"],
 			"realizationCoverage": "Partial",
 			"articleEvidence": {
-				"attested": "im",
-				"orthography": "Standard"
+				"kind": "Shared",
+				"article": {
+					"attested": "m",
+					"orthography": "Fused",
+					"fusion": {
+						"spelling": "im",
+						"components": [
+							{
+								"span": "i",
+								"surface": "in"
+							},
+							{
+								"span": "m",
+								"surface": "dem"
+							}
+						]
+					},
+					"component": 1
+				}
 			},
 			"valencyEvidence": []
 		}
 	},
 	"grammar-de-noun-regression-fusion-zur-schule": {
 		"input": {
-			"markedContext": "Wir gehen zur <TARGET>Schule</TARGET>.",
-			"members": ["Schule"]
+			"markedContext": "Wir gehen zu<TARGET>r</TARGET> <TARGET>Schule</TARGET>.",
+			"members": ["r", "Schule"]
 		},
 		"idealOutput": {
 			"lemma": {
@@ -1601,15 +1624,81 @@
 					"article": "Definite"
 				}
 			},
-			"normalizedMembers": ["Schule"],
-			"memberOrthographies": ["Standard"],
-			"realizationCoverage": "Partial",
+			"normalizedMembers": ["der", "Schule"],
+			"memberOrthographies": ["Fused", "Standard"],
+			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "zur",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": []
 		}
+	},
+	"grammar-de-noun-regression-fusion-aufs-ende": {
+		"input": {
+			"markedContext": "Er wartet auf<TARGET>s</TARGET> <TARGET>Ende</TARGET>.",
+			"members": ["s", "Ende"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Ende",
+				"coreFeatures": {
+					"gender": "Neut",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"article": "Definite"
+				}
+			},
+			"normalizedMembers": ["das", "Ende"],
+			"memberOrthographies": ["Fused", "Standard"],
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			},
+			"valencyEvidence": []
+		},
+		"explanation": "A colloquial fusion splits like a standard one: s is the noun's owned Fused article, and auf belongs to warten (ADR 0035)."
+	},
+	"grammar-de-noun-shorthand-ne-frage": {
+		"input": {
+			"markedContext": "Hast du <TARGET>'ne</TARGET> <TARGET>Frage</TARGET>?",
+			"members": ["'ne", "Frage"]
+		},
+		"idealOutput": {
+			"lemma": {
+				"canonicalForm": "Frage",
+				"coreFeatures": {
+					"gender": "Fem",
+					"hyph": null
+				}
+			},
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing",
+					"article": "Indefinite"
+				}
+			},
+			"normalizedMembers": ["eine", "Frage"],
+			"memberOrthographies": ["Shorthand", "Standard"],
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			},
+			"valencyEvidence": []
+		},
+		"explanation": "A shortened article is the noun's owned Shorthand member; the Surface stays Frage (ADR 0035)."
 	},
 	"grammar-de-noun-dev-abbreviation-dipl-ing": {
 		"input": {
@@ -1617,7 +1706,7 @@
 			"members": ["Dipl.-Ing."]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
+			"memberOrthographies": ["Shorthand"],
 			"normalizedMembers": ["Dipl.-Ing."],
 			"surface": {
 				"spelling": "Variant",
@@ -1625,7 +1714,7 @@
 				"inflectionalFeatures": {
 					"case": "Nom",
 					"number": "Sing",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1655,7 +1744,7 @@
 				"inflectionalFeatures": {
 					"case": "Dat",
 					"number": "Sing",
-					"article": null
+					"article": "None"
 				}
 			},
 			"lemma": {
@@ -1721,8 +1810,8 @@
 			},
 			"realizationCoverage": "Full",
 			"articleEvidence": {
-				"attested": "die",
-				"orthography": "Standard"
+				"kind": "Owned",
+				"member": 0
 			},
 			"valencyEvidence": [
 				{

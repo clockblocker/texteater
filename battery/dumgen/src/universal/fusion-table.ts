@@ -18,6 +18,7 @@ export type FusionComponent = {
 		| "Pronoun"
 		| "Verb"
 		| "Negation"
+		| "Possessive"
 		| "Host";
 };
 
@@ -44,7 +45,14 @@ export type CliticEntry = {
 	/** The clitic as written, apostrophe included. */
 	readonly clitic: string;
 	readonly surface: string | readonly [string, string, ...string[]];
-	readonly role: FusionComponent["role"];
+	/** The clitic's role, or one per candidate surface when they differ. */
+	readonly role:
+		| FusionComponent["role"]
+		| readonly [
+				FusionComponent["role"],
+				FusionComponent["role"],
+				...FusionComponent["role"][],
+		  ];
 	readonly attachment: "Attached" | "Free" | "Both";
 	/** Hosts the clitic attaches to, or null for any word. */
 	readonly hosts: readonly string[] | null;
@@ -69,9 +77,7 @@ export type FusionTable = {
 	readonly abbreviations: readonly AbbreviationEntry[];
 };
 
-function surfaces(
-	surface: string | readonly [string, string, ...string[]],
-): readonly string[] {
+function surfaces(surface: string | readonly string[]): readonly string[] {
 	return typeof surface === "string" ? [surface] : surface;
 }
 
@@ -104,6 +110,11 @@ export function validateFusionTable(table: FusionTable): void {
 			throw Error(`Clitic ${entry.clitic}: missing one-liner`);
 		if (entry.hosts && entry.hosts.length === 0)
 			throw Error(`Clitic ${entry.clitic}: empty host list`);
+		if (
+			typeof entry.role !== "string" &&
+			entry.role.length !== surfaces(entry.surface).length
+		)
+			throw Error(`Clitic ${entry.clitic}: one role per surface`);
 	}
 	for (const entry of table.abbreviations) {
 		if (!entry.text.endsWith("."))
@@ -126,6 +137,29 @@ export function fusionEntry(
 ): FusionEntry | undefined {
 	const normalized = form.normalize("NFC").toLocaleLowerCase(table.language);
 	return table.fusions.find((entry) => entry.form === normalized);
+}
+
+/**
+ * The source letters of each piece of a fused word, cut by the lengths of
+ * the authored spans. The authored spans are NFC; a combining mark stays with
+ * the letter before it, so an NFD `fu\u0308rs` still cuts after `für`.
+ */
+export function fusedWordPieces(
+	entry: FusionEntry,
+	text: string,
+): readonly string[] {
+	const characters = Array.from(text);
+	let position = 0;
+	return entry.components.map(({ span }, index) => {
+		const start = position;
+		if (index === entry.components.length - 1) position = characters.length;
+		else
+			for (let letter = 0; letter < Array.from(span).length; letter++) {
+				position++;
+				while (/^\p{M}$/u.test(characters[position] ?? "")) position++;
+			}
+		return characters.slice(start, position).join("");
+	});
 }
 
 /** Written as authored, or with its first letter capitalized to open a sentence. */
@@ -180,6 +214,93 @@ export function leadingFreeClitic(
 	const written = text.match(/^[’‘´`'][\p{L}\p{M}]+/u)?.[0];
 	const entry = written ? cliticEntry(table, written) : undefined;
 	return entry && entry.attachment !== "Attached" ? written : undefined;
+}
+
+/**
+ * One piece of a fused word as an Encounter holds it (ADR 0035): the
+ * surfaces each piece can stand for, and which piece the Segment is. A host
+ * keeps its own letters and authors no surface.
+ */
+export type FusedPiece = {
+	readonly pieces: readonly {
+		readonly span: string;
+		readonly surfaces: readonly string[];
+	}[];
+	readonly component: number;
+};
+
+const fold = (table: FusionTable, text: string) =>
+	text.normalize("NFC").toLocaleLowerCase(table.language);
+
+/**
+ * The fused word a Segment is a piece of: adjacent ResolvableText Segments
+ * with nothing between them that spell a table fusion piece by piece (`i` +
+ * `m`), or a host and its attached clitic (`geht` + `'s`). An unsplit fused
+ * word (`im`) is one Segment and no piece.
+ */
+export function fusedPieceAt(
+	table: FusionTable,
+	segments: readonly { readonly kind: string; readonly text: string }[],
+	index: number,
+): FusedPiece | undefined {
+	const resolvable = (position: number) =>
+		segments[position]?.kind === "ResolvableText";
+	if (!resolvable(index)) return undefined;
+	let start = index;
+	while (resolvable(start - 1)) start -= 1;
+	let end = index;
+	while (resolvable(end + 1)) end += 1;
+	if (start === end) return undefined;
+	const spans = segments.slice(start, end + 1).map(({ text }) => text);
+	const component = index - start;
+	const fusion = fusionEntry(table, spans.join(""));
+	if (
+		fusion &&
+		fusion.components.length === spans.length &&
+		fusion.components.every(
+			(part, position) =>
+				fold(table, part.span) === fold(table, spans[position] ?? ""),
+		)
+	)
+		return {
+			pieces: spans.map((span, position) => ({
+				span,
+				surfaces: surfaces(fusion.components[position]?.surface ?? []),
+			})),
+			component,
+		};
+	const [host, clitic] = spans;
+	if (spans.length !== 2 || host === undefined || clitic === undefined)
+		return undefined;
+	const attached = splitClitic(table, host + clitic);
+	if (
+		attached &&
+		attached.host === host.replaceAll(/[’‘´`]/g, "'") &&
+		cliticEntry(table, clitic) === attached.entry
+	)
+		return {
+			pieces: [
+				{ span: host, surfaces: [] },
+				{ span: clitic, surfaces: surfaces(attached.entry.surface) },
+			],
+			component,
+		};
+	return undefined;
+}
+
+/**
+ * A standalone shortened spelling (ADR 0035), a free clitic ('ne) or an
+ * abbreviation (z.B.), with the surfaces a clitic stands for; an
+ * abbreviation keeps its own letters. Undefined for any other spelling.
+ */
+export function shorthandSurfaces(
+	table: FusionTable,
+	text: string,
+): readonly string[] | undefined {
+	const clitic = cliticEntry(table, text);
+	if (clitic && clitic.attachment !== "Attached")
+		return surfaces(clitic.surface);
+	return abbreviationEntry(table, text) ? [] : undefined;
 }
 
 /**

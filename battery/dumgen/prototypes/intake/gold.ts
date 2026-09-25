@@ -370,7 +370,13 @@ export function loadGrammarSentences(scope: string): GoldSentence[] {
 				surface?: {
 					inflectionalFeatures: Record<string, unknown> | null;
 				};
-				articleEvidence?: { attested: string } | null;
+				articleEvidence?:
+					| { kind: "Owned"; member: number }
+					| {
+							kind: "Shared";
+							article: { attested: string; orthography: string };
+					  }
+					| null;
 				expletiveEvidence?: { attested: string } | null;
 			};
 			if (ideal.decision === "Unresolved") continue;
@@ -383,22 +389,20 @@ export function loadGrammarSentences(scope: string): GoldSentence[] {
 			const head = headOf(kind, members, parsed.segments);
 			const core = ideal.lemma?.coreFeatures ?? {};
 			const inflection = ideal.surface?.inflectionalFeatures ?? {};
-			const attested = ideal.articleEvidence?.attested ?? null;
-			const articleSource: ShapeProbe["articleSource"] = !attested
+			// ADR 0035: an owned article (standalone, fused piece or shortened)
+			// is a member; a shared one stays outside.
+			const evidence = ideal.articleEvidence ?? null;
+			const attested =
+				evidence?.kind === "Owned"
+					? (entry.input.members[evidence.member] ?? null)
+					: evidence?.kind === "Shared"
+						? evidence.article.attested
+						: null;
+			const articleSource: ShapeProbe["articleSource"] = !evidence
 				? "None"
-				: members.some(
-							(index) =>
-								parsed.segments[index]!.text === attested,
-						)
+				: evidence.kind === "Owned"
 					? "Owned"
-					: parsed.segments.some(
-								(segment) =>
-									segment.text.toLowerCase() ===
-										attested.toLowerCase() &&
-									/^(im|zum|ins|ans|am|beim|vom|zur)$/i.test(
-										attested,
-									),
-							)
+					: evidence.article.orthography === "Fused"
 						? "Fusion"
 						: "Shared";
 			build.add(id, parsed.segments, {

@@ -21,6 +21,7 @@ import {
 } from "../../universal/validation.js";
 import { authoredFor, closedRoute } from "./authored-closed-sets/select.js";
 import { resolveGrammarJudgments } from "./grammatical-resolution/judgments.js";
+import { attestedMember } from "./grammatical-resolution/member-spelling.js";
 import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
 import type { ReferentMode } from "./grammatical-resolution/referent.js";
 import { produceKnowledge } from "./knowledge-production/produce.js";
@@ -253,13 +254,20 @@ export function createGermanOperations(
 									lemma: authored?.lemma ?? lemma,
 									normalizedSurface,
 								},
-								members: input.members.map(
-									(attested, index) => ({
-										attested,
-										orthography:
-											output.memberOrthographies[index],
-									}),
-								),
+								members:
+									encounter.target.memberSegmentIndices.map(
+										(index, position) =>
+											attestedMember(
+												encounter,
+												index,
+												output.memberOrthographies[
+													position
+												] ?? "Standard",
+												output.normalizedMembers[
+													position
+												] ?? "",
+											),
+									),
 								realizationCoverage: output.realizationCoverage,
 								...("expletiveEvidence" in output
 									? {

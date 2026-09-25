@@ -3,6 +3,8 @@ import { Effect } from "effect";
 import type { OperationExperiment } from "promptsmith/evaluation";
 import type { z } from "zod";
 import type { LinguisticCorpus } from "../concrete-lang/de/authoring.js";
+import { germanFusionTable } from "../concrete-lang/de/fusion-entries.js";
+import { deriveNounArticle } from "../concrete-lang/de/grammatical-resolution/noun-article-reference.js";
 import { grammarPromptRoutes } from "../generated/prompts.js";
 import type {
 	DumgenOptions,
@@ -12,6 +14,7 @@ import type {
 	SentenceContext,
 } from "../types.js";
 import { createDumgen } from "../universal/dumgen.js";
+import { fusedWordPieces, fusionEntry } from "../universal/fusion-table.js";
 import { validateEncounter } from "../universal/validation.js";
 
 /**
@@ -77,15 +80,24 @@ export function grammarOperationExperiment(
 				else
 					for (const text of chunk.match(
 						/\s+|[\p{L}\p{N}]+(?:[-‐‑'][\p{L}\p{N}]+)*|[^\s\p{L}\p{N}]/gu,
-					) ?? [])
-						segments.push({
-							kind: /^\s+$/u.test(text)
-								? "Whitespace"
-								: /^[\p{L}\p{N}]/u.test(text)
-									? "ResolvableText"
-									: "Punctuation",
-							text,
-						});
+					) ?? []) {
+						// Intake splits a fused word into its pieces (ADR 0035).
+						const fusion =
+							language === "de"
+								? fusionEntry(germanFusionTable, text)
+								: undefined;
+						for (const piece of fusion
+							? fusedWordPieces(fusion, text)
+							: [text])
+							segments.push({
+								kind: /^\s+$/u.test(piece)
+									? "Whitespace"
+									: /^[\p{L}\p{N}]/u.test(piece)
+										? "ResolvableText"
+										: "Punctuation",
+								text: piece,
+							});
+					}
 			}
 			if (
 				members.some(
@@ -144,10 +156,7 @@ export function grammarOperationExperiment(
 				surface,
 				normalizedMembers: withValencyMembers(
 					attestation,
-					"articleEvidence" in attestation &&
-						attestation.realizationCoverage === "Partial"
-						? normalizedSurface.split(" ").slice(1).join(" ")
-						: normalizedSurface,
+					normalizedSurface,
 				),
 				memberOrthographies: attestation.members.map(
 					(member) => member.orthography,
@@ -173,22 +182,34 @@ export function grammarOperationExperiment(
 
 /**
  * The normalized members behind a Surface that projects only Fixed members:
- * a member realizing a preposition slot is normalized to its preposition.
+ * a member realizing a preposition slot is normalized to its preposition, and
+ * a noun's owned article to the article form it stands for (ADR 0035).
  */
 function withValencyMembers(
 	attestation: Dumling.Attestation,
 	normalizedSurface: string,
 ): string[] {
 	const fixed = normalizedSurface.split(" ");
-	if (!("valencyEvidence" in attestation)) return fixed;
-	const prepositions = new Map(
-		attestation.valencyEvidence.flatMap((slot) =>
-			slot.member !== null && slot.complement.kind === "Preposition"
-				? [[slot.member, slot.complement.preposition.canonicalForm]]
-				: [],
-		),
-	);
+	const outside = new Map<number, string>();
+	if ("valencyEvidence" in attestation)
+		for (const slot of attestation.valencyEvidence)
+			if (slot.member !== null && slot.complement.kind === "Preposition")
+				outside.set(
+					slot.member,
+					slot.complement.preposition.canonicalForm,
+				);
+	const article = deriveNounArticle(attestation.surface);
+	if (
+		"articleEvidence" in attestation &&
+		attestation.articleEvidence?.kind === "Owned" &&
+		article
+	)
+		outside.set(
+			attestation.articleEvidence.member,
+			article.surface.normalizedSurface,
+		);
+	if (!outside.size) return fixed;
 	return attestation.members.map(
-		(_, position) => prepositions.get(position) ?? fixed.shift() ?? "",
+		(_, position) => outside.get(position) ?? fixed.shift() ?? "",
 	);
 }

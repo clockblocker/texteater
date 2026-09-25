@@ -153,7 +153,7 @@ test("a bare mass noun keeps its click: NOUN Number never offers Unmarked", asyn
 			inflectionalFeatures: {
 				case: "Acc",
 				number: "Sing",
-				article: null,
+				article: "None",
 			},
 		},
 		articleEvidence: null,
@@ -220,7 +220,7 @@ test("a bare mass noun keeps its click: NOUN Number never offers Unmarked", asyn
 	expect(output.surface).toHaveProperty("inflectionalFeatures", {
 		case: "Acc",
 		number: "Sing",
-		article: null,
+		article: "None",
 	});
 });
 
@@ -375,7 +375,7 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 			surface: {
 				spelling: "Canonical",
 				surfaceFeatures: null,
-				inflectionalFeatures: { ...inflection, article: null },
+				inflectionalFeatures: { ...inflection, article: "None" },
 			},
 			memberOrthographies: [
 				attested === normalized ? "Standard" : "Typo",
@@ -414,7 +414,7 @@ for (const [attested, canonicalForm, normalized, inflection, expectedCalls] of [
 		expect(output.surface.normalizedSurface).toBe(normalized);
 		expect(output.surface).toHaveProperty("inflectionalFeatures", {
 			...inflection,
-			article: null,
+			article: "None",
 		});
 		expect(output.members[0]?.attested).toBe(attested);
 		const calls = traces[0]?.calls ?? [];
@@ -593,7 +593,7 @@ const weakNoun = {
 		memberOrthographies: ["Standard", "Standard"],
 		normalizedMembers: ["dem", "Nachbarn"],
 		realizationCoverage: "Full",
-		articleEvidence: { attested: "dem", orthography: "Standard" },
+		articleEvidence: { kind: "Owned", member: 0 },
 	},
 };
 

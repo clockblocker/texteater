@@ -439,6 +439,68 @@
 		},
 		"explanation": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
 	},
+	"grammar-de-verb-governed-preposition-fused-aufs": {
+		"input": {
+			"markedContext": "Er <TARGET>wartet</TARGET> <TARGET>auf</TARGET>s Ende.",
+			"members": ["wartet", "auf"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Fused"],
+			"normalizedMembers": ["wartet", "auf"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Pres",
+					"verbForm": "Fin",
+					"voice": null,
+					"perfect": null,
+					"future": null,
+					"passive": null,
+					"expletive": null
+				}
+			},
+			"lemma": {
+				"canonicalForm": "warten",
+				"coreFeatures": {
+					"hasSepPrefix": null,
+					"lexicallyReflexive": null,
+					"verbType": null
+				}
+			},
+			"realizationCoverage": "Full",
+			"expletiveEvidence": null,
+			"valencyEvidence": [
+				{
+					"member": 1,
+					"complement": {
+						"kind": "Preposition",
+						"preposition": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"canonicalForm": "auf",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": "Prep",
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							}
+						},
+						"case": "Acc",
+						"referent": "Something"
+					},
+					"realizedCase": "Acc"
+				}
+			]
+		},
+		"explanation": "The adposition piece of the fused aufs is the governed-preposition member of warten; its s piece is the article of Ende (ADR 0035)."
+	},
 	"grammar-de-verb-separable-finite-aufstehen": {
 		"input": {
 			"markedContext": "Sie <TARGET>steht</TARGET> jeden Morgen früh <TARGET>auf</TARGET>.",
