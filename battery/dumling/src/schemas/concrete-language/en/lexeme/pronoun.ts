@@ -5,10 +5,11 @@ import {
 	FeatureBagKind,
 	featureBagSchema,
 	featureValueSetSchema,
-	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 
+// Each spelled paradigm cell is its own Lemma: I, me, my, mine and myself
+// differ in Core case, number, gender or reflex (system ADR 0032).
 export const EnPronounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
@@ -35,15 +36,11 @@ export const EnPronounFeatureBagsSchema = z.strictObject({
 			"Slng",
 			"Vrnc",
 		]),
+		case: EN_FEATURE_SCHEMA.case.extract(["Acc", "Gen", "Nom"]),
+		gender: EN_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
+		number: EN_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
+		reflex: EN_FEATURE_SCHEMA.reflex,
 	}),
-	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
-		featureBagSchema({
-			case: EN_FEATURE_SCHEMA.case.extract(["Acc", "Gen", "Nom"]),
-			gender: EN_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
-			number: EN_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-			reflex: EN_FEATURE_SCHEMA.reflex,
-		}),
-	),
 });
 
 export type EnPronounFeatureBags = z.infer<typeof EnPronounFeatureBagsSchema>;

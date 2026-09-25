@@ -14,17 +14,10 @@ const occurrenceAttestation = {
 		language: "en",
 		normalizedSurface: "them",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Acc",
-			number: "Plur",
-			gender: null,
-			reflex: null,
-		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
-			canonicalForm: "they",
+			canonicalForm: "them",
 			family: "Lexeme",
 			kind: "PRON",
 			coreFeatures: {
@@ -34,6 +27,10 @@ const occurrenceAttestation = {
 				extPos: null,
 				poss: null,
 				style: null,
+				case: "Acc",
+				gender: null,
+				number: "Plur",
+				reflex: null,
 			},
 		},
 		surfaceFeatures: null,
@@ -44,5 +41,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "I emailed [them] yesterday.",
 	classifierNotes:
-		"Them is an accusative surface of they; singular-they readings are not separately encoded.",
+		"Them is its own Lemma: English pronoun case and number are Core Features, so them is not a form of they. Singular-they readings are not separately encoded.",
 } as const;

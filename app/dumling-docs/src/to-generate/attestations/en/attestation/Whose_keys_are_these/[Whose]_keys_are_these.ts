@@ -14,17 +14,10 @@ const occurrenceAttestation = {
 		language: "en",
 		normalizedSurface: "whose",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Gen",
-			gender: null,
-			number: null,
-			reflex: null,
-		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
-			canonicalForm: "who",
+			canonicalForm: "whose",
 			family: "Lexeme",
 			kind: "PRON",
 			coreFeatures: {
@@ -34,6 +27,10 @@ const occurrenceAttestation = {
 				extPos: null,
 				person: null,
 				style: null,
+				case: "Gen",
+				gender: null,
+				number: null,
+				reflex: null,
 			},
 		},
 		surfaceFeatures: null,
@@ -44,5 +41,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[Whose] keys are these?",
 	classifierNotes:
-		"Whose is attached to who with possessive and interrogative Core Features plus genitive Surface case.",
+		"Whose is its own Lemma, with genitive case, possessive and interrogative Core Features; it is not a form of who.",
 } as const;

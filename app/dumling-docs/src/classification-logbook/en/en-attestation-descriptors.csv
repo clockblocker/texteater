@@ -7,7 +7,7 @@ Do it [like] I showed you.,like,Grundform,Lexeme,SCONJ
 "During my [walk] in a park, I saw a squirrel.",walk,Undetermined,Lexeme,NOUN
 "For this layout, [less is more].",less is more,Grundform,Phraseme,Aphorism
 I [definately] saved the file.,definitely,Undetermined,Lexeme,ADV
-I emailed [them] yesterday.,them,Not Grundform,Lexeme,PRON
+I emailed [them] yesterday.,them,Grundform,Lexeme,PRON
 I know [that] you tried.,that,Grundform,Lexeme,SCONJ
 I [saw] the comet through binoculars.,saw,Not Grundform,Lexeme,VERB
 "If I [were] you, I would wait.",were,Not Grundform,Lexeme,AUX
@@ -27,7 +27,7 @@ She gave [up] after midnight.,gave up,Not Grundform,Lexeme,VERB
 She performed [best] under pressure.,best,Not Grundform,Lexeme,ADV
 Tag the issue with [#] before the number.,#,Not Grundform,Lexeme,SYM
 That answer was [un]believable.,un,Grundform,Morpheme,Prefix
-[That] was unexpected.,that,Undetermined,Lexeme,PRON
+[That] was unexpected.,that,Grundform,Lexeme,PRON
 The [bio]reactor failed overnight.,bio,Grundform,Morpheme,Root
 The [data] are still inconsistent.,data,Not Grundform,Lexeme,NOUN
 The estimate was thirty[ish] minutes.,ish,Grundform,Morpheme,Suffix
@@ -42,10 +42,10 @@ The [Smiths] invited everyone over.,Smiths,Not Grundform,Lexeme,PROPN
 The [twenty-first] attempt finally passed.,twenty-first,Undetermined,Lexeme,ADJ
 The [wind] shifted before dawn.,wind,Undetermined,Lexeme,NOUN
 These [scissors] are blunt.,scissors,Grundform,Lexeme,NOUN
-[They] left their umbrella here.,they,Undetermined,Lexeme,PRON
+[They] left their umbrella here.,they,Grundform,Lexeme,PRON
 This exam was a [walk] in the park.,walk in the park,Grundform,Phraseme,Idiom
 This is the [better] option.,better,Not Grundform,Lexeme,ADJ
 Use [half] the flour first.,half,Undetermined,Lexeme,DET
 We [depend] on accurate labels.,depend on,Undetermined,Lexeme,VERB
-[Whose] keys are these?,whose,Not Grundform,Lexeme,PRON
+[Whose] keys are these?,whose,Grundform,Lexeme,PRON
 Yesterday I [read] the warning twice.,read,Not Grundform,Lexeme,VERB

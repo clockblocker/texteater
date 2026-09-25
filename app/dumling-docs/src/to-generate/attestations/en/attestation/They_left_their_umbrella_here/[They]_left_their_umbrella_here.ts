@@ -14,13 +14,6 @@ const occurrenceAttestation = {
 		language: "en",
 		normalizedSurface: "they",
 		spelling: "Canonical",
-
-		inflectionalFeatures: {
-			case: "Nom",
-			number: "Plur",
-			gender: null,
-			reflex: null,
-		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
@@ -34,6 +27,10 @@ const occurrenceAttestation = {
 				extPos: null,
 				poss: null,
 				style: null,
+				case: "Nom",
+				gender: null,
+				number: "Plur",
+				reflex: null,
 			},
 		},
 		surfaceFeatures: null,

@@ -1,6 +1,6 @@
 {
 	"sourceCommit": "b0070e35",
-	"note": "Frozen legacy acceptance before retirement; German PRON deliberately covered by current identity tests.",
+	"note": "Frozen legacy acceptance before retirement; German PRON and English PRON deliberately covered by current identity tests.",
 	"all": [
 		{
 			"route": "de/lexeme/adjective.ts",
@@ -2223,75 +2223,6 @@
 					"abbr": "Yes",
 					"extPos": "CCONJ",
 					"polarity": "Neg"
-				},
-				"unexpected": true
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": {
-				"core": {
-					"abbr": "Yes",
-					"extPos": "ADV",
-					"person": "1",
-					"poss": "Yes",
-					"pronType": "Dem",
-					"style": "Arch"
-				},
-				"inflectional": {
-					"case": "Acc",
-					"gender": "Fem",
-					"number": "Plur",
-					"reflex": "Yes"
-				}
-			},
-			"accepted": true
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": null,
-			"accepted": false
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": {},
-			"accepted": false
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": {
-				"core": {},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": {
-				"core": {
-					"unexpected": true
-				},
-				"inflectional": {}
-			},
-			"accepted": false
-		},
-		{
-			"route": "en/lexeme/pronoun.ts",
-			"input": {
-				"core": {
-					"abbr": "Yes",
-					"extPos": "ADV",
-					"person": "1",
-					"poss": "Yes",
-					"pronType": "Dem",
-					"style": "Arch"
-				},
-				"inflectional": {
-					"case": "Acc",
-					"gender": "Fem",
-					"number": "Plur",
-					"reflex": "Yes"
 				},
 				"unexpected": true
 			},

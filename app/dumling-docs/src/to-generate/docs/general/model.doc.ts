@@ -33,8 +33,11 @@ is missing, ambiguous, or unrepresentable. Matching spelling alone does not
 establish Grundform. For example, English past-tense *read* has the same spelling
 as its infinitive.
 
-German PRON case, number and gender belong to Lemma identity. Contextual
-reflexiveness belongs to the Surface's inflectional features.
+Whether a feature is Core or inflectional is chosen per language, Family and
+Kind. German and English PRON put case, number and gender in Lemma identity,
+so each paradigm cell is its own Lemma: German \`mich\` and \`mir\`, English
+\`me\` and \`my\`. German contextual reflexiveness belongs to the Surface's
+inflectional features; English \`myself\` is its own Lemma.
 
 ## Reading
 

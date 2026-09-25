@@ -40,7 +40,6 @@ export const englishRules = {
 	"en/Lexeme/AUX": englishAuxiliary,
 	"en/Lexeme/DET": lexicalConvention,
 	"en/Lexeme/NOUN": noun,
-	"en/Lexeme/PRON": lexicalConvention,
 	"en/Lexeme/PROPN": noun,
 	"en/Lexeme/SYM": lexicalConvention,
 	"en/Lexeme/VERB": { features: { ...infinitive.features, voice: [null] } },

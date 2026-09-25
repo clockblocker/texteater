@@ -4818,6 +4818,10 @@ export interface UnitMap {
 					  )
 					| null;
 				style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
+				case: ("Acc" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+				reflex: "Yes" | null;
 			};
 		};
 		Surface: {
@@ -4874,17 +4878,15 @@ export interface UnitMap {
 						  )
 						| null;
 					style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
+					case: ("Acc" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+					reflex: "Yes" | null;
 				};
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures: {
-				case: ("Acc" | "Gen" | "Nom") | null;
-				gender: ("Fem" | "Masc" | "Neut") | null;
-				number: ("Plur" | "Sing") | null;
-				reflex: "Yes" | null;
-			} | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -4939,6 +4941,10 @@ export interface UnitMap {
 						  )
 						| null;
 					style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
+					case: ("Acc" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+					reflex: "Yes" | null;
 				};
 			};
 			emojiDescription: string;
@@ -5001,17 +5007,15 @@ export interface UnitMap {
 						style:
 							| ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc")
 							| null;
+						case: ("Acc" | "Gen" | "Nom") | null;
+						gender: ("Fem" | "Masc" | "Neut") | null;
+						number: ("Plur" | "Sing") | null;
+						reflex: "Yes" | null;
 					};
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures: {
-					case: ("Acc" | "Gen" | "Nom") | null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					number: ("Plur" | "Sing") | null;
-					reflex: "Yes" | null;
-				} | null;
 			};
 			members: [
 				{ attested: string; orthography: "Standard" | "Typo" },

@@ -11,11 +11,9 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		unitKind: "Surface",
-		inflectionalFeatures: null,
 		language: "en",
 		normalizedSurface: "that",
 		spelling: "Canonical",
-
 		lemma: {
 			unitKind: "Lemma",
 			language: "en",
@@ -29,6 +27,10 @@ const occurrenceAttestation = {
 				person: null,
 				poss: null,
 				style: null,
+				case: null,
+				gender: null,
+				number: "Sing",
+				reflex: null,
 			},
 		},
 		surfaceFeatures: null,
@@ -39,5 +41,5 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[That] was unexpected.",
 	classifierNotes:
-		"Standalone that is PRON; it shares its surface spelling with the DET and SCONJ examples.",
+		"Standalone that is PRON; it shares its surface spelling with the DET and SCONJ examples. Singular that and plural those are separate Lemmas.",
 } as const;

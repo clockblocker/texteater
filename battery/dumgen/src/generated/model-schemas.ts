@@ -8373,6 +8373,39 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
+									case: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Acc", "Gen", "Nom"],
+											},
+											{ type: "null" },
+										],
+									},
+									gender: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Fem", "Masc", "Neut"],
+											},
+											{ type: "null" },
+										],
+									},
+									number: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Plur", "Sing"],
+											},
+											{ type: "null" },
+										],
+									},
+									reflex: {
+										anyOf: [
+											{ type: "string", enum: ["Yes"] },
+											{ type: "null" },
+										],
+									},
 								},
 								required: [
 									"abbr",
@@ -8381,6 +8414,10 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									"poss",
 									"pronType",
 									"style",
+									"case",
+									"gender",
+									"number",
+									"reflex",
 								],
 								additionalProperties: false,
 							},
@@ -8416,73 +8453,8 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 									{ type: "null" },
 								],
 							},
-							inflectionalFeatures: {
-								anyOf: [
-									{
-										type: "object",
-										properties: {
-											case: {
-												anyOf: [
-													{
-														type: "string",
-														enum: [
-															"Acc",
-															"Gen",
-															"Nom",
-														],
-													},
-													{ type: "null" },
-												],
-											},
-											gender: {
-												anyOf: [
-													{
-														type: "string",
-														enum: [
-															"Fem",
-															"Masc",
-															"Neut",
-														],
-													},
-													{ type: "null" },
-												],
-											},
-											number: {
-												anyOf: [
-													{
-														type: "string",
-														enum: ["Plur", "Sing"],
-													},
-													{ type: "null" },
-												],
-											},
-											reflex: {
-												anyOf: [
-													{
-														type: "string",
-														enum: ["Yes"],
-													},
-													{ type: "null" },
-												],
-											},
-										},
-										required: [
-											"case",
-											"gender",
-											"number",
-											"reflex",
-										],
-										additionalProperties: false,
-									},
-									{ type: "null" },
-								],
-							},
 						},
-						required: [
-							"spelling",
-							"surfaceFeatures",
-							"inflectionalFeatures",
-						],
+						required: ["spelling", "surfaceFeatures"],
 						additionalProperties: false,
 					},
 					normalizedMembers: {
