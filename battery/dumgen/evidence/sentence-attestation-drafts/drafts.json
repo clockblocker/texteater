@@ -1,0 +1,27 @@
+{
+	"configuration": {
+		"generation": {
+			"model": "gpt-5.6-luna",
+			"settings": {
+				"reasoning": {
+					"effort": "none"
+				},
+				"service_tier": "fast"
+			}
+		},
+		"judgment": {
+			"model": "jev-latest",
+			"settings": {
+				"timeoutMs": 30000,
+				"maxRetries": 0
+			}
+		}
+	},
+	"drafts": {
+		"sentence-de-kakao": {
+			"0": {
+				"failure": "ProviderFailure: 402 Your organization has no available TypeSafe API credits. Please add more credits and/or set up auto-reload at https://console.typesafe.ai/settings/billing"
+			}
+		}
+	}
+}

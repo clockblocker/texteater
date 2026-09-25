@@ -6,7 +6,8 @@
  * the participle-boundary and governed-preposition slices. Cases sharing a
  * Sentence and target are drafted once.
  *
- * Paid and opt-in: it calls the live generation and judgment models.
+ * Paid and opt-in: it calls the live generation and judgment models, and
+ * stops at the first answer that the provider wants payment (HTTP 402).
  *
  *   bun --env-file=<repository>/.env.local cli/draft-target-attestations.ts
  *
@@ -18,27 +19,19 @@
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { parseUnit } from "dumling";
-import type * as Dumling from "dumling/types";
-import { Effect } from "effect";
 import { stableJson } from "promptsmith";
-import type { ModelConfiguration } from "promptsmith/evaluation";
-import { createOpenAIExecutor } from "promptsmith/openai";
-import { createTypeSafeExecutor } from "promptsmith/typesafe";
 import {
 	demonstrationIds,
 	evaluationCaseIds,
 	targetCases,
 } from "../src/concrete-lang/de/target-classification/cases.js";
-import type { DumgenOptions } from "../src/types.js";
-import { createDumgen } from "../src/universal/dumgen.js";
-import { effectiveConfiguration } from "../src/universal/model-configuration.js";
-import { judgmentConfiguration } from "../src/universal/trace.js";
-import { validateEncounter } from "../src/universal/validation.js";
+import {
+	type AttestationDraft,
+	createAttestationDrafter,
+	unpaid,
+} from "./attestation-drafter.js";
 
-export type TargetDraft =
-	| { attestation: Dumling.Attestation }
-	| { failure: string };
+export type TargetDraft = AttestationDraft;
 export type TargetDrafts = {
 	configuration: { generation: unknown; judgment: unknown };
 	drafts: Record<string, TargetDraft>;
@@ -68,20 +61,10 @@ async function main() {
 	for (const id of selected)
 		if (!targetCases[id]) throw Error(`Unknown target case ${id}`);
 
-	const execute = createOpenAIExecutor();
-	const judge = createTypeSafeExecutor();
-	const options: DumgenOptions = {
-		execute: (request) =>
-			execute({
-				...request,
-				configuration: request.configuration as ModelConfiguration,
-			}),
-		judge: (request, callOptions) => judge(request, callOptions),
-		judgmentConfiguration: {
-			timeoutMs: Number(values["judgment-timeout"]),
-		},
-	};
-	const dumgen = createDumgen(options);
+	const drafter = createAttestationDrafter({
+		attempts,
+		judgmentTimeoutMs: Number(values["judgment-timeout"]),
+	});
 
 	const previous: TargetDrafts | undefined = existsSync(draftsPath)
 		? JSON.parse(readFileSync(draftsPath, "utf8"))
@@ -106,54 +89,12 @@ async function main() {
 		const golden = targetCases[id];
 		if (!golden || "decision" in golden.idealOutput)
 			throw Error(`${id} has no target`);
-		let failure = "not attempted";
-		for (let attempt = 0; attempt < attempts; attempt++) {
-			try {
-				const encounter = validateEncounter({
-					sentence: {
-						id,
-						language: "de",
-						segments: golden.input.segments,
-					},
-					target: golden.idealOutput,
-				});
-				const result = await Effect.runPromise(
-					Effect.either(
-						dumgen.resolveGrammar({
-							...encounter,
-							contextAvailable: false,
-						}),
-					),
-				);
-				if (result._tag === "Left") {
-					failure = `${result.left._tag}: ${result.left.message}`;
-					continue;
-				}
-				if ("decision" in result.right) {
-					failure = `Decision ${result.right.decision}`;
-					continue;
-				}
-				const parsed = parseUnit(result.right);
-				if (
-					!parsed.success ||
-					parsed.chain.unitKind !== "Attestation"
-				) {
-					failure = "The Attestation fails strict parseUnit";
-					continue;
-				}
-				return {
-					attestation: parsed.chain.value as Dumling.Attestation,
-				};
-			} catch (error) {
-				failure =
-					error instanceof Error ? error.message : String(error);
-			}
-		}
-		return { failure };
+		return drafter.draft(id, golden.input.segments, golden.idealOutput);
 	}
 
 	const queue = [...groups.values()];
 	let done = 0;
+	let stopped = false;
 	const save = () => {
 		const ordered = Object.fromEntries(
 			Object.keys(targetCases)
@@ -165,10 +106,7 @@ async function main() {
 			draftsPath,
 			`${JSON.stringify(
 				{
-					configuration: {
-						generation: effectiveConfiguration(options),
-						judgment: judgmentConfiguration(options),
-					},
+					configuration: drafter.configuration,
 					drafts: ordered,
 				} satisfies TargetDrafts,
 				null,
@@ -178,8 +116,14 @@ async function main() {
 	};
 	await Promise.all(
 		Array.from({ length: concurrency }, async () => {
-			for (let ids = queue.shift(); ids; ids = queue.shift()) {
+			for (
+				let ids = queue.shift();
+				ids && !stopped;
+				ids = queue.shift()
+			) {
 				const result = await draft(ids[0] as string);
+				// Every later call would fail the same way.
+				if (unpaid(result)) stopped = true;
 				for (const id of ids) drafts[id] = result;
 				done++;
 				console.error(
