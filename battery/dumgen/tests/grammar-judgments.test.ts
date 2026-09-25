@@ -569,6 +569,45 @@ for (const [id, rejected] of [
 		});
 	});
 
+for (const id of [
+	"grammar-de-verb-subject-reflexive",
+	"grammar-de-verb-subject-question",
+	"grammar-de-verb-reflexive-schaemt",
+	"grammar-de-verb-finite-liest",
+] as const)
+	test(`membership settles expletive and lexicallyReflexive: ${id}`, async () => {
+		const example = verbCases[id];
+		const traces: OperationTrace[] = [];
+		const output = await Effect.runPromise(
+			createDumgen({
+				...grammarFixture(example.idealOutput),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar({
+				...markedEncounter(id, example.input.markedContext),
+				contextAvailable: false,
+			}),
+		);
+		const request = traces[0]?.calls[0]?.request;
+		if (!request || !("questions" in request))
+			throw Error("Expected feature judgment");
+		const asked = Object.keys(request.questions);
+		expect(asked).not.toContain("surface.inflectionalFeatures.expletive");
+		expect(asked).not.toContain("lemma.coreFeatures.lexicallyReflexive");
+		// Code normalizes a subject es, so its normalization is not asked.
+		const es = example.input.members.findIndex(
+			(member) => member.toLocaleLowerCase("de") === "es",
+		);
+		if (es !== -1) expect(asked).not.toContain(`normalization_${es}`);
+		expect(output.surface).toHaveProperty(
+			"inflectionalFeatures.expletive",
+			example.idealOutput.surface.inflectionalFeatures.expletive,
+		);
+		expect(output.surface.lemma.coreFeatures).toHaveProperty(
+			"lexicallyReflexive",
+			example.idealOutput.lemma.coreFeatures.lexicallyReflexive,
+		);
+	});
+
 test("every reviewed VERB Canonical Form is infinitive-shaped", () => {
 	for (const example of Object.values(verbCases))
 		expect(

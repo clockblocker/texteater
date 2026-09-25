@@ -500,18 +500,64 @@ test("an unsplit fused word is rejected, not resolved without its article", asyn
 	});
 });
 
-test("article attachment offers only complete lexical candidates", async () => {
+test("membership attaches an owned article without an attachment question", async () => {
+	for (const [text, members, form, orthography] of [
+		["Wir bleiben im Wald", ["m", "Wald"], "dem", "Fused"],
+		["Der Wald ist groß", ["Der", "Wald"], "der", "Standard"],
+	] as const) {
+		const fixture = example(
+			text,
+			[...members],
+			"Wald",
+			form,
+			"Definite",
+			form === "dem" ? "Dat" : "Nom",
+			"Sing",
+			"Masc",
+			null,
+			orthography,
+		);
+		const options = grammarFixture(fixture.golden);
+		const judge = options.judge;
+		if (!judge) throw Error("Missing fixture judge");
+		const asked: string[][] = [];
+		const result = await Effect.runPromise(
+			createDumgen({
+				...options,
+				judge: async (request, settings) => {
+					asked.push(Object.keys(request.questions));
+					return judge(request, settings);
+				},
+			}).resolveGrammar({
+				...fixture.encounter,
+				contextAvailable: false,
+			}),
+		);
+		expect(asked).toHaveLength(1);
+		expect(asked[0]).toContain("surface.inflectionalFeatures.case");
+		expect(asked[0]).not.toContain("attachment");
+		// Code normalizes the owned article to the form it stands for.
+		expect(asked[0]).not.toContain("normalization_0");
+		expect(result).toHaveProperty("articleEvidence", {
+			kind: "Owned",
+			member: 0,
+		});
+		expect(result.members[0]).toMatchObject({ attested: members[0] });
+		expect(result.surface.normalizedSurface).toBe("Wald");
+	}
+});
+
+test("article attachment offers only shared lexical candidates", async () => {
 	const fixture = example(
-		"Wir bleiben im Wald",
-		["m", "Wald"],
-		"Wald",
-		"dem",
+		"der Aufstieg und Abstieg",
+		["Abstieg"],
+		"Abstieg",
+		"der",
 		"Definite",
-		"Dat",
+		"Nom",
 		"Sing",
 		"Masc",
-		null,
-		"Fused",
+		sharedDer,
 	);
 	const options = grammarFixture(fixture.golden);
 	const judge = options.judge;
@@ -528,29 +574,22 @@ test("article attachment offers only complete lexical candidates", async () => {
 					expect(Object.keys(request.questions)).toContain(
 						"surface.inflectionalFeatures.case",
 					);
-					// Code sets a Fused member's orthography and normalization.
-					expect(Object.keys(request.questions)).not.toContain(
-						"orthography_0",
-					);
-					expect(Object.keys(request.questions)).not.toContain(
-						"normalization_0",
-					);
 					const question = request.questions.attachment;
 					if (question.type !== "choice")
 						throw Error("Expected attachment choice");
 					expect(Object.keys(question.criteria)).toEqual([
-						"Owned_s5",
+						"Shared_s0",
 						"None",
 						"Unresolved",
 					]);
-					expect(question.criteria.Owned_s5).toContain("dem");
+					expect(question.criteria.Shared_s0).toContain("der");
 				}
 				return judge(request, settings);
 			},
 		}).resolveGrammar({ ...fixture.encounter, contextAvailable: false }),
 	);
 	expect(inspected).toBe(true);
-	expect(result.surface.normalizedSurface).toBe("Wald");
+	expect(result.surface.normalizedSurface).toBe("Abstieg");
 });
 
 test("Fusion agreement contradictions remain Unresolved", async () => {

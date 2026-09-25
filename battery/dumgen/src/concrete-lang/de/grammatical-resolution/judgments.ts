@@ -155,7 +155,7 @@ const nounPolicy = {
 };
 
 const verbalIdentityPolicy =
-	"For VERB, hasSepPrefix is only a separable lexical prefix, lexicallyReflexive only a required reflexive; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb or expression lexically selects for its complement (wartet auf, erinnert sich an, geht um, weiß Bescheid über) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
+	"For VERB, hasSepPrefix is only a separable lexical prefix; verbType Mod is a lexical modal identity. Select string values only from code-supplied candidates. A verbal target that includes the preposition its verb or expression lexically selects for its complement (wartet auf, erinnert sich an, geht um, weiß Bescheid über) is a supported complete target: that owned member is named as governed-preposition evidence and stays out of the Lemma. A free adjunct preposition, a detached separable prefix or an adposition with its own nominal complement is never governed-preposition evidence. AUX is sein, haben or werden as the auxiliary member of another verb; its identity is a complete reviewed Lemma, and perfect, future and passive belong to the whole verbal Unit, never to the auxiliary alone.";
 
 /** ADJ and NOUN take in their governed preposition like verbs (ADR 0034). */
 const governmentPolicy =
@@ -163,6 +163,21 @@ const governmentPolicy =
 
 /** The Kinds that name a governed preposition among their members (ADR 0034). */
 const adnominalGovernors: ReadonlySet<string> = new Set(["ADJ", "NOUN"]);
+
+/**
+ * The spellings of a verb's required reflexive. A pronoun is a VERB target's
+ * member only as its reflexive, and es only as its subject expletive, so
+ * membership settles both features (#490).
+ */
+const reflexivePronouns: ReadonlySet<string> = new Set([
+	"sich",
+	"mich",
+	"dich",
+	"uns",
+	"euch",
+	"mir",
+	"dir",
+]);
 
 const partialCoveragePolicy =
 	"Partial coverage is otherwise allowed only for Idiom, DiscourseFormula, Proverb and Aphorism when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
@@ -347,6 +362,49 @@ export function resolveGrammarJudgments(
 							),
 				)
 			: [];
+		// Membership settles what member roles decide (#490). A Phraseme's fixed
+		// wording can hold an object es (es eilig haben), so only its es is judged.
+		const esPositions = input.members.flatMap((text, position) =>
+			text.toLocaleLowerCase("de") === "es" ||
+			spellings[position]?.surfaces.includes("es")
+				? [position]
+				: [],
+		);
+		const expletive = !verbal
+			? null
+			: encounter.target.family === "Lexeme"
+				? esPositions.length === 1
+					? "Subject"
+					: null
+				: esPositions.length
+					? undefined
+					: null;
+		const subjectEs = expletive === "Subject" ? esPositions[0] : undefined;
+		const lexicallyReflexive = spelledMembers.some((text) =>
+			reflexivePronouns.has(text.toLocaleLowerCase("de")),
+		)
+			? "Yes"
+			: null;
+		// A noun owns the article that is its first member (ADR 0035). A proper
+		// noun owns one only when cited with it, which stays a judgment.
+		const ownedArticle =
+			encounter.target.kind === "NOUN" && articleCandidates
+				? [...articleCandidates.values()].find(
+						(candidate) => candidate.realization === "Owned",
+					)
+				: undefined;
+		// What a member stands for when code knows it: a table spelling's
+		// texts, an owned standalone article's form, a VERB's subject es.
+		const memberSurfaces = input.members.map(
+			(_, position): readonly string[] =>
+				position === subjectEs
+					? ["es"]
+					: spellings[position]
+						? (tableTexts[position] ?? [])
+						: position === 0 && ownedArticle
+							? [ownedArticle.form]
+							: [],
+		);
 		const sentenceInitial =
 			encounter.target.memberSegmentIndices[0] ===
 			encounter.sentence.segments.findIndex(
@@ -405,6 +463,9 @@ export function resolveGrammarJudgments(
 			)
 				continue;
 			if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
+			if (path.endsWith(".lexicallyReflexive")) continue;
+			if (path.endsWith(".expletive") && expletive !== undefined)
+				continue;
 			questions[path] = featureQuestion(
 				encounter.target.kind,
 				path,
@@ -422,7 +483,7 @@ export function resolveGrammarJudgments(
 			);
 		for (const [index] of input.members.entries()) {
 			const spelling = spellings[index];
-			const surfaces = tableTexts[index] ?? [];
+			const surfaces = memberSurfaces[index] ?? [];
 			if (surfaces.length > 1)
 				questions[`surface_${index}`] = choice(
 					`Which word does \`members[${index}]\` stand for in \`markedContext\`?`,
@@ -436,7 +497,6 @@ export function resolveGrammarJudgments(
 						Unresolved: null,
 					},
 				);
-			if (spelling && surfaces.length) continue;
 			if (!spelling)
 				questions[`orthography_${index}`] = choice(
 					`Under \`policy.orthography\`, what is the orthography of \`members[${index}]\` in \`markedContext\`?`,
@@ -447,6 +507,7 @@ export function resolveGrammarJudgments(
 						Unresolved: null,
 					},
 				);
+			if (surfaces.length) continue;
 			questions[`normalization_${index}`] = choice(
 				`Under \`policy\`, how should \`members[${index}]\` be positionally normalized in \`markedContext\`?`,
 				normalizations,
@@ -617,7 +678,7 @@ export function resolveGrammarJudgments(
 			canonicalFormCandidate,
 			canonicalFormAlternatives,
 			storedLemmas,
-			...(articleCandidates ? nounArticleState(encounter) : {}),
+			...(questions.attachment ? nounArticleState(encounter) : {}),
 			...(Object.keys(lexicalStringCandidates).length
 				? { lexicalStringCandidates }
 				: {}),
@@ -693,6 +754,10 @@ export function resolveGrammarJudgments(
 						byReferent.push(key);
 						continue;
 					}
+					if (key === "lexicallyReflexive") {
+						core[key] = lexicallyReflexive;
+						continue;
+					}
 					const answer = selected(path);
 					if (field.open) {
 						core[key] = null;
@@ -746,6 +811,13 @@ export function resolveGrammarJudgments(
 							}
 							if (verbal && key === "voice") continue;
 							if (
+								key === "expletive" &&
+								expletive !== undefined
+							) {
+								bag[key] = expletive;
+								continue;
+							}
+							if (
 								auxiliary &&
 								constructionFeature(
 									`surface.inflectionalFeatures.${key}`,
@@ -793,10 +865,10 @@ export function resolveGrammarJudgments(
 					spellings[index]?.orthography ??
 					(selected(`orthography_${index}`) as "Standard" | "Typo"),
 			);
-			// A member the table spells stands for its one surface, or the one
-			// the judgment picks; a host or an abbreviation normalizes as usual.
+			// A member code spells stands for its one surface, or the one the
+			// judgment picks; a host or an abbreviation normalizes as usual.
 			const tableSurfaces = input.members.map((_, index) => {
-				const surfaces = tableTexts[index] ?? [];
+				const surfaces = memberSurfaces[index] ?? [];
 				if (surfaces.length < 2) return surfaces[0];
 				const answer = selected(`surface_${index}`);
 				return surfaces[Number(answer.slice("surface_".length))];

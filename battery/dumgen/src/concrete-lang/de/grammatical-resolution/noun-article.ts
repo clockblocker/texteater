@@ -43,20 +43,24 @@ const indefiniteSpellings = new Set([
 
 const casePath = "surface.inflectionalFeatures.case";
 
-export const nounArticlePolicy =
-	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling, choose Unresolved.";
+const attachmentRules =
+	"Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling, choose Unresolved.";
+
+/** A noun's owned article is its first member, so only sharing is judged. */
+const nounArticlePolicy = `Select one licensed article the supplied noun shares, using the whole sentence independently of previous clicks. The noun owns no article of its own: an owned article would be its first supplied member. Candidates are possible analyses of source occurrences, not proof of attachment. Shared means an article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Shared der for Abstieg, and im Wald und Feld gives Shared dem for Feld. ${attachmentRules}`;
 
 /** A proper noun owns only the article it is canonically cited with (ADR 0035). */
-const properNounArticlePolicy = `${nounArticlePolicy} A proper noun owns an article only when the name is canonically cited with the definite article (die Schweiz, der Rhein, the m in im Rhein). An article before a name cited bare (das alte Berlin, colloquial der Peter) is its own DET, and an article inside a title's own wording (Die Physiker) is part of the name: choose None for both.`;
+const properNounArticlePolicy = `Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. ${attachmentRules} A proper noun owns an article only when the name is canonically cited with the definite article (die Schweiz, der Rhein, the m in im Rhein). An article before a name cited bare (das alte Berlin, colloquial der Peter) is its own DET, and an article inside a title's own wording (Die Physiker) is part of the name: choose None for both.`;
 
 /**
  * Candidate spelling establishes possible analyses from raw source text, so the
  * attachment question can travel in the same round trip as the feature
- * questions; the judgment still decides contextual attachment. A piece of a
- * fused word or a shortened article stands for what the fusion table says
- * (m in im is dem, 'ne is eine); a Sentence never holds a fused word whole
- * (ADR 0035). Owned
- * orthography is patched from the judged member orthography afterwards.
+ * questions. An Owned candidate is the noun's first member, which membership
+ * alone attaches (ADR 0035); the judgment decides only a Shared article. A
+ * piece of a fused word or a shortened article stands for what the fusion
+ * table says (m in im is dem, 'ne is eine); a Sentence never holds a fused
+ * word whole (ADR 0035). Owned orthography is patched from the judged member
+ * orthography afterwards.
  */
 export function nounArticleCandidates(
 	encounter: Encounter,
@@ -114,6 +118,23 @@ type ArticleOwner = "NOUN" | "PROPN";
 const ownerOf = (encounter: Encounter): ArticleOwner =>
 	encounter.target.kind === "PROPN" ? "PROPN" : "NOUN";
 
+/**
+ * Whether membership alone attaches the target's article: a noun owns the
+ * article that is its first member. A proper noun owns one only when cited
+ * with it, so its attachment stays a judgment.
+ */
+function ownsArticle(
+	encounter: Encounter,
+	candidates: Map<string, ArticleCandidate>,
+): boolean {
+	return (
+		ownerOf(encounter) === "NOUN" &&
+		[...candidates.values()].some(
+			(candidate) => candidate.realization === "Owned",
+		)
+	);
+}
+
 /** Speculative article questions asked together with the noun feature questions. */
 export function nounArticleQuestions(
 	encounter: Encounter,
@@ -124,12 +145,15 @@ export function nounArticleQuestions(
 	if (!field) throw Error(`Missing ${kind} Case schema`);
 	const questions: Questions = {};
 	if (
+		!ownsArticle(encounter, candidates) &&
 		encounter.sentence.segments.filter(
 			(segment) => segment.kind === "ResolvableText",
 		).length > 1
 	)
 		questions.attachment = choice(
-			`Under \`articlePolicy\`, which complete article attachment in \`sentence\` is licensed for the ${kind === "PROPN" ? "proper noun" : "noun"} target marked in \`markedContext\` (its occurrences are \`target.memberSegmentIndices\`)? Judge agreement from the sentence itself.`,
+			kind === "PROPN"
+				? "Under `articlePolicy`, which complete article attachment in `sentence` is licensed for the proper noun target marked in `markedContext` (its occurrences are `target.memberSegmentIndices`)? Judge agreement from the sentence itself."
+				: "Under `articlePolicy`, which article in `sentence` does the noun target marked in `markedContext` (its occurrences are `target.memberSegmentIndices`) share? Judge agreement from the sentence itself.",
 			{
 				...Object.fromEntries(
 					[...candidates].map(([key, candidate]) => [
@@ -137,7 +161,10 @@ export function nounArticleQuestions(
 						`${candidate.realization}: source <s${candidate.segmentIndex}> ${candidate.attested} supplies ${candidate.article} DET form ${candidate.form}. Select only if this source grammatically supplies this noun's article.`,
 					]),
 				),
-				None: "No owned or shared article belongs to this noun",
+				None:
+					kind === "PROPN"
+						? "No owned or shared article belongs to this noun"
+						: "No shared article belongs to this noun",
 				Unresolved:
 					"Attachment is ambiguous, incompatible, or required evidence has no supported candidate",
 			},
@@ -148,6 +175,7 @@ export function nounArticleQuestions(
 	return questions;
 }
 
+/** What the attachment question reads, sent only when it is asked. */
 export function nounArticleState(encounter: Encounter) {
 	return {
 		sentence: indexedContext(encounter.sentence),
@@ -203,8 +231,19 @@ export function resolveNounArticle(
 				route,
 			);
 		};
-		let candidate: ArticleCandidate | undefined;
-		if (judged.attachment !== undefined) {
+		// Membership attaches a noun's owned article, standing for the form
+		// its first member does.
+		const owns = ownsArticle(encounter, judged.candidates);
+		let candidate = owns
+			? [...judged.candidates.values()].find(
+					(owned) =>
+						owned.realization === "Owned" &&
+						owned.form === output.normalizedMembers[0],
+				)
+			: undefined;
+		if (owns && !candidate)
+			return fail("Article member evidence is not aligned");
+		if (!owns && judged.attachment !== undefined) {
 			if (judged.attachment === "Unresolved")
 				return fail("Unresolved noun article attachment");
 			if (judged.attachment !== "None") {
@@ -221,13 +260,13 @@ export function resolveNounArticle(
 					return fail(
 						"Only a name cited with its definite article owns one",
 					);
-				if (candidate.realization === "Owned") {
-					const orthography = output.memberOrthographies[0];
-					if (orthography === undefined)
-						return fail("Article member evidence is not aligned");
-					candidate = { ...candidate, orthography };
-				}
 			}
+		}
+		if (candidate?.realization === "Owned") {
+			const orthography = output.memberOrthographies[0];
+			if (orthography === undefined)
+				return fail("Article member evidence is not aligned");
+			candidate = { ...candidate, orthography };
 		}
 		// Attachment precedes Case. A selected article constrains its possible analyses;
 		// a unique Case is determined by the morphology, not a separate model guess.
