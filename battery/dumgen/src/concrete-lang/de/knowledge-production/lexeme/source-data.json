@@ -313,6 +313,7 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": null,
+							"article": null,
 							"foreign": null,
 							"gender": "Neut"
 						},
@@ -1301,6 +1302,7 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": null,
+							"article": null,
 							"foreign": null,
 							"gender": "Neut"
 						},
@@ -1365,6 +1367,7 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": null,
+							"article": null,
 							"foreign": null,
 							"gender": "Masc"
 						},
@@ -1424,6 +1427,7 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": null,
+							"article": null,
 							"foreign": null,
 							"gender": "Masc"
 						},
@@ -2148,6 +2152,7 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": null,
+							"article": "Definite",
 							"foreign": null,
 							"gender": null
 						},

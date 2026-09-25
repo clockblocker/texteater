@@ -29,6 +29,7 @@ export const germanBVGAbbreviationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "BVG", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: {
 		unitKind: "Surface" as const,
 		inflectionalFeatures: null,

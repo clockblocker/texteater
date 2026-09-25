@@ -85,21 +85,34 @@ export function germanClosedClassSurfaceError(): string {
 	return "German PRON and DET mark case, number and gender in Core or on the Surface, never both; plural agreement has no marked gender; only a possessive marks possessor features";
 }
 
-/** A German article feature names an article form that agrees with its noun. */
+/**
+ * A German article feature names an article form that agrees with its noun.
+ * A proper noun's article is its Core `article` (ADR 0035), and a name
+ * without a marked case, such as one in direct address, shows no form.
+ */
 export function isGermanNounSurface(input: unknown): boolean {
 	const value = input as {
 		inflectionalFeatures: {
-			article: string;
+			article?: string;
 			case: string | null;
 			number: string | null;
 		} | null;
-		lemma: { coreFeatures: { gender: string | null } };
+		lemma: {
+			kind: string;
+			coreFeatures: { article?: string | null; gender: string | null };
+		};
 	};
 	const bag = value.inflectionalFeatures;
-	if (!bag || bag.article === "None") return true;
+	const proper = value.lemma.kind === "PROPN";
+	const article = proper
+		? (value.lemma.coreFeatures.article ?? "None")
+		: (bag?.article ?? "None");
+	if (!bag || article === "None" || (proper && !bag.case)) return true;
 	return (
 		germanArticleForm({
-			...bag,
+			article,
+			case: bag.case,
+			number: bag.number,
 			gender: value.lemma.coreFeatures.gender,
 		}) !== null
 	);
@@ -138,7 +151,10 @@ export function fusedMemberError(): string {
  * `article`, Hebrew with `definite: Def`. A noun without an article has no
  * article evidence and Full coverage; an owned article keeps Full coverage;
  * a shared article or a hidden Fusion component leaves the noun Partial.
- * A Hebrew `Def` form may name no evidence.
+ * A Hebrew `Def` form may name no evidence. A proper noun canonically cited
+ * with its article has Core `article: Definite` and owns it the same way; an
+ * occurrence may still show none (unsere Schweiz). A proper noun cited bare
+ * has no article evidence: an article it takes in a sentence is its own DET.
  */
 export function isNounArticleAttestation(input: unknown): boolean {
 	const value = input as {
@@ -148,6 +164,10 @@ export function isNounArticleAttestation(input: unknown): boolean {
 				article?: string;
 				definite?: string | null;
 			} | null;
+			lemma: {
+				kind: string;
+				coreFeatures: { article?: string | null };
+			};
 		};
 		articleEvidence:
 			| { kind: "Owned"; member: number }
@@ -159,12 +179,18 @@ export function isNounArticleAttestation(input: unknown): boolean {
 	};
 	const bag = value.surface.inflectionalFeatures;
 	const hebrew = value.surface.language === "he";
-	const article = hebrew
-		? bag?.definite === "Def"
-		: (bag?.article ?? "None") !== "None";
+	const proper = value.surface.lemma.kind === "PROPN";
+	const article = proper
+		? value.surface.lemma.coreFeatures.article === "Definite"
+		: hebrew
+			? bag?.definite === "Def"
+			: (bag?.article ?? "None") !== "None";
 	const evidence = value.articleEvidence;
 	if (!evidence)
-		return value.realizationCoverage === "Full" && (hebrew || !article);
+		return (
+			value.realizationCoverage === "Full" &&
+			(hebrew || proper || !article)
+		);
 	if (!article) return false;
 	if (evidence.kind === "Owned")
 		return (

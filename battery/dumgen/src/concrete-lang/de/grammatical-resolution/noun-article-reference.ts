@@ -82,7 +82,12 @@ export function nounArticleReference(input: {
 	return { surface: parsed.chain.value, reading };
 }
 
-/** The reviewed nominative singular definite article for a German noun heading, independent of its encounters. */
+/**
+ * The reviewed nominative definite article for a German noun heading,
+ * independent of its encounters. A proper noun has one only when it is cited
+ * with its article (die Schweiz); a plural name (die Niederlande) takes the
+ * plural cell.
+ */
 export function selectNounHeadingArticle(lemma: {
 	language: string;
 	family: string;
@@ -92,10 +97,20 @@ export function selectNounHeadingArticle(lemma: {
 	if (
 		lemma.language !== "de" ||
 		lemma.family !== "Lexeme" ||
-		lemma.kind !== "NOUN"
+		(lemma.kind !== "NOUN" && lemma.kind !== "PROPN")
 	)
 		return null;
 	const gender = lemma.coreFeatures.gender;
+	if (lemma.kind === "PROPN") {
+		if (lemma.coreFeatures.article !== "Definite") return null;
+		if (gender === null)
+			return articleCell({
+				definite: "Def",
+				case: "Nom",
+				number: "Plur",
+				gender: null,
+			});
+	}
 	if (gender !== "Masc" && gender !== "Fem" && gender !== "Neut") return null;
 	return articleCell({
 		definite: "Def",
@@ -105,14 +120,33 @@ export function selectNounHeadingArticle(lemma: {
 	});
 }
 
-/** Derives a contextual article from resolved noun grammar without model execution. */
+/**
+ * Derives a contextual article from resolved noun grammar without model
+ * execution. A proper noun's article is its Core `article` (ADR 0035); a name
+ * without a marked case, as in direct address, shows none.
+ */
 export function deriveNounArticle(surface: Dumling.Surface) {
-	if (
-		surface.language !== "de" ||
-		surface.lemma.family !== "Lexeme" ||
-		surface.lemma.kind !== "NOUN"
-	)
+	if (surface.language !== "de" || surface.lemma.family !== "Lexeme")
 		return null;
+	if (surface.lemma.kind === "PROPN") {
+		const name = surface as Dumling.Surface<"de", "Lexeme", "PROPN">;
+		const bag = name.inflectionalFeatures;
+		if (name.lemma.coreFeatures.article !== "Definite" || !bag?.case)
+			return null;
+		if (!bag.number)
+			throw new DumgenFailure(
+				"Unresolved",
+				"resolveGrammar",
+				"Article requires known noun agreement",
+			);
+		return nounArticleReference({
+			article: "Definite",
+			case: bag.case,
+			number: bag.number,
+			gender: name.lemma.coreFeatures.gender,
+		});
+	}
+	if (surface.lemma.kind !== "NOUN") return null;
 	const noun = surface as Dumling.Surface<"de", "Lexeme", "NOUN">;
 	const bag = noun.inflectionalFeatures;
 	if (!bag || bag.article === "None") return null;

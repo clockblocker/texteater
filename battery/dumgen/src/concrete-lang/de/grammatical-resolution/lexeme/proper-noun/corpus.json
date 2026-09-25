@@ -19,11 +19,13 @@
 				"canonicalForm": "Maria",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-demo-place-berlin": {
@@ -46,11 +48,13 @@
 				"canonicalForm": "Berlin",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-demo-multi-angela-merkel": {
@@ -73,11 +77,13 @@
 				"canonicalForm": "Angela Merkel",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "Both supplied members form one complete classified name; preserve their order and resolve one PROPN Surface."
 	},
@@ -101,21 +107,23 @@
 				"canonicalForm": "Hans",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-demo-acronym-nato": {
 		"input": {
-			"markedContext": "Die <TARGET>NATO</TARGET> berät heute über den Antrag.",
-			"members": ["NATO"]
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>NATO</TARGET> berät heute über den Antrag.",
+			"members": ["Die", "NATO"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["NATO"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "NATO"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -128,11 +136,16 @@
 				"canonicalForm": "NATO",
 				"coreFeatures": {
 					"abbr": "Yes",
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-demo-typo-koelnn": {
@@ -155,11 +168,13 @@
 				"canonicalForm": "Köln",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-demo-citation-work-tonio-kroeger": {
@@ -179,22 +194,24 @@
 				"canonicalForm": "Tonio Kröger",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "The surrounding common noun Titel bears sentence case; the separately quoted work-name mention is Citation rather than an accusative name occurrence."
 	},
 	"grammar-de-propn-demo-org-unesco": {
 		"input": {
-			"markedContext": "Die <TARGET>UNESCO</TARGET> fördert das neue Bildungsprojekt.",
-			"members": ["UNESCO"]
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>UNESCO</TARGET> fördert das neue Bildungsprojekt.",
+			"members": ["Die", "UNESCO"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["UNESCO"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "UNESCO"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -207,11 +224,16 @@
 				"canonicalForm": "UNESCO",
 				"coreFeatures": {
 					"abbr": "Yes",
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		},
 		"explanation": "An abbreviated organization in an ordinary subject occurrence is Inflection; its acronym shape never turns the contextual use into Citation."
 	},
@@ -235,11 +257,13 @@
 				"canonicalForm": "Clara",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "A direct-address occurrence is contextual Inflection with singular Number and null Case, never Citation."
 	},
@@ -263,22 +287,24 @@
 				"canonicalForm": "eBay",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "Registered styling is Canonical, ordinary contextual use is Inflection, and absent reliable agreement the name's gender stays null."
 	},
 	"grammar-de-propn-demo-org-rotes-kreuz": {
 		"input": {
-			"markedContext": "Das <TARGET>Rote</TARGET> <TARGET>Kreuz</TARGET> eröffnete eine neue Beratungsstelle.",
-			"members": ["Rote", "Kreuz"]
+			"markedContext": "<TARGET>Das</TARGET> <TARGET>Rote</TARGET> <TARGET>Kreuz</TARGET> eröffnete eine neue Beratungsstelle.",
+			"members": ["Das", "Rote", "Kreuz"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["Rote", "Kreuz"],
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["das", "Rote", "Kreuz"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -291,11 +317,16 @@
 				"canonicalForm": "Rotes Kreuz",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		},
 		"explanation": "An ordinary multi-member organization subject is Inflection; its contextual article and verb establish nominative singular."
 	},
@@ -319,11 +350,13 @@
 				"canonicalForm": "Die Physiker",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "A supplied article inside an ordinary contextual work-title object remains a member and the title is Inflection, not a Citation mention."
 	},
@@ -347,11 +380,13 @@
 				"canonicalForm": "LEGO",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "An established product name in German is not Foreign merely because its brand origin is non-German."
 	},
@@ -375,11 +410,13 @@
 				"canonicalForm": "Anna",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-person-peters-gen": {
@@ -402,21 +439,23 @@
 				"canonicalForm": "Peter",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-place-schweiz": {
 		"input": {
-			"markedContext": "Im Sommer besucht sie die <TARGET>Schweiz</TARGET>.",
-			"members": ["Schweiz"]
+			"markedContext": "Im Sommer besucht sie <TARGET>die</TARGET> <TARGET>Schweiz</TARGET>.",
+			"members": ["die", "Schweiz"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["Schweiz"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "Schweiz"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -429,21 +468,26 @@
 				"canonicalForm": "Schweiz",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-dev-place-niederlanden": {
 		"input": {
-			"markedContext": "Seit April arbeitet er in den <TARGET>Niederlanden</TARGET>.",
-			"members": ["Niederlanden"]
+			"markedContext": "Seit April arbeitet er in <TARGET>den</TARGET> <TARGET>Niederlanden</TARGET>.",
+			"members": ["den", "Niederlanden"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["Niederlanden"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["den", "Niederlanden"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -456,21 +500,26 @@
 				"canonicalForm": "Niederlande",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-dev-org-deutsche-bank": {
 		"input": {
-			"markedContext": "Die <TARGET>Deutsche</TARGET> <TARGET>Bank</TARGET> veröffentlichte den Bericht.",
-			"members": ["Deutsche", "Bank"]
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>Deutsche</TARGET> <TARGET>Bank</TARGET> veröffentlichte den Bericht.",
+			"members": ["Die", "Deutsche", "Bank"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard", "Standard"],
-			"normalizedMembers": ["Deutsche", "Bank"],
+			"memberOrthographies": ["Standard", "Standard", "Standard"],
+			"normalizedMembers": ["die", "Deutsche", "Bank"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -483,22 +532,27 @@
 				"canonicalForm": "Deutsche Bank",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		},
 		"explanation": "Upstream supplied both name members; Deutsche is not reclassified as ADJ and Bank is not repaired to a common NOUN."
 	},
 	"grammar-de-propn-dev-org-spd": {
 		"input": {
-			"markedContext": "Die <TARGET>SPD</TARGET> beschloss ein neues Programm.",
-			"members": ["SPD"]
+			"markedContext": "<TARGET>Die</TARGET> <TARGET>SPD</TARGET> beschloss ein neues Programm.",
+			"members": ["Die", "SPD"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["SPD"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "SPD"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -511,11 +565,16 @@
 				"canonicalForm": "SPD",
 				"coreFeatures": {
 					"abbr": "Yes",
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-dev-product-iphone": {
@@ -538,11 +597,13 @@
 				"canonicalForm": "iPhone",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "Registered internal capitalization is Standard and must not be regularized."
 	},
@@ -566,11 +627,13 @@
 				"canonicalForm": "adidas",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-work-zauberfloete": {
@@ -593,11 +656,13 @@
 				"canonicalForm": "Die Zauberflöte",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "The article is a supplied member of the fixed work title, not a neighboring DET to remove."
 	},
@@ -618,11 +683,13 @@
 				"canonicalForm": "Der Prozess",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-citation-hamburg": {
@@ -642,11 +709,13 @@
 				"canonicalForm": "Hamburg",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-vocative-lukas": {
@@ -669,11 +738,13 @@
 				"canonicalForm": "Lukas",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-foreign-new-york": {
@@ -696,11 +767,13 @@
 				"canonicalForm": "New York",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": "Yes",
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-transliteration-kyjiw": {
@@ -723,11 +796,13 @@
 				"canonicalForm": "Kyjiw",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": "Yes",
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-variant-pressburg": {
@@ -752,11 +827,13 @@
 				"canonicalForm": "Bratislava",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-typo-muenchn": {
@@ -779,11 +856,13 @@
 				"canonicalForm": "München",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-casing-berLin": {
@@ -806,11 +885,13 @@
 				"canonicalForm": "Berlin",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-multi-johann-goethe": {
@@ -838,11 +919,13 @@
 				"canonicalForm": "Johann Wolfgang von Goethe",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-neighbor-city-berlin": {
@@ -865,11 +948,13 @@
 				"canonicalForm": "Berlin",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		},
 		"explanation": "The unmarked common NOUN Stadt is a neighbor, not a member to add."
 	},
@@ -893,21 +978,23 @@
 				"canonicalForm": "Peter",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-dev-plural-alpen": {
 		"input": {
-			"markedContext": "Im Winter fahren sie in die <TARGET>Alpen</TARGET>.",
-			"members": ["Alpen"]
+			"markedContext": "Im Winter fahren sie in <TARGET>die</TARGET> <TARGET>Alpen</TARGET>.",
+			"members": ["die", "Alpen"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["Alpen"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "Alpen"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -920,11 +1007,16 @@
 				"canonicalForm": "Alpen",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-accept-v3-person-leonie": {
@@ -947,11 +1039,13 @@
 				"canonicalForm": "Leonie",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Fem"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-place-saarland": {
@@ -974,11 +1068,13 @@
 				"canonicalForm": "Saarland",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-multi-garmisch-partenkirchen": {
@@ -1001,21 +1097,23 @@
 				"canonicalForm": "Garmisch-Partenkirchen",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-org-zdf": {
 		"input": {
-			"markedContext": "Das <TARGET>ZDF</TARGET> überträgt die Debatte live.",
-			"members": ["ZDF"]
+			"markedContext": "<TARGET>Das</TARGET> <TARGET>ZDF</TARGET> überträgt die Debatte live.",
+			"members": ["Das", "ZDF"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["ZDF"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["das", "ZDF"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1028,11 +1126,16 @@
 				"canonicalForm": "ZDF",
 				"coreFeatures": {
 					"abbr": "Yes",
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-accept-v3-product-thermomix": {
@@ -1055,21 +1158,23 @@
 				"canonicalForm": "Thermomix",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-work-nibelungenlied": {
 		"input": {
-			"markedContext": "Die Klasse interpretiert das <TARGET>Nibelungenlied</TARGET>.",
-			"members": ["Nibelungenlied"]
+			"markedContext": "Die Klasse interpretiert <TARGET>das</TARGET> <TARGET>Nibelungenlied</TARGET>.",
+			"members": ["das", "Nibelungenlied"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["Nibelungenlied"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["das", "Nibelungenlied"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1082,11 +1187,16 @@
 				"canonicalForm": "Nibelungenlied",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
 		}
 	},
 	"grammar-de-propn-accept-v3-citation-mainz": {
@@ -1106,11 +1216,13 @@
 				"canonicalForm": "Mainz",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-foreign-rio-de-janeiro": {
@@ -1133,11 +1245,13 @@
 				"canonicalForm": "Rio de Janeiro",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": "Yes",
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-genitive-max": {
@@ -1160,11 +1274,13 @@
 				"canonicalForm": "Max",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Masc"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-typo-hannnover": {
@@ -1187,11 +1303,13 @@
 				"canonicalForm": "Hannover",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-variant-preussen": {
@@ -1213,21 +1331,23 @@
 				"canonicalForm": "Preußen",
 				"coreFeatures": {
 					"abbr": null,
+					"article": null,
 					"foreign": null,
 					"gender": "Neut"
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	},
 	"grammar-de-propn-accept-v3-plural-balearen": {
 		"input": {
-			"markedContext": "Im Oktober besuchen sie die <TARGET>Balearen</TARGET>.",
-			"members": ["Balearen"]
+			"markedContext": "Im Oktober besuchen sie <TARGET>die</TARGET> <TARGET>Balearen</TARGET>.",
+			"members": ["die", "Balearen"]
 		},
 		"idealOutput": {
-			"memberOrthographies": ["Standard"],
-			"normalizedMembers": ["Balearen"],
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["die", "Balearen"],
 			"surface": {
 				"spelling": "Canonical",
 				"surfaceFeatures": null,
@@ -1240,11 +1360,109 @@
 				"canonicalForm": "Balearen",
 				"coreFeatures": {
 					"abbr": null,
+					"article": "Definite",
 					"foreign": null,
 					"gender": null
 				}
 			},
-			"realizationCoverage": "Full"
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
+		}
+	},
+	"grammar-de-propn-regression-fused-article-rhein": {
+		"input": {
+			"markedContext": "Er badet i<TARGET>m</TARGET> <TARGET>Rhein</TARGET>.",
+			"members": ["m", "Rhein"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Fused", "Standard"],
+			"normalizedMembers": ["dem", "Rhein"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Dat",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Rhein",
+				"coreFeatures": {
+					"abbr": null,
+					"article": "Definite",
+					"foreign": null,
+					"gender": "Masc"
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
+		}
+	},
+	"grammar-de-propn-regression-owned-article-struwwelpeter": {
+		"input": {
+			"markedContext": "Sieh einmal, hier steht er, pfui, <TARGET>der</TARGET> <TARGET>Struwwelpeter</TARGET>!",
+			"members": ["der", "Struwwelpeter"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard", "Standard"],
+			"normalizedMembers": ["der", "Struwwelpeter"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Struwwelpeter",
+				"coreFeatures": {
+					"abbr": null,
+					"article": "Definite",
+					"foreign": null,
+					"gender": "Masc"
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": {
+				"kind": "Owned",
+				"member": 0
+			}
+		}
+	},
+	"grammar-de-propn-regression-bare-name-altes-berlin": {
+		"input": {
+			"markedContext": "Viele vermissen das alte <TARGET>Berlin</TARGET>.",
+			"members": ["Berlin"]
+		},
+		"idealOutput": {
+			"memberOrthographies": ["Standard"],
+			"normalizedMembers": ["Berlin"],
+			"surface": {
+				"spelling": "Canonical",
+				"surfaceFeatures": null,
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"lemma": {
+				"canonicalForm": "Berlin",
+				"coreFeatures": {
+					"abbr": null,
+					"article": null,
+					"foreign": null,
+					"gender": "Neut"
+				}
+			},
+			"realizationCoverage": "Full",
+			"articleEvidence": null
 		}
 	}
 }

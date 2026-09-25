@@ -13,6 +13,7 @@ import {
 	analysisState,
 	chunk,
 	lexemeQuestions,
+	nameArticleQuestions,
 	phrasemeQuestions,
 } from "./questions.js";
 
@@ -41,6 +42,7 @@ export function analyzeGermanSentence(
 				placement.resolvable,
 				placement.routes,
 			),
+			...nameArticleQuestions(sentence, placement),
 			...phrasemeQuestions(sentence, placement.resolvable),
 			...government,
 		};

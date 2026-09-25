@@ -1988,6 +1988,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				article: "Definite" | null;
 				foreign: "Yes" | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 			};
@@ -2003,6 +2004,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
@@ -2025,6 +2027,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
@@ -2044,6 +2047,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						article: "Definite" | null;
 						foreign: "Yes" | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 					};
@@ -2097,6 +2101,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"de/Lexeme/PUNCT": {
@@ -6649,6 +6706,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				article: "Definite" | null;
 				extPos: "PROPN" | null;
 				style: "Expr" | null;
 			};
@@ -6664,6 +6722,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					extPos: "PROPN" | null;
 					style: "Expr" | null;
 				};
@@ -6685,6 +6744,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					extPos: "PROPN" | null;
 					style: "Expr" | null;
 				};
@@ -6704,6 +6764,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						article: "Definite" | null;
 						extPos: "PROPN" | null;
 						style: "Expr" | null;
 					};
@@ -6756,6 +6817,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"en/Lexeme/PUNCT": {
@@ -10088,6 +10202,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				article: "Definite" | null;
 				gender:
 					| (
 							| ("Fem" | "Masc")
@@ -10107,6 +10222,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					gender:
 						| (
 								| ("Fem" | "Masc")
@@ -10130,6 +10246,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					article: "Definite" | null;
 					gender:
 						| (
 								| ("Fem" | "Masc")
@@ -10153,6 +10270,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						article: "Definite" | null;
 						gender:
 							| (
 									| ("Fem" | "Masc")
@@ -10209,6 +10327,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"he/Lexeme/PUNCT": {

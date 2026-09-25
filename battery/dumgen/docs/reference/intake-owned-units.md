@@ -82,12 +82,16 @@ Invariants enforced in code, never asked:
   Heads is split at them; a non-head follows the Head it scored the higher
   Include with, and a verbal role landing on a non-VERB Head, a governed
   preposition on a Head that is no VERB, ADJ or NOUN, or an Article on a
-  non-NOUN Head, becomes a singleton.
-- A NOUN target keeps at most one article, and it opens the phrase.
+  Head that is no NOUN or PROPN, becomes a singleton.
+- A NOUN or PROPN target keeps at most one article, and it opens the phrase.
 - A fused word never joins a group as a whole, whatever the matrix said about
   the source word. Its adposition component is a singleton ADP target; its
   article component joins the next NOUN target that has no article, with
   role Article (system ADR 0032). An unattached fused article is a DET singleton.
+- An article joins a PROPN target only when the name is cited with it (system
+  ADR 0035): a standalone article the matrix gave role Article, or a fused
+  word whose `nameArticle_N` answer is Name (`im Rhein`). Before a name cited
+  bare (`das alte Berlin`, `im alten Berlin`) it stays a DET singleton.
 - An abbreviation is one Segment; its surface is the expansion from the
   fusion table.
 - A Phraseme Target's members are words, projected by Head from the pair

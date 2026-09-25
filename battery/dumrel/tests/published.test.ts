@@ -47,7 +47,7 @@ test("published operations infer the source Family without narrowing the target 
 			backend: "typescript7",
 		}),
 	).toBe(
-		'type RelatedProperNoun = { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "PROPN"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; foreign: "Yes" | null; gender: "Fem" | "Masc" | "Neut" | null; }; }',
+		'type RelatedProperNoun = { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "PROPN"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; article: "Definite" | null; foreign: "Yes" | null; gender: "Fem" | "Masc" | "Neut" | null; }; }',
 	);
 }, 30_000);
 

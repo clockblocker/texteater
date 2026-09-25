@@ -71,6 +71,8 @@ type Plan = {
 		/** Free words the pair answers still tie to the expression. */
 		readonly carried?: readonly number[];
 	}[];
+	/** Fused-word indices whose article part is the article a name is cited with. */
+	readonly names?: readonly number[];
 	/** Head pairs the pair answers tie across expressions. */
 	readonly crossLinks?: readonly (readonly [number, number])[];
 	/** Governor, or governors splitting the vote, and case per governable preposition index; every other one is None. */
@@ -198,6 +200,10 @@ function judgeFrom(plan: Plan): TypeSafeExecutor {
 						chosen =
 							plan.government?.[numbers[0] ?? -1]?.referent ??
 							"Unresolved";
+					else if (prefix === "nameArticle")
+						chosen = plan.names?.includes(numbers[0] ?? -1)
+							? "Name"
+							: "Other";
 					else if (prefix === "scope")
 						chosen =
 							plan.government?.[numbers[0] ?? -1]?.scope ??
@@ -428,6 +434,124 @@ test("a fused article before a name stands alone instead of reaching a later nou
 		},
 		{ members: "Ligusterweg/Head", route: "PROPN", provenance: "vote" },
 		{ members: "Nummer/Head", route: "NOUN", provenance: "vote" },
+	]);
+});
+
+test("a name cited with its article owns it, standalone or fused (ADR 0035)", async () => {
+	// Wir0 fahren2 in4 die6 Schweiz8 .9
+	const schweiz = dumgenWith({
+		words: [[0], [2], [4], [6], [8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/DET",
+			8: "Lexeme/PROPN",
+		},
+		roles: { 6: "Article" },
+		expressions: [],
+	});
+	const inDieSchweiz = await Effect.runPromise(
+		schweiz.dumgen.analyzeSentence({
+			sentence: sentenceOf("schweiz", "Wir fahren in die Schweiz."),
+		}),
+	);
+	expect(lexemesOf(inDieSchweiz).slice(2)).toEqual([
+		{ members: "in/Head", route: "ADP", provenance: "vote" },
+		{
+			members: "die/Article Schweiz/Head",
+			route: "PROPN",
+			provenance: "vote+article",
+		},
+	]);
+	// Er0 badet2 im4 Rhein6 .7
+	const rhein = dumgenWith({
+		words: [[0], [2], [4], [6]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/PROPN",
+		},
+		roles: {},
+		names: [4],
+		expressions: [],
+	});
+	const imRhein = await Effect.runPromise(
+		rhein.dumgen.analyzeSentence({
+			sentence: sentenceOf("rhein", "Er badet im Rhein."),
+		}),
+	);
+	expect(lexemesOf(imRhein).slice(2)).toEqual([
+		{ members: "i/Head", route: "ADP", provenance: "fusion-table" },
+		{
+			members: "m/Article Rhein/Head",
+			route: "PROPN",
+			provenance: "vote+fusion-table",
+		},
+	]);
+	const request = rhein.traces[0]?.calls[0]?.request;
+	if (!request || !("questions" in request))
+		throw Error("Expected a judgment");
+	expect(Object.keys(request.questions)).toContain("nameArticle_4");
+});
+
+test("a name cited bare leaves the article it takes its own DET", async () => {
+	// Viele0 vermissen2 das4 alte6 Berlin8 .9
+	const { dumgen } = dumgenWith({
+		words: [[0], [2], [4], [6], [8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/DET",
+			6: "Lexeme/ADJ",
+			8: "Lexeme/PROPN",
+		},
+		roles: {},
+		expressions: [],
+	});
+	const dasAlteBerlin = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"altes-berlin",
+				"Viele vermissen das alte Berlin.",
+			),
+		}),
+	);
+	expect(lexemesOf(dasAlteBerlin).slice(2)).toEqual([
+		{ members: "das/Head", route: "DET", provenance: "vote" },
+		{ members: "alte/Head", route: "ADJ", provenance: "vote" },
+		{ members: "Berlin/Head", route: "PROPN", provenance: "vote" },
+	]);
+	// Ich0 wohne2 im4 alten6 Berlin8 .9: the fused article stays a DET too.
+	const imAltenBerlin = dumgenWith({
+		words: [[0], [2], [4], [6], [8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/ADJ",
+			8: "Lexeme/PROPN",
+		},
+		roles: {},
+		expressions: [],
+	});
+	const analysis = await Effect.runPromise(
+		imAltenBerlin.dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"im-alten-berlin",
+				"Ich wohne im alten Berlin.",
+			),
+		}),
+	);
+	expect(lexemesOf(analysis).slice(3)).toEqual([
+		{
+			members: "m/Head",
+			route: "DET",
+			provenance: "fusion-table:unattached-article",
+		},
+		{ members: "alten/Head", route: "ADJ", provenance: "vote" },
+		{ members: "Berlin/Head", route: "PROPN", provenance: "vote" },
 	]);
 });
 

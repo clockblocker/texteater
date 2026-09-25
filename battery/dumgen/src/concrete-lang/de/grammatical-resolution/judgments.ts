@@ -277,12 +277,35 @@ export function resolveGrammarJudgments(
 					lemma.family === encounter.target.family &&
 					lemma.kind === encounter.target.kind,
 			);
+		// A noun or a proper noun takes in the article it owns (ADR 0035).
+		// Candidates come from raw source text, so the attachment question
+		// can ride in the first round trip.
+		const articleCandidates =
+			encounter.target.kind === "NOUN" ||
+			encounter.target.kind === "PROPN"
+				? nounArticleCandidates(encounter)
+				: null;
+		// A name cited with its article (die Schweiz) has the rest of its
+		// members as its headword.
+		const properWithoutArticle =
+			encounter.target.kind === "PROPN" &&
+			[...(articleCandidates?.values() ?? [])].some(
+				(candidate) => candidate.realization === "Owned",
+			)
+				? joinMembers(
+						spelledMembers.slice(1),
+						new Set(
+							[...gluedMembers].map((position) => position - 1),
+						),
+					)
+				: undefined;
 		// Every source here sets Lemma precision. A preposition is never a
 		// noun's headword, so a governed one is not offered, nor is a fused or
 		// shortened article.
 		const canonicalFormAlternatives = [
 			...new Set([
 				...storedLemmas.map((lemma) => lemma.canonicalForm),
+				...(properWithoutArticle ? [properWithoutArticle] : []),
 				...(encounter.target.kind === "NOUN"
 					? input.members.filter(
 							(text, position) =>
@@ -373,6 +396,12 @@ export function resolveGrammarJudgments(
 			if (
 				encounter.target.kind === "NOUN" &&
 				(path.endsWith(".article") || path.endsWith(".case"))
+			)
+				continue;
+			// The attached article settles a name's Case like a noun's.
+			if (
+				encounter.target.kind === "PROPN" &&
+				path === "surface.inflectionalFeatures.case"
 			)
 				continue;
 			if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
@@ -468,7 +497,7 @@ export function resolveGrammarJudgments(
 			);
 		else if (encounter.target.kind !== "DET")
 			questions.canonical = choice(
-				"Under `policy.canonicalForm`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in `markedContext`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.",
+				`Under \`policy.canonicalForm\`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in \`markedContext\`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.${encounter.target.kind === "PROPN" ? " A name's headword excludes the article it is cited with (Schweiz for die Schweiz), but keeps an article that is part of a title's own wording (Die Physiker)." : ""}`,
 				{
 					...Object.fromEntries(
 						canonicalFormAlternatives.map((text, index) => [
@@ -486,10 +515,6 @@ export function resolveGrammarJudgments(
 			);
 		// Speculative questions whose candidates come from raw source text ride in
 		// the same round trip; code consumes them only when they apply.
-		const articleCandidates =
-			encounter.target.kind === "NOUN"
-				? nounArticleCandidates(encounter)
-				: null;
 		if (articleCandidates)
 			Object.assign(
 				questions,
@@ -711,8 +736,10 @@ export function resolveGrammarJudgments(
 							// Article attachment settles both after the features;
 							// None holds the article's place until then.
 							if (
-								encounter.target.kind === "NOUN" &&
-								(key === "article" || key === "case")
+								(encounter.target.kind === "NOUN" &&
+									(key === "article" || key === "case")) ||
+								(encounter.target.kind === "PROPN" &&
+									key === "case")
 							) {
 								bag[key] = key === "article" ? "None" : null;
 								continue;
@@ -977,6 +1004,14 @@ export function resolveGrammarJudgments(
 							.toLocaleLowerCase("de")
 							.split(/\s+/u)
 							.includes(governedWord);
+					// A name cited with its article keeps it out of the
+					// headword: die Schweiz is Schweiz (ADR 0035).
+					const withOwnedArticle = (text: string) =>
+						core.article === "Definite" &&
+						properWithoutArticle !== undefined &&
+						text !== properWithoutArticle &&
+						text.toLocaleLowerCase("de") ===
+							canonicalFormCandidate.toLocaleLowerCase("de");
 					const rejection =
 						chosen === undefined
 							? undefined
@@ -987,7 +1022,9 @@ export function resolveGrammarJudgments(
 									? "InflectedNounCanonicalForm"
 									: withGovernedPreposition(chosen)
 										? "GovernedPrepositionCanonicalForm"
-										: undefined;
+										: withOwnedArticle(chosen)
+											? "ArticledNameCanonicalForm"
+											: undefined;
 					const rejected = rejection !== undefined;
 					if (rejection)
 						recordEvent(scope, rejection, {
@@ -1025,9 +1062,7 @@ export function resolveGrammarJudgments(
 						...(adposition || adnominal
 							? { valencyEvidence: [] }
 							: {}),
-						...(encounter.target.kind === "NOUN"
-							? { articleEvidence: null }
-							: {}),
+						...(articleCandidates ? { articleEvidence: null } : {}),
 					},
 					"resolveGrammar",
 					true,
@@ -1045,7 +1080,8 @@ export function resolveGrammarJudgments(
 			if (Object.keys(needed).length === 1 && needed.canonicalForm) {
 				// The route already fixes the Kind, so the headword needs only
 				// the occurrence's words: besaß in, besitzen out. A governed
-				// preposition never belongs to the headword, so it stays out.
+				// preposition never belongs to the headword, so it stays out,
+				// and neither does the article a name is cited with.
 				const generation = yield* executeGeneration(
 					options,
 					scope,
@@ -1055,11 +1091,15 @@ export function resolveGrammarJudgments(
 						input: joinMembers(
 							normalizedMembers,
 							gluedMembers,
-							new Set(
-								governedPrepositionPosition === undefined
+							new Set([
+								...(governedPrepositionPosition === undefined
 									? []
-									: [governedPrepositionPosition],
-							),
+									: [governedPrepositionPosition]),
+								...(core.article === "Definite" &&
+								properWithoutArticle !== undefined
+									? [0]
+									: []),
+							]),
 						),
 						systemPrompt: canonicalFormPrompt(
 							encounter.target.kind,
@@ -1358,7 +1398,7 @@ export function resolveGrammarJudgments(
 					? { valencyEvidence }
 					: {}),
 				...(verbal ? { expletiveEvidence } : {}),
-				...(encounter.target.kind === "NOUN"
+				...(articleCandidates
 					? { articleEvidence: article?.evidence ?? null }
 					: {}),
 				lemma,

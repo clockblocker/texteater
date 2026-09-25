@@ -62,6 +62,7 @@ export const germanBVGLemma = {
 	canonicalForm: "BVG",
 	coreFeatures: {
 		abbr: "Yes",
+		article: null,
 		gender: null,
 		foreign: null,
 	},

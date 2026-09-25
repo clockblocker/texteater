@@ -231,7 +231,7 @@ function wordOf(
 	const kind = winner(routeMass);
 	if (kind === "Unresolved")
 		return { members: ordered, routeMass, unresolved: "route" };
-	if (kind === "NOUN") {
+	if (kind === "NOUN" || kind === "PROPN") {
 		const articles = ordered.filter((member) =>
 			articleForms.has(
 				sentence.segments[member]?.text.toLowerCase() ?? "",
@@ -257,7 +257,8 @@ const verbalRoles = new Set<RoleAnswer>([
  * The one-Head invariant: a group with two Heads is split at them. A
  * non-head follows the Head it scored the higher Include with; a verbal role
  * landing on a non-VERB Head, a governed preposition on a Head that governs
- * nothing, or an Article on a non-NOUN Head, becomes a singleton.
+ * nothing, or an Article on a Head that is neither a noun nor a name,
+ * becomes a singleton.
  */
 function splitMultiHead(
 	sentence: SegmentedSentence<"de">,
@@ -284,7 +285,7 @@ function splitMultiHead(
 			(verbalRoles.has(role) && headKind !== "VERB") ||
 			(role === "GovernedPreposition" &&
 				!takesPreposition({ family: "Lexeme", kind: headKind })) ||
-			(role === "Article" && headKind !== "NOUN")
+			(role === "Article" && headKind !== "NOUN" && headKind !== "PROPN")
 		)
 			singletons.push(member);
 		else groups.get(best)?.push(member);
@@ -454,7 +455,9 @@ export function assembleAnalysis(
 
 	const targets: LexemeTarget[] = [];
 	const headIndexOf = new Map<string, number>();
-	const fusedArticles: { offset: number }[] = [];
+	// `name`: the judgment says the article is one a name is cited with
+	// (the m of im Rhein).
+	const fusedArticles: { offset: number; name: boolean }[] = [];
 	let counter = 0;
 	const nextId = () => `t${++counter}`;
 	const memberRole = (index: number, singleton: boolean): MemberRole => {
@@ -492,7 +495,13 @@ export function assembleAnalysis(
 						identity: null,
 						provenance: "fusion-table",
 					});
-				} else fusedArticles.push({ offset: component.offset });
+				} else
+					fusedArticles.push({
+						offset: component.offset,
+						name:
+							choiceOf(answers, `nameArticle_${index}`)
+								?.choice === "Name",
+					});
 		}
 		// An abbreviation stands for its whole expansion, and the table names
 		// the Kind of the unit that expansion is.
@@ -541,9 +550,12 @@ export function assembleAnalysis(
 	}
 	// Every article no noun holds yet, fused or standalone, takes one path:
 	// it joins the noun its phrase opens onto when that noun has no article
-	// yet (system ADR 0032); a name, a later noun past another word or an unresolved
-	// word leaves it standing alone as DET. Later articles go first, so an
-	// earlier one never reaches past a later one's noun.
+	// yet (system ADR 0032). It joins a name only when the judgment says the
+	// name is cited with it (ADR 0035): a standalone article's Article role,
+	// a fused one's name answer. A name cited bare, a later noun past another
+	// word or an unresolved word leaves it standing alone as DET. Later
+	// articles go first, so an earlier one never reaches past a later one's
+	// noun.
 	const orphans = targets.filter(
 		(target) =>
 			target.members.length === 1 &&
@@ -553,15 +565,17 @@ export function assembleAnalysis(
 		...fusedArticles.map((article) => ({ ...article, orphan: null })),
 		...orphans.map((orphan) => ({
 			offset: orphan.members[0]?.offset ?? 0,
+			name: true,
 			orphan,
 		})),
 	].sort((a, b) => b.offset - a.offset);
 	for (const orphan of orphans) targets.splice(targets.indexOf(orphan), 1);
 	for (const article of articles) {
 		const next = phraseHeadAfter(targets, article.offset);
+		const kind = next ? winner(next.routeMass) : undefined;
 		const noun =
 			next &&
-			winner(next.routeMass) === "NOUN" &&
+			(kind === "NOUN" || (kind === "PROPN" && article.name)) &&
 			next.members.every(
 				(member) =>
 					member.role !== "Article" && member.offset > article.offset,
@@ -604,7 +618,8 @@ export function assembleAnalysis(
 		const article = target.members.find(
 			(member) => member.role === "Article",
 		);
-		if (!article || winner(target.routeMass) !== "NOUN") continue;
+		const kind = winner(target.routeMass);
+		if (!article || (kind !== "NOUN" && kind !== "PROPN")) continue;
 		const head = phraseHeadAfter(targets, article.offset);
 		if (
 			!head ||

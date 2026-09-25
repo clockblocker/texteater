@@ -190,8 +190,8 @@ const valencyEvidenceSchema = z.array(
 
 /**
  * Composition stores grammatical features; source evidence belongs to the
- * Attestation. A German, English or Hebrew noun, and a Hebrew adjective, names
- * where its article is attested (ADR 0035). A German verbal Attestation names
+ * Attestation. A German, English or Hebrew noun or proper noun, and a Hebrew
+ * adjective, names where its article is attested (ADR 0035). A German verbal Attestation names
  * its owned subject-expletive member as evidence (ADR 0022). Every German
  * governor Kind (VERB, AUX, ADJ, NOUN, Idiom, Collocation) names the valency
  * slots it realizes, such as its governed preposition member (ADR 0034). A
@@ -209,10 +209,10 @@ export function buildUnitSchemas<
 	const noun =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
-		route.kind === "NOUN";
+		["NOUN", "PROPN"].includes(route.kind);
 	const articleOwner =
 		route.family === "Lexeme" &&
-		(route.kind === "NOUN"
+		(["NOUN", "PROPN"].includes(route.kind)
 			? ["de", "en", "he"].includes(route.language)
 			: route.kind === "ADJ" && route.language === "he");
 	const verbal =
@@ -267,6 +267,9 @@ export function buildUnitSchemas<
 						| "de/NOUN"
 						| "en/NOUN"
 						| "he/NOUN"
+						| "de/PROPN"
+						| "en/PROPN"
+						| "he/PROPN"
 						| "he/ADJ"
 					? {
 							articleEvidence: z.ZodNullable<

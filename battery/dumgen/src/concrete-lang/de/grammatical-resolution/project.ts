@@ -59,7 +59,8 @@ const shifted = (positions: ReadonlySet<number> | undefined) =>
 	new Set([...(positions ?? [])].map((position) => position - 1));
 /**
  * A noun's Surface is its own letters (ADR 0035): an owned article stays an
- * Attestation member but leaves the Surface, like a governed preposition.
+ * Attestation member but leaves the Surface, like a governed preposition. A
+ * proper noun cited with its article (die Schweiz) owns it the same way.
  */
 export function normalizeGrammarSurface(
 	input: GrammaticalResolutionInput,
@@ -71,7 +72,13 @@ export function normalizeGrammarSurface(
 			slot.member === null ? [] : [slot.member],
 		),
 	);
-	if (route.family !== "Lexeme" || route.kind !== "NOUN")
+	const owned =
+		output.articleEvidence?.kind === "Owned"
+			? output.articleEvidence.member
+			: undefined;
+	const noun = route.family === "Lexeme" && route.kind === "NOUN";
+	const properNoun = route.family === "Lexeme" && route.kind === "PROPN";
+	if (!noun && !(properNoun && owned !== undefined))
 		return constructNormalizedSurface({
 			attestedMembers: input.members,
 			memberOrthographies: output.memberOrthographies,
@@ -79,10 +86,6 @@ export function normalizeGrammarSurface(
 			valencyMembers,
 			glued: output.gluedMembers,
 		});
-	const owned =
-		output.articleEvidence?.kind === "Owned"
-			? output.articleEvidence.member
-			: undefined;
 	if (owned !== undefined && owned !== 0)
 		throw new DeGrammaticalResolutionProjectionError(
 			"An owned noun article is the noun's first member",
@@ -103,6 +106,14 @@ export function normalizeGrammarSurface(
 		normalizedMembers: output.normalizedMembers.slice(0, 1),
 		memberOrthographies: output.memberOrthographies.slice(0, 1),
 	});
+	if (properNoun)
+		return constructNormalizedSurface({
+			attestedMembers: input.members.slice(1),
+			memberOrthographies: output.memberOrthographies.slice(1),
+			normalizedMembers: output.normalizedMembers.slice(1),
+			valencyMembers: shifted(valencyMembers),
+			glued: shifted(output.gluedMembers),
+		});
 	return constructNounNormalizedSurface({
 		input: { ...input, members: input.members.slice(1) },
 		memberOrthographies: output.memberOrthographies.slice(1),

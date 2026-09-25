@@ -28,6 +28,7 @@ export const hebrewUsAbbreviationAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "ארה״ב", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: hebrewUsAbbreviationCitationSurface,
 } satisfies Dumling.Attestation<"he", "Lexeme", "PROPN">;
 

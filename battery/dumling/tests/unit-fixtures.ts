@@ -104,6 +104,9 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			"de/Lexeme/NOUN",
 			"en/Lexeme/NOUN",
 			"he/Lexeme/NOUN",
+			"de/Lexeme/PROPN",
+			"en/Lexeme/PROPN",
+			"he/Lexeme/PROPN",
 			"he/Lexeme/ADJ",
 		].includes(route.key)
 			? { articleEvidence: null }

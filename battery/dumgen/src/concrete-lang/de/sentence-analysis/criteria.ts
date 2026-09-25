@@ -46,6 +46,10 @@ export const realizationEdits: readonly (readonly [string | RegExp, string])[] =
 			"mein/dieser/kein remain independent DETs; im/zum/ins do not join nouns as a whole. Bare nouns stay bare.",
 		],
 		[
+			", including an article piece of a fused word: in die Schweiz gives [die,Schweiz] PROPN and im Rhein gives [i] ADP and [m,Rhein] PROPN.",
+			": in die Schweiz gives [die,Schweiz] PROPN.",
+		],
+		[
 			" These noun rules preserve any larger established idiom boundary.",
 			"",
 		],
@@ -83,7 +87,8 @@ export const lexemeRoutes: Record<string, string> = {
 		"Particle, including the infinitive marker zu before an infinitive (schwer zu erklären, versucht zu schlafen)",
 	"Lexeme/PRON":
 		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
-	"Lexeme/PROPN": "Proper noun",
+	"Lexeme/PROPN":
+		"Proper noun, with the definite article it is canonically cited with (die Schweiz); a name cited bare (Berlin) absorbs no article",
 	"Lexeme/PUNCT": "Punctuation resolvable as its own unit",
 	"Lexeme/SCONJ":
 		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",
@@ -106,7 +111,7 @@ export const roles = {
 	Expletive:
 		"A lexically selected nonreferential subject es of its verb (es gibt, es regnet, es geht um), not referential, positional, anticipatory or object es",
 	Article:
-		"The definite or indefinite article a common noun absorbs (der in der Aufstieg, ein in ein Haus); mein, dieser, kein are not articles",
+		"The definite or indefinite article a common noun absorbs (der in der Aufstieg, ein in ein Haus), or the definite article a proper name is canonically cited with (die in die Schweiz, der in der Struwwelpeter); an article before a name cited bare (das in das alte Berlin) is Free; mein, dieser, kein are not articles",
 	Auxiliary:
 		"sein, haben, werden, or recipient-passive bekommen, marking perfect, future or passive for the lexical verb of its unit; a modal or a copula, including sein before an adjectival participle, is not an auxiliary",
 	Free: "Not a fixed member of any multi-word unit: the word stands alone as its own single-member unit",

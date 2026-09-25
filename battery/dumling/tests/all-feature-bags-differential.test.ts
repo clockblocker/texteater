@@ -6,10 +6,10 @@ import fixtures from "./fixtures/legacy-feature-acceptance.json";
 const retired = /^[a-z]+\/morpheme\/clitic\.ts$/;
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 	if (retired.test(route)) continue;
-	// A noun marks its article on every Surface (ADR 0035), so the legacy
-	// shapes, which leave it unmarked, are all rejected.
+	// A noun marks its article on every Surface and a proper noun in its Core
+	// (ADR 0035), so the legacy shapes, which leave it out, are all rejected.
 	const supersededShape =
-		/^de\/(lexeme\/(verb|auxiliary|noun)|phraseme\/(idiom|collocation))\.ts$|^en\/lexeme\/noun\.ts$/.test(
+		/^de\/(lexeme\/(verb|auxiliary|noun)|phraseme\/(idiom|collocation))\.ts$|^en\/lexeme\/noun\.ts$|^(de|en|he)\/lexeme\/proper-noun\.ts$/.test(
 			route,
 		);
 	test(`retained Feature Bag acceptance: ${route}`, async () => {

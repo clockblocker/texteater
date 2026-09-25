@@ -3915,6 +3915,15 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
+									article: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Definite"],
+											},
+											{ type: "null" },
+										],
+									},
 									foreign: {
 										anyOf: [
 											{ type: "string", enum: ["Yes"] },
@@ -3931,7 +3940,12 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 										],
 									},
 								},
-								required: ["abbr", "foreign", "gender"],
+								required: [
+									"abbr",
+									"article",
+									"foreign",
+									"gender",
+								],
 								additionalProperties: false,
 							},
 						},
@@ -4026,6 +4040,264 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 						type: "string",
 						enum: ["Full", "Partial"],
 					},
+					articleEvidence: {
+						anyOf: [
+							{
+								anyOf: [
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Owned",
+											},
+											member: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: ["kind", "member"],
+										additionalProperties: false,
+									},
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Shared",
+											},
+											article: {
+												anyOf: [
+													{
+														type: "object",
+														properties: {
+															attested: {
+																type: "string",
+																minLength: 1,
+															},
+															orthography: {
+																type: "string",
+																enum: [
+																	"Standard",
+																	"Typo",
+																	"Shorthand",
+																],
+															},
+														},
+														required: [
+															"attested",
+															"orthography",
+														],
+														additionalProperties: false,
+													},
+													{
+														type: "object",
+														properties: {
+															attested: {
+																type: "string",
+																minLength: 1,
+															},
+															orthography: {
+																type: "string",
+																const: "Fused",
+															},
+															fusion: {
+																type: "object",
+																properties: {
+																	spelling: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																	components:
+																		{
+																			type: "array",
+																			prefixItems:
+																				[
+																					{
+																						type: "object",
+																						properties:
+																							{
+																								span: {
+																									type: "string",
+																								},
+																								surface:
+																									{
+																										type: "string",
+																										minLength: 1,
+																									},
+																							},
+																						required:
+																							[
+																								"span",
+																								"surface",
+																							],
+																						additionalProperties: false,
+																					},
+																					{
+																						type: "object",
+																						properties:
+																							{
+																								span: {
+																									type: "string",
+																								},
+																								surface:
+																									{
+																										type: "string",
+																										minLength: 1,
+																									},
+																							},
+																						required:
+																							[
+																								"span",
+																								"surface",
+																							],
+																						additionalProperties: false,
+																					},
+																				],
+																			items: {
+																				type: "object",
+																				properties:
+																					{
+																						span: {
+																							type: "string",
+																						},
+																						surface:
+																							{
+																								type: "string",
+																								minLength: 1,
+																							},
+																					},
+																				required:
+																					[
+																						"span",
+																						"surface",
+																					],
+																				additionalProperties: false,
+																			},
+																		},
+																},
+																required: [
+																	"spelling",
+																	"components",
+																],
+																additionalProperties: false,
+															},
+															component: {
+																type: "integer",
+																minimum: 0,
+																maximum: 9007199254740991,
+															},
+														},
+														required: [
+															"attested",
+															"orthography",
+															"fusion",
+															"component",
+														],
+														additionalProperties: false,
+													},
+												],
+											},
+										},
+										required: ["kind", "article"],
+										additionalProperties: false,
+									},
+									{
+										type: "object",
+										properties: {
+											kind: {
+												type: "string",
+												const: "Hidden",
+											},
+											fusion: {
+												type: "object",
+												properties: {
+													spelling: {
+														type: "string",
+														minLength: 1,
+													},
+													components: {
+														type: "array",
+														prefixItems: [
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+															{
+																type: "object",
+																properties: {
+																	span: {
+																		type: "string",
+																	},
+																	surface: {
+																		type: "string",
+																		minLength: 1,
+																	},
+																},
+																required: [
+																	"span",
+																	"surface",
+																],
+																additionalProperties: false,
+															},
+														],
+														items: {
+															type: "object",
+															properties: {
+																span: {
+																	type: "string",
+																},
+																surface: {
+																	type: "string",
+																	minLength: 1,
+																},
+															},
+															required: [
+																"span",
+																"surface",
+															],
+															additionalProperties: false,
+														},
+													},
+												},
+												required: [
+													"spelling",
+													"components",
+												],
+												additionalProperties: false,
+											},
+											component: {
+												type: "integer",
+												minimum: 0,
+												maximum: 9007199254740991,
+											},
+										},
+										required: [
+											"kind",
+											"fusion",
+											"component",
+										],
+										additionalProperties: false,
+									},
+								],
+							},
+							{ type: "null" },
+						],
+					},
 				},
 				required: [
 					"lemma",
@@ -4033,6 +4305,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 					"normalizedMembers",
 					"memberOrthographies",
 					"realizationCoverage",
+					"articleEvidence",
 				],
 				additionalProperties: false,
 			},
@@ -10624,6 +10897,15 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
+									article: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Definite"],
+											},
+											{ type: "null" },
+										],
+									},
 									extPos: {
 										anyOf: [
 											{ type: "string", enum: ["PROPN"] },
@@ -10637,7 +10919,12 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 										],
 									},
 								},
-								required: ["abbr", "extPos", "style"],
+								required: [
+									"abbr",
+									"article",
+									"extPos",
+									"style",
+								],
 								additionalProperties: false,
 							},
 						},
@@ -14251,6 +14538,15 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 											{ type: "null" },
 										],
 									},
+									article: {
+										anyOf: [
+											{
+												type: "string",
+												enum: ["Definite"],
+											},
+											{ type: "null" },
+										],
+									},
 									gender: {
 										anyOf: [
 											{
@@ -14284,7 +14580,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 										],
 									},
 								},
-								required: ["abbr", "gender"],
+								required: ["abbr", "article", "gender"],
 								additionalProperties: false,
 							},
 						},

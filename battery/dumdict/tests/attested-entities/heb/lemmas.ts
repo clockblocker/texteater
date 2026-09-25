@@ -34,6 +34,7 @@ export const hebrewUsAbbreviationLemma = {
 	canonicalForm: "ארה״ב",
 	coreFeatures: {
 		abbr: "Yes",
+		article: null,
 		gender: null,
 	},
 	language: "he",

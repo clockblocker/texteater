@@ -3904,6 +3904,7 @@ export const grammarSchemas = {
 			.array(z.enum(["Standard", "Typo", "Fused", "Shorthand"]))
 			.min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
+		articleEvidence: R12.attestationSchema.shape.articleEvidence,
 	}),
 	"de/Lexeme/PUNCT": z.strictObject({
 		lemma: R13.lemmaSchema.omit({

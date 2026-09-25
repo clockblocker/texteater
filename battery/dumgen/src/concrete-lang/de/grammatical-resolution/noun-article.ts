@@ -46,6 +46,9 @@ const casePath = "surface.inflectionalFeatures.case";
 export const nounArticlePolicy =
 	"Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. Distinguish actual articles from unrelated phrases, quoted words and nonnominal uses such as am besten. Standalone homographic pronouns are not articles. Sharing never crosses an explicit repeated article, clause boundary, nested nominal scope or incompatible agreement. Proximity alone does not license attachment; use grammatical scope. Ties or ambiguous attachment are Unresolved. mein/dieser/kein remain independent DETs and supply no article. None means no article is licensed, not uncertainty or a way to hide disagreement. If an article is required but no candidate represents it, including an unsupported spelling, choose Unresolved.";
 
+/** A proper noun owns only the article it is canonically cited with (ADR 0035). */
+const properNounArticlePolicy = `${nounArticlePolicy} A proper noun owns an article only when the name is canonically cited with the definite article (die Schweiz, der Rhein, the m in im Rhein). An article before a name cited bare (das alte Berlin, colloquial der Peter) is its own DET, and an article inside a title's own wording (Die Physiker) is part of the name: choose None for both.`;
+
 /**
  * Candidate spelling establishes possible analyses from raw source text, so the
  * attachment question can travel in the same round trip as the feature
@@ -106,13 +109,19 @@ export function nounArticleCandidates(
 	return candidates;
 }
 
+/** A noun, or a proper noun canonically cited with its article (ADR 0035). */
+type ArticleOwner = "NOUN" | "PROPN";
+const ownerOf = (encounter: Encounter): ArticleOwner =>
+	encounter.target.kind === "PROPN" ? "PROPN" : "NOUN";
+
 /** Speculative article questions asked together with the noun feature questions. */
 export function nounArticleQuestions(
 	encounter: Encounter,
 	candidates: Map<string, ArticleCandidate>,
 ): Questions {
-	const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
-	if (!field) throw Error("Missing noun Case schema");
+	const kind = ownerOf(encounter);
+	const field = grammarFeatureFields(`de/Lexeme/${kind}`).get(casePath);
+	if (!field) throw Error(`Missing ${kind} Case schema`);
 	const questions: Questions = {};
 	if (
 		encounter.sentence.segments.filter(
@@ -120,7 +129,7 @@ export function nounArticleQuestions(
 		).length > 1
 	)
 		questions.attachment = choice(
-			"Under `articlePolicy`, which complete article attachment in `sentence` is licensed for the noun target marked in `markedContext` (its occurrences are `target.memberSegmentIndices`)? Judge agreement from the sentence itself.",
+			`Under \`articlePolicy\`, which complete article attachment in \`sentence\` is licensed for the ${kind === "PROPN" ? "proper noun" : "noun"} target marked in \`markedContext\` (its occurrences are \`target.memberSegmentIndices\`)? Judge agreement from the sentence itself.`,
 			{
 				...Object.fromEntries(
 					[...candidates].map(([key, candidate]) => [
@@ -135,7 +144,7 @@ export function nounArticleQuestions(
 		);
 	// Case is asked speculatively; code prefers the deterministic derivation
 	// from the attached article and consumes this answer only when needed.
-	questions[casePath] = featureQuestion("NOUN", casePath, field);
+	questions[casePath] = featureQuestion(kind, casePath, field);
 	return questions;
 }
 
@@ -146,11 +155,18 @@ export function nounArticleState(encounter: Encounter) {
 			...encounter.target,
 			memberSegmentIndices: [...encounter.target.memberSegmentIndices],
 		},
-		articlePolicy: nounArticlePolicy,
+		articlePolicy:
+			ownerOf(encounter) === "PROPN"
+				? properNounArticlePolicy
+				: nounArticlePolicy,
 	};
 }
 
-/** The article's evidence, if any, and the IDs of the calls that judged it. */
+/**
+ * The article's evidence, if any, and the IDs of the calls that judged it. A
+ * noun marks the attached article on its Surface; a proper noun owns one only
+ * when its Core `article` says it is cited with it (ADR 0035).
+ */
 export function resolveNounArticle(
 	options: DumgenOptions,
 	encounter: Encounter,
@@ -170,6 +186,9 @@ export function resolveNounArticle(
 ) {
 	return Effect.gen(function* () {
 		const calls: string[] = [];
+		const kind = ownerOf(encounter);
+		const route = `de/Lexeme/${kind}`;
+		const proper = kind === "PROPN";
 		const bag = output.surface.inflectionalFeatures as Record<
 			string,
 			string | null
@@ -181,7 +200,7 @@ export function resolveNounArticle(
 				"Unresolved",
 				"resolveGrammar",
 				message,
-				"de/Lexeme/NOUN",
+				route,
 			);
 		};
 		let candidate: ArticleCandidate | undefined;
@@ -194,6 +213,14 @@ export function resolveNounArticle(
 					return fail(
 						"Article attachment is not an eligible candidate",
 					);
+				if (
+					proper &&
+					(core.article !== "Definite" ||
+						candidate.article !== "Definite")
+				)
+					return fail(
+						"Only a name cited with its definite article owns one",
+					);
 				if (candidate.realization === "Owned") {
 					const orthography = output.memberOrthographies[0];
 					if (orthography === undefined)
@@ -204,8 +231,8 @@ export function resolveNounArticle(
 		}
 		// Attachment precedes Case. A selected article constrains its possible analyses;
 		// a unique Case is determined by the morphology, not a separate model guess.
-		const field = grammarFeatureFields("de/Lexeme/NOUN").get(casePath);
-		if (!field) throw Error("Missing noun Case schema");
+		const field = grammarFeatureFields(route).get(casePath);
+		if (!field) throw Error(`Missing ${kind} Case schema`);
 		let cases = field.values;
 		if (candidate) {
 			if (!bag.number || (bag.number !== "Plur" && !core.gender))
@@ -239,7 +266,7 @@ export function resolveNounArticle(
 			// ask again over the compatible values only.
 			const { id, output: result } = yield* judgmentCaller(options)(
 				"resolveGrammar",
-				"de/Lexeme/NOUN/case",
+				`${route}/case`,
 				{
 					...markedContext(encounter),
 					article: candidate
@@ -247,7 +274,7 @@ export function resolveNounArticle(
 						: "No attached article",
 				},
 				{
-					[casePath]: featureQuestion("NOUN", casePath, {
+					[casePath]: featureQuestion(kind, casePath, {
 						values: cases,
 						open: false,
 					}),
@@ -261,7 +288,7 @@ export function resolveNounArticle(
 			bag.case = selected === "Unmarked" ? null : selected;
 		}
 		if (!candidate) {
-			bag.article = "None";
+			if (!proper) bag.article = "None";
 			return { article: null, calls };
 		}
 		if (!bag.case || !bag.number)
@@ -273,7 +300,7 @@ export function resolveNounArticle(
 			gender: core.gender ?? null,
 			spelled: candidate.form,
 		});
-		bag.article = candidate.article;
+		if (!proper) bag.article = candidate.article;
 		recordEvent(scope, "NounArticleEvidence", {
 			segmentIndex: candidate.segmentIndex,
 			realization: candidate.realization,

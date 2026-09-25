@@ -207,10 +207,15 @@ test("all 1130 retained grammar answers project through public operations", asyn
 						"valencyEvidence",
 						output.valencyEvidence,
 					);
+				if ("articleEvidence" in output)
+					expect(result.right).toHaveProperty(
+						"articleEvidence",
+						output.articleEvidence,
+					);
 			}
 			count++;
 		}
 	}
-	expect(count).toBe(1105);
+	expect(count).toBe(1108);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

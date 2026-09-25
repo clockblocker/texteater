@@ -103,7 +103,7 @@ const NULL_CORE_FEATURES_BY_KIND = {
 		number: null,
 		gender: null,
 	},
-	PROPN: { abbr: null, foreign: null, gender: null },
+	PROPN: { abbr: null, article: null, foreign: null, gender: null },
 	PUNCT: { punctType: null },
 	SCONJ: { conjType: null },
 	SYM: { foreign: null, numType: null },
@@ -300,7 +300,9 @@ function occurrenceFor(
 			orthography: "Standard",
 		})),
 		realizationCoverage: "Full",
-		...(reading.lemma.kind === "NOUN" ? { articleEvidence: null } : {}),
+		...(reading.lemma.kind === "NOUN" || reading.lemma.kind === "PROPN"
+			? { articleEvidence: null }
+			: {}),
 		...(germanVerbalKinds.includes(reading.lemma.kind)
 			? { expletiveEvidence: null }
 			: {}),

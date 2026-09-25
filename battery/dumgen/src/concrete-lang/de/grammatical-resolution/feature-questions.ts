@@ -95,6 +95,16 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		unmarked:
 			"No included article; not uncertainty and not semantic indefiniteness",
 	},
+	"lemma.coreFeatures.article": {
+		question:
+			"Is this name canonically cited with the definite article, as a dictionary gives it (die Schweiz, der Rhein, die Niederlande, die NATO, das Saarland, der Struwwelpeter)? Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz).",
+		values: {
+			Definite:
+				"The name is canonically cited with its definite article, which it owns as its first member wherever the sentence shows it",
+		},
+		unmarked:
+			"The name is cited bare (Berlin, Anna, Deutschland), even where this sentence gives it an article of its own (das alte Berlin, colloquial der Peter), or an article is part of a title's own wording (Die Physiker)",
+	},
 	"lemma.coreFeatures.gender": {
 		question:
 			"What is the dictionary noun's lexical grammatical gender? Recover the singular identity even from plural spelling, as with Kinder and das Kind. Diminutives in -chen/-lein are neuter regardless of the referent's sex. Preserve lexical gender in plural occurrences.",

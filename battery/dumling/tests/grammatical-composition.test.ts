@@ -357,6 +357,209 @@ test("a hidden Hebrew article is a Fusion component that leaves its noun Partial
 	])
 		expect(parseUnit(invalid).success).toBe(false);
 });
+const properNoun = (
+	canonicalForm: string,
+	article: "Definite" | null,
+	gender: "Fem" | "Masc" | "Neut",
+	grammaticalCase: "Acc" | "Dat" | "Nom",
+) => ({
+	unitKind: "Surface",
+	language: "de",
+	normalizedSurface: canonicalForm,
+	spelling: "Canonical",
+	surfaceFeatures: null,
+	lemma: {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "PROPN",
+		canonicalForm,
+		coreFeatures: { abbr: null, article, foreign: null, gender },
+	},
+	inflectionalFeatures: { case: grammaticalCase, number: "Sing" },
+});
+test("a proper noun cited with its article owns it like a common noun", () => {
+	// Wir fahren in die Schweiz.
+	const schweiz = {
+		unitKind: "Attestation",
+		surface: properNoun("Schweiz", "Definite", "Fem", "Acc"),
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "die", orthography: "Standard" },
+			{ attested: "Schweiz", orthography: "Standard" },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(schweiz).success).toBe(true);
+	// Er badet im Rhein.
+	const rhein = {
+		...schweiz,
+		surface: properNoun("Rhein", "Definite", "Masc", "Dat"),
+		members: [
+			{ attested: "m", orthography: "Fused", fusion: im, component: 1 },
+			{ attested: "Rhein", orthography: "Standard" },
+		],
+	};
+	expect(parseUnit(rhein).success).toBe(true);
+	// unsere Schweiz: the name keeps its article where none is attested.
+	expect(
+		parseUnit({
+			...schweiz,
+			members: [schweiz.members[1]],
+			articleEvidence: null,
+		}).success,
+	).toBe(true);
+	for (const invalid of [
+		{ ...schweiz, realizationCoverage: "Partial" },
+		{ ...schweiz, articleEvidence: { kind: "Owned", member: 2 } },
+		{
+			...schweiz,
+			surface: {
+				...schweiz.surface,
+				lemma: {
+					...schweiz.surface.lemma,
+					coreFeatures: {
+						...schweiz.surface.lemma.coreFeatures,
+						article: "Indefinite",
+					},
+				},
+			},
+		},
+		// A singular name with an article needs a gender for its form.
+		{
+			...schweiz,
+			surface: {
+				...schweiz.surface,
+				lemma: {
+					...schweiz.surface.lemma,
+					coreFeatures: {
+						...schweiz.surface.lemma.coreFeatures,
+						gender: null,
+					},
+				},
+			},
+		},
+	])
+		expect(parseUnit(invalid).success).toBe(false);
+});
+test("a proper noun cited bare owns no article", () => {
+	// Ich wohne in Berlin.
+	const berlin = {
+		unitKind: "Attestation",
+		surface: properNoun("Berlin", null, "Neut", "Dat"),
+		realizationCoverage: "Full",
+		members: [{ attested: "Berlin", orthography: "Standard" }],
+		articleEvidence: null,
+	};
+	expect(parseUnit(berlin).success).toBe(true);
+	// das alte Berlin: das is its own DET, never Berlin's article.
+	expect(
+		parseUnit({
+			...berlin,
+			members: [
+				{ attested: "das", orthography: "Standard" },
+				{ attested: "Berlin", orthography: "Standard" },
+			],
+			articleEvidence: { kind: "Owned", member: 0 },
+		}).success,
+	).toBe(false);
+	expect(
+		parseUnit({
+			...berlin,
+			realizationCoverage: "Partial",
+			articleEvidence: {
+				kind: "Shared",
+				article: { attested: "das", orthography: "Standard" },
+			},
+		}).success,
+	).toBe(false);
+});
+test("an English and a Hebrew proper noun own the article they are cited with", () => {
+	// the Netherlands
+	const netherlands = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "Netherlands",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "en",
+				family: "Lexeme",
+				kind: "PROPN",
+				canonicalForm: "Netherlands",
+				coreFeatures: {
+					abbr: null,
+					article: "Definite",
+					extPos: null,
+					style: null,
+				},
+			},
+			inflectionalFeatures: { number: "Plur" },
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "the", orthography: "Standard" },
+			{ attested: "Netherlands", orthography: "Standard" },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(netherlands).success).toBe(true);
+	// הירדן: ה is the name's own Fused member.
+	const fusion = {
+		spelling: "הירדן",
+		components: [
+			{ span: "ה", surface: "ה" },
+			{ span: "ירדן", surface: "ירדן" },
+		],
+	};
+	const yarden = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "he",
+			normalizedSurface: "ירדן",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "he",
+				family: "Lexeme",
+				kind: "PROPN",
+				canonicalForm: "ירדן",
+				coreFeatures: {
+					abbr: null,
+					article: "Definite",
+					gender: "Masc",
+				},
+			},
+			inflectionalFeatures: { number: "Sing" },
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "ה", orthography: "Fused", fusion, component: 0 },
+			{ attested: "ירדן", orthography: "Fused", fusion, component: 1 },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(yarden).success).toBe(true);
+	const bare = {
+		...yarden,
+		surface: {
+			...yarden.surface,
+			lemma: {
+				...yarden.surface.lemma,
+				coreFeatures: {
+					...yarden.surface.lemma.coreFeatures,
+					article: null,
+				},
+			},
+		},
+	};
+	expect(parseUnit(bare).success).toBe(false);
+});
 const preposition = (canonicalForm: string, adpType = "Prep") => ({
 	unitKind: "Lemma",
 	language: "de",

@@ -3,7 +3,11 @@ import { checkIfGrundform, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { Effect } from "effect";
 import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";
-import { deriveNounArticle, nounArticleReference } from "../src/index.js";
+import {
+	deriveNounArticle,
+	nounArticleReference,
+	selectNounHeadingArticle,
+} from "../src/index.js";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
@@ -767,3 +771,169 @@ for (const [form, caseValue, number, gender] of [
 		expect(reference.surface.inflectionalFeatures).toBeNull();
 	});
 }
+
+/** A proper noun on the PROPN route, with its Core `article` (ADR 0035). */
+function name(
+	text: string,
+	members: string[],
+	canonicalForm: string,
+	article: "Definite" | null,
+	gender: "Fem" | "Masc" | "Neut",
+	caseValue: "Acc" | "Dat",
+	articleOrthography: "Standard" | "Fused" = "Standard",
+) {
+	const segments = segmentsOf(text);
+	let previous = -1;
+	const indices = members.map((member) => {
+		previous = segments.findIndex(
+			(segment, index) => index > previous && segment.text === member,
+		);
+		return previous;
+	});
+	const encounter = validateEncounter({
+		sentence: { id: "proper-noun-article", language: "de", segments },
+		target: {
+			family: "Lexeme",
+			kind: "PROPN",
+			memberSegmentIndices: indices,
+		},
+	});
+	const owned = members.length > 1;
+	const golden = {
+		lemma: {
+			canonicalForm,
+			coreFeatures: { abbr: null, article, foreign: null, gender },
+		},
+		surface: {
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			inflectionalFeatures: { case: caseValue, number: "Sing" },
+		},
+		normalizedMembers: members.map((member, position) =>
+			owned && position === 0
+				? articleOrthography === "Fused"
+					? "dem"
+					: member.toLocaleLowerCase("de")
+				: member,
+		),
+		memberOrthographies: members.map((_, position) =>
+			owned && position === 0 ? articleOrthography : "Standard",
+		),
+		realizationCoverage: "Full",
+		articleEvidence: owned ? { kind: "Owned", member: 0 } : null,
+	};
+	return (overrides: Record<string, string> = {}) =>
+		Effect.runPromise(
+			createDumgen(grammarFixture(golden, overrides)).resolveGrammar({
+				...encounter,
+				contextAvailable: false,
+			}),
+		);
+}
+
+test("a name cited with its article owns it: Wir fahren in die Schweiz", async () => {
+	const result = await name(
+		"Wir fahren in die Schweiz",
+		["die", "Schweiz"],
+		"Schweiz",
+		"Definite",
+		"Fem",
+		"Acc",
+	)();
+	expect(
+		result.members.map(({ attested, orthography }) => [
+			attested,
+			orthography,
+		]),
+	).toEqual([
+		["die", "Standard"],
+		["Schweiz", "Standard"],
+	]);
+	expect(result.realizationCoverage).toBe("Full");
+	expect(result).toHaveProperty("articleEvidence", {
+		kind: "Owned",
+		member: 0,
+	});
+	expect(result.surface.normalizedSurface).toBe("Schweiz");
+	expect(result.surface.lemma).toMatchObject({
+		kind: "PROPN",
+		canonicalForm: "Schweiz",
+		coreFeatures: { article: "Definite", gender: "Fem" },
+	});
+	expect(result.surface).toHaveProperty("inflectionalFeatures", {
+		case: "Acc",
+		number: "Sing",
+	});
+	// Its article is derived like a noun's: die, Acc Sing Fem.
+	expect(deriveNounArticle(result.surface)).toHaveProperty(
+		"surface.normalizedSurface",
+		"die",
+	);
+	expect(selectNounHeadingArticle(result.surface.lemma)).toHaveProperty(
+		"lemma.canonicalForm",
+		"die",
+	);
+});
+
+test("a name owns the article piece of a fused word: Er badet im Rhein", async () => {
+	const result = await name(
+		"Er badet im Rhein",
+		["m", "Rhein"],
+		"Rhein",
+		"Definite",
+		"Masc",
+		"Dat",
+		"Fused",
+	)();
+	expect(
+		result.members.map(({ attested, orthography }) => [
+			attested,
+			orthography,
+		]),
+	).toEqual([
+		["m", "Fused"],
+		["Rhein", "Standard"],
+	]);
+	expect(result.members[0]).toMatchObject({
+		fusion: { spelling: "im" },
+		component: 1,
+	});
+	expect(result.realizationCoverage).toBe("Full");
+	expect(result.surface.normalizedSurface).toBe("Rhein");
+	expect(deriveNounArticle(result.surface)).toHaveProperty(
+		"surface.normalizedSurface",
+		"dem",
+	);
+});
+
+test("a name cited bare owns no article: Ich wohne in Berlin", async () => {
+	const result = await name(
+		"Ich wohne in Berlin",
+		["Berlin"],
+		"Berlin",
+		null,
+		"Neut",
+		"Dat",
+	)();
+	expect(result.members.map(({ attested }) => attested)).toEqual(["Berlin"]);
+	expect(result).toHaveProperty("articleEvidence", null);
+	expect(result.surface.lemma.coreFeatures).toHaveProperty("article", null);
+	expect(deriveNounArticle(result.surface)).toBeNull();
+	expect(selectNounHeadingArticle(result.surface.lemma)).toBeNull();
+});
+
+test("an article before a name cited bare is never the name's own", async () => {
+	// das alte Berlin: the article is its own DET, so a judged attachment
+	// to a bare-cited name is refused rather than stored.
+	const resolve = name(
+		"Viele vermissen das alte Berlin",
+		["das", "Berlin"],
+		"Berlin",
+		null,
+		"Neut",
+		"Acc",
+	);
+	await expect(resolve()).rejects.toThrow(
+		"Only a name cited with its definite article owns one",
+	);
+});

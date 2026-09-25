@@ -357,6 +357,19 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: true });
 	});
+	test("a proper noun's Core article does not decide its Grundform", () => {
+		for (const article of ["Definite", null])
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/PROPN", {
+						canonical: "Schweiz",
+						core: { article, gender: "Fem" },
+						features: { case: "Nom", number: "Sing" },
+					}),
+				),
+				String(article),
+			).toEqual({ success: true, value: true });
+	});
 	test("Hebrew nouns have their own singular indefinite Grundform features", () => {
 		expect(
 			checkIfGrundform(

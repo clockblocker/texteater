@@ -34,7 +34,8 @@ export const routes = {
 		"Particle, including negation, modal and focus particles and the infinitive marker zu before an infinitive (schwer zu erklären, versucht zu schlafen)",
 	"Lexeme/PRON":
 		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
-	"Lexeme/PROPN": "Proper noun",
+	"Lexeme/PROPN":
+		"Proper noun, with the definite article it is canonically cited with (die Schweiz); a name cited bare (Berlin) absorbs no article",
 	"Lexeme/SCONJ":
 		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",
 	"Lexeme/SYM": "Symbol",
@@ -172,7 +173,7 @@ export function articleMembers(
 
 /**
  * Pure assembly of the judge's answers. Membership Unresolved stops before the
- * route; a NOUN may absorb only the one article opening its phrase, because the
+ * route; a NOUN or PROPN may absorb only the one article opening its phrase, because the
  * membership judge sometimes attaches every article in the sentence to the
  * clicked noun and the grammar stage would only reject that later.
  */
@@ -201,7 +202,7 @@ export function assembleTarget(
 			reason: "Assembled target is not defensible",
 		};
 	const [family, kind] = selected.split("/") as [string, string];
-	if (kind === "NOUN") {
+	if (kind === "NOUN" || kind === "PROPN") {
 		const articles = articleMembers(input.sentence, members);
 		if (
 			articles.length > 1 ||
@@ -209,7 +210,7 @@ export function assembleTarget(
 		)
 			return {
 				decision: "Unresolved",
-				reason: "A noun target may absorb only the one article opening its phrase",
+				reason: `A ${kind === "PROPN" ? "proper noun" : "noun"} target may absorb only the one article opening its phrase`,
 			};
 	}
 	return {

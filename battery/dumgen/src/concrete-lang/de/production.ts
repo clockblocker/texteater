@@ -238,7 +238,8 @@ export function createGermanOperations(
 						if (
 							output.realizationCoverage !== "Full" &&
 							lemma.family !== "Phraseme" &&
-							lemma.kind !== "NOUN"
+							lemma.kind !== "NOUN" &&
+							lemma.kind !== "PROPN"
 						)
 							throw new DumgenFailure(
 								"InvalidModelOutput",
@@ -283,7 +284,8 @@ export function createGermanOperations(
 												output.valencyEvidence ?? [],
 										}
 									: {}),
-								...(lemma.kind === "NOUN"
+								...(lemma.kind === "NOUN" ||
+								lemma.kind === "PROPN"
 									? {
 											articleEvidence:
 												output.articleEvidence ?? null,
