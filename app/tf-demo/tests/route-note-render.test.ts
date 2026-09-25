@@ -62,6 +62,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 			],
 			realizationCoverage: "Full",
 			surface: presentedSurface("steht auf", "aufstehen", "VERB"),
+			fusions: [],
 		},
 		surfaceTarget: {
 			kind: "Surface",
@@ -80,6 +81,93 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 	);
 	expect(lemmaMarkup).not.toContain('role="alert"');
 	expect(attestationMarkup).not.toContain('role="alert"');
+});
+
+test("an Attestation holding a piece of a fused word reaches its Fusion, and its noun Surface shows the article", () => {
+	const fusion = {
+		spelling: "im",
+		components: [
+			{ span: "i", surface: "in" },
+			{ span: "m", surface: "dem" },
+		],
+	};
+	const wald = {
+		...presentedSurface("Wald", "Wald", "NOUN"),
+		lemma: {
+			...presentedLemma("Wald", "NOUN"),
+			coreFeatures: { gender: "Masc" },
+		},
+		inflectionalFeatures: {
+			article: "Definite",
+			case: "Dat",
+			number: "Sing",
+		},
+	};
+	const attestation = {
+		kind: "Attestation",
+		target: { kind: "Attestation", attestationId: "attestation-1" },
+		source: {
+			textId: "text-1",
+			sentencePosition: 0,
+			sentenceSnippet: "Ich bin im Wald.",
+			segments: [
+				{ kind: "ResolvableText", text: "Ich" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "bin" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "i" },
+				{ kind: "ResolvableText", text: "m" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "Wald" },
+				{ kind: "Punctuation", text: "." },
+			],
+			memberSegmentIndices: [5, 7],
+			origin: { kind: "Text" },
+			target: {
+				kind: "Text",
+				textId: "text-1",
+				focusAttestationId: "attestation-1",
+			},
+		},
+		presented: {
+			members: [
+				{ attested: "m", orthography: "Fused", fusion, component: 1 },
+				{ attested: "Wald", orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
+			surface: wald,
+			fusions: [
+				{
+					...fusion,
+					realized: [1],
+					oneLiner: "„im“ ist „in dem“.",
+				},
+			],
+		},
+		surfaceTarget: {
+			kind: "Surface",
+			language: "de",
+			normalizedSurface: "Wald",
+		},
+		reading: {
+			emojiDescription: "🌲",
+			target: { kind: "Reading", readingId: "reading-1" },
+		},
+	} as unknown as NoteDataFor<"Attestation">;
+	const markup = renderToStaticMarkup(renderNote({ noteData: attestation }));
+	expect(markup).not.toContain('role="alert"');
+	expect(markup).toContain('aria-label="Fusion"');
+	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im = in + dem");
+	expect(markup).toContain('data-realized="true"');
+	expect(markup).toContain("„im“ ist „in dem“.");
+	expect(markup).toContain("dem Wald");
+	const bare = {
+		...attestation,
+		presented: { ...attestation.presented, fusions: [] },
+	} as NoteDataFor<"Attestation">;
+	expect(renderToStaticMarkup(renderNote({ noteData: bare }))).not.toContain(
+		'aria-label="Fusion"',
+	);
 });
 
 test("Surface Notes use the universal pipeline without an outer route", () => {

@@ -10,6 +10,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
 import { coreGender, nounHeadingArticle } from "../shared/grammatical-gender";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
+import { displayedSurface } from "../shared/surface-display";
 import { renderNote } from "../src/notes";
 import { ReaderSentence } from "../src/views/reader-sentence";
 
@@ -54,6 +55,35 @@ test("only noun and pronoun Core Features supply colour", () => {
 	).toBeUndefined();
 });
 
+test("a noun Surface is displayed with the article its features derive", () => {
+	const wald = (
+		language: string,
+		inflectionalFeatures: Record<string, string | null>,
+		kind = "NOUN",
+	) =>
+		displayedSurface({
+			language,
+			normalizedSurface: language === "he" ? "בית" : "Wald",
+			inflectionalFeatures,
+			lemma: { family: "Lexeme", kind, coreFeatures: { gender: "Masc" } },
+		});
+	expect(
+		wald("de", { article: "Definite", case: "Dat", number: "Sing" }),
+	).toBe("dem Wald");
+	expect(
+		wald("de", { article: "Indefinite", case: "Acc", number: "Sing" }),
+	).toBe("einen Wald");
+	expect(wald("de", { article: "None", case: "Dat", number: "Sing" })).toBe(
+		"Wald",
+	);
+	expect(wald("en", { article: "Definite", number: "Sing" })).toBe("Wald");
+	expect(wald("he", { definite: "Def" })).toBe("הבית");
+	expect(wald("he", { definite: "Ind" })).toBe("בית");
+	expect(
+		wald("de", { article: "Definite", case: "Dat", number: "Sing" }, "ADJ"),
+	).toBe("Wald");
+});
+
 test("noun Reading heading has separate article and noun destinations", () => {
 	const followed: unknown[] = [];
 	const note = renderReading(readingNote(), {
@@ -80,7 +110,16 @@ test("Surface heading links its existing article once and follows the exact anal
 	};
 	const analysis = {
 		analysisKey: "noun-dative",
-		presented: { lemma },
+		presented: {
+			language: "de",
+			normalizedSurface: "Aufstieg",
+			inflectionalFeatures: {
+				article: "Indefinite",
+				case: "Dat",
+				number: "Sing",
+			},
+			lemma,
+		},
 		article,
 	};
 	const surfaceNote = (analyses: readonly unknown[]) =>
@@ -89,7 +128,7 @@ test("Surface heading links its existing article once and follows the exact anal
 			target: {
 				kind: "Surface",
 				language: "de",
-				normalizedSurface: "einem Aufstieg",
+				normalizedSurface: "Aufstieg",
 			},
 			analyses,
 			continueCursor: "",
@@ -123,6 +162,7 @@ test("Surface heading links its existing article once and follows the exact anal
 			...analysis,
 			analysisKey: "other",
 			presented: {
+				...analysis.presented,
 				lemma: { ...lemma, coreFeatures: { gender: "Fem" } },
 			},
 		},

@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { makeSurfaceId } from "dumdict/planning";
 import { deriveNounArticle } from "dumgen/authored";
 import { parseGermanSurface } from "../../../server/operationalParsing";
+import { displayedSurface } from "../../../shared/surface-display";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
@@ -73,6 +74,8 @@ const attestationRouteNoteValidator = v.object({
 const surfaceRouteConnectionValidator = v.object({
 	surfaceId: v.id("surfaces"),
 	normalizedSurface: v.string(),
+	/** The Surface as the learner reads it: a noun with its article. */
+	displayed: v.string(),
 	canonicalForm: v.string(),
 	family: familyValidator,
 	kind: kindValidator,
@@ -443,6 +446,9 @@ async function loadLemmaRouteNote(
 							{
 								surfaceId: surface._id,
 								normalizedSurface: surface.normalizedSurface,
+								displayed: displayedSurface(
+									surfaceValue(surface, lemma),
+								),
 								canonicalForm: lemma.canonicalForm,
 								family: lemma.family,
 								kind: lemma.kind,

@@ -6,7 +6,6 @@ import {
 	type ResolutionGrammarProjection,
 	type ResolutionReadingProjection,
 } from "../../server/resolutionSessionProjection";
-import { encounterSentenceOf } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
@@ -298,8 +297,7 @@ async function resolutionSource(
 	ctx: QueryCtx,
 	session: ResolutionSession,
 ): Promise<ResolutionSource> {
-	const [sentence, segments, committed] = await Promise.all([
-		ctx.db.get(session.sentenceId),
+	const [segments, committed] = await Promise.all([
 		loadStoredSegments(ctx, session.sentenceId),
 		session.attestationId
 			? loadCompleteOccurrenceMembers(ctx, session.attestationId)
@@ -310,16 +308,9 @@ async function resolutionSource(
 	let memberSegmentIndices = [session.clickedSegmentIndex];
 	if (committed) {
 		memberSegmentIndices = committed.memberSegmentIndices;
-	} else if (sentence && encounterMembers) {
-		// Grammar reads fused words apart, so its indices are Encounter indices.
-		const view = encounterSentenceOf({
-			segmentedSentenceId: sentence.segmentedSentenceId,
-			segments,
-		});
-		memberSegmentIndices = encounterMembers.flatMap((index) => {
-			const stored = view.storedIndex(index);
-			return stored === undefined ? [] : [stored];
-		});
+	} else if (encounterMembers) {
+		// Encounter indices are stored indices: both hold a fused word's pieces.
+		memberSegmentIndices = [...encounterMembers];
 	}
 	return {
 		segments: segments.map(({ kind, text }) => ({ kind, text })),

@@ -1,8 +1,12 @@
 import { expect, test } from "bun:test";
 import type { SentenceAnalysis } from "dumgen/types";
+import { selectAnalysisTarget } from "../server/sentenceAnalysisSelection";
 import {
+	assertPiecesStored,
+	assertStoredSentence,
 	encounterSentenceOf,
 	storedSegmentsOf,
+	storedSegmentsWithoutAnalysis,
 } from "../server/storedSegments";
 
 const piece = (
@@ -55,40 +59,82 @@ test("a fused word is stored split, each component keeping its surface; an abbre
 	expect(segments[6]).toEqual({ kind: "ResolvableText", text: "z.B." });
 });
 
-test("the Encounter reads a fused word as its spaced surfaces and maps indices both ways", () => {
-	const view = encounterSentenceOf({
+test("the Encounter holds a fused word as its stored pieces, so its indices are the stored ones", () => {
+	const sentence = encounterSentenceOf({
 		segmentedSentenceId: "sentence-1",
 		segments: storedSegmentsOf(analysis).map((segment, index) => ({
 			...segment,
 			index,
 		})),
 	});
-	expect(view.sentence.segments.map(({ text }) => text).join("")).toBe(
-		"in dem Haus, z.B. hier.",
-	);
-	expect([0, 1, 2, 3].map(view.encounterIndex)).toEqual([0, 2, 3, 4]);
-	expect([0, 1, 2, 3, 4].map(view.storedIndex)).toEqual([
-		0,
-		undefined,
-		1,
-		2,
-		3,
-	]);
-});
-
-test("a Sentence without fused words keeps its stored indices", () => {
-	const view = encounterSentenceOf({
-		segmentedSentenceId: "sentence-1",
-		segments: [
-			{ index: 0, kind: "ResolvableText", text: "im" },
-			{ index: 1, kind: "Whitespace", text: " " },
-			{ index: 2, kind: "ResolvableText", text: "Haus" },
-		],
-	});
-	expect(view.sentence.segments).toEqual([
-		{ kind: "ResolvableText", text: "im" },
+	expect(sentence.segments.slice(0, 4)).toEqual([
+		{ kind: "ResolvableText", text: "I" },
+		{ kind: "ResolvableText", text: "m" },
 		{ kind: "Whitespace", text: " " },
 		{ kind: "ResolvableText", text: "Haus" },
 	]);
-	expect([0, 1, 2].map(view.encounterIndex)).toEqual([0, 1, 2]);
+	expect(sentence.segments.map(({ text }) => text).join("")).toBe(
+		analysis.stitchedText,
+	);
+});
+
+test("a German Sentence stored without an analysis still holds the pieces", () => {
+	const segments = storedSegmentsWithoutAnalysis({
+		language: "de",
+		segments: [
+			{ kind: "ResolvableText", text: "im" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Wald" },
+		],
+	});
+	expect(segments).toEqual([
+		{ kind: "ResolvableText", text: "i", surface: "in" },
+		{ kind: "ResolvableText", text: "m", surface: "dem" },
+		{ kind: "Whitespace", text: " " },
+		{ kind: "ResolvableText", text: "Wald" },
+	]);
+	expect(() =>
+		assertPiecesStored({ language: "de", segments }),
+	).not.toThrow();
+});
+
+test("a stored German Sentence with an unsplit fused word fails loudly", () => {
+	const segments = [
+		{ index: 0, kind: "ResolvableText" as const, text: "im" },
+		{ index: 1, kind: "Whitespace" as const, text: " " },
+		{ index: 2, kind: "ResolvableText" as const, text: "Wald" },
+	];
+	expect(() =>
+		assertStoredSentence({
+			language: "de",
+			stitchedText: "im Wald",
+			segments,
+		}),
+	).toThrow('fused word "im" unsplit');
+	expect(() =>
+		assertStoredSentence({
+			language: "en",
+			stitchedText: "im Wald",
+			segments,
+		}),
+	).not.toThrow();
+});
+
+test("an analysis selects the stored pieces; a stored Sentence that does not match it fails loudly", () => {
+	const stored = {
+		stitchedText: "Im Haus",
+		segments: [
+			{ index: 0, kind: "ResolvableText" as const, text: "Im" },
+			{ index: 1, kind: "Whitespace" as const, text: " " },
+			{ index: 2, kind: "ResolvableText" as const, text: "Haus" },
+		],
+	};
+	const split = {
+		...analysis,
+		stitchedText: "Im Haus",
+		segments: analysis.segments.slice(0, 4),
+	} as SentenceAnalysis;
+	expect(() => selectAnalysisTarget(split, stored, 0)).toThrow(
+		"a fused word must be stored as its pieces",
+	);
 });

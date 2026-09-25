@@ -33,7 +33,6 @@ export type ClassificationReason =
 	| "noResolvedUnit"
 	| "identityMiss"
 	| "auxSingleton"
-	| "clickedNotMember"
 	| "invalidEncounter";
 
 export type AnalysisSelection =
@@ -46,25 +45,18 @@ export type AnalysisSelection =
 /**
  * Reads the stored Sentence Analysis for one click instead of classifying.
  *
- * Stored Segments are index-keyed; analysed Segments are offset-keyed and a
- * fused word is one Segment per component. Sentences stored since intake
- * split fused words match the analysed Segments one to one; older ones hold
- * the unsplit word. The bridge is the Stitched Text: stored Segments
- * concatenate to it, so each stored Segment owns the offset range
- * `[start, start + text.length)`. The click lands on the first analysed
- * ResolvableText Segment in the clicked range, and the largest resolved unit
- * there is the target.
+ * Stored Segments are index-keyed and analysed Segments offset-keyed, but
+ * they are the same Segments: a fused word is stored as its pieces
+ * (ADR 0035), so each stored Segment starts where one analysed Segment does
+ * and spells it. The Stitched Text is the bridge: stored Segments concatenate
+ * to it, so each owns the offset `start`. A stored Sentence that does not
+ * match its analysis this way is broken, and the selector throws. The largest
+ * resolved unit at the clicked Segment is the target, and its members are the
+ * stored Segments at its offsets.
  *
- * A stored Segment is a member iff every analysed Segment inside its range is
- * in the unit. In an older Sentence the `r` of `zur` may serve a NOUN as
- * Article while `zu` stays a separate ADP; that NOUN does not cover the
- * stored `zur`, but a Collocation over both does. When the clicked Segment
- * itself is not a member the unit cannot be expressed at stored granularity
- * and the caller classifies.
- *
- * A lone word whose selected identity is AUX is classified as well: ADR 0026
- * forbids AUX as a target, and texteater#523 decides what the selector should
- * do instead. Every classified outcome names its reason.
+ * A lone word whose selected identity is AUX is classified: ADR 0026 forbids
+ * AUX as a target, and texteater#523 decides what the selector should do
+ * instead. Every classified outcome names its reason.
  *
  * The `word` layer skips any Phraseme over the click: the clicked word is
  * what a host resolves once grammar refuses the Phraseme.
@@ -81,25 +73,25 @@ export function selectAnalysisTarget(
 	if (!analysis) return { target: null, reason: "noAnalysis" };
 	if (analysis.stitchedText !== stored.stitchedText)
 		return { target: null, reason: "stitchedMismatch" };
-	const ordered = [...stored.segments].sort(
-		(left, right) => left.index - right.index,
-	);
 	const ranges = storedSegmentRanges(stored);
 	if (!ranges) return { target: null, reason: "lengthMismatch" };
-	const clicked = ranges.get(clickedSegmentIndex);
-	if (!clicked) return { target: null, reason: "noAnchor" };
-	const analysed = [...analysis.segments].sort(
-		(left, right) => left.offset - right.offset,
+	const analysed = new Map(
+		analysis.segments.map((segment) => [segment.offset, segment]),
 	);
-	const within = (range: { start: number; end: number }) =>
-		analysed.filter(
-			(segment) =>
-				segment.offset >= range.start && segment.offset < range.end,
-		);
-	const anchor = within(clicked).find(
-		(segment) => segment.kind === "ResolvableText",
-	);
-	if (!anchor) return { target: null, reason: "noAnchor" };
+	const offsets = new Map<number, number>();
+	for (const segment of stored.segments) {
+		const range = ranges.get(segment.index);
+		const match = range && analysed.get(range.start);
+		if (!range || match?.text !== segment.text)
+			throw new Error(
+				`Stored Segment ${segment.index} ("${segment.text}") is not an analysed Segment; a fused word must be stored as its pieces.`,
+			);
+		offsets.set(segment.index, range.start);
+	}
+	const clicked = offsets.get(clickedSegmentIndex);
+	const anchor = clicked === undefined ? undefined : analysed.get(clicked);
+	if (anchor?.kind !== "ResolvableText")
+		return { target: null, reason: "noAnchor" };
 	const unit =
 		layer === "word"
 			? resolvedWordAt(analysis, anchor.offset)
@@ -121,17 +113,11 @@ export function selectAnalysisTarget(
 	)
 		return { target: null, reason: "auxSingleton" };
 	const covered = new Set(unit.offsets);
-	const memberSegmentIndices = ordered.flatMap((segment) => {
-		const range = ranges.get(segment.index);
-		if (!range) return [];
-		const inside = within(range);
-		return inside.length > 0 &&
-			inside.every((entry) => covered.has(entry.offset))
-			? [segment.index]
-			: [];
-	});
-	if (!memberSegmentIndices.includes(clickedSegmentIndex))
-		return { target: null, reason: "clickedNotMember" };
+	const memberSegmentIndices = [...stored.segments]
+		.sort((left, right) => left.index - right.index)
+		.flatMap(({ index }) =>
+			covered.has(offsets.get(index) ?? -1) ? [index] : [],
+		);
 	return {
 		target: { family: unit.family, kind: unit.kind, memberSegmentIndices },
 	};

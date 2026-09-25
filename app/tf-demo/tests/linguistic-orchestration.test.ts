@@ -69,7 +69,7 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 		normalizedSurface: "Banken",
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
 	},
 	realizationCoverage: "Full",
 	articleEvidence: null,
@@ -90,7 +90,7 @@ const grammarOutput = {
 	surface: {
 		spelling: "Canonical",
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+		inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
 	},
 	lemma: {
 		canonicalForm: "Bank",
@@ -1013,7 +1013,8 @@ test("the occurrence commit waits for the in-flight Reading checkpoint", async (
 // ------------------------------------------------ Sentence Analysis at intake
 
 const verfuegungText = "Er stellt das Auto zur Verfügung.";
-const verfuegungSegments = [
+/** `zur` stored as intake splits it: `zu` standing for `zu`, `r` standing for `der`. */
+const verfuegungSegments: StoredSegment[] = [
 	"Er",
 	" ",
 	"stellt",
@@ -1022,7 +1023,8 @@ const verfuegungSegments = [
 	" ",
 	"Auto",
 	" ",
-	"zur",
+	"zu",
+	"r",
 	" ",
 	"Verfügung",
 	".",
@@ -1035,6 +1037,11 @@ const verfuegungSegments = [
 				? ("Punctuation" as const)
 				: ("ResolvableText" as const),
 	text,
+	...(text === "zu"
+		? { surface: "zu" }
+		: text === "r"
+			? { surface: "der" }
+			: {}),
 }));
 const word = (offset: number, text: string, surface = text) => ({
 	offset,
@@ -1133,7 +1140,7 @@ function setupWithAnalysis(
 		readonly analyzeSentence?: Dumgen["analyzeSentence"];
 		readonly analysis?: SentenceAnalysis | null;
 		readonly inspection?: ReturnType<typeof createInspectionCapture>;
-		/** Stored Segments; the unsplit words by default. */
+		/** Stored Segments; the `verfuegung` pieces by default. */
 		readonly segments?: readonly StoredSegment[];
 		/** The stored sentence's text; the `verfuegung` sentence by default. */
 		readonly stitchedText?: string;
@@ -1389,9 +1396,9 @@ test("interrupting a submission during Sentence Analysis propagates, stores noth
 
 // ------------------------------------------------ Sentence Analysis at click
 
-const verfuegungSelection = { ...selection, clickedSegmentIndex: 10 };
+const verfuegungSelection = { ...selection, clickedSegmentIndex: 11 };
 
-test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers the fused `zur` and skips classification; refused, it falls to the clicked word", async () => {
+test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers both pieces of `zur` and skips classification; refused, it falls to the clicked word", async () => {
 	const inspection = createInspectionCapture();
 	const run = setupWithAnalysis([], {
 		inspection,
@@ -1405,9 +1412,9 @@ test("a click reads the stored analysis: a Collocation over `stellt zur Verfügu
 		{
 			family: "Phraseme",
 			kind: "Collocation",
-			memberSegmentIndices: [2, 8, 10],
+			memberSegmentIndices: [2, 8, 9, 11],
 		},
-		{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [10] },
+		{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [9, 11] },
 	]);
 	expect(
 		inspection.steps.some(
@@ -1427,7 +1434,7 @@ test("a click reads the stored analysis: a Collocation over `stellt zur Verfügu
 	});
 });
 
-test("a NOUN whose Article is the `r` of `zur` leaves the stored `zur` outside its target", async () => {
+test("a NOUN owns the `r` of `zur` as its article member", async () => {
 	const run = setupWithAnalysis([], {
 		analysis: verfuegungAnalysis({ collocation: false }),
 	});
@@ -1437,48 +1444,33 @@ test("a NOUN whose Article is the `r` of `zur` leaves the stored `zur` outside i
 	expect(run.encounters[0]?.target).toEqual({
 		family: "Lexeme",
 		kind: "NOUN",
-		memberSegmentIndices: [10],
+		memberSegmentIndices: [9, 11],
 	});
 	expect(run.requests).toHaveLength(0);
 });
 
-test("a click on the fused `zur` itself cannot be expressed by a sub-word unit and is classified", async () => {
-	const inspection = createInspectionCapture();
-	const run = setupWithAnalysis(
-		[{ family: "Lexeme", kind: "ADP", memberSegmentIndices: [8] }],
-		{ analysis: verfuegungAnalysis({ collocation: false }), inspection },
-	);
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment({
-			...selection,
-			clickedSegmentIndex: 8,
-		}),
-	);
-	expect(run.encounters[0]?.target).toEqual({
-		family: "Lexeme",
-		kind: "ADP",
-		memberSegmentIndices: [8],
+test("a stored Sentence holding the fused `zur` unsplit fails loudly instead of being bridged", async () => {
+	const unsplit: StoredSegment[] = [
+		...verfuegungSegments.slice(0, 8),
+		{ index: 8, kind: "ResolvableText", text: "zur" },
+		...verfuegungSegments
+			.slice(10)
+			.map((segment) => ({ ...segment, index: segment.index - 1 })),
+	];
+	const run = setupWithAnalysis([], {
+		analysis: verfuegungAnalysis({ collocation: false }),
+		segments: unsplit,
 	});
-	expect(
-		run.requests.filter((request) => request.stage === "classifyTarget"),
-	).toHaveLength(1);
-	const step = inspection.steps.find((step) =>
-		step.name.startsWith("Select target"),
-	);
-	expect(JSON.parse(step?.payloadJson ?? "null")).toMatchObject({
-		input: { reason: "clickedNotMember" },
-	});
+	await expect(
+		Effect.runPromise(
+			run.orchestrator.resolveSegment({
+				...selection,
+				clickedSegmentIndex: 8,
+			}),
+		),
+	).rejects.toThrow('fused word "zur" unsplit');
+	expect(run.encounters).toHaveLength(0);
 });
-
-/** `zur` stored as intake splits it: `zu` standing for `zu`, `r` standing for `der`. */
-const splitVerfuegungSegments: StoredSegment[] = [
-	...verfuegungSegments.slice(0, 8),
-	{ index: 8, kind: "ResolvableText", text: "zu", surface: "zu" },
-	{ index: 9, kind: "ResolvableText", text: "r", surface: "der" },
-	...verfuegungSegments
-		.slice(9)
-		.map((segment) => ({ ...segment, index: segment.index + 1 })),
-];
 
 /**
  * A stored sentence of plain words and its analysis, from `[text, kind,
@@ -1599,10 +1591,9 @@ test("a click on a governed preposition opens its governor: the adjective beside
 	expect(run.requests).toHaveLength(0);
 });
 
-test("a click on the `zu` of a split `zur` reads its ADP from the analysis and resolves `zu der`", async () => {
+test("a click on the `zu` of `zur` reads its ADP from the analysis and hands Dumgen the pieces", async () => {
 	const run = setupWithAnalysis([], {
 		analysis: verfuegungAnalysis({ collocation: false }),
-		segments: splitVerfuegungSegments,
 	});
 	await Effect.runPromise(
 		run.orchestrator.resolveSegment({
@@ -1612,8 +1603,11 @@ test("a click on the `zu` of a split `zur` reads its ADP from the analysis and r
 	);
 	expect(run.requests).toHaveLength(0);
 	const encounter = run.encounters[0];
+	expect(
+		encounter?.sentence.segments.slice(8, 10).map(({ text }) => text),
+	).toEqual(["zu", "r"]);
 	expect(encounter?.sentence.segments.map(({ text }) => text).join("")).toBe(
-		"Er stellt das Auto zu der Verfügung.",
+		verfuegungText,
 	);
 	expect(encounter?.target).toEqual({
 		family: "Lexeme",
@@ -1622,10 +1616,9 @@ test("a click on the `zu` of a split `zur` reads its ADP from the analysis and r
 	});
 });
 
-test("a click on the `r` of a split `zur` selects the NOUN it articles, in Encounter indices", async () => {
+test("a click on the `r` of `zur` selects the NOUN it articles, in stored indices", async () => {
 	const run = setupWithAnalysis([], {
 		analysis: verfuegungAnalysis({ collocation: false }),
-		segments: splitVerfuegungSegments,
 	});
 	await Effect.runPromise(
 		run.orchestrator.resolveSegment({
@@ -1638,13 +1631,13 @@ test("a click on the `r` of a split `zur` selects the NOUN it articles, in Encou
 	expect(encounter?.target).toEqual({
 		family: "Lexeme",
 		kind: "NOUN",
-		memberSegmentIndices: [10, 12],
+		memberSegmentIndices: [9, 11],
 	});
 	expect(
 		encounter?.target.memberSegmentIndices.map(
 			(index) => encounter.sentence.segments[index]?.text,
 		),
-	).toEqual(["der", "Verfügung"]);
+	).toEqual(["r", "Verfügung"]);
 });
 
 test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored analysis, falls back to click-time classification and names why", async () => {
@@ -1683,7 +1676,7 @@ test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored ana
 			target: {
 				family: "Lexeme",
 				kind: "NOUN",
-				memberSegmentIndices: [10],
+				memberSegmentIndices: [11],
 			},
 		},
 		{
@@ -1708,7 +1701,7 @@ test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored ana
 			target: {
 				family: "Lexeme",
 				kind: "NOUN",
-				memberSegmentIndices: [10],
+				memberSegmentIndices: [11],
 			},
 		},
 	] as const;
@@ -1763,10 +1756,9 @@ test("a Resolution Session run restores the stored analysis to record masses and
 					paragraph: 0,
 					language: "de",
 					stitchedText: verfuegungText,
-					segments: verfuegungSegments.map(({ kind, text }) => ({
-						kind,
-						text,
-					})),
+					segments: verfuegungSegments.map(
+						({ index: _index, ...segment }) => segment,
+					),
 					analysis: toStoredSentenceAnalysis(analysis),
 				},
 			],
@@ -1824,7 +1816,7 @@ test("a Resolution Session run restores the stored analysis to record masses and
 	expect(run.encounters[0]?.target).toEqual({
 		family: "Phraseme",
 		kind: "Collocation",
-		memberSegmentIndices: [2, 8, 10],
+		memberSegmentIndices: [2, 8, 9, 11],
 	});
 	expect(
 		run.requests.filter((request) => request.stage === "classifyTarget"),

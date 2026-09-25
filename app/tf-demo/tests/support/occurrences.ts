@@ -27,7 +27,7 @@ export const bankenSurface = {
 	normalizedSurface: "Banken",
 	spelling: "Canonical",
 	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Plur", article: null },
+	inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
 	lemma: bankLemma,
 } as const;
 
@@ -134,7 +134,6 @@ export async function commitBankOccurrence(
 /** The definite `die Banken`, whose article joins the noun's occurrence. */
 export const dieBankenSurface = {
 	...bankenSurface,
-	normalizedSurface: "die Banken",
 	inflectionalFeatures: {
 		...bankenSurface.inflectionalFeatures,
 		article: "Definite",
@@ -159,10 +158,7 @@ export function dieBankenOccurrenceCommit(
 			attestation: {
 				...commit.occurrence.attestation,
 				surface: dieBankenSurface,
-				articleEvidence: {
-					attested: "die",
-					orthography: "Standard" as const,
-				},
+				articleEvidence: { kind: "Owned" as const, member: 0 },
 				valencyEvidence: [],
 				members: [
 					{ attested: "die", orthography: "Standard" as const },

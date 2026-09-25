@@ -4,6 +4,12 @@ export {
 	selectFormAlternatives,
 	selectGrammaticalAlternatives,
 } from "./concrete-lang/de/authored-closed-sets/select.js";
+export {
+	germanFusionOneLiner,
+	isGermanFusedWord,
+	type PieceSegment,
+	splitGermanFusedWords,
+} from "./concrete-lang/de/fused-words.js";
 export { deriveGrammaticalComponent } from "./concrete-lang/de/grammatical-resolution/components.js";
 export {
 	deriveNounArticle,

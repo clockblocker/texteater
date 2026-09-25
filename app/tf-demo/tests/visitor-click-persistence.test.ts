@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
-import { internal } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { applyDumdictPlanInTransaction } from "../convex/dumdictTransaction";
 import type schema from "../convex/schema";
@@ -442,4 +442,95 @@ test("partial overlap reports the committed membership and writes nothing", asyn
 	expect(
 		(await resolutionSessionRow(t, "request-partial")).lifecycle,
 	).toMatchObject({ state: "Terminal", outcome: "PermanentFailure" });
+});
+
+test("a fused article commits as a Fused member of its noun, and the noun's Attestation Note reaches the Fusion", async () => {
+	const t = createTestConvex();
+	const { sentenceIds } = await submitText(t, [
+		[
+			{ kind: "ResolvableText", text: "zu", surface: "zu" },
+			{ kind: "ResolvableText", text: "r", surface: "der" },
+			" ",
+			"Bank",
+		],
+	]);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a stored Sentence.");
+	const selection: Selection = {
+		requestId: "zur-bank",
+		visitorId: "visitor-1",
+		sentenceId,
+		clickedSegmentIndex: 1,
+	};
+	const guard = await startSession(t, selection);
+	const fusion = {
+		spelling: "zur",
+		components: [
+			{ span: "zu", surface: "zu" },
+			{ span: "r", surface: "der" },
+		],
+	};
+	const surface = {
+		...bankenSurface,
+		normalizedSurface: "Bank",
+		inflectionalFeatures: {
+			case: "Dat",
+			number: "Sing",
+			article: "Definite",
+		},
+	} as const;
+	const commit = bankOccurrenceCommit(selection, guard);
+	const result = await t.mutation(internal.persistence.persistResolvedClick, {
+		...commit,
+		occurrence: {
+			...commit.occurrence,
+			memberSegmentIndices: [1, 3],
+			attestation: {
+				...commit.occurrence.attestation,
+				surface,
+				articleEvidence: { kind: "Owned" as const, member: 0 },
+				members: [
+					{
+						attested: "r",
+						orthography: "Fused" as const,
+						fusion,
+						component: 1,
+					},
+					{ attested: "Bank", orthography: "Standard" as const },
+				],
+			},
+			surfaceKey: makeSurfaceId("de", surface),
+		},
+	});
+	if (result.status !== "Committed")
+		throw new Error(
+			`Expected a committed occurrence, got ${result.status}.`,
+		);
+	const article = (await rows(t, "segments")).find(
+		(segment) => segment.text === "r",
+	);
+	expect(article?.attestationMembership).toEqual({
+		attestationId: result.attestationId,
+		orthography: "Fused",
+		fusion,
+		component: 1,
+	});
+	expect(result.occurrence.grammatical.attestation.members[0]).toEqual({
+		attested: "r",
+		orthography: "Fused",
+		fusion,
+		component: 1,
+	});
+	const note = await t.query(api.routeNotes.get, {
+		target: { kind: "Attestation", attestationId: result.attestationId },
+	});
+	if (note?.kind !== "Attestation") throw new Error("Expected a Note.");
+	expect(note.presented.fusions).toEqual([
+		{
+			...fusion,
+			realized: [1],
+			oneLiner: expect.stringContaining("„zur“"),
+		},
+	]);
+	expect(note.presented.surface.normalizedSurface).toBe("Bank");
 });

@@ -2,7 +2,10 @@ import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
 
 import type { Infer } from "convex/values";
-import { MAX_SEGMENTS_PER_SENTENCE } from "../../server/storedSegments";
+import {
+	MAX_SEGMENTS_PER_SENTENCE,
+	storedSegmentsWithoutAnalysis,
+} from "../../server/storedSegments";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import type { segmentInputValidator } from "./validators";
@@ -156,7 +159,8 @@ export function ownsDefinitionTextRun(
 
 /**
  * Writes one segmented definition as a hidden Definition Text and marks the
- * state row Ready. Callers must have removed any previous live Text first.
+ * state row Ready. A German fused word is stored as its pieces, as intake
+ * stores it. Callers must have removed any previous live Text first.
  */
 export async function writeDefinitionText(
 	ctx: MutationCtx,
@@ -168,15 +172,13 @@ export async function writeDefinitionText(
 		readonly segments: readonly Infer<typeof segmentInputValidator>[];
 	},
 ): Promise<{ textId: Id<"texts">; sentenceId: Id<"sentences"> }> {
-	if (
-		input.segments.length === 0 ||
-		input.segments.length > MAX_SEGMENTS_PER_SENTENCE
-	) {
+	const segments = storedSegmentsWithoutAnalysis(input);
+	if (segments.length === 0 || segments.length > MAX_SEGMENTS_PER_SENTENCE) {
 		throw new Error(
 			`A Definition Sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
 		);
 	}
-	const stitchedText = input.segments.map(({ text }) => text).join("");
+	const stitchedText = segments.map(({ text }) => text).join("");
 	const textId = await ctx.db.insert("texts", {
 		submissionKey: `definition:${input.ownerReadingKey}:${input.segmentedSentenceId}`,
 		sourceText: stitchedText,
@@ -190,7 +192,7 @@ export async function writeDefinitionText(
 		stitchedText,
 	});
 	await Promise.all(
-		input.segments.map((segment, index) =>
+		segments.map((segment, index) =>
 			ctx.db.insert("segments", { sentenceId, index, ...segment }),
 		),
 	);

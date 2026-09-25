@@ -230,7 +230,7 @@ test("an inspected click resolving a new Reading, then its Knowledge, shows each
 					inflectionalFeatures: {
 						case: "Nom",
 						number: "Plur",
-						article: null,
+						article: "None",
 					},
 				},
 				lemma: {

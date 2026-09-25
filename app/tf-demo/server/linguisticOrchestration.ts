@@ -31,11 +31,11 @@ import {
 import { splitInParagraphs } from "./sentenceSplitting";
 import {
 	assertStoredSentence,
-	type EncounterSentence,
 	encounterSentenceOf,
 	type StoredSegment,
 	type StoredSegmentValue,
 	storedSegmentsOf,
+	storedSegmentsWithoutAnalysis,
 } from "./storedSegments";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
@@ -389,10 +389,14 @@ export function createTfDemoOrchestrator(options: {
 								paragraph: paragraphOf[position] ?? position,
 								language: sentence.language,
 								stitchedText,
+								// A fused word is stored as its pieces with or
+								// without an analysis (ADR 0035).
 								segments:
 									analysis?.stitchedText === stitchedText
 										? storedSegmentsOf(analysis)
-										: sentence.segments,
+										: storedSegmentsWithoutAnalysis(
+												sentence,
+											),
 								...(analysis ? { analysis } : {}),
 							};
 						},
@@ -690,8 +694,7 @@ export function createTfDemoOrchestrator(options: {
 							"The requested sentence does not exist.",
 						);
 					}
-					const view = parseGermanSentence(stored);
-					const sentence = view.sentence;
+					const sentence = parseGermanSentence(stored);
 					const neighbours = context.neighbours ?? {};
 					/**
 					 * One call with the Sentence alone; a pronoun whose referent
@@ -735,7 +738,7 @@ export function createTfDemoOrchestrator(options: {
 					return yield* Effect.gen(function* () {
 						const target = yield* selectTarget(
 							stored,
-							view,
+							sentence,
 							request.clickedSegmentIndex,
 						);
 						// Grammar may refuse a Phraseme the analysis named; the
@@ -746,7 +749,7 @@ export function createTfDemoOrchestrator(options: {
 									target.family === "Phraseme"
 										? selectWord(
 												stored,
-												view,
+												sentence,
 												request.clickedSegmentIndex,
 											)
 										: null;
@@ -778,17 +781,17 @@ export function createTfDemoOrchestrator(options: {
 			 * The stored Sentence Analysis answers the click when its largest
 			 * unit is resolved at the clicked Segment; otherwise, or without an
 			 * analysis, click-time classification runs as before. The inspection
-			 * step names the path taken. The click arrives in stored indices;
-			 * the target leaves in the Encounter's.
+			 * step names the path taken. Stored and Encounter indices are the
+			 * same, since both hold a fused word as its pieces.
 			 */
 			function selectTarget(
 				stored: PersistedSentence,
-				view: EncounterSentence,
+				sentence: SegmentedSentence<"de">,
 				clickedSegmentIndex: number,
 			) {
 				const selection = analysedTarget(
 					stored,
-					view,
+					sentence,
 					clickedSegmentIndex,
 				);
 				const fromAnalysis = selection.target;
@@ -809,9 +812,8 @@ export function createTfDemoOrchestrator(options: {
 						})
 					: Effect.map(
 							options.dumgen.classifyTarget({
-								sentence: view.sentence,
-								clickedSegmentIndex:
-									view.encounterIndex(clickedSegmentIndex),
+								sentence,
+								clickedSegmentIndex,
 							}),
 							(target) => ({
 								path: "classified" as const,
@@ -833,12 +835,12 @@ export function createTfDemoOrchestrator(options: {
 			 */
 			function selectWord(
 				stored: PersistedSentence,
-				view: EncounterSentence,
+				sentence: SegmentedSentence<"de">,
 				clickedSegmentIndex: number,
 			) {
 				const selection = analysedTarget(
 					stored,
-					view,
+					sentence,
 					clickedSegmentIndex,
 					"word",
 				);
@@ -864,7 +866,7 @@ export function createTfDemoOrchestrator(options: {
 			/** The analysis target, or why the click is classified instead. */
 			function analysedTarget(
 				stored: PersistedSentence,
-				view: EncounterSentence,
+				sentence: SegmentedSentence<"de">,
 				clickedSegmentIndex: number,
 				layer: "largest" | "word" = "largest",
 			):
@@ -880,17 +882,10 @@ export function createTfDemoOrchestrator(options: {
 					layer,
 				);
 				if (!selection.target) return selection;
-				const target = {
-					...selection.target,
-					memberSegmentIndices:
-						selection.target.memberSegmentIndices.map(
-							view.encounterIndex,
-						),
-				};
 				try {
 					const encounter = validateEncounter({
-						sentence: view.sentence,
-						target,
+						sentence,
+						target: selection.target,
 					});
 					// The Encounter's sentence is German, so its target is too.
 					return {
@@ -984,7 +979,9 @@ function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
 
-function parseGermanSentence(stored: PersistedSentence): EncounterSentence {
+function parseGermanSentence(
+	stored: PersistedSentence,
+): SegmentedSentence<"de"> {
 	if (stored.language !== "de") {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}
@@ -999,12 +996,11 @@ function storedMemberIndices(
 ): readonly number[] {
 	if (!stored)
 		throw new Error("The stored Sentence is needed to commit membership.");
-	const view = parseGermanSentence(stored);
+	const sentence = parseGermanSentence(stored);
 	return encounter.target.memberSegmentIndices.map((index) => {
-		const storedIndex = view.storedIndex(index);
-		if (storedIndex === undefined)
+		if (sentence.segments[index] === undefined)
 			throw new Error("An Encounter member is not a stored Segment.");
-		return storedIndex;
+		return index;
 	});
 }
 

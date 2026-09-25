@@ -51,7 +51,12 @@ export const phrasemeKindValues = [
 	"Idiom",
 	"Proverb",
 ] as const;
-const memberOrthographyValues = ["Standard", "Typo"] as const;
+const memberOrthographyValues = [
+	"Standard",
+	"Typo",
+	"Fused",
+	"Shorthand",
+] as const;
 const realizationCoverageValues = ["Full", "Partial"] as const;
 const surfaceSpellingValues = ["Canonical", "Variant"] as const;
 const semanticRelationValues = [
@@ -151,6 +156,54 @@ export const storedSegmentValidator = storedSegmentInputValidator.extend({
 
 export const orthographyValidator = literalUnion(memberOrthographyValues);
 
+/**
+ * A written word holding several words (ADR 0035): its spelling and the
+ * ordered components it stands for, each spelling its letters of the word.
+ */
+export const fusionValidator = v.object({
+	spelling: v.string(),
+	components: v.array(v.object({ span: v.string(), surface: v.string() })),
+});
+
+/**
+ * One Attestation member. A `Fused` member is one piece of a fused word and
+ * names the Fusion component it realizes; the other orthographies carry
+ * nothing else (ADR 0035).
+ */
+export const attestationMemberValidator = v.union(
+	v.object({
+		attested: v.string(),
+		orthography: v.union(
+			v.literal("Standard"),
+			v.literal("Typo"),
+			v.literal("Shorthand"),
+		),
+	}),
+	v.object({
+		attested: v.string(),
+		orthography: v.literal("Fused"),
+		fusion: fusionValidator,
+		component: v.number(),
+	}),
+);
+
+/**
+ * Where a noun's article is attested (ADR 0035): an owned member, a shared
+ * article the noun does not own, or a Fusion component with no letters.
+ */
+export const articleEvidenceValidator = v.union(
+	v.object({ kind: v.literal("Owned"), member: v.number() }),
+	v.object({
+		kind: v.literal("Shared"),
+		article: attestationMemberValidator,
+	}),
+	v.object({
+		kind: v.literal("Hidden"),
+		fusion: fusionValidator,
+		component: v.number(),
+	}),
+);
+
 export const realizationCoverageValidator = literalUnion(
 	realizationCoverageValues,
 );
@@ -184,16 +237,11 @@ export const surfaceValueValidator = v.object({
 });
 
 export const attestationValueValidator = v.object({
-	articleEvidence: v.optional(v.any()),
+	articleEvidence: v.optional(v.union(v.null(), articleEvidenceValidator)),
 	expletiveEvidence: v.optional(v.any()),
 	valencyEvidence: v.optional(v.any()),
 	unitKind: v.literal("Attestation"),
-	members: v.array(
-		v.object({
-			attested: v.string(),
-			orthography: orthographyValidator,
-		}),
-	),
+	members: v.array(attestationMemberValidator),
 	realizationCoverage: realizationCoverageValidator,
 	surface: surfaceValueValidator,
 });

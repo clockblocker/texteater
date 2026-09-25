@@ -60,6 +60,10 @@ export const renderDefaultLemmaRoutes = (({
 								onClick={() =>
 									PresentationCapabilities.follow(
 										surface.target,
+										{
+											activeAnalysisKey:
+												surface.surfaceId,
+										},
 									)
 								}
 							>
@@ -67,7 +71,7 @@ export const renderDefaultLemmaRoutes = (({
 									hop="reachedFrom"
 									className="me-1.5"
 								/>
-								{surface.normalizedSurface}
+								{surface.displayed}
 							</LinkButton>
 						</li>
 					))}

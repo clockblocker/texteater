@@ -4,10 +4,12 @@ import { inspectionStepValidator } from "./model/inspection";
 import { intakeRunValidator } from "./model/intakeRuns";
 
 import {
+	articleEvidenceValidator,
 	catalogMissStageValidator,
 	definitionTextStateValidator,
 	directSemanticRelationValidator,
 	familyValidator,
+	fusionValidator,
 	kindValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeProductionEvidenceValidator,
@@ -133,10 +135,16 @@ export default defineSchema({
 		sentenceId: v.id("sentences"),
 		...storedSegmentValidator.fields,
 		resolutionState: v.optional(segmentResolutionStateValidator),
+		/**
+		 * The member this Segment realizes. A `Fused` member also stores its
+		 * Fusion and the component it realizes (ADR 0035).
+		 */
 		attestationMembership: v.optional(
 			v.object({
 				attestationId: v.id("attestations"),
 				orthography: orthographyValidator,
+				fusion: v.optional(fusionValidator),
+				component: v.optional(v.number()),
 			}),
 		),
 	})
@@ -223,7 +231,9 @@ export default defineSchema({
 	}).index("by_surface_id", ["surfaceId"]),
 
 	attestations: defineTable({
-		articleEvidence: v.optional(v.any()),
+		articleEvidence: v.optional(
+			v.union(v.null(), articleEvidenceValidator),
+		),
 		expletiveEvidence: v.optional(v.any()),
 		valencyEvidence: v.optional(v.any()),
 		surfaceId: v.id("surfaces"),

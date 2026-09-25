@@ -45,6 +45,12 @@ Table (`auf etw · Akk: wohin? · Dat: wo?`), and each of its Source Contexts
 shows the case it realized, marking a non-preferred one
 (`Dat · umgangssprachlich`).
 
+**Fusion Block**:
+The Attestation Note Block for a fused word that the Attestation holds a
+piece of, or whose hidden article component it owns. It shows the fused word,
+the words it stands for, and the authored one-liner: `im = in + dem`. Clicking
+`i`, `m` or `Wald` in `im Wald` reaches the same Fusion Block.
+
 **Anchor Blocks**:
 The Heading and Source Contexts, which stay visible across every form so the
 Presentation reads as one thing while it changes.
@@ -62,23 +68,31 @@ Dumling Attestation value.
 
 **Attestation Membership**:
 The exclusive link from one Segment, keyed by its character offset in the
-Sentence, to at most one Occurrence Attestation. It carries member
-orthography, including Fused; ordered memberships reconstruct Attestation
-members.
+Sentence, to at most one Occurrence Attestation. It carries the member's
+orthography: `Standard`, `Typo`, `Fused` or `Shorthand`. A `Fused` membership
+also stores its Fusion and the component the Segment realizes. The `m` of
+`im` is `Fused` in `Wald`'s Attestation, and `'ne` is `Shorthand` in
+`Frage`'s. Ordered memberships reconstruct Attestation members, each attested
+as its Segment's own letters.
 _Avoid_: Segment index link
+
+**Stored Segment**:
+One Segment of a stored Sentence. Every German Sentence stores a fused word as
+its pieces, one Segment per component, whether or not intake analysed it:
+`im` is `i` (standing for `in`) and `m` (standing for `dem`). A stored Sentence
+that holds a whole fused word is broken, and tf-demo refuses it.
+_Avoid_: token, word
 
 **Sentence Analysis**:
 What intake produced for one German Sentence, stored with it and read at
 selection time. It holds two offset-keyed layers: Lexeme Targets, the analysed
 Segments that realize each word, and Phraseme Targets, the words that form an
-expression. A fused word is one analysed Segment per component, so analysed
-Segments do not map one-to-one onto stored Segments. A click selects the
-largest resolved unit at the clicked Segment; a stored Segment joins that unit
-only when all of its analysed Segments do. It is a hint for resolution, not
-linguistic identity. A Sentence without one, such as a Definition Text, a
-Segment whose word has an Unresolved route or a Miss identity, and a Segment
-the analysis cannot express at stored granularity are classified at click
-time as before.
+expression. Analysed Segments are the Stored Segments, one-to-one. A click
+selects the largest resolved unit at the clicked Segment, and its members are
+the Stored Segments at the unit's offsets. It is a hint for resolution, not
+linguistic identity. A Sentence without one, such as a Definition Text, and a
+Segment whose word has an Unresolved route or a Miss identity are classified
+at click time.
 _Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:
@@ -143,6 +157,9 @@ Lemma and Reading records it presents.
 **Surface Note**:
 A projection of one normalized orthographic form in one language, aggregating
 its typed Lemma analyses without assigning the Note an outer Family or Kind.
+A noun Surface is displayed with the article derived from its features:
+Surface `Wald` (Dat, Sing, Definite) reads `dem Wald`. English nouns display no
+article.
 
 **Crossroad Note**:
 A projection of one Spelling Crossroad: every Reading whose Lemma's Canonical

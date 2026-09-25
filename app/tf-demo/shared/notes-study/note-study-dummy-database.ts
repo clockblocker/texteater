@@ -1,3 +1,4 @@
+import { splitGermanFusedWords } from "dumgen/authored";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
@@ -27,6 +28,8 @@ export const NOTE_STUDY_VISITOR_ID = "playground:notes-study:visitor";
 type Segment = {
 	readonly kind: "ResolvableText" | "Whitespace" | "Punctuation";
 	readonly text: string;
+	/** The word a fusion component stands for, as intake stores it. */
+	readonly surface?: string;
 };
 
 export type NoteStudyOccurrence = {
@@ -240,19 +243,22 @@ function knowledgeFor(fixture: NoteStudyFixture): Dumrel.ReadingKnowledge {
 	return parsed.value;
 }
 
-function splitLiteral(text: string): Segment[] {
-	return text
-		.split(/( )/u)
-		.filter((part) => part !== "")
-		.map((part) => ({
-			kind:
-				part === " "
-					? "Whitespace"
-					: /^\p{P}+$/u.test(part)
-						? "Punctuation"
-						: "ResolvableText",
-			text: part,
-		}));
+/** Context words as intake stores them: a fused word (`Am`) as its pieces. */
+function splitLiteral(text: string): readonly Segment[] {
+	return splitGermanFusedWords(
+		text
+			.split(/( )/u)
+			.filter((part) => part !== "")
+			.map((part) => ({
+				kind:
+					part === " "
+						? ("Whitespace" as const)
+						: /^\p{P}+$/u.test(part)
+							? ("Punctuation" as const)
+							: ("ResolvableText" as const),
+				text: part,
+			})),
+	);
 }
 
 function targetTokens(fixture: NoteStudyFixture, line: NoteStudyLine) {

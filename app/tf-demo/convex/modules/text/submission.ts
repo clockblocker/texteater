@@ -1,6 +1,9 @@
 import type { Infer } from "convex/values";
 import { splitInSentences } from "../../../server/sentenceSplitting";
-import { MAX_SEGMENTS_PER_SENTENCE } from "../../../server/storedSegments";
+import {
+	assertPiecesStored,
+	MAX_SEGMENTS_PER_SENTENCE,
+} from "../../../server/storedSegments";
 import {
 	assertTextSubmissionWithinLimits,
 	MAX_SOURCE_SENTENCES,
@@ -264,6 +267,7 @@ export async function persistSubmittedText(
 					existing?._id ??
 					(await ctx.db.insert("sentences", sentenceValue));
 				if (existing) await ctx.db.replace(existing._id, sentenceValue);
+				assertPiecesStored(submitted);
 				await Promise.all(
 					submitted.segments.map((segment, index) =>
 						ctx.db.insert("segments", {
@@ -320,6 +324,7 @@ export async function persistSubmittedText(
 					language: sentence.language,
 					stitchedText: sentence.stitchedText,
 				});
+				assertPiecesStored(sentence);
 				await Promise.all(
 					sentence.segments.map((segment, index) =>
 						ctx.db.insert("segments", {

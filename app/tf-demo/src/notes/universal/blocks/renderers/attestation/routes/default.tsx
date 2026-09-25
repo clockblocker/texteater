@@ -1,5 +1,6 @@
 import { LinkButton, NoteSection } from "lego";
 
+import { displayedSurface } from "../../../../../../../shared/surface-display";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { featureSummary } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
@@ -28,7 +29,7 @@ export const renderDefaultAttestationRoutes = (({
 						}
 					>
 						<RouteMark hop="leadsTo" />
-						{surface.normalizedSurface}
+						{displayedSurface(surface)}
 					</LinkButton>
 					{spelling ||
 					inflection ||

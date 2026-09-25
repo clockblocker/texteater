@@ -21,7 +21,7 @@ const nonGermanReadingKinds = new Set([
 
 describe("German note-study fixtures", () => {
 	test("normalizes identity, bilingual Knowledge, and occurrences", () => {
-		expect(NOTE_STUDY_DATABASE).toHaveLength(28);
+		expect(NOTE_STUDY_DATABASE).toHaveLength(27);
 		expect(NOTE_STUDY_RELATED_DATABASE).toHaveLength(43);
 		expect(NOTE_STUDY_RESOLVED_RELATIONS).toHaveLength(43);
 		expect(NOTE_STUDY_PENDING_RELATIONS).toHaveLength(9);
@@ -58,7 +58,7 @@ describe("German note-study fixtures", () => {
 			.sort();
 		const fixtureRoutes = NOTE_STUDY_FIXTURES.map(routeKey).sort();
 
-		expect(NOTE_STUDY_FIXTURES).toHaveLength(28);
+		expect(NOTE_STUDY_FIXTURES).toHaveLength(27);
 		expect(fixtureRoutes).toEqual(expectedRoutes);
 		expect(new Set(fixtureRoutes).size).toBe(fixtureRoutes.length);
 	});

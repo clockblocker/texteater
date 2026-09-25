@@ -5,14 +5,13 @@ import {
 import {
 	encounterSentenceOf,
 	MAX_SEGMENTS_PER_SENTENCE,
-	spellingOf,
 } from "../../server/storedSegments";
 
 import {
 	germanGovernorKinds,
 	germanVerbalKinds,
 } from "../../shared/german-evidence-kinds";
-import type { Id } from "../_generated/dataModel";
+import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
 
@@ -177,14 +176,14 @@ export async function loadOccurrenceAttestation(
 		(left, right) => left.index - right.index,
 	);
 	const memberSegmentIndices = orderedMembers.map(({ index }) => index);
-	const view = encounterSentenceOf({
+	const sentenceValue = encounterSentenceOf({
 		segmentedSentenceId: sentence.segmentedSentenceId,
 		segments: orderedSentenceSegments,
 	});
 	const encounter = {
 		sentence: {
-			...view.sentence,
-			segments: view.sentence.segments.map(({ kind, text }) => ({
+			...sentenceValue,
+			segments: sentenceValue.segments.map(({ kind, text }) => ({
 				kind,
 				text,
 			})),
@@ -192,17 +191,12 @@ export async function loadOccurrenceAttestation(
 		target: {
 			family: lemma.family,
 			kind: lemma.kind,
-			memberSegmentIndices: memberSegmentIndices.map(view.encounterIndex),
+			memberSegmentIndices,
 		},
 	};
 	const publicAttestation = {
 		unitKind: "Attestation" as const,
-		members: orderedMembers.map((member) => ({
-			attested: spellingOf(member),
-			orthography: member.attestationMembership?.orthography as
-				| "Standard"
-				| "Typo",
-		})),
+		members: orderedMembers.map(attestationMemberOf),
 		realizationCoverage: attestation.realizationCoverage,
 		...(lemma.language === "de" && germanVerbalKinds.includes(lemma.kind)
 			? { expletiveEvidence: attestation.expletiveEvidence ?? null }
@@ -231,5 +225,26 @@ export async function loadOccurrenceAttestation(
 		encounter,
 		publicAttestation: parseGermanAttestation(publicAttestation),
 		publicReading: parseGermanReading(readingValue(reading, lemma)),
+	};
+}
+
+/**
+ * The Attestation member a member Segment realizes, attested as its own
+ * letters. A `Fused` member also names its Fusion and component (ADR 0035).
+ */
+function attestationMemberOf(segment: Doc<"segments">) {
+	const membership = segment.attestationMembership;
+	if (!membership)
+		throw new Error("An Attestation member Segment has no membership.");
+	if (membership.orthography !== "Fused")
+		return { attested: segment.text, orthography: membership.orthography };
+	const { fusion, component } = membership;
+	if (!fusion || component === undefined)
+		throw new Error("A Fused member stores its Fusion and component.");
+	return {
+		attested: segment.text,
+		orthography: membership.orthography,
+		fusion,
+		component,
 	};
 }

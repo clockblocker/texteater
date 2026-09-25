@@ -9,7 +9,6 @@ import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../server/operationalParsing";
-import { spellingOf } from "../server/storedSegments";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -338,10 +337,8 @@ export const persistResolvedClick = internalMutation({
 					"Attestation members must refer to ResolvableText Segments.",
 				);
 			}
-			// A fusion component is attested as the word it stands for.
-			if (
-				spellingOf(member) !== attestedMembers[memberPosition]?.attested
-			) {
+			// A piece of a fused word is attested as its own letters.
+			if (member.text !== attestedMembers[memberPosition]?.attested) {
 				throw new Error(
 					"Attestation member text must equal its Segment text.",
 				);
@@ -472,10 +469,18 @@ export const persistResolvedClick = internalMutation({
 					throw new Error("Missing Attestation member evidence.");
 				return ctx.db.patch(member._id, {
 					resolutionState: undefined,
-					attestationMembership: {
-						attestationId,
-						orthography: attested.orthography,
-					},
+					attestationMembership:
+						attested.orthography === "Fused"
+							? {
+									attestationId,
+									orthography: attested.orthography,
+									fusion: attested.fusion,
+									component: attested.component,
+								}
+							: {
+									attestationId,
+									orthography: attested.orthography,
+								},
 				});
 			}),
 		);

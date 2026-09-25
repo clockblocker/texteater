@@ -89,7 +89,7 @@ test("legacy noun checkpoints discard component references but retain exact occu
 			unitKind: "Attestation",
 			surface: {
 				...surface,
-				normalizedSurface: "der Hund",
+				normalizedSurface: "Hund",
 				lemma: {
 					unitKind: "Lemma",
 					language: "de",
@@ -110,7 +110,7 @@ test("legacy noun checkpoints discard component references but retain exact occu
 				{ attested: "Hund", orthography: "Standard" },
 			],
 			realizationCoverage: "Full",
-			articleEvidence: { attested: "Der", orthography: "Standard" },
+			articleEvidence: { kind: "Owned", member: 0 },
 			valencyEvidence: [],
 		},
 	};

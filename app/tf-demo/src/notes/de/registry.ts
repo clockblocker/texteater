@@ -1,4 +1,5 @@
 import type { RendererRegistry } from "../universal/blocks/renderer-registry";
+import { renderDefaultAttestationFusion } from "../universal/blocks/renderers/attestation/fusion/default";
 import { renderDefaultAttestationHeader } from "../universal/blocks/renderers/attestation/header/default";
 import { renderDefaultAttestationRoutes } from "../universal/blocks/renderers/attestation/routes/default";
 import { renderDefaultAttestationSource } from "../universal/blocks/renderers/attestation/source-contexts/default";
@@ -89,6 +90,7 @@ const LEMMA_ROUTE = {
 const ATTESTATION_ROUTE = {
 	Header: renderDefaultAttestationHeader,
 	SourceContexts: renderDefaultAttestationSource,
+	LexicalBreakdown: renderDefaultAttestationFusion,
 	Routes: renderDefaultAttestationRoutes,
 };
 const SHADOW_ROUTE = {

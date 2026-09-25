@@ -14,7 +14,7 @@ const segmentKindValues = [
 	"Whitespace",
 	"Punctuation",
 ];
-const memberOrthographyValues = ["Standard", "Typo"];
+const memberOrthographyValues = ["Standard", "Typo", "Fused", "Shorthand"];
 const realizationCoverageValues = ["Full", "Partial"];
 const surfaceSpellingValues = ["Canonical", "Variant"];
 
