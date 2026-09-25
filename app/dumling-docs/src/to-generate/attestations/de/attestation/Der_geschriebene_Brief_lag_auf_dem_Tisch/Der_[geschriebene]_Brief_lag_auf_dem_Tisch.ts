@@ -9,8 +9,6 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -18,41 +16,32 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: null,
-			number: "Sing",
-			person: null,
-			tense: null,
-			verbForm: "Part",
-			participleForm: "Past",
 			case: "Nom",
+			degree: "Pos",
 			gender: "Masc",
-			degree: null,
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: null,
-			passive: null,
+			number: "Sing",
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "schreiben",
+			canonicalForm: "geschrieben",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der [geschriebene] Brief lag auf dem Tisch.",
 	classifierNotes:
-		"Geschriebene is a productive attributive Partizip II of schreiben, so it resolves to the verb (ADR 0033) and carries Nom Sing Masc agreement with Brief.",
+		"Geschriebene is an attributive participle modifying Brief with nominative masculine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0035).",
 	isVerified: true,
 } as const;

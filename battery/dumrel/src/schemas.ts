@@ -14,6 +14,7 @@ import {
 	morphemeReadingSchema,
 	readingSchema,
 	unitShadowSchema,
+	verbLemmaSchema,
 } from "./generated/dumling-schemas.js";
 import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
@@ -76,6 +77,13 @@ export const valencySlotSchema = z.strictObject({
  * come from Lemma identity and are never Slots.
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
+
+/**
+ * The Participle Source of an adjectival participle Reading: the VERB Lemma
+ * whose participle it is (`gekocht` stores `kochen`). The ADJ Reading owns the
+ * claim; the verb's side is a read-time projection.
+ */
+export const participleSourceSchema = verbLemmaSchema;
 
 type MorphologicalNode =
 	| {
@@ -148,6 +156,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	lexicalBreakdown: lexicalBreakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
 	valency: valencyFrameSchema.optional(),
+	participleSource: participleSourceSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -216,6 +225,15 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
+		aspect: z.literal("participleSource"),
+		value: participleSourceSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("participleSource"),
+	}),
+	z.strictObject({
+		kind: setKinds,
 		aspect: z.literal("morphologicalTree"),
 		value: morphologicalTreeSchema,
 	}),
@@ -269,5 +287,21 @@ export const governmentProjectionSchema = z.strictObject({
 	relation: governmentRelationSchema,
 	target: z.union([lemmaSchema, readingSchema]),
 	case: governedCaseSchema,
+	provenance: z.enum(["direct", "inferred"]),
+});
+
+export const participleRelationSchema = z.enum([
+	"participleSource",
+	"participialAdjective",
+]);
+/**
+ * One edge of a Participle Source. `participleSource` runs from the ADJ
+ * Reading to the VERB Lemma it stores; `participialAdjective` is the inferred
+ * inverse from each supplied Reading of that VERB Lemma back to the ADJ Reading.
+ */
+export const participleProjectionSchema = z.strictObject({
+	source: readingSchema,
+	relation: participleRelationSchema,
+	target: z.union([lemmaSchema, readingSchema]),
 	provenance: z.enum(["direct", "inferred"]),
 });

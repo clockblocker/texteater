@@ -93,6 +93,22 @@ export const samples: Record<string, unknown[]> = {
 			aspect: "valency",
 			complement: { kind: "Case", case: "Dat", referent: "Someone" },
 		},
+		{
+			kind: "Contribute",
+			aspect: "participleSource",
+			value: wartenReading.lemma,
+		},
+		{ kind: "Retract", aspect: "participleSource" },
+	],
+	participleSource: [wartenReading.lemma],
+	participleRelation: ["participleSource", "participialAdjective"],
+	participleProjection: [
+		{
+			source: houseReading,
+			relation: "participleSource",
+			target: wartenReading.lemma,
+			provenance: "direct",
+		},
 	],
 	governedCase: ["Acc", "Gen"],
 	valencySlotStatus: ["Required", "Optional"],

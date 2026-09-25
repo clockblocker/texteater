@@ -9,8 +9,6 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -18,41 +16,32 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: null,
-			number: "Sing",
-			person: null,
-			tense: null,
-			verbForm: "Part",
-			participleForm: "Past",
 			case: "Nom",
+			degree: "Pos",
 			gender: "Fem",
-			degree: null,
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: null,
-			passive: null,
+			number: "Sing",
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "abstimmen",
+			canonicalForm: "abgestimmt",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: "ab",
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die auf ihn [abgestimmte] Lösung half sofort.",
 	classifierNotes:
-		"Abgestimmte is a productive attributive Partizip II of abstimmen with its auf-complement, so it resolves to the verb (ADR 0033) and carries Nom Sing Fem agreement.",
+		"Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0035). The dependent auf ihn stays outside.",
 	isVerified: true,
 } as const;

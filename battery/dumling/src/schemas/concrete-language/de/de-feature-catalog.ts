@@ -151,16 +151,12 @@ const forms = [
 	finite,
 	{ ...finite, mood: DE_FEATURE_SCHEMA.imperativeMood, tense: z.null() },
 	{ ...nonfinite, verbForm: DE_FEATURE_SCHEMA.infinitiveForm },
-	// A productive participle stays verbal when used like an adjective, so an
-	// attributive one agrees with its noun (ADR 0033).
+	// Only a perfect or passive participle is verbal; an adjectival one is an
+	// ADJ (ADR 0035), so a verbal participle never agrees with a noun.
 	{
 		...nonfinite,
 		verbForm: DE_FEATURE_SCHEMA.participleForm,
 		participleForm: UNIVERSAL_FEATURE_SCHEMA.participleForm.nullable(),
-		case: DE_FEATURE_SCHEMA.case.nullable(),
-		number: DE_FEATURE_SCHEMA.number.nullable(),
-		gender: DE_FEATURE_SCHEMA.gender.nullable(),
-		degree: DE_FEATURE_SCHEMA.degree.nullable(),
 	},
 ] as const;
 // Branches enforce voice/subtype consistency in both Zod and compiled validators.

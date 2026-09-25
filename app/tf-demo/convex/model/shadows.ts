@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
@@ -335,6 +336,15 @@ export async function syncStructuralShadowReferences(
 	);
 }
 
+/** The Lemma key of a stored Participle Source (ADR 0035), if any. */
+function participleSourceKey(knowledge: unknown): string | undefined {
+	const source =
+		knowledge && typeof knowledge === "object"
+			? Reflect.get(knowledge, "participleSource")
+			: undefined;
+	return source ? lemmaIdentityKey(source) : undefined;
+}
+
 /**
  * The sole accumulated-Knowledge replacement seam. Reading writes and their
  * structural Shadow projection are committed in the same Convex transaction.
@@ -356,11 +366,13 @@ export async function replaceAccumulatedKnowledge(
 	const content = knowledge ?? {};
 	await syncStructuralShadowReferences(ctx, ownerReadingKey, content);
 	await syncDefinitionText(ctx, ownerReadingKey, content);
+	const participleSourceLemmaKey = participleSourceKey(content);
 	if (existing) {
 		// Coverage evidence outlives the content it was recorded beside.
 		await ctx.db.patch(existing._id, {
 			knowledge: content,
 			status,
+			participleSourceLemmaKey,
 			updatedAt: Date.now(),
 		});
 		return existing._id;
@@ -369,6 +381,7 @@ export async function replaceAccumulatedKnowledge(
 		ownerReadingKey,
 		knowledge: content,
 		status,
+		...(participleSourceLemmaKey ? { participleSourceLemmaKey } : {}),
 		updatedAt: Date.now(),
 	});
 }

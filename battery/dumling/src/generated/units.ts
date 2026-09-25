@@ -464,7 +464,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -488,7 +488,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -512,18 +512,15 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -532,19 +529,16 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 				  )
 				| null;
@@ -601,7 +595,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -625,7 +619,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -649,20 +643,15 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -671,21 +660,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 					  )
 					| null;
@@ -1975,7 +1959,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -1999,7 +1983,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -2023,18 +2007,15 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -2043,19 +2024,16 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 				  )
 				| null;
@@ -2120,7 +2098,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -2144,7 +2122,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -2168,20 +2146,15 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -2190,21 +2163,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 					  )
 					| null;
@@ -2967,7 +2935,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -2991,7 +2959,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3015,18 +2983,15 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3035,19 +3000,16 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 				  )
 				| null;
@@ -3104,7 +3066,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -3128,7 +3090,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3152,20 +3114,15 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3174,21 +3131,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 					  )
 					| null;
@@ -3381,7 +3333,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: "Imp";
@@ -3405,7 +3357,7 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
@@ -3429,18 +3381,15 @@ export interface UnitMap {
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
@@ -3449,19 +3398,16 @@ export interface UnitMap {
 						  }
 						| {
 								mood: null;
-								number: ("Plur" | "Sing") | null;
+								number: null;
 								person: null;
 								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
-								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-								gender: ("Fem" | "Masc" | "Neut") | null;
-								degree: ("Cmp" | "Pos" | "Sup") | null;
 								expletive: "Subject" | null;
 								perfect: "Yes" | null;
 								future: "Yes" | null;
 								voice: "Pass";
-								passive: "Process" | "State" | "Recipient";
+								passive: "Process" | "Recipient";
 						  }
 				  )
 				| null;
@@ -3518,7 +3464,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: "Imp";
@@ -3542,7 +3488,7 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
@@ -3566,20 +3512,15 @@ export interface UnitMap {
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
@@ -3588,21 +3529,16 @@ export interface UnitMap {
 							  }
 							| {
 									mood: null;
-									number: ("Plur" | "Sing") | null;
+									number: null;
 									person: null;
 									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
-									case:
-										| ("Acc" | "Dat" | "Gen" | "Nom")
-										| null;
-									gender: ("Fem" | "Masc" | "Neut") | null;
-									degree: ("Cmp" | "Pos" | "Sup") | null;
 									expletive: "Subject" | null;
 									perfect: "Yes" | null;
 									future: "Yes" | null;
 									voice: "Pass";
-									passive: "Process" | "State" | "Recipient";
+									passive: "Process" | "Recipient";
 							  }
 					  )
 					| null;

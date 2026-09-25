@@ -24,6 +24,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"governedCaseValues",
 		"normalizeText",
 		"parseReadingKnowledge",
+		"projectParticipleSources",
 		"projectPrepositionalGovernment",
 		"projectSemanticRelations",
 		"selectKnowledge",

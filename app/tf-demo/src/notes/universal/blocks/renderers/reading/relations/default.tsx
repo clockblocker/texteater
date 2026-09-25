@@ -4,6 +4,12 @@ import { relationPreference } from "../../../../../../../shared/knowledge-prefer
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { RelationMark } from "../../common/relation-mark";
 
+/** How a Reading Note names each side of a Participle Source (ADR 0035). */
+const PARTICIPLE_LABELS = {
+	participleSource: "participle of",
+	participialAdjective: "participial adjectives",
+} as const;
+
 export const renderDefaultReadingRelations = (({
 	noteData,
 	PresentationCapabilities,
@@ -21,10 +27,13 @@ export const renderDefaultReadingRelations = (({
 			],
 	);
 	const grammaticalAlternatives = noteData.grammaticalAlternatives ?? [];
+	// Grammatical links, so no semantic-relation preference hides them.
+	const participleLinks = noteData.participleLinks ?? [];
 	if (
 		relations.length === 0 &&
 		pendingRelations.length === 0 &&
-		grammaticalAlternatives.length === 0
+		grammaticalAlternatives.length === 0 &&
+		participleLinks.length === 0
 	) {
 		return null;
 	}
@@ -77,6 +86,47 @@ export const renderDefaultReadingRelations = (({
 							</LinkButton>
 						</li>
 					))}
+				</ul>
+			) : null}
+			{participleLinks.length > 0 ? (
+				<ul
+					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
+					aria-label="Participle Source"
+				>
+					{(
+						["participleSource", "participialAdjective"] as const
+					).map((relation) => {
+						const links = participleLinks.filter(
+							(link) => link.relation === relation,
+						);
+						if (links.length === 0) return null;
+						return (
+							<li
+								key={relation}
+								className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+							>
+								<span className="text-sm text-ink-muted compact:text-xs">
+									{PARTICIPLE_LABELS[relation]}
+								</span>
+								{links.map((link) => (
+									<LinkButton
+										key={
+											link.target.kind === "Reading"
+												? link.target.readingId
+												: link.target.lemmaId
+										}
+										onClick={() =>
+											PresentationCapabilities.follow(
+												link.target,
+											)
+										}
+									>
+										{link.targetCanonicalForm}
+									</LinkButton>
+								))}
+							</li>
+						);
+					})}
 				</ul>
 			) : null}
 			{noteData.relationsTruncated ? (

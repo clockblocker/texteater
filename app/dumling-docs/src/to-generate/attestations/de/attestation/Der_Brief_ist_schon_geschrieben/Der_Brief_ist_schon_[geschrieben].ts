@@ -4,55 +4,44 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "ist",
-			orthography: "Standard",
-		},
-		{
 			attested: "geschrieben",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "ist geschrieben",
+		normalizedSurface: "geschrieben",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: "Ind",
-			number: "Sing",
-			person: "3",
-			tense: "Pres",
-			verbForm: "Fin",
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: "Pass",
-			passive: "State",
+			case: null,
+			degree: "Pos",
+			gender: null,
+			number: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "schreiben",
+			canonicalForm: "geschrieben",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der Brief ist schon [geschrieben].",
 	classifierNotes:
-		"Ist plus geschrieben preserves the productive schreiben event and forms one state-passive VERB target. The participle owns morphology and the Lemma; the auxiliary is a fixed member.",
+		"sein plus geschrieben is a state passive: ist is the copula VERB and geschrieben the ADJ geschrieben with Participle Source schreiben (ADR 0035).",
 	isVerified: true,
 } as const;

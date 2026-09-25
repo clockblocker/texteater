@@ -39,3 +39,10 @@ _Avoid_: govPrep, prepositional object, valency note
 the Reading whose Valency Frame holds a Governed Preposition. The
 preposition's side of the link is projected, never stored.
 _Avoid_: governing verb (adjectives, nouns and Phrasemes govern too)
+
+**Participle Source**:
+the VERB Lemma a Participial Adjective's Reading comes from, stored in that
+Reading's Knowledge (`gekocht`: `kochen`; `verliebt`: `sich verlieben`). It
+is a grammatical link, not a Semantic Relation. The verb's side, its
+participial adjectives, is projected, never stored.
+_Avoid_: base verb, derivation relation, participle relation

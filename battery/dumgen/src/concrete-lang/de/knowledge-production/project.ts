@@ -9,6 +9,10 @@ import {
 	governablePrepositionLemma,
 	isGovernablePreposition,
 } from "../governable-prepositions.js";
+import {
+	type ParticipleSourceDraft,
+	participleSourceLemma,
+} from "./participle-source.js";
 import { assertRequestShape } from "./request-shape.js";
 
 export function validateRequest(
@@ -63,6 +67,8 @@ export type KnowledgeAnalysis = {
 	>;
 	/** An empty list or null means no Slot was found. */
 	valency?: readonly ValencySlotDraft[] | null;
+	/** null means the adjective is no participle of a verb. */
+	participleSource?: ParticipleSourceDraft | null;
 };
 /** A Valency Frame Slot whose preposition is still its German spelling. */
 export type ValencySlotDraft = {
@@ -122,6 +128,13 @@ export function projectKnowledge(
 										),
 									},
 					})),
+				});
+		} else if (aspect === "participleSource") {
+			if (analysis.participleSource)
+				changes.push({
+					kind: "Contribute",
+					aspect,
+					value: participleSourceLemma(analysis.participleSource),
 				});
 		} else if (aspect === "translations")
 			for (const [language, text] of Object.entries(value ?? {})) {

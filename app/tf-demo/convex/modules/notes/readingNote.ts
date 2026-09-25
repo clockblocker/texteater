@@ -29,7 +29,9 @@ import type { PresentedRelations } from "./relations";
 import {
 	grammaticalAlternativeValidator,
 	loadGrammaticalAlternatives,
+	loadParticipleLinks,
 	loadRelationProjections,
+	participleLinkValidator,
 	relationProjectionValidator,
 } from "./relations";
 import { unitShadowProjectionValidator } from "./shadowNote";
@@ -107,6 +109,9 @@ const readingKnowledgeValidator = v.object({
 	),
 	morphologicalTree: v.optional(v.any()),
 	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
+	/** The Valency Frame is stored Knowledge the Note does not render yet. */
+	valency: v.optional(v.any()),
+	participleSource: v.optional(readingValueLemmaValidator),
 	semanticRelations: v.optional(
 		v.union(
 			v.object({
@@ -181,6 +186,8 @@ export const readingNoteValidator = v.object({
 	/** The relation neighbourhood passed a cap; more relations exist. */
 	relationsTruncated: v.boolean(),
 	grammaticalAlternatives: v.array(grammaticalAlternativeValidator),
+	/** Participle Source links, stored on the ADJ and projected on its verb. */
+	participleLinks: v.optional(v.array(participleLinkValidator)),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	definitionText: v.union(
@@ -280,6 +287,12 @@ export async function loadUnitReadingNote(
 		projectReadingValue(reading, lemma),
 		readingKnowledge?.knowledge,
 	);
+	const participleLinks = await loadParticipleLinks(
+		ctx,
+		reading,
+		lemma,
+		knowledge.participleSource,
+	);
 	const activeAttempt = attempts.find(
 		({ state }) =>
 			state === "Waiting" || state === "Scheduled" || state === "Running",
@@ -325,6 +338,7 @@ export async function loadUnitReadingNote(
 		relations: relationProjections.resolved,
 		relationsTruncated: relationProjections.truncated,
 		grammaticalAlternatives,
+		participleLinks,
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,

@@ -127,12 +127,13 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 ### German classifications
 
 **Verbal Participle**:
-A productive participle, which resolves to its VERB or AUX Lexeme in every
-use: attributive (`die gekochten Kartoffeln`), adverbial (`kam lachend
-herein`) or in a state passive (`Die Tür ist geschlossen`). Its Canonical Form
-is the infinitive. Its Surface records Partizip I or II and, when attributive,
-the case, number and gender it agrees in.
-_Avoid_: adjectival participle, for a productive use
+A participle in a perfect (`hat gekocht`, `ist gekommen`) or a passive
+(`wurde gekocht`, `bekam geschenkt`), which joins its auxiliary in one VERB
+target. Its Canonical Form is the infinitive, and its Surface records Partizip
+I or II with no agreement. `sein` with a participle outside the perfect is the
+copula, not an auxiliary: `Die Tür ist geschlossen` holds a Participial
+Adjective.
+_Avoid_: state passive, as a verbal construction
 
 **Modal Verb**:
 One of `dürfen`, `können`, `mögen`, `müssen`, `sollen`, `wollen` as a VERB
@@ -145,15 +146,16 @@ _Avoid_: Modal auxiliary, modal AUX
 modal-passive, obligation or progressive composition, or `bekommen`, `kriegen`
 and `erhalten` serving its recipient passive. An AUX Lexeme is one such
 grammatical use with its own Reading; the same verb standing alone is a VERB
-Lexeme.
+Lexeme. `sein` before a Participial Adjective is the copula VERB.
 _Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
 
 **Participial Adjective**:
-A lexicalized participle, which is its own ADJ Lexeme: its meaning comes from
-no sense of the verb, or it takes `un-`, `sehr` or comparison (`spannend`,
-`gebildet`, `ungelesen`). Its Canonical Form is the participial form. The same
-spelling can be a Verbal Participle elsewhere: `ein gebildeter Mann` is
-`gebildet`, `ein aus Ton gebildeter Krug` is `bilden`.
+A participle used as an adjective, which is an ADJ Lexeme whether it is
+lexicalized or not: attributive (`die gekochten Kartoffeln`), adverbial (`kam
+lachend herein`) or predicative after `sein` (`Die Tür ist geschlossen`, `Er
+ist verliebt`). Its Canonical Form is the uninflected participle (`gekocht`,
+`lachend`), and its Reading names its verb as Participle Source (Dumrel).
+_Avoid_: productive participle and lexicalized participle, as a Kind contrast
 
 **Collocation**:
 A conventional multiword Phraseme with restricted lexical choices and a

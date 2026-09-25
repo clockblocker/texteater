@@ -9,8 +9,6 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -18,42 +16,33 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: null,
-			number: "Sing",
-			person: null,
-			tense: null,
-			verbForm: "Part",
-			participleForm: "Past",
 			case: "Nom",
+			degree: "Pos",
 			gender: "Masc",
-			degree: null,
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: null,
-			passive: null,
+			number: "Sing",
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "bewundern",
+			canonicalForm: "bewundert",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"Der von allen [bewunderte] Lehrer ging in den Ruhestand.",
 	classifierNotes:
-		"Bewunderte has a von-agent, a productive attributive Partizip II of bewundern (ADR 0033). It carries Nom Sing Masc agreement with Lehrer.",
+		"Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0035). The von-agent stays outside.",
 	isVerified: true,
 } as const;

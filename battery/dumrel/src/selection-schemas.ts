@@ -20,6 +20,7 @@ export const knowledgeSettingsSchema = z.strictObject({
 	morphologicalTree: settingsLeaf,
 	lexicalBreakdown: settingsLeaf,
 	valency: settingsLeaf,
+	participleSource: settingsLeaf,
 	translations: z
 		.strictObject({ en: settingsLeaf, ru: settingsLeaf })
 		.optional(),
@@ -42,6 +43,7 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 	morphologicalTree: maskLeaf,
 	lexicalBreakdown: maskLeaf,
 	valency: maskLeaf,
+	participleSource: maskLeaf,
 	translations: z.strictObject({ en: maskLeaf, ru: maskLeaf }).optional(),
 	semanticRelations: z
 		.strictObject({

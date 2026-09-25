@@ -9,8 +9,6 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -18,41 +16,32 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			participleForm: "Past",
 			case: null,
+			degree: "Pos",
 			gender: null,
-			degree: null,
-			verbForm: "Part",
-			mood: null,
 			number: null,
-			person: null,
-			tense: null,
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: null,
-			passive: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "einzeichnen",
+			canonicalForm: "eingezeichnet",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: "ein",
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Auf der Karte sind drei Seen [eingezeichnet].",
 	classifierNotes:
-		"Eingezeichnet is treated as the perfect participle of separable einzeichnen. Under the current German rule, attributive participles like eingezeichneten in die eingezeichneten Seen go to ADJ, but this bare predicative Partizip-II form stays VERB despite the result-state reading.",
+		"sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0035).",
 	isVerified: true,
 } as const;

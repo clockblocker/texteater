@@ -5,7 +5,6 @@ import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
 import { member as aux7 } from "./members/lexeme/auxiliary/sein-modalpassiv.js";
 import { member as aux0 } from "./members/lexeme/auxiliary/sein-perfekt.js";
 import { member as aux9 } from "./members/lexeme/auxiliary/sein-verlaufsform.js";
-import { member as aux1 } from "./members/lexeme/auxiliary/sein-zustandspassiv.js";
 import { member as aux3 } from "./members/lexeme/auxiliary/werden-futur.js";
 import { member as aux4 } from "./members/lexeme/auxiliary/werden-vorgangspassiv.js";
 import { member as aux5 } from "./members/lexeme/auxiliary/werden-wuerde-konjunktiv.js";
@@ -163,7 +162,6 @@ export const authoredMembers = [
 	m31,
 	m35,
 	aux0,
-	aux1,
 	aux2,
 	aux3,
 	aux4,

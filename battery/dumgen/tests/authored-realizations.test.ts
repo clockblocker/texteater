@@ -414,5 +414,5 @@ test("every AUX gold case locates its sein, haben, werden or bekommen Lemma by s
 	expect([...lemmas].sort()).toEqual(["bekommen", "haben", "sein", "werden"]);
 	expect(
 		authoredMembers.filter((member) => member.lemma.kind === "AUX"),
-	).toHaveLength(10);
+	).toHaveLength(9);
 });

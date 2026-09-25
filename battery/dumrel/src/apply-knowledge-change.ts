@@ -19,7 +19,8 @@ import { parseChangeShape } from "./validation.js";
  * Reading targets support synonym only and require targetKind: "reading",
  * including retractions. The Valency Frame: Contribute appends the Slots whose
  * complement the frame lacks, Correct replaces the frame, and Retract removes
- * the frame or, given a complement, that one Slot. Failure returns ParsingError
+ * the frame or, given a complement, that one Slot. A Participle Source is
+ * atomic like a definition. Failure returns ParsingError
  * without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
@@ -65,6 +66,7 @@ function apply<R extends Dumling.Reading>(
 		case "definition":
 		case "morphologicalTree":
 		case "lexicalBreakdown":
+		case "participleSource":
 			return applyAtomic(knowledge, canonical);
 	}
 }
@@ -172,7 +174,8 @@ type AtomicChange = Extract<
 			| "transcription"
 			| "definition"
 			| "morphologicalTree"
-			| "lexicalBreakdown";
+			| "lexicalBreakdown"
+			| "participleSource";
 	}
 >;
 function applyAtomic<R extends Dumling.Reading>(

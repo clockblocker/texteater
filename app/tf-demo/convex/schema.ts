@@ -286,8 +286,12 @@ export default defineSchema({
 		checkedRelationKinds: v.optional(
 			v.array(directSemanticRelationValidator),
 		),
+		/** The stored Participle Source's Lemma key, so its verb finds this adjective. */
+		participleSourceLemmaKey: v.optional(v.string()),
 		updatedAt: v.number(),
-	}).index("by_owner_reading_key", ["ownerReadingKey"]),
+	})
+		.index("by_owner_reading_key", ["ownerReadingKey"])
+		.index("by_participle_source_lemma_key", ["participleSourceLemmaKey"]),
 
 	knowledgeProductionRuns: defineTable({
 		attemptKey: v.string(),

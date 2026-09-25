@@ -138,11 +138,53 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	return slots as ValencyFrame;
 }
 
+/**
+ * A Participle Source belongs to a Lexeme ADJ Reading and names a Lexeme VERB
+ * Lemma of the same Language (ADR 0035).
+ */
+function parseParticipleSource<R extends Dumling.Reading>(
+	source: R,
+	value: unknown,
+	path: Path,
+): Dumling.Lemma | ParsingError {
+	if (source.lemma.family !== "Lexeme" || source.lemma.kind !== "ADJ")
+		return issue(path, "Only an ADJ Reading has a Participle Source");
+	const parsed = parseUnit(value);
+	if (!parsed.success)
+		return new ParsingError(
+			parsed.error.issues.map((entry) => ({
+				...entry,
+				path: [...path, ...entry.path],
+			})),
+		);
+	const verb = parsed.chain.value as Dumling.Lemma;
+	if (
+		parsed.chain.unitKind !== "Lemma" ||
+		verb.family !== "Lexeme" ||
+		verb.kind !== "VERB"
+	)
+		return issue(path, "A Participle Source must be a VERB Lemma");
+	if (verb.language !== source.lemma.language)
+		return issue(
+			[...path, "language"],
+			"A Participle Source must use the source Language",
+		);
+	return verb;
+}
+
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge<R> | ParsingError {
 	const result = structuredClone(knowledge) as ReadingKnowledge;
+	if (result.participleSource) {
+		const verb = parseParticipleSource(source, result.participleSource, [
+			"knowledge",
+			"participleSource",
+		]);
+		if (verb instanceof ParsingError) return verb;
+		result.participleSource = verb as typeof result.participleSource;
+	}
 	if (result.valency) {
 		const frame = parseValencyFrame(source, result.valency, [
 			"knowledge",
@@ -174,6 +216,14 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange<R> | ParsingError {
+	if (change.aspect === "participleSource" && change.kind !== "Retract") {
+		const verb = parseParticipleSource(source, change.value, [
+			"change",
+			"value",
+		]);
+		if (verb instanceof ParsingError) return verb;
+		return { ...change, value: verb } as KnowledgeChange<R>;
+	}
 	if (change.aspect === "valency") {
 		if (change.kind !== "Retract") {
 			const frame = parseValencyFrame(source, change.value, [

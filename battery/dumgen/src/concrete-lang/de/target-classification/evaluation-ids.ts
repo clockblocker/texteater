@@ -1,5 +1,5 @@
 /**
- * The golden participle boundary (ADR 0034): an adjectival use of a
+ * The golden participle boundary (ADR 0035): an adjectival use of a
  * participle, attributive, adverbial or predicative after sein, is an ADJ
  * linked to its source VERB; only the perfect and the passive are VERB. Mostly
  * minimal pairs across that line. Explanations name the expected Participle

@@ -104,12 +104,12 @@ describe("public Dumgen types read as their Domain names", () => {
 			`"type GermanKnowledgeFailures = readonly KnowledgeFailure[]"`,
 		);
 		expect(await inferred("PublicKnowledgeFailure")).toMatchInlineSnapshot(
-			`"type PublicKnowledgeFailure = { aspect: "definition" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations" | "valency"; leaf?: string | undefined; candidate?: string | undefined; code: "CatalogMiss" | "InvalidInput" | "InvalidModelOutput" | "NotImplemented" | "ProviderFailure" | "Unresolved"; message: string; }"`,
+			`"type PublicKnowledgeFailure = { aspect: "definition" | "lexicalBreakdown" | "morphologicalTree" | "participleSource" | "semanticRelations" | "transcription" | "translations" | "valency"; leaf?: string | undefined; candidate?: string | undefined; code: "CatalogMiss" | "InvalidInput" | "InvalidModelOutput" | "NotImplemented" | "ProviderFailure" | "Unresolved"; message: string; }"`,
 		);
 		expect(
 			await inferred("GermanKnowledgeChangeAspects"),
 		).toMatchInlineSnapshot(
-			`"type GermanKnowledgeChangeAspects = "definition" | "lexicalBreakdown" | "morphologicalTree" | "semanticRelations" | "transcription" | "translations" | "valency""`,
+			`"type GermanKnowledgeChangeAspects = "definition" | "lexicalBreakdown" | "morphologicalTree" | "participleSource" | "semanticRelations" | "transcription" | "translations" | "valency""`,
 		);
 		expect(await inferred("GermanPendingRelations")).toMatchInlineSnapshot(
 			`"type GermanPendingRelations = readonly (PendingSemanticRelation & { target: { language: "de"; }; })[]"`,

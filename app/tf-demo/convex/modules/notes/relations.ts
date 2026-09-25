@@ -1,7 +1,11 @@
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import { selectGrammaticalAlternatives } from "dumgen/authored";
 import type * as Dumling from "dumling/types";
-import { parseReadingKnowledge, projectSemanticRelations } from "dumrel";
+import {
+	parseReadingKnowledge,
+	projectParticipleSources,
+	projectSemanticRelations,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
 	lemmaIdentityKey,
@@ -18,6 +22,7 @@ import { semanticRelationValidator } from "../../model/validators";
 const MAX_RELATIONS_PER_NOTE = 50;
 const MAX_RELATION_NEIGHBORHOOD_READINGS = 50;
 const MAX_RELATION_NEIGHBORHOOD_EDGES = 250;
+const MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE = 50;
 
 export const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
@@ -499,6 +504,109 @@ export async function loadRelationProjections(
 		else knowledge[projection.relation] = [target];
 	}
 	return { knowledge, resolved, truncated };
+}
+
+/**
+ * One Participle Source edge on a Reading Note (ADR 0035): the ADJ Reading
+ * names its source VERB Lemma, and the verb's Readings list the participial
+ * adjectives that name it. The verb's side is projected, never stored.
+ */
+export const participleLinkValidator = v.object({
+	relation: v.union(
+		v.literal("participleSource"),
+		v.literal("participialAdjective"),
+	),
+	targetCanonicalForm: v.string(),
+	target: v.union(
+		v.object({ kind: v.literal("Lemma"), lemmaId: v.id("lemmas") }),
+		v.object({ kind: v.literal("Reading"), readingId: v.id("readings") }),
+	),
+});
+
+/**
+ * The Participle Source edges whose source is this Reading, projected by
+ * Dumrel over the Reading and the participial adjectives stored against its
+ * Lemma. A target missing from the dictionary shows no link.
+ */
+export async function loadParticipleLinks(
+	ctx: QueryCtx,
+	source: Doc<"readings">,
+	sourceLemma: Doc<"lemmas">,
+	participleSource: Dumrel.ParticipleSource | undefined,
+): Promise<Infer<typeof participleLinkValidator>[]> {
+	const sourceReading = parseGermanReading({
+		unitKind: "Reading",
+		lemma: parseStoredGermanLemma(sourceLemma),
+		emojiDescription: source.emojiDescription,
+	});
+	const adjectiveRows = await ctx.db
+		.query("accumulatedKnowledge")
+		.withIndex("by_participle_source_lemma_key", (q) =>
+			q.eq("participleSourceLemmaKey", sourceLemma.lemmaKey),
+		)
+		.take(MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE);
+	const readingIds = new Map<string, Id<"readings">>();
+	const entries: Dumrel.ReadingWithKnowledge[] = [
+		{
+			reading: sourceReading,
+			knowledge: participleSource ? { participleSource } : {},
+		},
+	];
+	for (const row of adjectiveRows) {
+		if (row.ownerReadingKey === source.readingKey) continue;
+		const reading = await ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) =>
+				q.eq("readingKey", row.ownerReadingKey),
+			)
+			.unique();
+		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
+		if (!reading || !lemma) continue;
+		const adjective = parseGermanReading({
+			unitKind: "Reading",
+			lemma: parseStoredGermanLemma(lemma),
+			emojiDescription: reading.emojiDescription,
+		});
+		readingIds.set(reading.readingKey, reading._id);
+		entries.push({
+			reading: adjective,
+			knowledge: {
+				participleSource: Reflect.get(
+					row.knowledge ?? {},
+					"participleSource",
+				),
+			},
+		});
+	}
+	const projected = projectParticipleSources(entries);
+	if (!projected.success) throw projected.error;
+	const links: Infer<typeof participleLinkValidator>[] = [];
+	for (const edge of projected.value) {
+		if (readingFingerprint(edge.source) !== source.readingKey) continue;
+		if (edge.target.unitKind === "Lemma") {
+			const target = await ctx.db
+				.query("lemmas")
+				.withIndex("by_lemma_key", (q) =>
+					q.eq("lemmaKey", lemmaIdentityKey(edge.target)),
+				)
+				.unique();
+			if (target)
+				links.push({
+					relation: edge.relation,
+					targetCanonicalForm: target.canonicalForm,
+					target: { kind: "Lemma", lemmaId: target._id },
+				});
+			continue;
+		}
+		const readingId = readingIds.get(readingFingerprint(edge.target));
+		if (readingId)
+			links.push({
+				relation: edge.relation,
+				targetCanonicalForm: edge.target.lemma.canonicalForm,
+				target: { kind: "Reading", readingId },
+			});
+	}
+	return links;
 }
 
 export async function loadGrammaticalAlternatives(

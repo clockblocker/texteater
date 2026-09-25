@@ -758,7 +758,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -930,7 +929,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -1050,7 +1048,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -1073,18 +1070,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -1098,46 +1084,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -1180,9 +1126,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -1195,18 +1138,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -1220,46 +1152,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -1300,7 +1192,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -1312,9 +1203,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -3641,7 +3529,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -3813,7 +3700,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -3933,7 +3819,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -3956,18 +3841,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -3981,46 +3855,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -4063,9 +3897,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -4078,18 +3909,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -4103,46 +3923,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -4183,7 +3963,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -4195,9 +3974,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -5474,7 +5250,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -5646,7 +5421,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -5766,7 +5540,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -5789,18 +5562,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -5814,46 +5576,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -5896,9 +5618,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -5911,18 +5630,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -5936,46 +5644,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -6016,7 +5684,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -6028,9 +5695,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -6471,7 +6135,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -6643,7 +6306,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -6763,7 +6425,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -6786,18 +6447,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -6811,46 +6461,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -6893,9 +6503,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",
@@ -6908,18 +6515,7 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 												type: "object",
 												properties: {
 													mood: { type: "null" },
-													number: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Plur",
-																	"Sing",
-																],
-															},
-															{ type: "null" },
-														],
-													},
+													number: { type: "null" },
 													person: { type: "null" },
 													tense: { type: "null" },
 													verbForm: {
@@ -6933,46 +6529,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 																enum: [
 																	"Present",
 																	"Past",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													case: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Acc",
-																	"Dat",
-																	"Gen",
-																	"Nom",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													gender: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Fem",
-																	"Masc",
-																	"Neut",
-																],
-															},
-															{ type: "null" },
-														],
-													},
-													degree: {
-														anyOf: [
-															{
-																type: "string",
-																enum: [
-																	"Cmp",
-																	"Pos",
-																	"Sup",
 																],
 															},
 															{ type: "null" },
@@ -7013,7 +6569,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 														type: "string",
 														enum: [
 															"Process",
-															"State",
 															"Recipient",
 														],
 													},
@@ -7025,9 +6580,6 @@ export const modelSchemas: Readonly<Record<string, Record<string, unknown>>> = {
 													"tense",
 													"verbForm",
 													"participleForm",
-													"case",
-													"gender",
-													"degree",
 													"expletive",
 													"perfect",
 													"future",

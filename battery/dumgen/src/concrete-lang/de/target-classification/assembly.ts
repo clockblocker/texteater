@@ -12,7 +12,7 @@ import { indexedContext } from "../../../universal/validation.js";
 
 export const routes = {
 	"Lexeme/ADJ":
-		"Adjective, including lexicalized participles and adverbial adjective uses",
+		"Adjective, including adverbial adjective uses and every participle outside a perfect or passive: attributive, adverbial, or predicative after sein or another verb, whatever its sense and dependents (der zweimal verschobene Termin, den Koffer ziehend)",
 	"Lexeme/ADP":
 		"Adposition (preposition, postposition or fixed circumposition)",
 	"Lexeme/ADV":
@@ -31,7 +31,7 @@ export const routes = {
 		"Subordinating conjunction, including fixed multi-member conjunctions",
 	"Lexeme/SYM": "Symbol",
 	"Lexeme/VERB":
-		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal, a copula, and a productive participle used attributively or adverbially",
+		"Whole lexical verb with its own scoped auxiliaries and fixed members, including a modal or copula",
 	"Phraseme/Aphorism": "Established concise attributed maxim",
 	"Phraseme/Collocation":
 		"Conventional multiword expression with restricted lexical choices and a compositional overall meaning, including Funktionsverbgefüge (eine Entscheidung treffen, zur Verfügung stellen)",

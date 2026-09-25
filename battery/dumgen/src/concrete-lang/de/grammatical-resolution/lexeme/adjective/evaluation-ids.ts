@@ -1,4 +1,4 @@
-/** Adjectival participles are ADJ with the uninflected participle as Canonical Form (ADR 0034). */
+/** Adjectival participles are ADJ with the uninflected participle as Canonical Form (ADR 0035). */
 export const participleCaseIds = [
 	"grammar-de-adj-dev-participial-geschlossen",
 	"grammar-de-adj-dev-adverbial-participle-one-lachend",

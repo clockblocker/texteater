@@ -1,6 +1,7 @@
 export { ParsingError } from "common-utils";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
+export { projectParticipleSources } from "./project-participle-sources.js";
 export { projectPrepositionalGovernment } from "./project-prepositional-government.js";
 export { projectSemanticRelations } from "./project-semantic-relations.js";
 export {
@@ -22,6 +23,9 @@ export type {
 	MorphologicalTreeNode,
 	MorphologicalTreeStructure,
 	NonEmptyStrings,
+	ParticipleProjection,
+	ParticipleRelation,
+	ParticipleSource,
 	PendingSemanticRelation,
 	ReadingKnowledge,
 	ReadingWithKnowledge,

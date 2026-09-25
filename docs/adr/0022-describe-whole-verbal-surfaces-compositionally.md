@@ -6,7 +6,7 @@ status: accepted
 
 A German verbal Surface describes its complete target. Finite tense belongs
 to that construction; perfect and future composition are independent
-coordinates. Passive voice distinguishes process and state constructions.
+coordinates. Passive voice names the process or recipient construction.
 The same dimensions apply to VERB, AUX and verbal Phrasemes.
 
 For `ist ... geschrieben worden`, the Surface is finite present, perfect,
@@ -17,11 +17,11 @@ tense, mood, person or agreement inherited from the modal.
 Meaning-bearing modals remain separate targets and own their scoped
 grammatical auxiliaries: `hat ... schreiben müssen` has `[hat, müssen]` and
 `[schreiben]`. Selecting a reviewed modal identity does not force a singleton.
-The contextual VERB/AUX/ADJ boundary in [ADR 0033](./0033-resolve-productive-german-participles-to-their-verb.md) determines the route.
+The contextual VERB/AUX/ADJ boundary in [ADR 0035](./0035-make-adjectival-german-participles-adj-linked-to-their-verb.md) determines the route: a participle is verbal only in a perfect or passive, and the state passive is the copula `sein` plus an ADJ.
 
 `perfect` and `future` use `Yes` for a present construction and null for its
-absence. `passive` names the process or state construction when voice is
-passive. `tense` describes the finite verb only. `participleForm` describes a
+absence. `passive` names the process or recipient construction when voice
+is passive. `tense` describes the finite verb only. `participleForm` describes a
 whole participial Surface; it replaces the German use of `aspect: Perf` as
 past-participle morphology. A participle alone does not establish a perfect
 construction. Universal Aspect retains its existing meaning for other routes.

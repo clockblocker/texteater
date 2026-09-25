@@ -10,10 +10,12 @@ const select = (
 
 /** Routes whose Readings own a Valency Frame (`valency-policy.ts`): `warten auf`, `stolz auf`, `Angst vor`, `Bescheid wissen über`. */
 const framed = { valency: null } as const;
+/** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0035). */
+const participial = { ...framed, participleSource: null } as const;
 
 function request(
 	relations: readonly SemanticRelation[],
-	extra: Pick<KnowledgeRequestMask, "valency"> = {},
+	extra: Pick<KnowledgeRequestMask, "valency" | "participleSource"> = {},
 ): KnowledgeRequestMask {
 	const base = {
 		transcription: null,
@@ -35,7 +37,7 @@ const makeDeRelMap = () =>
 		Lexeme: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				framed,
+				participial,
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),

@@ -37,6 +37,11 @@ import {
 } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
+	parseParticipleSource,
+	participleSourceOutputSchema,
+	participleSourcePrompt,
+} from "./participle-source.js";
+import {
 	authoredKnowledge,
 	projectKnowledge,
 	type ValencySlotDraft,
@@ -189,6 +194,38 @@ export function produceKnowledge(
 			);
 			return contribution.changes.length ? contribution : null;
 		};
+		/**
+		 * The verb an adjectival participle comes from (ADR 0035), or no
+		 * contribution for a plain adjective. Published with the final batch
+		 * so a host can store the source verb before the link that names it.
+		 */
+		const participleSource = () =>
+			Effect.map(
+				executeGeneration(
+					options,
+					scope,
+					{
+						stage,
+						route,
+						input: { ...state, aspect: "participleSource" },
+						configuration: effectiveConfiguration(options, route),
+						systemPrompt: participleSourcePrompt,
+						outputSchema: participleSourceOutputSchema,
+					},
+					(output) => {
+						const draft = parseParticipleSource(output, route);
+						return draft
+							? projectKnowledge(
+									reading,
+									{ participleSource: null },
+									{ participleSource: draft },
+								)
+							: null;
+					},
+					[],
+				),
+				({ output }) => output,
+			);
 		const textOutcomes: Array<TextOutcome | undefined> = [];
 		const textJobs: Array<Effect.Effect<void, DumgenFailure>> = [];
 		const publishOutcomes = () => {
@@ -227,7 +264,8 @@ export function produceKnowledge(
 								aspect !== "definition" &&
 								aspect !== "transcription" &&
 								aspect !== "translations" &&
-								aspect !== "valency"
+								aspect !== "valency" &&
+								aspect !== "participleSource"
 							)
 								throw new DumgenFailure(
 									"NotImplemented",
@@ -269,54 +307,56 @@ export function produceKnowledge(
 							const contribution =
 								aspect === "valency"
 									? valency()
-									: draftText !== undefined
-										? validateText({ text: draftText })
-										: (yield* executeGeneration(
-												options,
-												scope,
-												{
-													stage,
-													route,
-													input:
-														aspect ===
-														"transcription"
-															? {
-																	lemma: reading.lemma,
-																	aspect,
-																}
-															: {
-																	...state,
-																	aspect,
-																	...(leaf
-																		? {
-																				language:
-																					leaf,
-																			}
-																		: {}),
+									: aspect === "participleSource"
+										? yield* participleSource()
+										: draftText !== undefined
+											? validateText({ text: draftText })
+											: (yield* executeGeneration(
+													options,
+													scope,
+													{
+														stage,
+														route,
+														input:
+															aspect ===
+															"transcription"
+																? {
+																		lemma: reading.lemma,
+																		aspect,
+																	}
+																: {
+																		...state,
+																		aspect,
+																		...(leaf
+																			? {
+																					language:
+																						leaf,
+																				}
+																			: {}),
+																	},
+														configuration:
+															effectiveConfiguration(
+																options,
+																route,
+															),
+														systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. ${translationFormClause(String(leaf))} For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+														outputSchema: {
+															type: "object",
+															properties: {
+																text: {
+																	type: [
+																		"string",
+																		"null",
+																	],
 																},
-													configuration:
-														effectiveConfiguration(
-															options,
-															route,
-														),
-													systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. ${translationFormClause(String(leaf))} For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
-													outputSchema: {
-														type: "object",
-														properties: {
-															text: {
-																type: [
-																	"string",
-																	"null",
-																],
 															},
+															required: ["text"],
+															additionalProperties: false,
 														},
-														required: ["text"],
-														additionalProperties: false,
 													},
-												},
-												validateText,
-												[],
-											)).output;
+													validateText,
+													[],
+												)).output;
 							if (contribution)
 								return {
 									changes: contribution.changes,
@@ -342,7 +382,11 @@ export function produceKnowledge(
 						Effect.tap((outcome) => {
 							textOutcomes[outcomeIndex] = outcome;
 							publishOutcomes();
-							if (outcome.changes.length && aspect !== "valency")
+							if (
+								outcome.changes.length &&
+								aspect !== "valency" &&
+								aspect !== "participleSource"
+							)
 								options.onKnowledgeContribution?.(
 									outcome.changes,
 								);

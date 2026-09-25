@@ -5609,6 +5609,7 @@ export type KnowledgeFailure = {
 		| "translations"
 		| "semanticRelations"
 		| "valency"
+		| "participleSource"
 		| "morphologicalTree"
 		| "lexicalBreakdown";
 	leaf?: string | undefined;

@@ -56,6 +56,8 @@ export function knowledgeComparison(
 							}
 						: complement,
 			}));
+		if (change.aspect === "participleSource")
+			result.participleSource = change.value.canonicalForm;
 		if (change.aspect === "translations")
 			(result.translations as Record<string, unknown>)[change.language] =
 				change.value[0] ?? null;

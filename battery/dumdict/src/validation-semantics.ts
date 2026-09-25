@@ -100,6 +100,11 @@ function knowledgeUsesLanguage(
 	)
 		return false;
 	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
+	if (
+		knowledge.participleSource !== undefined &&
+		!lemmaUsesLanguage(knowledge.participleSource, language)
+	)
+		return false;
 	return (knowledge.lexicalBreakdown ?? []).every(
 		(shadow) => shadow.language === language,
 	);
@@ -130,6 +135,8 @@ function knowledgeChangeUsesLanguage(
 						[{ status: "Optional", complement: change.complement }],
 						language,
 					);
+	if (change.aspect === "participleSource" && "value" in change)
+		return lemmaUsesLanguage(change.value, language);
 	return true;
 }
 

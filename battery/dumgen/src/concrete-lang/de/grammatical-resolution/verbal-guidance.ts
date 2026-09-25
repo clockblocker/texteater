@@ -23,17 +23,17 @@ verbForm is Fin, Inf or Part for the whole construction. Finite indicative and
 subjunctive forms have mood Ind or Sub, applicable person and number, and finite
 tense Pres or Past. Konjunktiv I uses Pres, Konjunktiv II uses Past. Imperatives
 have mood Imp and null tense. Infinitives and participles have null finite
-tense, mood and person; infinitives also have null number. Only a whole
-participial Surface has participleForm Present or Past, and only it carries
-case, number, gender and degree. A productive participle stays VERB when used
-like an adjective: attributive die gebratenen Zwiebeln is Part, Past, Nom,
-Plur with gender null; adverbial ging pfeifend davon is Part, Present with
-case, number and gender null. Its degree stays null. Never use aspect.
+tense, mood, person and number. Only a whole participial Surface has
+participleForm Present or Past. A participle is verbal only in a perfect or
+passive; an attributive, adverbial or predicative one is an ADJ and never
+reaches this route. Do not use aspect, case, gender or degree in this verbal
+bag.
 
 Every marked verbal bag has independent perfect and future coordinates: Yes
 when the construction is present, null when absent. A Partizip II alone is not
-a perfect construction. voice is Pass with passive Process, State or Recipient
-for an established passive; otherwise both voice and passive are null. The
+a perfect construction. voice is Pass with passive Process or Recipient for an
+established passive; otherwise both voice and passive are null. sein with a
+participle outside the perfect is a copula with an adjective, not a passive. The
 recipient passive is bekommen, kriegen or erhalten with a Partizip II that
 contributes nothing lexical (bekommt ... geliefert); the auxiliary is a member,
 the participle's verb is the Lemma. Lexical bekommen with an object and the

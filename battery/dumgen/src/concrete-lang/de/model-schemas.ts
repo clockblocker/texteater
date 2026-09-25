@@ -135,5 +135,7 @@ export const knowledgeOutputSchema = z.strictObject({
 		})
 		.optional(),
 	valency: z.array(valencySlotDraftSchema).nullable().optional(),
+	/** The source verb's Canonical Form, or null for no participle. */
+	participleSource: z.string().min(1).nullable().optional(),
 });
 export { directSemanticRelationSchema };

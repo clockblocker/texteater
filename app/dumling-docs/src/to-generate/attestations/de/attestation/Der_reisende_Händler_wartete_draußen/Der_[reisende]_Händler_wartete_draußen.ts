@@ -9,8 +9,6 @@ const occurrenceAttestation = {
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
@@ -18,41 +16,32 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: null,
-			number: "Sing",
-			person: null,
-			tense: null,
-			verbForm: "Part",
-			participleForm: "Present",
 			case: "Nom",
+			degree: "Pos",
 			gender: "Masc",
-			degree: null,
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: null,
-			passive: null,
+			number: "Sing",
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "reisen",
+			canonicalForm: "reisend",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der [reisende] Händler wartete draußen.",
 	classifierNotes:
-		"Reisende is a productive attributive Partizip I of reisen, so it resolves to the verb (ADR 0033) and carries Nom Sing Masc agreement. The substantivized der Reisende is a NOUN.",
+		"Reisende is an attributive participle modifying Händler with nominative masculine singular agreement, so it is the ADJ reisend with Participle Source reisen (ADR 0035). Without an overt noun, Der Reisende is a substantivized NOUN.",
 	isVerified: true,
 } as const;

@@ -27,6 +27,9 @@ export const dumrelOutputTypeExports = {
 	ValencySlot: "valencySlot",
 	GovernmentRelation: "governmentRelation",
 	GovernmentProjection: "governmentProjection",
+	ParticipleSource: "participleSource",
+	ParticipleRelation: "participleRelation",
+	ParticipleProjection: "participleProjection",
 };
 
 export const dumrelTypePreservingOperations = [

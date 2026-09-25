@@ -23,7 +23,7 @@ null on an auxiliary's own Surface.
 
 The AUX catalog is a closed set of grammar-explaining Readings, one per
 grammatical use of a verb (for example `sein` as Perfekt auxiliary and `sein`
-as Zustandspassiv auxiliary), with every form an authored Surface under each
+as Modalpassiv auxiliary), with every form an authored Surface under each
 Reading it can serve. The serving verb's form decides the Reading, not the
 spelling. A reader reaches an AUX Reading from the unit's Surface explanation,
 never from the text. Per-form AUX Lemmas such as `ist` and `bin` are retired.
@@ -31,9 +31,9 @@ never from the text. Per-form AUX Lemmas such as `ist` and `bin` are retired.
 The recipient passive joins AUX: `bekommen`, `kriegen` and `erhalten` with a
 Partizip II that contributes nothing lexical (`Sie bekommt das Paket
 geliefert`) are auxiliary members under one authored Reading on the AUX Lemma
-`bekommen`, and `passive` gains the value `Recipient` beside `Process` and
-`State`. The lexical use (`Sie bekommt ein Paket`) and the resultative use
-(`Sie bekommt das Glas geöffnet`, manages to open it) keep `bekommen` as the
+`bekommen`, and `passive` gains the value `Recipient` beside `Process`. The
+lexical use (`Sie bekommt ein Paket`) and the resultative use (`Sie bekommt
+das Glas geöffnet`, manages to open it) keep `bekommen` as the
 VERB; only the sentence decides, so both carry gold. Verbs that add a meaning
 beside a construction (`sich lassen`, `gehören` with a participle, `brauchen`,
 `scheinen`, `drohen`, `versprechen`, `pflegen` with `zu`, copular `bleiben`)
@@ -45,3 +45,8 @@ contracts in ADRs 0003 and 0004 are unchanged. The rulings are recorded on
 [the lab scope decision](https://github.com/clockblocker/texteater/issues/502),
 [the auxiliary schema decision](https://github.com/clockblocker/texteater/issues/504)
 and [the AUX Readings decision](https://github.com/clockblocker/texteater/issues/507).
+
+Amended on 2026-09-25 by [ADR 0035](./0035-make-adjectival-german-participles-adj-linked-to-their-verb.md):
+`sein` with a participle outside the perfect is the copula VERB and the
+participle an ADJ, so the Zustandspassiv AUX Reading is retired and `passive`
+has no `State` value.

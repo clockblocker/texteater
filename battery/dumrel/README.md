@@ -39,6 +39,11 @@ derives the inverse `governedBy` edges from Preposition Slots over a
 dictionary inventory, so a preposition lists its Governors without storing
 them.
 
+`participleSource` records the VERB Lemma an adjectival participle Reading
+comes from (`gekocht` stores `kochen`). `projectParticipleSources` derives
+the inverse `participialAdjective` edges, so a verb lists its participial
+adjectives without storing them.
+
 The `dumrel/schema` entrypoint exposes the canonical composable Zod schemas.
 The package build compiles those schemas into lightweight runtime validation
 and generated structural declarations. Normal imports and `dumrel/types` do

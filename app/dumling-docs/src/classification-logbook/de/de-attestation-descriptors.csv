@@ -2,7 +2,7 @@ sentence_markdown,normalizedSurface,grundform,family,kind
 Am [nächsten] Morgen war alles anders.,nächsten,Not Grundform,Lexeme,ADJ
 Am nächsten Morgen war alles [anders].,anders,Undetermined,Lexeme,ADJ
 Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Not Grundform,Lexeme,NOUN
-Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Not Grundform,Lexeme,VERB
+Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Grundform,Lexeme,ADJ
 Bei dieser Formel verstehe ich nur [Bahnhof].,verstehe nur Bahnhof,Not Grundform,Phraseme,Idiom
 Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Not Grundform,Lexeme,DET
 Damit triffst du den [Nagel] auf den Kopf.,den nagel auf den kopf,Not Grundform,Phraseme,Idiom
@@ -22,30 +22,30 @@ Das wäre [fast] schief gewesen.,fast,Undetermined,Lexeme,ADV
 Das wäre fast schief [gewesen].,gewesen,Not Grundform,Lexeme,AUX
 Das wäre schön [gewesen].,gewesen,Not Grundform,Lexeme,AUX
 "Der Autor, [dessen] Buch fehlt, wartet draußen.",dessen,Grundform,Lexeme,PRON
-Der Brief ist schon [geschrieben].,ist geschrieben,Not Grundform,Lexeme,VERB
+Der Brief ist schon [geschrieben].,geschrieben,Grundform,Lexeme,ADJ
 Der dritte [Band] ist längst vergriffen.,Band,Undetermined,Lexeme,NOUN
 Der Fährmann hat uns [übergesetzt].,übergesetzt,Not Grundform,Lexeme,VERB
-Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,VERB
+Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
 Der hockte da im grünen Gras; dem [floß] der Kaffee auf die Nas.,floß,Not Grundform,Lexeme,VERB
 Der hockte da im grünen Gras; dem floß der Kaffee [auf] die Nas.,auf,Grundform,Lexeme,ADP
 Der [Kiefer] schmerzte nach der Operation.,Kiefer,Undetermined,Lexeme,NOUN
-Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,VERB
+Der [lachende] Junge winkte uns zu.,lachende,Not Grundform,Lexeme,ADJ
 Der Laster [fuhr] das Schild um.,fuhr um,Not Grundform,Lexeme,VERB
 Der [Leiter] der Werkstatt kam später.,Leiter,Undetermined,Lexeme,NOUN
-Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,VERB
+Der [reisende] Händler wartete draußen.,reisende,Not Grundform,Lexeme,ADJ
 Der [Reisende] wartete draußen.,Reisende,Undetermined,Lexeme,NOUN
-Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,VERB
+Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Not Grundform,Lexeme,ADJ
 Die alte [Kiefer] steht am Hang.,Kiefer,Undetermined,Lexeme,NOUN
 Die [Angestellten] streikten gestern.,Angestellten,Not Grundform,Lexeme,NOUN
-Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,VERB
+Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Not Grundform,Lexeme,ADJ
 Die Aufgabe bleibt [ungelöst].,ungelöst,Grundform,Lexeme,ADJ
 Die [Band] spielt heute im Kellerclub.,Band,Undetermined,Lexeme,NOUN
-Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,VERB
-Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,VERB
-Die Kartoffeln sind bereits [gekocht].,sind gekocht,Not Grundform,Lexeme,VERB
+Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Not Grundform,Lexeme,ADJ
+Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Not Grundform,Lexeme,ADJ
+Die Kartoffeln sind bereits [gekocht].,gekocht,Grundform,Lexeme,ADJ
 Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Undetermined,Lexeme,NOUN
 Die [linke] Hand zitterte.,linke,Not Grundform,Lexeme,ADJ
-Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,VERB
+Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Not Grundform,Lexeme,ADJ
 Die [Mutter] passt nicht auf diese Schraube.,Mutter,Undetermined,Lexeme,NOUN
 [Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Grundform,Lexeme,DET
 Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Undetermined,Lexeme,NOUN
@@ -59,11 +59,11 @@ Die Peitsche hat er mitgebracht und nimmt sie [sorglich] sehr in acht.,sorglich,
 Die Peitsche hat er mitgebracht und nimmt sie sorglich [sehr] in acht.,sehr,Undetermined,Lexeme,ADV
 Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht,Not Grundform,Phraseme,Idiom
 Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht,Not Grundform,Phraseme,Idiom
-Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Not Grundform,Lexeme,VERB
+Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Not Grundform,Lexeme,ADJ
 Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Undetermined,Lexeme,ADJ
 Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
 Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o wei,Grundform,Phraseme,DiscourseFormula
-Die Tür ist [geschlossen].,ist geschlossen,Not Grundform,Lexeme,VERB
+Die Tür ist [geschlossen].,geschlossen,Grundform,Lexeme,ADJ
 "Die Zeugin, [deren] Aussage zählt, bleibt anonym.",deren,Grundform,Lexeme,PRON
 Ein [interessierter] Leser fragte nach.,interessierter,Not Grundform,Lexeme,ADJ
 Ein [Verletzter] lag am Straßenrand.,Verletzter,Undetermined,Lexeme,NOUN
@@ -74,7 +74,7 @@ Einst ging er an [Ufers] Rand mit der Mappe in der Hand.,Ufers,Not Grundform,Lex
 Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Undetermined,Lexeme,NOUN
 Er lief erst nach links und dann [hinaus].,hinaus,Undetermined,Lexeme,ADV
 Er [muss] heute arbeiten.,muss,Not Grundform,Lexeme,AUX
-Er saß [schweigend] am Fenster.,schweigend,Not Grundform,Lexeme,VERB
+Er saß [schweigend] am Fenster.,schweigend,Grundform,Lexeme,ADJ
 Er vergaß [seinen] Schlüssel im Büro.,seinen,Not Grundform,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Not Grundform,Lexeme,VERB
 Er [wartet] auf den Nachtbus.,wartet auf,Not Grundform,Lexeme,VERB
@@ -122,7 +122,7 @@ Sein ständiges [Meckern] nervt.,Meckern,Undetermined,Lexeme,NOUN
 Sie [erinnert] sich an den Geruch.,erinnert sich an,Not Grundform,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Not Grundform,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Grundform,Lexeme,ADJ
-Sie kam [lachend] herein.,lachend,Not Grundform,Lexeme,VERB
+Sie kam [lachend] herein.,lachend,Grundform,Lexeme,ADJ
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Not Grundform,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Not Grundform,Lexeme,VERB
 Sie wurde um Geduld [gebeten].,wurde um gebeten,Not Grundform,Lexeme,VERB

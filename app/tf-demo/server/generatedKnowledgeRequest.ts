@@ -52,6 +52,7 @@ export function generationRequestFor(
 		morphologicalTree: _morphologicalTree,
 		lexicalBreakdown: _lexicalBreakdown,
 		valency: _valency,
+		participleSource: _participleSource,
 		...rest
 	} = applicable;
 	const request = { ...rest, ...government };

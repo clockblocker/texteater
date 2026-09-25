@@ -125,6 +125,7 @@ export const knowledgeFailureSchema = z.strictObject({
 		"translations",
 		"semanticRelations",
 		"valency",
+		"participleSource",
 		"morphologicalTree",
 		"lexicalBreakdown",
 	]),

@@ -4,55 +4,44 @@ const occurrenceAttestation = {
 	unitKind: "Attestation",
 	members: [
 		{
-			attested: "sind",
-			orthography: "Standard",
-		},
-		{
 			attested: "gekocht",
 			orthography: "Standard",
 		},
 	],
 	realizationCoverage: "Full",
-	expletiveEvidence: null,
-	governedPrepositionEvidence: null,
 	surface: {
 		unitKind: "Surface",
 		language: "de",
-		normalizedSurface: "sind gekocht",
+		normalizedSurface: "gekocht",
 		spelling: "Canonical",
 
 		inflectionalFeatures: {
-			mood: "Ind",
-			number: "Plur",
-			person: "3",
-			tense: "Pres",
-			verbForm: "Fin",
-			expletive: null,
-			perfect: null,
-			future: null,
-			voice: "Pass",
-			passive: "State",
+			case: null,
+			degree: "Pos",
+			gender: null,
+			number: null,
 		},
 		lemma: {
 			unitKind: "Lemma",
 			language: "de",
-			canonicalForm: "kochen",
+			canonicalForm: "gekocht",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Dumling.Attestation<"de", "Lexeme", "VERB">;
+} satisfies Dumling.Attestation<"de", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Kartoffeln sind bereits [gekocht].",
 	classifierNotes:
-		"Sind plus gekocht preserves the productive kochen event and forms one state-passive VERB target. The participle owns morphology and the Lemma; the auxiliary is a fixed member.",
+		"sein plus gekocht is a state passive: sind is the copula VERB and gekocht the ADJ gekocht with Participle Source kochen (ADR 0035).",
 	isVerified: true,
 } as const;

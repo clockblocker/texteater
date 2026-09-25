@@ -1115,7 +1115,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An attributive participle is an ADJ (ADR 0034): Canonical Form geschlossen, the uninflected participle, not schließen."
+		"explanation": "An attributive participle is an ADJ (ADR 0035): Canonical Form geschlossen, the uninflected participle, not schließen."
 	},
 	"grammar-de-adj-dev-adverbial-participle-one-lachend": {
 		"input": {
@@ -1146,7 +1146,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An adverbial Partizip I is an ADJ (ADR 0034): Canonical Form lachend; adverbial use has only degree."
+		"explanation": "An adverbial Partizip I is an ADJ (ADR 0035): Canonical Form lachend; adverbial use has only degree."
 	},
 	"grammar-de-adj-participle-attributive-gekochten": {
 		"input": {
@@ -1177,7 +1177,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An attributive Partizip II is an ADJ (ADR 0034): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked."
+		"explanation": "An attributive Partizip II is an ADJ (ADR 0035): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked."
 	},
 	"grammar-de-adj-participle-attributive-bewunderte": {
 		"input": {
@@ -1208,7 +1208,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An attributive participle with a von-agent is still an ADJ (ADR 0034): Canonical Form bewundert; Nom Sing Masc."
+		"explanation": "An attributive participle with a von-agent is still an ADJ (ADR 0035): Canonical Form bewundert; Nom Sing Masc."
 	},
 	"grammar-de-adj-participle-attributive-gelegene": {
 		"input": {
@@ -1239,7 +1239,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "Locative gelegen 'situated' is an attributive ADJ (ADR 0034), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
+		"explanation": "Locative gelegen 'situated' is an attributive ADJ (ADR 0035), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
 	},
 	"grammar-de-adj-participle-attributive-umgestuerzte": {
 		"input": {
@@ -1270,7 +1270,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An attributive participle of a separable verb is an ADJ (ADR 0034): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
+		"explanation": "An attributive participle of a separable verb is an ADJ (ADR 0035): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
 	},
 	"grammar-de-adj-participle-attributive-spielenden": {
 		"input": {
@@ -1301,7 +1301,7 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "An attributive Partizip I is an ADJ (ADR 0034): Canonical Form spielend; Acc Plur with Kinder."
+		"explanation": "An attributive Partizip I is an ADJ (ADR 0035): Canonical Form spielend; Acc Plur with Kinder."
 	},
 	"grammar-de-adj-participle-state-passive-geschlossen": {
 		"input": {
@@ -1332,6 +1332,6 @@
 			},
 			"realizationCoverage": "Full"
 		},
-		"explanation": "A state passive is the copula sein plus an ADJ (ADR 0034): predicative geschlossen has only degree."
+		"explanation": "A state passive is the copula sein plus an ADJ (ADR 0035): predicative geschlossen has only degree."
 	}
 }

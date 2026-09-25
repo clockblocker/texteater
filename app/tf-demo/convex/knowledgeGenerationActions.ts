@@ -1,7 +1,12 @@
 "use node";
 
 import { v } from "convex/values";
-import type { KnowledgeInput, KnowledgeProduction } from "dumgen/types";
+import type {
+	ComparisonInput,
+	KnowledgeInput,
+	KnowledgeProduction,
+} from "dumgen/types";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import {
 	inspected,
@@ -10,8 +15,13 @@ import {
 	spanHops,
 } from "../server/inspectionCapture";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import { createProductionDumgen } from "../server/modelExecution";
 import { parseGermanReading } from "../server/operationalParsing";
+import {
+	asksParticipleSource,
+	contributedParticipleSource,
+} from "../server/participleSource";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
@@ -136,6 +146,12 @@ export const runKnowledgeGeneration = internalAction({
 					attestsGovernment: input.government.length > 0,
 				});
 				requested = request;
+				const participleSource = asksParticipleSource(reading, {
+					topUpOnly: input.topUpOnly,
+					knowledge: input.existingKnowledge,
+				});
+				/** The source verb's new Reading, stored with the final batch. */
+				let participleSourceReading: Dumling.Reading<"de"> | undefined;
 				const requestedKinds = requestedRelationKinds(
 					"semanticRelations" in request ? request : {},
 				);
@@ -163,6 +179,9 @@ export const runKnowledgeGeneration = internalAction({
 						attemptKey,
 						final,
 						reading,
+						...(final && participleSourceReading
+							? { participleSourceReading }
+							: {}),
 						changes: [...publishable.changes],
 						pendingRelations: [...publishable.pendingRelations],
 						productionEvidence: {
@@ -199,13 +218,14 @@ export const runKnowledgeGeneration = internalAction({
 				publishContribution = async (changes) => {
 					await publish(false, { changes, pendingRelations: [] }, []);
 				};
+				const { encounter } = parseResolvedGrammar({
+					encounter: input.encounter,
+					attestation: input.attestation,
+				});
 				const generated = await spans.run(
 					knowledgeDumgen
 						.produceKnowledge({
-							encounter: parseResolvedGrammar({
-								encounter: input.encounter,
-								attestation: input.attestation,
-							}).encounter,
+							encounter,
 							reading,
 							request: {
 								...missingKnowledgeRequest(request, {
@@ -216,6 +236,9 @@ export const runKnowledgeGeneration = internalAction({
 								// Coverage is per occurrence: stored government may miss this sentence's.
 								...("valency" in request
 									? { valency: null }
+									: {}),
+								...(participleSource
+									? { participleSource: null }
 									: {}),
 							},
 							attestedGovernment: input.government,
@@ -253,18 +276,82 @@ export const runKnowledgeGeneration = internalAction({
 					return null;
 				}
 				generationCompleted = true;
+				// A Participle Source always has a target (ADR 0035): a source
+				// verb the dictionary lacks gets a Reading before the link. A
+				// source whose Reading cannot be generated is dropped and fails
+				// its aspect, so the run is Partial and retries it.
+				let production: KnowledgeProduction<"de"> = generated;
+				const sourceVerb = contributedParticipleSource(
+					generated.changes,
+				);
+				if (sourceVerb) {
+					try {
+						const stored = await hop(
+							"Find the source verb's stored Readings",
+							{ lemma: sourceVerb },
+							() =>
+								ctx.runQuery(
+									internal.dumdictStorage.queries
+										.findStoredReadings,
+									{ lemmaKey: lemmaIdentityKey(sourceVerb) },
+								),
+						);
+						if (stored.length === 0) {
+							const resolution = await spans.run(
+								knowledgeDumgen.resolveOrGenerateReadingEmojiDescription(
+									{
+										encounter,
+										lemma: sourceVerb,
+										candidates: [],
+									} as ComparisonInput<"de">,
+								),
+							);
+							participleSourceReading = parseGermanReading({
+								unitKind: "Reading",
+								lemma: sourceVerb,
+								emojiDescription: resolution.emojiDescription,
+							});
+						}
+					} catch (error) {
+						console.error(
+							"The Participle Source's verb could not be resolved",
+							error,
+						);
+						production = {
+							...generated,
+							changes: generated.changes.filter(
+								(change) =>
+									change.aspect !== "participleSource",
+							),
+							failures: [
+								...generated.failures,
+								{
+									aspect: "participleSource",
+									code: "Unresolved",
+									message:
+										"The source verb's Reading could not be generated.",
+								},
+							],
+						};
+					}
+				}
 				// Relations too many for one plan commit in chunks first; the
 				// last chunk settles the run.
 				await publishInRelationChunks(
 					generatedKnowledgeAllowedForPublication(
-						generated,
+						production,
 						qualifiedKinds,
 					),
 					({ final, proposed, ...chunk }) =>
-						publish(final, chunk, final ? generated.failures : [], {
-							requestedKinds,
-							proposed: [...proposed],
-						}),
+						publish(
+							final,
+							chunk,
+							final ? production.failures : [],
+							{
+								requestedKinds,
+								proposed: [...proposed],
+							},
+						),
 				);
 				return null;
 			} catch (error) {
