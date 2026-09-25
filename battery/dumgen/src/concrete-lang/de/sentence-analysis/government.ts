@@ -9,6 +9,8 @@
  * sentence without a governable preposition asks nothing.
  */
 
+import type * as Dumling from "dumling/types";
+import { allowedComplementKinds } from "dumrel";
 import type { Questions } from "promptsmith/typesafe";
 import type { SegmentedSentence } from "../../../types.js";
 import { choice } from "../../../universal/questions.js";
@@ -19,11 +21,13 @@ import {
 	isGovernablePreposition,
 } from "../governable-prepositions.js";
 import {
+	effectiveRoute,
 	headOf,
 	type LexemeTarget,
 	type PhrasemeTarget,
 	type PrepositionComplement,
 	type Slot,
+	selectPhrasemeKind,
 } from "./analysis.js";
 import type { Answers } from "./assemble.js";
 import type { Placement } from "./placement.js";
@@ -135,17 +139,41 @@ function top(answers: Answers, id: string): string | undefined {
 export const governorTau = 0.6;
 
 /**
- * One Slot per governed preposition. The governor vote is summed per word,
- * so `nimmt` and `teil` vote together for `teilnehmen`, and the word reaching
- * `governorTau` governs. Failing that, a preposition the Lexeme layer made a
- * word's `GovernedPreposition` member is governed by that word, and failing
- * that, the vote summed over a Phraseme's words lets the expression govern
- * (`mit … nichts zu tun haben`, the vote split between `tun` and `haben`).
- * A governing word inside a Phraseme hands the slot to the Phraseme when it
- * governs only inside it (`Bescheid wissen über`, ADR 0034); a word that
- * keeps the government alone keeps the slot (`Angst vor` inside `Angst
- * haben`). A preposition voted to govern itself and an unresolved case yield
- * nothing; an unresolved referent is `Either`.
+ * Whether a route's Valency Frame holds a Preposition slot, by Dumrel's
+ * valency policy (ADR 0034): VERB, ADJ and NOUN Lexemes, Collocations and
+ * Idioms.
+ */
+export function takesPreposition(route: {
+	readonly family: string;
+	readonly kind: string;
+}): boolean {
+	return allowedComplementKinds({
+		language: "de",
+		...route,
+	} as Pick<Dumling.Lemma, "language" | "family" | "kind">).includes(
+		"Preposition",
+	);
+}
+
+/** Routes whose preposition is a fixed part: infinitive zu, and um, ohne or statt … zu. */
+const fixedPartKinds = new Set(["PART", "SCONJ"]);
+
+/**
+ * One Slot per governed preposition. Fixed parts are not slots (ADR 0034):
+ * a separable particle (`hört … auf`), the zu of an infinitive or of `um …
+ * zu`, and a Phraseme's wording (`zu` in `zur Verfügung stellen`) yield
+ * nothing, and only a route whose frame takes a preposition governs one.
+ * The governor vote is summed per word, so `nimmt` and `teil` vote together
+ * for `teilnehmen`, and the word reaching `governorTau` governs. Failing
+ * that, a preposition the Lexeme layer made a word's `GovernedPreposition`
+ * member is governed by that word, and failing that, the vote summed over a
+ * Phraseme's words lets the expression govern (`mit … nichts zu tun haben`,
+ * the vote split between `tun` and `haben`). A governing word inside a
+ * Phraseme hands the slot to the Phraseme when it governs only inside it
+ * (`Bescheid wissen über`, ADR 0034); a word that keeps the government alone
+ * keeps the slot (`Angst vor` inside `Angst haben`). A preposition voted to
+ * govern itself and an unresolved case yield nothing; an unresolved referent
+ * is `Either`.
  */
 export function assembleSlots(
 	placement: Placement,
@@ -157,12 +185,27 @@ export function assembleSlots(
 		targets.find((target) =>
 			target.members.some((member) => member.offset === offset),
 		);
+	const governs = (target: LexemeTarget) =>
+		takesPreposition(effectiveRoute(target));
+	const expressionGoverns = (phraseme: PhrasemeTarget) =>
+		takesPreposition({
+			family: "Phraseme",
+			kind: selectPhrasemeKind({ targets }, phraseme).kind,
+		});
 	const slots: Slot[] = [];
 	for (const index of placement.resolvable) {
 		const piece = prepositionPiece(placement, index);
 		if (!piece) continue;
 		const own = targetAt(piece.offset);
 		if (!own) continue;
+		const role = own.members.find(
+			(member) => member.offset === piece.offset,
+		)?.role;
+		if (
+			role === "SeparableParticle" ||
+			fixedPartKinds.has(effectiveRoute(own).kind)
+		)
+			continue;
 		const votes = new Map<LexemeTarget, number>();
 		for (const [option, share] of Object.entries(
 			probabilities(answers, `gov_${index}`),
@@ -173,22 +216,23 @@ export function assembleSlots(
 			if (target) votes.set(target, (votes.get(target) ?? 0) + share);
 		}
 		let governor = [...votes].find(
-			([, share]) => share >= governorTau,
+			([target, share]) => share >= governorTau && governs(target),
 		)?.[0];
-		const role = own.members.find(
-			(member) => member.offset === piece.offset,
-		)?.role;
-		if (!governor && role === "GovernedPreposition") governor = own;
+		if (!governor && role === "GovernedPreposition" && governs(own))
+			governor = own;
 		if (governor && headOf(governor).offset === piece.offset) continue;
-		// A preposition that is a fixed word of the Phraseme in its own right
-		// (`zu` in `zur Verfügung stellen`) is never one it governs.
-		const fixedIn = (phraseme: PhrasemeTarget) =>
-			phraseme.members.includes(own.id) && own !== governor;
+		// A preposition in a Phraseme's fixed word is its wording, unless that
+		// word is the governor that took it in (`Bescheid über`).
+		if (
+			own !== governor &&
+			phrasemes.some((phraseme) => phraseme.members.includes(own.id))
+		)
+			continue;
 		const around = governor
 			? phrasemes.find(
 					(phraseme) =>
 						phraseme.members.includes(governor.id) &&
-						!fixedIn(phraseme),
+						expressionGoverns(phraseme),
 				)
 			: undefined;
 		const expression = governor
@@ -197,7 +241,7 @@ export function assembleSlots(
 				: undefined
 			: phrasemes.find(
 					(phraseme) =>
-						!phraseme.members.includes(own.id) &&
+						expressionGoverns(phraseme) &&
 						[...votes]
 							.filter(([target]) =>
 								phraseme.members.includes(target.id),

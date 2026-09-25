@@ -28,15 +28,9 @@ import type {
 	SentenceAnalysis,
 	Slot,
 } from "./analysis.js";
-import {
-	effectiveRoute,
-	fixednessFloor,
-	headOf,
-	selectIdentity,
-	selectPhrasemeKind,
-} from "./analysis.js";
+import { fixednessFloor, headOf, selectIdentity } from "./analysis.js";
 import type { RoleAnswer } from "./criteria.js";
-import { assembleSlots } from "./government.js";
+import { assembleSlots, takesPreposition } from "./government.js";
 import {
 	candidateKey,
 	candidateOf,
@@ -259,12 +253,6 @@ const verbalRoles = new Set<RoleAnswer>([
 	"Expletive",
 ]);
 
-/** The Lexeme Kinds that take in the preposition they govern (ADR 0034). */
-const governorKinds = new Set(["VERB", "ADJ", "NOUN"]);
-
-/** The Phraseme Kinds whose Attestation names a governed preposition. */
-const governingPhrasemeKinds = new Set(["Collocation", "Idiom"]);
-
 /**
  * The one-Head invariant: a group with two Heads is split at them. A
  * non-head follows the Head it scored the higher Include with; a verbal role
@@ -294,7 +282,8 @@ function splitMultiHead(
 		const headKind = winner(routeMassOf(answers, [best]));
 		if (
 			(verbalRoles.has(role) && headKind !== "VERB") ||
-			(role === "GovernedPreposition" && !governorKinds.has(headKind)) ||
+			(role === "GovernedPreposition" &&
+				!takesPreposition({ family: "Lexeme", kind: headKind })) ||
 			(role === "Article" && headKind !== "NOUN")
 		)
 			singletons.push(member);
@@ -786,15 +775,16 @@ export function assembleAnalysis(
 // --------------------------------------------------- governed prepositions
 
 /**
- * Every governor takes in the preposition its slot names (ADR 0034): a VERB,
- * ADJ or NOUN Lexeme Target gains it as a `GovernedPreposition` member,
- * wherever it stands (`Auf ihn bin ich stolz`), and a Collocation or Idiom
- * lists it among its governed prepositions, beside its fixed words and
- * outside its fixedness. The preposition leaves the word it stood in: its
- * own ADP singleton goes, and a member the Lexeme layer glued to another
- * word is split off. A fused adposition (`vom`) stays its own word, as does
- * a preposition that is a fixed word of an expression, one before a noun's
- * article, and one under a governor that takes in nothing.
+ * Every governor takes in the preposition its slot names (ADR 0034); slots
+ * name only routes that take one. A VERB, ADJ or NOUN Lexeme Target gains it
+ * as a `GovernedPreposition` member, wherever it stands (`Auf ihn bin ich
+ * stolz`), and a Collocation or Idiom lists it among its governed
+ * prepositions, beside its fixed words and outside its fixedness. The
+ * preposition leaves the word it stood in: its own ADP singleton goes, and
+ * a member the Lexeme layer glued to another word is split off. A member of
+ * the governor itself keeps the role it has. A fused adposition (`vom`)
+ * stays its own word, as does a preposition that is a fixed word of an
+ * expression and one before a noun's article.
  */
 function absorbGovernedPrepositions(
 	placement: Placement,
@@ -836,16 +826,6 @@ function absorbGovernedPrepositions(
 		});
 		return true;
 	};
-	const analysis = (): SentenceAnalysis => ({
-		sentenceId: "",
-		language: "de",
-		stitchedText: placement.stitchedText,
-		segments: placement.segments,
-		targets,
-		phrasemes: expressions,
-		fusions: placement.fusions,
-		slots,
-	});
 	for (const slot of slots) {
 		const offset = slot.marker;
 		if (offset === null || fused.has(offset)) continue;
@@ -858,39 +838,27 @@ function absorbGovernedPrepositions(
 			const article = word.members.find(
 				(member) => member.role === "Article",
 			);
-			if (
-				!governorKinds.has(effectiveRoute(word).kind) ||
-				(article && offset < article.offset)
-			)
+			// A member the word already holds keeps its role (`auf` stays
+			// the SeparableParticle of `steht … auf`).
+			if (owner === word || (article && offset < article.offset))
 				continue;
-			if (owner !== word && !detach(owner, offset)) continue;
+			if (!detach(owner, offset)) continue;
 			const current = targets.find((target) => target.id === word.id);
 			if (!current) continue;
 			replace(current, {
 				...current,
 				members: [
-					...current.members.filter(
-						(member) => member.offset !== offset,
-					),
+					...current.members,
 					{ offset, role: "GovernedPreposition" as const },
 				].sort((a, b) => a.offset - b.offset),
-				provenance:
-					owner === word
-						? current.provenance
-						: `${current.provenance}+governed`,
+				provenance: `${current.provenance}+governed`,
 			});
 			continue;
 		}
 		const expression = expressions.find(
 			(phraseme) => phraseme.id === slot.governor,
 		);
-		if (
-			!expression ||
-			!governingPhrasemeKinds.has(
-				selectPhrasemeKind(analysis(), expression).kind,
-			)
-		)
-			continue;
+		if (!expression) continue;
 		let preposition = owner;
 		if (owner.members.length > 1) {
 			if (!detach(owner, offset)) continue;

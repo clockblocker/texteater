@@ -1700,3 +1700,165 @@ test("a noun keeps its article and takes in its governed preposition across a ge
 		"Kinder/Head",
 	]);
 });
+
+// Fixed parts are not slots (ADR 0034), whatever the governor vote says.
+
+test("the zu of an infinitive or of um … zu is no slot", async () => {
+	// Er0 versucht2 zu4 schlafen6 .7
+	const infinitive = dumgenWith({
+		words: [[0], [2], [4], [6]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/PART",
+			6: "Lexeme/VERB",
+		},
+		roles: {},
+		expressions: [],
+		government: { 4: { governor: 2, case: "Dat" } },
+	});
+	const versucht = await Effect.runPromise(
+		infinitive.dumgen.analyzeSentence({
+			sentence: sentenceOf("versucht", "Er versucht zu schlafen."),
+		}),
+	);
+	expect(versucht.slots).toEqual([]);
+	expect(text(versucht, targetOf(versucht, 12))).toEqual(["zu/Head"]);
+	// Sie0 spart2 ,3 um5 im7 Sommer9 zu11 reisen13 .14
+	const purpose = dumgenWith({
+		words: [[0], [2], [5], [7], [9], [11], [13]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			5: "Lexeme/SCONJ",
+			7: "Lexeme/ADP",
+			9: "Lexeme/NOUN",
+			11: "Lexeme/SCONJ",
+			13: "Lexeme/VERB",
+		},
+		roles: {},
+		expressions: [],
+		government: {
+			5: { governor: 2, case: "Acc" },
+			11: { governor: 13, case: "Dat" },
+		},
+	});
+	const spart = await Effect.runPromise(
+		purpose.dumgen.analyzeSentence({
+			sentence: sentenceOf("spart", "Sie spart, um im Sommer zu reisen."),
+		}),
+	);
+	expect(spart.slots).toEqual([]);
+});
+
+// Er0 hört2 trotz4 des6 Lärms8 auf10 .11; offsets: hört3 auf24
+test("a separable particle is no slot and keeps its role", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0], [2, 10], [4], [6, 8]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/ADP",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/VERB",
+		},
+		roles: { 2: "Head", 6: "Article", 8: "Head", 10: "SeparableParticle" },
+		expressions: [],
+		government: { 10: { governor: 2, case: "Acc" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({
+			sentence: sentenceOf("aufhoeren", "Er hört trotz des Lärms auf."),
+		}),
+	);
+	expect(analysis.slots).toEqual([]);
+	expect(text(analysis, targetOf(analysis, 3))).toEqual([
+		"hört/Head",
+		"auf/SeparableParticle",
+	]);
+});
+
+test("the fixed preposition of a Funktionsverbgefüge is its wording, not a slot of its verb", async () => {
+	const { dumgen } = dumgenWith({
+		words: [[0, 2], [4], [6, 8], [10], [12], [14]],
+		routes: {
+			0: "Lexeme/NOUN",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/VERB",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/NOUN",
+			12: "Lexeme/ADP",
+			14: "Lexeme/NOUN",
+		},
+		roles: { 0: "Article", 2: "Head", 6: "Article", 8: "Head" },
+		expressions: [
+			{ heads: [4, 12, 14], kind: "Collocation", fixedness: 2 },
+		],
+		government: { 12: { governor: 4, case: "Dat" } },
+	});
+	const analysis = await Effect.runPromise(
+		dumgen.analyzeSentence({ sentence: verfuegung }),
+	);
+	expect(analysis.slots).toEqual([]);
+	expect(text(analysis, targetOf(analysis, 11))).toEqual(["stellt/Head"]);
+	const phraseme = analysis.phrasemes[0];
+	if (!phraseme) throw Error("Expected the Collocation");
+	expect(phraseme.members).toContain(targetOf(analysis, 40)?.id ?? "");
+	expect(phraseme.governedPrepositions).toEqual([]);
+});
+
+test("a word or an expression on a route whose frame takes no preposition governs none", async () => {
+	// Sie0 hilft2 jemandem4 aus6 der8 Nachbarschaft10 .11
+	const pronoun = dumgenWith({
+		words: [[0], [2], [4], [6], [8, 10]],
+		routes: {
+			0: "Lexeme/PRON",
+			2: "Lexeme/VERB",
+			4: "Lexeme/PRON",
+			6: "Lexeme/ADP",
+			8: "Lexeme/NOUN",
+			10: "Lexeme/NOUN",
+		},
+		roles: { 8: "Article", 10: "Head" },
+		expressions: [],
+		government: { 6: { governor: 4, case: "Dat" } },
+	});
+	const hilft = await Effect.runPromise(
+		pronoun.dumgen.analyzeSentence({
+			sentence: sentenceOf(
+				"hilft",
+				"Sie hilft jemandem aus der Nachbarschaft.",
+			),
+		}),
+	);
+	expect(hilft.slots).toEqual([]);
+	expect(text(hilft, targetOf(hilft, 19))).toEqual(["aus/Head"]);
+	// Vielen0 Dank2 für4 die6 Hilfe8 .9; the vote split over the formula's words
+	const formula = dumgenWith({
+		words: [[0], [2], [4], [6, 8]],
+		routes: {
+			0: "Lexeme/ADJ",
+			2: "Lexeme/NOUN",
+			4: "Lexeme/ADP",
+			6: "Lexeme/NOUN",
+			8: "Lexeme/NOUN",
+		},
+		roles: { 6: "Article", 8: "Head" },
+		expressions: [
+			{ heads: [0, 2], kind: "DiscourseFormula", fixedness: 3 },
+		],
+		government: { 4: { governor: [0, 2], case: "Acc" } },
+	});
+	const dank = await Effect.runPromise(
+		formula.dumgen.analyzeSentence({
+			sentence: sentenceOf("dank", "Vielen Dank für die Hilfe."),
+		}),
+	);
+	const phraseme = dank.phrasemes[0];
+	if (!phraseme) throw Error("Expected the formula");
+	expect(selectPhrasemeKind(dank, phraseme).kind).toBe("DiscourseFormula");
+	expect(dank.slots).toEqual([]);
+	expect(phraseme.governedPrepositions).toEqual([]);
+});

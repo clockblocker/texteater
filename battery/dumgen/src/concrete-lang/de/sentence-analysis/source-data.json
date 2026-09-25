@@ -1595,9 +1595,10 @@
 						"kind": "Collocation",
 						"words": [11, 40, 44]
 					}
-				]
+				],
+				"slots": []
 			},
-			"explanation": "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments."
+			"explanation": "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments. Its fixed `zu` is wording, not a slot of `stellt`."
 		},
 		"sentence-de-manche": {
 			"input": {

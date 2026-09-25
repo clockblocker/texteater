@@ -305,7 +305,7 @@ export type SelectedPhrasemeKind = {
  * 0034).
  */
 function funktionsverbgefuege(
-	analysis: SentenceAnalysis,
+	analysis: Pick<SentenceAnalysis, "targets">,
 	phraseme: PhrasemeTarget,
 ): boolean {
 	const kinds = new Set(
@@ -325,7 +325,7 @@ function funktionsverbgefuege(
  * can take, the vote named nothing they are and the Phraseme is `None`.
  */
 export function selectPhrasemeKind(
-	analysis: SentenceAnalysis,
+	analysis: Pick<SentenceAnalysis, "targets">,
 	phraseme: PhrasemeTarget,
 ): SelectedPhrasemeKind {
 	const collocation = funktionsverbgefuege(analysis, phraseme);
@@ -345,7 +345,7 @@ export function selectPhrasemeKind(
 
 /** The fixed words a Phraseme is made of, in member order. */
 export function membersOf(
-	analysis: SentenceAnalysis,
+	analysis: Pick<SentenceAnalysis, "targets">,
 	phraseme: PhrasemeTarget,
 ): LexemeTarget[] {
 	return phraseme.members.flatMap((id) => {
