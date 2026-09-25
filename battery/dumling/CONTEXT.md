@@ -32,8 +32,18 @@ or Idiom.
 _Avoid_: Entry Subkind
 
 **Core Features**:
-The stable grammatical features that complete a Lemma's identity.
+The grammatical features that belong to a Lemma's identity; the rest
+describe its Surfaces. Each language, Family and Kind decides which features
+are Core by what serves the learner best, so the same feature can be Core on
+one route and inflectional on another.
 _Avoid_: Inherent Features
+
+**Paradigm Cell**:
+One combination of case, number, gender or reflexivity in a closed, authored
+paradigm such as a pronoun or determiner. Each cell is its own Lemma with one
+Reading: German `mich` and `mir`, accusative and dative `uns`, `dem` and
+`den`; English `me` and `my`. Open classes keep these features on the Surface.
+_Avoid_: Paradigm form, inflected closed-class Surface
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.

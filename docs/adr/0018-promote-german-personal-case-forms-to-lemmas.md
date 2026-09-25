@@ -30,3 +30,7 @@ This resolves #421 and #420's feature decisions. UD supplies feature meanings,
 not this project's choice of Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
 [possessor gender](https://universaldependencies.org/u/feat/Gender-psor.html).
+
+Amended by [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
+on 2026-09-25: German DET and English PRON take the same per-cell identity,
+so the German DET feature split above no longer holds.
