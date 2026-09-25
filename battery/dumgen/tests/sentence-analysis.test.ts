@@ -22,8 +22,13 @@ import {
 	slotsAt,
 	targetOf,
 } from "../src/concrete-lang/de/sentence-analysis/analysis.js";
+import {
+	realizationCriteria,
+	realizationEdits,
+} from "../src/concrete-lang/de/sentence-analysis/criteria.js";
 import { candidatesFor } from "../src/concrete-lang/de/sentence-analysis/identity.js";
 import { placeSegments } from "../src/concrete-lang/de/sentence-analysis/placement.js";
+import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
 import type {
 	LexemeTarget,
 	OperationTrace,
@@ -236,6 +241,16 @@ function dumgenWith(plan: Plan) {
 		}),
 	};
 }
+
+test("every edit from the classifier's criteria to the realization rules still finds its text", () => {
+	let text = targetCriteria;
+	for (const [pattern, replacement] of realizationEdits) {
+		expect(text).toMatch(pattern);
+		text = text.replace(pattern, replacement);
+	}
+	expect(text).toBe(realizationCriteria);
+	expect(realizationCriteria).toMatchSnapshot();
+});
 
 // Der0 Lehrer2 stellt4 den6 Schülern8 Material10 zur12 Verfügung14 .15
 const verfuegung = sentenceOf(

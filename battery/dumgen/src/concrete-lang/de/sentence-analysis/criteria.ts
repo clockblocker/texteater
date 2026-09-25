@@ -10,34 +10,46 @@ import { targetCriteria } from "../target-classification/judgments.js";
 export const notation =
 	"In `sentence`, <sN> tags identify selectable occurrences by original segment index N. Untagged text supplies context only. Every occurrence belongs to exactly one complete fixed unit; most units have exactly one member.";
 
+/**
+ * The edits that turn `targetCriteria` into the realization rules, in order.
+ * Each pattern must still match the text it edits: a pattern that stops
+ * matching would leave the classifier's wording in intake silently.
+ */
+export const realizationEdits: readonly (readonly [string | RegExp, string])[] =
+	[
+		[
+			"Select the largest complete fixed learner-facing unit containing the clicked occurrence.",
+			"Select the complete fixed unit containing the clicked occurrence: one dictionary word together with its fixed grammatical members. A multiword expression (an idiom, a collocation, a Funktionsverbgefüge, a proverb, a formula) is not a unit here: every word inside it is its own unit with its own grammatical members, and the expression is judged separately.",
+		],
+		[
+			/ A Funktionsverbgefüge, a support verb with its predicate noun \([^)]*\), is one Collocation target[^.]*\.(?: [^.]*\.)?/u,
+			"",
+		],
+		[
+			/An established noncompositional expression is an Idiom;[^\n]*?only a support-verb predicate is a Collocation\.\n/u,
+			"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",
+		],
+		// The judgment reads a fused word whole (`im`), so the click-time
+		// wording about its pieces gives way to the measured intake wording.
+		[
+			", including an article piece of a fused word (m in im, s in ins) and a shortened article ('ne, 'nen).",
+			".",
+		],
+		[
+			"mein/dieser/kein remain independent DETs. Bare nouns stay bare.",
+			"mein/dieser/kein remain independent DETs; im/zum/ins do not join nouns as a whole. Bare nouns stay bare.",
+		],
+		[
+			" These noun rules preserve any larger established idiom boundary.",
+			"",
+		],
+	];
+
 /** The realization rules: which Segments realize one word. */
-export const realizationCriteria = targetCriteria
-	.replace(
-		"Select the largest complete fixed learner-facing unit containing the clicked occurrence.",
-		"Select the complete fixed unit containing the clicked occurrence: one dictionary word together with its fixed grammatical members. A multiword expression (an idiom, a collocation, a Funktionsverbgefüge, a proverb, a formula) is not a unit here: every word inside it is its own unit with its own grammatical members, and the expression is judged separately.",
-	)
-	.replace(
-		/ A Funktionsverbgefüge, a support verb with its predicate noun \([^)]*\), is one Collocation target[^.]*\.(?: [^.]*\.)?/u,
-		"",
-	)
-	.replace(
-		/An established noncompositional expression is an Idiom;[^\n]*?only a support-verb predicate is a Collocation\.\n/u,
-		"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",
-	)
-	// The judgment reads a fused word whole (`im`), so the click-time
-	// wording about its pieces gives way to the measured intake wording.
-	.replace(
-		", including an article piece of a fused word (m in im, s in ins) and a shortened article ('ne, 'nen).",
-		".",
-	)
-	.replace(
-		"mein/dieser/kein remain independent DETs. Bare nouns stay bare.",
-		"mein/dieser/kein remain independent DETs; im/zum/ins do not join nouns as a whole. Bare nouns stay bare.",
-	)
-	.replace(
-		" These noun rules preserve any larger established idiom boundary.",
-		"",
-	);
+export const realizationCriteria = realizationEdits.reduce(
+	(text, [pattern, replacement]) => text.replace(pattern, replacement),
+	targetCriteria,
+);
 
 /** The fixedness rules: which words are fixed lexical members of one expression. */
 export const fixednessCriteria = `An expression is an established multiword unit with its own dictionary identity, made of words that are its fixed lexical members. A word is a fixed lexical member when the expression requires this particular word or a narrow set of alternatives in this slot: replacing it with an ordinary synonym would break the expression. A fixed preposition or fixed article of the expression counts as a member through the word that carries it (ins Feuer, zur Verfügung, das Eis). Free arguments, modifiers and fillers are never members, however close they stand: in stellt den Schülern Material zur Verfügung the expression is stellt ... zur Verfügung and den Schülern and Material are free.
