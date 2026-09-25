@@ -360,13 +360,13 @@ test("an inspected click reusing another session's occurrence makes no Dumgen ca
 		...running,
 		inspect: true,
 	});
-	// The other commit advanced this click's Encounter, so the run finds its
-	// result recorded and settles Complete without a commit of its own.
+	// The other commit gave the Segment its membership, so the run reuses
+	// that occurrence and completes in the reuse commit.
 	expect(await inspection(t, "request-1")).toEqual([
+		"Resolution session > Commit reused occurrence [Code · app/tf-demo · persistence · Success]",
 		"Resolution session > Load checkpoints and start run [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session > Record Succeeded [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Success]",
-		"Resolution session > Settle Complete [Code · app/tf-demo · resolutionSessions · Success]",
 		"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Success]",
 		SELECTION,
 	]);
