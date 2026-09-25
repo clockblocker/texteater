@@ -1601,5 +1601,287 @@
 			},
 			"explanation": "The noun owns its article and its governed preposition across a genitive attribute; the Surface is die Angst."
 		}
+	},
+	"origins": {
+		"grammar-de-noun-demo-shared-abstieg": {
+			"record": "de/der-aufstieg-und-abstieg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-owned-aufstieg": {
+			"record": "de/als-der-aufstieg-anstrengender-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-citation-haus": {
+			"record": "de/woerterbucheintrag-haus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-acc-sing-hund": {
+			"record": "de/sie-sieht-den-hund-im-garten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-dat-plur-kindern": {
+			"record": "de/er-hilft-den-kindern-bei-den-aufgaben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-typo-kaffe": {
+			"record": "de/der-kaffe-duftet-am-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-archaic-antlitz": {
+			"record": "de/sie-bewundert-sein-antlitz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-demo-suspended-kinderbuecher": {
+			"record": "de/sie-verkauft-kinder-und-jugendbuecher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-shared-long": {
+			"record": "de/der-aufstieg-und-abstieg-und-umstieg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-repeated": {
+			"record": "de/der-aufstieg-und-der-abstieg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-nested": {
+			"record": "de/der-anfang-des-aufstiegs",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-adjective": {
+			"record": "de/der-steile-aufstieg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-nom-plur-banken": {
+			"record": "de/die-banken-oeffnen-um-neun-uhr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-dat-sing-bibliothek": {
+			"record": "de/wir-sitzen-in-der-bibliothek",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-gen-sing-mannes": {
+			"record": "de/das-fahrrad-des-mannes-ist-neu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-gen-plur-frauen": {
+			"record": "de/die-stimmen-der-frauen-waren-deutlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-vocative-leute": {
+			"record": "de/hallo-leute-hoert-kurz-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-acc-plur-buecher": {
+			"record": "de/sie-kauft-die-buecher-fuer-den-kurs",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-nom-sing-maedchen": {
+			"record": "de/das-maedchen-wartet-vor-der-schule",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-acc-sing-stadt": {
+			"record": "de/wir-besuchen-die-stadt-am-wochenende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-dat-sing-chef": {
+			"record": "de/sie-spricht-mit-dem-chef-ueber-den-plan",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-nom-plur-eltern": {
+			"record": "de/die-eltern-warten-draussen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-acc-plur-knie": {
+			"record": "de/der-arzt-untersucht-beide-knie-gruendlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-nom-sing-mark": {
+			"record": "de/die-mark-war-damals-die-waehrung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-nom-sing-tisch": {
+			"record": "de/der-tisch-steht-am-fenster",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-acc-sing-tuer": {
+			"record": "de/sie-oeffnet-die-tuer-ganz-leise",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-dat-plur-haeusern": {
+			"record": "de/zwischen-den-haeusern-liegt-ein-hof",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-gen-plur-kinder": {
+			"record": "de/das-lachen-der-kinder-war-laut",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-invariant-plur-maedchen": {
+			"record": "de/die-drei-maedchen-spielen-draussen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-plural-only-ferien": {
+			"record": "de/die-ferien-beginnen-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-hyphenated-u-bahn": {
+			"record": "de/sie-nimmt-die-u-bahn-zur-arbeit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-variant-photographie": {
+			"record": "de/die-redaktion-fuehrt-fotografie-als-leitform-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-lowercase-katze": {
+			"record": "de/sie-streichelt-die-katze-vorsichtig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-archaic-odem": {
+			"record": "de/der-odem-des-greises-ging-schwer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-compound-haustuer": {
+			"record": "de/er-streicht-die-haustuer-gruen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-substantivized-reisenden": {
+			"record": "de/die-reisenden-steigen-am-bahnhof-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-gen-sing-schule": {
+			"record": "de/das-dach-der-schule-wird-saniert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-hyphenated-e-mail": {
+			"record": "de/sie-beantwortet-die-e-mail-sofort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-substantivized-angestellten": {
+			"record": "de/wir-danken-den-angestellten-fuer-ihre-hilfe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-suspended-right-jugendbuecher": {
+			"record": "de/sie-verkauft-kinder-und-jugendbuecher",
+			"target": 1,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-suspended-hyphen-genitiv": {
+			"record": "de/die-seiten-des-kinder-und-jugendbuchs-fehlen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-suspended-typo": {
+			"record": "de/sie-verkauft-kidner-und-jugendbuecher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-suspended-nonbreaking": {
+			"record": "de/der-laden-fuehrt-kinder-und-jugendbuecher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-suspended-oder-singular": {
+			"record": "de/sie-kauft-ein-kinder-oder-jugendbuch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-suspended-dativ-plural": {
+			"record": "de/mit-kinder-und-jugendbuechern-kennt-sie-sich-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-accept-suspended-nominativ-plural": {
+			"record": "de/kinder-und-jugendbuecher-sind-beliebt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-im-wald": {
+			"record": "de/wir-bleiben-im-wald",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-zum-wald": {
+			"record": "de/wir-gehen-zum-wald",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-ins-haus": {
+			"record": "de/wir-gehen-ins-haus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-shared-feld": {
+			"record": "de/wir-bleiben-im-wald-und-feld",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-zur-schule": {
+			"record": "de/wir-gehen-zur-schule",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-fusion-aufs-ende": {
+			"record": "de/er-wartet-aufs-ende",
+			"target": 1,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-shorthand-ne-frage": {
+			"record": "de/hast-du-ne-frage",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-dev-abbreviation-dipl-ing": {
+			"record": "de/dipl-ing-mueller-leitet-das-projekt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-governed-angst-vor": {
+			"record": "de/aus-angst-vor-hunden-bleibt-sie-zu-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-noun-governed-article-angst-vor": {
+			"record": "de/sie-spuert-die-angst-der-kinder-vor-hunden",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

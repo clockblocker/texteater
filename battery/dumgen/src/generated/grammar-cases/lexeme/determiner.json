@@ -1523,5 +1523,202 @@
 			"idealOutput": { "decision": "Unresolved" },
 			"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved."
 		}
+	},
+	"origins": {
+		"grammar-de-det-demo-definite-article-der": {
+			"record": "de/der-hund-schlaeft-vor-der-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-possessive-meinem": {
+			"record": "de/ich-helfe-meinem-bruder-beim-umzug",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-feminine-article-die": {
+			"record": "de/die-aerztin-beginnt-gleich-mit-der-sprechstunde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-neuter-article-das": {
+			"record": "de/das-kind-spielt-im-garten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-uninflected-derlei": {
+			"record": "de/derlei-vorfaelle-werden-sofort-dokumentiert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-variant-ne": {
+			"record": "de/da-steht-ne-kiste-auf-dem-flur",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-paradigm-welche": {
+			"record": "de/welche-nachricht-hat-die-redaktion-zuerst-bestaetigt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-paradigm-manchem": {
+			"record": "de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-demo-quoted-archaic-etwelche": {
+			"record": "de/der-chronist-hegte-noch-etwelche-zweifel-an-dem-bericht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-indefinite-article-einen": {
+			"record": "de/er-zaehlt-eins-und-kauft-danach-einen-mantel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-demonstrative-diesem": {
+			"record": "de/mit-diesem-plan-schaffen-wir-den-termin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-emphatic-selben": {
+			"record": "de/am-selben-morgen-fiel-erneut-der-strom-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-exclamative-welch": {
+			"record": "de/welch-ein-glueck-dass-niemand-verletzt-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-interrogative-welchen": {
+			"record": "de/welchen-weg-nehmen-wir-nach-dem-bahnhof",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-relative-welchem": {
+			"record": "de/er-versprach-puenktliche-lieferung-welchem-versprechen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-negative-kein": {
+			"record": "de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-total-alle": {
+			"record": "de/alle-stuehle-stehen-schon-im-saal",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-total-beide": {
+			"record": "de/sie-pruefte-beide-geraete-vor-dem-versand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-indefinite-viele": {
+			"record": "de/viele-buecher-wurden-an-die-schule-gespendet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-comparative-weniger": {
+			"record": "de/heute-kamen-weniger-als-zwanzig-besucher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-superlative-meisten": {
+			"record": "de/die-meisten-gaeste-reisten-am-sonntag-ab",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-possessive-deinen": {
+			"record": "de/du-legst-deinen-schluessel-auf-den-tisch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-possessive-unserem": {
+			"record": "de/wir-vertrauen-unserem-team-auch-unter-zeitdruck",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-possessive-seinen-masc": {
+			"record": "de/paul-sucht-seinen-ausweis-seit-dem-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-possessive-sein-neut": {
+			"record": "de/das-kind-raeumt-sein-zimmer-vor-dem-essen-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-possessive-ihr-fem": {
+			"record": "de/mara-repariert-ihr-radio-noch-heute",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-formal-ihrem": {
+			"record": "de/wir-helfen-ihrem-team-bei-der-umstellung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-dev-ordinal-wievielte": {
+			"record": "de/der-wievielte-versuch-war-schliesslich-erfolgreich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-definite-des": {
+			"record": "de/wegen-des-laerms-schloss-die-bibliothek-frueher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-indefinite-ein": {
+			"record": "de/ein-kran-hebt-die-schwere-kiste-auf-das-dach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-demonstrative-jenem": {
+			"record": "de/mit-jenem-schluessel-oeffnet-die-hausmeisterin-den-keller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-interrogative-welches": {
+			"record": "de/fuer-welches-projekt-beantragt-das-institut-die-mittel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-negative-keinen": {
+			"record": "de/die-ermittlerin-fand-keinen-zeugen-fuer-den-vorfall",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-total-jeder": {
+			"record": "de/jeder-schritt-wird-im-pruefprotokoll-dokumentiert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-possessive-deinem": {
+			"record": "de/du-hilfst-deinem-bruder-beim-aufbau-des-schranks",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-formal-ihrem": {
+			"record": "de/frau-roth-wir-arbeiten-eng-mit-ihrem-buero-zusammen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-indefinite-manches": {
+			"record": "de/die-neue-messung-erklaert-manches-problem-der-alten-studie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-typo-disem": {
+			"record": "de/mit-disem-plan-erreicht-das-team-sein-ziel-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-det-accept-v4-variant-n": {
+			"record": "de/wir-brauchen-fuer-den-transport-noch-n-auto",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

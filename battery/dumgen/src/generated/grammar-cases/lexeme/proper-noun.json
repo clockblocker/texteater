@@ -1344,5 +1344,252 @@
 			},
 			"explanation": "Berlin is cited bare, so its Lemma has no article and the das before it is not its member."
 		}
+	},
+	"origins": {
+		"grammar-de-propn-demo-person-maria": {
+			"record": "de/maria-eroeffnet-heute-die-ausstellung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-place-berlin": {
+			"record": "de/wir-treffen-uns-morgen-in-berlin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-multi-angela-merkel": {
+			"record": "de/angela-merkel-hielt-am-abend-eine-rede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-genitive-hans": {
+			"record": "de/hans-fahrrad-steht-noch-vor-dem-haus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-acronym-nato": {
+			"record": "de/die-nato-beraet-heute-ueber-den-antrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-typo-koelnn": {
+			"record": "de/der-zug-haelt-morgen-in-koelnn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-citation-work-tonio-kroeger": {
+			"record": "de/im-werkverzeichnis-steht-der-titel-tonio-kroeger",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-org-unesco": {
+			"record": "de/die-unesco-foerdert-das-neue-bildungsprojekt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-vocative-clara": {
+			"record": "de/hoer-bitte-kurz-zu-clara",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-stylized-ebay": {
+			"record": "de/der-bericht-erwaehnt-ebay-nur-am-rand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-org-rotes-kreuz": {
+			"record": "de/das-rote-kreuz-eroeffnete-eine-neue-beratungsstelle",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-work-physiker": {
+			"record": "de/das-theater-zeigt-heute-die-physiker",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-demo-integrated-lego": {
+			"record": "de/das-kind-sortiert-das-lego-nach-farben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-person-anna-acc": {
+			"record": "de/die-redaktion-interviewt-anna-am-freitag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-person-peters-gen": {
+			"record": "de/peters-neuer-roman-erscheint-im-herbst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-place-schweiz": {
+			"record": "de/im-sommer-besucht-sie-die-schweiz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-place-niederlanden": {
+			"record": "de/seit-april-arbeitet-er-in-den-niederlanden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-org-deutsche-bank": {
+			"record": "de/die-deutsche-bank-veroeffentlichte-den-bericht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-org-spd": {
+			"record": "de/die-spd-beschloss-ein-neues-programm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-product-iphone": {
+			"record": "de/sie-testet-das-neue-iphone-im-labor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-product-adidas": {
+			"record": "de/die-kampagne-stellt-adidas-in-den-mittelpunkt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-work-zauberfloete": {
+			"record": "de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-work-prozess": {
+			"record": "de/der-katalog-nennt-den-titel-der-prozess",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-citation-hamburg": {
+			"record": "de/im-register-steht-der-namenseintrag-hamburg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-vocative-lukas": {
+			"record": "de/bitte-komm-herein-lukas",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-foreign-new-york": {
+			"record": "de/sie-lebt-seit-zwei-jahren-in-new-york",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-transliteration-kyjiw": {
+			"record": "de/im-ukrainischsprachigen-teil-sagt-die-delegation-sie-reise",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-variant-pressburg": {
+			"record": "de/der-reisebericht-verwendet-den-historischen-deutschen-namen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-typo-muenchn": {
+			"record": "de/die-konferenz-findet-in-muenchn-statt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-casing-berLin": {
+			"record": "de/die-messe-wurde-nach-berlin-verlegt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-multi-johann-goethe": {
+			"record": "de/die-universitaet-ehrt-johann-wolfgang-von-goethe-mit-einer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-neighbor-city-berlin": {
+			"record": "de/die-stadt-berlin-waechst-weiterhin-schnell",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-repeated-second-peter": {
+			"record": "de/peter-kam-zuerst-doch-peter-ging-als-letzter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-dev-plural-alpen": {
+			"record": "de/im-winter-fahren-sie-in-die-alpen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-person-leonie": {
+			"record": "de/die-jury-dankt-leonie-fuer-ihren-einsatz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-place-saarland": {
+			"record": "de/saarland-meldet-steigende-besucherzahlen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-multi-garmisch-partenkirchen": {
+			"record": "de/der-bus-durchquert-garmisch-partenkirchen-am-nachmittag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-org-zdf": {
+			"record": "de/das-zdf-uebertraegt-die-debatte-live",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-product-thermomix": {
+			"record": "de/die-werkstatt-repariert-den-thermomix-noch-heute",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-work-nibelungenlied": {
+			"record": "de/die-klasse-interpretiert-das-nibelungenlied",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-citation-mainz": {
+			"record": "de/das-namenverzeichnis-enthaelt-den-ortsnamen-mainz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-foreign-rio-de-janeiro": {
+			"record": "de/im-portugiesischsprachigen-gespraech-erzaehlt-sie-von-rio-de",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-genitive-max": {
+			"record": "de/max-fahrrad-lehnt-an-der-mauer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-typo-hannnover": {
+			"record": "de/die-messe-findet-dieses-jahr-in-hannnover-statt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-variant-preussen": {
+			"record": "de/das-woerterbuch-dokumentiert-preussen-als-historische",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-accept-v3-plural-balearen": {
+			"record": "de/im-oktober-besuchen-sie-die-balearen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-regression-fused-article-rhein": {
+			"record": "de/er-badet-im-rhein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-propn-regression-owned-article-struwwelpeter": {
+			"record": "de/sieh-einmal-hier-steht-er",
+			"target": 6,
+			"status": "Draft"
+		},
+		"grammar-de-propn-regression-bare-name-altes-berlin": {
+			"record": "de/viele-vermissen-das-alte-berlin",
+			"target": 1,
+			"status": "Draft"
+		}
 	}
 }

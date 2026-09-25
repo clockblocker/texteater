@@ -1613,5 +1613,242 @@
 			},
 			"explanation": "An attributive adjective keeps its governed preposition across its complement; the Surface is stolze."
 		}
+	},
+	"origins": {
+		"grammar-de-adj-demo-citation-sanft": {
+			"record": "de/im-woerterbuch-steht-das-adjektiv-sanft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-citation-mild": {
+			"record": "de/als-grundform-wird-mild-angegeben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-demo-attributive-klein": {
+			"record": "de/der-kleine-hund-schlaeft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-demo-adverbial-schnell": {
+			"record": "de/der-hund-laeuft-schnell",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-acc-fem-rot": {
+			"record": "de/sie-traegt-die-rote-tasche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-dat-neut-kalt": {
+			"record": "de/bei-kaltem-wetter-bleiben-wir-drinnen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-gen-plur-neu": {
+			"record": "de/wegen-neuer-regeln-aenderte-sich-der-ablauf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-nom-plur-alt": {
+			"record": "de/die-alten-haeuser-stehen-am-marktplatz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-predicative-blau": {
+			"record": "de/blau-ist-der-himmel-ueber-dem-meer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-adverbial-leise": {
+			"record": "de/sie-schliesst-die-tuer-leise",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-attributive-dat-fem-lang": {
+			"record": "de/mit-langer-geduld-loeste-sie-das-raetsel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-attributive-acc-neut-gruen": {
+			"record": "de/sie-kaufte-ein-gruenes-fahrrad",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-attributive-gen-masc-stark": {
+			"record": "de/trotz-starken-regens-begann-das-spiel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-predicative-ruhig": {
+			"record": "de/der-see-bleibt-ruhig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-adverbial-deutlich": {
+			"record": "de/die-zeugin-sprach-deutlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-demo-comparative-besser": {
+			"record": "de/der-zweite-plan-ist-besser",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-comparative-teuer": {
+			"record": "de/er-kaufte-ein-teureres-geraet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-attributive-superlative-hoch": {
+			"record": "de/der-hoechste-turm-steht-am-fluss",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig": {
+			"record": "de/von-allen-arbeitet-sie-am-sorgfaeltigsten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-predicative-comparative-nah": {
+			"record": "de/das-neue-buero-liegt-naeher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-irregular-superlative-beste": {
+			"record": "de/das-war-die-beste-loesung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-adverbial-comparative-schnell": {
+			"record": "de/heute-faehrt-der-zug-schneller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-typo-grsser": {
+			"record": "de/ein-grsser-hund-wartet-draussen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-typo-wunderschoen": {
+			"record": "de/der-garten-sieht-wundershcoen-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-participial-spannend": {
+			"record": "de/der-spannende-vortrag-dauerte-eine-stunde",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-dev-lexicalized-participial-verrueckt": {
+			"record": "de/der-mann-ist-voellig-verrueckt",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-dev-invariant-lila": {
+			"record": "de/sie-trug-einen-lila-schal",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-archaic-hold": {
+			"record": "de/ihr-holdes-laecheln-bezauberte-die-gaeste",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-participial-glaenzend": {
+			"record": "de/eine-glaenzende-idee-rettete-das-projekt",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-accept-invariant-rosa": {
+			"record": "de/er-kaufte-ein-rosa-kleid",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-demo-ordinal-erste": {
+			"record": "de/der-erste-versuch-gelang",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-demo-typo-freundlcih": {
+			"record": "de/die-antwort-klingt-freundlcih",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-cardinal-siebenhundert": {
+			"record": "de/sie-las-die-siebenhundert-seiten-in-einer-woche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-foreign-special": {
+			"record": "de/das-war-ein-special-moment-fuer-das-team",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-abbreviation-sog": {
+			"record": "de/ein-sog-experte-sagte-vor-gericht-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-accept-ordinal-zweite": {
+			"record": "de/die-zweite-sitzung-begann-puenktlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-participial-geschlossen": {
+			"record": "de/die-geschlossene-tuer-bleibt-heute-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-dev-adverbial-participle-one-lachend": {
+			"record": "de/er-kam-lachend-herein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-participle-attributive-gekochten": {
+			"record": "de/die-gekochten-kartoffeln-standen-schon-bereit",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-participle-attributive-bewunderte": {
+			"record": "de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-participle-attributive-gelegene": {
+			"record": "de/das-am-see-gelegene-haus-gehoert-meinem-onkel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-participle-attributive-umgestuerzte": {
+			"record": "de/der-sturm-blockierte-mit-dem-umgestuerzten-baum-die-strasse",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-participle-attributive-spielenden": {
+			"record": "de/sie-beobachtete-die-im-garten-spielenden-kinder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-participle-state-passive-geschlossen": {
+			"record": "de/die-tuer-ist-geschlossen",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-governed-stolz-auf": {
+			"record": "de/er-ist-stolz-auf-seinen-sohn",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-adj-governed-separated-auf-ihn": {
+			"record": "de/auf-ihn-bin-ich-stolz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adj-governed-attributive-stolze": {
+			"record": "de/der-auf-seinen-sohn-stolze-vater-laechelt",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

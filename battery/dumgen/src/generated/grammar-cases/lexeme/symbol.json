@@ -992,5 +992,232 @@
 				"realizationCoverage": "Full"
 			}
 		}
+	},
+	"origins": {
+		"grammar-de-sym-demo-percent-unit": {
+			"record": "de/die-anzeige-zeigt-80-ladezustand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-times-nominal": {
+			"record": "de/ein-einziges-steht-zwischen-den-zahlen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-euro-currency": {
+			"record": "de/der-eintritt-kostet-zwoelf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-section-dative": {
+			"record": "de/mit-dem-verweist-sie-auf-die-einschlaegige-vorschrift",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-equals-genitive": {
+			"record": "de/die-form-des-ist-in-dieser-schrift-besonders-breit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-feminine-hash": {
+			"record": "de/die-lektorin-nennt-die-eine-raute",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-foreign-arabic-percent": {
+			"record": "de/in-der-arabischen-quellenzeile-folgt-auf-die-zahl-das",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-card-number-sign": {
+			"record": "de/in-der-inventarliste-kennzeichnet-die-folgende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-range-dash": {
+			"record": "de/in-der-tabellarischen-angabe-10-12-bezeichnet-der-strich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-variant-fullwidth-plus": {
+			"record": "de/die-unicode-tabelle-nennt-ausdruecklich-als-vollbreite",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-typo-ocr-euro": {
+			"record": "de/im-fehlerhaften-ocr-text-steht-statt-des-eurozeichens",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-demo-sections-plural": {
+			"record": "de/die-beiden-verweisen-auf-getrennte-regelungen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-math-plus": {
+			"record": "de/die-rechnung-lautet-zwei-drei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-math-minus": {
+			"record": "de/auf-der-tafel-steht-neun-vier",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-science-integral": {
+			"record": "de/die-dozentin-schreibt-ein-vor-den-ausdruck",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-measurement-micro": {
+			"record": "de/die-korngroesse-betraegt-fuenf-m",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-measurement-degree": {
+			"record": "de/am-nachmittag-werden-achtzehn-c-gemessen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-measurement-permille": {
+			"record": "de/die-probe-enthaelt-zwei-salz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-currency-dollar": {
+			"record": "de/das-ersatzteil-kostet-dreissig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-currency-pound": {
+			"record": "de/der-katalog-nennt-einen-preis-von-vierzig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-legal-copyright": {
+			"record": "de/im-impressum-steht-vor-dem-erscheinungsjahr-ein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-coordinator-ampersand": {
+			"record": "de/auf-dem-schild-steht-brot-kuchen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-marker-hash": {
+			"record": "de/setze-ein-vor-das-stichwort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-emoticon-wink": {
+			"record": "de/sie-beendet-die-nachricht-mit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-repeated-plus-second": {
+			"record": "de/links-steht-bereits-rechts-ergaenzt-sie-ein-zweites",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-numeric-neighbor-percent": {
+			"record": "de/die-statistik-weist-einen-anteil-von-47-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-punctuation-neighbor-star": {
+			"record": "de/vor-dem-abschliessenden-komma-steht-ein-das-auf-die-fussnote",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-opaque-neighbor-hash": {
+			"record": "de/vor-dem-nicht-anklickbaren-emoji-steht-ein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-abbreviation-neighbor-section": {
+			"record": "de/die-fundstelle-lautet-8-abs-2",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-inflection-acc-plus": {
+			"record": "de/die-lehrerin-markiert-das-rot",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-inflection-gen-percent": {
+			"record": "de/die-form-des-ist-in-dieser-schrift-ungewoehnlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-inflection-feminine-at": {
+			"record": "de/die-designerin-nennt-die-eine-klammeraffe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-dev-archaic-dagger": {
+			"record": "de/die-legende-fuehrt-als-historisches-todeszeichen-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-division-inflection": {
+			"record": "de/die-schuelerin-umkreist-das-mit-roter-farbe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-not-equal": {
+			"record": "de/die-bedingung-lautet-x-5",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-sum": {
+			"record": "de/in-der-herleitung-wird-die-reihe-mit-notiert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-rupee": {
+			"record": "de/auf-der-indischen-rechnung-stehen-achthundert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-registered": {
+			"record": "de/die-verpackung-traegt-hinter-dem-namen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-double-arrow": {
+			"record": "de/das-zustandsdiagramm-zeigt-a-b",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-basis-point": {
+			"record": "de/die-abweichung-betraegt-drei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-card-numero": {
+			"record": "de/im-franzoesischen-formular-kennzeichnet-n-ausdruecklich-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-range-tilde": {
+			"record": "de/in-der-zahlenangabe-20-30-dient-die-tilde-ausdruecklich-als",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-foreign-japanese-reference": {
+			"record": "de/im-japanischen-original-steht-vor-dem-hinweis-das-zeichen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-variant-small-percent": {
+			"record": "de/die-unicode-liste-erklaert-als-kleine-variante-von",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sym-accept-v2-typo-double-permille": {
+			"record": "de/durch-einen-tippfehler-erscheint-statt-eines-einzelnen",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

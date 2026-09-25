@@ -736,5 +736,217 @@
 				"realizationCoverage": "Full"
 			}
 		}
+	},
+	"origins": {
+		"grammar-de-intj-demo-pfui-expressive": {
+			"record": "de/sieh-einmal-hier-steht-er",
+			"target": 5,
+			"status": "Draft"
+		},
+		"grammar-de-intj-demo-ja-response": {
+			"record": "de/sie-fragte-ob-er-komme-er-antwortete-ja",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-wupp-onomatopoeia": {
+			"record": "de/fort-geht-nun-die-mutter-und",
+			"target": 1,
+			"status": "Draft"
+		},
+		"grammar-de-intj-dev-hallo-greeting": {
+			"record": "de/am-gartentor-rief-sie-hallo-zu-den-nachbarn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-hurra-joy": {
+			"record": "de/nach-dem-sieg-riefen-alle-hurra",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-oh-reaction": {
+			"record": "de/als-sie-die-nachricht-las-sagte-sie-nur-oh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-huch-surprise": {
+			"record": "de/beim-anblick-der-maus-rief-er-huch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-au-pain": {
+			"record": "de/er-stiess-sich-am-tisch-und-rief-au",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-aeh-hesitation": {
+			"record": "de/ich-wollte-aeh-nur-kurz-nachfragen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-tja-resignation": {
+			"record": "de/nach-dem-letzten-fehlschlag-sagte-sie-tja-und-ging",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-miau-onomatopoeia": {
+			"record": "de/die-katze-sprang-aufs-fensterbrett-miau",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-nein-response": {
+			"record": "de/auf-die-frage-nach-dem-termin-antwortete-er-nein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-doch-corrective-response": {
+			"record": "de/sie-fragte-kommst-du-nicht-er-antwortete-doch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-jawohl-response": {
+			"record": "de/der-offizier-fragte-nach-dem-auftrag-sie-antwortete-jawohl",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-aha-realization": {
+			"record": "de/als-sie-den-zusammenhang-verstand-sagte-sie-aha",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-hoppla-mishap": {
+			"record": "de/als-das-glas-beinahe-fiel-rief-er-hoppla",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-maeh-onomatopoeia": {
+			"record": "de/das-lamm-lief-zum-gatter-maeh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-ja-response-initial": {
+			"record": "de/auf-die-frage-nach-der-reservierung-antwortete-sie-ja",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-heda-prompting": {
+			"record": "de/vom-anderen-ufer-rief-der-faehrmann-heda",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-demo-hmm-lengthened": {
+			"record": "de/sie-ueberlegte-einen-moment-hmm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-demo-ha-ha-reduplication": {
+			"record": "de/der-zauberer-lachte-ha-ha-und-verbeugte-sich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-demo-typo-huraa": {
+			"record": "de/im-stadion-rief-jemand-huraa",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-demo-archaic-juchhei": {
+			"record": "de/in-dem-alten-festlied-riefen-sie-juchhei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-initial-ach": {
+			"record": "de/ach-das-ist-wirklich-schade",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-lengthened-boahhh": {
+			"record": "de/beim-blick-ins-tal-rief-er-boahhh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-reduplicated-he-he": {
+			"record": "de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-typo-pufi": {
+			"record": "de/beim-anblick-des-schmutzes-sagte-er-pufi",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-archaic-potz": {
+			"record": "de/in-der-alten-posse-rief-der-diener-potz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-acronym-omg": {
+			"record": "de/im-chat-schrieb-sie-nur-omg-und-legte-das-handy-weg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-secondary-mann": {
+			"record": "de/als-der-schluessel-wieder-klemmte-rief-er-mann",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-secondary-donnerwetter": {
+			"record": "de/beim-anblick-des-schadens-rief-sie-donnerwetter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-lengthened-aaach": {
+			"record": "de/beim-blick-auf-die-rechnung-stoehnte-er-aaach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-reduplicated-igitt-igitt": {
+			"record": "de/vor-dem-schmutzigen-becken-rief-sie-igitt-igitt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-typo-halol": {
+			"record": "de/in-der-nachricht-begruesste-er-sie-mit-halol",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-acronym-lol": {
+			"record": "de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-lengthened-ohhh": {
+			"record": "de/als-die-ueberraschung-enthuellt-wurde-sagte-er-ohhh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-demo-contextual-ach-after-noun": {
+			"record": "de/sein-staendiges-ach-stoerte-sie-spaeter-seufzte-er-ach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-beside-part-ja": {
+			"record": "de/das-ist-ja-erstaunlich-auf-ihre-frage-antwortete-er-ja",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-beside-discourse-formula-oh": {
+			"record": "de/nach-dem-guten-morgen-sah-er-die-rechnung-und-sagte-oh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-dev-beside-adv-na": {
+			"record": "de/nun-war-alles-vorbereitet-na-dann-erzaehl-endlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-ordinary-lexical-mist": {
+			"record": "de/der-mist-lag-auf-dem-feld-am-bahnhof-rief-jemand-mist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-intj-accept-v2-beside-formula-aehm": {
+			"record": "de/sie-sagte-vielen-dank-er-zoegerte-nur-aehm",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

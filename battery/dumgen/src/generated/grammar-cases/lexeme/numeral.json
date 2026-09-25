@@ -997,5 +997,197 @@
 				"realizationCoverage": "Full"
 			}
 		}
+	},
+	"origins": {
+		"grammar-de-num-demo-word-vier": {
+			"record": "de/die-schuelerin-kauft-vier-karierte-hefte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-digit-7": {
+			"record": "de/auf-der-anzeigetafel-steht-7",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-initial-fuenf": {
+			"record": "de/fuenf-gaeste-warten-bereits-im-foyer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-decimal-drei-komma-vierzehn": {
+			"record": "de/der-gemessene-wert-betraegt-drei-komma-vierzehn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-year-2024": {
+			"record": "de/die-neue-bruecke-wurde-2024-eroeffnet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-roman-xiv": {
+			"record": "de/als-roemische-zahl-wird-vierzehn-xiv-geschrieben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-abbreviation-t": {
+			"record": "de/die-stueckzahl-ist-mit-t-fuer-tausend-angegeben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-foreign-three": {
+			"record": "de/im-englischen-zitat-stand-die-zahl-three",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-distributive-zwei": {
+			"record": "de/die-kinder-erhielten-jeweils-zwei-aepfel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-collective-zwei": {
+			"record": "de/fuer-die-reise-kaufte-sie-zwei-paar-wanderschuhe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-multi-member-ein-komma-fuenf": {
+			"record": "de/der-mittelwert-betraegt-ein-komma-fuenf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-word-dreizehn": {
+			"record": "de/auf-dem-bahnsteig-warten-dreizehn-reisende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-digit-73": {
+			"record": "de/das-trikot-traegt-die-nummer-73",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-decimal-sieben-komma-acht": {
+			"record": "de/der-pegel-liegt-bei-sieben-komma-acht-metern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-year-1987": {
+			"record": "de/die-aufnahme-entstand-1987-in-leipzig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-roman-xix": {
+			"record": "de/die-roemische-zahl-neunzehn-wird-als-xix-notiert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-multi-member-vier-komma-neun": {
+			"record": "de/die-waage-zeigt-vier-komma-neun-kilogramm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-inflected-million-acc": {
+			"record": "de/der-fonds-investiert-eine-million-euro",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-inflected-millionen-gen": {
+			"record": "de/trotz-millionen-offener-fragen-begann-das-projekt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-inflected-quadrillionen-nom": {
+			"record": "de/quadrillionen-kleinster-einheiten-waeren-dafuer-noetig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-archaic-zween": {
+			"record": "de/zween-ritter-bewachten-der-sage-nach-das-tor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-variant-zwo": {
+			"record": "de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-typo-neunzhen": {
+			"record": "de/im-protokoll-stehen-neunzhen-einzelne-meldungen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-archaic-fuenff": {
+			"record": "de/im-alten-rechenbuch-steht-die-zahl-fuenff",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-route-adj-drei": {
+			"record": "de/nach-dem-zweiten-versuch-gelang-schliesslich-versuch-nummer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-route-det-zwei": {
+			"record": "de/von-beiden-gruppen-kamen-jeweils-zwei-personen-zur-probe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-route-pron-drei": {
+			"record": "de/von-den-zwoelf-bewerbern-kamen-drei-spaeter-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-route-noun-eins": {
+			"record": "de/die-anzeige-sprang-von-der-null-auf-eins",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-route-symbol-7": {
+			"record": "de/die-gleichung-lautet-drei-plus-vier-gleich-7",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-fraction-eineinhalb": {
+			"record": "de/die-fahrt-dauert-eineinhalb-stunden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-range-zehn-bis-zwoelf": {
+			"record": "de/die-sprechstunde-laeuft-von-zehn-bis-zwoelf-uhr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-inflected-millionen": {
+			"record": "de/mit-millionen-rechnet-die-planerin-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-initial-inflected-trillionen": {
+			"record": "de/trillionen-winziger-teilchen-wuerden-den-behaelter-fuellen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-demo-typo-dreii": {
+			"record": "de/fuer-das-experiment-fehlen-dreii-kabel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-dev-multiplicative-dreifach": {
+			"record": "de/der-klassifizierte-multiplikator-lautet-dreifach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-fraction-siebenachtel": {
+			"record": "de/der-tank-ist-zu-siebenachtel-gefuellt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-multiplicative-sechsfach": {
+			"record": "de/die-beschichtung-schuetzt-sechsfach-besser",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-num-accept-v3-range-zwoelf-bis-sechzehn": {
+			"record": "de/das-angebot-gilt-fuer-gruppen-von-zwoelf-bis-sechzehn",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

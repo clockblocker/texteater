@@ -7356,5 +7356,1012 @@
 			},
 			"explanation": "Plural kommen and alle settle third person plural inside the sentence."
 		}
+	},
+	"origins": {
+		"grammar-de-pron-fixed-mir": {
+			"record": "de/bitte-gib-mir-den-schluessel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-du": {
+			"record": "de/heute-kochst-du-das-abendessen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-dich": {
+			"record": "de/ich-rufe-dich-morgen-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-deiner": {
+			"record": "de/wir-gedachten-deiner-in-dankbarkeit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-er": {
+			"record": "de/am-montag-beginnt-er-die-neue-stelle",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihn": {
+			"record": "de/die-kollegin-begruesst-ihn-am-eingang",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-seiner-masc": {
+			"record": "de/der-alte-pfarrer-war-beliebt-die-gemeinde-gedachte-seiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihr-fem": {
+			"record": "de/der-arzt-hilft-ihr-sofort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihrer-fem": {
+			"record": "de/die-alte-baeckerin-fehlt-allen-die-nachbarn-gedachten-ihrer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihm-neut": {
+			"record": "de/das-tier-zittert-wir-geben-ihm-wasser",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-seiner-neut": {
+			"record": "de/des-alten-gesetzes-wurde-seiner-gedacht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-uns": {
+			"record": "de/die-gastgeber-laden-uns-ein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-unser-gen": {
+			"record": "de/man-erinnerte-sich-unser-gern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihr-second-plur": {
+			"record": "de/morgen-beginnt-ihr-frueher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihnen-plur": {
+			"record": "de/die-kinder-frieren-wir-geben-ihnen-decken",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihrer-plur": {
+			"record": "de/die-opfer-des-ungluecks-sind-nicht-vergessen-die-stadt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-sie-formal-sing": {
+			"record": "de/kommen-sie-bitte-herein-frau-mueller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihnen-formal-sing": {
+			"record": "de/ich-helfe-ihnen-gern-herr-oezdemir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihrer-formal-sing": {
+			"record": "de/frau-doktor-wir-gedachten-ihrer-dankbar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-sie-formal-plur": {
+			"record": "de/kommen-sie-bitte-herein-meine-damen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihnen-formal-plur": {
+			"record": "de/ich-helfe-ihnen-gern-liebe-gaeste",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihrer-formal-plur": {
+			"record": "de/meine-damen-wir-gedachten-ihrer-dankbar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-dein": {
+			"record": "de/der-freie-platz-ist-deiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-sein-masc": {
+			"record": "de/paul-sucht-seinen-koffer-der-schwarze-koffer-dort-ist-seiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-sein-neut": {
+			"record": "de/das-kind-sucht-sein-spielzeug-das-rote-spielzeug-dort-ist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihr-fem-poss": {
+			"record": "de/lena-sucht-ihren-mantel-der-gruene-mantel-dort-ist-ihrer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihr-plur-poss": {
+			"record": "de/die-gaeste-kommen-gleich-die-reservierten-plaetze-sind-ihre",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-unser-poss": {
+			"record": "de/der-grosse-tisch-ist-unserer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-euer-poss": {
+			"record": "de/der-letzte-vorschlag-ist-eurer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-ihr-formal-poss": {
+			"record": "de/frau-weber-der-ordner-ist-ihrer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-wer": {
+			"record": "de/wer-kommt-heute",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-wen": {
+			"record": "de/wen-rufst-du-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-wessen": {
+			"record": "de/wessen-bedarf-es-noch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jemand-jemand": {
+			"record": "de/jemand-wartet-vor-der-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jemand-jemanden": {
+			"record": "de/ich-sehe-jemanden-vor-der-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jemand-jemandes": {
+			"record": "de/es-bedarf-jemandes-mit-erfahrung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-niemand-niemand": {
+			"record": "de/niemand-wartet-vor-der-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-niemand-niemanden": {
+			"record": "de/ich-sehe-niemanden-vor-der-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-niemand-niemandes": {
+			"record": "de/es-bedarf-niemandes-mit-erfahrung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-nom-sing-fem": {
+			"record": "de/von-den-frauen-kam-keine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-acc-sing-masc": {
+			"record": "de/von-den-maennern-sah-ich-keinen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-acc-sing-fem": {
+			"record": "de/ich-suche-eine-aerztin-mit-erfahrung-aber-ich-kenne-keine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-acc-sing-neut": {
+			"record": "de/von-den-geraeten-reparierte-ich-keines",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-dat-sing-masc": {
+			"record": "de/von-den-maennern-half-ich-keinem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-dat-sing-fem": {
+			"record": "de/von-den-frauen-widersprach-ich-keiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-dat-sing-neut": {
+			"record": "de/von-den-geraeten-vertraue-ich-keinem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-gen-sing-masc": {
+			"record": "de/es-bedarf-keines-der-vorgeschlagenen-vertraege",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-gen-sing-fem": {
+			"record": "de/eine-genehmigung-es-bedarf-keiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-gen-sing-neut": {
+			"record": "de/es-bedarf-keines-der-vorgeschlagenen-geraete",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-acc-plur": {
+			"record": "de/von-den-gaesten-sah-ich-keine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-dat-plur": {
+			"record": "de/von-den-gaesten-half-ich-keinen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-gen-plur": {
+			"record": "de/zusaetzliche-unterlagen-es-bedarf-keiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-nom-sing-fem": {
+			"record": "de/von-den-frauen-irrt-sich-manche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-nom-sing-neut": {
+			"record": "de/von-den-details-bleibt-manches-unklar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-acc-sing-masc": {
+			"record": "de/von-den-maennern-kenne-ich-manchen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-acc-sing-fem": {
+			"record": "de/von-den-frauen-kenne-ich-manche-die-schon-damals-dabei-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-acc-sing-neut": {
+			"record": "de/von-den-details-verstehe-ich-manches",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-dat-sing-masc": {
+			"record": "de/von-den-kandidaten-vertraue-ich-manchem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-dat-sing-fem": {
+			"record": "de/von-den-empfehlungen-folge-ich-mancher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-gen-sing-masc": {
+			"record": "de/die-meinung-manches-der-teilnehmer-blieb-ungehoert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-gen-sing-fem": {
+			"record": "de/die-stimme-mancher-der-frauen-fehlte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-gen-sing-neut": {
+			"record": "de/die-wirkung-manches-der-mittel-ist-unklar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-acc-plur": {
+			"record": "de/von-den-gaesten-kenne-ich-manche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-dat-plur": {
+			"record": "de/von-den-gaesten-helfe-ich-manchen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-gen-plur": {
+			"record": "de/man-gedachte-mancher-die-nicht-mehr-dabei-waren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedermann-nom": {
+			"record": "de/jedermann-ist-willkommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedermann-dat": {
+			"record": "de/das-steht-jedermann-frei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-alles-nom": {
+			"record": "de/alles-funktioniert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-allem-dat": {
+			"record": "de/mit-allem-bin-ich-einverstanden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-alle-acc": {
+			"record": "de/ich-kenne-alle",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-allen-dat": {
+			"record": "de/ich-helfe-allen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mehrere-nom": {
+			"record": "de/mehrere-kamen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mehrere-acc": {
+			"record": "de/ich-kenne-mehrere",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-nom-fem": {
+			"record": "de/unter-den-frauen-hilft-jede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-nom-neut": {
+			"record": "de/unter-den-kindern-hilft-jedes",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-acc-masc": {
+			"record": "de/von-den-maennern-kenne-ich-jeden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-acc-neut": {
+			"record": "de/von-den-kindern-kenne-ich-jedes",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-dat-masc": {
+			"record": "de/von-den-maennern-helfe-ich-jedem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-dat-fem": {
+			"record": "de/von-den-frauen-helfe-ich-jeder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-nom-fem": {
+			"record": "de/unter-den-frauen-hilft-jedwede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-nom-neut": {
+			"record": "de/unter-den-kindern-hilft-jedwedes",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-acc-masc": {
+			"record": "de/von-den-maennern-kenne-ich-jedweden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-acc-neut": {
+			"record": "de/von-den-kindern-kenne-ich-jedwedes",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-dat-masc": {
+			"record": "de/von-den-maennern-helfe-ich-jedwedem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-dat-fem": {
+			"record": "de/von-den-frauen-helfe-ich-jedweder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-nom-sing-fem": {
+			"record": "de/unter-den-frauen-hilft-jegliche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-nom-sing-neut": {
+			"record": "de/unter-den-kindern-hilft-jegliches",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-acc-sing-masc": {
+			"record": "de/von-den-maennern-kenne-ich-jeglichen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-acc-sing-neut": {
+			"record": "de/von-den-kindern-kenne-ich-jegliches",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-dat-sing-masc": {
+			"record": "de/von-den-maennern-helfe-ich-jeglichem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-dat-sing-fem": {
+			"record": "de/von-den-frauen-helfe-ich-jeglicher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-acc-plur": {
+			"record": "de/die-vorschlaege-lagen-vor-wir-prueften-jegliche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-gen-plur": {
+			"record": "de/die-vorschlaege-lagen-vor-der-wortlaut-jeglicher-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-den-acc-masc": {
+			"record": "de/den-nehme-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-dem-dat-masc": {
+			"record": "de/der-mann-dort-mit-dem-arbeite-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-masc": {
+			"record": "de/der-plan-dort-dessen-bedarf-es",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-die-nom-fem": {
+			"record": "de/die-gefaellt-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-die-acc-fem": {
+			"record": "de/die-jacke-dort-die-nehme-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-der-dat-fem": {
+			"record": "de/die-frau-dort-mit-der-arbeite-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-deren-gen-fem": {
+			"record": "de/die-loesung-dort-deren-bedarf-es",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-das-nom-neut": {
+			"record": "de/das-gefaellt-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-das-acc-neut": {
+			"record": "de/das-nehme-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-dem-dat-neut": {
+			"record": "de/das-geraet-dort-mit-dem-arbeite-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-dessen-gen-neut": {
+			"record": "de/das-werkzeug-dort-dessen-bedarf-es",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-die-nom-plur": {
+			"record": "de/die-gefallen-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-die-acc-plur": {
+			"record": "de/von-den-geraeten-nehme-ich-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-denen-dat-plur": {
+			"record": "de/mit-denen-arbeite-ich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-deren-gen-plur": {
+			"record": "de/die-loesungen-dort-deren-bedarf-es",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-den-acc-masc": {
+			"record": "de/das-ist-der-mann-den-wir-begruessen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-dem-dat-masc": {
+			"record": "de/das-ist-der-mann-mit-dem-wir-arbeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-masc": {
+			"record": "de/das-ist-der-mann-dessen-plan-wir-pruefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-die-nom-fem": {
+			"record": "de/das-ist-die-frau-die-heute-auftritt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-die-acc-fem": {
+			"record": "de/das-ist-die-frau-die-wir-begruessen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-der-dat-fem": {
+			"record": "de/das-ist-die-frau-mit-der-wir-arbeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-deren-gen-fem": {
+			"record": "de/das-ist-die-frau-deren-plan-wir-pruefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-das-nom-neut": {
+			"record": "de/das-ist-das-geraet-das-im-labor-steht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-das-acc-neut": {
+			"record": "de/das-ist-das-geraet-das-wir-pruefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-dem-dat-neut": {
+			"record": "de/das-ist-das-geraet-mit-dem-wir-arbeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-dessen-gen-neut": {
+			"record": "de/das-ist-das-geraet-dessen-nummer-wir-notieren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-die-nom-plur": {
+			"record": "de/das-sind-die-geraete-die-im-labor-stehen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-die-acc-plur": {
+			"record": "de/das-sind-die-geraete-die-wir-pruefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-denen-dat-plur": {
+			"record": "de/das-sind-die-geraete-mit-denen-wir-arbeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-deren-gen-plur": {
+			"record": "de/das-sind-die-geraete-deren-nummern-wir-notieren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-personal-ihm": {
+			"record": "de/ihr-bruder-zieht-um-anna-hilft-ihm-beim-umzug",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-formal-ihnen": {
+			"record": "de/frau-weber-ich-danke-ihnen-fuer-die-hilfe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-personal-ich": {
+			"record": "de/heute-fahre-ich-mit-dem-zug-nach-leipzig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-personal-sie-fem": {
+			"record": "de/nach-dem-essen-liest-sie-noch-eine-stunde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-personal-sie-plur-acc": {
+			"record": "de/die-gaeste-warten-draussen-der-portier-ruft-sie-herein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-personal-euch": {
+			"record": "de/morgen-besuche-ich-euch-in-dresden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-formal-sie-nom": {
+			"record": "de/herr-yilmaz-sie-beginnen-bitte-mit-dem-bericht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-personal-dir-dat": {
+			"record": "de/nach-der-besprechung-gebe-ich-dir-die-notizen-zurueck",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-personal-wir-nom": {
+			"record": "de/am-naechsten-morgen-fahren-wir-gemeinsam-zur-baustelle",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-formal-ihnen-dat": {
+			"record": "de/herr-brandt-die-rezeption-reserviert-ihnen-ein-ruhiges",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-formal-sie-unknown-addressee": {
+			"record": "de/kommen-sie-bitte-herein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-reflexive-sich": {
+			"record": "de/nach-dem-training-waescht-lea-sich-die-haende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc": {
+			"record": "de/der-gefaellt-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc": {
+			"record": "de/das-ist-der-mann-der-den-drucker-repariert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jemand-jemandem": {
+			"record": "de/ich-helfe-jemandem-aus-der-nachbarschaft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-niemand-niemandem": {
+			"record": "de/ich-helfe-niemandem-aus-der-nachbarschaft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-nom-sing-masc": {
+			"record": "de/von-den-maennern-kam-keiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-nom-sing-neut": {
+			"record": "de/von-den-geraeten-funktioniert-keines",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-keiner-nom-plur": {
+			"record": "de/von-den-gaesten-kamen-keine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedermann-acc": {
+			"record": "de/das-betrifft-jedermann",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedermann-gen": {
+			"record": "de/das-ist-jedermanns-sache",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-nom-sing-masc": {
+			"record": "de/von-den-maennern-irrt-sich-mancher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-nom-plur": {
+			"record": "de/von-den-gaesten-kommen-manche-spaeter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mancher-dat-sing-neut": {
+			"record": "de/von-den-kindern-hilft-das-manchem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-reflexive-mich": {
+			"record": "de/vor-dem-spiegel-kaemme-ich-mich-sorgfaeltig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-nonreflexive-mich": {
+			"record": "de/die-aerztin-untersucht-mich-am-montag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-reflexive-dich": {
+			"record": "de/nach-dem-lauf-waeschst-du-dich-gruendlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-reflexive-uns": {
+			"record": "de/vor-dem-foto-stellen-wir-uns-nebeneinander",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-reciprocal-einander": {
+			"record": "de/nach-dem-streit-hoerten-die-beiden-einander-wieder-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-inherent-reflexive-sich": {
+			"record": "de/mara-schaemt-sich-fuer-den-irrtum",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-reflexive-euch-acc": {
+			"record": "de/vor-dem-wettkampf-waermt-euch-gruendlich-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-relative-der": {
+			"record": "de/das-ist-der-techniker-der-den-drucker-repariert-hat",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-indefinite-etwas": {
+			"record": "de/etwas-fehlt-noch-fuer-das-gemeinsame-fruehstueck",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-demonstrative-das-nom": {
+			"record": "de/das-gefaellt-der-ganzen-familie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-standalone-jener": {
+			"record": "de/jener-war-deutlich-guenstiger-als-dieser-hier",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-relative-die-nom": {
+			"record": "de/die-musikerin-die-heute-auftritt-kommt-aus-koeln",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-interrogative-wer-nom": {
+			"record": "de/wer-uebernimmt-morgen-den-bereitschaftsdienst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-indefinite-jemandem": {
+			"record": "de/die-notiz-muss-jemandem-aus-dem-team-gehoeren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-negative-niemanden": {
+			"record": "de/am-eingang-sah-der-pfoertner-niemanden-mehr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-demonstrative-die-nom-plur": {
+			"record": "de/die-dort-warten-bereits-auf-den-naechsten-bus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-relative-dem-dat-neut": {
+			"record": "de/das-geraet-mit-dem-wir-messen-steht-im-labor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-interrogative-wem-dat": {
+			"record": "de/wem-gehoert-der-gruene-rucksack-am-eingang",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-indefinite-irgendjemandem-dat": {
+			"record": "de/die-nachricht-muss-irgendjemandem-im-buero-bekannt-vorkommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-negative-niemanden-acc": {
+			"record": "de/die-kontrolleurin-liess-niemanden-ohne-ausweis-hinein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-reciprocal-einander": {
+			"record": "de/im-engen-flur-gingen-die-besucher-einander-hoeflich-aus-dem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-accept-v4-negative-nichts": {
+			"record": "de/auf-dem-leeren-schreibtisch-lag-nichts-mehr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-variant-nix": {
+			"record": "de/nach-dem-gewitter-war-im-keller-nix-mehr-trocken",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-poss-meiner": {
+			"record": "de/der-rote-regenschirm-am-eingang-ist-meiner",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-comparative-mehr": {
+			"record": "de/mehr-als-die-haelfte-der-gaeste-blieb-bis-zum-ende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-contraction-s": {
+			"record": "de/wenn-s-morgen-regnet-bleibt-das-turnier-in-der-halle",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-typo-ihc": {
+			"record": "de/nach-der-sitzung-fahre-ihc-direkt-nach-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-archaic-euer": {
+			"record": "de/euer-gedenke-ich-in-dieser-schweren-stunde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-demo-archaic-meiner": {
+			"record": "de/er-gedachte-meiner-in-dieser-schweren-stunde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-wem": {
+			"record": "de/wem-hilfst-du-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-alles-acc": {
+			"record": "de/ich-habe-alles-geprueft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-alle-nom": {
+			"record": "de/alle-sind-angekommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-aller-gen": {
+			"record": "de/die-stimmen-aller-zaehlen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-nom-masc": {
+			"record": "de/unter-den-maennern-hilft-jeder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-acc-fem": {
+			"record": "de/von-den-frauen-kenne-ich-jede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-dat-neut": {
+			"record": "de/von-den-kindern-helfe-ich-jedem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeder-gen-fem": {
+			"record": "de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jeder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-nom-masc": {
+			"record": "de/unter-den-maennern-hilft-jedweder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-acc-fem": {
+			"record": "de/von-den-frauen-kenne-ich-jedwede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-dat-neut": {
+			"record": "de/von-den-kindern-helfe-ich-jedwedem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jedweder-gen-fem": {
+			"record": "de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jedweder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-nom-sing-masc": {
+			"record": "de/unter-den-maennern-hilft-jeglicher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-acc-sing-fem": {
+			"record": "de/von-den-frauen-kenne-ich-jegliche",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-dat-sing-neut": {
+			"record": "de/von-den-kindern-helfe-ich-jeglichem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-gen-sing-fem": {
+			"record": "de/die-bewerberinnen-stellten-projekte-vor-der-beitrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-nom-plur": {
+			"record": "de/die-vorschlaege-lagen-vor-jegliche-wurden-geprueft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-jeglicher-dat-plur": {
+			"record": "de/die-vorschlaege-lagen-vor-wir-widersprachen-jeglichen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mehrere-dat": {
+			"record": "de/ich-helfe-mehreren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-fixed-mehrere-gen": {
+			"record": "de/die-aussagen-mehrerer-stimmen-ueberein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-dev-formal-lowercase-typo": {
+			"record": "de/frau-doktor-bitte-setzen-sie-sich-an-den-tisch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-referent-sie-formal-meier": {
+			"record": "de/herr-meier-sie-kommen-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-referent-sie-in-sentence-fem": {
+			"record": "de/maria-lacht-und-ich-sehe-sie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-referent-sie-in-sentence-plur": {
+			"record": "de/die-kinder-lachen-und-ich-sehe-sie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-pron-referent-sie-nom-agreement": {
+			"record": "de/morgen-kommen-sie-alle",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

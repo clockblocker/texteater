@@ -1023,5 +1023,187 @@
 				"realizationCoverage": "Full"
 			}
 		}
+	},
+	"origins": {
+		"grammar-de-x-demo-unknown-citation-zorp": {
+			"record": "de/im-feld-fuer-nicht-kategorisierte-woerter-stand-der-eintrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-foreign-whatever": {
+			"record": "de/in-der-sonst-deutschen-unterhaltung-antwortete-sie-nur",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-inflection-glorp-dat": {
+			"record": "de/mit-dem-glorp-konnte-niemand-etwas-anfangen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-typo-watevr": {
+			"record": "de/im-chat-war-mit-dem-fehlerhaft-geschriebenen-englischen-wort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-abbr-idk": {
+			"record": "de/in-ihrer-deutschen-nachricht-schrieb-sie-lediglich-idk",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-fragment-unver": {
+			"record": "de/die-sprecherin-begann-mit-unver-und-brach-das-wort-hoerbar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-inflection-nerpa-acc": {
+			"record": "de/die-testperson-verschob-die-nerpa-ohne-ihre-bedeutung-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-demo-inflection-plerke-sub": {
+			"record": "de/die-forscherin-sagte-das-geraet-plerke-nur-bei-vollmond",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-blarg-nom": {
+			"record": "de/der-blarg-tauchte-ohne-erklaerung-im-bericht-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-glorps-acc": {
+			"record": "de/die-pruefer-markierten-die-glorps-im-letzten-absatz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-glorpen-inf": {
+			"record": "de/im-beispiel-sollte-die-figur-morgen-glorpen-doch-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-glorpt-fin": {
+			"record": "de/laut-der-versuchsanweisung-glorpt-er-jeden-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-geglorpt-part": {
+			"record": "de/im-erfundenen-bericht-habe-die-maschine-bereits-geglorpt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-unknown-glorp-imp": {
+			"record": "de/glorp-jetzt-stand-als-unbekannte-anweisung-auf-dem-display",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-foreign-anyway": {
+			"record": "de/mitten-im-deutschen-satz-fuegte-er-anyway-ein-und-sprach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-foreign-low-key": {
+			"record": "de/die-studentin-nannte-das-ergebnis-low-key-ueberraschend",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-slang-cringe": {
+			"record": "de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-slang-sus": {
+			"record": "de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-casing-whatever": {
+			"record": "de/whatever-sagte-sie-am-anfang-ihrer-deutschen-antwort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-archaic-thou": {
+			"record": "de/im-historischen-englischen-zitat-blieb-das-wort-thou",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-variant-colour": {
+			"record": "de/die-britische-schreibvariante-colour-stand-in-der-deutschen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-mixed-w00t": {
+			"record": "de/der-alte-forenbeitrag-endete-mit-dem-slangausdruck-w00t",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-repeated-whatever": {
+			"record": "de/zuerst-sagte-sie-whatever-spaeter-schrieb-sie-whatever-noch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-near-opaque-foobar": {
+			"record": "de/der-beschaedigte-scan-zeigte-im-lesbaren-technischen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-near-known-routes-yeet": {
+			"record": "de/neben-dem-namen-paris-der-abkuerzung-z-b-dem-ausruf-ach-dem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-dev-alphanumeric-3d": {
+			"record": "de/die-uneinheitlich-annotierte-spalte-enthielt-den-eintrag-3d",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-unknown-quend": {
+			"record": "de/das-glossar-fuehrte-den-nicht-weiter-bestimmten-eintrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-unknown-zarg-nom-masc": {
+			"record": "de/dieser-zarg-erschien-ploetzlich-im-versuch-doch-niemand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-unknown-zorps-gen": {
+			"record": "de/die-wirkung-dieses-zorps-blieb-unklar",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-unknown-nerge-sub": {
+			"record": "de/die-zeugin-erklaerte-der-apparat-nerge-waehrend-der-nacht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-foreign-random": {
+			"record": "de/im-ansonsten-deutschen-gespraech-nannte-er-die-entscheidung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-abbr-tbh": {
+			"record": "de/vor-ihrer-meinung-schrieb-sie-im-deutschen-chat-tbh",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-fragment-trans": {
+			"record": "de/die-aufnahme-brach-mitten-im-begonnenen-wort-nach-trans",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-hyphen-off-grid": {
+			"record": "de/der-englische-ausdruck-off-grid-blieb-im-deutschen-gespraech",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-typo-wierd": {
+			"record": "de/im-deutsch-englischen-chat-war-mit-dem-tippfehler-wierd",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-x-accept-v2-archaic-hither": {
+			"record": "de/im-ausdruecklich-archaischen-englischen-dialog-stand-hither",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

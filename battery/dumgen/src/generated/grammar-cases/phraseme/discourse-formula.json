@@ -634,5 +634,177 @@
 			},
 			"explanation": "A valid single-member formula is resolved on this authoritative route; the nearby unmarked Interjection does not alter membership."
 		}
+	},
+	"origins": {
+		"grammar-de-discourse-formula-demo-guten-morgen": {
+			"record": "de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-demo-es-tut-mir-leid-discontinuous": {
+			"record": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-demo-vielen-dank-complement": {
+			"record": "de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-demo-ach-du-meine-guete-vocative": {
+			"record": "de/als-die-leiter-umkippte-rief-sie-ach-du-meine-guete-paul",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-demo-mfg-variant": {
+			"record": "de/am-ende-der-dienstlichen-nachricht-stand-als-grussformel-mfg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-auf-wiedersehen": {
+			"record": "de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-gern-geschehen": {
+			"record": "de/auf-den-dank-des-nachbarn-antwortete-sie-gern-geschehen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-nein-danke": {
+			"record": "de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-darf-ich-bitten": {
+			"record": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-dann-wollen-wir-mal": {
+			"record": "de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-wie-dem-auch-sei": {
+			"record": "de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-herzlich-willkommen": {
+			"record": "de/die-museumsleiterin-begruesste-die-neue-gruppe-mit-herzlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-bitte-schoen-presentation": {
+			"record": "de/der-kellner-stellte-die-tasse-vor-den-gast-und-sagte-bitte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-bitte-schoen-request": {
+			"record": "de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-tut-mir-leid-sympathy": {
+			"record": "de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-herzlichen-glueckwunsch": {
+			"record": "de/nach-der-bestandenen-pruefung-sagte-der-ausbilder-herzlichen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-danke-danke-repetition": {
+			"record": "de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-schoenen-guten-tag": {
+			"record": "de/an-der-hotelrezeption-wandte-sich-der-gast-an-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-gute-nacht": {
+			"record": "de/vor-dem-ausschalten-des-flurlichts-verabschiedete-sich-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-besten-dank": {
+			"record": "de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-ich-bitte-um-verzeihung": {
+			"record": "de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-keine-ursache": {
+			"record": "de/auf-sein-dankbares-nicken-antwortete-der-hausmeister-keine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-demo-es-tut-mir-partial": {
+			"record": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-guten-morgen-casing-typo": {
+			"record": "de/auf-dem-handgeschriebenen-schild-stand-die-begruessung-guten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-herzlich-wilkommen-typo": {
+			"record": "de/die-gastgeberin-oeffnete-die-tuer-und-sagte-herzlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-auf-wiedersehn-variant": {
+			"record": "de/am-gartentor-verabschiedete-sich-der-besucher-mit-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-gott-befohlen-archaic": {
+			"record": "de/im-historischen-buehnenstueck-verabschiedete-sich-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-mit-freundlichen-partial": {
+			"record": "de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-vielen-herzlichen-partial": {
+			"record": "de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-dev-gute-reise-wish": {
+			"record": "de/nachdem-sie-ueber-eine-gute-reise-im-naechsten-jahr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-auf-keinen-fall": {
+			"record": "de/gibst-du-ihm-das-original-ohne-quittung-auf-keinen-fall",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-nun-denn": {
+			"record": "de/als-alle-plaetze-besetzt-waren-eroeffnete-die-moderatorin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-um-himmels-willen": {
+			"record": "de/nachdem-jemand-den-idiom-ausdruck-ins-gras-beissen-erwaehnt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-discourse-formula-accept-willkommen-single": {
+			"record": "de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

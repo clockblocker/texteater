@@ -1164,5 +1164,342 @@
 			},
 			"explanation": "An unmarked correlating CCONJ and abbreviation remain outside the authoritative SCONJ target; the codec has no abbreviation feature."
 		}
+	},
+	"origins": {
+		"grammar-de-sconj-demo-finite-weil": {
+			"record": "de/wir-bleiben-im-haus-weil-es-draussen-regnet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-reduced-wie": {
+			"record": "de/alles-verlief-wie-gestern-besprochen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-infinitival-um": {
+			"record": "de/sie-ging-frueher-um-den-zug-zu-erreichen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-causal-da": {
+			"record": "de/wir-verschoben-den-ausflug-da-ein-sturm-angekuendigt-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-complement-dass": {
+			"record": "de/mara-weiss-dass-ben-morgen-kommt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-conditional-wenn": {
+			"record": "de/wir-gehen-los-wenn-der-regen-aufhoert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-nachdem": {
+			"record": "de/nachdem-er-gegessen-hatte-raeumte-er-den-tisch-ab",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-waehrend": {
+			"record": "de/sie-las-waehrend-er-das-abendessen-kochte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-interrogative-ob": {
+			"record": "de/ich-frage-mich-ob-die-bibliothek-noch-geoeffnet-ist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-bevor": {
+			"record": "de/ruf-mich-an-bevor-du-zum-bahnhof-faehrst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-conditional-falls": {
+			"record": "de/nimm-eine-jacke-mit-falls-es-abends-kuehl-wird",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-seitdem": {
+			"record": "de/es-ist-ruhiger-seitdem-die-baustelle-geschlossen-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-sobald": {
+			"record": "de/wir-beginnen-sobald-alle-gaeste-eingetroffen-sind",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-modal-indem": {
+			"record": "de/sie-half-indem-sie-die-messwerte-sorgfaeltig-pruefte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-causal-zumal": {
+			"record": "de/wir-blieben-noch-zumal-die-diskussion-spannend-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-comparative-als-clause": {
+			"record": "de/der-weg-dauerte-laenger-als-wir-erwartet-hatten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-comparative-wie-clause": {
+			"record": "de/die-maschine-arbeitet-so-leise-wie-der-hersteller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-als": {
+			"record": "de/als-der-bus-endlich-kam-warteten-wir-schon-lange",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-adversative-wohingegen": {
+			"record": "de/lena-faehrt-gern-rad-wohingegen-tom-lieber-wandert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-concessive-obgleich": {
+			"record": "de/er-setzte-die-reise-fort-obgleich-das-wetter-schlechter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-conditional-sofern": {
+			"record": "de/die-sitzung-findet-statt-sofern-genug-mitglieder-kommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-temporal-bis": {
+			"record": "de/wir-warteten-bis-das-licht-wieder-anging",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-concessive-obwohl": {
+			"record": "de/sie-ging-spazieren-obwohl-ein-kalter-wind-wehte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-purpose-damit": {
+			"record": "de/er-sprach-langsam-damit-alle-ihn-verstehen-konnten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-temporal-ehe": {
+			"record": "de/pruefe-die-adresse-ehe-du-den-brief-abschickst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-concessive-wenngleich": {
+			"record": "de/der-plan-ist-moeglich-wenngleich-er-teuer-werden-duerfte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-concessive-obschon": {
+			"record": "de/sie-laechelte-obschon-sie-sehr-muede-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-consecutive-sodass": {
+			"record": "de/es-schneite-stark-sodass-die-strasse-gesperrt-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-proportional-je": {
+			"record": "de/je-laenger-wir-warteten-desto-unruhiger-wurden-die-kinder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-um-zu": {
+			"record": "de/noah-spart-um-im-sommer-verreisen-zu-koennen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-ohne-zu": {
+			"record": "de/er-ging-ohne-sich-zu-verabschieden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-statt-zu": {
+			"record": "de/lina-schwieg-statt-offen-zu-widersprechen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-repeated-um-zu-context": {
+			"record": "de/um-das-haus-blieb-es-zu-laut-um-dort-ruhig-schlafen-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-um-zu": {
+			"record": "de/tarek-oeffnete-das-fenster-um-frische-luft-hereinzulassen-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-ohne-zu": {
+			"record": "de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-beside-adp-waehrend": {
+			"record": "de/waehrend-des-urlaubs-las-nora-waehrend-die-kinder-schliefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-beside-cconj-denn": {
+			"record": "de/wir-blieben-denn-es-regnete-bis-der-bus-kam",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-beside-adv-da": {
+			"record": "de/da-drueben-wartete-mira-ob-der-laden-oeffnete",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-beside-part-ja": {
+			"record": "de/es-ging-schneller-als-er-ja-behauptet-hatte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-beside-correlating-cconj": {
+			"record": "de/sowohl-lea-als-auch-tim-kommen-wenn-die-probe-endet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-beside-abbreviation": {
+			"record": "de/die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-typo-obwol": {
+			"record": "de/sie-ging-weiter-obwol-sie-muede-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-historical-dass": {
+			"record": "de/im-brief-von-1880-schrieb-sie-dass-alles-bereit-sei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-multiword-so-dass": {
+			"record": "de/es-schneite-stark-so-dass-die-strasse-gesperrt-wurde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-anstatt-zu": {
+			"record": "de/mara-telefonierte-anstatt-den-bericht-sorgfaeltig-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-demo-discontinuous-so-dass": {
+			"record": "de/im-alten-druck-stand-er-sprach-so-leise-dass-ihn-niemand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-multiword-als-ob": {
+			"record": "de/er-tat-als-ob-er-die-nachricht-nicht-gehoert-haette",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-dev-variant-sodass": {
+			"record": "de/die-tuer-klemmte-so-dass-wir-warten-mussten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-multiword-ohne-dass": {
+			"record": "de/sie-ging-ohne-dass-jemand-es-bemerkte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-typo-wehn": {
+			"record": "de/ruf-an-wehn-du-angekommen-bist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-archaic-sintemal": {
+			"record": "de/der-chronist-schwieg-sintemal-ihm-niemand-glauben-schenkte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-variant-obzwar": {
+			"record": "de/sie-blieb-hoeflich-obzwar-sie-den-einwand-ablehnte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-finite-obwohl": {
+			"record": "de/die-faehre-legte-ab-obwohl-dichter-nebel-aufzog",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-purpose-damit": {
+			"record": "de/nora-beschriftete-die-kisten-damit-niemand-sie-verwechselte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-conditional-wenn": {
+			"record": "de/die-lampe-blinkt-wenn-der-akku-fast-leer-ist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-interrogative-ob": {
+			"record": "de/der-techniker-pruefte-ob-das-kabel-richtig-sass",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-infinitival-ohne": {
+			"record": "de/mina-verliess-den-raum-ohne-sich-zu-verabschieden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-comparative-als": {
+			"record": "de/die-reparatur-dauerte-kuerzer-als-der-meister-vorausgesagt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-reduced-wie": {
+			"record": "de/der-vertrag-gilt-wie-schriftlich-vereinbart",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-multiword-als-wenn": {
+			"record": "de/sie-sah-mich-an-als-wenn-sie-eine-erklaerung-erwartete",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-initial-falls": {
+			"record": "de/falls-die-lieferung-heute-eintrifft-rufen-wir-sofort-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-typo-obwhol": {
+			"record": "de/der-hund-blieb-ruhig-obwhol-es-an-der-tuer-klingelte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-archaic-dieweil": {
+			"record": "de/der-schreiber-verweilte-dieweil-der-bote-noch-ausstand",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-variant-so-dass": {
+			"record": "de/im-alten-druck-war-die-zeile-verrutscht-so-dass-ein-wort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-beside-adv-da": {
+			"record": "de/da-vorne-steht-der-wagen-weil-die-einfahrt-gesperrt-ist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-beside-part-ja": {
+			"record": "de/die-messung-war-genauer-als-wir-ja-gehofft-hatten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-sconj-accept-v2-beside-correlative-and-abbreviation": {
+			"record": "de/weder-die-abk-noch-die-fussnote-wird-geaendert-bevor-die",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

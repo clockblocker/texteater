@@ -636,5 +636,97 @@
 			},
 			"explanation": "kriegen realizes the same recipient-passive AUX Lemma and Reading as bekommen (ADR 0026)."
 		}
+	},
+	"origins": {
+		"grammar-de-aux-demo-future-wird": {
+			"record": "de/mara-wird-morgen-abreisen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-perfect-hat-gegessen": {
+			"record": "de/nora-hat-bereits-gegessen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-perfect-waren-gegangen": {
+			"record": "de/die-gaeste-waren-schon-gegangen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-passive-wird-repariert": {
+			"record": "de/die-bruecke-wird-im-sommer-repariert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-passive-wurde-gesperrt": {
+			"record": "de/die-strasse-wurde-gestern-gesperrt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-subjunctive-sei-gegangen": {
+			"record": "de/der-zeuge-sagt-die-frau-sei-frueh-gegangen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-subjunctive-waeren-geblieben": {
+			"record": "de/ohne-den-anruf-waeren-sie-laenger-geblieben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-infinitive-sein": {
+			"record": "de/mira-wird-laengst-angekommen-sein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-infinitive-passive-werden": {
+			"record": "de/der-saal-muss-heute-gereinigt-werden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-participle-worden": {
+			"record": "de/der-antrag-ist-gestern-genehmigt-worden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-perfect-ist-gegangen": {
+			"record": "de/der-kurier-ist-puenktlich-gegangen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-future-werden-abreisen": {
+			"record": "de/wir-werden-am-freitag-abreisen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-passive-wurden-gerufen": {
+			"record": "de/die-helfer-wurden-sofort-gerufen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-subjunctive-haette": {
+			"record": "de/mit-mehr-zeit-haette-er-das-ziel-erreicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-infinitive-haben": {
+			"record": "de/sie-koennte-den-zug-verpasst-haben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-archaic-ward": {
+			"record": "de/der-bote-ward-freundlich-empfangen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-dev-recipient-bekommt-geliefert": {
+			"record": "de/sie-bekommt-das-paket-geliefert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aux-accept-recipient-kriegt-erklaert": {
+			"record": "de/er-kriegt-alles-erklaert",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

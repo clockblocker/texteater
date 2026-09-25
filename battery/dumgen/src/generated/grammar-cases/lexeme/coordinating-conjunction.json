@@ -1070,5 +1070,312 @@
 			},
 			"explanation": "und zwar is one specifying conjunction unit (issue 495)."
 		}
+	},
+	"origins": {
+		"grammar-de-cconj-demo-ordinary-und": {
+			"record": "de/anna-liest-und-ben-kocht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-ordinary-oder-nouns": {
+			"record": "de/zum-fruehstueck-gibt-es-muesli-oder-brot",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-adversative-aber-clauses": {
+			"record": "de/sie-ist-muede-aber-sie-arbeitet-weiter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-adversative-doch-clauses": {
+			"record": "de/er-wollte-kommen-doch-der-zug-fiel-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-corrective-sondern": {
+			"record": "de/das-wasser-ist-nicht-kalt-sondern-warm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-additive-sowie": {
+			"record": "de/brot-sowie-kaese-werden-serviert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-beziehungsweise-full": {
+			"record": "de/die-eltern-beziehungsweise-sorgeberechtigten-unterschreiben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-sentence-initial-und": {
+			"record": "de/und-danach-gingen-alle-nach-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-repeated-second-und": {
+			"record": "de/anna-und-ben-singen-und-carla-tanzt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-und-list": {
+			"record": "de/im-korb-liegen-aepfel-birnen-und-pflaumen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-oder-clauses": {
+			"record": "de/wir-fahren-heute-oder-wir-bleiben-zu-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-aber-adjectives": {
+			"record": "de/der-weg-ist-lang-aber-gut-ausgeschildert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-sowie-subjects": {
+			"record": "de/die-aerztin-sowie-der-pfleger-wurden-informiert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-variant-u": {
+			"record": "de/auf-dem-zettel-stehen-brot-u-kaese",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-entweder-freitag": {
+			"record": "de/wir-reisen-entweder-am-freitag-oder-am-samstag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-entweder-clauses": {
+			"record": "de/entweder-faehrt-mia-heute-oder-sie-bleibt-bis-morgen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-weder-noch": {
+			"record": "de/sie-trinkt-weder-tee-noch-kaffee",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-sowohl-als": {
+			"record": "de/sie-schaetzt-sowohl-ruhe-als-bewegung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-sowohl-wie": {
+			"record": "de/die-regel-gilt-sowohl-fuer-kinder-wie-fuer-erwachsene",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-sowohl-wie-auch": {
+			"record": "de/das-angebot-gilt-sowohl-online-wie-auch-im-laden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-je-umso": {
+			"record": "de/je-genauer-wir-messen-umso-sicherer-wird-das-ergebnis",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-je-je": {
+			"record": "de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-casing-entweder": {
+			"record": "de/entweder-gewinnen-wir-heute-oder-wir-ueben-morgen-weiter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-desto-typo": {
+			"record": "de/je-hoeher-der-druck-desdo-groesser-das-risiko",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-near-ordinary-cconj": {
+			"record": "de/die-frage-lautet-kaffee-oder-tee-doch-wir-bestellen-entweder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-near-sconj": {
+			"record": "de/ob-es-regnet-weiss-niemand-wir-fahren-entweder-mit-dem-bus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-near-adv": {
+			"record": "de/ausserdem-ist-der-entwurf-sowohl-klar-als-auch-knapp",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-entweder-nouns": {
+			"record": "de/zum-fruehstueck-gibt-es-entweder-muesli-oder-brot",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-weder-clauses": {
+			"record": "de/weder-rief-sie-zurueck-noch-schrieb-sie-eine-nachricht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-sowohl-als-auch": {
+			"record": "de/der-kurs-ist-sowohl-anspruchsvoll-als-auch-unterhaltsam",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-sowohl-wie": {
+			"record": "de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-je-desto": {
+			"record": "de/je-ruhiger-die-see-war-desto-schneller-kamen-wir-voran",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-je-umso": {
+			"record": "de/je-spaeter-der-abend-wurde-umso-leiser-sprach-die-runde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-comparative-als": {
+			"record": "de/mira-ist-groesser-als-ihre-schwester",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-causal-denn": {
+			"record": "de/wir-gehen-jetzt-denn-es-wird-spaet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-comparative-wie": {
+			"record": "de/mira-ist-genauso-gross-wie-ihre-schwester",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-comparative-als-mehr": {
+			"record": "de/heute-kamen-mehr-gaeste-als-gestern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-jedoch-null-position": {
+			"record": "de/die-polizei-suchte-ueberall-jedoch-sie-fand-ihn-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-aber-not-particle": {
+			"record": "de/die-aufgabe-war-schwierig-aber-alle-loesten-sie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-doch-not-particle": {
+			"record": "de/wir-warteten-lange-doch-niemand-erschien",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-denn-verb-second-anchor": {
+			"record": "de/nora-schloss-das-fenster-denn-draussen-tobte-ein-sturm",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-ordinary-oder-without-correlate": {
+			"record": "de/du-kannst-anrufen-oder-eine-nachricht-schreiben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-comparative-als-tiefer": {
+			"record": "de/der-neue-brunnen-ist-tiefer-als-der-alte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-comparative-wie-ebenso": {
+			"record": "de/die-zweite-loesung-ist-ebenso-robust-wie-die-erste",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-denn-causal": {
+			"record": "de/lea-nahm-einen-schirm-denn-dunkle-wolken-zogen-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-doch-sentence-initial": {
+			"record": "de/doch-niemand-wollte-den-plan-aufgeben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-jedoch-null-position": {
+			"record": "de/der-weg-war-weit-jedoch-die-gruppe-blieb-zusammen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-typo-udn": {
+			"record": "de/tee-udn-kaffee-stehen-bereit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-variant-bzw": {
+			"record": "de/die-eltern-bzw-sorgeberechtigten-unterschreiben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-archaic-allein": {
+			"record": "de/ich-wollte-helfen-allein-mir-fehlte-die-zeit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-sowohl-als-auch": {
+			"record": "de/sie-hat-sowohl-den-film-gesehen-als-auch-das-buch-gelesen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-je-desto": {
+			"record": "de/je-laenger-der-weg-wird-desto-mueder-werden-die-reisenden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-demo-entweder-typo": {
+			"record": "de/wir-nehmen-endweder-den-bus-oder-die-bahn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-typo-odre": {
+			"record": "de/nimm-den-bus-odre-geh-zu-fuss",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-typo-sonedrn": {
+			"record": "de/das-paket-ist-nicht-leicht-sonedrn-schwer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-variant-bzw-initial": {
+			"record": "de/bzw-die-gesetzliche-vertretung-muss-zustimmen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-typo-jedcoh": {
+			"record": "de/der-versuch-war-riskant-jedcoh-das-team-setzte-ihn-fort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-accept-archaic-allein": {
+			"record": "de/die-mannschaft-kaempfte-tapfer-allein-der-sieg-blieb-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-abbreviation-dh": {
+			"record": "de/er-kam-spaet-d-h-nach-mitternacht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-written-das-heisst": {
+			"record": "de/er-kam-spaet-das-heisst-nach-mitternacht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-cconj-dev-written-und-zwar": {
+			"record": "de/sie-kommt-morgen-und-zwar-frueh",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

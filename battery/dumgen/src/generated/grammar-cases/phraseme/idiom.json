@@ -1453,5 +1453,172 @@
 			"explanation": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape.",
 			"contaminationKeys": ["de-idiom-lemma:die-segel-streichen"]
 		}
+	},
+	"origins": {
+		"grammar-de-idiom-flinte-past-full": {
+			"record": "de/nach-dem-rueckstand-warf-die-trainerin-die-flinte-endgueltig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-grass-citation": {
+			"record": "de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-woelfe-present-full": {
+			"record": "de/heult-nicht-laenger-mit-den-woelfen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-teufel-wand-full": {
+			"record": "de/kaum-sprachen-wir-von-ihr-da-malten-wir-offenbar-den-teufel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-nase-typo-full": {
+			"record": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-handtuch-ellipsis-partial": {
+			"record": "de/die-erste-mannschaft-hat-das-handtuch-geworfen-und-spaeter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-was-zum-truncation-partial": {
+			"record": "de/was-zum",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-faeustchen-perfect-full": {
+			"record": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-truebsal-imperative-full": {
+			"record": "de/blase-jetzt-nicht-laenger-truebsal",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-hand-fuss-subjunctive-full": {
+			"record": "de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-schneider-past-full": {
+			"record": "de/ohne-mantel-fror-sie-wie-ein-schneider",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-fliegen-present-full": {
+			"record": "de/mit-derselben-massnahme-schlaegt-sie-zwei-fliegen-mit-einer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-loeffel-typo-full": {
+			"record": "de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-kalte-schulter-future-full": {
+			"record": "de/morgen-wird-sie-ihm-wohl-die-kalte-schulter-zeigen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-fettnaepfchen-infinitive-full": {
+			"record": "de/er-versucht-nicht-wieder-ins-fettnaepfchen-zu-treten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-tomaten-present-full": {
+			"record": "de/du-hast-heute-wohl-tomaten-auf-den-augen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-nagel-passive-full": {
+			"record": "de/mit-dieser-diagnose-wurde-der-nagel-genau-auf-den-kopf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-zunge-im-zaum-infinitive-full": {
+			"record": "de/sie-versprach-kuenftig-die-zunge-im-zaum-zu-halten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-dick-duenn-past-full": {
+			"record": "de/die-freunde-gingen-gemeinsam-durch-dick-und-duenn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-faden-perfect-full": {
+			"record": "de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-ohr-present-full": {
+			"record": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-kuerzeren-ellipsis-partial": {
+			"record": "de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-bett-literal-figurative-full": {
+			"record": "de/waehrend-der-waerter-das-historische-bett-huetete-huetete",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-wolke-present-full": {
+			"record": "de/das-sprichwort-morgenstund-hat-gold-im-mund-half-ihm-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-wolken-past-full": {
+			"record": "de/nach-dem-aphorismus-ueber-die-hoffnung-fiel-sie-bei-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-katze-perfect-full": {
+			"record": "de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-kirche-imperative-full": {
+			"record": "de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-blatt-future-full": {
+			"record": "de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-kopf-sand-typo-perfect": {
+			"record": "de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-licht-passive-full": {
+			"record": "de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-haende-present-full": {
+			"record": "de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-schlauch-present-full": {
+			"record": "de/bei-dieser-frage-stehe-ich-voellig-auf-dem-schlauch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-idiom-segel-ellipsis-partial": {
+			"record": "de/eva-hat-die-segel-gestrichen-nach-der-niederlage-hat-auch",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

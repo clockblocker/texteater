@@ -3872,5 +3872,442 @@
 			},
 			"explanation": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
 		}
+	},
+	"origins": {
+		"grammar-de-verb-governed-preposition-fused-aufs": {
+			"record": "de/er-wartet-aufs-ende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-demo-exists": {
+			"record": "de/es-gibt-brot",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-demo-weather": {
+			"record": "de/es-regnet-heute",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-citation-arbeiten": {
+			"record": "de/woerterbucheintrag-vollverb-arbeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-separable-imperative-aufpassen": {
+			"record": "de/pass-auf-dich-auf",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-verb-dw-future-beteiligen": {
+			"record": "de/deutschland-wird-sich-an-diesem-manoever-beteiligen-sagte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-separable-aufsetzen": {
+			"record": "de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-modal-passive-hergestellt": {
+			"record": "de/die-impfstofflieferung-fuer-die-eu-soll-in-den",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-perfect-passive-aufgefunden": {
+			"record": "de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-question": {
+			"record": "de/gibt-es-einen-ausweg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-past": {
+			"record": "de/es-gab-damals-hoffnung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-subordinate": {
+			"record": "de/weil-es-dort-noch-moeglichkeiten-gibt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-weather": {
+			"record": "de/heute-regnet-es-wieder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-governed": {
+			"record": "de/es-geht-heute-um-geld",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-subject-reflexive": {
+			"record": "de/es-handelt-sich-um-einen-fehler",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-referential-es": {
+			"record": "de/es-liegt-auf-dem-tisch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-positional-es": {
+			"record": "de/es-kamen-gaeste",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-anticipatory-es": {
+			"record": "de/es-freut-mich-dass-du-kommst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-object-es": {
+			"record": "de/sie-meint-es-gut-mit-dir",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-finite-liest": {
+			"record": "de/sie-liest-leise",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-past-ging": {
+			"record": "de/er-ging-nach-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-imperative-lauf": {
+			"record": "de/lauf-schneller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-infinitive-hinauszulaufen": {
+			"record": "de/er-versucht-hinauszulaufen",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-verb-participle-mitgebracht": {
+			"record": "de/die-peitsche-hat-er-mitgebracht-2",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-participle-gesungen": {
+			"record": "de/sie-hat-gesungen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-reflexive-erinnert": {
+			"record": "de/sie-erinnert-sich-an-den-geruch",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-verb-governed-preposition-wartet": {
+			"record": "de/sie-wartet-auf-den-naechsten-zug",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-separable-finite-aufstehen": {
+			"record": "de/sie-steht-jeden-morgen-frueh-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-reflexive-schaemt": {
+			"record": "de/er-schaemt-sich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-future-wird-reisen": {
+			"record": "de/sie-wird-reisen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-passive-wurde-gebeten": {
+			"record": "de/sie-wurde-um-geduld-gebeten",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-verb-full-modal-mag": {
+			"record": "de/sie-mag-schokolade",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-elliptical-modal-kann": {
+			"record": "de/sie-kann-das",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-full-werden": {
+			"record": "de/sie-wird-aerztin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-full-hat": {
+			"record": "de/sie-hat-ein-fahrrad",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-typo-tanzd": {
+			"record": "de/er-tanzd-gern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-passive-participle-geschlossen": {
+			"record": "de/die-tuer-wurde-geschlossen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-provisional-zu-infinitive-warten": {
+			"record": "de/sie-versucht-zu-warten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-perfect-etabliert": {
+			"record": "de/die-weltordnung-die-sich-nach-dem-zweiten-weltkrieg",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-perfect-eingependelt": {
+			"record": "de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-perfect-ausgeschlossen": {
+			"record": "de/die-tansanische-wahlkommission-hat-die-chadema-partei-des",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-separable-nachwirken": {
+			"record": "de/die-eindruecke-wirken-noch-nach-sagt-der-historiker-beim",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-passive-weitergeleitet": {
+			"record": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-future-finden": {
+			"record": "de/auch-emilia-wird-vermutlich-schnell-einen-job-finden-sobald",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-pluperfect-angekuendigt": {
+			"record": "de/die-gruenen-hatten-in-ihrem-wahlprogramm-angekuendigt-dass",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-passive-aufgefressen": {
+			"record": "de/diese-erfolge-werden-jedoch-von-den-steigenden-emissionen-im",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-perfect-ausgesprochen": {
+			"record": "de/der-deutsche-aerztetag-die-vertretung-der-mediziner-in",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-pluperfect-passive-verschifft": {
+			"record": "de/durch-die-meerenge-war-zuvor-fast-ein-fuenftel-des-weltweit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dw-separable-vorbereiten": {
+			"record": "de/die-bundeswehr-bereitet-sich-auf-einen-moeglichen-minenraeum",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-governed-warten-auf": {
+			"record": "de/die-fahrgaeste-warten-trotz-der-eisigen-kaelte-geduldig-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-free-warten-im": {
+			"record": "de/waehrend-des-schweren-gewitters-wartet-der-hausmeister-im",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-governed-verzichten-auf": {
+			"record": "de/die-ministerin-verzichtet-trotz-heftiger-kritik-aus-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-free-sprechen-im": {
+			"record": "de/nach-langen-verhandlungen-spricht-die-ministerin-im-voll",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-governed-reflexive-erinnern-an": {
+			"record": "de/der-pensionierte-lehrer-erinnert-sich-noch-deutlich-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-governed-reflexive-sehnen-nach": {
+			"record": "de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-free-reflexive-erholen-im": {
+			"record": "de/nach-der-anstrengenden-sitzung-erholt-sich-die-ministerin-im",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-governed-warnen-vor": {
+			"record": "de/internationale-fachleute-warnen-die-kuestenstaedte-seit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-free-arbeiten-mit": {
+			"record": "de/die-aerztin-arbeitet-seit-vielen-jahren-mit-einem-besonders",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-prep-free-spielen-auf": {
+			"record": "de/die-kinder-spielen-auch-bei-kuehlem-herbstwetter-auf-dem",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-dev-apocope-haett-bestellt": {
+			"record": "de/fuer-die-ganze-weite-welt-haett-ich-selbst-ein-fest-bestellt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-demo-kann": {
+			"record": "de/das-kind-kann-schon-schwimmen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-citation-duerfen": {
+			"record": "de/im-woerterbuch-steht-das-modalverb-duerfen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-darf-bleiben": {
+			"record": "de/der-hund-darf-heute-drinnen-bleiben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-wolltest-gehen": {
+			"record": "de/du-wolltest-doch-frueher-gehen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-moechte-bleiben": {
+			"record": "de/lea-moechte-noch-etwas-bleiben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-sollen-syncretic": {
+			"record": "de/in-der-beschaedigten-notiz-steht-wir-sollen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-muessen": {
+			"record": "de/wir-muessen-jetzt-eintreten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-mag-infinitive": {
+			"record": "de/tobias-mag-spaeter-mitkommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-wollt": {
+			"record": "de/ihr-wollt-morgen-weiterfahren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-typo-sol": {
+			"record": "de/er-sol-jetzt-warten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-typo-mus": {
+			"record": "de/der-fahrer-mus-sofort-bremsen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-variant-muss": {
+			"record": "de/im-alten-brief-steht-er-muss-morgen-abreisen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-typo-koenen": {
+			"record": "de/wir-koenen-den-termin-einhalten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-modal-contrast-mag": {
+			"record": "de/sie-mag-schokolade-aber-heute-mag-sie-lieber-kochen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-ist": {
+			"record": "de/der-innenhof-ist-heute-still",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-imperative-sei": {
+			"record": "de/sei-bitte-vorsichtig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-bin-muede": {
+			"record": "de/nach-der-reise-bin-ich-muede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-bist-muede": {
+			"record": "de/nach-der-reise-bist-du-muede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-sind-muede": {
+			"record": "de/nach-der-reise-sind-wir-muede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-seid-muede": {
+			"record": "de/nach-der-reise-seid-ihr-muede",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-war-ruhig": {
+			"record": "de/der-see-war-am-morgen-ruhig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-perfect-ist-gewesen": {
+			"record": "de/der-raum-ist-lange-leer-gewesen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-copula-citation-sein": {
+			"record": "de/der-woerterbucheintrag-nennt-sein-als-kopula",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-recipient-passive-bekommt-geliefert": {
+			"record": "de/sie-bekommt-das-paket-geliefert-2",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-recipient-passive-erhielt-ueberreicht": {
+			"record": "de/der-preistraeger-erhielt-die-urkunde-ueberreicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-lexical-bekommt-paket": {
+			"record": "de/sie-bekommt-ein-paket",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-verb-resultative-bekommt-geoeffnet": {
+			"record": "de/sie-bekommt-das-glas-endlich-geoeffnet",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

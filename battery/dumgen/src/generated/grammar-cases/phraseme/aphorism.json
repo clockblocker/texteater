@@ -1625,5 +1625,167 @@
 				"de-aphorism-lemma:die-guete-die-nicht-grenzenlos-ist"
 			]
 		}
+	},
+	"origins": {
+		"grammar-de-aphorism-alt-werden": {
+			"record": "de/alt-werden-heisst-sehend-werden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-typo-hoert": {
+			"record": "de/wo-die-eitelkeit-anfaengt-hoehrt-der-verstand-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-historical-muss": {
+			"record": "de/wer-nichts-weiss-muss-alles-glauben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-nachahmer": {
+			"record": "de/ebner-eschenbach-schrieb-die-meisten-nachahmer-lockt-das",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-nachsicht": {
+			"record": "de/die-meiste-nachsicht-uebt-der-der-die-wenigste-braucht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-kindheit": {
+			"record": "de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-alter": {
+			"record": "de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-jugend": {
+			"record": "de/in-der-jugend-lernt-im-alter-versteht-man",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-tadel": {
+			"record": "de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-gegenwart": {
+			"record": "de/nachdem-sie-die-redewendung-den-nagel-auf-den-kopf-treffen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-streiten": {
+			"record": "de/nach-dem-grammatikbeispiel-eine-entscheidung-treffen-folgte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-unbezahlbar": {
+			"record": "de/die-protokollnotiz-die-sitzung-endet-um-fuenf-war-nur",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-grundsaetze": {
+			"record": "de/anders-als-das-sprichwort-morgenstund-hat-gold-im-mund-ist",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-casing-menschen": {
+			"record": "de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-aphorismus-ring": {
+			"record": "de/ein-aphorismus-ist-der-letzte-ring-einer-langen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-selbstverstaendlich": {
+			"record": "de/sag-etwas-das-sich-von-selbst-versteht-zum-ersten-mal-und-du",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-sichtbare-schoenheit": {
+			"record": "de/was-uns-an-der-sichtbaren-schoenheit-entzueckt-ist-ewig-nur",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-vertrauen-discontinuous": {
+			"record": "de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-verstehen-partial": {
+			"record": "de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-liebe-rechte": {
+			"record": "de/neben-dem-werbeslogan-liebe-lohnt-sich-stand-der-aphorismus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-geduld-streitsucht": {
+			"record": "de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-weise-gut": {
+			"record": "de/wie-weise-muss-man-sein-um-immer-gut-zu-sein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-warten": {
+			"record": "de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-leidenschaft": {
+			"record": "de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-gebrannte-kinder": {
+			"record": "de/gebrannte-kinder-fuerchten-das-feuer-oder-vernarren-sich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-mitleid-neglige": {
+			"record": "de/mitleid-ist-liebe-im-neglige",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-arme-reiche": {
+			"record": "de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-widerspruch-partial": {
+			"record": "de/die-ausgabe-kuerzt-mit-auslassungszeichen-die-leute-denen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-huete-dich": {
+			"record": "de/huete-dich-vor-der-tugend-die-zu-besitzen-ein-mensch-von",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-alten-lesen": {
+			"record": "de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-kunst-tempel-partial": {
+			"record": "de/auf-der-karte-war-nur-der-anfang-gedruckt-wenn-der-kunst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-aphorism-guete-grenzenlos": {
+			"record": "de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

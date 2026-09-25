@@ -858,5 +858,107 @@
 			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid.",
 			"contaminationKeys": ["de-coll-lemma:bescheid-wissen"]
 		}
+	},
+	"origins": {
+		"grammar-de-coll-decision-present-full": {
+			"record": "de/der-ausschuss-trifft-eine-entscheidung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-frage-citation": {
+			"record": "de/woerterbucheintrag-eine-frage-stellen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-verfuegung-present-full": {
+			"record": "de/wir-stellen-die-daten-zur-verfuegung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-anerkennung-participle-typo-full": {
+			"record": "de/der-vorschlag-hat-anerkenung-gefunden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-antrag-present-full": {
+			"record": "de/sie-stellt-einen-antrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-antrag-past-full": {
+			"record": "de/gestern-stellte-sie-einen-antrag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-vereinbarung-present-full": {
+			"record": "de/die-parteien-treffen-eine-vereinbarung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-abbitte-plural-full": {
+			"record": "de/die-verantwortlichen-leisten-abbitte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-abschied-past-full": {
+			"record": "de/wir-nahmen-abschied",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-zustimmung-present-full": {
+			"record": "de/der-rat-erteilt-zustimmung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-ende-imperative-full": {
+			"record": "de/komm-endlich-zum-ende",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-anspruch-participle-full": {
+			"record": "de/sie-hat-hilfe-in-anspruch-genommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-ausdruck-infinitive-full": {
+			"record": "de/sie-versucht-ihre-sorge-zum-ausdruck-zu-bringen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-einfluss-present-full": {
+			"record": "de/das-wetter-nimmt-einfluss-auf-die-planung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-erscheinung-modified-full": {
+			"record": "de/das-problem-tritt-ploetzlich-in-erscheinung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-abschied-citation": {
+			"record": "de/woerterbucheintrag-abschied-nehmen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-abbitte-typo": {
+			"record": "de/sie-leistet-abbite",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-determiner-alternant": {
+			"record": "de/der-ausschuss-trifft-die-entscheidung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-plural-member-alternant": {
+			"record": "de/die-ausschuesse-treffen-entscheidungen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-coll-governed-bescheid-ueber": {
+			"record": "de/er-weiss-bescheid-ueber-die-plaene",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

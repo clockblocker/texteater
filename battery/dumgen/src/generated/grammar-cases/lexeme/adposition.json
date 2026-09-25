@@ -1446,5 +1446,217 @@
 			},
 			"explanation": "im is two Segments. i stands for the ADP in, whose complement dem Wald took the dative."
 		}
+	},
+	"origins": {
+		"grammar-de-adp-demo-prep-mit-dat": {
+			"record": "de/sie-faehrt-mit-dem-bus-zur-arbeit",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-demo-two-way-auf": {
+			"record": "de/das-buch-liegt-auf-dem-tisch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-demo-post-entlang-acc": {
+			"record": "de/wir-liefen-den-fluss-entlang-bis-zur-bruecke",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-demo-circ-von-an": {
+			"record": "de/von-diesem-tag-an-fuehrte-sie-das-protokoll",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-prep-durch-acc": {
+			"record": "de/wir-gehen-durch-den-park-nach-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-prep-zu-dat": {
+			"record": "de/sie-geht-zu-ihrer-aerztin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-two-way-vor-acc": {
+			"record": "de/er-stellt-die-kiste-vor-die-tuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-post-zuliebe-dat": {
+			"record": "de/den-kindern-zuliebe-blieb-sie-noch-eine-stunde",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-prep-seit-dat": {
+			"record": "de/sie-wohnt-seit-einem-jahr-in-bonn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-wegen-local-dat-lexical-gen": {
+			"record": "de/wir-blieben-wegen-dem-regen-zu-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-circ-um-willen": {
+			"record": "de/um-des-friedens-willen-schwiegen-beide-seiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-circ-an-vorbei": {
+			"record": "de/der-radweg-fuehrt-an-der-schule-vorbei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-post-gegenueber-dat": {
+			"record": "de/dem-bahnhof-gegenueber-oeffnete-ein-cafe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-extpos-sconj-anstatt": {
+			"record": "de/anstatt-dass-er-klagte-half-er-sofort",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-foreign-versus-acc": {
+			"record": "de/im-finale-spielt-koeln-versus-berlin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-prep-entlang-gen": {
+			"record": "de/entlang-des-kanals-stehen-alte-pappeln",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-adp-before-unmarked-particle": {
+			"record": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-adp-beside-governed-verb-member": {
+			"record": "de/sie-wartet-auf-den-bus-geht-aber-ohne-schirm-los",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-adp-beside-fusion": {
+			"record": "de/im-regal-liegt-das-buch-auf-dem-mittleren-brett",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-adp-beside-sconj": {
+			"record": "de/obwohl-es-regnet-bleiben-wir-wegen-des-windes-drinnen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-prep-fuer-acc": {
+			"record": "de/sie-backt-einen-kuchen-fuer-ihre-nachbarin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-prep-aus-dat": {
+			"record": "de/der-tisch-besteht-aus-massivem-holz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-prep-waehrend-gen": {
+			"record": "de/waehrend-des-konzerts-blieb-ihr-handy-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-two-way-zwischen-dat": {
+			"record": "de/der-schluessel-liegt-zwischen-den-buechern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-post-wegen-gen": {
+			"record": "de/des-dichten-nebels-wegen-fiel-der-flug-aus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-circ-von-aus": {
+			"record": "de/von-der-terrasse-aus-sieht-man-den-see",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-circ-ueber-hinaus": {
+			"record": "de/die-wirkung-reicht-ueber-das-jahr-hinaus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-post-gemaess-dat": {
+			"record": "de/den-regeln-gemaess-beginnt-die-sitzung-puenktlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-alternating-dank": {
+			"record": "de/dank-des-schnellen-einsatzes-blieb-niemand-verletzt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-prep-bis-acc": {
+			"record": "de/die-sperrung-gilt-bis-naechsten-montag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-demo-typo-one": {
+			"record": "de/sie-ging-one-mantel-hinaus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-demo-archaic-ob": {
+			"record": "de/ob-des-unwetters-blieb-das-tor-geschlossen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-sentence-initial-wegen": {
+			"record": "de/wegen-des-sturms-blieb-die-faehre-im-hafen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-casing-typo-unter": {
+			"record": "de/das-paket-liegt-unter-dem-tisch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-lexical-typo-gegen": {
+			"record": "de/sie-protestiert-egen-den-neuen-plan",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-abbreviation-inkl": {
+			"record": "de/der-preis-betraegt-inkl-versand-zehn-euro",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-variant-auf-grund": {
+			"record": "de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-typo-ohhne": {
+			"record": "de/er-verliess-das-haus-ohhne-seine-schluessel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-accept-archaic-behufs": {
+			"record": "de/behufs-einer-pruefung-wurden-die-akten-versiegelt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-two-way-auf-acc": {
+			"record": "de/er-legte-das-band-auf-das-geschenk",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-dev-fused-in-dat": {
+			"record": "de/wir-wohnen-in-dem-wald",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adp-fused-piece-i": {
+			"record": "de/ich-bin-im-wald",
+			"target": 0,
+			"status": "Draft"
+		}
 	}
 }

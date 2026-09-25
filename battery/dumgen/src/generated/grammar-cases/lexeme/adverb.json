@@ -1439,5 +1439,287 @@
 			},
 			"explanation": "The written-out multi-word Lemma with every member attested (issue 495)."
 		}
+	},
+	"origins": {
+		"grammar-de-adv-demo-temporal-heute": {
+			"record": "de/wir-treffen-uns-heute-vor-der-bibliothek",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-demonstrative-dazu": {
+			"record": "de/dazu-brauchen-wir-noch-einen-schluessel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-interrogative-warum": {
+			"record": "de/warum-bleibt-das-fenster-heute-geschlossen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-comparative-lieber": {
+			"record": "de/mina-faehrt-lieber-mit-dem-zug-als-mit-dem-auto",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-superlative-am-liebsten": {
+			"record": "de/mina-reist-am-liebsten-im-fruehling",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-typo-gester": {
+			"record": "de/der-regionalzug-kam-gester-puenktlich-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-temporal-morgen": {
+			"record": "de/der-nachtzug-faehrt-morgen-um-sechs-uhr-ab",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-initial-vielleicht": {
+			"record": "de/vielleicht-endet-die-sitzung-etwas-frueher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-demonstrative-damit": {
+			"record": "de/damit-oeffnet-der-hausmeister-das-seitentor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-relative-weshalb": {
+			"record": "de/das-ist-der-grund-weshalb-die-faehre-heute-ausfaellt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-negative-keineswegs": {
+			"record": "de/die-reparatur-ist-keineswegs-abgeschlossen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-multiplicative-zweimal": {
+			"record": "de/die-besucherin-klingelte-zweimal-an-der-hintertuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-positive-viel": {
+			"record": "de/heute-regnete-es-viel-gestern-mehr-und-vorgestern-am-meisten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-cardinal-2x": {
+			"record": "de/ich-war-bereits-2x-in-dieser-werkstatt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-foreign-remotely": {
+			"record": "de/das-internationale-team-arbeitete-diese-woche-remotely",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-comparative-weniger": {
+			"record": "de/seit-dem-umbau-laermt-die-anlage-weniger-als-zuvor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-superlative-am-fruehesten": {
+			"record": "de/von-allen-zuegen-kommt-dieser-am-fruehesten-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-typo-vielleich": {
+			"record": "de/die-vertretung-kommt-vielleich-erst-am-nachmittag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-variant-bisschen": {
+			"record": "de/der-historische-brief-klingt-bisschen-foermlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-ca": {
+			"record": "de/die-wanderung-dauert-ca-drei-stunden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-temporal-gestern": {
+			"record": "de/die-bibliothek-schloss-gestern-schon-um-sechs-uhr",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-locative-hier": {
+			"record": "de/bitte-warten-sie-hier-vor-dem-eingang",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-initial-draussen": {
+			"record": "de/draussen-warten-noch-drei-gaeste",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-demonstrative-dafuer": {
+			"record": "de/dafuer-fehlt-uns-heute-das-passende-werkzeug",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-indefinite-wenig": {
+			"record": "de/nach-dem-umbau-arbeitet-die-pumpe-wenig",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-interrogative-wo": {
+			"record": "de/wo-steht-der-reservierte-kleinbus",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-relative-wobei": {
+			"record": "de/das-war-der-versuch-wobei-die-sicherung-ausfiel",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-negative-nie": {
+			"record": "de/der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-multiplicative-dreimal": {
+			"record": "de/vor-dem-oeffnen-klopfte-sie-dreimal-an",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-comparative-oefter": {
+			"record": "de/seit-dem-fahrplanwechsel-kommt-der-bus-oefter",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-typo-morgne": {
+			"record": "de/die-lieferung-erreicht-uns-morgne-am-vormittag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-archaic-allhier": {
+			"record": "de/der-unterzeichnete-erklaert-allhier-die-uebergabe",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-demo-einerseits-andererseits": {
+			"record": "de/der-plan-ist-einerseits-guenstig-andererseits-riskant",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-teils-teils": {
+			"record": "de/die-antworten-waren-teils-hilfreich-teils-widerspruechlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-andererseits-typo": {
+			"record": "de/die-loesung-ist-einerseits-schnell-anderrerseits-aber-teuer",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-einerseits-andererseits": {
+			"record": "de/die-wohnung-liegt-einerseits-zentral-andererseits-ist-sie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-accept-teils-teils": {
+			"record": "de/der-weg-fuehrte-teils-durch-wald-teils-ueber-offene-felder",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-route-sconj-da": {
+			"record": "de/da-steht-der-hausmeister-schon-vor-dem-tor",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-route-part-doch": {
+			"record": "de/nach-langem-zoegern-kam-leon-dann-doch-zur-sitzung",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-route-adp-davor": {
+			"record": "de/davor-warnt-die-technikerin-in-jedem-kurs",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-route-adj-gern": {
+			"record": "de/die-praktikantin-hilft-den-gaesten-gern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-route-correlating-cconj-auch": {
+			"record": "de/der-jugendchor-singt-und-tanzt-auch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-zb": {
+			"record": "de/das-museum-oeffnet-z-b-am-montag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-zum-beispiel": {
+			"record": "de/das-museum-oeffnet-zum-beispiel-am-montag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-usw": {
+			"record": "de/anna-kauft-obst-gemuese-usw-auf-dem-markt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-usw-final": {
+			"record": "de/anna-kauft-obst-gemuese-brot-usw",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-und-so-weiter": {
+			"record": "de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-ua": {
+			"record": "de/sie-kam-u-a-wegen-des-wetters",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-unter-anderem": {
+			"record": "de/sie-kam-unter-anderem-wegen-des-wetters",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-oae": {
+			"record": "de/sie-mag-aepfel-birnen-o-ae-sehr-gern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-oder-aehnliches": {
+			"record": "de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-zt": {
+			"record": "de/die-strasse-ist-z-t-gesperrt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-zum-teil": {
+			"record": "de/die-strasse-ist-zum-teil-gesperrt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-abbreviation-va": {
+			"record": "de/sie-liest-v-a-romane",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-vor-allem": {
+			"record": "de/sie-liest-vor-allem-romane",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-adv-dev-written-im-allgemeinen": {
+			"record": "de/im-allgemeinen-ist-der-zug-puenktlich",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

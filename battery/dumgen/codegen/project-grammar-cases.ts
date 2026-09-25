@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import type * as Dumspec from "dumspec/types";
 import { z } from "zod";
 import { grammarOutputOf } from "../src/evaluation/grammar-operation.js";
+import { type CaseOrigin, caseOriginOf } from "./case-origin.js";
 
 const flags = {
 	demonstration: z.literal(true).optional(),
@@ -36,6 +37,10 @@ const sidecarSchema = z.strictObject({
 	),
 });
 
+/**
+ * `origins` names the Spec Record target of every case projected from one;
+ * a case the sidecar owns has none.
+ */
 export type ProjectedGrammarCases = {
 	demonstrationIds: string[];
 	evaluationCaseIds: string[];
@@ -49,6 +54,7 @@ export type ProjectedGrammarCases = {
 			contaminationKeys?: string[];
 		}
 	>;
+	origins: Record<string, CaseOrigin>;
 };
 
 /** Reads a route's sidecar from `directory`. */
@@ -75,6 +81,7 @@ export function projectGrammarCases(
 			Object.keys(sidecar.slices).map((name) => [name, []]),
 		),
 		cases: {},
+		origins: {},
 	};
 	for (const [key, entry] of Object.entries(sidecar.cases)) {
 		let id: string;
@@ -84,6 +91,7 @@ export function projectGrammarCases(
 			const record = byId.get(match?.record ?? "");
 			const target = record?.targets[Number(match?.target)];
 			if (!record || !target) throw Error(`No Spec Record target ${key}`);
+			projected.origins[id] = caseOriginOf(record, Number(match?.target));
 			const members = new Set(target.memberSegmentIndices);
 			projected.cases[id] = {
 				input: {

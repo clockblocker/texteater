@@ -1097,5 +1097,177 @@
 			},
 			"explanation": "The explicitly framed unmarked Aphorism is context, not a reason to reopen the marked target's route."
 		}
+	},
+	"origins": {
+		"grammar-de-proverb-demo-morgenstund-attribution": {
+			"record": "de/als-die-enkel-ueber-das-fruehe-aufstehen-klagten-erinnerte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-demo-aller-anfang-typo": {
+			"record": "de/auf-dem-fehlerhaften-uebungsblatt-stand-das-sprichwort-aller",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-demo-was-heute-punctuation": {
+			"record": "de/vor-der-abreise-mahnte-der-vater-was-du-heute-kannst",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-andere-laender": {
+			"record": "de/nachdem-die-reisenden-ueber-ungewohnte-essenszeiten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-ende-gut": {
+			"record": "de/als-die-auffuehrung-trotz-der-panne-gelang-fasste-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-uebung-meister": {
+			"record": "de/nach-dem-ersten-misslungenen-versuch-ermutigte-die-trainerin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-viele-koeche": {
+			"record": "de/als-fuenf-personen-gleichzeitig-den-ablauf-aendern-wollten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-grube": {
+			"record": "de/nachdem-der-intrigant-an-seinem-eigenen-plan-gescheitert-war",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-zuletzt-lacht": {
+			"record": "de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-stille-wasser": {
+			"record": "de/als-der-schweigsame-bewerber-die-beste-analyse-vorlegte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-gelegenheit-diebe": {
+			"record": "de/beim-abschliessen-des-lagerraums-erklaerte-der-hausmeister",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-apfel-stamm": {
+			"record": "de/als-mutter-und-tochter-denselben-beruf-waehlten-kommentierte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-kleinvieh": {
+			"record": "de/als-sich-die-kleinen-monatlichen-betraege-summierten-sagte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-luegen-beine": {
+			"record": "de/nachdem-die-erfundene-ausrede-sofort-aufflog-stellte-der",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-reden-silber": {
+			"record": "de/bevor-die-zeugin-antwortete-erinnerte-ihr-anwalt-sie-an-den",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-wer-rastet": {
+			"record": "de/nach-der-winterpause-begann-die-laufgruppe-wieder-zu",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-repeated-das": {
+			"record": "de/als-der-schueler-sich-ueber-denselben-streich-beschwerte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-wer-zuerst": {
+			"record": "de/vor-dem-kartenverkauf-wies-die-veranstalterin-auf-die",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-wo-rauch": {
+			"record": "de/als-mehrere-voneinander-unabhaengige-hinweise-eintrafen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-wo-wille": {
+			"record": "de/trotz-des-knappen-zeitplans-blieb-die-ingenieurin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-geteiltes-leid": {
+			"record": "de/nachdem-er-seine-sorge-endlich-erzaehlt-hatte-erinnerte-ihn",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-demo-grube-partial": {
+			"record": "de/auf-dem-beschaedigten-tonband-war-nur-der-anfang-wer-anderen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-demo-muss-historical-variant": {
+			"record": "de/in-der-zeitung-von-1985-stand-das-sprichwort-wer-a-sagt-muss",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-casing-viele-koeche": {
+			"record": "de/auf-dem-schild-war-der-sprichwortanfang-faelschlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-stille-wasser-typo": {
+			"record": "de/im-schuelerheft-stand-der-fehlerhafte-satz-stille-wasser",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-wes-brot-archaic": {
+			"record": "de/der-schauspieler-verwendete-im-historischen-stueck-die-alte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-dev-reden-silber-partial": {
+			"record": "de/der-abgerissene-zettel-enthielt-nur-die-halbe-zeile-reden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-glashaus-partial": {
+			"record": "de/die-aufnahme-endete-nach-dem-klar-erkennbaren",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-demo-wo-gehobelt-discontinuous": {
+			"record": "de/wo-gehobelt-wird-da-erklaerte-der-meister-und-setzte-das",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-frueher-vogel-slogan-context": {
+			"record": "de/nachdem-die-gruppe-den-werbeslogan-geiz-ist-geil-verworfen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-eile-discourse-context": {
+			"record": "de/nach-der-begruessung-guten-morgen-bremste-die-ausbilderin",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-betten-idiom-context": {
+			"record": "de/obwohl-im-gespraech-zuvor-die-redewendung-den-nagel-auf-den",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-doppelt-quotation-context": {
+			"record": "de/die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-proverb-accept-gaul-aphorism-context": {
+			"record": "de/nach-dem-aphorismus-alt-werden-heisst-sehend-werden",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }

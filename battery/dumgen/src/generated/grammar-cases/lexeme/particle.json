@@ -957,5 +957,217 @@
 				"realizationCoverage": "Full"
 			}
 		}
+	},
+	"origins": {
+		"grammar-de-part-demo-negative-nicht": {
+			"record": "de/heute-faehrt-der-letzte-bus-nicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-infinitival-zu": {
+			"record": "de/mina-hofft-das-paket-morgen-zu-erhalten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-modal-halt": {
+			"record": "de/dann-warten-wir-halt-bis-montag",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-focus-sogar": {
+			"record": "de/lea-hat-sogar-den-schwierigen-zusatztest-bestanden",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-typo-ebn": {
+			"record": "de/das-ist-ebn-der-entscheidende-unterschied",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-archaic-nit": {
+			"record": "de/das-historische-woerterbuch-kennzeichnet-nit-ausdruecklich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-distinct-archaic-ni": {
+			"record": "de/das-fachlexikon-fuehrt-die-historische-negationspartikel-ni",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-foreign-yes": {
+			"record": "de/im-deutsch-englischen-gespraech-sagte-sie-das-ist-yes-ganz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-demo-abbreviation-aff": {
+			"record": "de/in-der-codeliste-wird-die-affirmative-partikel-mit-aff",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-negative-initial": {
+			"record": "de/nicht-jeder-vorschlag-wurde-angenommen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-answer-ja": {
+			"record": "de/auf-die-kontrollfrage-antwortete-sie-klar-mit-ja",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-foreign-not": {
+			"record": "de/im-deutsch-englischen-gespraech-sagte-er-das-ist-not-okay",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-abbreviation-n": {
+			"record": "de/im-transkript-wurde-die-partikel-nicht-als-n-abgekuerzt",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-doch": {
+			"record": "de/komm-doch-nach-der-arbeit-kurz-vorbei",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-denn": {
+			"record": "de/wie-hast-du-das-denn-so-schnell-geschafft",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-wohl": {
+			"record": "de/der-zug-wird-wohl-erst-am-abend-eintreffen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-mal": {
+			"record": "de/sieh-mal-im-oberen-fach-nach",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-ja": {
+			"record": "de/du-kennst-den-weg-ja-bereits",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-focus-nur": {
+			"record": "de/fuer-die-reparatur-braucht-sie-nur-einen-schraubendreher",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-focus-selbst": {
+			"record": "de/selbst-der-erfahrenste-techniker-uebersah-den-riss",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-intensifying-sehr": {
+			"record": "de/das-ergebnis-ist-sehr-viel-besser-als-erwartet",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-answer-doch": {
+			"record": "de/auf-die-negative-frage-antwortete-pavel-entschieden-mit-doch",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-infinitival-beside-adp": {
+			"record": "de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-focus-beside-adv": {
+			"record": "de/er-arbeitet-heute-bloss-vormittags-von-zu-hause",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-beside-sconj": {
+			"record": "de/sie-ist-eben-gegangen-weil-der-bus-schon-kam",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-modal-aber-not-cconj": {
+			"record": "de/das-ist-aber-eine-erfreuliche-nachricht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-beside-verb-particle": {
+			"record": "de/hoer-mal-mit-dem-laerm-auf",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-variant-nich": {
+			"record": "de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-typo-dohc": {
+			"record": "de/komm-dohc-bitte-kurz-herein",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-dev-other-eigentlich": {
+			"record": "de/was-wolltest-du-eigentlich-noch-erzaehlen",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-negative-nicht": {
+			"record": "de/der-wartungsbericht-wurde-gestern-nicht-veroeffentlicht",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-infinitival-zu": {
+			"record": "de/die-technikerin-versucht-den-fehler-vor-mittag-zu-beheben",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-answer-doch": {
+			"record": "de/auf-die-frage-ob-sie-nicht-teilnehmen-koenne-antwortete-sie",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-foreign-never": {
+			"record": "de/im-deutsch-englischen-dialog-sagte-kim-das-wuerde-ich-never",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-abbreviation-pos": {
+			"record": "de/in-der-tag-legende-wird-die-positive-antwortpartikel-mit-pos",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-modal-bloss": {
+			"record": "de/wie-konnte-der-schluessel-bloss-hinter-den-schrank-geraten",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-focus-lediglich": {
+			"record": "de/die-aenderung-betrifft-lediglich-den-letzten-absatz",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-intensifying-gar": {
+			"record": "de/die-messwerte-waren-gar-nicht-so-ungewoehnlich",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-modal-ja-not-intj": {
+			"record": "de/der-neue-ablauf-ist-ja-deutlich-einfacher-als-der-alte",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-typo-nciht": {
+			"record": "de/die-datei-wurde-nciht-rechtzeitig-gespeichert",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-explicit-variant-nedd": {
+			"record": "de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
+			"target": 0,
+			"status": "Reviewed"
+		},
+		"grammar-de-part-accept-v2-distinct-archaic-en": {
+			"record": "de/das-historische-lexikon-fuehrt-die-negationspartikel-en-als",
+			"target": 0,
+			"status": "Reviewed"
+		}
 	}
 }
