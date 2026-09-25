@@ -5,6 +5,7 @@
 export const READING_BLOCK_KIND_VALUES = [
 	"Header",
 	"SourceContexts",
+	"Valency",
 	"Definition",
 	"Translations",
 	"Relations",
@@ -38,6 +39,7 @@ export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	order: [
 		"Header",
 		"SourceContexts",
+		"Valency",
 		"Relations",
 		"Translations",
 		"Definition",

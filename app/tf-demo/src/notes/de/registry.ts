@@ -15,6 +15,7 @@ import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shad
 import { renderDefaultSurfaceHeader } from "../universal/blocks/renderers/surface/header/default";
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
 import { renderHeaderDeLexemeVerb } from "./block-renderer-overrides/reading/header/lexeme-verb";
+import { renderDeReadingValency } from "./block-renderers/reading/valency/default";
 
 const READING_BASE = {
 	Header: DefaultReadingHeaderRenderer,
@@ -27,17 +28,22 @@ const READING_RELATIONAL = {
 	...READING_BASE,
 	Relations: renderDefaultReadingRelations,
 };
+/** The routes whose Readings may hold a Valency Frame (Dumrel's valency policy). */
+const READING_VALENT = {
+	...READING_RELATIONAL,
+	Valency: renderDeReadingValency,
+};
 
 const READING = {
 	Lexeme: {
-		ADJ: READING_RELATIONAL,
+		ADJ: READING_VALENT,
 		ADP: READING_RELATIONAL,
 		ADV: READING_RELATIONAL,
 		AUX: READING_RELATIONAL,
 		CCONJ: READING_RELATIONAL,
 		DET: READING_RELATIONAL,
 		INTJ: READING_RELATIONAL,
-		NOUN: READING_RELATIONAL,
+		NOUN: READING_VALENT,
 		NUM: READING_RELATIONAL,
 		PART: READING_RELATIONAL,
 		PRON: READING_RELATIONAL,
@@ -45,14 +51,14 @@ const READING = {
 		PUNCT: READING_BASE,
 		SCONJ: READING_RELATIONAL,
 		SYM: READING_RELATIONAL,
-		VERB: { ...READING_RELATIONAL, Header: renderHeaderDeLexemeVerb },
+		VERB: { ...READING_VALENT, Header: renderHeaderDeLexemeVerb },
 		X: READING_BASE,
 	},
 	Phraseme: {
 		Aphorism: READING_RELATIONAL,
-		Collocation: READING_RELATIONAL,
+		Collocation: READING_VALENT,
 		DiscourseFormula: READING_RELATIONAL,
-		Idiom: READING_RELATIONAL,
+		Idiom: READING_VALENT,
 		Proverb: READING_RELATIONAL,
 	},
 	Morpheme: {

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
@@ -23,6 +24,7 @@ import {
 	MAX_SOURCE_TEXT_CHARACTERS,
 } from "../server/textSubmissionLimits";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
+import { renderNote } from "../src/notes";
 import {
 	createTestConvex,
 	submitText,
@@ -326,6 +328,73 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 	});
 	expect(note.relations).toHaveLength(1);
 	expect(note.structuralReferences).toHaveLength(1);
+});
+
+test("a stored Valency Frame reaches the Reading Note and renders its Valency Block", async () => {
+	const t = createTestConvex();
+	const lemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm: "aufpassen",
+		coreFeatures: {
+			hasSepPrefix: "auf",
+			lexicallyReflexive: null,
+			verbType: null,
+		},
+	} as const;
+	const valency = [
+		{
+			status: "Optional",
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "auf",
+					coreFeatures: {
+						abbr: null,
+						adpType: "Prep",
+						extPos: null,
+						foreign: null,
+						governedCase: null,
+						partType: null,
+					},
+				},
+				case: "Acc",
+				referent: "Either",
+			},
+		},
+	];
+	const reading = await insertReading(t, {
+		unitKind: "Reading",
+		lemma,
+		emojiDescription: "👀",
+	});
+	await t.run(async (ctx) => {
+		await ctx.db.insert("accumulatedKnowledge", {
+			ownerReadingKey: reading.readingKey,
+			knowledge: { valency },
+			status: "Partial",
+			updatedAt: 1,
+		});
+	});
+
+	const note = await t.query(api.readingNotes.get, {
+		readingId: reading.readingId,
+		visitorId: "visitor-1",
+	});
+
+	if (!note) throw new Error("Expected a Reading Note.");
+	expect(note.knowledge.valency).toEqual(valency);
+	const markup = renderToStaticMarkup(renderNote({ noteData: note }));
+	expect(markup).toContain('aria-label="Valency"');
+	expect(markup).toContain(
+		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN/etw</span>',
+	);
 });
 
 test("note and text queries expose target-specific interfaces", () => {

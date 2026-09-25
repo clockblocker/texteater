@@ -3,6 +3,7 @@ import { z } from "zod";
 export const noteBlockKindSchema = z.enum([
 	"Header",
 	"SourceContexts",
+	"Valency",
 	"Definition",
 	"Translations",
 	"PersonalAnnotation",

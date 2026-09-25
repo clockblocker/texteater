@@ -55,6 +55,7 @@ const LANGUAGE_ORDER: readonly ReadingBlockKind[] = [
 	"Translations",
 	"SourceContexts",
 	"Header",
+	"Valency",
 	"PersonalAnnotation",
 ];
 const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
@@ -62,6 +63,7 @@ const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
 	"Header",
 	"SourceContexts",
 	"Definition",
+	"Valency",
 	"Relations",
 	"PersonalAnnotation",
 ];

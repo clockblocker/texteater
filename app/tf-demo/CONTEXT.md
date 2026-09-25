@@ -36,6 +36,11 @@ every form.
 **Source Contexts Block**:
 The pinned Block listing where the Subject was met, most recent first.
 
+**Valency Block**:
+The Block showing a Reading's Lemma with its Valency Frame, such as
+`>passen (auf jN/etw) auf<`. It is computed from the frame at render time and
+never stored as text. A Reading without a frame has no Valency Block.
+
 **Anchor Blocks**:
 The Heading and Source Contexts, which stay visible across every form so the
 Presentation reads as one thing while it changes.

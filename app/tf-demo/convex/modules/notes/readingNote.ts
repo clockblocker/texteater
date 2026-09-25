@@ -98,6 +98,35 @@ const structuralShadowProjectionValidator = v.object({
 	}),
 });
 
+const valencyReferentValidator = v.union(
+	v.literal("Someone"),
+	v.literal("Something"),
+	v.literal("Either"),
+);
+const governedCaseValidator = v.union(
+	v.literal("Acc"),
+	v.literal("Dat"),
+	v.literal("Gen"),
+);
+
+/** A German Valency Frame Slot, as the Valency Block reads it. */
+const valencySlotValidator = v.object({
+	status: v.union(v.literal("Required"), v.literal("Optional")),
+	complement: v.union(
+		v.object({
+			kind: v.literal("Case"),
+			case: v.union(v.literal("Nom"), governedCaseValidator),
+			referent: valencyReferentValidator,
+		}),
+		v.object({
+			kind: v.literal("Preposition"),
+			preposition: readingValueLemmaValidator,
+			case: governedCaseValidator,
+			referent: valencyReferentValidator,
+		}),
+	),
+});
+
 const readingKnowledgeValidator = v.object({
 	transcription: v.optional(v.string()),
 	definition: v.optional(v.string()),
@@ -109,8 +138,7 @@ const readingKnowledgeValidator = v.object({
 	),
 	morphologicalTree: v.optional(v.any()),
 	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
-	/** The Valency Frame is stored Knowledge the Note does not render yet. */
-	valency: v.optional(v.any()),
+	valency: v.optional(v.array(valencySlotValidator)),
 	participleSource: v.optional(readingValueLemmaValidator),
 	semanticRelations: v.optional(
 		v.union(
