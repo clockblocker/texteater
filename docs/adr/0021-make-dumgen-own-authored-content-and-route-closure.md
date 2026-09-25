@@ -40,3 +40,7 @@ Catalog Miss, including for a Fixed Population inside an Open Route; unlisted
 members of that Open Route still follow normal production. This trades catalog
 maintenance for deterministic content and removes encounter-time generation as
 a way to conceal an incomplete authored member.
+
+Amended on 2026-09-25 by [ADR 0037](./0037-make-the-dumling-spec-own-the-golden-corpus-and-classification-rules.md):
+evaluation gold and classification rules move to `dumspec`. Fixed Catalogs,
+Fixed Populations and their authored Knowledge stay in Dumgen.
