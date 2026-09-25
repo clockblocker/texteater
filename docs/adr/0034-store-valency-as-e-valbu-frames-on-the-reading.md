@@ -72,9 +72,20 @@ routes to the governor. `normalizedSurface` projects only Fixed members:
 
 Intake's Sentence Analysis replaces `government` with the realized
 `slots: { governor, marker: offset | null, filler: target id | null, complement, realizedCase }[]`.
-It lists only slots the sentence realizes. A passive clause is converted back
-to the active frame through the Surface's `passive`
-([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)). In
+It lists only preposition slots the sentence realizes, for every governor
+Kind. Case slots (bare Nom, Acc, Dat or Gen noun phrases) come only from the
+Knowledge call's frame. The frame is already complete without them, and
+Source Contexts already show the sentence. A free dative would Contribute a
+wrong slot (`Ich backe dir einen Kuchen` → Dat on `backen`). Each bare noun
+phrase would also cost one more import-time question. Decided in
+[#605](https://github.com/clockblocker/texteater/issues/605).
+
+A preposition slot keeps its case under passive (`um Geduld` stays `um` +
+Acc), so intake converts no passives. Asking about bare Dat and Gen objects
+stays an option ([#609](https://github.com/clockblocker/texteater/issues/609)).
+If intake takes it up, it must convert a passive back to the active frame
+through the Surface's `passive`
+([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)): in
 `Sie wurde um Geduld gebeten`, the Nom `Sie` fills the Acc slot of `bitten`.
 
 Some words realize a governed preposition and its filler at once: German
