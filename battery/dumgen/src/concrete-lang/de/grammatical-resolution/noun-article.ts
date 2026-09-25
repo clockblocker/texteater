@@ -300,6 +300,9 @@ export function resolveNounArticle(
 		if (cases.length === 1) bag.case = String(cases[0]);
 		else if (speculative !== undefined && cases.includes(speculative))
 			bag.case = speculative;
+		// Without an article nothing narrows Case, so asking again would
+		// repeat the same question: an automatic retry (#445).
+		else if (!candidate) return fail("Unresolved noun Case");
 		else {
 			// The speculative answer is incompatible with the attached article:
 			// ask again over the compatible values only.
@@ -308,9 +311,7 @@ export function resolveNounArticle(
 				`${route}/case`,
 				{
 					...markedContext(encounter),
-					article: candidate
-						? `${candidate.realization}: ${candidate.attested} supplies ${candidate.form}`
-						: "No attached article",
+					article: `${candidate.realization}: ${candidate.attested} supplies ${candidate.form}`,
 				},
 				{
 					[casePath]: featureQuestion(kind, casePath, {

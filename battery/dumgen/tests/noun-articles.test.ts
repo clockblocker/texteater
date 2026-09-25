@@ -784,6 +784,36 @@ for (const [text, caseValue] of [
 	});
 }
 
+test("an unresolved Case without an article fails instead of asking again", async () => {
+	const fixture = example(
+		"Im Haus liegt Holz",
+		["Holz"],
+		"Holz",
+		"",
+		"None",
+		"Nom",
+		"Sing",
+		"Neut",
+	);
+	const traces: OperationTrace[] = [];
+	await expect(
+		Effect.runPromise(
+			createDumgen({
+				...grammarFixture(fixture.golden, {
+					"surface.inflectionalFeatures.case": "Unresolved",
+				}),
+				onOperation: (trace) => traces.push(trace),
+			}).resolveGrammar({
+				...fixture.encounter,
+				contextAvailable: false,
+			}),
+		),
+	).rejects.toThrow("Unresolved noun Case");
+	expect(traces[0]?.calls.map((call) => call.request.route)).toEqual([
+		"de/Lexeme/NOUN/features",
+	]);
+});
+
 for (const [form, caseValue, number, gender] of [
 	["der", "Dat", "Sing", "Fem"],
 	["der", "Gen", "Sing", "Fem"],
