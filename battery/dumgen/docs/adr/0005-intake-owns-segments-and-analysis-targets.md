@@ -26,9 +26,13 @@ pronoun type) and the cell stays a grammar question. Identity implies route:
 a Selected head's Kind replaces the route vote for that target. A non-head
 role inherits its parent's route: the article inside a NOUN target, the
 auxiliary, expletive or reflexive inside a VERB target, any member of a
-Phraseme. Their identities are Derived by code from the head's grammar and
-the target's shape (ADR 0024 for the article, the derivation rules of the
-intake lab for the auxiliary), never asked and never stored.
+Phraseme. The identity Choice is still asked for every occurrence whose
+spelling enumerates candidates, because roles come from the same call, but
+only a target's head feeds its Identity Mass. A non-head's identity is
+Derived by code from the head's grammar and the target's shape
+([system ADR 0035](../../../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md)
+and system ADR 0032 for the article, the derivation rules of the intake lab
+for the auxiliary) and never stored.
 
 The numbers, measured in `battery/dumgen/prototypes/intake/` (README) on
 2026-09-18 to 2026-09-21, one jev call per sentence:
@@ -96,3 +100,8 @@ Amended by ADR 0006 on 2026-09-21: the flat partition becomes two layers.
 Phraseme Target nests exactly one layer of Lexeme Targets and the Phraseme
 layer has its own gold. The membership matrix, the group route vote, the
 roles, the identity selection and the click-time fallback stand.
+
+Amended on 2026-09-25 to match the code: non-head occurrences are asked the
+identity Choice too, and only the head's answer is used. The article's
+Derived identity now cites system ADRs 0035 and 0032, which replaced system
+ADR 0024 for DET cells.
