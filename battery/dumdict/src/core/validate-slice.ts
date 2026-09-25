@@ -17,7 +17,6 @@ import {
 	parseReadingKnowledgeForDumdictRuntime,
 	unwrapDumdictParse,
 } from "../parsing/lightweight-parsers";
-import { DumdictLanguageMismatchError } from "../public";
 import type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,
@@ -42,17 +41,6 @@ import {
 	pendingSemanticRelationLocatorKey,
 } from "./pending";
 
-function assertLanguage(
-	expected: Dumling.Language,
-	actual: Dumling.Language | undefined,
-) {
-	if (actual !== expected)
-		throw new DumdictLanguageMismatchError({
-			expectedLanguage: expected,
-			actualLanguage: actual,
-		});
-}
-
 function assertNoDuplicates(values: string[], context: string) {
 	if (new Set(values).size !== values.length)
 		throw new Error(`${context} contains duplicates.`);
@@ -63,7 +51,6 @@ function validateLemmaRecord<L extends Dumling.Language>(
 	record: LemmaRecord<L>,
 ) {
 	unwrapDumdictParse(parseAsLemmaRecord(record, expected));
-	assertLanguage(expected, record.lemma.language);
 }
 
 function validateReading<L extends Dumling.Language>(
@@ -71,7 +58,6 @@ function validateReading<L extends Dumling.Language>(
 	reading: Dumling.Reading<L>,
 ) {
 	unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected));
-	assertLanguage(expected, reading.lemma.language);
 	if (
 		reading.emojiDescription.trim().normalize("NFC") !==
 		reading.emojiDescription
@@ -119,8 +105,8 @@ function validateSurfaceEntry<L extends Dumling.Language>(
 	entry: SurfaceEntry<L>,
 ) {
 	unwrapDumdictParse(parseAsSurfaceEntry(entry, expected));
-	assertLanguage(expected, entry.surface.lemma.language);
-	assertLanguage(expected, entry.surface.lemma.language);
+	// The parse checks id and owner on normalized forms and is discarded;
+	// these check the raw entry that planning reads.
 	if (entry.id !== makeSurfaceId(expected, entry.surface))
 		throw new Error("surface entry id does not match its derived id.");
 	if (!sameLemma(entry.ownerLemma, entry.surface.lemma))
@@ -137,16 +123,6 @@ function validatePendingRecord<L extends Dumling.Language>(
 		parseAsPendingSemanticRelationRecord(record, expected),
 	);
 	validateReading(expected, parsedRecord.sourceReading);
-	assertLanguage(expected, parsedRecord.pending.target.language);
-	if (
-		parsedRecord.pending.target.language !==
-		parsedRecord.sourceReading.lemma.language
-	)
-		throw new Error(
-			"Pending Semantic Relation endpoints must use the same language.",
-		);
-	if (!directSemanticRelationValues.includes(parsedRecord.locator.relation))
-		throw new Error("Invalid Semantic Relation.");
 	assertPendingSemanticRelationRecordIdentity(parsedRecord);
 }
 
