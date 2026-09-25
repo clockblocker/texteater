@@ -1,0 +1,43 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie verkauft Kinder-- und Jugendbücher.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verkauft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kinder-" },
+		{ "kind": "Punctuation", "text": "-" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jugendbücher" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#82",
+				"url": "https://github.com/clockblocker/texteater/issues/82",
+				"supports": "No Target Kinder-"
+			},
+			{
+				"title": "clockblocker/texteater#93",
+				"url": "https://github.com/clockblocker/texteater/issues/93",
+				"supports": "No Target Kinder-"
+			}
+		]
+	},
+	"targets": [],
+	"noTarget": [
+		{
+			"segment": 4,
+			"reason": "Under issue #82 and #93 policy, the malformed double-hyphen fragment has no defensible route and no licensed suspended-compound target. Source: https://universaldependencies.org/u/pos/NOUN.html"
+		}
+	]
+}

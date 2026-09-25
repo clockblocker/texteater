@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Auf dem Zettel steht Kinder-.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zettel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kinder-" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#82",
+				"url": "https://github.com/clockblocker/texteater/issues/82",
+				"supports": "No Target Kinder-"
+			},
+			{
+				"title": "clockblocker/texteater#93",
+				"url": "https://github.com/clockblocker/texteater/issues/93",
+				"supports": "No Target Kinder-"
+			}
+		]
+	},
+	"targets": [],
+	"noTarget": [
+		{
+			"segment": 8,
+			"reason": "Under issue #82 and #93 policy, a trailing fragment without a visible right conjunct has no defensible route. Source: https://universaldependencies.org/u/pos/NOUN.html"
+		}
+	]
+}

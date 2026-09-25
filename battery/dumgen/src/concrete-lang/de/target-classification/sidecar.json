@@ -36,9 +36,13 @@
 		"target-de-suspended-compound-and-left": {},
 		"target-de-suspended-compound-and-right": {},
 		"target-de-suspended-compound-or-left": {},
-		"target-de-suspended-compound-context-free": {},
+		"de/auf-dem-zettel-steht-kinder@8": {
+			"id": "target-de-suspended-compound-context-free"
+		},
 		"target-de-suspended-compound-en-dash-lookalike": {},
-		"target-de-suspended-compound-malformed-double-hyphen": {},
+		"de/sie-verkauft-kinder-und-jugendbuecher-2@4": {
+			"id": "target-de-suspended-compound-malformed-double-hyphen"
+		},
 		"target-de-diagnostic-fusion-am": {},
 		"target-de-diagnostic-paired-je-near-waermer": {},
 		"target-de-diagnostic-paired-je-near-schoener": {},
@@ -323,8 +327,10 @@
 		"target-de-demo-symbol-percent": {
 			"demonstration": true
 		},
-		"target-de-core-unresolved-qzxv": {
-			"demonstration": true
+		"de/er-sagt-qzxv@4": {
+			"id": "target-de-core-unresolved-qzxv",
+			"demonstration": true,
+			"contaminationKeys": ["target-stimulus:qzxv"]
 		},
 		"target-de-diagnostic-idiom-oel-click-ins": {
 			"demonstration": true
@@ -355,107 +361,168 @@
 		"target-de-noun-article-owner-article": {
 			"demonstration": true
 		},
-		"target-de-noun-article-shared-first": {
-			"demonstration": true
+		"de/der-aufstieg-und-abstieg@6": {
+			"id": "target-de-noun-article-shared-first",
+			"demonstration": true,
+			"contaminationKeys": ["noun-article-shared-first"],
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
 		},
-		"target-de-demo-exists-0": {
-			"demonstration": true
+		"de/es-gibt-brot@0": {
+			"id": "target-de-demo-exists-0",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-exists"]
 		},
-		"target-de-demo-exists-2": {
-			"demonstration": true
+		"de/es-gibt-brot@2": {
+			"id": "target-de-demo-exists-2",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-exists"]
 		},
-		"target-de-demo-weather-0": {
-			"demonstration": true
+		"de/es-regnet-heute@0": {
+			"id": "target-de-demo-weather-0",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-weather"]
 		},
-		"target-de-demo-weather-2": {
-			"demonstration": true
+		"de/es-regnet-heute@2": {
+			"id": "target-de-demo-weather-2",
+			"demonstration": true,
+			"contaminationKeys": ["subject-es:demo-weather"]
 		},
-		"target-de-subject-question-0": {
-			"evaluation": true
+		"de/gibt-es-einen-ausweg@0": {
+			"id": "target-de-subject-question-0",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-question"]
 		},
-		"target-de-subject-question-2": {
-			"evaluation": true
+		"de/gibt-es-einen-ausweg@2": {
+			"id": "target-de-subject-question-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-question"]
 		},
-		"target-de-subject-past-0": {
-			"evaluation": true
+		"de/es-gab-damals-hoffnung@0": {
+			"id": "target-de-subject-past-0",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-past"]
 		},
-		"target-de-subject-past-2": {
-			"evaluation": true
+		"de/es-gab-damals-hoffnung@2": {
+			"id": "target-de-subject-past-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-past"]
 		},
-		"target-de-subject-subordinate-2": {
-			"evaluation": true
+		"de/weil-es-dort-noch-moeglichkeiten-gibt@2": {
+			"id": "target-de-subject-subordinate-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-subordinate"]
 		},
-		"target-de-subject-subordinate-10": {
-			"evaluation": true
+		"de/weil-es-dort-noch-moeglichkeiten-gibt@10": {
+			"id": "target-de-subject-subordinate-10",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-subordinate"]
 		},
-		"target-de-subject-weather-2": {
-			"evaluation": true
+		"de/heute-regnet-es-wieder@2": {
+			"id": "target-de-subject-weather-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-weather"]
 		},
-		"target-de-subject-weather-4": {
-			"evaluation": true
+		"de/heute-regnet-es-wieder@4": {
+			"id": "target-de-subject-weather-4",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-weather"]
 		},
-		"target-de-subject-governed-0": {
-			"evaluation": true
+		"de/es-geht-heute-um-geld@0": {
+			"id": "target-de-subject-governed-0",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-governed"]
 		},
-		"target-de-subject-governed-2": {
-			"evaluation": true
+		"de/es-geht-heute-um-geld@2": {
+			"id": "target-de-subject-governed-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-governed"]
 		},
-		"target-de-subject-governed-6": {
-			"evaluation": true
+		"de/es-geht-heute-um-geld@6": {
+			"id": "target-de-subject-governed-6",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-governed"]
 		},
-		"target-de-subject-reflexive-0": {
-			"evaluation": true
+		"de/es-handelt-sich-um-einen-fehler@0": {
+			"id": "target-de-subject-reflexive-0",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-reflexive"]
 		},
-		"target-de-subject-reflexive-2": {
-			"evaluation": true
+		"de/es-handelt-sich-um-einen-fehler@2": {
+			"id": "target-de-subject-reflexive-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-reflexive"]
 		},
-		"target-de-subject-reflexive-4": {
-			"evaluation": true
+		"de/es-handelt-sich-um-einen-fehler@4": {
+			"id": "target-de-subject-reflexive-4",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-reflexive"]
 		},
-		"target-de-subject-reflexive-6": {
-			"evaluation": true
+		"de/es-handelt-sich-um-einen-fehler@6": {
+			"id": "target-de-subject-reflexive-6",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:subject-reflexive"]
 		},
 		"target-de-referential-es-0": {
 			"evaluation": true
 		},
-		"target-de-referential-es-2": {
-			"evaluation": true
+		"de/es-liegt-auf-dem-tisch@2": {
+			"id": "target-de-referential-es-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:referential-es"]
 		},
 		"target-de-positional-es-0": {
 			"evaluation": true
 		},
-		"target-de-positional-es-2": {
-			"evaluation": true
+		"de/es-kamen-gaeste@2": {
+			"id": "target-de-positional-es-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:positional-es"]
 		},
 		"target-de-anticipatory-es-0": {
 			"evaluation": true
 		},
-		"target-de-anticipatory-es-2": {
-			"evaluation": true
+		"de/es-freut-mich-dass-du-kommst@2": {
+			"id": "target-de-anticipatory-es-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:anticipatory-es"]
 		},
 		"target-de-object-es-4": {
 			"evaluation": true
 		},
-		"target-de-object-es-2": {
-			"evaluation": true
+		"de/sie-meint-es-gut-mit-dir@2": {
+			"id": "target-de-object-es-2",
+			"evaluation": true,
+			"contaminationKeys": ["subject-es:object-es"]
 		},
 		"target-de-noun-article-owner-noun": {
 			"evaluation": true
 		},
-		"target-de-noun-article-adjective-article": {
-			"evaluation": true
+		"de/der-steile-aufstieg@0": {
+			"id": "target-de-noun-article-adjective-article",
+			"evaluation": true,
+			"contaminationKeys": ["noun-article-adjective-article"],
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
 		},
-		"target-de-noun-article-long-coordination": {
-			"evaluation": true
+		"de/der-aufstieg-und-abstieg-und-umstieg@10": {
+			"id": "target-de-noun-article-long-coordination",
+			"evaluation": true,
+			"contaminationKeys": ["noun-article-long-coordination"],
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
 		},
-		"target-de-noun-article-repeated-article": {
-			"evaluation": true
+		"de/der-aufstieg-und-der-abstieg@8": {
+			"id": "target-de-noun-article-repeated-article",
+			"evaluation": true,
+			"contaminationKeys": ["noun-article-repeated-article"],
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
 		},
 		"target-de-noun-article-nested-head": {
 			"evaluation": true
 		},
-		"target-de-noun-article-nested-complement": {
-			"evaluation": true
+		"de/der-anfang-des-aufstiegs@6": {
+			"id": "target-de-noun-article-nested-complement",
+			"evaluation": true,
+			"contaminationKeys": ["noun-article-nested-complement"],
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
 		},
 		"target-de-noun-article-cross-quoted-click-der-of-aufstieg": {
 			"evaluation": true
@@ -766,29 +833,56 @@
 		"target-de-route-phraseme-proverb-click-mund": {
 			"evaluation": true
 		},
-		"target-de-core-entscheidung-click-entscheidung": {
-			"evaluation": true
+		"de/der-ausschuss-trifft-eine-entscheidung@8": {
+			"id": "target-de-core-entscheidung-click-entscheidung",
+			"evaluation": true,
+			"contaminationKeys": [
+				"target-lexical-unit:eine-entscheidung-treffen"
+			],
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
-		"target-de-core-entscheidung-click-trifft": {
-			"evaluation": true
+		"de/der-ausschuss-trifft-eine-entscheidung@4": {
+			"id": "target-de-core-entscheidung-click-trifft",
+			"evaluation": true,
+			"contaminationKeys": [
+				"target-lexical-unit:eine-entscheidung-treffen"
+			],
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
-		"target-de-core-entscheidung-click-eine": {
-			"evaluation": true
+		"de/der-ausschuss-trifft-eine-entscheidung@6": {
+			"id": "target-de-core-entscheidung-click-eine",
+			"evaluation": true,
+			"contaminationKeys": [
+				"target-lexical-unit:eine-entscheidung-treffen"
+			],
+			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
 		"target-de-route-construction-fusion": {
 			"evaluation": true
 		},
-		"target-de-fused-article-im-wald-click-m": {
-			"evaluation": true
+		"de/ich-bin-im-wald@5": {
+			"id": "target-de-fused-article-im-wald-click-m",
+			"evaluation": true,
+			"contaminationKeys": ["target-fusion:im-wald"],
+			"explanation": "The article piece m of im stands for dem and is the owned article of Wald, joining the noun like a standalone article (ADR 0035)."
 		},
-		"target-de-fused-article-im-wald-click-wald": {
-			"evaluation": true
+		"de/ich-bin-im-wald@7": {
+			"id": "target-de-fused-article-im-wald-click-wald",
+			"evaluation": true,
+			"contaminationKeys": ["target-fusion:im-wald"],
+			"explanation": "Wald owns the article piece m of im, so the noun target is m and Wald (ADR 0035)."
 		},
-		"target-de-fused-article-im-wald-click-i": {
-			"evaluation": true
+		"de/ich-bin-im-wald@4": {
+			"id": "target-de-fused-article-im-wald-click-i",
+			"evaluation": true,
+			"contaminationKeys": ["target-fusion:im-wald"],
+			"explanation": "The preposition piece i of im stands for in and is a singleton ADP; its article piece belongs to Wald (ADR 0035)."
 		},
-		"target-de-fused-article-aufs-ende-click-s": {
-			"evaluation": true
+		"de/er-wartet-aufs-ende@5": {
+			"id": "target-de-fused-article-aufs-ende-click-s",
+			"evaluation": true,
+			"contaminationKeys": ["target-fusion:aufs-ende"],
+			"explanation": "s in aufs stands for das and is the owned article of Ende, while auf is the preposition wartet governs (ADR 0035)."
 		},
 		"target-de-route-lexeme-cconj-click-je": {
 			"evaluation": true
@@ -838,11 +932,15 @@
 		"target-de-boundary-adjunct-click-wiese": {
 			"evaluation": true
 		},
-		"target-de-boundary-inherent-reflexive-click-schaemt": {
-			"evaluation": true
+		"de/er-schaemt-sich@2": {
+			"id": "target-de-boundary-inherent-reflexive-click-schaemt",
+			"evaluation": true,
+			"explanation": "IDS treats the pronoun of obligatorily reflexive verbs as lexically required, unlike an ordinary anaphoric object. Issue #82 product policy maps schämt and sich together at original indices [2,4], but keeps the contextual wäscht and sich targets separate at [2] and [4]. Source: https://grammis.ids-mannheim.de/progr%40mm/5205"
 		},
-		"target-de-boundary-inherent-reflexive-click-sich": {
-			"evaluation": true
+		"de/er-schaemt-sich@4": {
+			"id": "target-de-boundary-inherent-reflexive-click-sich",
+			"evaluation": true,
+			"explanation": "IDS treats the pronoun of obligatorily reflexive verbs as lexically required, unlike an ordinary anaphoric object. Issue #82 product policy maps schämt and sich together at original indices [2,4], but keeps the contextual wäscht and sich targets separate at [2] and [4]. Source: https://grammis.ids-mannheim.de/progr%40mm/5205"
 		},
 		"target-de-boundary-optional-reflexive-click-waescht": {
 			"evaluation": true
@@ -883,14 +981,18 @@
 		"target-de-boundary-lexicalized-participle-click-ist": {
 			"evaluation": true
 		},
-		"target-de-boundary-lexicalized-participle-click-verrueckt": {
-			"evaluation": true
+		"de/der-mann-ist-voellig-verrueckt@8": {
+			"id": "target-de-boundary-lexicalized-participle-click-verrueckt",
+			"evaluation": true,
+			"explanation": "verrückt 'crazy' comes from no sense of verrücken and takes völlig, sehr and comparison, so it is a lexicalized ADJ and copular ist stays separate (ADR 0033)."
 		},
 		"target-de-boundary-participle-one-attributive-lachende": {
 			"evaluation": true
 		},
-		"target-de-boundary-participle-one-adverbial-lachend": {
-			"evaluation": true
+		"de/er-kam-lachend-herein@4": {
+			"id": "target-de-boundary-participle-one-adverbial-lachend",
+			"evaluation": true,
+			"explanation": "An adverbial participle is adjectival (ADR 0036): lachend is a singleton ADJ with Participle Source lachen."
 		},
 		"target-de-boundary-modal-click-muss": {
 			"evaluation": true
@@ -898,11 +1000,15 @@
 		"target-de-boundary-modal-click-schlafen": {
 			"evaluation": true
 		},
-		"target-de-boundary-modal-main-predicate-click-kann": {
-			"evaluation": true
+		"de/sie-kann-das@2": {
+			"id": "target-de-boundary-modal-main-predicate-click-kann",
+			"evaluation": true,
+			"explanation": "No overt infinitive is present, and kann is the clause's main predicate. Current German policy therefore routes this occurrence as a singleton Lexeme/VERB. Source: https://grammis.ids-mannheim.de/terminologie/155"
 		},
-		"target-de-boundary-lexical-werden-click-wird": {
-			"evaluation": true
+		"de/sie-wird-aerztin@2": {
+			"id": "target-de-boundary-lexical-werden-click-wird",
+			"evaluation": true,
+			"explanation": "wird carries its own change-of-state meaning instead of marking another verbal form, so current German policy routes it as a singleton Lexeme/VERB. Source: https://universaldependencies.org/u/pos/VERB.html"
 		},
 		"target-de-boundary-auxiliary-participle-click-gewesen": {
 			"evaluation": true
@@ -1003,20 +1109,29 @@
 		"target-de-robust-long-click-verstanden": {
 			"evaluation": true
 		},
-		"target-de-robust-unresolved": {
+		"de/er-sagt-xqzvrrt@4": {
+			"id": "target-de-robust-unresolved",
 			"evaluation": true
 		},
-		"target-de-boundary-recipient-passive-click-bekommt": {
-			"evaluation": true
+		"de/sie-bekommt-das-paket-geliefert-2@2": {
+			"id": "target-de-boundary-recipient-passive-click-bekommt",
+			"evaluation": true,
+			"explanation": "Recipient passive: bekommt contributes nothing lexical and joins the participle it serves as an auxiliary member (ADR 0026). das Paket is a free object."
 		},
-		"target-de-boundary-recipient-passive-click-geliefert": {
-			"evaluation": true
+		"de/sie-bekommt-das-paket-geliefert-2@8": {
+			"id": "target-de-boundary-recipient-passive-click-geliefert",
+			"evaluation": true,
+			"explanation": "Either member click selects the same recipient-passive VERB target (ADR 0026)."
 		},
-		"target-de-boundary-lexical-bekommen-click-bekommt": {
-			"evaluation": true
+		"de/sie-bekommt-ein-paket@2": {
+			"id": "target-de-boundary-lexical-bekommen-click-bekommt",
+			"evaluation": true,
+			"explanation": "Lexical bekommen with an object is an ordinary singleton VERB."
 		},
-		"target-de-boundary-resultative-bekommen-click-bekommt": {
-			"evaluation": true
+		"de/sie-bekommt-das-glas-endlich-geoeffnet@2": {
+			"id": "target-de-boundary-resultative-bekommen-click-bekommt",
+			"evaluation": true,
+			"explanation": "Resultative bekommen (manages to open it) keeps its meaning, so it stays the VERB and the participle remains outside; only the sentence separates it from the recipient passive (ADR 0026)."
 		},
 		"target-de-abbreviation-zb-click-zb": {
 			"evaluation": true
@@ -1027,80 +1142,155 @@
 		"target-de-abbreviation-zum-beispiel-click-zum": {
 			"evaluation": true
 		},
-		"target-de-abbreviation-dh-click-dh": {
-			"evaluation": true
+		"de/er-kam-spaet-d-h-nach-mitternacht@7": {
+			"id": "target-de-abbreviation-dh-click-dh",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:das-heisst"],
+			"explanation": "The abbreviation stands for the conjunction das heißt."
 		},
-		"target-de-abbreviation-das-heisst-click-heißt": {
-			"evaluation": true
+		"de/er-kam-spaet-das-heisst-nach-mitternacht@9": {
+			"id": "target-de-abbreviation-das-heisst-click-heißt",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:das-heisst"],
+			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here."
 		},
-		"target-de-abbreviation-das-heisst-click-das": {
-			"evaluation": true
+		"de/er-kam-spaet-das-heisst-nach-mitternacht@7": {
+			"id": "target-de-abbreviation-das-heisst-click-das",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:das-heisst"],
+			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here."
 		},
-		"target-de-abbreviation-usw-click-usw": {
-			"evaluation": true
+		"de/anna-kauft-obst-gemuese-usw-auf-dem-markt@9": {
+			"id": "target-de-abbreviation-usw-click-usw",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-so-weiter"],
+			"explanation": "usw. closes an enumeration and stands for und so weiter."
 		},
-		"target-de-abbreviation-usw-final-click-usw": {
-			"evaluation": true
+		"de/anna-kauft-obst-gemuese-brot-usw@12": {
+			"id": "target-de-abbreviation-usw-final-click-usw",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-so-weiter"],
+			"explanation": "Sentence-final usw.: the abbreviation dot doubles as the period and stays inside the Segment."
 		},
-		"target-de-abbreviation-und-so-weiter-click-weiter": {
-			"evaluation": true
+		"de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt@13": {
+			"id": "target-de-abbreviation-und-so-weiter-click-weiter",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-so-weiter"],
+			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here."
 		},
-		"target-de-abbreviation-und-so-weiter-click-und": {
-			"evaluation": true
+		"de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt@9": {
+			"id": "target-de-abbreviation-und-so-weiter-click-und",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-so-weiter"],
+			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here."
 		},
-		"target-de-abbreviation-ua-click-ua": {
-			"evaluation": true
+		"de/sie-kam-u-a-wegen-des-wetters@4": {
+			"id": "target-de-abbreviation-ua-click-ua",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:unter-anderem"],
+			"explanation": "u.a. before a reason stands for unter anderem."
 		},
-		"target-de-abbreviation-unter-anderem-click-anderem": {
-			"evaluation": true
+		"de/sie-kam-unter-anderem-wegen-des-wetters@6": {
+			"id": "target-de-abbreviation-unter-anderem-click-anderem",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:unter-anderem"],
+			"explanation": "Written out, unter anderem is one ADV unit; unter is not a free preposition here."
 		},
-		"target-de-abbreviation-unter-anderem-click-unter": {
-			"evaluation": true
+		"de/sie-kam-unter-anderem-wegen-des-wetters@4": {
+			"id": "target-de-abbreviation-unter-anderem-click-unter",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:unter-anderem"],
+			"explanation": "Written out, unter anderem is one ADV unit; unter is not a free preposition here."
 		},
-		"target-de-abbreviation-oae-click-oä": {
-			"evaluation": true
+		"de/sie-mag-aepfel-birnen-o-ae-sehr-gern@9": {
+			"id": "target-de-abbreviation-oae-click-oä",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:oder-aehnliches"],
+			"explanation": "o.Ä. closes an enumeration and stands for oder Ähnliches."
 		},
-		"target-de-abbreviation-oder-aehnliches-click-ähnliches": {
-			"evaluation": true
+		"de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern@11": {
+			"id": "target-de-abbreviation-oder-aehnliches-click-ähnliches",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:oder-aehnliches"],
+			"explanation": "Written out, oder Ähnliches is one ADV unit."
 		},
-		"target-de-abbreviation-oder-aehnliches-click-oder": {
-			"evaluation": true
+		"de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern@9": {
+			"id": "target-de-abbreviation-oder-aehnliches-click-oder",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:oder-aehnliches"],
+			"explanation": "Written out, oder Ähnliches is one ADV unit."
 		},
-		"target-de-abbreviation-zt-click-zt": {
-			"evaluation": true
+		"de/die-strasse-ist-z-t-gesperrt@6": {
+			"id": "target-de-abbreviation-zt-click-zt",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:zum-teil"],
+			"explanation": "z.T. stands for zum Teil."
 		},
-		"target-de-abbreviation-zum-teil-click-teil": {
-			"evaluation": true
+		"de/die-strasse-ist-zum-teil-gesperrt@9": {
+			"id": "target-de-abbreviation-zum-teil-click-teil",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:zum-teil"],
+			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here."
 		},
-		"target-de-abbreviation-zum-teil-click-zum": {
-			"evaluation": true
+		"de/die-strasse-ist-zum-teil-gesperrt@6": {
+			"id": "target-de-abbreviation-zum-teil-click-zum",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:zum-teil"],
+			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here."
 		},
-		"target-de-abbreviation-va-click-va": {
-			"evaluation": true
+		"de/sie-liest-v-a-romane@4": {
+			"id": "target-de-abbreviation-va-click-va",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:vor-allem"],
+			"explanation": "v.a. stands for vor allem."
 		},
-		"target-de-abbreviation-vor-allem-click-allem": {
-			"evaluation": true
+		"de/sie-liest-vor-allem-romane@6": {
+			"id": "target-de-abbreviation-vor-allem-click-allem",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:vor-allem"],
+			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here."
 		},
-		"target-de-abbreviation-vor-allem-click-vor": {
-			"evaluation": true
+		"de/sie-liest-vor-allem-romane@4": {
+			"id": "target-de-abbreviation-vor-allem-click-vor",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:vor-allem"],
+			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here."
 		},
-		"target-de-abbreviation-im-allgemeinen-click-allgemeinen": {
-			"evaluation": true
+		"de/im-allgemeinen-ist-der-zug-puenktlich@3": {
+			"id": "target-de-abbreviation-im-allgemeinen-click-allgemeinen",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:im-allgemeinen"],
+			"explanation": "Im Allgemeinen is one ADV unit; both pieces of the fused Im, I and m, are members (ADR 0035)."
 		},
-		"target-de-abbreviation-im-allgemeinen-click-im": {
-			"evaluation": true
+		"de/im-allgemeinen-ist-der-zug-puenktlich@0": {
+			"id": "target-de-abbreviation-im-allgemeinen-click-im",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:im-allgemeinen"],
+			"explanation": "Im Allgemeinen is one ADV unit; both pieces of the fused Im, I and m, are members (ADR 0035)."
 		},
-		"target-de-abbreviation-und-zwar-click-zwar": {
-			"evaluation": true
+		"de/sie-kommt-morgen-und-zwar-frueh@9": {
+			"id": "target-de-abbreviation-und-zwar-click-zwar",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-zwar"],
+			"explanation": "und zwar is one specifying conjunction unit."
 		},
-		"target-de-abbreviation-und-zwar-click-und": {
-			"evaluation": true
+		"de/sie-kommt-morgen-und-zwar-frueh@7": {
+			"id": "target-de-abbreviation-und-zwar-click-und",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:und-zwar"],
+			"explanation": "und zwar is one specifying conjunction unit."
 		},
-		"target-de-abbreviation-sowie-click-sowie": {
-			"evaluation": true
+		"de/brot-sowie-kaese-werden-serviert@2": {
+			"id": "target-de-abbreviation-sowie-click-sowie",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:sowie"],
+			"explanation": "sowie is an ordinary one-word additive conjunction."
 		},
-		"target-de-abbreviation-dipl-ing-click-dipling": {
-			"evaluation": true
+		"de/dipl-ing-mueller-leitet-das-projekt@0": {
+			"id": "target-de-abbreviation-dipl-ing-click-dipling",
+			"evaluation": true,
+			"contaminationKeys": ["abbreviation:dipl-ing"],
+			"explanation": "A title abbreviation is one Segment resolving to the NOUN Diplom-Ingenieur; the name stays outside."
 		},
 		"target-de-pronominal-adverb-stolz-click-stolz": {
 			"evaluation": true
@@ -1161,9 +1351,18 @@
 			"evaluation": true,
 			"slices": ["participle-boundary"]
 		},
-		"target-de-participle-boundary-gelegen-adj-productive-attributive": {
+		"de/das-am-see-gelegene-haus-gehoert-meinem-onkel@7": {
+			"id": "target-de-participle-boundary-gelegen-adj-productive-attributive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ gelegen, Participle Source liegen. Attributive, so adjectival even in liegen's own sense 'situated'.",
+			"sources": [
+				{
+					"title": "Duden: gelegen_zu_liegen",
+					"url": "https://www.duden.de/rechtschreibung/gelegen_zu_liegen",
+					"supports": "Duden refers the locative gelegen to the verb liegen"
+				}
+			]
 		},
 		"target-de-participle-boundary-spannend-adj-attributive": {
 			"evaluation": true,
@@ -1217,17 +1416,30 @@
 			"evaluation": true,
 			"slices": ["participle-boundary"]
 		},
-		"target-de-participle-boundary-gekocht-adj-attributive": {
+		"de/die-gekochten-kartoffeln-standen-schon-bereit@2": {
+			"id": "target-de-participle-boundary-gekocht-adj-attributive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ gekocht, Participle Source kochen. Attributive, so adjectival; its Canonical Form is the uninflected participle.",
+			"sources": [
+				{
+					"title": "UD German-HDT",
+					"url": "https://universaldependencies.org/treebanks/de_hdt/index.html",
+					"supports": "HDT lemmatizes an attributive participle to its verb"
+				}
+			]
 		},
-		"target-de-participle-boundary-gekocht-adj-state-passive": {
+		"de/die-kartoffeln-sind-bereits-gekocht@8": {
+			"id": "target-de-participle-boundary-gekocht-adj-state-passive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ gekocht, Participle Source kochen. A state passive is the copula sein plus an ADJ; sind and bereits stay outside."
 		},
-		"target-de-participle-boundary-bewundert-adj-agent": {
+		"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand@6": {
+			"id": "target-de-participle-boundary-bewundert-adj-agent",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ bewundert, Participle Source bewundern. Attributive, so adjectival even with a von-agent; von and allen stay outside."
 		},
 		"target-de-participle-boundary-repariert-adj-attributive": {
 			"evaluation": true,
@@ -1257,17 +1469,30 @@
 			"evaluation": true,
 			"slices": ["participle-boundary"]
 		},
-		"target-de-participle-boundary-schlafend-adj-attributive": {
+		"de/die-schlafenden-kinder-wurden-nicht-geweckt@2": {
+			"id": "target-de-participle-boundary-schlafend-adj-attributive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ schlafend, Participle Source schlafen. Attributive Partizip I."
 		},
-		"target-de-participle-boundary-reisend-adj-attributive": {
+		"de/der-reisende-haendler-wartete-draussen@2": {
+			"id": "target-de-participle-boundary-reisend-adj-attributive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ reisend, Participle Source reisen. Attributive Partizip I; the substantivized der Reisende is a NOUN."
 		},
-		"target-de-participle-boundary-geschlossen-adj-state-passive": {
+		"de/die-tuer-ist-geschlossen@6": {
+			"id": "target-de-participle-boundary-geschlossen-adj-state-passive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "ADJ geschlossen, Participle Source schließen. A state passive is the copula sein plus an ADJ; ist stays a separate VERB.",
+			"sources": [
+				{
+					"title": "Duden: geschlossen_zu_schlieszen",
+					"url": "https://www.duden.de/rechtschreibung/geschlossen_zu_schlieszen",
+					"supports": "Duden treats this geschlossen as a form of schließen"
+				}
+			]
 		},
 		"target-de-participle-boundary-geschlossen-adj-state-passive-click-ist": {
 			"evaluation": true,
@@ -1277,9 +1502,11 @@
 			"evaluation": true,
 			"slices": ["participle-boundary"]
 		},
-		"target-de-participle-boundary-geschlossen-verb-passive": {
+		"de/die-tuer-wurde-geschlossen@6": {
+			"id": "target-de-participle-boundary-geschlossen-verb-passive",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "VERB schließen. A werden-passive is verbal; wurde joins the verb. Contrast the state passive Die Tür ist geschlossen."
 		},
 		"target-de-participle-boundary-geschlossen-verb-perfect": {
 			"evaluation": true,
@@ -1345,9 +1572,11 @@
 			"evaluation": true,
 			"slices": ["participle-boundary"]
 		},
-		"target-de-participle-boundary-reisende-noun": {
+		"de/der-reisende-wartete-draussen@2": {
+			"id": "target-de-participle-boundary-reisende-noun",
 			"evaluation": true,
-			"slices": ["participle-boundary"]
+			"slices": ["participle-boundary"],
+			"explanation": "NOUN Reisender. A substantivized participle is a NOUN with its article, outside the VERB/ADJ boundary."
 		},
 		"target-de-participle-boundary-verheiratet-adj-predicative": {
 			"evaluation": true,
@@ -1369,29 +1598,44 @@
 			"evaluation": true,
 			"slices": ["governed-preposition"]
 		},
-		"target-de-governed-adjective-copula-click-stolz": {
+		"de/er-ist-stolz-auf-seinen-sohn@4": {
+			"id": "target-de-governed-adjective-copula-click-stolz",
 			"evaluation": true,
-			"slices": ["governed-preposition"]
+			"slices": ["governed-preposition"],
+			"contaminationKeys": ["target-stimulus:stolz-auf-sohn"],
+			"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target."
 		},
-		"target-de-governed-adjective-copula-click-auf": {
+		"de/er-ist-stolz-auf-seinen-sohn@6": {
+			"id": "target-de-governed-adjective-copula-click-auf",
 			"evaluation": true,
-			"slices": ["governed-preposition"]
+			"slices": ["governed-preposition"],
+			"contaminationKeys": ["target-stimulus:stolz-auf-sohn"],
+			"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target."
 		},
-		"target-de-governed-adjective-fronted-click-auf": {
+		"de/auf-ihn-bin-ich-stolz@0": {
+			"id": "target-de-governed-adjective-fronted-click-auf",
 			"evaluation": true,
-			"slices": ["governed-preposition"]
+			"slices": ["governed-preposition"],
+			"contaminationKeys": ["target-stimulus:auf-ihn-stolz"],
+			"explanation": "A fronted governed preposition joins its adjective the way a separated particle joins its verb (ADR 0034); bin stays a separate copula VERB."
 		},
-		"target-de-governed-noun-click-vor": {
+		"de/aus-angst-vor-hunden-bleibt-sie-zu-hause@4": {
+			"id": "target-de-governed-noun-click-vor",
 			"evaluation": true,
-			"slices": ["governed-preposition"]
+			"slices": ["governed-preposition"],
+			"contaminationKeys": ["target-stimulus:aus-angst-vor"],
+			"explanation": "Angst governs vor in the same sense without any verb, so the preposition joins the NOUN (ADR 0034); aus is a free preposition."
 		},
 		"target-de-governed-collocation-angst-haben-click-vor": {
 			"evaluation": true,
 			"slices": ["governed-preposition"]
 		},
-		"target-de-governed-collocation-bescheid-click-ueber": {
+		"de/er-weiss-bescheid-ueber-die-plaene@6": {
+			"id": "target-de-governed-collocation-bescheid-click-ueber",
 			"evaluation": true,
-			"slices": ["governed-preposition"]
+			"slices": ["governed-preposition"],
+			"contaminationKeys": ["target-stimulus:bescheid-wissen-ueber"],
+			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation, not a fixed one; die Pläne is its free complement (ADR 0034)."
 		}
 	}
 }

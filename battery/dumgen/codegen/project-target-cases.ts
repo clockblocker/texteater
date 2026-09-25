@@ -12,9 +12,9 @@ const clickKey = /^(?<record>[a-z]{2}(?:\/[a-z0-9-]+)+)@(?<segment>\d+)$/u;
 /**
  * Target classification's sidecar: Dumgen's use of Spec Record Segments. A
  * case served by a record is keyed by its click, `<record id>@<Segment
- * index>`, and names the case id it keeps, its contamination keys, the
- * record references it cites, and its explanation when that is not the
- * target's rationale (`null` when the case has none). A case still in
+ * index>`, and names the case id it keeps, its contamination keys and
+ * sources, and its explanation when that is not the target's rationale
+ * (`null` when the case has none). A case still in
  * `source-data.json` is keyed by its case id and holds only its flags. The
  * order of `cases` is the order of every list the stage projects.
  */
@@ -28,8 +28,14 @@ const sidecarSchema = z.strictObject({
 				...flags,
 				contaminationKeys: z.array(z.string().min(1)).min(1).optional(),
 				explanation: z.string().min(1).nullable().optional(),
-				references: z
-					.array(z.number().int().nonnegative())
+				sources: z
+					.array(
+						z.strictObject({
+							title: z.string().min(1),
+							url: z.url(),
+							supports: z.string().min(1),
+						}),
+					)
 					.min(1)
 					.optional(),
 			}),
@@ -150,21 +156,13 @@ export function projectTargetCases(
 				entry.explanation === undefined
 					? explanation
 					: (entry.explanation ?? undefined);
-			const sources = entry.references?.map((index) => {
-				const reference = record.sources.references[index];
-				if (!reference)
-					throw Error(
-						`${key} cites no reference ${index} of ${record.id}`,
-					);
-				return reference;
-			});
 			projected.cases[id] = {
 				...projectedCase,
 				...(ownExplanation ? { explanation: ownExplanation } : {}),
 				...(entry.contaminationKeys
 					? { contaminationKeys: entry.contaminationKeys }
 					: {}),
-				...(sources ? { sources } : {}),
+				...(entry.sources ? { sources: entry.sources } : {}),
 			};
 		}
 		projected.caseIds.push(id);

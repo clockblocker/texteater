@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er sagt qzxv?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sagt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "qzxv" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "clockblocker/texteater#82",
+				"url": "https://github.com/clockblocker/texteater/issues/82",
+				"supports": "No Target qzxv"
+			}
+		]
+	},
+	"targets": [],
+	"noTarget": [
+		{
+			"segment": 4,
+			"reason": "UD reserves X for material that cannot receive a more informative part of speech, while current Dumgen policy ordinarily keeps unintelligible material upstream as OpaqueText. No observable category fact licenses qzxv or xqzvrrt as a particular Family/Kind; under issue #82, the clicked ResolvableText therefore has no defensible route, and Unresolved carries no guessed route or membership. Source: https://universaldependencies.org/u/pos/X.html"
+		}
+	]
+}
