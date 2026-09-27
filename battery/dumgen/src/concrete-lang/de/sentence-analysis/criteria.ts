@@ -53,20 +53,6 @@ export const realizationEdits: readonly (readonly [string | RegExp, string])[] =
 			" These noun rules preserve any larger established idiom boundary.",
 			"",
 		],
-		// The click-time examples of article reach (#637) are unmeasured in
-		// intake, so its measured noun wording stays as it was.
-		[
-			"even across adjectives and numerals: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ, and die zwei Brüder gives [die,Brüder] NOUN and zwei NUM.",
-			"even across adjectives: der steile Aufstieg gives [der,Aufstieg] NOUN and steile ADJ.",
-		],
-		[
-			/ Every noun owns the article opening its own phrase, whatever its role in the sentence: [^.]*\. Article clicks resolve the same noun: clicking des gives \[des,Kindes\] NOUN\./u,
-			" Article clicks resolve the same noun.",
-		],
-		[
-			", while a conjunct with its own article owns it: die Katze und der Hund gives [die,Katze] and [der,Hund].",
-			".",
-		],
 	];
 
 /** The realization rules: which Segments realize one word. */
