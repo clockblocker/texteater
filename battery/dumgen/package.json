@@ -56,6 +56,7 @@
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"generate": "bun codegen/generate.ts",
 		"generate:check": "bun codegen/generate.ts --check",
+		"generate:hebrew-word-list": "bun codegen/hebrew-word-list.ts",
 		"test": "bun test",
 		"lint": "bun run --silent biome check .",
 		"fix": "bun run --silent biome check --write .",
