@@ -14,6 +14,8 @@ const framed = { valency: null } as const;
 const participial = { ...framed, participleSource: null } as const;
 /** A noun records how it forms its plural: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#597). */
 const nominal = { ...framed, pluralPattern: null } as const;
+/** A verb records how it conjugates: `wiegen` ⚖️ `wog`, `wiegte` for rocking (ADR 0038). */
+const verbal = { ...framed, conjugationClass: null } as const;
 
 /** A routine formula records what it does in conversation (ADR 0039). */
 const formula = { formulaRole: null } as const;
@@ -27,6 +29,7 @@ function request(
 		| "valency"
 		| "participleSource"
 		| "pluralPattern"
+		| "conjugationClass"
 		| "locutionType"
 		| "sayingType"
 		| "formulaRole"
@@ -105,7 +108,7 @@ const makeDeRelMap = () =>
 					"nearAntonym",
 					"hypernym",
 				),
-				framed,
+				verbal,
 			),
 			X: request(select()),
 		},

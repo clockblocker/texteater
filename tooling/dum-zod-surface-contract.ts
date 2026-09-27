@@ -2,6 +2,8 @@ import { operationalEntrypoints } from "./dum-entrypoint-rss/inventory";
 
 export const DUM_PUBLIC_ZOD_SURFACES = {
 	"dumrel/schema": [
+		"conjugationClassSchema",
+		"conjugationClassesSchema",
 		"directSemanticRelationSchema",
 		"governedCaseSchema",
 		"governmentProjectionSchema",

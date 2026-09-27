@@ -19,6 +19,7 @@ import {
 import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
+	conjugationClassValues,
 	directSemanticRelationValues,
 	formulaRoleValues,
 	germanComplementCaseValues,
@@ -159,6 +160,15 @@ export const nounPluralSchema = z.union([
 	z.enum(pluralMarkerValues),
 ]);
 
+export const conjugationClassSchema = z.enum(conjugationClassValues);
+/**
+ * A German verb Reading's conjugation classes (ADR 0038): every class its
+ * Präteritum forms attest, each listed once (`senden`: `sandte`, `sendete`,
+ * Weak and Mixed). Homonyms that differ only in conjugation (`wiegen`: `wog`,
+ * `wiegte`) share one Lemma and differ here, per Reading.
+ */
+export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
+
 /** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
 export const locutionTypeSchema = z.enum(locutionTypeValues);
 /**
@@ -246,6 +256,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	valency: valencyFrameSchema.optional(),
 	participleSource: participleSourceSchema.optional(),
 	pluralPattern: nounPluralSchema.optional(),
+	conjugationClass: conjugationClassesSchema.optional(),
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
 	formulaRole: formulaRoleSchema.optional(),
@@ -332,6 +343,15 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.literal("pluralPattern"),
+	}),
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("conjugationClass"),
+		value: conjugationClassesSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("conjugationClass"),
 	}),
 	z.strictObject({
 		kind: setKinds,

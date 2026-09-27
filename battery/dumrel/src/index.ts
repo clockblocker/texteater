@@ -1,5 +1,6 @@
 export { ParsingError } from "common-utils";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
+export { germanConjugationClass } from "./german-conjugation-class.js";
 export { germanPluralPattern } from "./german-plural-pattern.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 export { projectParticipleSources } from "./project-participle-sources.js";
@@ -11,6 +12,8 @@ export {
 } from "./select-knowledge.js";
 export { normalizeText } from "./semantics.js";
 export type {
+	ConjugationClass,
+	ConjugationClasses,
 	DirectSemanticRelation,
 	EnglishValencyComplement,
 	FormulaRole,

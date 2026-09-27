@@ -8,6 +8,8 @@ import type {
 } from "./generated/types.js";
 
 export type {
+	ConjugationClass,
+	ConjugationClasses,
 	DirectSemanticRelation,
 	EnglishValencyComplement,
 	FormulaRole,

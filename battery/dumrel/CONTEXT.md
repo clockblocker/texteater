@@ -66,6 +66,16 @@ NOUN Reading's Knowledge stores every pattern its plurals attest (`Pizza`:
 `Mutter` 👩 `Mütter` and 🔩 `Muttern` are two Readings of one Lemma.
 _Avoid_: plural class, declension class (declension covers the singular too)
 
+**Conjugation Class**:
+how a German verb forms its Präteritum, judged on the stem: Strong changes
+the stem with no `-te` (`wog`), Weak adds `-te` to the unchanged stem
+(`wiegte`), Mixed adds `-te` to a changed stem (`brachte`). A separable verb
+is judged by its stem (`aufstehen`: `stand`). A VERB Reading's Knowledge
+stores every class its Präteritum forms attest (`senden`: `sandte`,
+`sendete`). It never splits a Lemma: `wiegen` 'weigh' (`wog`) and 'rock'
+(`wiegte`) are two Readings of one Lemma.
+_Avoid_: verb type, irregular verb, Verbklasse
+
 **Locution Type**:
 whether a Locution's Reading is an Idiom (its meaning is not the sum of its
 words: `ins Gras beißen`) or a Collocation (its verb only supports the

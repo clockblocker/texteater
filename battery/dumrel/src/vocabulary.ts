@@ -54,6 +54,14 @@ export const pluralPatternValues = [
 export const pluralMarkerValues = ["NoPlural", "PluralOnly"] as const;
 
 /**
+ * How a German verb forms its Präteritum, judged on the stem: Strong changes
+ * the stem and adds no `-te` (`wiegen` → `wog`), Weak adds `-te` or `-ete` to
+ * the unchanged stem (`wiegte`, `arbeitete`), and Mixed adds `-te` to a
+ * changed stem (`bringen` → `brachte`).
+ */
+export const conjugationClassValues = ["Strong", "Weak", "Mixed"] as const;
+
+/**
  * Whether a Locution's Reading means more than its words (Idiom: `ins Gras
  * beißen`) or has a verb that only supports its predicate (Collocation: `eine
  * Entscheidung treffen`). A Locution with neither (`zum Teil`) stores none

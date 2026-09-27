@@ -36,6 +36,8 @@ export const dumrelOutputTypeExports = {
 	ParticipleProjection: "participleProjection",
 	PluralPattern: "pluralPattern",
 	NounPlural: "nounPlural",
+	ConjugationClass: "conjugationClass",
+	ConjugationClasses: "conjugationClasses",
 	LocutionType: "locutionType",
 	SayingType: "sayingType",
 	FormulaRole: "formulaRole",

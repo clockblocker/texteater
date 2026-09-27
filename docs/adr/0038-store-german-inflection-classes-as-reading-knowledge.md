@@ -69,4 +69,7 @@ class, as for plurals.
 - A Surface still attaches to its Lemma, so `Muttern` is a Surface of the
   Lemma `Mutter`. The Reading it attests is the emoji judge's decision.
 - Neither aspect enters NOUN or VERB Core Features, and no Lemma is split.
-- The plural shipped first. The conjugation class is still open in #597.
+- The plural shipped first. Dumrel's `conjugationClass` aspect and
+  `germanConjugationClass` followed in
+  [#656](https://github.com/clockblocker/texteater/issues/656); producing and
+  attesting the class waits for the Dumgen rewrite.

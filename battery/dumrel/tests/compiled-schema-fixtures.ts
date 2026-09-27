@@ -21,6 +21,7 @@ export const samples: Record<string, unknown[]> = {
 		{ semanticRelations: { synonym: [houseLemma] } },
 		{ pluralPattern: ["UmlautE", "En"] },
 		{ pluralPattern: "NoPlural" },
+		{ conjugationClass: ["Weak", "Mixed"] },
 		{ locutionType: "Idiom" },
 		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
 		{ sayingType: { type: "Proverb" } },
@@ -110,6 +111,9 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Contribute", aspect: "pluralPattern", value: ["En", "S"] },
 		{ kind: "Correct", aspect: "pluralPattern", value: "PluralOnly" },
 		{ kind: "Retract", aspect: "pluralPattern" },
+		{ kind: "Contribute", aspect: "conjugationClass", value: ["Weak"] },
+		{ kind: "Correct", aspect: "conjugationClass", value: ["Strong"] },
+		{ kind: "Retract", aspect: "conjugationClass" },
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 		{
 			kind: "Correct",
@@ -123,6 +127,8 @@ export const samples: Record<string, unknown[]> = {
 	],
 	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
 	nounPlural: [["UmlautOnly"], ["En", "S"], "NoPlural", "PluralOnly"],
+	conjugationClass: ["Strong", "Weak", "Mixed"],
+	conjugationClasses: [["Strong"], ["Weak", "Mixed"]],
 	locutionType: ["Idiom", "Collocation"],
 	sayingType: [
 		{ type: "Proverb" },

@@ -8,6 +8,8 @@ import {
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import {
+	conjugationClassesSchema,
+	conjugationClassSchema,
 	directSemanticRelationSchema,
 	englishValencyComplementSchema,
 	formulaRoleSchema,
@@ -98,6 +100,8 @@ const compiled = compileZodValidationArtifacts({
 		participleProjection: participleProjectionSchema,
 		pluralPattern: pluralPatternSchema,
 		nounPlural: nounPluralSchema,
+		conjugationClass: conjugationClassSchema,
+		conjugationClasses: conjugationClassesSchema,
 		locutionType: locutionTypeSchema,
 		sayingType: sayingTypeSchema,
 		formulaRole: formulaRoleSchema,

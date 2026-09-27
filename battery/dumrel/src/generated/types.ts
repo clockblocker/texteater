@@ -8,6 +8,7 @@ export type KnowledgeSettings = {
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
 	pluralPattern?: boolean | undefined;
+	conjugationClass?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
 	formulaRole?: boolean | undefined;
@@ -35,6 +36,7 @@ export type KnowledgeRequestMask = {
 	valency?: null | undefined;
 	participleSource?: null | undefined;
 	pluralPattern?: null | undefined;
+	conjugationClass?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
 	formulaRole?: null | undefined;
@@ -1786,6 +1788,7 @@ export type ReadingKnowledge = {
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
 	pluralPattern?: NounPlural | undefined;
+	conjugationClass?: ConjugationClasses | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
 	formulaRole?: FormulaRole | undefined;
@@ -2058,6 +2061,12 @@ export type KnowledgeChange =
 			value: NounPlural;
 	  }
 	| { kind: "Retract"; aspect: "pluralPattern" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "conjugationClass";
+			value: ConjugationClasses;
+	  }
+	| { kind: "Retract"; aspect: "conjugationClass" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "locutionType";
@@ -3233,6 +3242,8 @@ export type PluralPattern =
 	| "S"
 	| "Other";
 export type NounPlural = Array<PluralPattern> | ("NoPlural" | "PluralOnly");
+export type ConjugationClass = "Strong" | "Weak" | "Mixed";
+export type ConjugationClasses = Array<ConjugationClass>;
 export type LocutionType = "Idiom" | "Collocation";
 export type SayingType = {
 	type: "Proverb" | "WingedWord";

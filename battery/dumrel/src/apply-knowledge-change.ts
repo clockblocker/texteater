@@ -4,6 +4,7 @@ import { conflict, contextualizeChange, parseSource } from "./context.js";
 import { fingerprint } from "./fingerprint.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
+	ConjugationClasses,
 	KnowledgeChange,
 	NounPlural,
 	ReadingKnowledge,
@@ -13,7 +14,7 @@ import type {
 	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
-import { pluralPatternValues } from "./vocabulary.js";
+import { conjugationClassValues, pluralPatternValues } from "./vocabulary.js";
 
 /**
  * Applies one source-aware change atomically. Contribute adds absent atomic
@@ -23,8 +24,9 @@ import { pluralPatternValues } from "./vocabulary.js";
  * complement the frame lacks, Correct replaces the frame, and Retract removes
  * the frame or, given a complement, that one Slot. A Participle Source,
  * Locution Type, Saying Type and Formula Role are atomic like a definition. A noun's plural: Contribute adds the Plural
- * Patterns it lacks, and a NoPlural or PluralOnly marker is atomic. Failure
- * returns ParsingError without a partial value.
+ * Patterns it lacks, and a NoPlural or PluralOnly marker is atomic. A verb's
+ * conjugation classes: Contribute adds the classes it lacks. Failure returns
+ * ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
@@ -67,6 +69,9 @@ function apply<R extends Dumling.Reading>(
 			return;
 		case "pluralPattern":
 			return applyPlural(knowledge, canonical);
+		case "conjugationClass":
+			applyConjugation(knowledge, canonical);
+			return;
 		case "transcription":
 		case "definition":
 		case "morphologicalTree":
@@ -160,6 +165,30 @@ function applyPlural<R extends Dumling.Reading>(
 	knowledge.pluralPattern = pluralPatternValues.filter((pattern) =>
 		patterns.has(pattern),
 	) as NounPlural;
+}
+
+/**
+ * Conjugation classes accumulate like Plural Patterns: `sandte` then
+ * `sendete` store `Weak`, `Mixed`, always in vocabulary order. Correct
+ * replaces the set.
+ */
+function applyConjugation<R extends Dumling.Reading>(
+	knowledge: ReadingKnowledge<R>,
+	change: Extract<KnowledgeChange, { aspect: "conjugationClass" }>,
+): void {
+	if (change.kind === "Retract") {
+		delete knowledge.conjugationClass;
+		return;
+	}
+	const classes = new Set([
+		...(change.kind === "Contribute"
+			? (knowledge.conjugationClass ?? [])
+			: []),
+		...change.value,
+	]);
+	knowledge.conjugationClass = conjugationClassValues.filter((value) =>
+		classes.has(value),
+	) as ConjugationClasses;
 }
 
 /**

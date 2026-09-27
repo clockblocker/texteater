@@ -3,6 +3,7 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { fingerprint } from "./fingerprint.js";
 import type {
+	ConjugationClasses,
 	KnowledgeChange,
 	NounPlural,
 	ParticipleSource,
@@ -253,6 +254,26 @@ function parseNounPlural<R extends Dumling.Reading>(
 	return value;
 }
 
+/**
+ * Conjugation classes belong to a German VERB Reading, and each class appears
+ * once (ADR 0038).
+ */
+function parseConjugationClasses<R extends Dumling.Reading>(
+	source: R,
+	value: ConjugationClasses,
+	path: Path,
+): ConjugationClasses | ParsingError {
+	const { language, family, kind } = source.lemma;
+	if (language !== "de" || family !== "Lexeme" || kind !== "VERB")
+		return issue(
+			path,
+			"Only a German VERB Reading has a conjugation class",
+		);
+	if (new Set(value).size !== value.length)
+		return issue(path, "A conjugation lists each class once");
+	return value;
+}
+
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
@@ -279,6 +300,14 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 			"pluralPattern",
 		]);
 		if (plural instanceof ParsingError) return plural;
+	}
+	if (result.conjugationClass) {
+		const classes = parseConjugationClasses(
+			source,
+			result.conjugationClass,
+			["knowledge", "conjugationClass"],
+		);
+		if (classes instanceof ParsingError) return classes;
 	}
 	if (result.participleSource) {
 		const participle = parseParticipleSource(
@@ -340,6 +369,13 @@ export function contextualizeChange<R extends Dumling.Reading>(
 			"value",
 		]);
 		if (plural instanceof ParsingError) return plural;
+	}
+	if (change.aspect === "conjugationClass" && change.kind !== "Retract") {
+		const classes = parseConjugationClasses(source, change.value, [
+			"change",
+			"value",
+		]);
+		if (classes instanceof ParsingError) return classes;
 	}
 	if (change.aspect === "participleSource" && change.kind !== "Retract") {
 		const participle = parseParticipleSource(source, change.value, [

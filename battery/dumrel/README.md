@@ -51,6 +51,13 @@ Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds
 the patterns it lacks, and a marker is atomic. `germanPluralPattern` derives a
 pattern from a singular and a plural (`Mutter`, `Muttern` → `En`).
 
+`conjugationClass` records how a German VERB Reading forms its Präteritum: the
+Strong, Weak and Mixed classes its Präteritum forms attest. `Contribute` adds
+the classes it lacks, so `senden` can hold Weak and Mixed.
+`germanConjugationClass` derives a class from an infinitive and a Präteritum
+form, ignoring `sich` and a separable particle (`aufstehen`, `stand auf` →
+`Strong`; `bringen`, `brachte` → `Mixed`).
+
 Three atomic aspects type a multiword or formulaic Reading without splitting
 its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`
 or, for a VERB Locution, a `Collocation`, or is absent when it is neither
