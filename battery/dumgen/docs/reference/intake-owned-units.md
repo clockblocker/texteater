@@ -208,8 +208,8 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 
 - Sentence gold is keyed by offset (`sentence-analysis/de`, projected by
   `codegen/project-sentence-cases.ts` from the Full dumspec Spec Records its
-  `sidecar.json` keys, and from
-  `src/concrete-lang/de/sentence-analysis/source-data.json` for the rest;
+  `sidecar.json` keys; the other cases sit verbatim in Draft Spec Records
+  until they are reshaped, per the 2026-09-27 amendment of system ADR 0037;
   every other Full record adds an unscored case): Lexeme Targets with members `{ offset, role? }`, a Kind, and for closed-class
   heads the headword group `Kind:headword`; Phraseme Targets as a Kind, the
   head offsets of their member words and, where authored, the offsets of the

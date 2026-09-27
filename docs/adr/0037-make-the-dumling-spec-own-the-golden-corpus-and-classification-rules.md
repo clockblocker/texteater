@@ -84,12 +84,51 @@ and amends [ADR 0021](./0021-make-dumgen-own-authored-content-and-route-closure.
 the Fixed Catalog and its authored Knowledge stay in Dumgen; evaluation gold
 moves to `dumspec`.
 
+Amended on 2026-09-27: `dumspec` owns all gold, and a Draft may fail the
+current model.
+
+`dumspec` also owns the Knowledge gold (Semantic Relations, Valency Frames,
+translations), the Reading Emoji Description gold for generating a description
+and for resolving one as Reuse or New, and the text-intake gold. This reverses
+the rejected option below and the Projections rule that kept this gold in
+Dumgen. Relations, frames, translations and Emoji Descriptions are Dumrel and
+Reading values, and they belong to the model now being settled (map
+[#595](https://github.com/clockblocker/texteater/issues/595)). One reviewable
+place for all gold beats two. Adjudications, which are verdicts on outputs a
+run generated, the demo and evaluation sidecars, and run evidence stay with
+Dumgen's eval.
+
+The model is changing, so a record's Review Status no longer implies it is
+valid:
+
+- A Draft may fail validation against the current model. `bun test` lists each
+  such Draft with its failing checks as a worklist and does not fail. The
+  loader and the pages leave it out until it passes. A Reviewed record must
+  pass.
+- A model change that breaks Reviewed records demotes them to Draft by script
+  (`bun run demote-broken-reviewed`) instead of migrating them. The Drafts are
+  reshaped to the new model later, in one pass, and a person reviews them
+  after that.
+- An imported case keeps its payload verbatim in the record's `legacy` list:
+  its source file, its case id and the case as it was, with its input, ideal
+  output, explanation and sources. It stays there until it is reshaped into
+  typed fields: an Attestation, and later Reading Knowledge on the target. A
+  record holding one is always on the worklist.
+- Intake gold is raw text, not a sentence, so each raw text enters as a Text
+  Record under `records/text/`, keyed by the text.
+
+The target-classification and sentence-analysis cases no record held entered
+the same way, with every other remaining case in Dumgen, so drafting and
+reviewing their Attestations moves into that pass. Their Dumgen projections
+wait for the pipeline rewrite against `dumspec`.
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec
   stays a view, and its pages stay empty wherever no one curates.
 - The spec also owns Knowledge, emoji and translation gold. Rejected: those are
-  Dumrel and Dumgen concepts, not Dumling values.
+  Dumrel and Dumgen concepts, not Dumling values. Reversed by the 2026-09-27
+  amendment.
 - A target may be Classified only, without an Attestation. Rejected in favour of
   one uniform target, at the cost of drafting and reviewing the classification
   cases before they move.

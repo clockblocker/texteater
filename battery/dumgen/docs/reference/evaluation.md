@@ -16,7 +16,9 @@ or `src/generated/sentence-cases.json`, as
 index in `targets`, and its Review Status. A sentence-analysis case analyses
 a whole Full record, so its `target` is null and it is Reviewed only when
 every target of the record is. A case the sidecar owns, such as an
-`Unresolved` answer, or a case still in a `source-data.json`, has no origin.
+`Unresolved` answer, has no origin. dumspec owns the gold of every stage,
+Knowledge, Reading Emoji Description and intake included (system ADR 0037,
+amended 2026-09-27); Adjudications, sidecars and runs stay here.
 To make another stage spec-backed, emit `origins` with `codegen/case-origin.ts`
 and add the route's origins to `caseOrigins` in `src/development.ts`.
 
