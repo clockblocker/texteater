@@ -77,9 +77,10 @@ closed-class word, so a sentence-initial `Die` is `die`.
 **Clicking a piece.** A click on a piece resolves to the unit that owns that
 piece, never to the whole written word. Clicking `i` in `im Wald` opens ADP `in`
 alone, and clicking `m` opens `Wald`. A fused article piece counts as the one
-article of its noun (`[s, Ende]`). A Phraseme may own every piece of a fused
-word (`zum Teil` is `[zu, m, Teil]`), and the one-article rule for nouns does
-not apply to it.
+article of its noun (`[s, Ende]`). A unit that is not a noun may own every
+piece of a fused word, and the one-article rule for nouns does not apply to it:
+the ADV `zum Teil` is `[zu, m, Teil]`, the Idiom `das Eis brechen` is
+`[brach, das, Eis]`.
 
 **Apostrophes.** An apostrophe belongs to the Segment it marks. `geht's` is
 the Segments `geht` and `'s`, and `'s` stands for `es`. It is never a
