@@ -42,113 +42,57 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
+			"notes": {
+				"rationale": "verdammte modifies Katze and stays outside; every fixed word is present, so the Locution is Full."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "ließ", "orthography": "Standard" },
+					{ "attested": "die", "orthography": "Standard" },
+					{ "attested": "Katze", "orthography": "Standard" },
+					{ "attested": "aus", "orthography": "Standard" },
+					{ "attested": "dem", "orthography": "Standard" },
+					{ "attested": "Sack", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ließ die Katze aus dem Sack",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "die Katze aus dem Sack lassen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-liess",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 15,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-die",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 19,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-demo-idiom-katze-click-verdammte",
@@ -196,214 +140,6 @@
 					"memberSegmentIndices": [21]
 				},
 				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 keeps the freely inserted adjective verdammte outside die Katze aus dem Sack lassen and selects only the clicked Lexeme/ADJ. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-katze",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 23,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-aus",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 25,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-dem",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 27,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-idiom-katze-click-sack",
-			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 29,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Alle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geheimen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Plan" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wissen" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Schließlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ließ" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "verdammte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Katze" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sack" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [15, 19, 23, 25, 27, 29]
-				},
-				"explanation": "The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte. Source: https://grammis.ids-mannheim.de/terminologie/1175",
 				"contaminationKeys": [
 					"target-lexical-unit:die-katze-aus-dem-sack-lassen"
 				]

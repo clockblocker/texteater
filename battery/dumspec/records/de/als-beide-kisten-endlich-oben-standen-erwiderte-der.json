@@ -60,10 +60,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "danke danke",
-						"coreFeatures": { "discourseFormulaRole": "Thanks" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "danke danke",
 					"spelling": "Canonical",

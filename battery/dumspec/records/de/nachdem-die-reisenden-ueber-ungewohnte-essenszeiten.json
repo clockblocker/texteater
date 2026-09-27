@@ -57,9 +57,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Andere Länder andere Sitten",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Andere Länder, andere Sitten",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Andere Länder andere Sitten",

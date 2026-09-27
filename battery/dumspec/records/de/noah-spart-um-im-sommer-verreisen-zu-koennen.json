@@ -40,10 +40,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "um zu",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "um … zu",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "um zu",
 					"spelling": "Canonical",

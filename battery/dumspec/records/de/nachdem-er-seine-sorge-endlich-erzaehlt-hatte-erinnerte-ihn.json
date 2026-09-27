@@ -58,8 +58,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Geteiltes Leid ist halbes Leid",
 						"coreFeatures": {}
 					},

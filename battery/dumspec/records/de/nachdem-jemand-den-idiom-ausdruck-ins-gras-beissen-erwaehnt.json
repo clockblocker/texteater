@@ -72,10 +72,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "um himmels willen",
-						"coreFeatures": { "discourseFormulaRole": "Reaction" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "um Himmels willen",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "um Himmels willen",
 					"spelling": "Canonical",

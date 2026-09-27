@@ -63,8 +63,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "אין חדש תחת השמש",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

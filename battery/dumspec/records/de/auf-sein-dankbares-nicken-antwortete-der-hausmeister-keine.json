@@ -52,12 +52,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "keine ursache",
-						"coreFeatures": {
-							"discourseFormulaRole": "Acknowledgment"
-						}
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "keine Ursache",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "keine Ursache",
 					"spelling": "Canonical",

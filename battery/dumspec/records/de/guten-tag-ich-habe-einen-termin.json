@@ -36,15 +36,15 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "Guten Tag",
+					"normalizedSurface": "guten Tag",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Guten Tag",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+						"canonicalForm": "guten Tag",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

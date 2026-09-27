@@ -18,7 +18,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "נו is kept as INTJ rather than a discourse formula because it functions as a prompting interjection."
+				"rationale": "נו is kept as INTJ rather than a multiword formula because it functions as a prompting interjection."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

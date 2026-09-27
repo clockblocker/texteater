@@ -53,8 +53,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "den Nagel auf den Kopf treffen",
 						"coreFeatures": {}
 					},

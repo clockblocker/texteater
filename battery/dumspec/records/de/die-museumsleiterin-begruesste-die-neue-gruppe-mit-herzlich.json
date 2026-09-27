@@ -46,10 +46,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "herzlich willkommen",
-						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "herzlich willkommen",
 					"spelling": "Canonical",

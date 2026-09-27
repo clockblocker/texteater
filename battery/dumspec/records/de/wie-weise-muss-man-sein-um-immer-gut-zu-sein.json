@@ -43,9 +43,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Wie weise muss man sein um immer gut zu sein",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wie weise muss man sein, um immer gut zu sein",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wie weise muss man sein um immer gut zu sein",
@@ -65,6 +65,9 @@
 					{ "attested": "sein", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

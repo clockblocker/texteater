@@ -37,7 +37,7 @@
 		{
 			"memberSegmentIndices": [20],
 			"notes": {
-				"rationale": "The nearby greeting is an unmarked DiscourseFormula; the authoritative singleton reaction remains INTJ."
+				"rationale": "The nearby greeting is an unmarked Locution/INTJ; the authoritative singleton reaction remains INTJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

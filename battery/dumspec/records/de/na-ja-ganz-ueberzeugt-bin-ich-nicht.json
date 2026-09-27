@@ -26,7 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "The Full Attestation records both members of the discourse formula na ja; the docs review span on ja does not make it a standalone response particle. Na ja is treated as a discourse formula with the role Reaction; punctuation is excluded from the normalized surface."
+				"rationale": "The Full Attestation records both members of the routine formula na ja; the docs review span on ja does not make it a standalone response particle. Na ja is a Locution/INTJ; punctuation is excluded from the normalized surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,9 +44,9 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "na ja",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Reaction" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

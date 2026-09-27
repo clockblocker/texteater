@@ -51,9 +51,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert, ist ein schlechter Erzieher",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
@@ -76,6 +76,9 @@
 					{ "attested": "Erzieher", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

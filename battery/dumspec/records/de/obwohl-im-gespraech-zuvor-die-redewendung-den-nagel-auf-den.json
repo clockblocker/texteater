@@ -88,9 +88,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wie man sich bettet so liegt man",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wie man sich bettet, so liegt man",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wie man sich bettet so liegt man",

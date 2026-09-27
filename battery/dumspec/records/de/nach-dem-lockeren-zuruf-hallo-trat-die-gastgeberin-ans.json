@@ -68,10 +68,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Lexeme",
+						"kind": "INTJ",
 						"canonicalForm": "willkommen",
-						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "willkommen",
 					"spelling": "Canonical",

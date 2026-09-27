@@ -71,9 +71,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Man kann viele Dinge kaufen die unbezahlbar sind",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Man kann viele Dinge kaufen, die unbezahlbar sind",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Man kann viele Dinge kaufen die unbezahlbar sind",
@@ -91,6 +91,9 @@
 					{ "attested": "sind", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

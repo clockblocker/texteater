@@ -40,10 +40,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "CCONJ",
 						"canonicalForm": "sowohl … wie",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sowohl wie",
 					"spelling": "Canonical",

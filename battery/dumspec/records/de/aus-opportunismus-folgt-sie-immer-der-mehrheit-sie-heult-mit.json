@@ -38,189 +38,55 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [17, 19, 21, 25],
+			"notes": {
+				"rationale": "hungrigen modifies Wölfen and stays outside; every fixed word is present, so the Locution is Full."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "heult", "orthography": "Standard" },
+					{ "attested": "mit", "orthography": "Standard" },
+					{ "attested": "den", "orthography": "Standard" },
+					{ "attested": "Wölfen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "heult mit den Wölfen",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "mit den Wölfen heulen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-fixed-function-click-heult",
-			"memberSegmentIndices": [17, 19, 21, 25],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 17,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Opportunismus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "folgt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mehrheit" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heult" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hungrigen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wölfen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [17, 19, 21, 25]
-				},
-				"explanation": "This IDS publication records mit den Wölfen heulen as a conventional expression. Its broader paremiological label does not determine Dumgen's occurrence route: issue #82 product policy classifies the inflected predicate here as Phraseme/Idiom, includes its fixed function words, and excludes the inserted adjective. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13241/file/Matulina_Die_Verwendung_von_Sprichwoertern_2012.pdf"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-fixed-function-click-mit",
-			"memberSegmentIndices": [17, 19, 21, 25],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 19,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Opportunismus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "folgt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mehrheit" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heult" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hungrigen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wölfen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [17, 19, 21, 25]
-				},
-				"explanation": "This IDS publication records mit den Wölfen heulen as a conventional expression. Its broader paremiological label does not determine Dumgen's occurrence route: issue #82 product policy classifies the inflected predicate here as Phraseme/Idiom, includes its fixed function words, and excludes the inserted adjective. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13241/file/Matulina_Die_Verwendung_von_Sprichwoertern_2012.pdf"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-fixed-function-click-den",
-			"memberSegmentIndices": [17, 19, 21, 25],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 21,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Opportunismus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "folgt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mehrheit" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heult" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hungrigen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wölfen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [17, 19, 21, 25]
-				},
-				"explanation": "This IDS publication records mit den Wölfen heulen as a conventional expression. Its broader paremiological label does not determine Dumgen's occurrence route: issue #82 product policy classifies the inflected predicate here as Phraseme/Idiom, includes its fixed function words, and excludes the inserted adjective. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13241/file/Matulina_Die_Verwendung_von_Sprichwoertern_2012.pdf"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-fixed-function-click-woelfen",
-			"memberSegmentIndices": [17, 19, 21, 25],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 25,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Opportunismus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "folgt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mehrheit" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heult" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hungrigen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wölfen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [17, 19, 21, 25]
-				},
-				"explanation": "This IDS publication records mit den Wölfen heulen as a conventional expression. Its broader paremiological label does not determine Dumgen's occurrence route: issue #82 product policy classifies the inflected predicate here as Phraseme/Idiom, includes its fixed function words, and excludes the inserted adjective. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13241/file/Matulina_Die_Verwendung_von_Sprichwoertern_2012.pdf"
-			}
-		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-boundary-fixed-function-near-hungrigen",

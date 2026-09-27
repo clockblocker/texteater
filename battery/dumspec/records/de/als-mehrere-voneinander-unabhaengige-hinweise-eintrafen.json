@@ -57,9 +57,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wo Rauch ist ist auch Feuer",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wo Rauch ist, ist auch Feuer",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo Rauch ist ist auch Feuer",

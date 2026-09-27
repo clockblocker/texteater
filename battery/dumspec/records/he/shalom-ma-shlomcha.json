@@ -18,7 +18,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "שלום is treated as a discourse formula rather than as the noun peace because the sentence is a greeting."
+				"rationale": "שלום is a one-word routine formula, Lexeme/INTJ, rather than the noun peace, because the sentence is a greeting."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -33,8 +33,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "שלום",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Lexeme",
+						"kind": "INTJ",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

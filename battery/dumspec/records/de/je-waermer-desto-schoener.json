@@ -20,7 +20,37 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 5],
+			"notes": {
+				"rationale": "je and desto are the anchors of one Locution/SCONJ; the comparatives they connect stay outside (Rule de/correlator-anchors)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Je", "orthography": "Standard" },
+					{ "attested": "desto", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "je desto",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "SCONJ",
+						"canonicalForm": "je … desto",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

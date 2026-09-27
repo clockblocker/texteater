@@ -30,7 +30,7 @@
 		{
 			"memberSegmentIndices": [9, 15],
 			"notes": {
-				"rationale": "The Full Attestation records both ordered members of the multi-member Lexeme/SCONJ `um zu`; the docs-owned review span remains on `zu`, outside the Dumling DTO."
+				"rationale": "The Full Attestation records both ordered members of the Locution/SCONJ `um … zu`; the docs-owned review span remains on `zu`, outside the Dumling DTO."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -47,10 +47,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "um zu",
-						"family": "Lexeme",
+						"canonicalForm": "um … zu",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

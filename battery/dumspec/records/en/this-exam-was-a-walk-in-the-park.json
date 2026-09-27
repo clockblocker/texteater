@@ -44,11 +44,12 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "walk in the park",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "NOUN",
 						"coreFeatures": {}
 					},
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "number": "Sing" }
 				}
 			}
 		}

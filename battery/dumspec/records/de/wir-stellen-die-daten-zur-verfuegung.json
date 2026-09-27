@@ -44,8 +44,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Collocation",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "zur Verfügung stellen",
 						"coreFeatures": {}
 					},

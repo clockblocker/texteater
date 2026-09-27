@@ -78,8 +78,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Der frühe Vogel fängt den Wurm",
 						"coreFeatures": {}
 					},

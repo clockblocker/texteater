@@ -62,8 +62,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "חס וחלילה",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "INTJ",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

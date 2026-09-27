@@ -45,10 +45,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "guten morgen",
-						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "guten Morgen",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "guten Morgen",
 					"spelling": "Canonical",

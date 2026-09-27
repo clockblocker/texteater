@@ -39,10 +39,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "anstatt zu",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "anstatt … zu",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "anstatt zu",
 					"spelling": "Canonical",

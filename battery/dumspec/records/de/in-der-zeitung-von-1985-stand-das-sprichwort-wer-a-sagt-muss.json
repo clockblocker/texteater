@@ -58,9 +58,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wer A sagt muss auch B sagen",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer A sagt, muss auch B sagen",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer A sagt muß auch B sagen",

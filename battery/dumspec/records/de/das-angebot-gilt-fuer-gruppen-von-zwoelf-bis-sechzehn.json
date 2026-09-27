@@ -42,14 +42,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "NUM",
 						"canonicalForm": "zwölf bis sechzehn",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"numType": "Range"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zwölf bis sechzehn",
 					"spelling": "Canonical",

@@ -52,10 +52,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "auf keinen fall",
-						"coreFeatures": { "discourseFormulaRole": "Refusal" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "auf keinen Fall",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf keinen Fall",
 					"spelling": "Canonical",

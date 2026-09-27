@@ -43,10 +43,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "ohne zu",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "ohne … zu",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ohne zu",
 					"spelling": "Canonical",

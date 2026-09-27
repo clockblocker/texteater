@@ -58,9 +58,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wo ein Wille ist ist auch ein Weg",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wo ein Wille ist, ist auch ein Weg",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo ein Wille ist ist auch ein Weg",

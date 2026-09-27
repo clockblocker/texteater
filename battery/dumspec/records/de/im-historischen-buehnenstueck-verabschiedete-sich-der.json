@@ -48,10 +48,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "gott befohlen",
-						"coreFeatures": { "discourseFormulaRole": "Farewell" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "Gott befohlen",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "Gott befohlen",
 					"spelling": "Canonical",

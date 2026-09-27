@@ -42,7 +42,7 @@
 		{
 			"memberSegmentIndices": [22, 24],
 			"notes": {
-				"rationale": "The presentation function has no exact value in the role enum, so this Lemma identity has null role."
+				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,10 +52,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "bitte schön",
-						"coreFeatures": { "discourseFormulaRole": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "bitte schön",
 					"spelling": "Canonical",

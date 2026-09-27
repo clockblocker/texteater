@@ -50,10 +50,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "bitte schön",
-						"coreFeatures": { "discourseFormulaRole": "Request" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "bitte schön",
 					"spelling": "Canonical",

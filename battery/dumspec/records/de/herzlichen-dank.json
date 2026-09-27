@@ -15,52 +15,33 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-discourse-click-herzlichen",
 			"memberSegmentIndices": [0, 2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Herzlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Dank" },
-						{ "kind": "Punctuation", "text": "!" }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "DiscourseFormula",
-					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not assign Dumgen's route to Herzlichen Dank; issue #82 product policy treats this conventional greeting response as Phraseme/DiscourseFormula and includes both fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-discourse-click-dank",
-			"memberSegmentIndices": [0, 2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Herzlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Dank" },
-						{ "kind": "Punctuation", "text": "!" }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "DiscourseFormula",
-					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not assign Dumgen's route to Herzlichen Dank; issue #82 product policy treats this conventional greeting response as Phraseme/DiscourseFormula and includes both fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Herzlichen", "orthography": "Standard" },
+					{ "attested": "Dank", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "herzlichen Dank",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "herzlichen Dank",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

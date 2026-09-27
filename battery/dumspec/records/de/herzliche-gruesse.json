@@ -15,30 +15,33 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-discourse-herzliche-gruesse-click-herzliche",
 			"memberSegmentIndices": [0, 2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Herzliche" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Grüße" },
-						{ "kind": "Punctuation", "text": "!" }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "DiscourseFormula",
-					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not assign Dumgen's route to Herzlichen Dank; issue #82 product policy treats this conventional greeting response as Phraseme/DiscourseFormula and includes both fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Herzliche", "orthography": "Standard" },
+					{ "attested": "Grüße", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "herzliche Grüße",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "herzliche Grüße",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

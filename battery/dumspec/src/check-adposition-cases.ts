@@ -60,8 +60,10 @@ export function attestationAdpositionCaseIssues(
 	}[];
 	return slots.flatMap(({ complement, realizedCase }, index) => {
 		const path = `valencyEvidence.${index}`;
-		// The table lists Lexeme ADPs, circumpositions (`um … willen`) among
-		// them; a Kind never implies its Family (ADR 0039).
+		// Only a Lexeme ADP records its complement's case. A circumposition
+		// (`um … willen`) is a Locution ADP and records none until #652, so
+		// the table's circumposition entries have no occurrence to check yet;
+		// a Kind never implies its Family (ADR 0039).
 		if (
 			lemma.family === "Lexeme" &&
 			lemma.kind === "ADP" &&

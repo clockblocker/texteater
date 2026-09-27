@@ -41,10 +41,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "CCONJ",
 						"canonicalForm": "sowohl … wie auch",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sowohl wie auch",
 					"spelling": "Canonical",

@@ -37,14 +37,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "NUM",
 						"canonicalForm": "ein Komma fünf",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ein Komma fünf",
 					"spelling": "Canonical",

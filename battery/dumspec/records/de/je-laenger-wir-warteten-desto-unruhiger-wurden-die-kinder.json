@@ -32,26 +32,32 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [0, 9],
+			"notes": {
+				"rationale": "je and desto are the anchors of one Locution/SCONJ; the comparatives they connect stay outside (Rule de/correlator-anchors)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Je", "orthography": "Standard" },
+					{ "attested": "desto", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "je desto",
+					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "je",
-						"coreFeatures": { "conjType": "Comp" }
+						"canonicalForm": "je … desto",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "je",
-					"spelling": "Canonical",
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "Je", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		}
 	],

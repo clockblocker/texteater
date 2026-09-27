@@ -48,10 +48,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "nein danke",
-						"coreFeatures": { "discourseFormulaRole": "Refusal" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "nein danke",
 					"spelling": "Canonical",

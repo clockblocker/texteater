@@ -67,14 +67,14 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "morgenstund hat gold im mund",
+					"normalizedSurface": "Morgenstund hat Gold im Mund",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "Morgenstund hat Gold im Mund",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

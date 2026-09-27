@@ -48,23 +48,19 @@
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADV",
 						"canonicalForm": "und so weiter",
-						"coreFeatures": {
-							"foreign": null,
-							"numType": null,
-							"pronType": null
-						}
+						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "und so weiter",
 					"spelling": "Canonical",
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "und", "orthography": "Standard" },

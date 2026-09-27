@@ -31,23 +31,19 @@
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADV",
 						"canonicalForm": "zum Teil",
-						"coreFeatures": {
-							"foreign": null,
-							"numType": null,
-							"pronType": null
-						}
+						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum Teil",
 					"spelling": "Canonical",
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "z.T.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"

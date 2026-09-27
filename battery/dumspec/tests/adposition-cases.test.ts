@@ -200,18 +200,28 @@ test("the table lists the new circumpositions with …", () => {
 		).toEqual(allowed);
 });
 
-test("the table finds a circumposition written with … or ASCII ...", () => {
+test("the table finds a circumposition, a Locution ADP, written with … or ASCII ...", () => {
 	const circumposition = (canonicalForm: string) => {
-		const parsed = parseUnit(adposition(canonicalForm, "Circ"));
+		const parsed = parseUnit({
+			unitKind: "Lemma",
+			language: "de",
+			family: "Locution",
+			kind: "ADP",
+			canonicalForm,
+			coreFeatures: {},
+		});
 		if (!parsed.success || parsed.chain.unitKind !== "Lemma")
 			throw Error(`Dumling rejects ${canonicalForm}`);
-		return parsed.chain.value as Dumling.Lemma<"de", "Lexeme", "ADP">;
+		return parsed.chain.value as Dumling.Lemma<"de", "Locution", "ADP">;
 	};
 	const ascii = circumposition("um ... willen");
 	expect(ascii).toEqual(circumposition("um … willen"));
 	expect(germanAdpositionCases(ascii)?.allowed).toEqual(["Gen"]);
 	expect(
-		germanAdpositionCases(adposition("um ... willen", "Circ"))?.allowed,
+		germanAdpositionCases({
+			canonicalForm: "um ... willen",
+			coreFeatures: {},
+		})?.allowed,
 	).toEqual(["Gen"]);
 });
 

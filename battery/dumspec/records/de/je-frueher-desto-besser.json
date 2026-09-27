@@ -20,65 +20,39 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 5],
+			"notes": {
+				"rationale": "je and desto are the anchors of one Locution/SCONJ; the comparatives they connect stay outside (Rule de/correlator-anchors)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Je", "orthography": "Standard" },
+					{ "attested": "desto", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "je desto",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "SCONJ",
+						"canonicalForm": "je … desto",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-lexeme-cconj-click-je",
-			"memberSegmentIndices": [0, 5],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Je" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "früher" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "desto" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "besser" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "CCONJ",
-					"memberSegmentIndices": [0, 5]
-				},
-				"explanation": "IDS describes je with obligatory desto or umso as a two-part proportional correlation. ADR 0009 maps the complete fixed correlator to one Lexeme/CCONJ while keeping the comparative fillers separate. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2118",
-				"contaminationKeys": ["target-lexeme:cconj:je-desto"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-lexeme-cconj-click-desto",
-			"memberSegmentIndices": [0, 5],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 5,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Je" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "früher" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "desto" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "besser" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "CCONJ",
-					"memberSegmentIndices": [0, 5]
-				},
-				"explanation": "IDS describes je with obligatory desto or umso as a two-part proportional correlation. ADR 0009 maps the complete fixed correlator to one Lexeme/CCONJ while keeping the comparative fillers separate. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2118",
-				"contaminationKeys": ["target-lexeme:cconj:je-desto"]
-			}
-		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-route-lexeme-cconj-near-frueher",

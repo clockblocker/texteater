@@ -51,9 +51,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wer im Glashaus sitzt soll nicht mit Steinen werfen",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer im Glashaus sitzt, soll nicht mit Steinen werfen",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer im Glashaus sitzt",

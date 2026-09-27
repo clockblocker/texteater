@@ -39,10 +39,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
 						"canonicalForm": "so dass",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "so dass",
 					"spelling": "Canonical",

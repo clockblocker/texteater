@@ -47,10 +47,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "auf wiedersehen",
-						"coreFeatures": { "discourseFormulaRole": "Farewell" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "auf Wiedersehen",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf Wiedersehen",
 					"spelling": "Canonical",

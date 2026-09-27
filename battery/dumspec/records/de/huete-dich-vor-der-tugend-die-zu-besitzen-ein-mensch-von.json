@@ -53,9 +53,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Hüte dich vor der Tugend, die zu besitzen ein Mensch von sich selber rühmt",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt",
@@ -79,6 +79,9 @@
 					{ "attested": "rühmt", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

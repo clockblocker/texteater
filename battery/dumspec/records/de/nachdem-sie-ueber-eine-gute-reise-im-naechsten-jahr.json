@@ -62,7 +62,7 @@
 		{
 			"memberSegmentIndices": [39, 41],
 			"notes": {
-				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context, and Wish has no role enum value."
+				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context. The wish is the formula's Formula Role, Reading Knowledge (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -72,10 +72,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "gute reise",
-						"coreFeatures": { "discourseFormulaRole": null }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "gute Reise",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gute Reise",
 					"spelling": "Canonical",

@@ -34,23 +34,19 @@
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADV",
 						"canonicalForm": "zum Beispiel",
-						"coreFeatures": {
-							"foreign": null,
-							"numType": null,
-							"pronType": null
-						}
+						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum Beispiel",
 					"spelling": "Canonical",
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "z.B.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"

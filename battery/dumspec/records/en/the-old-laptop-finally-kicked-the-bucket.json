@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"notes": {
-				"rationale": "The verb is inflected in the sentence, while the idiom resolves to a Citation Surface linked to its Phraseme Lemma."
+				"rationale": "The Locution inflects like its verb: kicked the bucket is the past tense of kick the bucket."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,11 +44,19 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "kick the bucket",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": "Past",
+						"verbForm": "Fin",
+						"voice": null
+					}
 				}
 			}
 		}

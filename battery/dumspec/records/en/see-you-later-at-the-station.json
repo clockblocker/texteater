@@ -42,9 +42,9 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "see you later",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Farewell" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

@@ -51,8 +51,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "die Zunge im Zaum halten",
 						"coreFeatures": {}
 					},

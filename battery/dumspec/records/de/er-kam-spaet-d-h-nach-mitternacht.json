@@ -38,10 +38,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "CCONJ",
 						"canonicalForm": "das heißt",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "das heißt",
 					"spelling": "Canonical",

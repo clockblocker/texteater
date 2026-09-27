@@ -49,10 +49,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "vielen herzlichen dank",
-						"coreFeatures": { "discourseFormulaRole": "Thanks" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "vielen herzlichen Dank",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "vielen herzlichen",
 					"spelling": "Canonical",

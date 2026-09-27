@@ -41,8 +41,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Die meisten Nachahmer lockt das Unnachahmliche",
 						"coreFeatures": {}
 					},
@@ -59,6 +59,9 @@
 					{ "attested": "Unnachahmliche", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

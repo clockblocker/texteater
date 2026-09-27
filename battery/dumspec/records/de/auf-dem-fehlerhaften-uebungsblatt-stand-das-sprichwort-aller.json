@@ -49,8 +49,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Aller Anfang ist schwer",
 						"coreFeatures": {}
 					},

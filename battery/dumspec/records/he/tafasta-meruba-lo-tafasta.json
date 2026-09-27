@@ -39,8 +39,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "תפסת מרובה לא תפסת",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

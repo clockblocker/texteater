@@ -53,8 +53,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "alle Hände voll zu tun haben",
 						"coreFeatures": {}
 					},

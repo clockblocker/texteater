@@ -39,7 +39,7 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"notes": {
-				"rationale": "Congratulation is a supported interactional formula but is not represented by the role enum."
+				"rationale": "A congratulation formula, one Locution/INTJ. What it does in conversation is its Formula Role, Reading Knowledge, not part of the Lemma (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,10 +49,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "herzlichen glückwunsch",
-						"coreFeatures": { "discourseFormulaRole": null }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "herzlichen Glückwunsch",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "herzlichen Glückwunsch",
 					"spelling": "Canonical",

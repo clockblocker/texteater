@@ -36,6 +36,7 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "en",
 					"normalizedSurface": "by and large",
 					"spelling": "Canonical",
@@ -43,9 +44,9 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "by and large",
-						"family": "Phraseme",
-						"kind": "Idiom",
-						"coreFeatures": {}
+						"family": "Locution",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}

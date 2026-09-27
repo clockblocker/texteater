@@ -52,9 +52,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wenn man nur die Alten liest, ist man sicher, immer neu zu bleiben",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
@@ -77,6 +77,9 @@
 					{ "attested": "bleiben", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

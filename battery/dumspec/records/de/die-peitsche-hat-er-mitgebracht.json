@@ -175,28 +175,43 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [12, 20, 22],
 			"notes": {
-				"rationale": "The Full Attestation preserves the complete normalized Surface nimmt, which resolves to the fixed-expression Lemma in acht nehmen rather than a standalone nehmen inflection."
+				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is Variant. Acht is not the numeral."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "nimmt", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "nimmt", "orthography": "Standard" },
+					{ "attested": "in", "orthography": "Standard" },
+					{ "attested": "acht", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"language": "de",
-					"normalizedSurface": "nimmt",
-					"spelling": "Canonical",
+					"normalizedSurface": "nimmt in acht",
+					"spelling": "Variant",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "in acht nehmen",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"canonicalForm": "in Acht nehmen",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
@@ -299,38 +314,6 @@
 							"numType": null,
 							"pronType": null
 						}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [20, 22],
-			"notes": {
-				"rationale": "I treated in as part of the idiom in acht nehmen rather than as a free adposition, because the phrase is functioning as one fixed learner-facing unit here. Acht is not the numeral here. It is the internal noun-shaped component of the fixed idiom in acht nehmen, so the attestation points to the whole idiom."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "in", "orthography": "Standard" },
-					{ "attested": "acht", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"inflectionalFeatures": null,
-					"language": "de",
-					"normalizedSurface": "in acht",
-					"spelling": "Canonical",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "in acht nehmen",
-						"family": "Phraseme",
-						"kind": "Idiom",
-						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

@@ -43,10 +43,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "CCONJ",
+						"family": "Locution",
+						"kind": "SCONJ",
 						"canonicalForm": "je … umso",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "je umso",
 					"spelling": "Canonical",

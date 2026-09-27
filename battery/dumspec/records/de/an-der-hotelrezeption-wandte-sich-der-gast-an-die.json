@@ -56,10 +56,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "schönen guten tag",
-						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "schönen guten Tag",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "schönen guten Tag",
 					"spelling": "Canonical",

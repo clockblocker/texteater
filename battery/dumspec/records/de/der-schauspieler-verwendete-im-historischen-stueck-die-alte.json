@@ -63,9 +63,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wes Brot ich ess des Lied ich sing",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wes Brot ich ess, des Lied ich sing",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wes Brot ich ess des Lied ich sing",

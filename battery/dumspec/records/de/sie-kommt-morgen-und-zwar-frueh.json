@@ -44,10 +44,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "CCONJ",
 						"canonicalForm": "und zwar",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und zwar",
 					"spelling": "Canonical",

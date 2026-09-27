@@ -30,7 +30,9 @@ two-way, `wegen` {Gen, Dat} preferring Gen, `entlang` Post {Acc} and Prep
 alone. It is a fact about the language, so Dumling types a frame's
 preposition and case without it (ADR 0041). Dumspec checks that a
 governor's Preposition Slot and an ADP occurrence's realized case, in its
-records and inventories, are cases the table allows.
+records and inventories, are cases the table allows. The table lists the
+circumpositions too (`um … willen`), but they are Locution ADPs and record
+no case until #652 decides, so no check reads those entries yet.
 _Avoid_: governed case, governedCase, case government feature
 
 **Spec Record**:

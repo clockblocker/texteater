@@ -17,83 +17,34 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-aphorism-zeit-click-zeit",
 			"memberSegmentIndices": [0, 2, 4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Zeit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Geld" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Aphorism",
-					"memberSegmentIndices": [0, 2, 4]
-				},
-				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 treats Zeit ist Geld as the complete Phraseme/Aphorism target under the German high-level policy. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": ["target-phraseme:aphorism:zeit-ist-geld"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-aphorism-zeit-click-ist",
-			"memberSegmentIndices": [0, 2, 4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Zeit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Geld" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Aphorism",
-					"memberSegmentIndices": [0, 2, 4]
-				},
-				"explanation": "The clicked copular spelling participates in the fixed Aphorism rather than becoming a standalone VERB under this high-level occurrence. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": ["target-phraseme:aphorism:zeit-ist-geld"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-aphorism-zeit-click-geld",
-			"memberSegmentIndices": [0, 2, 4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Zeit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Geld" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Aphorism",
-					"memberSegmentIndices": [0, 2, 4]
-				},
-				"explanation": "Every fixed member click returns the same source-ordered Aphorism target. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": ["target-phraseme:aphorism:zeit-ist-geld"]
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Zeit", "orthography": "Standard" },
+					{ "attested": "ist", "orthography": "Standard" },
+					{ "attested": "Geld", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Zeit ist Geld",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Zeit ist Geld",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

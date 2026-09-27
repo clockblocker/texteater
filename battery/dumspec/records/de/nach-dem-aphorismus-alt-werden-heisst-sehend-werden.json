@@ -67,7 +67,7 @@
 		{
 			"memberSegmentIndices": [34, 36, 38, 40, 42, 44, 46, 47, 49],
 			"notes": {
-				"rationale": "The explicitly framed unmarked Aphorism is context, not a reason to reopen the marked target's route."
+				"rationale": "The explicitly framed unmarked maxim is context, not a reason to reopen the marked target's route."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -77,8 +77,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Einem geschenkten Gaul schaut man nicht ins Maul",
 						"coreFeatures": {}
 					},

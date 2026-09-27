@@ -52,10 +52,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "dann wollen wir mal",
-						"coreFeatures": { "discourseFormulaRole": "Initiation" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "dann wollen wir mal",
 					"spelling": "Canonical",

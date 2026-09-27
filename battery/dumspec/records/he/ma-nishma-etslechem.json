@@ -17,7 +17,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "The multiword greeting is modeled as one discourse-formula surface."
+				"rationale": "The multiword greeting is one Locution/INTJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,8 +35,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "מה נשמע",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

@@ -43,10 +43,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
 						"canonicalForm": "als ob",
-						"coreFeatures": { "conjType": "Comp" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "als ob",
 					"spelling": "Canonical",

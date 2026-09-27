@@ -43,12 +43,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "gern geschehen",
-						"coreFeatures": {
-							"discourseFormulaRole": "Acknowledgment"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gern geschehen",
 					"spelling": "Canonical",

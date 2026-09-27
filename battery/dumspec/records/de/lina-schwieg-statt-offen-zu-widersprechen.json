@@ -28,7 +28,7 @@
 		{
 			"memberSegmentIndices": [5, 9],
 			"notes": {
-				"rationale": "statt zu is a lexical identity of its own, not a spelling variant of anstatt zu."
+				"rationale": "statt … zu is a Lemma of its own, not a spelling variant of anstatt … zu."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -38,10 +38,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "statt zu",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "statt … zu",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "statt zu",
 					"spelling": "Canonical",

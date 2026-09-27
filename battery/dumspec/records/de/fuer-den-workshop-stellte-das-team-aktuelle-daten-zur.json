@@ -32,125 +32,71 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-verfuegung-click-stellte",
 			"memberSegmentIndices": [6, 16, 17, 19],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Für" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Workshop" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Team" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aktuelle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Daten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "r" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Verfügung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [6, 16, 17, 19]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-verfuegung-click-zur",
-			"memberSegmentIndices": [6, 16, 17, 19],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 16,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Für" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Workshop" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Team" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aktuelle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Daten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "r" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Verfügung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [6, 16, 17, 19]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-verfuegung-click-verfuegung",
-			"memberSegmentIndices": [6, 16, 17, 19],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 19,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Für" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Workshop" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Team" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aktuelle" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Daten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "r" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Verfügung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [6, 16, 17, 19]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Verfügung stellen: the fused zur is one Segment in this corpus and belongs to the expression through the noun it articles and the preposition it carries; aktuelle Daten is the free object."
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "stellte", "orthography": "Standard" },
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zur",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "r", "surface": "der" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "r",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zur",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "r", "surface": "der" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Verfügung", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "stellte zur Verfügung",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "zur Verfügung stellen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

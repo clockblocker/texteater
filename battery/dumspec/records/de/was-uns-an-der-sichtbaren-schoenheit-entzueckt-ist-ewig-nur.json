@@ -47,9 +47,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Was uns an der sichtbaren Schönheit entzückt, ist ewig nur die unsichtbare",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare",
@@ -71,6 +71,9 @@
 					{ "attested": "unsichtbare", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

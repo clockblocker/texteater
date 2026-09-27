@@ -58,9 +58,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Geduld mit der Streitsucht der Einfältigen! Es ist nicht leicht zu begreifen, dass man nicht begreift",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift",
@@ -86,6 +86,9 @@
 					{ "attested": "begreift", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			}
 		}
 	],

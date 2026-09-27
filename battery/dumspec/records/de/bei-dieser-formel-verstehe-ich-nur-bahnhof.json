@@ -58,8 +58,8 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "nur Bahnhof verstehen",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

@@ -23,108 +23,51 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 8, 10],
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "trifft", "orthography": "Standard" },
+					{ "attested": "eine", "orthography": "Standard" },
+					{ "attested": "Entscheidung", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "trifft eine Entscheidung",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "eine Entscheidung treffen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-collocation-click-trifft",
-			"memberSegmentIndices": [4, 8, 10],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ausschuss" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "trifft" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heute" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "eine" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Entscheidung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [4, 8, 10]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
-				"contaminationKeys": [
-					"target-lexical-unit:eine-entscheidung-treffen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-collocation-click-eine",
-			"memberSegmentIndices": [4, 8, 10],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 8,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ausschuss" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "trifft" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heute" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "eine" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Entscheidung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [4, 8, 10]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
-				"contaminationKeys": [
-					"target-lexical-unit:eine-entscheidung-treffen"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-collocation-click-entscheidung",
-			"memberSegmentIndices": [4, 8, 10],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 10,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ausschuss" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "trifft" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heute" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "eine" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Entscheidung" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Collocation",
-					"memberSegmentIndices": [4, 8, 10]
-				},
-				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202",
-				"contaminationKeys": [
-					"target-lexical-unit:eine-entscheidung-treffen"
-				]
-			}
-		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-boundary-collocation-near-heute",

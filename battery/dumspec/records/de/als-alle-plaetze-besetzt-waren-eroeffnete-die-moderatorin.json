@@ -56,10 +56,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "nun denn",
-						"coreFeatures": { "discourseFormulaRole": "Initiation" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "nun denn",
 					"spelling": "Canonical",

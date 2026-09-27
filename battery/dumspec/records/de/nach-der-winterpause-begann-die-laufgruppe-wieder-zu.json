@@ -54,9 +54,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wer rastet der rostet",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer rastet, der rostet",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer rastet der rostet",

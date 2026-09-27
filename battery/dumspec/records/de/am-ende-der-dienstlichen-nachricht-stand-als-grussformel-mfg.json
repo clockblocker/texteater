@@ -47,10 +47,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "mit freundlichen grüßen",
-						"coreFeatures": { "discourseFormulaRole": "Farewell" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "mit freundlichen Grüßen",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "MfG",
 					"spelling": "Variant",

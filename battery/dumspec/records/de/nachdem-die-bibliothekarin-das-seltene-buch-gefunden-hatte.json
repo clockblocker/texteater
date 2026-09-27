@@ -58,10 +58,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "besten dank",
-						"coreFeatures": { "discourseFormulaRole": "Thanks" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "besten Dank",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "besten Dank",
 					"spelling": "Canonical",

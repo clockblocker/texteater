@@ -61,9 +61,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Ende gut alles gut",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Ende gut, alles gut",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Ende gut alles gut",

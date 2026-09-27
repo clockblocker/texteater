@@ -44,9 +44,9 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "my bad",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Apology" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

@@ -36,7 +36,7 @@
 		{
 			"memberSegmentIndices": [4, 10],
 			"notes": {
-				"rationale": "an der Kirche vorbei is one constituent inside the noun phrase, outside any verbal bracket, so an … vorbei is a circumposition taking Dat. In der Radweg führt an der Schule vorbei the same words in the bracket give vorbeiführen."
+				"rationale": "an der Kirche vorbei is one constituent inside the noun phrase, outside any verbal bracket, so an … vorbei is a circumposition, a Locution ADP, taking Dat. In der Radweg führt an der Schule vorbei the same words in the bracket give vorbeiführen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,16 +46,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADP",
 						"canonicalForm": "an … vorbei",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Circ",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "an vorbei",
 					"spelling": "Canonical",
@@ -65,18 +59,7 @@
 					{ "attested": "an", "orthography": "Standard" },
 					{ "attested": "vorbei", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
+				"realizationCoverage": "Full"
 			}
 		}
 	],

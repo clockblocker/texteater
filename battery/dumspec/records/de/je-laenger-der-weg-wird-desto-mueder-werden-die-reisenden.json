@@ -36,7 +36,7 @@
 		{
 			"memberSegmentIndices": [0, 11],
 			"notes": {
-				"rationale": "Je and desto are the fixed CCONJ anchors; comparative payload remains unmarked."
+				"rationale": "Je and desto are the anchors of one Locution/SCONJ; the comparatives they connect stay outside (Rule de/correlator-anchors)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,10 +46,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "CCONJ",
+						"family": "Locution",
+						"kind": "SCONJ",
 						"canonicalForm": "je … desto",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "je desto",
 					"spelling": "Canonical",

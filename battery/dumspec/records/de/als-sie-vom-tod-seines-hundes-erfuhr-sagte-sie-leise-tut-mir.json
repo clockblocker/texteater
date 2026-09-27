@@ -46,7 +46,7 @@
 		{
 			"memberSegmentIndices": [24, 26, 28],
 			"notes": {
-				"rationale": "The speaker expresses sympathy rather than an apology; Sympathy has no role enum value."
+				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma tut mir leid as the apology; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,10 +56,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "tut mir leid",
-						"coreFeatures": { "discourseFormulaRole": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "tut mir leid",
 					"spelling": "Canonical",

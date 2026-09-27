@@ -58,9 +58,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wer zuerst kommt mahlt zuerst",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer zuerst kommt, mahlt zuerst",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer zuerst kommt mahlt zuerst",

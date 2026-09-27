@@ -49,7 +49,7 @@
 		{
 			"memberSegmentIndices": [27, 29, 31],
 			"notes": {
-				"rationale": "The unmarked greeting is a nearby DiscourseFormula; the marked Proverb remains authoritative."
+				"rationale": "The unmarked greeting is a nearby Locution/INTJ; the marked Saying remains authoritative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -59,8 +59,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"family": "Saying",
+						"kind": "Saying",
 						"canonicalForm": "Eile mit Weile",
 						"coreFeatures": {}
 					},

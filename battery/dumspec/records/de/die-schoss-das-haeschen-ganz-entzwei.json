@@ -84,7 +84,7 @@
 		{
 			"memberSegmentIndices": [23, 25],
 			"notes": {
-				"rationale": "The Full Attestation records both members O and wei of the reaction formula; the docs review span on wei does not make it an independent Lexeme. I linked the selected O to the whole exclamation o wei as a discourse formula, not to a standalone interjection token. That follows the dumling preference for preserving the meaning-bearing multiword formula when a learner highlights only one part of it."
+				"rationale": "The Full Attestation records both members O and wei of the reaction formula; the docs review span on wei does not make it an independent Lexeme. I linked the selected O to the whole exclamation o wei as a Locution/INTJ, not to a standalone interjection token: a click on any member selects the multiword formula."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -102,9 +102,9 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "o wei",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Reaction" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

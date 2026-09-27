@@ -80,10 +80,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "wie dem auch sei",
-						"coreFeatures": { "discourseFormulaRole": "Transition" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wie dem auch sei",
 					"spelling": "Canonical",

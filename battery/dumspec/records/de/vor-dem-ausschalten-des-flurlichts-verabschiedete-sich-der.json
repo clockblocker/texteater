@@ -53,10 +53,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "gute nacht",
-						"coreFeatures": { "discourseFormulaRole": "Farewell" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "gute Nacht",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gute Nacht",
 					"spelling": "Canonical",

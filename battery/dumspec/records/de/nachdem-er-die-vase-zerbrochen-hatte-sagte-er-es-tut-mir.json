@@ -66,10 +66,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Locution",
+						"kind": "INTJ",
 						"canonicalForm": "es tut mir leid",
-						"coreFeatures": { "discourseFormulaRole": "Apology" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "es tut mir leid",
 					"spelling": "Canonical",

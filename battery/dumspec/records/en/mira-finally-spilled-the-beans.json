@@ -40,11 +40,19 @@
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "spill the beans",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": "Past",
+						"verbForm": "Fin",
+						"voice": null
+					}
 				}
 			}
 		}

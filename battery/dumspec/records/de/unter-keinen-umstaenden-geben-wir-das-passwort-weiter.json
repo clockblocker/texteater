@@ -31,7 +31,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "The classified target is the DET member inside a larger phraseme context; preserve the fixed upstream function-word membership."
+				"rationale": "The classified target is the DET member inside a larger fixed expression; preserve the fixed upstream function-word membership."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

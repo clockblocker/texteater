@@ -66,9 +66,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wo gehobelt wird da fallen Späne",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wo gehobelt wird, da fallen Späne",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo gehobelt wird da fallen Späne",

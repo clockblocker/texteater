@@ -33,8 +33,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "תודה",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Lexeme",
+						"kind": "INTJ",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

@@ -52,10 +52,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"canonicalForm": "ach du meine güte",
-						"coreFeatures": { "discourseFormulaRole": "Reaction" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"canonicalForm": "ach du meine Güte",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ach du meine Güte",
 					"spelling": "Canonical",

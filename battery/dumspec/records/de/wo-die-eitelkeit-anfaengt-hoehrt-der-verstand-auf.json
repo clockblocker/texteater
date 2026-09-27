@@ -32,7 +32,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 9, 11, 13, 15],
 			"notes": {
-				"rationale": "The one misspelled member is repaired in the normalized Surface and marked Typo; punctuation remains outside membership."
+				"rationale": "The one misspelled member is repaired in the normalized Surface and marked Typo; punctuation remains outside membership. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,9 +42,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Wo die Eitelkeit anfängt hört der Verstand auf",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wo die Eitelkeit anfängt, hört der Verstand auf",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo die Eitelkeit anfängt hört der Verstand auf",

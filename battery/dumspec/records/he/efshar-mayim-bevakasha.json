@@ -59,8 +59,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "בבקשה",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
+						"family": "Lexeme",
+						"kind": "INTJ",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

@@ -16,54 +16,59 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-interrogative-partial-idiom-was-zum-click-was",
-			"memberSegmentIndices": [0, 2, 3],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Was" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Punctuation", "text": "…?" }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [0, 2, 3]
-				},
-				"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-interrogative-partial-idiom-was-zum-click-zum",
-			"memberSegmentIndices": [0, 2, 3],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Was" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Punctuation", "text": "…?" }
-					]
-				},
-				"idealOutput": {
-					"family": "Phraseme",
-					"kind": "Idiom",
-					"memberSegmentIndices": [0, 2, 3]
-				},
-				"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
+			"memberSegmentIndices": [2, 3],
+			"notes": {
+				"rationale": "Conventional truncation. The Locution is zum Teufel, which intensifies a question word (was, wer, wo zum Teufel); zu and m identify it and Teufel is unrealized fixed material. Was is a PRON of its own."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Partial",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "zum",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "zum Teufel",
+						"coreFeatures": { "comparable": null }
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

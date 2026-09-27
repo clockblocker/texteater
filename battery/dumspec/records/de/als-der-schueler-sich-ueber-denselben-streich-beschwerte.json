@@ -83,9 +83,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Was du nicht willst das man dir tu das füg auch keinem andern zu",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Was du nicht willst, das man dir tu, das füg auch keinem andern zu",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Was du nicht willst das man dir tu das füg auch keinem andern zu",

@@ -20,8 +20,6 @@ const everyLocution = locution(
 const saying: RuleRoute[] = [
 	{ language: "de", family: "Saying", kind: "Saying" },
 ];
-// The phraseme Rules keep their Phraseme-era statements until #668 rewrites
-// them; their routes already name the Locution and Saying routes (ADR 0039).
 const everyMultiword = [...everyLocution, ...saying];
 
 /** Which Segments form one unit, whatever its route. */
@@ -43,9 +41,9 @@ const units: Rule[] = [
 		records: [],
 	},
 	{
-		id: "de/phrasemes-are-made-of-lexemes",
+		id: "de/locutions-and-sayings-are-made-of-lexemes",
 		statement:
-			"Every word belongs to exactly one target: the biggest unit it is part of. A word inside an idiom or a collocation has no target of its own in the sentence; the multiword unit leads to it through the Lemma's Breakdown.",
+			"Every word belongs to exactly one target: the biggest unit it is part of. A word inside a Locution or a Saying has no target of its own in the sentence; the multiword unit leads to it through the Lemma's Breakdown.",
 		adrs: ["ADR-0041", "dumgen/ADR-0007"],
 		routes: everyMultiword,
 		records: [],
@@ -99,14 +97,16 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition ADP only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen).",
+			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen).",
 		adrs: ["ADR-0004", "ADR-0022", "ADR-0034", "ADR-0039"],
-		routes: lexeme("VERB", "ADP"),
+		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
 			"de/der-radweg-fuehrt-an-der-schule-vorbei",
 			"de/die-wirkung-reicht-ueber-das-jahr-hinaus",
 			"de/der-weg-an-der-kirche-vorbei-ist-gesperrt",
 			"de/von-der-terrasse-aus-sieht-man-den-see",
+			"de/um-des-friedens-willen-schwiegen-beide-seiten",
+			"de/von-diesem-tag-an-fuehrte-sie-das-protokoll",
 		],
 	},
 	{
@@ -311,10 +311,24 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/correlator-anchors",
 		statement:
-			"A fixed correlator is one target made of its anchors only, never the words they connect, and it takes the part of speech of the whole unit, not of the clicked anchor: entweder/oder, weder/noch, sowohl/als/auch, nicht nur/sondern auch and je/desto are CCONJ; um/zu, ohne/zu, statt/zu and so/dass are SCONJ; einerseits/andererseits and teils/teils are ADV.",
-		adrs: ["ADR-0009"],
-		routes: lexeme("CCONJ", "SCONJ", "ADV"),
-		records: [],
+			"A fixed correlator is one Locution made of its anchors only, never the words they connect, and its Kind is the part of speech of the whole unit, not of the clicked anchor: entweder … oder, weder … noch, sowohl … als auch and nicht nur … sondern auch are CCONJ; je … desto, je … umso and je … je are SCONJ, since the je clause is verb-final, and so are um … zu, ohne … zu, statt … zu and so … dass; einerseits … andererseits and teils … teils are ADV. je … desto, je … umso (with its pre-1996 Variant je … um so) and je … je are three Lemmas, related as synonyms.",
+		adrs: ["ADR-0009", "ADR-0039"],
+		routes: locution("CCONJ", "SCONJ", "ADV"),
+		records: [
+			"de/je-hoeher-der-druck-desdo-groesser-das-risiko",
+			"de/je-laenger-der-weg-wird-desto-mueder-werden-die-reisenden",
+			"de/je-ruhiger-die-see-war-desto-schneller-kamen-wir-voran",
+			"de/je-laenger-wir-warteten-desto-unruhiger-wurden-die-kinder",
+			"de/je-frueher-desto-besser",
+			"de/je-waermer-desto-schoener",
+			"de/je-laenger-der-weg-desto-mueder-die-reisenden",
+			"de/je-genauer-wir-messen-umso-sicherer-wird-das-ergebnis",
+			"de/je-spaeter-der-abend-wurde-umso-leiser-sprach-die-runde",
+			"de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm",
+			"de/sie-trinkt-weder-tee-noch-kaffee",
+			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
+			"de/der-plan-ist-einerseits-guenstig-andererseits-riskant",
+		],
 	},
 	{
 		id: "de/bare-infinitive-zu",
@@ -326,7 +340,7 @@ const conjunctionsAndParticles: Rule[] = [
 	},
 ];
 
-const phrasemes: Rule[] = [
+const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/fixed-member-test",
 		statement:
@@ -338,25 +352,58 @@ const phrasemes: Rule[] = [
 	{
 		id: "de/funktionsverbgefuege-are-collocations",
 		statement:
-			"A Funktionsverbgefüge, a support verb with its predicate noun (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Angst haben, Bescheid wissen), is one Collocation. Its members are the verb, the noun, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs. Free arguments and adverbs stay outside: stellt den Schülern Material zur Verfügung gives [stellt, zu, r, Verfügung]. An ordinary verb with a free object (eine Cola bringen) is not a Collocation.",
+			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Angst haben, Bescheid wissen) or a verb with an adjective predicate (geltend machen, ernst nehmen). Its members are the verb, the noun or adjective, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs. Free arguments and adverbs stay outside: stellt den Schülern Material zur Verfügung gives [stellt, zu, r, Verfügung]. A weak collocation whose meaning is literal (starker Raucher, Zähne putzen) and an ordinary verb with a free object (eine Cola bringen) are separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
 		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007"],
 		routes: locution("VERB"),
-		records: [],
+		records: [
+			"de/wir-stellen-die-daten-zur-verfuegung",
+			"de/der-ausschuss-trifft-eine-entscheidung",
+			"de/die-ausschuesse-treffen-entscheidungen",
+			"de/er-weiss-bescheid-ueber-die-plaene",
+		],
 	},
 	{
 		id: "de/idiom",
 		statement:
-			"An established expression whose meaning here is not the sum of its words is an Idiom, with or without a noun (den Faden verlieren, das Eis brechen, es in sich haben). The same words used literally are separate units. A click on any fixed member, a fixed article or preposition included, selects the whole Idiom.",
-		adrs: ["dumgen/ADR-0007"],
+			"An established expression whose meaning here is not the sum of its words is an Idiom, a Locution whose Kind is the part of speech the whole acts as: den Faden verlieren and es in sich haben are VERB, weißer Rabe is NOUN, ganz und gar and unter vier Augen are ADV. A VERB or NOUN Idiom inflects like its verb or noun (hat den Faden verloren). The same words used literally are separate units. A click on any fixed member, a fixed article or preposition included, selects the whole Locution. Idiom is the Reading's Locution Type, never part of the Lemma.",
+		adrs: ["ADR-0039", "dumgen/ADR-0007"],
 		routes: everyLocution,
-		records: [],
+		records: [
+			"de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren",
+			"de/verbrannt-ist-alles-ganz-und-gar",
+			"de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen",
+		],
 	},
 	{
-		id: "de/formulas-proverbs-aphorisms",
+		id: "de/routine-formula-is-intj",
 		statement:
-			"A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund), and an aphorism an established maxim with a known author (Zeit ist Geld). A merely preferred combination (starker Regen) has no expression of its own, and its words stay separate units.",
-		adrs: ["dumgen/ADR-0007"],
-		routes: [...locution("INTJ"), ...saying],
+			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen, herzlichen Dank, tut mir leid, wie geht's), is an INTJ: a Lexeme when it is one word (danke, willkommen, Entschuldigung!), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge: tut mir leid is one Lemma with an apology Reading and a sympathy Reading. Entschuldigung! and the noun die Entschuldigung are two Lemmas. A merely preferred combination (starker Regen) is no formula, and its words stay separate units.",
+		adrs: ["ADR-0039"],
+		routes: [...lexeme("INTJ"), ...locution("INTJ")],
+		records: [
+			"de/tut-mir-leid-das-war-mein-fehler",
+			"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
+			"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte",
+			"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans",
+		],
+	},
+	{
+		id: "de/saying-needs-uptake",
+		statement:
+			"A Saying is a complete saying that speakers have taken up, one target over all its words: a Proverb (Morgenstund hat Gold im Mund) or a Winged Word, a line from a known source that speakers use apart from it (Sein oder Nichtsein). A line is taken up when a reference collection lists it: Büchmann's Geflügelte Worte, Duden's Zitate und Aussprüche or OWID's Sprichwörterbuch. A Reviewed record of a Saying cites that collection in its references. A maxim nobody quotes, a famous author's included, resolves word by word. The Canonical Form is written as a sentence, with internal punctuation and no final punctuation (Wer rastet, der rostet). Proverb or Winged Word is the Reading's Saying Type, never part of the Lemma.",
+		adrs: ["ADR-0039"],
+		routes: saying,
+		records: [
+			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
+			"de/nach-der-winterpause-begann-die-laufgruppe-wieder-zu",
+		],
+	},
+	{
+		id: "de/modification-attests-partially",
+		statement:
+			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen).",
+		adrs: ["ADR-0039", "ADR-0003"],
+		routes: everyMultiword,
 		records: [],
 	},
 ];
@@ -438,8 +485,8 @@ const attestations: Rule[] = [
 	{
 		id: "de/partial-coverage",
 		statement:
-			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or an Idiom, discourse formula, proverb or aphorism with a fixed word left out. A split target, or one with free words between its members, is still Full.",
-		adrs: ["ADR-0003", "ADR-0004"],
+			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). A split target, or one with free words between its members, is still Full.",
+		adrs: ["ADR-0003", "ADR-0004", "ADR-0039"],
 		routes: [...lexeme("NOUN"), ...everyMultiword],
 		records: [],
 	},
@@ -458,6 +505,6 @@ export const germanRules: readonly Rule[] = [
 	...fusedWords,
 	...pronounsAndAdjectives,
 	...conjunctionsAndParticles,
-	...phrasemes,
+	...locutionsAndSayings,
 	...attestations,
 ];

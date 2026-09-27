@@ -57,9 +57,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Wer zuletzt lacht lacht am besten",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer zuletzt lacht, lacht am besten",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer zuletzt lacht lacht am besten",

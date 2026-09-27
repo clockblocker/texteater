@@ -60,9 +60,9 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Proverb",
-						"canonicalForm": "Reden ist Silber Schweigen ist Gold",
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Reden ist Silber, Schweigen ist Gold",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Reden ist Silber Schweigen ist Gold",

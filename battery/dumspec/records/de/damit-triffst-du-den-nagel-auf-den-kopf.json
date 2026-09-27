@@ -25,13 +25,14 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 8, 10, 12, 14],
+			"memberSegmentIndices": [2, 6, 8, 10, 12, 14],
 			"notes": {
-				"rationale": "The inflected sentence form points to the citation phraseme; the attested member is only an internal component."
+				"rationale": "triffst is the Locution's verb and joins its fixed words; damit and du stay outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
+					{ "attested": "triffst", "orthography": "Standard" },
 					{ "attested": "den", "orthography": "Standard" },
 					{ "attested": "Nagel", "orthography": "Standard" },
 					{ "attested": "auf", "orthography": "Standard" },
@@ -43,16 +44,27 @@
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"language": "de",
-					"normalizedSurface": "den nagel auf den kopf",
+					"normalizedSurface": "triffst den Nagel auf den Kopf",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "den Nagel auf den Kopf treffen",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

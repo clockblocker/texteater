@@ -36,16 +36,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADP",
 						"canonicalForm": "um … willen",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Circ",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "um willen",
 					"spelling": "Canonical",
@@ -55,18 +49,7 @@
 					{ "attested": "Um", "orthography": "Standard" },
 					{ "attested": "willen", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Gen",
-							"referent": "Either"
-						},
-						"realizedCase": "Gen"
-					}
-				]
+				"realizationCoverage": "Full"
 			}
 		}
 	],

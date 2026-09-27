@@ -66,16 +66,27 @@
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"language": "de",
-					"normalizedSurface": "da liegt der hase im pfeffer",
+					"normalizedSurface": "da liegt der Hase im Pfeffer",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "da liegt der Hase im Pfeffer",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

@@ -62,8 +62,8 @@
 						"unitKind": "Lemma",
 						"language": "he",
 						"canonicalForm": "על הפנים",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "ADV",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

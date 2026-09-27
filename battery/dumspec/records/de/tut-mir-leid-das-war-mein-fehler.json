@@ -26,7 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"notes": {
-				"rationale": "Tut mir leid is stored as an apology phraseme, not as a literal finite-verb attestation."
+				"rationale": "Tut mir leid is one Locution/INTJ, not a literal finite-verb attestation. Its apology role is Reading Knowledge, not part of the Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -45,9 +45,9 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "tut mir leid",
-						"family": "Phraseme",
-						"kind": "DiscourseFormula",
-						"coreFeatures": { "discourseFormulaRole": "Apology" }
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

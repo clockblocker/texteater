@@ -42,14 +42,14 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "en",
-					"normalizedSurface": "the early bird catches the worm",
+					"normalizedSurface": "The early bird catches the worm",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",
-						"canonicalForm": "the early bird catches the worm",
-						"family": "Phraseme",
-						"kind": "Proverb",
+						"canonicalForm": "The early bird catches the worm",
+						"family": "Saying",
+						"kind": "Saying",
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null

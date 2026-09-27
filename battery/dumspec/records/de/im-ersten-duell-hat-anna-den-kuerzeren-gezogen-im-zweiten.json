@@ -62,8 +62,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Idiom",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "den Kürzeren ziehen",
 						"coreFeatures": {}
 					},

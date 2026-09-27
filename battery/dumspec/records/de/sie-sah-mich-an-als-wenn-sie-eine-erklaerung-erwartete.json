@@ -43,10 +43,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
 						"canonicalForm": "als wenn",
-						"coreFeatures": { "conjType": "Comp" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "als wenn",
 					"spelling": "Canonical",

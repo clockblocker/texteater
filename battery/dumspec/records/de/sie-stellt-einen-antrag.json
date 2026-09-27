@@ -39,8 +39,8 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Phraseme",
-						"kind": "Collocation",
+						"family": "Locution",
+						"kind": "VERB",
 						"canonicalForm": "einen Antrag stellen",
 						"coreFeatures": {}
 					},

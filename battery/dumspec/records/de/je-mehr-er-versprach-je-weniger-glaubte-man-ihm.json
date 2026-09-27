@@ -34,7 +34,7 @@
 		{
 			"memberSegmentIndices": [0, 9],
 			"notes": {
-				"rationale": "The repeated anchors are separate ordered members of one proportional CCONJ."
+				"rationale": "The repeated anchors are separate ordered members of one proportional Locution/SCONJ, je … je, a synonym of je … desto."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,10 +44,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "CCONJ",
+						"family": "Locution",
+						"kind": "SCONJ",
 						"canonicalForm": "je … je",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "je je",
 					"spelling": "Canonical",

@@ -172,7 +172,8 @@ const germanAdpositionCaseTable: Readonly<Record<string, Entry>> = {
 		},
 	},
 	zufolge: { byAdpType: { Post: only("Dat"), Prep: only("Gen") } },
-	// Circumpositions.
+	// Circumpositions: Locution ADPs (ADR 0039), found by Canonical Form. No
+	// check reads them while a Locution ADP records no case (#652).
 	"an … entlang": only("Dat"),
 	"an … vorbei": only("Dat"),
 	"auf … hin": only("Acc"),

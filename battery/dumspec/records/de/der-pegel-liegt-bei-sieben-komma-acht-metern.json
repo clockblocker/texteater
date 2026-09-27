@@ -38,14 +38,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "NUM",
 						"canonicalForm": "sieben Komma acht",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sieben Komma acht",
 					"spelling": "Canonical",
