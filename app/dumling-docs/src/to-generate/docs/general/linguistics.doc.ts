@@ -21,9 +21,11 @@ The Lemma owns properties that remain stable across forms and attestations:
 - \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Idiom\`
 - \`coreFeatures\`: the stable grammatical features that complete its identity
 
-Together these fields are Lemma identity. Grammatically indistinguishable
-homonyms share one Lemma. Homographs with different grammatical analyses—for
-example a noun and verb with the same spelling—are different Lemmas.
+Together these fields are Lemma identity. Homonyms share one Lemma unless
+they differ in one of these fields: a noun and a verb with the same spelling
+are two Lemmas. A grammatical difference outside identity does not split a
+Lemma: \`Mutter\` 'mother' (\`Mütter\`) and \`Mutter\` 'nut' (\`Muttern\`) are one
+Lemma with two Readings, and each Reading's Knowledge records its plural.
 
 A fused word such as German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, English \`I'll\` or \`don't\`, or Hebrew \`בבית\` is not a Lemma. Each of its pieces is a syntactic word of its own Lexeme Kind, never a Morpheme: \`'ll\` is AUX \`will\`, \`n't\` is PART \`not\`, Hebrew \`ב\` is ADP. The Attestation member realized by such a piece carries the orthography \`Fused\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
 

@@ -59,3 +59,5 @@ refuses and resolution runs the judge again over the current candidates.
   nothing its Lemma already carries. Person, number, gender and case stay Core
   Features, so every possessive is 🔐 and every personal pronoun is 👈; `sein`
   is not 👨🔐, because a picture standing in for grammatical gender claims sex.
+
+Amended by [ADR 0043](./0043-correct-identity-by-moving-occurrences.md): a wrong Reuse or NoMatch is corrected by moving occurrences, so judge errors no longer persist.

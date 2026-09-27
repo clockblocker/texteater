@@ -15,8 +15,9 @@ Attestation records occurrence evidence.
 
 A Lemma has \`unitKind: "Lemma"\`, \`language\`, \`family\`, \`kind\`, \`canonicalForm\`,
 and \`coreFeatures\`. These fields distinguish grammatical identities.
-Grammatically indistinguishable homonyms share one Lemma. Their Readings may
-have different Emoji Descriptions.
+Homonyms that agree in all these fields share one Lemma, even when their
+plurals differ (\`Mutter\`: \`Mütter\`, \`Muttern\`). Their Readings have different
+Emoji Descriptions.
 
 ## Surface
 

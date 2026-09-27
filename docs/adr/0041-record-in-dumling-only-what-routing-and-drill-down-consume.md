@@ -54,8 +54,11 @@ something clickable is an implementation choice.
   `auf`);
 - an article from the Lemma's gender for the header and `articleEvidence` for
   an occurrence, its DET cell derived in dumspec;
-- an auxiliary (`hat` in `hat gekocht` → AUX `haben` perfect) and a reflexive
-  (`sich` → its reflexive cell) from the authored units in dumspec.
+- an auxiliary (`hat` in `hat gekocht` → AUX `haben` perfect) from the
+  authored units in dumspec;
+- a reflexive to the one authored unit per language that explains
+  reflexivity, never to a case cell: `sich` alone cannot tell *er schämt
+  sich* (Acc) from *er bildet sich etwas ein* (Dat).
 
 A separable particle is a Morpheme and is not a drill-down target.
 
@@ -92,3 +95,5 @@ pointer to the Lemma.
   [#595](https://github.com/clockblocker/texteater/issues/595).
 
 Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumspec.
+
+Amended on 2026-09-27 (#595, model audit): a reflexive drills down to one authored unit per language that explains reflexivity, since the verb's `lexicallyReflexive` and the member's spelling cannot pick the Acc or Dat cell. Every target in every dumspec record, Breakdown Records included, eventually names its Reading; a Reviewed target must.

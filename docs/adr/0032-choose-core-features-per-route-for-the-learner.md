@@ -98,3 +98,17 @@ Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): a r
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): the article's DET cell is derived from the Article satellite's spelling and its Head's case, number and gender, not from a noun `article` feature.
 
 Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): German and English ADV and ADJ record comparability in Core. It decides whether their Surfaces mark Degree.
+
+Amended on 2026-09-27 (#595, model audit) with a written test for pillars: a
+closed paradigm is a pillar only when its forms cannot be derived from another
+paradigm. That covers suppletive paradigms (the personal pronouns: `ich`,
+`mir`, `mich`) and the source tables other words borrow their endings from
+(the `der` and `ein` articles, and the `der`-series demonstratives and
+relatives with `dessen`, `deren`, `denen`). A word whose forms are another
+paradigm's endings on its own stem, or a pillar with a prefix, is a stem.
+`jemand` and `niemand` (article endings, optional in use: *mit jemand*) and
+`wer`/`was` (the `der`-pronoun pattern on `w-`) become stems: `wem` is a
+Surface of `wer`, as `diesem` is of `dieser`, and genitive `wessen` is one
+Lemma with its gender on the Surface. This reverses the part of the pillar
+collisions amendment that split `wessen`.
+
