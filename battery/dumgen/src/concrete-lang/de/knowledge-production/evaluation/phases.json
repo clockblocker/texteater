@@ -63,6 +63,18 @@
 			"relation-acceptance-hyp-02-zylinderkopf-null",
 			"relation-acceptance-hol-01-zeh",
 			"relation-acceptance-hol-02-kapitell"
+		],
+		"participle-source": [
+			"participle-source-01-gelassen",
+			"participle-source-02-verschieden-different",
+			"participle-source-03-verschieden-deceased",
+			"participle-source-04-bekannt",
+			"participle-source-05-verwandt",
+			"participle-source-06-besessen",
+			"participle-source-07-gekocht",
+			"participle-source-08-gebildet",
+			"participle-source-09-verlegen-null",
+			"participle-source-10-ungelesen-null"
 		]
 	},
 	"knowledge-analysis/de/phraseme": {

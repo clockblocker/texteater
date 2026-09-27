@@ -16,6 +16,7 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"morphologicalTreeNodeSchema",
 		"morphologicalTreeSchema",
 		"nounPluralSchema",
+		"participleMeaningSchema",
 		"participleProjectionSchema",
 		"participleRelationSchema",
 		"participleSourceSchema",

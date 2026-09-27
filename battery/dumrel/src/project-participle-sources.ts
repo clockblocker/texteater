@@ -1,7 +1,11 @@
 import { ParsingError } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { conflict, contextualizeKnowledge } from "./context.js";
-import type { ParticipleProjection, ReadingWithKnowledge } from "./types.js";
+import type {
+	ParticipleProjection,
+	ParticipleSource,
+	ReadingWithKnowledge,
+} from "./types.js";
 import { parseProjectionShape } from "./validation.js";
 
 // Structural indexing is private to this projection, not a persistent ID codec.
@@ -25,9 +29,10 @@ const relationOrder = ["participleSource", "participialAdjective"];
 /**
  * Projects Participle Sources over a finite dictionary inventory. Each stored
  * Participle Source yields a direct `participleSource` edge from the ADJ
- * Reading to the VERB Lemma, and an inferred `participialAdjective` edge from
- * that VERB Lemma back to the ADJ Reading, so the Lemma `sich verlieben` can
- * list `verliebt` without storing anything on the verb. The inverse starts at
+ * Reading to the VERB Lemma, and, when the Reading's meaning is Verbal, an
+ * inferred `participialAdjective` edge from that VERB Lemma back to the ADJ
+ * Reading, so the Lemma `sich verlieben` can list `verliebt` without storing
+ * anything on the verb. The inverse starts at
  * the Lemma the claim names, never at one of its Readings: no Reading of the
  * verb is chosen for the adjective, and the verb need not be stored at all.
  *
@@ -47,7 +52,7 @@ export function projectParticipleSources(
 	const seen = new Set<string>();
 	const participles: {
 		reading: Dumling.Reading;
-		source: Dumling.Lemma;
+		source: ParticipleSource;
 	}[] = [];
 	for (const [index, entry] of parsed.entries()) {
 		const identity = key(entry.reading);
@@ -82,15 +87,19 @@ export function projectParticipleSources(
 		edges.push({
 			source: reading,
 			relation: "participleSource",
-			target: source,
+			target: source.verb,
+			meaning: source.meaning,
 			provenance: "direct",
 		} as ParticipleProjection);
-		edges.push({
-			source,
-			relation: "participialAdjective",
-			target: reading,
-			provenance: "inferred",
-		} as ParticipleProjection);
+		// A drifted meaning is no participial adjective of the verb:
+		// `gelassen` 😌 is not listed under `lassen`.
+		if (source.meaning === "Verbal")
+			edges.push({
+				source: source.verb,
+				relation: "participialAdjective",
+				target: reading,
+				provenance: "inferred",
+			} as ParticipleProjection);
 	}
 	return {
 		success: true,

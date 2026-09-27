@@ -33,6 +33,7 @@ import {
 	loadParticipleLinks,
 	loadRelationProjections,
 	participleLinkValidator,
+	participleMeaningValidator,
 	relationProjectionValidator,
 } from "./relations";
 import { unitShadowProjectionValidator } from "./shadowNote";
@@ -154,7 +155,12 @@ const readingKnowledgeValidator = v.object({
 	morphologicalTree: v.optional(v.any()),
 	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
 	valency: v.optional(v.array(valencySlotValidator)),
-	participleSource: v.optional(readingValueLemmaValidator),
+	participleSource: v.optional(
+		v.object({
+			verb: readingValueLemmaValidator,
+			meaning: participleMeaningValidator,
+		}),
+	),
 	semanticRelations: v.optional(
 		v.union(
 			v.object({

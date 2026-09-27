@@ -44,18 +44,34 @@ const verliebtReading = {
 	emojiDescription: "💘",
 } as const satisfies Dumling.Reading<"de", "Lexeme", "ADJ">;
 
-test("an ADJ Reading stores a VERB Lemma of its Language as its Participle Source", () => {
+const verbal = { verb: verlieben, meaning: "Verbal" } as const;
+
+test("an ADJ Reading stores a VERB Lemma of its Language and a meaning as its Participle Source", () => {
 	expect(
 		parseReadingKnowledge({
 			source: verliebtReading,
-			knowledge: { participleSource: verlieben },
+			knowledge: { participleSource: verbal },
 		}),
-	).toEqual({ success: true, value: { participleSource: verlieben } });
+	).toEqual({ success: true, value: { participleSource: verbal } });
+	expect(
+		parseReadingKnowledge({
+			source: verliebtReading,
+			knowledge: {
+				participleSource: { verb: verlieben, meaning: "Drifted" },
+			},
+		}).success,
+	).toBe(true);
 	for (const [source, participleSource] of [
-		[verliebtReading, houseLemma],
-		[verliebtReading, wartenReading],
-		[verliebtReading, { ...verlieben, language: "en" }],
-		[wartenReading, verlieben],
+		[verliebtReading, { verb: houseLemma, meaning: "Verbal" }],
+		[verliebtReading, { verb: wartenReading, meaning: "Verbal" }],
+		[
+			verliebtReading,
+			{ verb: { ...verlieben, language: "en" }, meaning: "Verbal" },
+		],
+		[verliebtReading, verlieben],
+		[verliebtReading, { verb: verlieben }],
+		[verliebtReading, { verb: verlieben, meaning: "Lexicalized" }],
+		[wartenReading, verbal],
 	] as const)
 		expect(
 			parseReadingKnowledge({
@@ -66,24 +82,27 @@ test("an ADJ Reading stores a VERB Lemma of its Language as its Participle Sourc
 });
 
 test("a Participle Source is atomic: Contribute conflicts, Correct replaces, Retract removes", () => {
-	const lieben = { ...verlieben, canonicalForm: "lieben" } as const;
+	const lieben = {
+		verb: { ...verlieben, canonicalForm: "lieben" },
+		meaning: "Verbal",
+	} as const;
 	const contributed = applyKnowledgeChange({
 		source: verliebtReading,
 		knowledge: {},
 		change: {
 			kind: "Contribute",
 			aspect: "participleSource",
-			value: verlieben,
+			value: verbal,
 		},
 	});
 	expect(contributed).toEqual({
 		success: true,
-		value: { participleSource: verlieben },
+		value: { participleSource: verbal },
 	});
 	expect(
 		applyKnowledgeChange({
 			source: verliebtReading,
-			knowledge: { participleSource: verlieben },
+			knowledge: { participleSource: verbal },
 			change: {
 				kind: "Contribute",
 				aspect: "participleSource",
@@ -94,7 +113,7 @@ test("a Participle Source is atomic: Contribute conflicts, Correct replaces, Ret
 	expect(
 		applyKnowledgeChange({
 			source: verliebtReading,
-			knowledge: { participleSource: verlieben },
+			knowledge: { participleSource: verbal },
 			change: {
 				kind: "Correct",
 				aspect: "participleSource",
@@ -105,7 +124,7 @@ test("a Participle Source is atomic: Contribute conflicts, Correct replaces, Ret
 	expect(
 		applyKnowledgeChange({
 			source: verliebtReading,
-			knowledge: { definition: "x", participleSource: verlieben },
+			knowledge: { definition: "x", participleSource: verbal },
 			change: { kind: "Retract", aspect: "participleSource" },
 		}),
 	).toEqual({ success: true, value: { definition: "x" } });
@@ -134,7 +153,7 @@ test("projection stores the adjective side and infers the verb Lemma side", () =
 		{ reading: verliebenReading, knowledge: {} },
 		{
 			reading: verliebtReading,
-			knowledge: { participleSource: verlieben },
+			knowledge: { participleSource: verbal },
 		},
 		{ reading: wartenReading, knowledge: {} },
 	]);
@@ -153,6 +172,7 @@ test("projection stores the adjective side and infers the verb Lemma side", () =
 			source: verliebtReading,
 			relation: "participleSource",
 			target: verlieben,
+			meaning: "Verbal",
 			provenance: "direct",
 		},
 	] as const;
@@ -161,10 +181,28 @@ test("projection stores the adjective side and infers the verb Lemma side", () =
 	const withoutVerb = projectParticipleSources([
 		{
 			reading: verliebtReading,
-			knowledge: { participleSource: verlieben },
+			knowledge: { participleSource: verbal },
 		},
 	]);
 	expect(withoutVerb.success && withoutVerb.value).toEqual(edges);
+	// A drifted meaning keeps its link but is no participial adjective.
+	const drifted = projectParticipleSources([
+		{
+			reading: verliebtReading,
+			knowledge: {
+				participleSource: { verb: verlieben, meaning: "Drifted" },
+			},
+		},
+	]);
+	expect(drifted.success && drifted.value).toEqual([
+		{
+			source: verliebtReading,
+			relation: "participleSource",
+			target: verlieben,
+			meaning: "Drifted",
+			provenance: "direct",
+		},
+	]);
 	expect(
 		projectParticipleSources([
 			{ reading: verliebtReading, knowledge: {} },

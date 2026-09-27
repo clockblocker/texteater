@@ -103,7 +103,7 @@ function knowledgeUsesLanguage(
 	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
 	if (
 		knowledge.participleSource !== undefined &&
-		!lemmaUsesLanguage(knowledge.participleSource, language)
+		!lemmaUsesLanguage(knowledge.participleSource.verb, language)
 	)
 		return false;
 	return (knowledge.lexicalBreakdown ?? []).every(
@@ -137,7 +137,7 @@ function knowledgeChangeUsesLanguage(
 						language,
 					);
 	if (change.aspect === "participleSource" && "value" in change)
-		return lemmaUsesLanguage(change.value, language);
+		return lemmaUsesLanguage(change.value.verb, language);
 	return true;
 }
 

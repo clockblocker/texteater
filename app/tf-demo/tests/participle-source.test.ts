@@ -55,10 +55,11 @@ const GEKOCHT_READING = {
 	},
 	emojiDescription: "🥔",
 } as const satisfies Dumling.Reading<"de">;
+const KOCHEN_SOURCE = { verb: KOCHEN, meaning: "Verbal" } as const;
 const SOURCE_CHANGE = {
 	kind: "Contribute",
 	aspect: "participleSource",
-	value: KOCHEN,
+	value: KOCHEN_SOURCE,
 } as const;
 
 test("only a base run of an ADJ Reading without a stored source asks for its Participle Source", () => {
@@ -77,7 +78,7 @@ test("only a base run of an ADJ Reading without a stored source asks for its Par
 	expect(
 		asksParticipleSource(GEKOCHT_READING, {
 			topUpOnly: false,
-			knowledge: { participleSource: KOCHEN },
+			knowledge: { participleSource: KOCHEN_SOURCE },
 		}),
 	).toBe(false);
 	expect(
@@ -150,12 +151,19 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 	});
 }
 
-function publishSource(t: TestConvexDb) {
+function publishSource(
+	t: TestConvexDb,
+	change: {
+		readonly kind: "Contribute";
+		readonly aspect: "participleSource";
+		readonly value: unknown;
+	} = SOURCE_CHANGE,
+) {
 	return t.mutation(internal.knowledgeGeneration.publish, {
 		attemptKey: "participle",
 		final: true,
 		reading: GEKOCHT_READING,
-		changes: [SOURCE_CHANGE],
+		changes: [change],
 		pendingRelations: [],
 		productionEvidence: {
 			request: { definition: null },
@@ -215,10 +223,11 @@ test("a missing source verb stays a Unit Shadow and no Reading is minted for it"
 		readingId: adjectiveId,
 		visitorId,
 	});
-	expect(adjectiveNote?.knowledge.participleSource).toEqual(KOCHEN);
+	expect(adjectiveNote?.knowledge.participleSource).toEqual(KOCHEN_SOURCE);
 	expect(adjectiveNote?.participleLinks).toEqual([
 		{
 			relation: "participleSource",
+			meaning: "Verbal",
 			targetCanonicalForm: "kochen",
 			target: { kind: "Shadow", shadowId: shadow._id },
 		},
@@ -250,6 +259,7 @@ test("the link reaches the source verb once it is stored, and the verb's Lemma N
 	expect(adjectiveNote?.participleLinks).toEqual([
 		{
 			relation: "participleSource",
+			meaning: "Verbal",
 			targetCanonicalForm: "kochen",
 			target: { kind: "Lemma", lemmaId: verb.lemmaId },
 		},
@@ -293,4 +303,35 @@ test("a stored verb with other Core Features is not the source", async () => {
 		visitorId,
 	});
 	expect(adjectiveNote?.participleLinks?.[0]?.target.kind).toBe("Shadow");
+});
+
+test("a drifted meaning keeps its link but is not listed under the verb", async () => {
+	const t = createTestConvex();
+	const visitorId = "visitor-1";
+	const adjectiveId = await seedAdjective(t, visitorId);
+	expect(
+		await publishSource(t, {
+			...SOURCE_CHANGE,
+			value: { verb: KOCHEN, meaning: "Drifted" },
+		}),
+	).toEqual({ status: "Committed" });
+	const verb = await storeVerb(t, KOCHEN_READING);
+	const adjectiveNote = await t.query(api.readingNotes.get, {
+		readingId: adjectiveId,
+		visitorId,
+	});
+	expect(adjectiveNote?.participleLinks).toEqual([
+		{
+			relation: "participleSource",
+			meaning: "Drifted",
+			targetCanonicalForm: "kochen",
+			target: { kind: "Lemma", lemmaId: verb.lemmaId },
+		},
+	]);
+	const verbLemmaNote = await t.query(api.routeNotes.get, {
+		target: { kind: "Lemma", lemmaId: verb.lemmaId },
+	});
+	expect(
+		verbLemmaNote?.kind === "Lemma" && verbLemmaNote.participialAdjectives,
+	).toEqual([]);
 });

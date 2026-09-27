@@ -22,6 +22,13 @@ export const valencyReferentValues = [
 	"Either",
 ] as const;
 
+/**
+ * Whether a Participial Adjective's Reading means a sense of its source verb
+ * (`gekocht`: `kochen`) or has drifted from all of them (`gelassen` 😌:
+ * `lassen`). Form alone names the verb; this records the meaning.
+ */
+export const participleMeaningValues = ["Verbal", "Drifted"] as const;
+
 /** Cases a German bare case complement takes, the subject's Nom included. */
 export const germanComplementCaseValues = ["Nom", "Acc", "Dat", "Gen"] as const;
 

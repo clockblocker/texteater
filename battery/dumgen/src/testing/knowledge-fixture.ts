@@ -10,6 +10,7 @@ type Analysis = {
 		{ canonicalForm: string; kind: string }[] | null
 	>;
 	valency?: unknown[] | null;
+	participleSource?: { verb: string; meaning: string } | null;
 };
 export function knowledgeFixture(
 	output: unknown,
@@ -25,6 +26,14 @@ export function knowledgeFixture(
 			if (!analysis || typeof analysis !== "object") return { output };
 			if (input.aspect === "valency")
 				return { output: { valency: analysis.valency ?? [] } };
+			if (input.aspect === "participleSource")
+				return {
+					output: {
+						source: analysis.participleSource?.verb ?? null,
+						separablePrefix: null,
+						meaning: analysis.participleSource?.meaning ?? null,
+					},
+				};
 			if (input.aspect)
 				return {
 					output: {

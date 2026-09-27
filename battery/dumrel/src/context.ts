@@ -5,6 +5,7 @@ import { fingerprint } from "./fingerprint.js";
 import type {
 	KnowledgeChange,
 	NounPlural,
+	ParticipleSource,
 	ReadingKnowledge,
 	ValencyComplement,
 	ValencyFrame,
@@ -148,21 +149,22 @@ function parseValencyFrame<R extends Dumling.Reading>(
 
 /**
  * A Participle Source belongs to a Lexeme ADJ Reading and names a Lexeme VERB
- * Lemma of the same Language (ADR 0035).
+ * Lemma of the same Language (ADR 0036).
  */
 function parseParticipleSource<R extends Dumling.Reading>(
 	source: R,
-	value: unknown,
+	value: ParticipleSource,
 	path: Path,
-): Dumling.Lemma | ParsingError {
+): ParticipleSource | ParsingError {
 	if (source.lemma.family !== "Lexeme" || source.lemma.kind !== "ADJ")
 		return issue(path, "Only an ADJ Reading has a Participle Source");
-	const parsed = parseUnit(value);
+	const verbPath = [...path, "verb"];
+	const parsed = parseUnit(value.verb);
 	if (!parsed.success)
 		return new ParsingError(
 			parsed.error.issues.map((entry) => ({
 				...entry,
-				path: [...path, ...entry.path],
+				path: [...verbPath, ...entry.path],
 			})),
 		);
 	const verb = parsed.chain.value as Dumling.Lemma;
@@ -171,13 +173,13 @@ function parseParticipleSource<R extends Dumling.Reading>(
 		verb.family !== "Lexeme" ||
 		verb.kind !== "VERB"
 	)
-		return issue(path, "A Participle Source must be a VERB Lemma");
+		return issue(verbPath, "A Participle Source must be a VERB Lemma");
 	if (verb.language !== source.lemma.language)
 		return issue(
-			[...path, "language"],
+			[...verbPath, "language"],
 			"A Participle Source must use the source Language",
 		);
-	return verb;
+	return { ...value, verb } as ParticipleSource;
 }
 
 /**
@@ -210,12 +212,13 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		if (plural instanceof ParsingError) return plural;
 	}
 	if (result.participleSource) {
-		const verb = parseParticipleSource(source, result.participleSource, [
-			"knowledge",
-			"participleSource",
-		]);
-		if (verb instanceof ParsingError) return verb;
-		result.participleSource = verb as typeof result.participleSource;
+		const participle = parseParticipleSource(
+			source,
+			result.participleSource,
+			["knowledge", "participleSource"],
+		);
+		if (participle instanceof ParsingError) return participle;
+		result.participleSource = participle;
 	}
 	if (result.valency) {
 		const frame = parseValencyFrame(source, result.valency, [
@@ -256,12 +259,12 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		if (plural instanceof ParsingError) return plural;
 	}
 	if (change.aspect === "participleSource" && change.kind !== "Retract") {
-		const verb = parseParticipleSource(source, change.value, [
+		const participle = parseParticipleSource(source, change.value, [
 			"change",
 			"value",
 		]);
-		if (verb instanceof ParsingError) return verb;
-		return { ...change, value: verb } as KnowledgeChange<R>;
+		if (participle instanceof ParsingError) return participle;
+		return { ...change, value: participle } as KnowledgeChange<R>;
 	}
 	if (change.aspect === "valency") {
 		if (change.kind !== "Retract") {

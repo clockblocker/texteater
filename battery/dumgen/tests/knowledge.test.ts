@@ -455,7 +455,7 @@ test("all retained Knowledge corpora run through production Knowledge with compl
 			count++;
 		}
 	}
-	expect(count).toBe(69);
+	expect(count).toBe(79);
 }, 30000);
 
 const governor = {

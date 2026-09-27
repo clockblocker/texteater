@@ -367,7 +367,8 @@ export function participleSourceVerb(
 			? Reflect.get(knowledge, "participleSource")
 			: undefined;
 	if (source === undefined) return undefined;
-	return requireRecord(source, "Participle Source") as Dumling.Lemma;
+	const { verb } = requireRecord(source, "Participle Source");
+	return requireRecord(verb, "Participle Source verb") as Dumling.Lemma;
 }
 
 /** The Lemma key of a stored Participle Source, so its verb finds the adjective. */

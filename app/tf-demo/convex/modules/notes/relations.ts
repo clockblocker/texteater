@@ -542,12 +542,20 @@ export async function loadRelationProjections(
 	return { knowledge, resolved, truncated };
 }
 
+/** Whether a Participial Adjective's Reading means a sense of its verb. */
+export const participleMeaningValidator = v.union(
+	v.literal("Verbal"),
+	v.literal("Drifted"),
+);
+
 /**
  * The Participle Source link on an ADJ Reading Note (ADR 0036): the source
  * VERB Lemma it names, or that verb's Unit Shadow while it is not stored.
  */
 export const participleLinkValidator = v.object({
 	relation: v.literal("participleSource"),
+	/** Drifted: the adjective's form comes from the verb, its meaning does not. */
+	meaning: participleMeaningValidator,
 	targetCanonicalForm: v.string(),
 	target: v.union(
 		v.object({ kind: v.literal("Lemma"), lemmaId: v.id("lemmas") }),
@@ -633,6 +641,7 @@ export async function loadParticipleLinks(
 		if (target)
 			links.push({
 				relation: edge.relation,
+				meaning: edge.meaning,
 				targetCanonicalForm: edge.target.canonicalForm,
 				target,
 			});
@@ -652,9 +661,10 @@ export const participialAdjectiveValidator = v.object({
 });
 
 /**
- * The ADJ Readings that name this VERB Lemma as their Participle Source,
- * projected by Dumrel as inverse edges from the Lemma. The link targets the
- * Lemma, so it is listed once here and on none of the verb's Readings.
+ * The ADJ Readings that name this VERB Lemma as their Participle Source with
+ * a Verbal meaning, projected by Dumrel as inverse edges from the Lemma. The
+ * link targets the Lemma, so it is listed once here and on none of the verb's
+ * Readings. A Drifted adjective (`gelassen` 😌 under `lassen`) is not listed.
  */
 export async function loadParticipialAdjectives(
 	ctx: QueryCtx,

@@ -22,6 +22,7 @@ import {
 	directSemanticRelationValues,
 	germanComplementCaseValues,
 	governedCaseValues,
+	participleMeaningValues,
 	pluralMarkerValues,
 	pluralPatternValues,
 	translationLanguageValues,
@@ -130,12 +131,18 @@ export const valencySlotSchema = z.strictObject({
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 
+export const participleMeaningSchema = z.enum(participleMeaningValues);
 /**
  * The Participle Source of an adjectival participle Reading: the VERB Lemma
- * whose participle it is (`gekocht` stores `kochen`). The ADJ Reading owns the
- * claim; the verb's side is a read-time projection.
+ * whose participle its form is (`gekocht` stores `kochen`), and whether this
+ * Reading's meaning is a sense of that verb (`gelassen` 😌 stores `lassen`,
+ * Drifted). The ADJ Reading owns the claim; the verb's side is a read-time
+ * projection.
  */
-export const participleSourceSchema = verbLemmaSchema;
+export const participleSourceSchema = z.strictObject({
+	verb: verbLemmaSchema,
+	meaning: participleMeaningSchema,
+});
 
 export const pluralPatternSchema = z.enum(pluralPatternValues);
 /**
@@ -372,14 +379,16 @@ export const participleRelationSchema = z.enum([
 ]);
 /**
  * One edge of a Participle Source. `participleSource` runs from the ADJ
- * Reading to the VERB Lemma it stores; `participialAdjective` is the inferred
- * inverse from that VERB Lemma back to the ADJ Reading.
+ * Reading to the VERB Lemma it stores, with its Participle Meaning;
+ * `participialAdjective` is the inferred inverse from that VERB Lemma back to
+ * the ADJ Reading, for a Verbal meaning only.
  */
 export const participleProjectionSchema = z.union([
 	z.strictObject({
 		source: readingSchema,
 		relation: z.literal("participleSource"),
 		target: lemmaSchema,
+		meaning: participleMeaningSchema,
 		provenance: z.literal("direct"),
 	}),
 	z.strictObject({

@@ -57,7 +57,10 @@ export function knowledgeComparison(
 						: complement,
 			}));
 		if (change.aspect === "participleSource")
-			result.participleSource = change.value.canonicalForm;
+			result.participleSource = {
+				verb: change.value.verb.canonicalForm,
+				meaning: change.value.meaning,
+			};
 		if (change.aspect === "pluralPattern")
 			result.pluralPattern = change.value;
 		if (change.aspect === "translations")

@@ -28,6 +28,7 @@ export type {
 	MorphologicalTreeStructure,
 	NonEmptyStrings,
 	NounPlural,
+	ParticipleMeaning,
 	ParticipleProjection,
 	ParticipleRelation,
 	ParticipleSource,
@@ -52,5 +53,6 @@ export { allowedComplementKinds } from "./valency-policy.js";
 export {
 	directSemanticRelationValues,
 	governedCaseValues,
+	participleMeaningValues,
 	translationLanguageValues,
 } from "./vocabulary.js";

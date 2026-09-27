@@ -100,7 +100,7 @@ export const samples: Record<string, unknown[]> = {
 		{
 			kind: "Contribute",
 			aspect: "participleSource",
-			value: wartenReading.lemma,
+			value: { verb: wartenReading.lemma, meaning: "Drifted" },
 		},
 		{ kind: "Retract", aspect: "participleSource" },
 		{ kind: "Contribute", aspect: "pluralPattern", value: ["En", "S"] },
@@ -109,13 +109,15 @@ export const samples: Record<string, unknown[]> = {
 	],
 	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
 	nounPlural: [["UmlautOnly"], ["En", "S"], "NoPlural", "PluralOnly"],
-	participleSource: [wartenReading.lemma],
+	participleMeaning: ["Verbal", "Drifted"],
+	participleSource: [{ verb: wartenReading.lemma, meaning: "Verbal" }],
 	participleRelation: ["participleSource", "participialAdjective"],
 	participleProjection: [
 		{
 			source: houseReading,
 			relation: "participleSource",
 			target: wartenReading.lemma,
+			meaning: "Verbal",
 			provenance: "direct",
 		},
 		{

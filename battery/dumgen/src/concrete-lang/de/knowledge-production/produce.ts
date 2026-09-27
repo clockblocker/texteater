@@ -187,9 +187,10 @@ export function produceKnowledge(
 				return changes.length ? { changes } : null;
 			});
 		/**
-		 * The verb an adjectival participle comes from (ADR 0036), or no
-		 * contribution for a plain adjective. Published with the final batch
-		 * so a host can store the source verb before the link that names it.
+		 * The verb an adjectival participle's form comes from and whether this
+		 * Reading's meaning is a sense of it (ADR 0036), or no contribution for
+		 * a plain adjective. Published with the final batch, like the other
+		 * structured aspects.
 		 */
 		const participleSource = () =>
 			Effect.map(

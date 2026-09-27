@@ -87,50 +87,68 @@ export const renderDefaultReadingRelations = (({
 					className="grid gap-2 [p+&]:mt-2 [ul+&]:mt-2"
 					aria-label="Participle Source"
 				>
-					{participleLinks.map((link) => (
-						<li
-							key={
-								link.target.kind === "Shadow"
-									? link.target.shadowId
-									: link.target.lemmaId
-							}
-							className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
-						>
-							<span className="text-sm text-ink-muted compact:text-xs">
-								participle of
-							</span>
-							{link.target.kind === "Shadow" ? (
-								// A source verb not stored yet is a Unit
-								// Shadow, locked like a pending relation target.
+					{participleLinks.map((link) => {
+						const drifted = link.meaning === "Drifted";
+						const label = drifted
+							? "historically the participle of"
+							: "from";
+						const pending = link.target.kind === "Shadow";
+						return (
+							<li
+								key={
+									link.target.kind === "Shadow"
+										? link.target.shadowId
+										: link.target.lemmaId
+								}
+								className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+							>
+								<span
+									className={
+										drifted
+											? "text-xs text-ink-muted italic"
+											: "text-sm text-ink-muted compact:text-xs"
+									}
+								>
+									{label}
+								</span>
+								{/* A source verb not stored yet is a Unit Shadow,
+								    locked like a pending relation target. */}
 								<LinkButton
-									tone="shadow"
+									tone={
+										pending
+											? "shadow"
+											: drifted
+												? "quiet"
+												: "link"
+									}
+									className={
+										drifted
+											? "text-sm compact:text-xs"
+											: undefined
+									}
 									onClick={() =>
 										PresentationCapabilities.follow(
 											link.target,
 										)
 									}
-									aria-label={`participle of Unit Shadow ${link.targetCanonicalForm}`}
+									{...(pending
+										? {
+												"aria-label": `${label} Unit Shadow ${link.targetCanonicalForm}`,
+											}
+										: {})}
 								>
-									<LockIcon
-										aria-hidden="true"
-										strokeWidth={1.5}
-										className="me-1"
-									/>
+									{pending ? (
+										<LockIcon
+											aria-hidden="true"
+											strokeWidth={1.5}
+											className="me-1"
+										/>
+									) : null}
 									{link.targetCanonicalForm}
 								</LinkButton>
-							) : (
-								<LinkButton
-									onClick={() =>
-										PresentationCapabilities.follow(
-											link.target,
-										)
-									}
-								>
-									{link.targetCanonicalForm}
-								</LinkButton>
-							)}
-						</li>
-					))}
+							</li>
+						);
+					})}
 				</ul>
 			) : null}
 			{noteData.relationsTruncated ? (

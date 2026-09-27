@@ -20,6 +20,7 @@ export type {
 	MorphologicalTree,
 	MorphologicalTreeNode,
 	NounPlural,
+	ParticipleMeaning,
 	ParticipleProjection,
 	ParticipleRelation,
 	ParticipleSource,

@@ -3329,6 +3329,390 @@
 			"contaminationKeys": [
 				"acceptance-reservation-de-kapitell-column-2026"
 			]
+		},
+		"participle-source-01-gelassen": {
+			"input": {
+				"markedContext": "Trotz der Hektik blieb sie ganz <TARGET>gelassen</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "gelassen",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "😌",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "lassen",
+					"meaning": "Drifted"
+				}
+			},
+			"explanation": "Gelassen is the Partizip II of lassen by form, but 'calm' is no sense of lassen.",
+			"sources": [
+				{
+					"title": "Duden: gelassen",
+					"url": "https://www.duden.de/rechtschreibung/gelassen",
+					"supports": "Lists gelassen 'calm, composed' as an adjective derived from the participle of lassen."
+				}
+			]
+		},
+		"participle-source-02-verschieden-different": {
+			"input": {
+				"markedContext": "Die beiden Brüder sind sehr <TARGET>verschieden</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "verschieden",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "↔️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "verscheiden",
+					"meaning": "Drifted"
+				}
+			},
+			"explanation": "The form is the Partizip II of verscheiden 'to pass away'; 'different' is no sense of that verb.",
+			"sources": [
+				{
+					"title": "Duden: verschieden",
+					"url": "https://www.duden.de/rechtschreibung/verschieden",
+					"supports": "Gives verschieden 'different' as an adjective."
+				}
+			]
+		},
+		"participle-source-03-verschieden-deceased": {
+			"input": {
+				"markedContext": "Der kürzlich <TARGET>verschiedene</TARGET> Dichter wurde in seiner Heimatstadt beigesetzt.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "verschieden",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "⚰️",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "verscheiden",
+					"meaning": "Verbal"
+				}
+			},
+			"explanation": "Here verschieden means 'deceased', the resulting state of verscheiden; the same form as the 'different' Reading, with another meaning.",
+			"sources": [
+				{
+					"title": "Duden: verscheiden",
+					"url": "https://www.duden.de/rechtschreibung/verscheiden",
+					"supports": "Defines verscheiden as 'to die' with Partizip II verschieden."
+				}
+			]
+		},
+		"participle-source-04-bekannt": {
+			"input": {
+				"markedContext": "Der Schauspieler ist in ganz Europa <TARGET>bekannt</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "bekannt",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🌟",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "bekennen",
+					"meaning": "Drifted"
+				}
+			},
+			"explanation": "Bekannt is the Partizip II of bekennen by form; 'well-known' is no sense of bekennen 'to confess'.",
+			"sources": [
+				{
+					"title": "Duden: bekannt",
+					"url": "https://www.duden.de/rechtschreibung/bekannt",
+					"supports": "Gives bekannt 'known, well-known' as an adjective."
+				}
+			]
+		},
+		"participle-source-05-verwandt": {
+			"input": {
+				"markedContext": "Ich bin mit ihm entfernt <TARGET>verwandt</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "verwandt",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "👪",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "verwenden",
+					"meaning": "Drifted"
+				}
+			},
+			"explanation": "Verwandt is a Partizip II of verwenden by form; 'related by family' is no sense of verwenden 'to use'.",
+			"sources": [
+				{
+					"title": "Duden: verwandt",
+					"url": "https://www.duden.de/rechtschreibung/verwandt",
+					"supports": "Gives verwandt 'related' as an adjective."
+				}
+			]
+		},
+		"participle-source-06-besessen": {
+			"input": {
+				"markedContext": "Er ist von seiner Arbeit regelrecht <TARGET>besessen</TARGET>.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "besessen",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🤯",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "besitzen",
+					"meaning": "Drifted"
+				}
+			},
+			"explanation": "Besessen is the Partizip II of besitzen by form; 'obsessed' is no sense of besitzen 'to own'.",
+			"sources": [
+				{
+					"title": "Duden: besessen",
+					"url": "https://www.duden.de/rechtschreibung/besessen",
+					"supports": "Gives besessen 'obsessed, possessed' as an adjective."
+				}
+			]
+		},
+		"participle-source-07-gekocht": {
+			"input": {
+				"markedContext": "Zum Abendessen gab es <TARGET>gekochte</TARGET> Eier mit Brot.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "gekocht",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🍳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "kochen",
+					"meaning": "Verbal"
+				}
+			},
+			"explanation": "Gekocht is the resulting state of kochen 'to boil, to cook'.",
+			"sources": [
+				{
+					"title": "Duden: kochen",
+					"url": "https://www.duden.de/rechtschreibung/kochen",
+					"supports": "Defines kochen as boiling or cooking food."
+				}
+			]
+		},
+		"participle-source-08-gebildet": {
+			"input": {
+				"markedContext": "Sie ist eine sehr <TARGET>gebildete</TARGET> Frau.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "gebildet",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "🎓",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": {
+					"verb": "bilden",
+					"meaning": "Verbal"
+				}
+			},
+			"explanation": "Gebildet 'educated' is the resulting state of bilden in its sense 'to educate, to cultivate', so the meaning is Verbal although the adjective is lexicalized.",
+			"sources": [
+				{
+					"title": "Duden: bilden",
+					"url": "https://www.duden.de/rechtschreibung/bilden",
+					"supports": "Lists 'jemanden geistig formen, erziehen' among the senses of bilden."
+				}
+			]
+		},
+		"participle-source-09-verlegen-null": {
+			"input": {
+				"markedContext": "Er lächelte <TARGET>verlegen</TARGET> und sah zu Boden.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "verlegen",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "😳",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": null
+			},
+			"explanation": "Verlegen 'embarrassed' is not a participle form: the verb verlegen forms verlegt.",
+			"sources": [
+				{
+					"title": "Duden: verlegen (Adjektiv)",
+					"url": "https://www.duden.de/rechtschreibung/verlegen_Adjektiv",
+					"supports": "Gives verlegen 'embarrassed' as an adjective."
+				}
+			]
+		},
+		"participle-source-10-ungelesen-null": {
+			"input": {
+				"markedContext": "Das Buch liegt noch <TARGET>ungelesen</TARGET> auf dem Tisch.",
+				"reading": {
+					"lemma": {
+						"language": "de",
+						"canonicalForm": "ungelesen",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						},
+						"unitKind": "Lemma"
+					},
+					"emojiDescription": "📕",
+					"unitKind": "Reading"
+				},
+				"request": {
+					"participleSource": null
+				}
+			},
+			"idealOutput": {
+				"participleSource": null
+			},
+			"explanation": "An un- form has no Participle Source: there is no verb ungelesen.",
+			"sources": [
+				{
+					"title": "Duden: ungelesen",
+					"url": "https://www.duden.de/rechtschreibung/ungelesen",
+					"supports": "Gives ungelesen as an adjective."
+				}
+			]
 		}
 	},
 	"demonstrationIds": [

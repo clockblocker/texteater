@@ -2554,10 +2554,14 @@ export type GovernmentProjection = {
 	case: GovernedCase | null;
 	provenance: "direct" | "inferred";
 };
-export type ParticipleSource =
-	| Dumling.Lemma<"de", "Lexeme", "VERB">
-	| Dumling.Lemma<"en", "Lexeme", "VERB">
-	| Dumling.Lemma<"he", "Lexeme", "VERB">;
+export type ParticipleMeaning = "Verbal" | "Drifted";
+export type ParticipleSource = {
+	verb:
+		| Dumling.Lemma<"de", "Lexeme", "VERB">
+		| Dumling.Lemma<"en", "Lexeme", "VERB">
+		| Dumling.Lemma<"he", "Lexeme", "VERB">;
+	meaning: ParticipleMeaning;
+};
 export type ParticipleRelation = "participleSource" | "participialAdjective";
 export type ParticipleProjection =
 	| {
@@ -2750,6 +2754,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
 				| Dumling.Lemma<"he", "Phraseme", "Idiom">
 				| Dumling.Lemma<"he", "Phraseme", "Proverb">;
+			meaning: ParticipleMeaning;
 			provenance: "direct";
 	  }
 	| {

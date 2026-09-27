@@ -11,7 +11,7 @@ import {
 } from "../governable-prepositions.js";
 import {
 	type ParticipleSourceDraft,
-	participleSourceLemma,
+	participleSourceValue,
 } from "./participle-source.js";
 import { assertRequestShape } from "./request-shape.js";
 
@@ -67,7 +67,7 @@ export type KnowledgeAnalysis = {
 	>;
 	/** An empty list or null means no Slot was found. */
 	valency?: readonly ValencySlotDraft[] | null;
-	/** null means the adjective is no participle of a verb. */
+	/** null means the adjective's form is no participle of a verb. */
 	participleSource?: ParticipleSourceDraft | null;
 	/** The noun's plural with its patterns already derived; null means none was found. */
 	pluralPattern?: Dumrel.NounPlural | null;
@@ -143,7 +143,7 @@ export function projectKnowledge(
 				changes.push({
 					kind: "Contribute",
 					aspect,
-					value: participleSourceLemma(analysis.participleSource),
+					value: participleSourceValue(analysis.participleSource),
 				});
 		} else if (aspect === "translations")
 			for (const [language, text] of Object.entries(value ?? {})) {

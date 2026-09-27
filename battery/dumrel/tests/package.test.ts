@@ -28,6 +28,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"governedCaseValues",
 		"normalizeText",
 		"parseReadingKnowledge",
+		"participleMeaningValues",
 		"projectParticipleSources",
 		"projectPrepositionalGovernment",
 		"projectSemanticRelations",

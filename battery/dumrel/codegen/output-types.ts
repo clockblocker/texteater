@@ -30,6 +30,7 @@ export const dumrelOutputTypeExports = {
 	ValencySlot: "valencySlot",
 	GovernmentRelation: "governmentRelation",
 	GovernmentProjection: "governmentProjection",
+	ParticipleMeaning: "participleMeaning",
 	ParticipleSource: "participleSource",
 	ParticipleRelation: "participleRelation",
 	ParticipleProjection: "participleProjection",

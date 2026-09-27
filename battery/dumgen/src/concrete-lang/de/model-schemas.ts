@@ -4,6 +4,7 @@ import {
 	knowledgeRequestMaskSchema,
 	lexicalBreakdownSchema,
 	nounPluralSchema,
+	participleMeaningSchema,
 	valencyReferentSchema,
 	valencySlotStatusSchema,
 } from "dumrel/schema";
@@ -136,8 +137,14 @@ export const knowledgeOutputSchema = z.strictObject({
 		})
 		.optional(),
 	valency: z.array(valencySlotDraftSchema).nullable().optional(),
-	/** The source verb's Canonical Form, or null for no participle. */
-	participleSource: z.string().min(1).nullable().optional(),
+	/** The source verb's Canonical Form and this Reading's meaning, or null for no participle. */
+	participleSource: z
+		.strictObject({
+			verb: z.string().min(1),
+			meaning: participleMeaningSchema,
+		})
+		.nullable()
+		.optional(),
 	/** The noun's Plural Patterns or its marker, or null for none. */
 	pluralPattern: nounPluralSchema.nullable().optional(),
 });
