@@ -6,7 +6,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "קפה" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "במטבח" },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "מטבח" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

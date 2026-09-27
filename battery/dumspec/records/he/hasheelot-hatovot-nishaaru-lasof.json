@@ -2,14 +2,16 @@
 	"$schema": "../../schema/spec-record.he.json",
 	"sentence": "השאלות הטובות נשארו לסוף.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "השאלות" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "שאלות" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "ה" },
 		{ "kind": "ResolvableText", "text": "טובות" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "נשארו" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "לסוף" },
+		{ "kind": "ResolvableText", "text": "ל" },
+		{ "kind": "ResolvableText", "text": "סוף" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -18,7 +20,7 @@
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 3],
+			"memberSegmentIndices": [3, 4],
 			"notes": {
 				"rationale": "הטובות is a definite feminine plural adjective agreeing with השאלות. The adjective owns its own article ה as a Fused member; normalizedSurface is טובות."
 			},

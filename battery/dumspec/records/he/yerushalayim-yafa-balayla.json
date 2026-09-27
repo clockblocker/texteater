@@ -6,7 +6,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "יפה" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "בלילה" },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "לילה" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

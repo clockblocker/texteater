@@ -4,7 +4,8 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "בואו" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "לכאן" },
+		{ "kind": "ResolvableText", "text": "ל" },
+		{ "kind": "ResolvableText", "text": "כאן" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

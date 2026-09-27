@@ -2,7 +2,8 @@
 	"$schema": "../../schema/spec-record.he.json",
 	"sentence": "הראיון היה על הפנים.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "הראיון" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "ראיון" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "היה" },
 		{ "kind": "Whitespace", "text": " " },
@@ -18,7 +19,7 @@
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6, 7],
+			"memberSegmentIndices": [5, 7, 8],
 			"notes": {
 				"rationale": "The idiom על הפנים owns every piece of its occurrence, including ה and פנים, the Fused pieces of הפנים. The review span on פנים does not make it a noun Attestation."
 			},

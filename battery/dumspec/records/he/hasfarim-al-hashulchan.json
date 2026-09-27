@@ -7,7 +7,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "על" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "השולחן" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "שולחן" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

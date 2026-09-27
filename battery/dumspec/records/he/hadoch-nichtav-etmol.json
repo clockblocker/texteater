@@ -2,7 +2,8 @@
 	"$schema": "../../schema/spec-record.he.json",
 	"sentence": "הדו\"ח נכתב אתמול.",
 	"segments": [
-		{ "kind": "OpaqueText", "text": "הדו\"ח" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "דו\"ח" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "נכתב" },
 		{ "kind": "Whitespace", "text": " " },
@@ -15,7 +16,7 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [3],
 			"notes": {
 				"rationale": "נכתב is the NIFAL passive-like form, so it carries voice Pass."
 			},

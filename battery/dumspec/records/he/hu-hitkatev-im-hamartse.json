@@ -8,7 +8,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "עם" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "המרצה" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "מרצה" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

@@ -4,7 +4,8 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "בתי" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "הספר" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "ספר" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "נסגרו" },
 		{ "kind": "Whitespace", "text": " " },

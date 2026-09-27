@@ -6,7 +6,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "את" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "הסרט" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "סרט" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",

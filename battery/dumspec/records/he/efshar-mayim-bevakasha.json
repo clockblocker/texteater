@@ -7,22 +7,48 @@
 		{ "kind": "ResolvableText", "text": "מים" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "בבקשה" },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "בקשה" },
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [5, 6],
 			"notes": {
-				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה."
+				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה. The formula owns both Fused pieces of the written word, the ADP ב and the noun בקשה; be-vakasha has no hidden article."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "בבקשה", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ב",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "בבקשה",
+							"components": [
+								{ "span": "ב", "surface": "ב" },
+								{ "span": "בקשה", "surface": "בקשה" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "בקשה",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "בבקשה",
+							"components": [
+								{ "span": "ב", "surface": "ב" },
+								{ "span": "בקשה", "surface": "בקשה" }
+							]
+						},
+						"component": 1
+					}
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",

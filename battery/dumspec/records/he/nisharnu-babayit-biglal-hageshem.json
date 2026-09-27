@@ -4,11 +4,13 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "נשארנו" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "בבית" },
+		{ "kind": "ResolvableText", "text": "ב" },
+		{ "kind": "ResolvableText", "text": "בית" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "בגלל" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "הגשם" },
+		{ "kind": "ResolvableText", "text": "ה" },
+		{ "kind": "ResolvableText", "text": "גשם" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -17,7 +19,7 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [5],
 			"notes": {
 				"rationale": "בגלל is a causal adposition without an additional case feature in the current schema."
 			},

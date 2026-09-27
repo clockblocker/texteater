@@ -7,7 +7,8 @@
 		{ "kind": "ResolvableText", "text": "ו" },
 		{ "kind": "ResolvableText", "text": "חלילה" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "שנאחר" },
+		{ "kind": "ResolvableText", "text": "ש" },
+		{ "kind": "ResolvableText", "text": "נאחר" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "שוב" },
 		{ "kind": "Punctuation", "text": "." }
