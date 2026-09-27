@@ -32,6 +32,7 @@ export function outputType(
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",
 							"dumling.normalize-form",
+							"dumling.normalize-emoji-description",
 						]).has(effect[1])
 					)
 						throw Error(`No output-type contract for ${effect[1]}`);

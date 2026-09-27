@@ -23,6 +23,7 @@ import {
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
 	nonEmptyFeatureBagError,
+	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
 } from "../validation/semantics.js";
@@ -37,9 +38,11 @@ export const UnitKindSchema = z.enum([
 ]);
 
 const normalizedFormSchema = z.string().overwrite(normalizeForm).min(1);
-const emojiDescriptionSchema = normalizedFormSchema.refine(isEmojiDescription, {
-	error: emojiDescriptionError,
-});
+const emojiDescriptionSchema = z
+	.string()
+	.overwrite(normalizeEmojiDescription)
+	.min(1)
+	.refine(isEmojiDescription, { error: emojiDescriptionError });
 const indexSchema = z.number().int().nonnegative();
 const fusionComponentSchema = z.strictObject({
 	span: z.string(),

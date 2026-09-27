@@ -589,16 +589,18 @@ export function createTfDemoOrchestrator(options: {
 			if (readingResolution.decision === "CatalogMiss") {
 				return { catalogMiss: readingResolution };
 			}
+			// Both sides compare as Dumling parses them (ADR 0031).
+			const resolved = parseGermanReading({
+				unitKind: "Reading",
+				lemma,
+				emojiDescription: readingResolution.emojiDescription,
+			});
 			const reading = checkpoints.reading
 				? parseGermanReading(checkpoints.reading.reading)
-				: parseGermanReading({
-						unitKind: "Reading",
-						lemma,
-						emojiDescription: readingResolution.emojiDescription,
-					});
+				: resolved;
 			if (
 				lemmaIdentityKey(reading.lemma) !== lemmaKey ||
-				reading.emojiDescription !== readingResolution.emojiDescription
+				reading.emojiDescription !== resolved.emojiDescription
 			) {
 				throw new Error(
 					"The Reading checkpoint does not match Grammar.",

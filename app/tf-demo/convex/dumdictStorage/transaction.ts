@@ -508,19 +508,16 @@ async function applyChange(
 		case "createReading": {
 			const entry = withAuthoredArticleKnowledge(change.entry);
 			const reading = requireRecord(entry.reading, "Reading");
-			const emojiDescription = requireString(
-				reading.emojiDescription,
-				"Reading emojiDescription",
-			);
+			// Stored and compared as Dumling parses it (ADR 0031).
+			const parsed = parseUnit(reading);
+			if (!parsed.success || parsed.chain.unitKind !== "Reading")
+				throw new Error("Invalid Reading");
+			const { emojiDescription } = parsed.chain.value;
 			const storedLemma = await findLemma(ctx, reading.lemma);
 			if (!storedLemma || (await findReading(ctx, reading))) {
 				return false;
 			}
-			const readingKey = readingFingerprint({
-				unitKind: "Reading",
-				lemma: reading.lemma,
-				emojiDescription,
-			} as Dumling.Reading);
+			const readingKey = readingFingerprint(parsed.chain.value);
 			const canonical = await findCanonicalReading(ctx, reading);
 			if (
 				canonical &&

@@ -31,6 +31,8 @@ export function resolveReading(
 		const stage = "resolveOrGenerateReadingEmojiDescription";
 		const route = `${input.lemma.language}/${input.lemma.family}/${input.lemma.kind}`;
 		const candidates = [...new Set(input.candidates)];
+		// Candidates arrive parsed, and authored descriptions are already in
+		// parsed form (tests/authored.test.ts), so both compare as parsed.
 		const resolveAuthored = (
 			emojiDescription: string,
 		): ReadingEmojiDescriptionResolution => ({

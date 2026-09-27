@@ -27,6 +27,7 @@ import {
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
 	nonEmptyFeatureBagError,
+	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
 } from "../src/validation/semantics.js";
@@ -134,6 +135,12 @@ export const registrations = [
 		construct: "overwrite",
 		implementation: normalizeForm,
 		name: "dumling.normalize-form",
+		version: 1,
+	},
+	{
+		construct: "overwrite",
+		implementation: normalizeEmojiDescription,
+		name: "dumling.normalize-emoji-description",
 		version: 1,
 	},
 ] as const satisfies readonly ZodValidationOperationRegistration[];

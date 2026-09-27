@@ -1,5 +1,6 @@
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import type { ModelExecutor, ModelRequest } from "../types.js";
+import { parseEmojiDescription } from "../universal/validation.js";
 
 /** Injected outputs check projection and orchestration, never live linguistic accuracy. */
 export function executeOutput(
@@ -68,13 +69,23 @@ export function queuedTargetJudgment(outputs: unknown[]): TypeSafeExecutor {
 	};
 }
 
+/** Compares Emoji Descriptions as Dumling parses them; an unparseable one matches nothing parsed. */
+function parsed(value: string): string {
+	try {
+		return parseEmojiDescription(value, "readingJudgment");
+	} catch {
+		return value;
+	}
+}
 export function readingJudgment(output: unknown): TypeSafeExecutor {
 	return async (request) => {
 		if (output instanceof Error) throw output;
-		const description =
+		const description = parsed(
 			typeof output === "string"
 				? output
-				: (output as { emojiDescription?: string })?.emojiDescription;
+				: ((output as { emojiDescription?: string })
+						?.emojiDescription ?? ""),
+		);
 		const state = request.state as {
 			candidates?: string[];
 			readings?: { emojiDescription: string }[];
@@ -82,13 +93,13 @@ export function readingJudgment(output: unknown): TypeSafeExecutor {
 		// Several reviewed Readings on one Lemma: pick the one the expectation names.
 		if (state.readings) {
 			const reviewed = state.readings.findIndex(
-				(reading) => reading.emojiDescription === description,
+				(reading) => parsed(reading.emojiDescription) === description,
 			);
 			return choiceAnswers(request.questions, () =>
 				reviewed < 0 ? "Unresolved" : `authored_${reviewed}`,
 			);
 		}
-		const index = (state.candidates ?? []).indexOf(description ?? "");
+		const index = (state.candidates ?? []).map(parsed).indexOf(description);
 		return choiceAnswers(request.questions, () =>
 			index < 0 ? "NoMatch" : `candidate_${index}`,
 		);

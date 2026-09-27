@@ -424,7 +424,10 @@ export const persistResolvedClick = internalMutation({
 				"Attestation Surface and Reading must share one Lemma.",
 			);
 		}
-		if (reading.emojiDescription !== args.reading.emojiDescription) {
+		if (
+			reading.emojiDescription !==
+			parseGermanReading(args.reading).emojiDescription
+		) {
 			throw new Error(
 				"Stored Reading does not match the selected Reading value.",
 			);

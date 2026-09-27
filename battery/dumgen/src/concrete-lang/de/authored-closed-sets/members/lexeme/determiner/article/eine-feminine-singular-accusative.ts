@@ -23,7 +23,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "1️⃣" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "1⃣" }, lemma },
 	knowledge: {
 		transcription: "ˈaɪ̯nə",
 		definition:

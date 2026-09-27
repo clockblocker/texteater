@@ -596,7 +596,7 @@ add(
 	},
 	description(
 		{ pronType: "Tot", numType: "Card" },
-		"2️⃣",
+		"2⃣",
 		"Der totalisierende Determinierer „beide“ erfasst die bezeichnete Menge vollständig.",
 		["both"],
 		["оба"],

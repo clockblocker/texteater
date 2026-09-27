@@ -501,7 +501,7 @@ for (const [stem, ipa, pronType, definition, en, ru] of [
 	};
 	const meaning = description(
 		pronType,
-		stem === "kein" ? "🚫" : stem === "ein" ? "1️⃣" : "❔",
+		stem === "kein" ? "🚫" : stem === "ein" ? "1⃣" : "❔",
 		definition,
 		[en],
 		[ru],
@@ -582,7 +582,7 @@ for (const [stem, ipa] of [
 		},
 		description(
 			"Tot",
-			"✌️",
+			"✌",
 			"Bezeichnet die Gesamtheit zweier Personen oder Sachen.",
 			["both"],
 			["оба; обе"],

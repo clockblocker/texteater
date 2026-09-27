@@ -8,6 +8,7 @@ export const dumlingTypePreservingOperations = [
 	"dumling.de-determiner.core",
 	"dumling.emoji-description",
 	"dumling.normalize-form",
+	"dumling.normalize-emoji-description",
 ];
 
 /** Lets a dependent package's generated types name Dumling units instead of copying them. */

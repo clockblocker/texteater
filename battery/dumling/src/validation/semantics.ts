@@ -11,6 +11,15 @@ export function nonEmptyFeatureBagError(): string {
 export function normalizeForm(value: string): string {
 	return value.trim().normalize("NFC");
 }
+const presentationMarks = /[\uFE0E\uFE0F]|\p{Emoji_Modifier}/gu;
+/**
+ * An Emoji Description compares without variation selectors or skin-tone
+ * modifiers (ADR 0031), so `🖱️` is `🖱` and `🫳🏽` is `🫳`. Order and ZWJ
+ * sequences stay.
+ */
+export function normalizeEmojiDescription(value: string): string {
+	return normalizeForm(value).replace(presentationMarks, "");
+}
 const emojiPattern = new RegExp(`^(?:${emojiRegex().source})$`);
 const modifierPattern = /^\p{Emoji_Modifier}$/u;
 let segmenter: Intl.Segmenter | undefined;

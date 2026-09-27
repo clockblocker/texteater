@@ -27,6 +27,7 @@ import {
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
 	nonEmptyFeatureBagError,
+	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
 } from "./semantics.js";
@@ -96,5 +97,8 @@ export const validationOperations: ValidationOperations = {
 	),
 	"dumling.normalize-form": (value) => ({
 		value: normalizeForm(value as string),
+	}),
+	"dumling.normalize-emoji-description": (value) => ({
+		value: normalizeEmojiDescription(value as string),
 	}),
 };

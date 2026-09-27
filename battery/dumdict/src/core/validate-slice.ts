@@ -57,14 +57,11 @@ function validateReading<L extends Dumling.Language>(
 	expected: L,
 	reading: Dumling.Reading<L>,
 ) {
-	unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected));
-	if (
-		reading.emojiDescription.trim().normalize("NFC") !==
-		reading.emojiDescription
-	)
-		throw new Error(
-			"Reading emoji description must use NFC normalization.",
-		);
+	const parsed = unwrapDumdictParse(
+		parseReadingForDumdictRuntime(reading, expected),
+	);
+	if (parsed.emojiDescription !== reading.emojiDescription)
+		throw new Error("Reading emoji description must be normalized.");
 }
 
 function validateReadingEntry<L extends Dumling.Language>(

@@ -4,7 +4,10 @@ import { createOpenAIExecutor } from "promptsmith/openai";
 import { readingOperationExperiment } from "../src/concrete-lang/de/reading-emoji-description/experiment.js";
 import { evaluateGeneratedEmoji } from "../src/concrete-lang/de/reading-emoji-description/generate/cases.js";
 import cases from "../src/concrete-lang/de/reading-emoji-description/operation-cases.json";
-import { comparisonInputSchema } from "../src/generated/schemas.js";
+import {
+	comparisonInputSchema,
+	emojiDescriptionSchema,
+} from "../src/generated/schemas.js";
 import { choiceAnswers, readingJudgment } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
@@ -267,7 +270,13 @@ test("all retained Reading cases execute the unified API and operation evaluator
 				input,
 			),
 		);
-		expect<unknown>(output, id).toEqual(example.idealOutput);
+		// Outputs are parsed: the case's 🖱️ comes back as 🖱.
+		expect<unknown>(output, id).toEqual({
+			...example.idealOutput,
+			emojiDescription: emojiDescriptionSchema.parse(
+				example.idealOutput.emojiDescription,
+			),
+		});
 		const experiment = readingOperationExperiment(
 			id.startsWith("reading-generation-")
 				? "reading-generation/de"

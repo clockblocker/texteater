@@ -1,4 +1,7 @@
-import { comparisonInputSchema } from "../../../../generated/schemas.js";
+import {
+	comparisonInputSchema,
+	emojiDescriptionSchema,
+} from "../../../../generated/schemas.js";
 
 type Example = {
 	id: string;
@@ -873,10 +876,15 @@ export const additionalOperationCases = Object.fromEntries(
 );
 
 // Reviewed sequences are order-insensitive: 🐷💰 and 💰🐷 carry one meaning.
+// They compare as parsed, like the output: 🖱️ is 🖱.
 const graphemes = new Intl.Segmenter("und", { granularity: "grapheme" });
+function parsed(value: string) {
+	const result = emojiDescriptionSchema.safeParse(value);
+	return result.success ? result.data : value;
+}
 function sameGraphemes(left: string, right: string) {
 	const sorted = (value: string) =>
-		[...graphemes.segment(value)]
+		[...graphemes.segment(parsed(value))]
 			.map((segment) => segment.segment)
 			.sort()
 			.join("");
@@ -902,7 +910,7 @@ export function evaluateGeneratedEmoji(
 		needsReview: !knownFailure && !recognized,
 		exactMatch:
 			output.decision === ideal.decision &&
-			description === ideal.emojiDescription,
+			parsed(description) === parsed(ideal.emojiDescription),
 		meaning: example?.meaning ?? null,
 		acceptedExamples: accepted,
 		rejectedExamples: rejected,

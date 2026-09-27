@@ -903,7 +903,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		const alternativeReading = {
 			unitKind: "Reading",
 			lemma: alternativeLemma,
-			emojiDescription: "🏃‍♀️",
+			emojiDescription: "🏃‍♀",
 		} as const;
 		await inTransaction(t, (dictionary) =>
 			dictionary.addNewNote({ draft: { reading: laufenReading, note } }),
@@ -974,7 +974,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 		const laterReading = {
 			...laufenReading,
-			emojiDescription: "🏃‍♀️",
+			emojiDescription: "🏃‍♀",
 		} as const;
 		expect(
 			await inTransaction(t, (dictionary) =>

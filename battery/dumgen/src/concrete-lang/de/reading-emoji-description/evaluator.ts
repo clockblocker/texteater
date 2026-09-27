@@ -1,4 +1,5 @@
 import type { ExperimentEvaluation } from "promptsmith";
+import { emojiDescriptionSchema } from "../../../generated/schemas.js";
 import type {
 	emojiComparisonInputSchema as inputSchema,
 	emojiOutputSchema as outputSchema,
@@ -47,8 +48,12 @@ export const evaluateReadingMeaningIsolation: ExperimentEvaluation<
 			`No neighbor-meaning oracle exists for case "${caseId}".`,
 		);
 	}
+	// The output is parsed, so each neighbor is too before it is looked for.
 	const neighborMeaningPass = forbidden.every(
-		(emoji) => !output.emojiDescription.includes(emoji),
+		(emoji) =>
+			!output.emojiDescription.includes(
+				emojiDescriptionSchema.parse(emoji),
+			),
 	);
 	return {
 		contractPass: neighborMeaningPass,

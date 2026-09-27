@@ -16,7 +16,7 @@ export const hebrewKatavLemma = {
 export const hebrewKatavReading = {
 	unitKind: "Reading" as const,
 	lemma: hebrewKatavLemma,
-	emojiDescription: "✍️",
+	emojiDescription: "✍",
 } satisfies Dumling.Reading<"he">;
 
 export const heSerializedNotes = [

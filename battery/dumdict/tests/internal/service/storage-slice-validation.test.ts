@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import type { DumdictReadingDraft } from "../../../src";
+import { readingFingerprint } from "../../../src/core/identity";
 import {
 	validateReadingEntryContext,
 	validateStoredReadingsSlice,
@@ -191,6 +192,30 @@ describe("storage slice validation", () => {
 				}),
 			),
 		).toThrow();
+		expect(() =>
+			validateReadingEntryContext(
+				"en",
+				slice,
+				addNewNoteRequest({
+					...englishSwimDraft,
+					reading: {
+						...englishSwimDraft.reading,
+						emojiDescription: "🏊🏽️",
+					},
+				}),
+			),
+		).toThrow("Reading emoji description must be normalized.");
+	});
+
+	test("one Reading whatever its variation selectors and skin-tone modifiers", () => {
+		const reading = (emojiDescription: string) =>
+			readingFingerprint({
+				...englishSwimDraft.reading,
+				emojiDescription,
+			});
+		expect(reading("🖱️")).toBe(reading("🖱"));
+		expect(reading("🫳🏽⏸️")).toBe(reading("🫳⏸"));
+		expect(reading("🏠➡️")).not.toBe(reading("➡️🏠"));
 	});
 
 	test("rejects a pending record whose target ID is not derived from its Unit Shadow", () => {

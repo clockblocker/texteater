@@ -18,7 +18,7 @@ const jogLemma = {
 const jogReading = {
 	unitKind: "Reading" as const,
 	lemma: jogLemma,
-	emojiDescription: "🏃‍➡️",
+	emojiDescription: "🏃‍➡",
 };
 
 function entry(

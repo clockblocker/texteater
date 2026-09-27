@@ -147,6 +147,39 @@ describe("compiled unit interface", () => {
 			false,
 		);
 	});
+	test("compares Emoji Descriptions without variation selectors or skin-tone modifiers", () => {
+		const description = (emojiDescription: string) => {
+			const parsed = parseUnit({ ...noun.Reading, emojiDescription });
+			if (!parsed.success || parsed.chain.unitKind !== "Reading")
+				throw Error(`Rejected ${emojiDescription}`);
+			return parsed.chain.value.emojiDescription;
+		};
+		const schema = nounRoute.schemas.Reading;
+		for (const [left, right] of [
+			["🖱️", "🖱"],
+			["❤", "❤️"],
+			["🫳🏽⏸️", "🫳⏸️"],
+		] as const) {
+			expect(description(left)).toBe(description(right));
+			expect(
+				schema.parse({ ...noun.Reading, emojiDescription: left }),
+			).toEqual(
+				schema.parse({ ...noun.Reading, emojiDescription: right }),
+			);
+		}
+		expect(description("🖱️")).toBe("🖱");
+		expect(description("🫳🏽⏸️")).toBe("🫳⏸");
+		expect(description("👨‍👩‍👧")).toBe("👨‍👩‍👧");
+		expect(description("🏠➡️")).not.toBe(description("➡️🏠"));
+		for (const emojiDescription of ["🏽", "️", "🏽️"]) {
+			expect(
+				parseUnit({ ...noun.Reading, emojiDescription }).success,
+			).toBe(false);
+			expect(
+				schema.safeParse({ ...noun.Reading, emojiDescription }).success,
+			).toBe(false);
+		}
+	});
 	test("preserves feature refinements and nonempty occurrence members", () => {
 		const result = parseUnit({
 			...hebrewNoun.Surface,

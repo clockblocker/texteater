@@ -4,6 +4,7 @@ import {
 	selectGrammaticalAlternatives,
 	validateEncounter,
 } from "dumgen";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -91,6 +92,10 @@ test("reviewed member bundles have distinct Readings and valid semantic endpoint
 	).toBe(authoredMembers.length);
 	for (const member of authoredMembers) {
 		expect(member.reading.lemma).toEqual(member.lemma);
+		// Stored Readings are parsed, so an authored one is already in parsed
+		// form: no variation selectors or skin-tone modifiers (ADR 0031).
+		const parsed = parseUnit(member.reading);
+		expect(parsed.success && parsed.chain.value).toEqual(member.reading);
 		expect(
 			parseReadingKnowledge({
 				source: member.reading,

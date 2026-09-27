@@ -56,7 +56,7 @@ describe("consumer workflow", () => {
 			reading: {
 				unitKind: "Reading" as const,
 				lemma: englishWalkLemma,
-				emojiDescription: "🚶‍➡️",
+				emojiDescription: "🚶‍➡",
 			},
 		};
 
@@ -75,6 +75,6 @@ describe("consumer workflow", () => {
 
 		expect(
 			readings.candidates.map(({ reading }) => reading.emojiDescription),
-		).toEqual(["🚶", "🚶‍➡️"]);
+		).toEqual(["🚶", "🚶‍➡"]);
 	});
 });

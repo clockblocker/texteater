@@ -78,7 +78,7 @@ test(
 							canonicalForm: "Aufstieg",
 							coreFeatures: { gender: "Masc", hyph: null },
 						},
-						emojiDescription: "🥾⛰️",
+						emojiDescription: "🥾⛰",
 					},
 					note: {
 						attestedTranslations: [],

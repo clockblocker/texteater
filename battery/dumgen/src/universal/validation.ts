@@ -32,6 +32,10 @@ export function parse<T>(
 		);
 	return parsed;
 }
+/** Dumling's parse of an Emoji Description: no variation selectors or skin-tone modifiers. */
+export function parseEmojiDescription(value: string, stage: string): string {
+	return parse<string>("emojiDescriptionSchema", value, stage);
+}
 export function validateEncounter(
 	value: unknown,
 	stage = "validateEncounter",
