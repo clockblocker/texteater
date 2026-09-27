@@ -19,6 +19,27 @@ const legacyCaseSchema = z.strictObject({
 });
 
 /**
+ * The ADRs and Rules a record's annotation rests on, and outside references.
+ * A Reviewed record cites at least one Rule.
+ */
+const sourcesSchema = z.strictObject({
+	adrs: z.array(z.string().regex(adrIdPattern)),
+	rules: z.array(
+		z.strictObject({
+			rule: textSchema,
+			hash: z.string().regex(ruleHashPattern),
+		}),
+	),
+	references: z.array(
+		z.strictObject({
+			title: textSchema,
+			url: z.url(),
+			supports: textSchema,
+		}),
+	),
+});
+
+/**
  * The Reading a target attests, named by its Emoji Description (ADR 0031).
  * Its Lemma is the target's; the loader checks the Reading with Dumling's
  * `parseUnit`.
@@ -63,22 +84,7 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 				year: z.number().int(),
 			}),
 		]),
-		sources: z.strictObject({
-			adrs: z.array(z.string().regex(adrIdPattern)),
-			rules: z.array(
-				z.strictObject({
-					rule: textSchema,
-					hash: z.string().regex(ruleHashPattern),
-				}),
-			),
-			references: z.array(
-				z.strictObject({
-					title: textSchema,
-					url: z.url(),
-					supports: textSchema,
-				}),
-			),
-		}),
+		sources: sourcesSchema,
 		targets: z.array(
 			z.strictObject({
 				memberSegmentIndices: z.array(indexSchema).min(1),
@@ -105,5 +111,6 @@ export const textRecordFileSchema = z.strictObject({
 	$schema: z.string().optional(),
 	sourceText: z.string().min(1),
 	status: reviewStatusSchema,
+	sources: sourcesSchema.optional(),
 	legacy: z.array(legacyCaseSchema).optional(),
 });

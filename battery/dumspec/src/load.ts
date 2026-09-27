@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { checkRecord } from "./check-record.js";
+import { checkRecord, uncitedIssue } from "./check-record.js";
 import { type SpecIssue, SpecRecordError } from "./issues.js";
 import { textRecordFileSchema } from "./record-schema.js";
 import type {
@@ -58,8 +58,8 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
  * that parses but fails a check against the current model goes on the
  * worklist instead of failing; so does every record holding imported cases,
  * and every Draft with a target that names no Reading. A Reviewed record must
- * pass. Text Records, under `text/`, are checked for
- * shape only and join the worklist while they hold imported cases.
+ * pass. Text Records, under `text/`, are checked for shape and a Reviewed
+ * one's Rule citation, and join the worklist while they hold imported cases.
  */
 export function readRecords(directory: string): {
 	records: SpecRecord[];
@@ -84,11 +84,17 @@ export function readRecords(directory: string): {
 					});
 				continue;
 			}
-			const { sourceText, status, legacy } = file.data;
+			const { sourceText, status, sources, legacy } = file.data;
+			const uncited = uncitedIssue(id, status, sources);
+			if (uncited) {
+				issues.push(uncited);
+				continue;
+			}
 			textRecords.push({
 				id,
 				sourceText,
 				status,
+				...(sources === undefined ? {} : { sources }),
 				...(legacy === undefined ? {} : { legacy }),
 			});
 			if (legacy?.length)

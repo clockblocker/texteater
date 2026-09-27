@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import type { SpecCheck } from "../src/issues.js";
+import { ruleStatementHash, rules } from "../src/rules.js";
 
 // biome-ignore lint/suspicious/noExplicitAny: fixtures edit raw record JSON.
 type RecordJson = any;
@@ -10,14 +11,23 @@ export function seedJson(id: string): RecordJson {
 	);
 }
 
+const [citedRule] = rules;
+if (!citedRule) throw Error("Expected a Rule to cite");
+/** A current citation of a real Rule, for records the tests mark Reviewed. */
+export const ruleCitation = {
+	rule: citedRule.id,
+	hash: ruleStatementHash(citedRule.statement),
+};
+
 /**
  * Marks a seed record Reviewed and gives it what a Reviewed record needs
- * beyond a Draft: a Reading on every target.
+ * beyond a Draft: a Reading on every target and a Rule citation.
  */
 export function review(record: RecordJson): RecordJson {
 	record.status = "Reviewed";
 	for (const target of record.targets)
 		target.reading = { emojiDescription: "👀" };
+	record.sources.rules = [ruleCitation];
 	return record;
 }
 
@@ -159,6 +169,15 @@ export const negativeFixtures: {
 			record.targets[0].reading = {
 				emojiDescription: "\u{1F5B1}\u{FE0F}",
 			};
+		},
+	},
+	{
+		name: "a Reviewed record citing no Rule",
+		seed: "de/pass-auf-dich-auf",
+		check: "Uncited",
+		edit: (record) => {
+			review(record);
+			record.sources.rules = [];
 		},
 	},
 	{

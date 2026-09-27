@@ -27,7 +27,8 @@ A Draft record may fail the current Dumling model. `loadSpecRecords` leaves
 it out, and `loadSpecWorklist` lists it with its failing checks, beside every
 record whose `legacy` list still holds a case imported verbatim from Dumgen
 and every Draft with a target that names no Reading. A Reviewed target must
-name its Reading.
+name its Reading, and a Reviewed record, Text Records included, must cite at
+least one Rule in `sources.rules`.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
 model change, `bun run demote-broken-reviewed` demotes each Reviewed record

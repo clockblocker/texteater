@@ -91,8 +91,10 @@ export interface Reference {
 	supports: string;
 }
 
+/** What a record's annotation rests on. */
 export interface Sources {
 	adrs: readonly AdrId[];
+	/** A Reviewed record cites at least one Rule; a Draft may cite none. */
 	rules: readonly RuleCitation[];
 	references: readonly Reference[];
 }
@@ -137,6 +139,8 @@ export interface TextRecord {
 	id: string;
 	sourceText: string;
 	status: ReviewStatus;
+	/** A Reviewed Text Record cites at least one Rule; a Draft may omit it. */
+	sources?: Sources;
 	legacy?: readonly LegacyCase[];
 }
 

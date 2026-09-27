@@ -55,7 +55,7 @@ re-checks the citing text and cites the new hash.
 
 **Review Status**:
 Draft or Reviewed. A Reviewed record has been checked by a person against the
-ADRs and Rules it cites, and turns stale when one of them is superseded or
+ADRs and Rules it cites, cites at least one Rule, and turns stale when one of them is superseded or
 changed. A Draft may fail the current Dumling model; a Reviewed record may
 not, and a model change that breaks one demotes it to Draft.
 _Avoid_: verified, isVerified

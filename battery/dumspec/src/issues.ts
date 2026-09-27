@@ -9,6 +9,7 @@ export type SpecCheck =
 	| "Members"
 	| "Coverage"
 	| "Grundform"
+	| "Uncited"
 	| "UnknownCitation"
 	| "StaleCitation";
 

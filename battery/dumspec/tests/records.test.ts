@@ -8,6 +8,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { demoteBrokenReviewed } from "../scripts/demote-broken-reviewed.js";
 import { checkCitations } from "../src/check-citations.js";
 import { checkRecord } from "../src/check-record.js";
@@ -19,7 +20,12 @@ import {
 } from "../src/index.js";
 import { readRecords } from "../src/load.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
-import { negativeFixtures, review, seedJson } from "./negative-fixtures.js";
+import {
+	negativeFixtures,
+	review,
+	ruleCitation,
+	seedJson,
+} from "./negative-fixtures.js";
 
 const records = loadSpecRecords();
 
@@ -38,8 +44,11 @@ describe("the corpus", () => {
 	});
 
 	test("passes the stale-citation guard against the repository's ADRs", () => {
+		const { textRecords } = readRecords(
+			fileURLToPath(new URL("../records/", import.meta.url)),
+		);
 		expect(
-			checkCitations(records, {
+			checkCitations([...records, ...textRecords], {
 				adrStatuses: readRepositoryAdrStatuses(),
 				rules,
 			}),
@@ -256,6 +265,45 @@ describe("negative fixtures", () => {
 				["de/unnamed", "Draft", [], 0, [1]],
 				["text/raw", "Draft", [], 1, []],
 			]);
+		} finally {
+			rmSync(directory, { recursive: true });
+		}
+	});
+
+	test("the loader fails a Reviewed Text Record that cites no Rule", () => {
+		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
+		const write = (id: string, record: unknown) =>
+			writeFileSync(
+				join(directory, `${id}.json`),
+				JSON.stringify(record),
+			);
+		const sources = (rules: unknown[]) => ({
+			adrs: [],
+			rules,
+			references: [],
+		});
+		try {
+			mkdirSync(join(directory, "text"));
+			write("text/draft", { sourceText: "Das H aus", status: "Draft" });
+			write("text/uncited", {
+				sourceText: "Das H aus",
+				status: "Reviewed",
+				sources: sources([]),
+			});
+			write("text/bare", { sourceText: "Das H aus", status: "Reviewed" });
+			write("text/cited", {
+				sourceText: "Das H aus",
+				status: "Reviewed",
+				sources: sources([ruleCitation]),
+			});
+			const { textRecords, issues } = readRecords(directory);
+			expect(textRecords.map((record) => record.id)).toEqual([
+				"text/cited",
+				"text/draft",
+			]);
+			expect(
+				issues.map((issue) => `${issue.record} ${issue.check}`),
+			).toEqual(["text/bare Uncited", "text/uncited Uncited"]);
 		} finally {
 			rmSync(directory, { recursive: true });
 		}

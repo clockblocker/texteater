@@ -6,6 +6,7 @@ import type {
 	Rule,
 	RuleCitation,
 	RuleId,
+	Sources,
 	SpecRecord,
 } from "./types.js";
 
@@ -45,25 +46,29 @@ function checkRuleCitation(
 const byId = (rules: readonly Rule[]) =>
 	new Map(rules.map((rule) => [rule.id, rule]));
 
+/** A record that cites sources: a Spec Record, or a Text Record that does. */
+type CitingRecord = Pick<SpecRecord, "id" | "status"> & { sources?: Sources };
+
 /**
  * The stale-citation guard (ADR 0037, guard 1). Every record must cite ADRs
  * and Rules that exist. A Reviewed record must not cite a superseded or
  * deprecated ADR, or a Rule whose statement changed since its review.
  */
 export function checkCitations(
-	records: readonly SpecRecord[],
+	records: readonly CitingRecord[],
 	context: { adrStatuses: AdrStatuses; rules: readonly Rule[] },
 ): SpecIssue[] {
 	const rulesById = byId(context.rules);
 	const issues: SpecIssue[] = [];
-	for (const record of records) {
+	for (const { id, status: recordStatus, sources } of records) {
+		if (sources === undefined) continue;
 		const issue = (
 			check: SpecIssue["check"],
 			path: string,
 			message: string,
-		) => issues.push({ record: record.id, check, path, message });
-		const reviewed = record.status === "Reviewed";
-		for (const [index, adr] of record.sources.adrs.entries()) {
+		) => issues.push({ record: id, check, path, message });
+		const reviewed = recordStatus === "Reviewed";
+		for (const [index, adr] of sources.adrs.entries()) {
 			const path = `sources.adrs.${index}`;
 			const status = context.adrStatuses.get(adr);
 			if (status === undefined)
@@ -75,7 +80,7 @@ export function checkCitations(
 					`${adr} is ${status}; re-review the record against the ADR that replaced it`,
 				);
 		}
-		for (const [index, citation] of record.sources.rules.entries()) {
+		for (const [index, citation] of sources.rules.entries()) {
 			const path = `sources.rules.${index}`;
 			const checked = checkRuleCitation(
 				citation,

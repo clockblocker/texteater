@@ -6,6 +6,7 @@ import { recordFileSchema } from "./record-schema.js";
 import type {
 	LegacyCase,
 	ReviewStatus,
+	Sources,
 	SpecRecord,
 	SpecRecordId,
 	SpecTarget,
@@ -29,9 +30,30 @@ export type RecordCheck =
 	  };
 
 /**
+ * A Reviewed record of any kind cites at least one Rule; a Draft may cite
+ * none. The stale-citation guard checks what a record cites, this that it
+ * cites something.
+ */
+export function uncitedIssue(
+	record: SpecRecordId,
+	status: ReviewStatus,
+	sources: Pick<Sources, "rules"> | undefined,
+): SpecIssue | undefined {
+	if (status !== "Reviewed" || (sources?.rules.length ?? 0) > 0)
+		return undefined;
+	return {
+		record,
+		check: "Uncited",
+		path: "sources.rules",
+		message: "A Reviewed record cites at least one Rule",
+	};
+}
+
+/**
  * Runs every check that needs only the record itself: its id, shape, strict
- * Attestations and Readings, Segments, member order, coverage and Grundform.
- * A Reviewed target must name its Reading; a Draft target may not yet.
+ * Attestations and Readings, Segments, member order, coverage, Grundform and
+ * a Reviewed record's Rule citation. A Reviewed target must name its Reading;
+ * a Draft target may not yet.
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const issues: SpecIssue[] = [];
@@ -188,6 +210,8 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			"targets",
 			"A record has a target or No Target entry",
 		);
+	const uncited = uncitedIssue(id, status, file.data.sources);
+	if (uncited) issues.push(uncited);
 
 	if (issues.length > 0 || !language)
 		return {
