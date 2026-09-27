@@ -40,7 +40,13 @@ function surface(
 					inflectionalFeatures:
 						["de/Lexeme/NOUN", "en/Lexeme/NOUN"].includes(key) &&
 						options.features
-							? { article: "None", ...options.features }
+							? {
+									article: "None",
+									...(key === "de/Lexeme/NOUN"
+										? { gender: null }
+										: {}),
+									...options.features,
+								}
 							: options.features,
 				}
 			: {}),

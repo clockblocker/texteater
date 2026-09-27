@@ -93,7 +93,7 @@ export const registrations = [
 		implementation: isGermanNounSurface,
 		error: germanNounSurfaceError,
 		name: "dumling.de-noun.surface",
-		version: 3,
+		version: 4,
 	},
 	{
 		construct: "custom",

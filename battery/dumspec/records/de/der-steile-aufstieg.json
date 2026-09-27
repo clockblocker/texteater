@@ -38,6 +38,7 @@
 					"inflectionalFeatures": {
 						"article": "Definite",
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

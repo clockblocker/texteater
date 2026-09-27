@@ -15,7 +15,12 @@ const noun = {
 		canonicalForm: "Haus",
 		coreFeatures: { gender: "Neut", hyph: null },
 	},
-	inflectionalFeatures: { article: "Definite", case: "Dat", number: "Sing" },
+	inflectionalFeatures: {
+		article: "Definite",
+		case: "Dat",
+		gender: null,
+		number: "Sing",
+	},
 } as const;
 const verb = {
 	unitKind: "Surface",
@@ -77,6 +82,72 @@ test("noun parsing validates article agreement and rejects obsolete embedded fie
 				...noun.inflectionalFeatures,
 				article: "Indefinite",
 				number: "Plur",
+			},
+		},
+	])
+		expect(parseUnit(invalid).success).toBe(false);
+});
+test("a genderless noun marks the gender its singular form shows", () => {
+	// der Reisende, ein Verletzter: the Lemma has no gender, the Surface does.
+	const reisende = {
+		...noun,
+		normalizedSurface: "Reisende",
+		lemma: {
+			...noun.lemma,
+			canonicalForm: "Reisende",
+			coreFeatures: { gender: null, hyph: null },
+		},
+		inflectionalFeatures: {
+			article: "Definite",
+			case: "Nom",
+			gender: "Masc",
+			number: "Sing",
+		},
+	} as const;
+	const verletzter = {
+		...reisende,
+		normalizedSurface: "Verletzter",
+		lemma: { ...reisende.lemma, canonicalForm: "Verletzte" },
+		inflectionalFeatures: {
+			...reisende.inflectionalFeatures,
+			article: "Indefinite",
+		},
+	} as const;
+	const angestellten = {
+		...reisende,
+		normalizedSurface: "Angestellten",
+		lemma: { ...reisende.lemma, canonicalForm: "Angestellte" },
+		inflectionalFeatures: {
+			...reisende.inflectionalFeatures,
+			gender: null,
+			number: "Plur",
+		},
+	} as const;
+	for (const valid of [reisende, verletzter, angestellten])
+		expect(parseUnit(valid).success).toBe(true);
+	for (const invalid of [
+		// A singular with neither a Lemma nor a Surface gender.
+		{
+			...reisende,
+			inflectionalFeatures: {
+				...reisende.inflectionalFeatures,
+				gender: null,
+			},
+		},
+		// A plural marks none.
+		{
+			...angestellten,
+			inflectionalFeatures: {
+				...angestellten.inflectionalFeatures,
+				gender: "Masc",
+			},
+		},
+		// A Lemma with a gender leaves the Surface's unmarked.
+		{
+			...noun,
+			inflectionalFeatures: {
+				...noun.inflectionalFeatures,
+				gender: "Neut",
 			},
 		},
 	])
@@ -262,6 +333,7 @@ test("a shortened article is a Shorthand member of its noun", () => {
 				inflectionalFeatures: {
 					article: "Indefinite",
 					case: "Acc",
+					gender: null,
 					number: "Sing",
 				},
 			},
@@ -822,6 +894,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 			inflectionalFeatures: {
 				article: "Definite",
 				case: "Nom",
+				gender: null,
 				number: "Sing",
 			},
 		},

@@ -5212,6 +5212,21 @@
 																	}
 																]
 															},
+															"gender": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Fem",
+																			"Masc",
+																			"Neut"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"number": {
 																"anyOf": [
 																	{
@@ -5230,6 +5245,7 @@
 														"required": [
 															"article",
 															"case",
+															"gender",
 															"number"
 														],
 														"additionalProperties": false

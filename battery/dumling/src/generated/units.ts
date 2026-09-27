@@ -1239,6 +1239,7 @@ export interface UnitMap {
 			inflectionalFeatures: {
 				article: "Definite" | "Indefinite" | "None";
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
 			} | null;
 		};
@@ -1279,6 +1280,7 @@ export interface UnitMap {
 				inflectionalFeatures: {
 					article: "Definite" | "Indefinite" | "None";
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 				} | null;
 			};

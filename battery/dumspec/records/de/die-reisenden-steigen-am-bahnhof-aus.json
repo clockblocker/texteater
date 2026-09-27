@@ -21,7 +21,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -46,6 +51,7 @@
 					"inflectionalFeatures": {
 						"article": "Definite",
 						"case": "Nom",
+						"gender": null,
 						"number": "Plur"
 					}
 				},

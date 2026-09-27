@@ -424,7 +424,17 @@ const attestations: Rule[] = [
 			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen, and a noun keeps its capital. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen, je … desto), never ASCII .... An adjective used only attributively cites the dictionary's adjective headword, never an adverb of the same stem: die linke Hand gives ADJ linke (Duden: linke, linker, linkes), not ADV links, and so do rechte, obere and innere. An adjectival noun for a person is one Lemma cited in its weak form after the definite article, with gender null, because its gender is the referent's sex: der Angestellte, die Angestellte, ein Angestellter and zwei Angestellte all give Angestellte, and ein Verletzter gives Verletzte. A neuter with a meaning of its own is a separate Lemma with gender Neut: ins Deutsche übersetzen gives Deutsche. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
-		records: [],
+		records: [
+			"de/die-linke-hand-zitterte",
+			"de/die-angestellten-streikten-gestern",
+			"de/wir-danken-den-angestellten-fuer-ihre-hilfe",
+			"de/die-reisenden-steigen-am-bahnhof-aus",
+			"de/auf-dem-bahnsteig-warten-dreizehn-reisende",
+			"de/der-reisende-wartete-draussen",
+			"de/der-reisende-haendler-wartete-draussen",
+			"de/ein-verletzter-lag-am-strassenrand",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+		],
 	},
 	{
 		id: "de/member-orthography",

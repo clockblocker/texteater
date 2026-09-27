@@ -14,12 +14,21 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "This is ordinary adjective agreement, included to contrast the directional adjective with political and proper-noun readings."
+				"rationale": "This is ordinary adjective agreement, included to contrast the directional adjective with political and proper-noun readings. linke is used only attributively, so it cites the dictionary's adjective headword linke, never the ADV links."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -33,18 +42,19 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Fem",
 						"number": "Sing"
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "links",
+						"canonicalForm": "linke",
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

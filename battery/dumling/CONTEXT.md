@@ -113,7 +113,9 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
 features. A German or English noun Surface is the noun's own letters and says
-nothing about its article; `books` is one Surface. Hebrew keeps `definite`. A
+nothing about its article; `books` is one Surface. A German noun whose Lemma
+has no gender, such as an adjectival noun for a person (`Reisende`), marks on
+a singular Surface the gender its form shows. Hebrew keeps `definite`. A
 proper noun canonically cited with its article (`die Schweiz`) has
 `article: Definite` as a Core Feature; one cited bare (`Berlin`) has none.
 Verbal subject expletives are composition expressed by

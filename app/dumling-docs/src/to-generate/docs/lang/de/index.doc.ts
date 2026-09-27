@@ -37,11 +37,11 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`gender\`, \`hyph\` | \`article\`, \`case\`, \`number\` |
+| \`NOUN\` | \`gender\`, \`hyph\` | \`article\`, \`case\`, \`gender\`, \`number\` |
 | \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\`, \`verbType\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`foreign\`, \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
-German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
+German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. An adjectival noun for a person (\`Angestellte\`, \`Reisende\`) has no Lemma gender, since its gender is the referent's; its singular Surface marks the gender its form shows (\`der Reisende\` and \`ein Verletzter\` are \`Masc\`), and no other noun Surface marks gender. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
 
 ## Nouns and Their Articles
 
@@ -95,6 +95,7 @@ const seenSurface = {
 \tinflectionalFeatures: {
 \t\tarticle: "None",
 \t\tcase: "Nom",
+\t\tgender: null,
 \t\tnumber: "Plur",
 \t},
 \tsurfaceFeatures: null,

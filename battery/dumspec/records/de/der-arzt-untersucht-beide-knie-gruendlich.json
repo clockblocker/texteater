@@ -48,6 +48,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Acc",
+						"gender": null,
 						"number": "Plur"
 					}
 				},

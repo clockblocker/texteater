@@ -14,12 +14,21 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "Angestellten is a substantivized participial form used here as a plural noun. Under the German rule for nominalized verb forms, it classifies as NOUN rather than ADJ or VERB; subject position and verb agreement support nominative plural."
+				"rationale": "Angestellten is a substantivized participial form used here as a plural noun. Under the German rule for nominalized verb forms, it classifies as NOUN rather than ADJ or VERB; subject position and verb agreement support nominative plural. An adjectival noun for a person is one Lemma cited in its weak form, Angestellte, with no gender, since its gender is the referent's."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -38,15 +47,16 @@
 					"inflectionalFeatures": {
 						"article": "Definite",
 						"case": "Nom",
+						"gender": null,
 						"number": "Plur"
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Angestellter",
+						"canonicalForm": "Angestellte",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"surfaceFeatures": null
 				}

@@ -46,6 +46,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Acc",
+						"gender": null,
 						"number": "Plur"
 					}
 				},
@@ -78,6 +79,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Acc",
+						"gender": null,
 						"number": "Plur"
 					}
 				},

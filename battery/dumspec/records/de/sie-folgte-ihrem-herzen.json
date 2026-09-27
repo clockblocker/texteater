@@ -37,6 +37,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Dat",
+						"gender": null,
 						"number": "Sing"
 					},
 					"lemma": {

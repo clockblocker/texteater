@@ -34,6 +34,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					},
 					"language": "de",

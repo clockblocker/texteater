@@ -45,6 +45,7 @@
 					"inflectionalFeatures": {
 						"article": "Definite",
 						"case": "Dat",
+						"gender": null,
 						"number": "Plur"
 					}
 				},

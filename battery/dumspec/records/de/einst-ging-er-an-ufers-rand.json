@@ -168,6 +168,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Gen",
+						"gender": null,
 						"number": "Sing"
 					},
 					"lemma": {
@@ -201,6 +202,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": null,
+						"gender": null,
 						"number": "Sing"
 					},
 					"language": "de",

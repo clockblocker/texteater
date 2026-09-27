@@ -41,6 +41,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Acc",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

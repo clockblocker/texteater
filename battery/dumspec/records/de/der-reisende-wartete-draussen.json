@@ -14,12 +14,21 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "Reisende is treated here as a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. The selected form is already citation-shaped for this nominal reading, so it stays `Surface/Citation`."
+				"rationale": "Reisende is a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. An adjectival noun for a person is one Lemma, Reisende, with no gender. The singular Surface marks the gender its form shows, Masc, and der agrees with it. Minimal pair: der reisende Händler, where reisende is an attributive ADJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,6 +44,7 @@
 					"inflectionalFeatures": {
 						"article": "Definite",
 						"case": "Nom",
+						"gender": "Masc",
 						"number": "Sing"
 					},
 					"language": "de",
@@ -46,7 +56,7 @@
 						"canonicalForm": "Reisende",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"surfaceFeatures": null
 				}

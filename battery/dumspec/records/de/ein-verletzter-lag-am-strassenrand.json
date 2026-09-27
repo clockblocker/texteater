@@ -17,12 +17,21 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "Verletzter is a substantivized participial form used as a noun here. The highlighted form is already citation-shaped for this nominal reading, so it stays `Surface/Citation` and is classified as `NOUN` rather than `ADJ` or `VERB`."
+				"rationale": "Verletzter is a substantivized participle used as a noun, so it classifies as NOUN rather than ADJ or VERB. An adjectival noun for a person is one Lemma cited in its weak form after the definite article, Verletzte, with no gender. The singular Surface marks the gender its strong form shows, Masc, and ein agrees with it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -38,6 +47,7 @@
 					"inflectionalFeatures": {
 						"article": "Indefinite",
 						"case": "Nom",
+						"gender": "Masc",
 						"number": "Sing"
 					},
 					"language": "de",
@@ -46,10 +56,10 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Verletzter",
+						"canonicalForm": "Verletzte",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"surfaceFeatures": null
 				}

@@ -45,6 +45,7 @@
 					"inflectionalFeatures": {
 						"article": "Indefinite",
 						"case": "Acc",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

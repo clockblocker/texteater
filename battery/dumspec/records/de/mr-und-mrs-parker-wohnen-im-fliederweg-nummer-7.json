@@ -116,6 +116,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					}
 				},
@@ -154,6 +155,7 @@
 					"inflectionalFeatures": {
 						"article": "None",
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

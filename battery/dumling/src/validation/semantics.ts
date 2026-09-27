@@ -112,13 +112,18 @@ export function germanClosedClassSurfaceError(): string {
 /**
  * A German article feature names an article form that agrees with its noun.
  * A proper noun's article is its Core `article` (ADR 0035), and a name
- * without a marked case, such as one in direct address, shows no form.
+ * without a marked case, such as one in direct address, shows no form. A
+ * common noun whose Lemma has no gender, such as an adjectival noun for a
+ * person, marks on a singular Surface the gender its form shows, and the
+ * article agrees with that (der Reisende, ein Verletzter). No other Surface
+ * marks gender.
  */
 export function isGermanNounSurface(input: unknown): boolean {
 	const value = input as {
 		inflectionalFeatures: {
 			article?: string;
 			case: string | null;
+			gender?: string | null;
 			number: string | null;
 		} | null;
 		lemma: {
@@ -128,6 +133,15 @@ export function isGermanNounSurface(input: unknown): boolean {
 	};
 	const bag = value.inflectionalFeatures;
 	const proper = value.lemma.kind === "PROPN";
+	const lemmaGender = value.lemma.coreFeatures.gender;
+	const surfaceGender = bag?.gender ?? null;
+	if (
+		surfaceGender !== null &&
+		(lemmaGender !== null || bag?.number !== "Sing")
+	)
+		return false;
+	const gender = lemmaGender ?? surfaceGender;
+	if (!proper && bag?.number === "Sing" && gender === null) return false;
 	const article = proper
 		? (value.lemma.coreFeatures.article ?? "None")
 		: (bag?.article ?? "None");
@@ -137,12 +151,12 @@ export function isGermanNounSurface(input: unknown): boolean {
 			article,
 			case: bag.case,
 			number: bag.number,
-			gender: value.lemma.coreFeatures.gender,
+			gender,
 		}) !== null
 	);
 }
 export function germanNounSurfaceError(): string {
-	return "Noun article must have a form for its case, number and gender";
+	return "Noun article must have a form for its case, number and gender; a singular noun Surface marks gender only when its Lemma has none, and then must";
 }
 
 type Fusion = { spelling: string; components: { span: string }[] };
