@@ -78,7 +78,6 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
-	"battery/dumling/experimets/compiled-zod/findings.md",
 	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
 	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
 	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
