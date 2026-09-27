@@ -386,7 +386,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/noun-article-feature",
 		statement:
-			"A noun's Surface records the article it owns or shares as article: Definite, Indefinite, or None for a bare noun or a noun with a non-article determiner. A noun in a sentence always marks case and number, even with article None.",
+			"A noun's Surface records the article it owns or shares as article: Definite, Indefinite, or None for a bare noun or a noun with a non-article determiner. A noun in a sentence always marks case and number, even with article None. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none.",
 		adrs: ["ADR-0035"],
 		routes: lexeme("NOUN"),
 		records: [],
