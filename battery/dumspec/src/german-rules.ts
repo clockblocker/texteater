@@ -346,7 +346,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen, and a noun keeps its capital. A noun's is the bare noun, without its article. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
+			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen, and a noun keeps its capital. A noun's is the bare noun, without its article. An adjective used only attributively cites the dictionary's adjective headword, never an adverb of the same stem: die linke Hand gives ADJ linke (Duden: linke, linker, linkes), not ADV links, and so do rechte, obere and innere. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
 		records: [],
