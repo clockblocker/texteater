@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir sollten das in Betracht ziehen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sollten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Betracht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ziehen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
+			"caseId": "lexical-resolve-collocation-shadows",
+			"memberSegmentIndices": [6, 8, 10],
+			"case": {
+				"input": {
+					"source": "in Betracht ziehen",
+					"markedContext": "Wir sollten das <TARGET>in Betracht ziehen</TARGET>.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "in Betracht ziehen",
+							"family": "Phraseme",
+							"kind": "Collocation"
+						},
+						"emojiDescription": "🤔"
+					},
+					"segmentation": {
+						"components": ["in", "Betracht", "ziehen"]
+					}
+				},
+				"idealOutput": [
+					{
+						"language": "de",
+						"canonicalForm": "in",
+						"family": "Lexeme",
+						"kind": "ADP"
+					},
+					{
+						"language": "de",
+						"canonicalForm": "Betracht",
+						"family": "Lexeme",
+						"kind": "NOUN"
+					},
+					{
+						"language": "de",
+						"canonicalForm": "ziehen",
+						"family": "Lexeme",
+						"kind": "VERB"
+					}
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
+			"caseId": "lexical-segment-collocation",
+			"memberSegmentIndices": [6, 8, 10],
+			"case": {
+				"input": {
+					"source": "in Betracht ziehen",
+					"markedContext": "Wir sollten das <TARGET>in Betracht ziehen</TARGET>.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "in Betracht ziehen",
+							"family": "Phraseme",
+							"kind": "Collocation"
+						},
+						"emojiDescription": "🤔"
+					}
+				},
+				"idealOutput": {
+					"components": ["in", "Betracht", "ziehen"]
+				}
+			}
+		}
+	]
+}

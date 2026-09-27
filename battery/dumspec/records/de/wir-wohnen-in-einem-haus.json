@@ -61,6 +61,18 @@
 				},
 				"idealOutput": { "decision": "New", "emojiDescription": "🏠" }
 			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/source-data.json",
+			"caseId": "reading-generation-house",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Wir wohnen in einem <TARGET>Haus</TARGET>.",
+					"lemma": "Haus"
+				},
+				"idealOutput": "🏠"
+			}
 		}
 	]
 }

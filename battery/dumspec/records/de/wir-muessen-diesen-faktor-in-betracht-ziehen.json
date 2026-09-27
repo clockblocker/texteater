@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir müssen diesen Faktor in Betracht ziehen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müssen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "diesen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Faktor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Betracht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ziehen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/source-data.json",
+			"caseId": "translation-cover-concise-paraphrase",
+			"memberSegmentIndices": [8, 10, 12],
+			"case": {
+				"input": {
+					"markedContext": "Wir müssen diesen Faktor <TARGET>in Betracht ziehen</TARGET>.",
+					"sourceReading": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "in Betracht ziehen",
+							"family": "Phraseme",
+							"kind": "Collocation"
+						},
+						"emojiDescription": "🤔"
+					},
+					"targetLanguage": "en",
+					"existingTranslations": ["consider"]
+				},
+				"idealOutput": { "decision": "Covered", "existingIndex": 0 },
+				"explanation": "A concise existing literal may cover a longer source expression without mirroring its form."
+			}
+		}
+	]
+}

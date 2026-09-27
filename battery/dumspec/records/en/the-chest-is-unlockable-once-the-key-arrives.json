@@ -1,0 +1,67 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The chest is unlockable once the key arrives.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "chest" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "is" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "unlockable" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "once" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "the" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "key" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "arrives" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/source-data.json",
+			"caseId": "morphology-segment-reading-sensitive-tree",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"source": "unlockable",
+					"markedContext": "The chest is <TARGET>unlockable</TARGET> once the key arrives.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "en",
+							"canonicalForm": "unlockable",
+							"family": "Lexeme",
+							"kind": "ADJ"
+						},
+						"emojiDescription": "🔓"
+					}
+				},
+				"idealOutput": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "lexicalUnit",
+								"sourceText": "unlock"
+							},
+							{ "nodeKind": "morpheme", "sourceText": "-able" }
+						]
+					}
+				},
+				"explanation": "The encounter selects one durable hierarchy; alternatives are not stored as Knowledge metadata."
+			}
+		}
+	]
+}

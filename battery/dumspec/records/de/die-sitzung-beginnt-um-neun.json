@@ -73,6 +73,32 @@
 				"explanation": "Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
 				"contaminationKeys": ["relation-de-beginnen-start"]
 			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/source-data.json",
+			"caseId": "translation-cover-near-equivalent",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+					"sourceReading": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "beginnen",
+							"family": "Lexeme",
+							"kind": "VERB"
+						},
+						"emojiDescription": "▶️"
+					},
+					"targetLanguage": "en",
+					"existingTranslations": ["start", "commence"]
+				},
+				"idealOutput": {
+					"decision": "Covered",
+					"existingIndex": 0
+				},
+				"explanation": "The ordinary context is already covered by start; wording novelty alone is not a reason to add begin."
+			}
 		}
 	]
 }

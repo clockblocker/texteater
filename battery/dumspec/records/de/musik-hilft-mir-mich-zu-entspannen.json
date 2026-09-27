@@ -1,0 +1,127 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Musik hilft mir, mich zu entspannen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Musik" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hilft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mir" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entspannen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/source-data.json",
+			"caseId": "morphology-resolve-direct-pointers",
+			"memberSegmentIndices": [11],
+			"case": {
+				"input": {
+					"source": "entspannen",
+					"markedContext": "Musik hilft mir, mich zu <TARGET>entspannen</TARGET>.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "entspannen",
+							"family": "Lexeme",
+							"kind": "VERB"
+						},
+						"emojiDescription": "😌"
+					},
+					"segmentation": {
+						"root": {
+							"nodeKind": "structure",
+							"children": [
+								{
+									"nodeKind": "morpheme",
+									"sourceText": "ent-"
+								},
+								{
+									"nodeKind": "lexicalUnit",
+									"sourceText": "spannen"
+								}
+							]
+						}
+					}
+				},
+				"idealOutput": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "morphemeReading",
+								"reading": {
+									"lemmaDescriptor": {
+										"language": "de",
+										"canonicalForm": "ent-",
+										"family": "Morpheme",
+										"kind": "Prefix"
+									},
+									"emojiDescription": "↩️"
+								}
+							},
+							{
+								"nodeKind": "unitShadow",
+								"unitShadow": {
+									"language": "de",
+									"canonicalForm": "spannen",
+									"family": "Lexeme",
+									"kind": "VERB"
+								}
+							}
+						]
+					}
+				},
+				"explanation": "Only the Morpheme becomes a Reading draft; the lexical component remains a Unit Shadow."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/source-data.json",
+			"caseId": "morphology-segment-mixed-morpheme-and-lexeme",
+			"memberSegmentIndices": [11],
+			"case": {
+				"input": {
+					"source": "entspannen",
+					"markedContext": "Musik hilft mir, mich zu <TARGET>entspannen</TARGET>.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "entspannen",
+							"family": "Lexeme",
+							"kind": "VERB"
+						},
+						"emojiDescription": "😌"
+					}
+				},
+				"idealOutput": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{ "nodeKind": "morpheme", "sourceText": "ent-" },
+							{
+								"nodeKind": "lexicalUnit",
+								"sourceText": "spannen"
+							}
+						]
+					}
+				}
+			}
+		}
+	]
+}

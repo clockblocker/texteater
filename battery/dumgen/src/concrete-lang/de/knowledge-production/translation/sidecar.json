@@ -1,0 +1,8 @@
+{
+	"path": "knowledge-analysis/translation/prompt-source.ts",
+	"route": "knowledge-analysis/translation",
+	"demonstrationIds": [
+		"translation-add-polysemy-sensitive-literal"
+	],
+	"localDemonstrations": []
+}

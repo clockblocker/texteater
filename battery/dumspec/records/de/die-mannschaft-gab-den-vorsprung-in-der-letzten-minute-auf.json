@@ -1,0 +1,61 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Mannschaft gab den Vorsprung in der letzten Minute auf.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mannschaft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gab" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Vorsprung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "letzten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Minute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/source-data.json",
+			"caseId": "translation-add-context-specific-wording",
+			"memberSegmentIndices": [4, 18],
+			"case": {
+				"input": {
+					"markedContext": "Die Mannschaft <TARGET>gab</TARGET> den Vorsprung in der letzten Minute <TARGET>auf</TARGET>.",
+					"sourceReading": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "aufgeben",
+							"family": "Lexeme",
+							"kind": "VERB"
+						},
+						"emojiDescription": "🏳️"
+					},
+					"targetLanguage": "en",
+					"existingTranslations": ["surrender"]
+				},
+				"idealOutput": { "decision": "Add", "translation": "give up" },
+				"explanation": "The encounter calls for a context-specific wording not covered by the existing literal."
+			}
+		}
+	]
+}

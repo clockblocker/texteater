@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das ist so oder so nötig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "so" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "oder" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "so" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nötig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
+			"caseId": "lexical-resolve-repeated-shadows",
+			"memberSegmentIndices": [4, 6, 8],
+			"case": {
+				"input": {
+					"source": "so oder so",
+					"markedContext": "Das ist <TARGET>so oder so</TARGET> nötig.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "so oder so",
+							"family": "Phraseme",
+							"kind": "Idiom"
+						},
+						"emojiDescription": "🔁"
+					},
+					"segmentation": {
+						"components": ["so", "oder", "so"]
+					}
+				},
+				"idealOutput": [
+					{
+						"language": "de",
+						"canonicalForm": "so",
+						"family": "Lexeme",
+						"kind": "ADV"
+					},
+					{
+						"language": "de",
+						"canonicalForm": "oder",
+						"family": "Lexeme",
+						"kind": "CCONJ"
+					},
+					{
+						"language": "de",
+						"canonicalForm": "so",
+						"family": "Lexeme",
+						"kind": "ADV"
+					}
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
+			"caseId": "lexical-segment-phraseme-repetition",
+			"memberSegmentIndices": [4, 6, 8],
+			"case": {
+				"input": {
+					"source": "so oder so",
+					"markedContext": "Das ist <TARGET>so oder so</TARGET> nötig.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "so oder so",
+							"family": "Phraseme",
+							"kind": "Idiom"
+						},
+						"emojiDescription": "🔁"
+					}
+				},
+				"idealOutput": {
+					"components": ["so", "oder", "so"]
+				}
+			}
+		}
+	]
+}

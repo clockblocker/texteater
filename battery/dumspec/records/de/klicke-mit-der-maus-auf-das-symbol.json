@@ -68,6 +68,18 @@
 				},
 				"idealOutput": { "decision": "New", "emojiDescription": "🖱️" }
 			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/source-data.json",
+			"caseId": "reading-generation-maus-computer",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Klicke mit der <TARGET>Maus</TARGET> auf das Symbol.",
+					"lemma": "Maus"
+				},
+				"idealOutput": "🖱️"
+			}
 		}
 	]
 }

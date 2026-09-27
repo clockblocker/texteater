@@ -1,0 +1,52 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Schönheit der Landschaft.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schönheit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Landschaft" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morpheme/source-data.json",
+			"caseId": "knowledge-demo-morpheme-suffix-heit",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Die Schön<TARGET>heit</TARGET> der Landschaft.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "-heit",
+							"family": "Morpheme",
+							"kind": "Suffix",
+							"coreFeatures": {},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "📦",
+						"unitKind": "Reading"
+					},
+					"request": {}
+				},
+				"idealOutput": {},
+				"explanation": "The thin Morpheme route owns base leaves only: one definition and one English literal for the bound suffix; it never requests Semantic Relations.",
+				"contaminationKeys": ["knowledge-de-morpheme-heit"]
+			}
+		}
+	]
+}

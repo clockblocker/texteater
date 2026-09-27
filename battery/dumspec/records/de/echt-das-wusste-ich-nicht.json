@@ -1,0 +1,52 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Echt? Das wusste ich nicht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Echt" },
+		{ "kind": "Punctuation", "text": "?" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wusste" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/translation/source-data.json",
+			"caseId": "translation-add-punctuation-distinction",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Echt?</TARGET> Das wusste ich nicht.",
+					"sourceReading": {
+						"lemmaDescriptor": {
+							"language": "de",
+							"canonicalForm": "echt?",
+							"family": "Phraseme",
+							"kind": "DiscourseFormula"
+						},
+						"emojiDescription": "❓"
+					},
+					"targetLanguage": "en",
+					"existingTranslations": ["Really!"]
+				},
+				"idealOutput": { "decision": "Add", "translation": "Really?" },
+				"explanation": "Question and exclamation punctuation distinguish the contextual discourse act and remain literal."
+			}
+		}
+	]
+}

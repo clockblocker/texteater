@@ -1,0 +1,125 @@
+{
+	"$schema": "../../schema/spec-record.en.json",
+	"sentence": "The flowers have a forget-me-not-like blue.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "The" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "flowers" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "have" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "a" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "forget-me-not-like" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blue" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/resolution/source-data.json",
+			"caseId": "morphology-resolve-phraseme-shadow",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"source": "forget-me-not-like",
+					"markedContext": "The flowers have a <TARGET>forget-me-not-like</TARGET> blue.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "en",
+							"canonicalForm": "forget-me-not-like",
+							"family": "Lexeme",
+							"kind": "ADJ"
+						},
+						"emojiDescription": "🌸"
+					},
+					"segmentation": {
+						"root": {
+							"nodeKind": "structure",
+							"children": [
+								{
+									"nodeKind": "lexicalUnit",
+									"sourceText": "forget me not"
+								},
+								{
+									"nodeKind": "morpheme",
+									"sourceText": "-like"
+								}
+							]
+						}
+					}
+				},
+				"idealOutput": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "unitShadow",
+								"unitShadow": {
+									"language": "en",
+									"canonicalForm": "forget me not",
+									"family": "Phraseme",
+									"kind": "Idiom"
+								}
+							},
+							{
+								"nodeKind": "morphemeReading",
+								"reading": {
+									"lemmaDescriptor": {
+										"language": "en",
+										"canonicalForm": "-like",
+										"family": "Morpheme",
+										"kind": "Suffix"
+									},
+									"emojiDescription": "🔁"
+								}
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/morphological-tree/segmentation/source-data.json",
+			"caseId": "morphology-segment-phraseme-shadow",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"source": "forget-me-not-like",
+					"markedContext": "The flowers have a <TARGET>forget-me-not-like</TARGET> blue.",
+					"owner": {
+						"lemmaDescriptor": {
+							"language": "en",
+							"canonicalForm": "forget-me-not-like",
+							"family": "Lexeme",
+							"kind": "ADJ"
+						},
+						"emojiDescription": "🌸"
+					}
+				},
+				"idealOutput": {
+					"root": {
+						"nodeKind": "structure",
+						"children": [
+							{
+								"nodeKind": "lexicalUnit",
+								"sourceText": "forget me not"
+							},
+							{ "nodeKind": "morpheme", "sourceText": "-like" }
+						]
+					}
+				}
+			}
+		}
+	]
+}
