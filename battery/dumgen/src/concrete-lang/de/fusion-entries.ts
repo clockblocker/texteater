@@ -468,4 +468,5 @@ export const germanFusionTable: FusionTable = {
 	fusions: germanFusions,
 	clitics: germanClitics,
 	abbreviations: germanAbbreviations,
+	abbreviationCase: "Authored",
 };

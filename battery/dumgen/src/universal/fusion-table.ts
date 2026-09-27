@@ -69,6 +69,12 @@ export type AbbreviationEntry = {
 	/** The whole-unit Kind the expansion resolves to when known; null leaves it to the Open path. */
 	readonly kind: string | null;
 	readonly oneLiner: string;
+	/**
+	 * Set when the letters are also a plain word before a full stop (`No.`
+	 * ends the reply "No."): the spelling is the abbreviation only when a
+	 * numeral follows it (`No. 5`, `No.5`).
+	 */
+	readonly followedBy?: "Numeral";
 };
 
 export type FusionTable = {
@@ -76,6 +82,12 @@ export type FusionTable = {
 	readonly fusions: readonly FusionEntry[];
 	readonly clitics: readonly CliticEntry[];
 	readonly abbreviations: readonly AbbreviationEntry[];
+	/**
+	 * How an abbreviation may be cased when written: `Authored` as authored or
+	 * with its first letter capitalized to open a sentence (`Vgl.`), `Any` in
+	 * any case (`mr.`, `ETC.`).
+	 */
+	readonly abbreviationCase: "Authored" | "Any";
 };
 
 function surfaces(surface: string | readonly string[]): readonly string[] {
@@ -189,8 +201,16 @@ export function fusedWordSegments(
 	});
 }
 
-/** Written as authored, or with its first letter capitalized to open a sentence. */
+/**
+ * Written as authored, or with its first letter capitalized to open a
+ * sentence; in any case where the table allows it.
+ */
 function spells(table: FusionTable, authored: string, written: string) {
+	if (table.abbreviationCase === "Any")
+		return (
+			written.toLocaleLowerCase(table.language) ===
+			authored.toLocaleLowerCase(table.language)
+		);
 	return (
 		written === authored ||
 		written ===
@@ -207,7 +227,11 @@ export function abbreviationEntry(
 	return table.abbreviations.find((entry) => spells(table, entry.text, text));
 }
 
-/** The longest abbreviation the text starts with, as written there. */
+/**
+ * The longest abbreviation the text starts with, as written there. An entry
+ * that holds only before a numeral needs one next, with at most a space
+ * between (`No. 5`, `No.5`); otherwise its letters are a plain word.
+ */
 export function leadingAbbreviation(
 	table: FusionTable,
 	text: string,
@@ -217,6 +241,8 @@ export function leadingAbbreviation(
 		const written = text.slice(0, entry.text.length);
 		if (
 			spells(table, entry.text, written) &&
+			(entry.followedBy !== "Numeral" ||
+				/^ ?\p{N}/u.test(text.slice(written.length))) &&
 			written.length > (longest?.length ?? 0)
 		)
 			longest = written;

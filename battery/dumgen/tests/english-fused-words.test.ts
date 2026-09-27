@@ -116,6 +116,42 @@ test("English fusions, clitics, possessives and abbreviations split by the table
 	);
 });
 
+const texts = (text: string) =>
+	segmentEnglish(text).segments.map(({ text }) => text);
+
+test("No. is an abbreviation only before a numeral; a reply No. stays a word", () => {
+	expect(texts("No.")).toEqual(["No", "."]);
+	expect(texts("I said no.")).toEqual(["I", " ", "said", " ", "no", "."]);
+	expect(texts("The answer is NO.")).toEqual([
+		"The",
+		" ",
+		"answer",
+		" ",
+		"is",
+		" ",
+		"NO",
+		".",
+	]);
+	expect(texts("No. I won't.")[0]).toBe("No");
+	expect(texts("See No. 5.")).toEqual(["See", " ", "No.", " ", "5", "."]);
+	expect(texts("See No.5")).toEqual(["See", " ", "No.", "5"]);
+	expect(texts("no. 12")).toEqual(["no.", " ", "12"]);
+});
+
+test("English abbreviations match in any case, as the old list did", () => {
+	for (const [text, expected] of [
+		["mr. Smith", ["mr.", " ", "Smith"]],
+		["MR. SMITH", ["MR.", " ", "SMITH"]],
+		[
+			"apples, pears, ETC.",
+			["apples", ",", " ", "pears", ",", " ", "ETC."],
+		],
+		["dr. Who vs. Daleks", ["dr.", " ", "Who", " ", "vs.", " ", "Daleks"]],
+		["ST. Paul", ["ST.", " ", "Paul"]],
+	] as const)
+		expect(texts(text), text).toEqual([...expected]);
+});
+
 test("an English Encounter holding a whole fused word is rejected", () => {
 	const encounter = (text: string) => ({
 		sentence: {

@@ -308,7 +308,15 @@ export const englishAbbreviations: readonly AbbreviationEntry[] = [
 		"NOUN",
 		'St. stands for "Saint" before a name or "Street" after one; the sentence decides.',
 	),
-	abbreviation("No.", "Number", "NOUN", 'No. stands for "Number".'),
+	{
+		...abbreviation(
+			"No.",
+			"Number",
+			"NOUN",
+			'No. stands for "Number" before a numeral (No. 5).',
+		),
+		followedBy: "Numeral",
+	},
 	abbreviation(
 		"Jr.",
 		"Junior",
@@ -352,4 +360,5 @@ export const englishFusionTable: FusionTable = {
 	fusions: englishFusions,
 	clitics: englishClitics,
 	abbreviations: englishAbbreviations,
+	abbreviationCase: "Any",
 };
