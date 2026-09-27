@@ -3,12 +3,13 @@
  * spelling can realize, offered as per-cell rubric options whose mass is
  * summed per headword group (Dumgen ADR 0005, issue 509).
  */
+
+import type { AuthoredMember } from "dumspec/inventories";
+import { authoredRealizations } from "dumspec/inventories";
 import {
 	abbreviationEntry,
 	cliticEntry,
 } from "../../../universal/fusion-table.js";
-import type { AuthoredMember } from "../authored-closed-sets/member.js";
-import { authoredRealizations } from "../authored-closed-sets/realizations.js";
 import { germanFusionTable } from "../fusion-entries.js";
 import type { IdentityCandidate, IdentityMass } from "./analysis.js";
 

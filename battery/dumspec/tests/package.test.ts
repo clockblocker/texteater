@@ -34,3 +34,34 @@ test("a consumer on Node loads the records through the published entry", async (
 	expect(count).toBeGreaterThan(0);
 	expect(found).toBe("de/pass-auf-dich-auf");
 });
+
+test("a consumer on Node reads the authored inventories through their entry", async () => {
+	const output = await run([
+		resolve(packageRoot, "../../node_modules/node/bin/node"),
+		"--input-type=module",
+		"-e",
+		`const inventories = await import("dumspec/inventories");
+		const root = await import("dumspec");
+		console.log(JSON.stringify({
+			count: inventories.authoredMembers.length,
+			same: root.authoredMembers === inventories.authoredMembers,
+		}));`,
+	]);
+	const { count, same } = JSON.parse(output);
+	expect(count).toBeGreaterThan(300);
+	expect(same).toBe(true);
+});
+
+test("the inventories entry reads no files and loads no Zod", async () => {
+	const files = ["./inventories.js"];
+	const external: string[] = [];
+	for (const file of files) {
+		const text = await Bun.file(resolve(packageRoot, "dist", file)).text();
+		for (const [, specifier = ""] of text.matchAll(
+			/(?:from|import)\s*"([^"]+)"/g,
+		))
+			if (!specifier.startsWith("./")) external.push(specifier);
+			else if (!files.includes(specifier)) files.push(specifier);
+	}
+	expect(external).toEqual([]);
+});

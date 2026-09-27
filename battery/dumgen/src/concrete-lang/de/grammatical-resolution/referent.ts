@@ -1,7 +1,7 @@
+import { authoredRealizations } from "dumspec/inventories";
 import type { ChoiceQuestion } from "promptsmith/typesafe";
 import type { SentenceContext } from "../../../types.js";
 import { choice } from "../../../universal/questions.js";
-import { authoredRealizations } from "../authored-closed-sets/realizations.js";
 import { isParadigmCell } from "../authored-closed-sets/select.js";
 
 /**

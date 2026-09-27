@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { authoredMembers } from "dumspec/inventories";
 import { Effect } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import { locateAuthoredIdentity } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 import { targetCriteria } from "../src/concrete-lang/de/target-classification/judgments.js";
 import { grammarFixture } from "../src/testing.js";

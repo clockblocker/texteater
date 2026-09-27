@@ -122,6 +122,17 @@ the same way, with every other remaining case in Dumgen, so drafting and
 reviewing their Attestations moves into that pass. Their Dumgen projections
 wait for the pipeline rewrite against `dumspec`.
 
+Amended on 2026-09-27 with [ADR 0021](./0021-make-dumgen-own-authored-content-and-route-closure.md):
+`dumspec` also owns the Authored Inventories, the closed-class units authored
+instead of generated, with their Reading Knowledge. They live apart from
+`records/`, because they are the model's content, not gold a run is scored
+against. The package roles follow: Dumling is the model's types and schemas;
+`dumspec` connects the model to reality through gold, Rules and authored
+units, and is meant to become part of the Dumling docs; Dumgen is a pipeline
+that reads them. `bun test` parses every authored Lemma and Reading with
+`parseUnit`, every Reading's Knowledge with Dumrel, and checks it against the
+route's Knowledge policy.
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec

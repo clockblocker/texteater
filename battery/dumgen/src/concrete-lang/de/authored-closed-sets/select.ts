@@ -1,9 +1,11 @@
 import type * as Dumling from "dumling/types";
+import {
+	authoredMembers,
+	reviewedDeterminers,
+	reviewedPronouns,
+	type SurfaceCell,
+} from "dumspec/inventories";
 import { DumgenFailure } from "../../../universal/failure.js";
-import { reviewedDeterminers } from "./determiner-paradigms.js";
-import { authoredMembers } from "./inventory.js";
-import { reviewedPronouns } from "./pronoun-paradigms.js";
-import type { SurfaceCell } from "./stem-lemma.js";
 
 export function sameValue(left: unknown, right: unknown): boolean {
 	if (left === right) return true;

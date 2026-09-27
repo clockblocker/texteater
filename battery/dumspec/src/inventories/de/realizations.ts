@@ -1,0 +1,202 @@
+import type * as Dumling from "dumling/types";
+import { reviewedDeterminers } from "./determiner-paradigms.js";
+import { authoredMembers } from "./inventory.js";
+import type { AuthoredMember } from "./member.js";
+import { reviewedPronouns } from "./pronoun-paradigms.js";
+
+/** One spelling that realizes an authored DET, PRON or AUX member. */
+export type AuthoredRealization = {
+	readonly member: AuthoredMember;
+	readonly spelled: string;
+	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
+	readonly inflection?: Readonly<Record<string, string | null>>;
+};
+/** Licensed alternate spellings of authored determiners, keyed by Canonical Form. */
+// Free clitic article forms (fusion Entry table) and the comparative of
+// uninflected wenig.
+const determinerAliases: Readonly<Record<string, readonly string[]>> = {
+	ein: ["n"],
+	eine: ["ne"],
+	einen: ["nen"],
+	einem: ["nem"],
+	einer: ["ner"],
+	wenig: ["weniger"],
+};
+/** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
+export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
+	sein: [
+		"sein",
+		"bin",
+		"bist",
+		"ist",
+		"sind",
+		"seid",
+		"war",
+		"warst",
+		"waren",
+		"wart",
+		"sei",
+		"seist",
+		"seiest",
+		"seien",
+		"seiet",
+		"wäre",
+		"wärst",
+		"wärest",
+		"wären",
+		"wärt",
+		"wäret",
+		"gewesen",
+	],
+	haben: [
+		"haben",
+		"habe",
+		"hab",
+		"hast",
+		"hat",
+		"habt",
+		"hatte",
+		"hattest",
+		"hatten",
+		"hattet",
+		"habest",
+		"habet",
+		"hätte",
+		"hätt",
+		"hättest",
+		"hätten",
+		"hättet",
+		"gehabt",
+	],
+	werden: [
+		"werden",
+		"werde",
+		"wirst",
+		"wird",
+		"werdet",
+		"wurde",
+		"wurdest",
+		"wurden",
+		"wurdet",
+		// Archaic preterite, attested in the auxiliary corpus.
+		"ward",
+		"wardst",
+		"werdest",
+		"würde",
+		"würdest",
+		"würden",
+		"würdet",
+		"geworden",
+		"worden",
+	],
+	// Recipient passive: three verbs share one AUX Lemma and Reading (ADR 0026).
+	bekommen: [
+		"bekommen",
+		"bekomme",
+		"bekommst",
+		"bekommt",
+		"bekam",
+		"bekamst",
+		"bekamen",
+		"bekamt",
+		"bekomme",
+		"bekommest",
+		"bekommet",
+		"bekäme",
+		"bekämst",
+		"bekämest",
+		"bekämen",
+		"bekämt",
+		"bekämet",
+		"kriegen",
+		"kriege",
+		"kriegst",
+		"kriegt",
+		"kriegte",
+		"kriegtest",
+		"kriegten",
+		"kriegtet",
+		"kriegest",
+		"krieget",
+		"gekriegt",
+		"erhalten",
+		"erhalte",
+		"erhältst",
+		"erhält",
+		"erhaltet",
+		"erhielt",
+		"erhieltst",
+		"erhielten",
+		"erhieltet",
+		"erhaltest",
+		"erhielte",
+		"erhieltest",
+		"erhielten",
+		"erhieltet",
+	],
+};
+const pronounAliases: Readonly<Record<string, readonly string[]>> = {
+	nichts: ["nix"],
+	es: ["s"],
+	jemanden: ["jemand"],
+	jemandem: ["jemand"],
+	niemanden: ["niemand"],
+	niemandem: ["niemand"],
+};
+/**
+ * Licensed alternate spellings of one pronoun Lemma rather than of every Lemma
+ * spelled alike. Relative derer (die Opfer, derer wir gedenken) is nonstandard;
+ * Duden prescribes deren, so it is a Variant of standalone relative deren.
+ */
+function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
+	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+	if (
+		lemma.canonicalForm === "deren" &&
+		core.pronType === "Rel" &&
+		core.extPos === null
+	)
+		return ["derer"];
+	return pronounAliases[lemma.canonicalForm] ?? [];
+}
+
+/**
+ * Every spelling that realizes an authored DET, PRON or AUX member: a stem's
+ * spellings with the cell each marks, a pillar's own spelling, the licensed
+ * aliases, and every form of an auxiliary.
+ */
+export const authoredRealizations: readonly AuthoredRealization[] =
+	authoredMembers.flatMap((member) => {
+		const { lemma } = member;
+		if (
+			lemma.kind !== "DET" &&
+			lemma.kind !== "PRON" &&
+			lemma.kind !== "AUX"
+		)
+			return [];
+		const aliases =
+			lemma.kind === "DET"
+				? (determinerAliases[lemma.canonicalForm] ?? [])
+				: lemma.kind === "AUX"
+					? (auxiliaryForms[lemma.canonicalForm] ?? [])
+					: pronounAliasesOf(lemma);
+		const reviewed = (
+			lemma.kind === "DET" ? reviewedDeterminers : reviewedPronouns
+		).find((entry) => entry.member === member);
+		// A stem Lemma's canonical spelling is one of its cells, never cell-less.
+		const spellings = reviewed?.spellings ?? [
+			{ spelled: lemma.canonicalForm },
+		];
+		const cellless = new Set(
+			spellings.filter(({ cell }) => !cell).map(({ spelled }) => spelled),
+		);
+		return [
+			...spellings.map(({ spelled, cell }) => ({
+				member,
+				spelled,
+				...(cell ? { inflection: { ...cell } } : {}),
+			})),
+			...aliases
+				.filter((spelled) => !cellless.has(spelled))
+				.map((spelled) => ({ member, spelled })),
+		];
+	});

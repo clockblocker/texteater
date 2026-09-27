@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { authoredRealizations } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
+import { authoredRealizations } from "dumspec/inventories";
 import {
 	germanAbbreviations,
 	germanClitics,

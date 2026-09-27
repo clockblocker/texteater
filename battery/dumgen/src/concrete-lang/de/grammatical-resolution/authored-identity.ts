@@ -1,13 +1,11 @@
+import type { AuthoredRealization } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { DumgenOptions } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { choice } from "../../../universal/questions.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
-import {
-	type AuthoredRealization,
-	locateAuthoredIdentity,
-} from "../authored-closed-sets/realizations.js";
+import { locateAuthoredIdentity } from "../authored-closed-sets/realizations.js";
 
 /** The reviewed identity, if any, and the IDs of the calls that chose it. */
 export type AuthoredIdentity = {

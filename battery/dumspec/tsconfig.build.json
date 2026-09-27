@@ -9,8 +9,10 @@
 		"paths": {
 			"common-utils": ["../common-utils/dist/index.d.ts"],
 			"dumling": ["../dumling/dist/index.d.ts"],
-			"dumling/types": ["../dumling/dist/types.d.ts"]
+			"dumling/types": ["../dumling/dist/types.d.ts"],
+			"dumrel": ["../dumrel/dist/index.d.ts"],
+			"dumrel/types": ["../dumrel/dist/types.d.ts"]
 		}
 	},
-	"include": ["src/index.ts", "src/types.ts"]
+	"include": ["src/index.ts", "src/inventories.ts", "src/types.ts"]
 }

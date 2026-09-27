@@ -1,7 +1,7 @@
 {
 	"name": "dumspec",
 	"version": "0.1.0",
-	"description": "The Dumling spec's golden corpus: Spec Records of attested sentences and the classification Rules they follow.",
+	"description": "The Dumling spec: Spec Records of attested sentences, the classification Rules they follow, and the authored closed-class inventories.",
 	"type": "module",
 	"packageManager": "bun@1.4.2",
 	"license": "MIT",
@@ -29,6 +29,11 @@
 			"import": "./dist/types.js",
 			"default": "./dist/types.js"
 		},
+		"./inventories": {
+			"types": "./dist/inventories.d.ts",
+			"import": "./dist/inventories.js",
+			"default": "./dist/inventories.js"
+		},
 		"./schema/*": "./schema/*",
 		"./package.json": "./package.json"
 	},
@@ -48,7 +53,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts --bundle --external:dumling --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/inventories.ts --bundle --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"demote-broken-reviewed": "bun scripts/demote-broken-reviewed.ts",
@@ -64,6 +69,7 @@
 	},
 	"dependencies": {
 		"dumling": "workspace:^",
+		"dumrel": "workspace:^",
 		"zod": "^4.4.0"
 	},
 	"devDependencies": {

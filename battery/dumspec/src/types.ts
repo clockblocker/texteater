@@ -1,5 +1,13 @@
 import type * as Dumling from "dumling/types";
 
+export type {
+	AuthoredMember,
+	AuthoredRealization,
+	AuthoredSpelling,
+	ReviewedMember,
+	SurfaceCell,
+} from "./inventories.js";
+
 /**
  * A Spec Record's path under `records/`, without `.json`: `de/pass-auf-dich-auf`.
  * The first part is the record's language.

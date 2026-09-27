@@ -1,11 +1,23 @@
 # Dumspec
 
-Dumspec owns all the gold Dumgen is scored against: annotated sentences, with
-their Knowledge and Emoji Description gold, raw texts for intake, and the
-classification Rules (ADR 0037). Dumgen and the docs site read it; neither
+Dumspec connects the Dumling model to real language. It owns all the gold
+Dumgen is scored against: annotated sentences, with their Knowledge and Emoji
+Description gold, raw texts for intake, and the classification Rules (ADR
+0037). It also owns the Authored Inventories (ADR 0021). Dumling holds only
+the model's types and schemas. Dumgen and the docs site read Dumspec; neither
 owns it.
 
 ## Language
+
+**Authored Inventory**:
+The closed-class units of a language that are authored instead of generated,
+each Reading with its reviewed Knowledge: in German the AUX Readings, the
+PRON and DET pillar cells and stems, and the pronominal adverbs, with every
+spelling that realizes them. They are the model's content, not gold: a run
+is not scored against them. A Note's drill-down reaches an article,
+auxiliary or reflexive here without generation.
+_Avoid_: Fixed Catalog (Dumgen's term for the members that bound a Closed
+Route), closed set, catalog member
 
 **Spec Record**:
 One sentence of the golden corpus with its Segments, its targets and their

@@ -56,7 +56,7 @@ const caseNames = {
 const genderNames = { Masc: "Maskulinum", Neut: "Neutrum", Fem: "Femininum" };
 
 /** The learner-facing German name of a Paradigm Cell, such as "Dativ, Singular, Maskulinum". */
-export function cellCoordinates(core: Partial<PronounCell>): string {
+function cellCoordinates(core: Partial<PronounCell>): string {
 	return [
 		core.case && caseNames[core.case],
 		core.number === "Sing"

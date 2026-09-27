@@ -1,4 +1,5 @@
 import { germanAdpositionCases } from "dumling";
+import { authoredMembers } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";
@@ -16,7 +17,6 @@ import { choice } from "../../../universal/questions.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext, parse } from "../../../universal/validation.js";
 import { closedParadigmVerb } from "../authored-closed-sets/closed-verb-paradigms.js";
-import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import { sameValue } from "../authored-closed-sets/select.js";
 import {
 	fixedCaseOf,

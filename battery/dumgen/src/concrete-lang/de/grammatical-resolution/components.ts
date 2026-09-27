@@ -1,7 +1,9 @@
 import type * as Dumling from "dumling/types";
+import {
+	authoredMembers,
+	subjectExpletiveEs as subjectEs,
+} from "dumspec/inventories";
 import { DumgenFailure } from "../../../universal/failure.js";
-import { authoredMembers } from "../authored-closed-sets/inventory.js";
-import { member as subjectEs } from "../authored-closed-sets/members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { sameValue } from "../authored-closed-sets/select.js";
 import { deriveNounArticle } from "./noun-article-reference.js";
 

@@ -1,10 +1,10 @@
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import type { AuthoredMember } from "dumspec/inventories";
 import type { KnowledgeProduction, KnowledgeRequest } from "../../../types.js";
 import { DumgenFailure } from "../../../universal/failure.js";
 import { parse } from "../../../universal/validation.js";
-import type { AuthoredMember } from "../authored-closed-sets/member.js";
 import {
 	governablePrepositionLemma,
 	isGovernablePreposition,

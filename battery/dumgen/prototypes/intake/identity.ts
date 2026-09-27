@@ -8,9 +8,10 @@
  * Identity implies route, so the selected member's Kind is compared with the
  * route the group vote gave the same occurrence.
  */
+
+import type { AuthoredMember } from "dumspec/inventories";
+import { authoredRealizations } from "dumspec/inventories";
 import { choice, type Questions } from "promptsmith/typesafe";
-import type { AuthoredMember } from "../../src/concrete-lang/de/authored-closed-sets/member.js";
-import { authoredRealizations } from "../../src/concrete-lang/de/authored-closed-sets/realizations.js";
 import { sameValue } from "../../src/concrete-lang/de/authored-closed-sets/select.js";
 import { isResolved, type Sentence, type Unit } from "./corpus.js";
 import type { GoldSentence, IdentityProbe } from "./gold.js";

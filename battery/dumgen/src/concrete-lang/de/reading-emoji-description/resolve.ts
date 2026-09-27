@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { authoredMembers } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type {
 	DumgenOptions,
@@ -11,7 +12,6 @@ import { textModelCaller } from "../../../universal/model.js";
 import { choice } from "../../../universal/questions.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { markedContext } from "../../../universal/validation.js";
-import { authoredMembers } from "../authored-closed-sets/inventory.js";
 import {
 	authoredFor,
 	closedRoute,

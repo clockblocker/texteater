@@ -44,3 +44,15 @@ a way to conceal an incomplete authored member.
 Amended on 2026-09-25 by [ADR 0037](./0037-make-the-dumling-spec-own-the-golden-corpus-and-classification-rules.md):
 evaluation gold and classification rules move to `dumspec`. Fixed Catalogs,
 Fixed Populations and their authored Knowledge stay in Dumgen.
+
+Amended on 2026-09-27: the authored closed-class inventories move to
+`dumspec`. The German AUX Readings, the PRON and DET pillar cells and stems,
+the pronominal adverbs, their spellings and their Reading Knowledge are
+Authored Inventories there, beside the gold, and `dumspec` checks them with
+Dumling and Dumrel. A Note's drill-down routes from a Lexeme to its article,
+auxiliary and reflexive in code, so those units must exist without generation,
+be readable from a package that stays green while Dumgen is rewritten, and be
+reviewed where the gold is. The completeness rule above still holds and is
+enforced by `dumspec`'s tests. Route Closure, Catalog Miss, the selection of
+an authored member for an encounter and grammatical navigation stay in
+Dumgen, which reads the inventories from `dumspec`.

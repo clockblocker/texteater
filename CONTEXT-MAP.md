@@ -12,7 +12,8 @@
 - [Dumling](./battery/dumling/CONTEXT.md): names the grammatical entities to
   which learner text resolves.
 - [Dumspec](./battery/dumspec/CONTEXT.md): owns the gold Dumgen is scored
-  against: Spec Records, Text Records and classification Rules.
+  against, Spec Records, Text Records and classification Rules, and the
+  Authored Inventories of closed-class units.
 - [Dumrel](./battery/dumrel/CONTEXT.md): defines Reading Knowledge and relation
   algebra.
 - [Dumdict](./battery/dumdict/CONTEXT.md): manages dictionary records over

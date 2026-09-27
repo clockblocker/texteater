@@ -126,6 +126,12 @@ import { member as m159 } from "./members/lexeme/pronoun/relative/die-plural-acc
 import { member as m158 } from "./members/lexeme/pronoun/relative/die-plural-nominative.js";
 import { pronominalAdverbs } from "./pronominal-adverbs.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
+
+/**
+ * Every German authored member: the article and PRON pillar cells, the
+ * invariant determiners, the AUX Readings (one per grammatical use, ADR
+ * 0026), the stem determiners and pronouns, and the pronominal adverbs.
+ */
 export const authoredMembers = [
 	article_das_neuter_singular_accusative,
 	article_das_neuter_singular_nominative,

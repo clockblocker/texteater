@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
+import { authoredMembers } from "dumspec/inventories";
 import { Effect, Fiber } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import expectedOutcomes from "../src/concrete-lang/de/knowledge-production/evaluation/operation-outcomes.json";
 import { markedContextEncounter } from "../src/evaluation/knowledge-operation.js";
 import { knowledgeInputSchema } from "../src/schemas.js";

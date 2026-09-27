@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
+import type { AuthoredMember } from "dumspec/inventories";
+import { authoredMembers } from "dumspec/inventories";
 import { validateAuthoredCatalog } from "../codegen/validate-authored-catalog.js";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
-import type { AuthoredMember } from "../src/concrete-lang/de/authored-closed-sets/member.js";
 
 const member = authoredMembers[0];
 if (!member) throw Error("Expected the authored catalog to contain a member");

@@ -1,4 +1,17 @@
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
+export {
+	type AuthoredMember,
+	type AuthoredRealization,
+	type AuthoredSpelling,
+	authoredMembers,
+	authoredRealizations,
+	closedVerbForms,
+	type ReviewedMember,
+	reviewedDeterminers,
+	reviewedPronouns,
+	type SurfaceCell,
+	subjectExpletiveEs,
+} from "./inventories.js";
 export { type SpecCheck, type SpecIssue, SpecRecordError } from "./issues.js";
 export {
 	findSpecRecord,

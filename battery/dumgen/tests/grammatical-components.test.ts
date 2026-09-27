@@ -1,8 +1,10 @@
 import { expect, test } from "bun:test";
 import { checkIfGrundform, parseUnit } from "dumling";
+import {
+	authoredMembers,
+	subjectExpletiveEs as subjectEs,
+} from "dumspec/inventories";
 import { Effect } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
-import { member as subjectEs } from "../src/concrete-lang/de/authored-closed-sets/members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { targetCases } from "../src/concrete-lang/de/target-classification/cases.js";
 import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
 import {

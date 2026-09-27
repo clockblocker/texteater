@@ -9,8 +9,8 @@ import { comparisonInputSchema } from "dumgen/schemas";
 import type { ComparisonInput, Encounter } from "dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { authoredMembers } from "dumspec/inventories";
 import { Effect } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
 import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
 import {

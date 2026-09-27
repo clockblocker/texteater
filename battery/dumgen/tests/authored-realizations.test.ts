@@ -1,8 +1,7 @@
 import { expect, test } from "bun:test";
+import { authoredMembers, authoredRealizations } from "dumspec/inventories";
 import { Effect } from "effect";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
 import {
-	authoredRealizations,
 	locateAuthoredIdentity,
 	validateAuthoredRealizations,
 } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";

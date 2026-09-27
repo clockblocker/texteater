@@ -1,7 +1,7 @@
 import { germanArticleForm, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { authoredMembers } from "dumspec/inventories";
 import { DumgenFailure } from "../../../universal/failure.js";
-import { authoredMembers } from "../authored-closed-sets/inventory.js";
 
 /** The reviewed article Paradigm Cell with exactly these coordinates. */
 function articleCell(cell: {

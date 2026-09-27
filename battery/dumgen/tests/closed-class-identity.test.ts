@@ -2,8 +2,7 @@ import { expect, test } from "bun:test";
 import { required } from "common-utils";
 import { checkIfGrundform, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { authoredMembers } from "../src/concrete-lang/de/authored-closed-sets/inventory.js";
-import { authoredRealizations } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
+import { authoredMembers, authoredRealizations } from "dumspec/inventories";
 import {
 	isParadigmCell,
 	selectFormAlternatives,

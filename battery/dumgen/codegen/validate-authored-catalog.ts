@@ -1,7 +1,7 @@
 import { parseUnit } from "dumling";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import type { AuthoredMember } from "../src/concrete-lang/de/authored-closed-sets/member.js";
+import type { AuthoredMember } from "dumspec/inventories";
 import { validateAuthoredRealizations } from "../src/concrete-lang/de/authored-closed-sets/realizations.js";
 
 function field(value: unknown, key: string): unknown {
@@ -77,9 +77,7 @@ export function validateAuthoredCatalog(
 }
 
 if (import.meta.main) {
-	const { authoredMembers } = await import(
-		"../src/concrete-lang/de/authored-closed-sets/inventory.js"
-	);
+	const { authoredMembers } = await import("dumspec/inventories");
 	validateAuthoredCatalog(authoredMembers);
 	validateAuthoredRealizations();
 	console.log(

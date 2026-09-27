@@ -137,10 +137,12 @@ _Avoid_: surrounding text, paragraph context
 
 **Authored Content**:
 reviewed Lemmas, fixed Readings, Knowledge and semantic
-relation claims that Dumgen selects under its production policy.
+relation claims that Dumgen selects under its production policy. Dumspec's
+Authored Inventories hold the closed-class members; Dumgen reads them.
 
 **Fixed Catalog**:
-the reviewed Authored Content that bounds a Closed Route.
+the reviewed Authored Content that bounds a Closed Route. Its members are
+authored in Dumspec; Dumgen decides the closure.
 
 **Fixed Population**:
 reviewed Authored Content within an Open Route. A miss

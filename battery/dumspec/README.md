@@ -1,8 +1,8 @@
 # dumspec
 
 The golden corpus of the [Dumling](https://www.npmjs.com/package/dumling)
-spec: Spec Records of attested sentences, and the classification Rules they
-follow.
+spec: Spec Records of attested sentences, the classification Rules they
+follow, and the Authored Inventories of closed-class units.
 
 Each record is one JSON file under `records/<language>/`, and its path without
 `.json` is its id. It holds the sentence and its Segments, and its targets,
@@ -35,3 +35,25 @@ the records that show it. A citation stores the Rule's id with
 `ruleStatementHash(statement)`. `checkPromptCitations` fails a prompt
 paragraph whose cited Rule was reworded since the paragraph was checked
 against it.
+
+The Authored Inventories are the closed-class units authored instead of
+generated, each Reading with its reviewed Knowledge. `dumspec/inventories`
+exports them without reading files or loading Zod, so a short-lived isolate
+can import it; the package root re-exports it.
+
+```ts
+import { authoredMembers, authoredRealizations } from "dumspec/inventories";
+
+// hat in hat gekocht spells the AUX Lemma haben.
+const haben = authoredRealizations.filter(
+	({ spelled, member }) => spelled === "hat" && member.lemma.kind === "AUX",
+);
+```
+
+`authoredMembers` holds every German Lemma, Reading and Knowledge:
+the AUX Readings, the PRON and DET pillar cells and stems, and the
+pronominal adverbs. `authoredRealizations` lists every spelling of a DET,
+PRON or AUX member, with the cell a stem's spelling marks.
+`reviewedDeterminers` and `reviewedPronouns` pair each stem with its
+spellings, and `closedVerbForms` lists every form of sein, haben, werden and
+the modals.
