@@ -2,7 +2,7 @@
  * Reviewed data for splitting one source word into several Segments at
  * intake (Dumgen ADR 0004). Each language authors a table of closed entries;
  * open patterns (Hebrew prefix stacks) are enumerated in code and are not
- * tables. A language's segmenter reads its table to cut abbreviations,
+ * tables (`concrete-lang/he/segmentation/prefixes.ts`). A language's segmenter reads its table to cut abbreviations,
  * apostrophe clitics and fused words, and placement reads it for the
  * surfaces.
  */
@@ -15,6 +15,8 @@ export type FusionComponent = {
 	readonly surface: string | readonly [string, string, ...string[]];
 	readonly role:
 		| "Adposition"
+		| "Conjunction"
+		| "Subordinator"
 		| "Article"
 		| "Pronoun"
 		| "Verb"

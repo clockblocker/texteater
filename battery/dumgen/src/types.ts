@@ -174,6 +174,14 @@ export type SentenceOutcome = {
 	readonly tag?: string;
 };
 export interface Dumgen {
+	/**
+	 * Intake: judges each source sentence, stitches it when needed and cuts
+	 * it into Segments. A Hebrew prefixed word splits by the prefix grammar
+	 * and a bundled word list; the words they leave open are settled by one
+	 * Choice call per sentence. An accepted Hebrew sentence carries the
+	 * Fusion of each word it split, a hidden article as a component with an
+	 * empty span (ADR 0035).
+	 */
 	segment(input: {
 		readonly sourceSentences: readonly [string, ...string[]];
 	}): Task<readonly SegmentationDecision[]>;
@@ -181,7 +189,9 @@ export interface Dumgen {
 	 * Segments one sentence whose language the caller already trusts, such as
 	 * authored dictionary prose. Intake, language detection, and stitching are
 	 * skipped; only the per-language Source Segmentation runs. Kept as a Task
-	 * so a language whose segmentation needs a model call fits unchanged.
+	 * so a language whose segmentation needs a model call fits unchanged. A
+	 * Hebrew word that intake would settle by Choice stays whole here, unless
+	 * its readings differ only in a hidden article.
 	 */
 	segmentSentence<L extends "de" | "en" | "he">(input: {
 		readonly language: L;

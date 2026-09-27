@@ -15,6 +15,10 @@ export function intakeFixture(
 		judge: async (request) => {
 			if (output instanceof Error) throw output;
 			const state = request.state as { id: string; sourceText: string };
+			// A Hebrew prefix Choice leaves each open word to the
+			// deterministic segmentation.
+			if (!("sourceText" in state))
+				return choiceAnswers(request.questions, () => "Unresolved");
 			const item = (output as { items: (Item | undefined)[] }).items[
 				Number(state.id)
 			];

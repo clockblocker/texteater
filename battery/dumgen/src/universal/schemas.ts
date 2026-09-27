@@ -163,6 +163,32 @@ export const knowledgeProductionSchema = z.strictObject({
 	failures: z.array(knowledgeFailureSchema),
 });
 export { knowledgeRequestMaskSchema };
+
+/**
+ * A Hebrew prefixed word that intake split (ADR 0035): each prefix and the
+ * stem is a Segment at its offset; a hidden article is a component with an
+ * empty span at its stem's offset, never a Segment.
+ */
+const hebrewFusionSchema = z.strictObject({
+	offset: z.number().int().nonnegative(),
+	form: z.string().min(1),
+	components: z
+		.array(
+			z.strictObject({
+				offset: z.number().int().nonnegative(),
+				span: z.string(),
+				surface: z.string().min(1),
+				role: z.enum([
+					"Conjunction",
+					"Subordinator",
+					"Adposition",
+					"Article",
+					"Host",
+				]),
+			}),
+		)
+		.min(2),
+});
 export const segmentationDecisionSchema = z.union([
 	z.strictObject({
 		decision: z.literal("Accepted"),
@@ -178,6 +204,7 @@ export const segmentationDecisionSchema = z.union([
 		decision: z.literal("Accepted"),
 		language: z.literal("he"),
 		sentence: segmentedSentenceSchema.extend({ language: z.literal("he") }),
+		fusions: z.array(hebrewFusionSchema),
 	}),
 	z.strictObject({ decision: z.literal("UnsupportedLanguage") }),
 	z.strictObject({ decision: z.literal("Unintelligible") }),

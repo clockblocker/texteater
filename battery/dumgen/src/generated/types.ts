@@ -27,6 +27,21 @@ export type SegmentationDecision =
 			decision: "Accepted";
 			language: "he";
 			sentence: { id: string; language: "he"; segments: Array<Segment> };
+			fusions: Array<{
+				offset: number;
+				form: string;
+				components: Array<{
+					offset: number;
+					span: string;
+					surface: string;
+					role:
+						| "Conjunction"
+						| "Subordinator"
+						| "Adposition"
+						| "Article"
+						| "Host";
+				}>;
+			}>;
 	  }
 	| { decision: "UnsupportedLanguage" }
 	| { decision: "Unintelligible" };

@@ -185,7 +185,7 @@ test("mixed languages, clean and stitched sentences and terminal rejections keep
 			language: "UnsupportedLanguage",
 			delayMs: 1,
 		},
-		"שלום עולם.": { language: "he", delayMs: 10 },
+		"תודה רבה.": { language: "he", delayMs: 10 },
 		"Gu ten Tag.": { language: "de", stitching: "Needed", delayMs: 2 },
 	};
 	const { judge, counter } = intake(plan);
@@ -226,7 +226,7 @@ test("mixed languages, clean and stitched sentences and terminal rejections keep
 		"en:The house.",
 		"Unintelligible",
 		"UnsupportedLanguage",
-		"he:שלום עולם.",
+		"he:תודה רבה.",
 		"de:Guten Tag.",
 	]);
 	expect(counter.peak).toBe(2);

@@ -2,7 +2,16 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import { segmentGerman } from "../concrete-lang/de/segmentation/segment.js";
 import { segmentEnglish } from "../concrete-lang/en/segmentation/segment.js";
-import { segmentHebrew } from "../concrete-lang/he/segmentation/segment.js";
+import {
+	chosenReadings,
+	prefixChoiceState,
+	prefixQuestions,
+} from "../concrete-lang/he/segmentation/prefix-choice.js";
+import type { HebrewReading } from "../concrete-lang/he/segmentation/prefixes.js";
+import {
+	openHebrewWords,
+	segmentHebrew,
+} from "../concrete-lang/he/segmentation/segment.js";
 import type {
 	DumgenOptions,
 	SegmentationDecision,
@@ -46,6 +55,39 @@ export function createSegmentation(
 					"segment",
 					"Source sentences must contain text",
 				);
+			// Hebrew words that keep several readings after the grammar and
+			// the word list are settled by one Choice call per Sentence
+			// (#645); a Sentence without such words makes no call.
+			const settleHebrewPrefixes = (
+				index: number,
+				stitchedText: string,
+				dependsOn: readonly string[],
+			): Effect.Effect<
+				ReadonlyMap<number, HebrewReading>,
+				DumgenFailure
+			> =>
+				Effect.gen(function* () {
+					const open = openHebrewWords(stitchedText);
+					if (!open.length) return new Map();
+					const settled = yield* judgmentCaller(options)(
+						"segment",
+						"intake",
+						prefixChoiceState(stitchedText),
+						prefixQuestions(open),
+						scope,
+						dependsOn,
+					);
+					recordEvent(scope, "HebrewPrefixChoice", {
+						index,
+						stitchedText,
+						words: open.map(({ offset, text }) => ({
+							offset,
+							text,
+						})),
+						answers: settled.output.answers,
+					});
+					return chosenReadings(open, settled.output);
+				});
 			// Sentences are judged independently, so every intake judgment is
 			// issued at once; the result keeps the input order by index. One
 			// failed sentence fails the operation and interrupts the others.
@@ -130,6 +172,7 @@ export function createSegmentation(
 						);
 					const supportedLanguage = language as "de" | "en" | "he";
 					let stitchedText = sourceText;
+					const dependsOn = [judged.id];
 					if (answer("stitching") === "Needed") {
 						const stitched = yield* executeGeneration(
 							options,
@@ -185,9 +228,19 @@ export function createSegmentation(
 							[judged.id],
 						);
 						stitchedText = stitched.output;
+						dependsOn.push(stitched.id);
 					}
 					const segmented =
-						segmenters[supportedLanguage](stitchedText);
+						supportedLanguage === "he"
+							? segmentHebrew(
+									stitchedText,
+									yield* settleHebrewPrefixes(
+										index,
+										stitchedText,
+										dependsOn,
+									),
+								)
+							: segmenters[supportedLanguage](stitchedText);
 					const decision = parse<SegmentationDecision>(
 						"segmentationDecisionSchema",
 						{
@@ -198,6 +251,9 @@ export function createSegmentation(
 								language: supportedLanguage,
 								segments: [...segmented.segments],
 							},
+							...("fusions" in segmented
+								? { fusions: segmented.fusions }
+								: {}),
 						},
 						"segment",
 						true,
