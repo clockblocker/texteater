@@ -17,6 +17,8 @@ export const samples: Record<string, unknown[]> = {
 		{},
 		{ definition: "  Geba\u0308ude  ", translations: { en: [" house "] } },
 		{ semanticRelations: { synonym: [houseLemma] } },
+		{ pluralPattern: ["UmlautE", "En"] },
+		{ pluralPattern: "NoPlural" },
 		{
 			valency: [
 				{
@@ -99,7 +101,12 @@ export const samples: Record<string, unknown[]> = {
 			value: wartenReading.lemma,
 		},
 		{ kind: "Retract", aspect: "participleSource" },
+		{ kind: "Contribute", aspect: "pluralPattern", value: ["En", "S"] },
+		{ kind: "Correct", aspect: "pluralPattern", value: "PluralOnly" },
+		{ kind: "Retract", aspect: "pluralPattern" },
 	],
+	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
+	nounPlural: [["UmlautOnly"], ["En", "S"], "NoPlural", "PluralOnly"],
 	participleSource: [wartenReading.lemma],
 	participleRelation: ["participleSource", "participialAdjective"],
 	participleProjection: [

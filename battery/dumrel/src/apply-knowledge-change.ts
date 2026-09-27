@@ -5,6 +5,7 @@ import { fingerprint } from "./fingerprint.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	KnowledgeChange,
+	NounPlural,
 	ReadingKnowledge,
 	SemanticRelations,
 	ValencyComplement,
@@ -12,6 +13,7 @@ import type {
 	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
+import { pluralPatternValues } from "./vocabulary.js";
 
 /**
  * Applies one source-aware change atomically. Contribute adds absent atomic
@@ -20,8 +22,9 @@ import { parseChangeShape } from "./validation.js";
  * including retractions. The Valency Frame: Contribute appends the Slots whose
  * complement the frame lacks, Correct replaces the frame, and Retract removes
  * the frame or, given a complement, that one Slot. A Participle Source is
- * atomic like a definition. Failure returns ParsingError
- * without a partial value.
+ * atomic like a definition. A noun's plural: Contribute adds the Plural
+ * Patterns it lacks, and a NoPlural or PluralOnly marker is atomic. Failure
+ * returns ParsingError without a partial value.
  */
 export function applyKnowledgeChange<const R extends Dumling.Reading>(input: {
 	source: R;
@@ -62,6 +65,8 @@ function apply<R extends Dumling.Reading>(
 		case "valency":
 			applyValency(knowledge, canonical);
 			return;
+		case "pluralPattern":
+			return applyPlural(knowledge, canonical);
 		case "transcription":
 		case "definition":
 		case "morphologicalTree":
@@ -115,6 +120,43 @@ function applyValency<R extends Dumling.Reading>(
 	}
 	if (next.length === 0) delete knowledge.valency;
 	else knowledge.valency = next as ValencyFrame;
+}
+
+/**
+ * Plural Patterns accumulate: `Pizzen` then `Pizzas` store `En`, `S`, always
+ * in vocabulary order. A marker never merges with patterns; replacing one with
+ * the other takes Correct.
+ */
+function applyPlural<R extends Dumling.Reading>(
+	knowledge: ReadingKnowledge<R>,
+	change: Extract<KnowledgeChange, { aspect: "pluralPattern" }>,
+): ParsingError | undefined {
+	if (change.kind === "Retract") {
+		delete knowledge.pluralPattern;
+		return;
+	}
+	const existing =
+		change.kind === "Contribute" ? knowledge.pluralPattern : undefined;
+	if (
+		existing !== undefined &&
+		(typeof existing === "string" || typeof change.value === "string") &&
+		existing !== change.value
+	)
+		return conflict(
+			["change", "value"],
+			"Contribute conflicts with the existing plural; use Correct to replace it",
+		);
+	if (typeof change.value === "string") {
+		knowledge.pluralPattern = change.value;
+		return;
+	}
+	const patterns = new Set([
+		...(Array.isArray(existing) ? existing : []),
+		...change.value,
+	]);
+	knowledge.pluralPattern = pluralPatternValues.filter((pattern) =>
+		patterns.has(pattern),
+	) as NounPlural;
 }
 
 /**

@@ -38,6 +38,12 @@ import {
 	participleSourcePrompt,
 } from "./participle-source.js";
 import {
+	mergedPlural,
+	parsePlural,
+	pluralOutputSchema,
+	pluralPrompt,
+} from "./plural-pattern.js";
+import {
 	authoredKnowledge,
 	projectKnowledge,
 	validateRequest,
@@ -84,6 +90,11 @@ export function produceKnowledge(
 			preposition: string;
 			case: Dumrel.GovernedCase;
 		}[];
+		/**
+		 * The Plural Pattern this occurrence's plural Surface attests (#597),
+		 * Contributed whether or not `pluralPattern` is requested.
+		 */
+		attestedPluralPattern?: Dumrel.PluralPattern;
 	},
 	scope: OperationScope,
 ): Effect.Effect<KnowledgeProduction, DumgenFailure> {
@@ -207,6 +218,51 @@ export function produceKnowledge(
 				),
 				({ output }) => output,
 			);
+		/**
+		 * The noun's plural: the model names its plural forms only when
+		 * requested, and code derives their patterns (#597). The pattern this
+		 * sentence attests is Contributed with no model call. Published with
+		 * the final batch.
+		 */
+		const attestedPlural = input.attestedPluralPattern;
+		const plural = () =>
+			Effect.gen(function* () {
+				const proposed = Object.hasOwn(
+					authored.missing,
+					"pluralPattern",
+				)
+					? (yield* executeGeneration(
+							options,
+							scope,
+							{
+								stage,
+								route,
+								input: { ...state, aspect: "pluralPattern" },
+								configuration: effectiveConfiguration(
+									options,
+									route,
+								),
+								systemPrompt: pluralPrompt,
+								outputSchema: pluralOutputSchema,
+							},
+							(output) =>
+								parsePlural(
+									output,
+									reading.lemma.canonicalForm,
+									route,
+								),
+							[],
+						)).output
+					: null;
+				const value = mergedPlural(proposed, attestedPlural);
+				return value
+					? projectKnowledge(
+							reading,
+							{ pluralPattern: null },
+							{ pluralPattern: value },
+						)
+					: null;
+			});
 		const textOutcomes: Array<TextOutcome | undefined> = [];
 		const textJobs: Array<Effect.Effect<void, DumgenFailure>> = [];
 		const publishOutcomes = () => {
@@ -224,6 +280,8 @@ export function produceKnowledge(
 		// Attested government is Contributed even when no frame is requested.
 		if (attested.length && !Object.hasOwn(authored.missing, "valency"))
 			aspects.push(["valency", null]);
+		if (attestedPlural && !Object.hasOwn(authored.missing, "pluralPattern"))
+			aspects.push(["pluralPattern", null]);
 		for (const [aspect, selection] of aspects) {
 			if (aspect === "semanticRelations") continue;
 			const leaves =
@@ -250,7 +308,8 @@ export function produceKnowledge(
 								aspect !== "transcription" &&
 								aspect !== "translations" &&
 								aspect !== "valency" &&
-								aspect !== "participleSource"
+								aspect !== "participleSource" &&
+								aspect !== "pluralPattern"
 							)
 								throw new DumgenFailure(
 									"NotImplemented",
@@ -294,54 +353,60 @@ export function produceKnowledge(
 									? yield* valency()
 									: aspect === "participleSource"
 										? yield* participleSource()
-										: draftText !== undefined
-											? validateText({ text: draftText })
-											: (yield* executeGeneration(
-													options,
-													scope,
-													{
-														stage,
-														route,
-														input:
-															aspect ===
-															"transcription"
-																? {
-																		lemma: reading.lemma,
-																		aspect,
-																	}
-																: {
-																		...state,
-																		aspect,
-																		...(leaf
-																			? {
-																					language:
-																						leaf,
-																				}
-																			: {}),
+										: aspect === "pluralPattern"
+											? yield* plural()
+											: draftText !== undefined
+												? validateText({
+														text: draftText,
+													})
+												: (yield* executeGeneration(
+														options,
+														scope,
+														{
+															stage,
+															route,
+															input:
+																aspect ===
+																"transcription"
+																	? {
+																			lemma: reading.lemma,
+																			aspect,
+																		}
+																	: {
+																			...state,
+																			aspect,
+																			...(leaf
+																				? {
+																						language:
+																							leaf,
+																					}
+																				: {}),
+																		},
+															configuration:
+																effectiveConfiguration(
+																	options,
+																	route,
+																),
+															systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. ${translationFormClause(String(leaf))} For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
+															outputSchema: {
+																type: "object",
+																properties: {
+																	text: {
+																		type: [
+																			"string",
+																			"null",
+																		],
 																	},
-														configuration:
-															effectiveConfiguration(
-																options,
-																route,
-															),
-														systemPrompt: `Supply only the requested ${aspect} text for the fixed exact German ${aspect === "transcription" ? "Lemma headword" : "Reading in its marked context. The Reading's emojiDescription is the sense anchor: describe the meaning it names"}. Never change the Lemma, Kind, Core Features or Emoji Description or borrow a neighboring meaning. ${aspect === "definition" ? "Write a concise German definition." : aspect === "transcription" ? "Write broad standard-German IPA without slash or bracket delimiters." : `Translate only the unit marked by <TARGET> into ${leaf}. Use the surrounding sentence only to disambiguate its meaning. Return one concise word or phrase for that Reading, never a translation of the surrounding sentence. ${translationFormClause(String(leaf))} For example, gestern <TARGET>anstrengend</TARGET> gives strenuous in English, not yesterday was strenuous.`} Return {text:string}, or {text:null} if no defensible contribution exists. Do not return judgments or domain objects.`,
-														outputSchema: {
-															type: "object",
-															properties: {
-																text: {
-																	type: [
-																		"string",
-																		"null",
-																	],
 																},
+																required: [
+																	"text",
+																],
+																additionalProperties: false,
 															},
-															required: ["text"],
-															additionalProperties: false,
 														},
-													},
-													validateText,
-													[],
-												)).output;
+														validateText,
+														[],
+													)).output;
 							if (contribution)
 								return {
 									changes: contribution.changes,
@@ -370,7 +435,8 @@ export function produceKnowledge(
 							if (
 								outcome.changes.length &&
 								aspect !== "valency" &&
-								aspect !== "participleSource"
+								aspect !== "participleSource" &&
+								aspect !== "pluralPattern"
 							)
 								options.onKnowledgeContribution?.(
 									outcome.changes,

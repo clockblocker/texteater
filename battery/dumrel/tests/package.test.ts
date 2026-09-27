@@ -24,6 +24,7 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"allowedComplementKinds",
 		"applyKnowledgeChange",
 		"directSemanticRelationValues",
+		"germanPluralPattern",
 		"governedCaseValues",
 		"normalizeText",
 		"parseReadingKnowledge",

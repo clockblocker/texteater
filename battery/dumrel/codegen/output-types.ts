@@ -30,6 +30,8 @@ export const dumrelOutputTypeExports = {
 	ParticipleSource: "participleSource",
 	ParticipleRelation: "participleRelation",
 	ParticipleProjection: "participleProjection",
+	PluralPattern: "pluralPattern",
+	NounPlural: "nounPlural",
 };
 
 export const dumrelTypePreservingOperations = [

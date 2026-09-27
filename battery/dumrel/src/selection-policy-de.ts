@@ -12,10 +12,15 @@ const select = (
 const framed = { valency: null } as const;
 /** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
 const participial = { ...framed, participleSource: null } as const;
+/** A noun records how it forms its plural: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#597). */
+const nominal = { ...framed, pluralPattern: null } as const;
 
 function request(
 	relations: readonly SemanticRelation[],
-	extra: Pick<KnowledgeRequestMask, "valency" | "participleSource"> = {},
+	extra: Pick<
+		KnowledgeRequestMask,
+		"valency" | "participleSource" | "pluralPattern"
+	> = {},
 ): KnowledgeRequestMask {
 	const base = {
 		transcription: null,
@@ -64,7 +69,7 @@ const makeDeRelMap = () =>
 					"hypernym",
 					"holonym",
 				),
-				framed,
+				nominal,
 			),
 			NUM: request(select("synonym")),
 			PART: request(

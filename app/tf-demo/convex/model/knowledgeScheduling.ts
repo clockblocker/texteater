@@ -8,6 +8,7 @@ import {
 	missingKnowledge,
 	nothingMissing,
 	occurrenceGovernment,
+	occurrencePluralPattern,
 } from "./knowledgeCoverage";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
 
@@ -54,11 +55,15 @@ export async function scheduleKnowledgeGeneration(
 	);
 	const missing = missingKnowledge(accumulated, {
 		translationLanguages,
-		// Government can only be all that is missing once the base is covered.
+		// Government and a plural can only be all that is missing once the base is covered.
 		attestedGovernment:
 			accumulated?.status === "Full"
 				? await occurrenceGovernment(ctx, occurrence)
 				: [],
+		attestedPluralPattern:
+			accumulated?.status === "Full"
+				? occurrencePluralPattern(occurrence)
+				: null,
 	});
 	if (nothingMissing(missing)) return;
 	await demandKnowledgeAttempt(ctx, {

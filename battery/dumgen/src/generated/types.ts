@@ -3679,6 +3679,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3698,6 +3699,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3717,6 +3719,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3736,6 +3739,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3755,6 +3759,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3774,6 +3779,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3793,6 +3799,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3812,6 +3819,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3831,6 +3839,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3850,6 +3859,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3869,6 +3879,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3888,6 +3899,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3907,6 +3919,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3926,6 +3939,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3945,6 +3959,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3964,6 +3979,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -3983,6 +3999,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4002,6 +4019,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4021,6 +4039,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4040,6 +4059,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4059,6 +4079,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4078,6 +4099,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4097,6 +4119,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4116,6 +4139,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4135,6 +4159,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4154,6 +4179,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4173,6 +4199,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4192,6 +4219,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4211,6 +4239,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4230,6 +4259,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4249,6 +4279,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4268,6 +4299,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4287,6 +4319,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4306,6 +4339,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4325,6 +4359,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4344,6 +4379,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4363,6 +4399,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4382,6 +4419,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4401,6 +4439,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4420,6 +4459,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4439,6 +4479,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4458,6 +4499,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4477,6 +4519,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4496,6 +4539,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4515,6 +4559,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4534,6 +4579,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4553,6 +4599,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4572,6 +4619,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4591,6 +4639,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4610,6 +4659,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4629,6 +4679,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4648,6 +4699,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4667,6 +4719,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4686,6 +4739,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4705,6 +4759,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4724,6 +4779,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4743,6 +4799,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4762,6 +4819,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4781,6 +4839,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4800,6 +4859,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4819,6 +4879,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4838,6 +4899,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4857,6 +4919,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4876,6 +4939,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4895,6 +4959,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4914,6 +4979,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4933,6 +4999,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4952,6 +5019,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4971,6 +5039,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -4990,6 +5059,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5009,6 +5079,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5028,6 +5099,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5047,6 +5119,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5066,6 +5139,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5085,6 +5159,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5104,6 +5179,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5123,6 +5199,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5142,6 +5219,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5161,6 +5239,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5180,6 +5259,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5199,6 +5279,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5218,6 +5299,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5237,6 +5319,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5256,6 +5339,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5275,6 +5359,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5294,6 +5379,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5313,6 +5399,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5332,6 +5419,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5351,6 +5439,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5370,6 +5459,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5389,6 +5479,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5408,6 +5499,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  }
 	| {
 			encounter: {
@@ -5427,6 +5519,7 @@ export type KnowledgeInput =
 			attestedGovernment?:
 				| Array<{ preposition: string; case: Dumrel.GovernedCase }>
 				| undefined;
+			attestedPluralPattern?: Dumrel.PluralPattern | undefined;
 	  };
 export type SegmentInput = { sourceSentences: [string, ...Array<string>] };
 export type KnowledgeFailure = {
@@ -5437,6 +5530,7 @@ export type KnowledgeFailure = {
 		| "semanticRelations"
 		| "valency"
 		| "participleSource"
+		| "pluralPattern"
 		| "morphologicalTree"
 		| "lexicalBreakdown";
 	leaf?: string | undefined;

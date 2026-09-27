@@ -44,6 +44,11 @@ comes from (`gekocht` stores `kochen`). `projectParticipleSources` derives
 the inverse `participialAdjective` edges, so a verb lists its participial
 adjectives without storing them.
 
+`pluralPattern` records how a German NOUN Reading forms its plural: the Plural
+Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds
+the patterns it lacks, and a marker is atomic. `germanPluralPattern` derives a
+pattern from a singular and a plural (`Mutter`, `Muttern` → `En`).
+
 The `dumrel/schema` entrypoint exposes the canonical composable Zod schemas.
 The package build compiles those schemas into lightweight runtime validation
 and generated structural declarations. Normal imports and `dumrel/types` do

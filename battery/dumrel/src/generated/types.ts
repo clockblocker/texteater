@@ -7,6 +7,7 @@ export type KnowledgeSettings = {
 	lexicalBreakdown?: boolean | undefined;
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
+	pluralPattern?: boolean | undefined;
 	translations?:
 		| { en?: boolean | undefined; ru?: boolean | undefined }
 		| undefined;
@@ -30,6 +31,7 @@ export type KnowledgeRequestMask = {
 	lexicalBreakdown?: null | undefined;
 	valency?: null | undefined;
 	participleSource?: null | undefined;
+	pluralPattern?: null | undefined;
 	translations?: { en?: null | undefined; ru?: null | undefined } | undefined;
 	semanticRelations?:
 		| {
@@ -1637,6 +1639,7 @@ export type ReadingKnowledge = {
 	semanticRelations?: SemanticRelations | undefined;
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
+	pluralPattern?: NounPlural | undefined;
 };
 export type KnowledgeChange =
 	| {
@@ -1882,6 +1885,12 @@ export type KnowledgeChange =
 			value: ParticipleSource;
 	  }
 	| { kind: "Retract"; aspect: "participleSource" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "pluralPattern";
+			value: NounPlural;
+	  }
+	| { kind: "Retract"; aspect: "pluralPattern" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "morphologicalTree";
@@ -2798,3 +2807,14 @@ export type ParticipleProjection = {
 		  );
 	provenance: "direct" | "inferred";
 };
+export type PluralPattern =
+	| "NoEnding"
+	| "UmlautOnly"
+	| "E"
+	| "UmlautE"
+	| "Er"
+	| "UmlautEr"
+	| "En"
+	| "S"
+	| "Other";
+export type NounPlural = Array<PluralPattern> | ("NoPlural" | "PluralOnly");

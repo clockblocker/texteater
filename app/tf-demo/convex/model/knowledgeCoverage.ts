@@ -5,6 +5,10 @@ import {
 	attestedGovernment,
 	uncoveredGovernment,
 } from "../../server/attestedGovernment";
+import {
+	attestedPluralPattern,
+	uncoveredPluralPattern,
+} from "../../server/attestedPlural";
 import type { KnowledgeCoverage } from "../../server/knowledgeCompletion";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
@@ -28,6 +32,8 @@ export type MissingKnowledge = {
 	readonly translationLanguages: readonly Dumrel.TranslationLanguage[];
 	/** Government this occurrence attests that the Reading's Valency Frame lacks. */
 	readonly government: readonly GovernedPrepositionDraft[];
+	/** The Plural Pattern this occurrence attests that the Reading's plural lacks. */
+	readonly pluralPattern: Dumrel.PluralPattern | null;
 };
 
 export function findAccumulatedKnowledge(
@@ -70,11 +76,19 @@ export async function occurrenceGovernment(
 	);
 }
 
+/** The Plural Pattern a noun occurrence's plural Surface attests (#597). */
+export function occurrencePluralPattern(
+	occurrence: Occurrence,
+): Dumrel.PluralPattern | null {
+	return attestedPluralPattern(occurrence.publicAttestation.surface);
+}
+
 export function missingKnowledge(
 	accumulated: AccumulatedKnowledge | null,
 	demand: {
 		readonly translationLanguages: readonly Dumrel.TranslationLanguage[];
 		readonly attestedGovernment: readonly GovernedPrepositionDraft[];
+		readonly attestedPluralPattern: Dumrel.PluralPattern | null;
 	},
 ): MissingKnowledge {
 	const covered = new Set(
@@ -89,6 +103,10 @@ export function missingKnowledge(
 			demand.attestedGovernment,
 			accumulated?.knowledge,
 		),
+		pluralPattern: uncoveredPluralPattern(
+			demand.attestedPluralPattern,
+			accumulated?.knowledge,
+		),
 	};
 }
 
@@ -96,7 +114,8 @@ export function nothingMissing(missing: MissingKnowledge): boolean {
 	return (
 		!missing.base &&
 		missing.translationLanguages.length === 0 &&
-		missing.government.length === 0
+		missing.government.length === 0 &&
+		missing.pluralPattern === null
 	);
 }
 

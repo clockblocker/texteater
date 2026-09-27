@@ -46,3 +46,11 @@ Reading's Knowledge (`gekocht`: `kochen`; `verliebt`: `sich verlieben`). It
 is a grammatical link, not a Semantic Relation. The verb's side, its
 participial adjectives, is projected, never stored.
 _Avoid_: base verb, derivation relation, participle relation
+
+**Plural Pattern**:
+how a German noun forms its plural from its singular: no ending, umlaut only,
+`-e`, umlaut + `-e`, `-er`, umlaut + `-er`, `-(e)n`, `-s`, or another way. A
+NOUN Reading's Knowledge stores every pattern its plurals attest (`Pizza`:
+`-(e)n`, `-s`), or a NoPlural or PluralOnly marker. It never splits a Lemma:
+`Mutter` 👩 `Mütter` and 🔩 `Muttern` are two Readings of one Lemma.
+_Avoid_: plural class, declension class (declension covers the singular too)

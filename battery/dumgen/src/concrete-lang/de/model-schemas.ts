@@ -3,6 +3,7 @@ import {
 	governedCaseSchema,
 	knowledgeRequestMaskSchema,
 	lexicalBreakdownSchema,
+	nounPluralSchema,
 	valencyReferentSchema,
 	valencySlotStatusSchema,
 } from "dumrel/schema";
@@ -137,5 +138,7 @@ export const knowledgeOutputSchema = z.strictObject({
 	valency: z.array(valencySlotDraftSchema).nullable().optional(),
 	/** The source verb's Canonical Form, or null for no participle. */
 	participleSource: z.string().min(1).nullable().optional(),
+	/** The noun's Plural Patterns or its marker, or null for none. */
+	pluralPattern: nounPluralSchema.nullable().optional(),
 });
 export { directSemanticRelationSchema };

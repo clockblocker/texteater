@@ -93,7 +93,7 @@ import * as R89 from "dumling/schema/he/phraseme/aphorism";
 import * as R90 from "dumling/schema/he/phraseme/discourse-formula";
 import * as R91 from "dumling/schema/he/phraseme/idiom";
 import * as R92 from "dumling/schema/he/phraseme/proverb";
-import { knowledgeRequestMaskSchema } from "dumrel/schema";
+import { knowledgeRequestMaskSchema, pluralPatternSchema } from "dumrel/schema";
 import { z } from "zod";
 import {
 	memberIndicesSchema as memberSegmentIndices,
@@ -2453,6 +2453,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[1],
@@ -2466,6 +2467,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[2],
@@ -2479,6 +2481,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[3],
@@ -2492,6 +2495,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[4],
@@ -2505,6 +2509,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[5],
@@ -2518,6 +2523,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[6],
@@ -2531,6 +2537,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[7],
@@ -2544,6 +2551,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[8],
@@ -2557,6 +2565,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[9],
@@ -2570,6 +2579,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[10],
@@ -2583,6 +2593,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[11],
@@ -2596,6 +2607,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[12],
@@ -2609,6 +2621,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[13],
@@ -2622,6 +2635,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[14],
@@ -2635,6 +2649,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[15],
@@ -2648,6 +2663,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[16],
@@ -2661,6 +2677,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[17],
@@ -2674,6 +2691,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[18],
@@ -2687,6 +2705,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[19],
@@ -2700,6 +2719,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[20],
@@ -2713,6 +2733,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[21],
@@ -2726,6 +2747,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[22],
@@ -2739,6 +2761,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[23],
@@ -2752,6 +2775,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[24],
@@ -2765,6 +2789,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[25],
@@ -2778,6 +2803,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[26],
@@ -2791,6 +2817,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[27],
@@ -2804,6 +2831,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[28],
@@ -2817,6 +2845,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[29],
@@ -2830,6 +2859,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[30],
@@ -2843,6 +2873,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[31],
@@ -2856,6 +2887,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[32],
@@ -2869,6 +2901,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[33],
@@ -2882,6 +2915,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[34],
@@ -2895,6 +2929,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[35],
@@ -2908,6 +2943,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[36],
@@ -2921,6 +2957,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[37],
@@ -2934,6 +2971,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[38],
@@ -2947,6 +2985,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[39],
@@ -2960,6 +2999,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[40],
@@ -2973,6 +3013,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[41],
@@ -2986,6 +3027,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[42],
@@ -2999,6 +3041,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[43],
@@ -3012,6 +3055,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[44],
@@ -3025,6 +3069,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[45],
@@ -3038,6 +3083,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[46],
@@ -3051,6 +3097,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[47],
@@ -3064,6 +3111,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[48],
@@ -3077,6 +3125,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[49],
@@ -3090,6 +3139,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[50],
@@ -3103,6 +3153,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[51],
@@ -3116,6 +3167,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[52],
@@ -3129,6 +3181,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[53],
@@ -3142,6 +3195,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[54],
@@ -3155,6 +3209,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[55],
@@ -3168,6 +3223,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[56],
@@ -3181,6 +3237,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[57],
@@ -3194,6 +3251,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[58],
@@ -3207,6 +3265,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[59],
@@ -3220,6 +3279,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[60],
@@ -3233,6 +3293,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[61],
@@ -3246,6 +3307,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[62],
@@ -3259,6 +3321,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[63],
@@ -3272,6 +3335,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[64],
@@ -3285,6 +3349,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[65],
@@ -3298,6 +3363,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[66],
@@ -3311,6 +3377,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[67],
@@ -3324,6 +3391,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[68],
@@ -3337,6 +3405,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[69],
@@ -3350,6 +3419,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[70],
@@ -3363,6 +3433,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[71],
@@ -3376,6 +3447,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[72],
@@ -3389,6 +3461,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[73],
@@ -3402,6 +3475,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[74],
@@ -3415,6 +3489,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[75],
@@ -3428,6 +3503,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[76],
@@ -3441,6 +3517,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[77],
@@ -3454,6 +3531,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[78],
@@ -3467,6 +3545,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[79],
@@ -3480,6 +3559,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[80],
@@ -3493,6 +3573,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[81],
@@ -3506,6 +3587,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[82],
@@ -3519,6 +3601,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[83],
@@ -3532,6 +3615,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[84],
@@ -3545,6 +3629,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[85],
@@ -3558,6 +3643,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[86],
@@ -3571,6 +3657,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[87],
@@ -3584,6 +3671,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[88],
@@ -3597,6 +3685,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[89],
@@ -3610,6 +3699,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[90],
@@ -3623,6 +3713,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[91],
@@ -3636,6 +3727,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 	z.strictObject({
 		encounter: encounterSchema.options[92],
@@ -3649,6 +3741,7 @@ export const knowledgeInputSchema = z.union([
 				}),
 			)
 			.optional(),
+		attestedPluralPattern: pluralPatternSchema.optional(),
 	}),
 ]);
 export const grammarSchemas = {

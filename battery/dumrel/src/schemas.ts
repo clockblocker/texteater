@@ -22,6 +22,8 @@ import {
 	directSemanticRelationValues,
 	germanComplementCaseValues,
 	governedCaseValues,
+	pluralMarkerValues,
+	pluralPatternValues,
 	translationLanguageValues,
 	valencyReferentValues,
 	valencySlotStatusValues,
@@ -84,6 +86,18 @@ export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
  * claim; the verb's side is a read-time projection.
  */
 export const participleSourceSchema = verbLemmaSchema;
+
+export const pluralPatternSchema = z.enum(pluralPatternValues);
+/**
+ * A German noun Reading's plural (#597): every Plural Pattern its plurals
+ * attest, each listed once (`Pizza`: `En`, `S`), or a marker for a noun with
+ * no plural (`Milch`) or no singular (`Leute`). Homonyms that differ only in
+ * plural (`Mütter`, `Muttern`) share one Lemma and differ here, per Reading.
+ */
+export const nounPluralSchema = z.union([
+	z.array(pluralPatternSchema).min(1),
+	z.enum(pluralMarkerValues),
+]);
 
 type MorphologicalNode =
 	| {
@@ -157,6 +171,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	semanticRelations: semanticRelationsSchema.optional(),
 	valency: valencyFrameSchema.optional(),
 	participleSource: participleSourceSchema.optional(),
+	pluralPattern: nounPluralSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -231,6 +246,15 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.literal("participleSource"),
+	}),
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("pluralPattern"),
+		value: nounPluralSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.literal("pluralPattern"),
 	}),
 	z.strictObject({
 		kind: setKinds,

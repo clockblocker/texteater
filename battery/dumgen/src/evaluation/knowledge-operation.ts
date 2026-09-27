@@ -58,6 +58,8 @@ export function knowledgeComparison(
 			}));
 		if (change.aspect === "participleSource")
 			result.participleSource = change.value.canonicalForm;
+		if (change.aspect === "pluralPattern")
+			result.pluralPattern = change.value;
 		if (change.aspect === "translations")
 			(result.translations as Record<string, unknown>)[change.language] =
 				change.value[0] ?? null;

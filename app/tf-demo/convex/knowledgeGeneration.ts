@@ -34,6 +34,7 @@ import {
 	missingKnowledge,
 	nothingMissing,
 	occurrenceGovernment,
+	occurrencePluralPattern,
 	recordCoverageEvidence,
 } from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
@@ -145,6 +146,8 @@ const generationInputValidator = v.union(
 				),
 			}),
 		),
+		/** The attested Plural Pattern the Reading's plural lacks. */
+		pluralPattern: v.union(v.string(), v.null()),
 		authorization: publicationAuthorizationValidator,
 	}),
 );
@@ -181,6 +184,7 @@ export const begin = internalMutation({
 		const missing = missingKnowledge(accumulated, {
 			translationLanguages: attempt.translationLanguages ?? ["en"],
 			attestedGovernment: await occurrenceGovernment(ctx, occurrence),
+			attestedPluralPattern: occurrencePluralPattern(occurrence),
 		});
 		if (nothingMissing(missing)) {
 			await endKnowledgeRun(ctx, attempt, null, { kind: "LostRace" });
@@ -203,6 +207,7 @@ export const begin = internalMutation({
 			translationLanguages: [...missing.translationLanguages],
 			topUpOnly: !missing.base,
 			government: [...missing.government],
+			pluralPattern: missing.pluralPattern,
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
@@ -369,8 +374,8 @@ export const publish = internalMutation({
 			attempt.ownerReadingKey,
 		);
 		// The race check: before its first batch, did another run cover this
-		// demand since the claim? A Full Reading still takes government a new
-		// sentence attests, which only the batch itself shows here.
+		// demand since the claim? A Full Reading still takes government or a
+		// plural a new sentence attests, which only the batch itself shows here.
 		if (
 			!attempt.publicationSequence &&
 			nothingMissing(
@@ -379,9 +384,14 @@ export const publish = internalMutation({
 						"en",
 					],
 					attestedGovernment: [],
+					attestedPluralPattern: null,
 				}),
 			) &&
-			!args.changes.some((change) => change?.aspect === "valency")
+			!args.changes.some(
+				(change) =>
+					change?.aspect === "valency" ||
+					change?.aspect === "pluralPattern",
+			)
 		) {
 			await endKnowledgeRun(ctx, attempt, runNumber, {
 				kind: "LostRace",
@@ -506,7 +516,7 @@ export const publish = internalMutation({
 			knowledge,
 			{
 				// A top-up that partly fails never downgrades a Full Reading; its
-				// content still shows the translations and government it lacks.
+				// content still shows the translations, government and plural it lacks.
 				status:
 					(args.final && complete) || accumulated?.status === "Full"
 						? "Full"

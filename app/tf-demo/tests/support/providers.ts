@@ -6,7 +6,7 @@ type Fixture = Pick<DumgenOptions, "execute" | "judge">;
  * Answers the production Luna and TypeSafe HTTP transports from a Dumgen
  * fixture, so real actions run their real Dumgen against queued outputs.
  * Knowledge leaves, which carry an aspect, are answered apart from the queue:
- * text from `knowledge`, and an empty Valency Frame.
+ * text from `knowledge`, an empty Valency Frame, and a noun with no plural.
  * A fixture that throws becomes an HTTP 503.
  */
 export function fakeProviders(
@@ -37,7 +37,9 @@ export function fakeProviders(
 				input && typeof input === "object" && "aspect" in input
 					? input.aspect === "valency"
 						? { valency: [] }
-						: { text: knowledge(input) }
+						: input.aspect === "pluralPattern"
+							? { plurality: "NoPlural", plurals: [] }
+							: { text: knowledge(input) }
 					: (
 							await fixture.execute({
 								stage:

@@ -100,7 +100,16 @@ const ANGST_READING = {
 	lemma: { ...BANK_LEMMA, canonicalForm: "Angst" },
 } as const;
 
-type SeededReading = typeof BANK_READING | typeof ANGST_READING;
+const PIZZA_READING = {
+	unitKind: "Reading",
+	lemma: { ...BANK_LEMMA, canonicalForm: "Pizza" },
+	emojiDescription: "🍕",
+} as const;
+
+type SeededReading =
+	| typeof BANK_READING
+	| typeof ANGST_READING
+	| typeof PIZZA_READING;
 type ReadingRecord = Record<string, unknown>;
 type Occurrence = {
 	readonly readingId: Id<"readings">;
@@ -181,11 +190,19 @@ function governedAnalysis(segmentedSentenceId: string) {
 async function seedOccurrence(
 	t: TestConvexDb,
 	reading: SeededReading = BANK_READING,
+	/** The member's Surface; the Canonical Form with no features by default. */
+	surface: {
+		readonly normalizedSurface: string;
+		readonly inflectionalFeatures: unknown;
+	} = {
+		normalizedSurface: reading.lemma.canonicalForm,
+		inflectionalFeatures: null,
+	},
 ): Promise<Occurrence> {
 	const governed = reading.lemma.canonicalForm === "Angst";
 	const { textId, sentenceIds, segmentIds } = await submitText(t, [
 		[
-			{ kind: "ResolvableText", text: reading.lemma.canonicalForm },
+			{ kind: "ResolvableText", text: surface.normalizedSurface },
 			{
 				kind: "OpaqueText",
 				text: governed ? " vor Hunden" : " am Fluss",
@@ -214,8 +231,7 @@ async function seedOccurrence(
 			surfaceKey: `surface:${readingKey}`,
 			lemmaId,
 			language: "de",
-			normalizedSurface: reading.lemma.canonicalForm,
-			inflectionalFeatures: null,
+			...surface,
 			spelling: "Canonical",
 			surfaceFeatures: null,
 		});
@@ -445,6 +461,79 @@ test("a Full Reading still tops up government its new sentence attests, and only
 	});
 	await schedule(covered, input(coveredOccurrence));
 	expect(await attempts(covered)).toEqual([]);
+});
+
+test("a Full Reading still takes the Plural Pattern its new sentence attests, with no model call", async () => {
+	const input = (occurrence: Occurrence) => ({
+		attemptKey: "plural-top-up",
+		visitorId: "visitor-1",
+		readingId: occurrence.readingId,
+		attestationId: occurrence.attestationId,
+	});
+	const full = (pluralPattern: unknown) => ({
+		knowledge: {
+			translations: { en: ["pizza"], ru: ["пицца"] },
+			pluralPattern,
+		},
+		status: "Full" as const,
+		coveredTranslationLanguages: ["en" as const, "ru" as const],
+	});
+	const pizzas = (grammaticalCase: string) => ({
+		normalizedSurface: "Pizzas",
+		inflectionalFeatures: {
+			article: "None",
+			case: grammaticalCase,
+			number: "Plur",
+		},
+	});
+	jest.useRealTimers();
+	const t = createTestConvex();
+	const occurrence = await seedOccurrence(t, PIZZA_READING, pizzas("Nom"));
+	await addToDictionary(t, occurrence, {
+		knowledge: { pluralPattern: ["En"] },
+	});
+	await insertAccumulatedKnowledge(t, occurrence, full(["En"]));
+	await schedule(t, input(occurrence));
+	expect(await attempts(t)).toHaveLength(1);
+	const provider = stubProvider(async () => {
+		throw new Error("An attested plural needs no model call.");
+	});
+	try {
+		await t.action(
+			internal.knowledgeGenerationActions.runKnowledgeGeneration,
+			{ attemptKey: "plural-top-up" },
+		);
+	} finally {
+		provider.restore();
+	}
+	expect(provider.requests).toEqual([]);
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+	const [accumulated] = await rows(t, "accumulatedKnowledge");
+	expect(accumulated).toMatchObject({
+		status: "Full",
+		knowledge: { pluralPattern: ["En", "S"] },
+	});
+
+	// A stored pattern, a marker or a dative plural demands nothing.
+	for (const [stored, grammaticalCase] of [
+		[["En", "S"], "Nom"],
+		["NoPlural", "Nom"],
+		[["En"], "Dat"],
+	] as const) {
+		const covered = createTestConvex();
+		const coveredOccurrence = await seedOccurrence(
+			covered,
+			PIZZA_READING,
+			pizzas(grammaticalCase),
+		);
+		await insertAccumulatedKnowledge(
+			covered,
+			coveredOccurrence,
+			full(stored),
+		);
+		await schedule(covered, input(coveredOccurrence));
+		expect(await attempts(covered)).toEqual([]);
+	}
 });
 
 const VOR_DAT = {
@@ -690,6 +779,7 @@ test("manual writes never downgrade Full and failures persist only a safe catego
 function stubProvider(
 	respond: (modelInput: ModelInput) => Promise<string>,
 	frame: readonly unknown[] = [],
+	plural: unknown = { plurality: "NoPlural", plurals: [] },
 ) {
 	const previousFetch = globalThis.fetch;
 	const previousKey = process.env.OPENAI_API_KEY;
@@ -710,7 +800,14 @@ function stubProvider(
 								value:
 									modelInput.aspect === "valency"
 										? { valency: frame }
-										: { text: await respond(modelInput) },
+										: modelInput.aspect === "pluralPattern"
+											? plural
+											: {
+													text:
+														await respond(
+															modelInput,
+														),
+												},
 							}),
 						},
 					],
@@ -773,12 +870,13 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		},
 		[],
 	);
-	// The Knowledge call that creates the Reading proposes its frame.
+	// The Knowledge call that creates the Reading proposes its frame and names its plural.
 	expect(request).toEqual({
 		transcription: null,
 		definition: null,
 		translations: { en: null, ru: null },
 		valency: null,
+		pluralPattern: null,
 	});
 	expect(
 		generationRequestFor(
@@ -839,7 +937,11 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 			},
 			checkedRelationKinds: [],
 		}),
-	).toEqual({ transcription: null, translations: { en: null, ru: null } });
+	).toEqual({
+		transcription: null,
+		translations: { en: null, ru: null },
+		pluralPattern: null,
+	});
 });
 
 test("production publication remains empty without a reviewed verdict", () => {
@@ -1939,10 +2041,10 @@ test.each([false, true])(
 			}
 			slow.resolve();
 			await running;
-			// The final publication always carries every change; the mutation
-			// drops what this run already published.
+			// The final publication always carries every change, the plural
+			// included; the mutation drops what this run already published.
 			const changes = await committedChanges();
-			expect(changes).toHaveLength(3);
+			expect(changes).toHaveLength(4);
 			const sequences = new Set(
 				changes.map(
 					({ knowledgeChangeKey }) =>

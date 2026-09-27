@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { fingerprint } from "./fingerprint.js";
 import type {
 	KnowledgeChange,
+	NounPlural,
 	ReadingKnowledge,
 	ValencyComplement,
 	ValencyFrame,
@@ -173,11 +174,35 @@ function parseParticipleSource<R extends Dumling.Reading>(
 	return verb;
 }
 
+/**
+ * A plural belongs to a German NOUN Reading, and each Plural Pattern appears
+ * once (#597).
+ */
+function parseNounPlural<R extends Dumling.Reading>(
+	source: R,
+	value: NounPlural,
+	path: Path,
+): NounPlural | ParsingError {
+	const { language, family, kind } = source.lemma;
+	if (language !== "de" || family !== "Lexeme" || kind !== "NOUN")
+		return issue(path, "Only a German NOUN Reading has a plural");
+	if (typeof value !== "string" && new Set(value).size !== value.length)
+		return issue(path, "A plural lists each Plural Pattern once");
+	return value;
+}
+
 export function contextualizeKnowledge<R extends Dumling.Reading>(
 	source: R,
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge<R> | ParsingError {
 	const result = structuredClone(knowledge) as ReadingKnowledge;
+	if (result.pluralPattern) {
+		const plural = parseNounPlural(source, result.pluralPattern, [
+			"knowledge",
+			"pluralPattern",
+		]);
+		if (plural instanceof ParsingError) return plural;
+	}
 	if (result.participleSource) {
 		const verb = parseParticipleSource(source, result.participleSource, [
 			"knowledge",
@@ -217,6 +242,13 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange<R> | ParsingError {
+	if (change.aspect === "pluralPattern" && change.kind !== "Retract") {
+		const plural = parseNounPlural(source, change.value, [
+			"change",
+			"value",
+		]);
+		if (plural instanceof ParsingError) return plural;
+	}
 	if (change.aspect === "participleSource" && change.kind !== "Retract") {
 		const verb = parseParticipleSource(source, change.value, [
 			"change",

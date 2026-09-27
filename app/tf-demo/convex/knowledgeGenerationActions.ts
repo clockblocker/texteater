@@ -240,6 +240,10 @@ export const runKnowledgeGeneration = internalAction({
 							},
 							// Coverage is per occurrence: the stored frame may lack this sentence's government.
 							attestedGovernment: input.government,
+							// The stored plural may lack this sentence's Plural Pattern.
+							...(input.pluralPattern
+								? { attestedPluralPattern: input.pluralPattern }
+								: {}),
 						} as KnowledgeInput<"de">)
 						.pipe(
 							Effect.catchTag("CatalogMiss", (failure) =>

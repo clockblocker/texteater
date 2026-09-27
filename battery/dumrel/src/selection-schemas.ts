@@ -21,6 +21,7 @@ export const knowledgeSettingsSchema = z.strictObject({
 	lexicalBreakdown: settingsLeaf,
 	valency: settingsLeaf,
 	participleSource: settingsLeaf,
+	pluralPattern: settingsLeaf,
 	translations: z
 		.strictObject({ en: settingsLeaf, ru: settingsLeaf })
 		.optional(),
@@ -44,6 +45,7 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 	lexicalBreakdown: maskLeaf,
 	valency: maskLeaf,
 	participleSource: maskLeaf,
+	pluralPattern: maskLeaf,
 	translations: z.strictObject({ en: maskLeaf, ru: maskLeaf }).optional(),
 	semanticRelations: z
 		.strictObject({

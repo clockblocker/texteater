@@ -69,6 +69,8 @@ export type KnowledgeAnalysis = {
 	valency?: readonly ValencySlotDraft[] | null;
 	/** null means the adjective is no participle of a verb. */
 	participleSource?: ParticipleSourceDraft | null;
+	/** The noun's plural with its patterns already derived; null means none was found. */
+	pluralPattern?: Dumrel.NounPlural | null;
 };
 /** A Valency Frame Slot whose preposition is still its German spelling. */
 export type ValencySlotDraft = {
@@ -128,6 +130,13 @@ export function projectKnowledge(
 										),
 									},
 					})),
+				});
+		} else if (aspect === "pluralPattern") {
+			if (analysis.pluralPattern)
+				changes.push({
+					kind: "Contribute",
+					aspect,
+					value: analysis.pluralPattern,
 				});
 		} else if (aspect === "participleSource") {
 			if (analysis.participleSource)
