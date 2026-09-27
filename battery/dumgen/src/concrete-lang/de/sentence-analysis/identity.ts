@@ -10,7 +10,7 @@ import {
 import type { AuthoredMember } from "../authored-closed-sets/member.js";
 import { authoredRealizations } from "../authored-closed-sets/realizations.js";
 import { germanFusionTable } from "../fusion-entries.js";
-import type { IdentityCandidate } from "./analysis.js";
+import type { IdentityCandidate, IdentityMass } from "./analysis.js";
 
 const key = (text: string) => text.normalize("NFC").toLowerCase();
 
@@ -126,6 +126,27 @@ export function candidateOf(
 			),
 		),
 		definition: first.knowledge.definition ?? "",
+	};
+}
+
+/**
+ * The identity of a fused article piece no noun holds (the m of im alten
+ * Berlin): the fusion table already says it is the definite article its
+ * surface spells, so the article group is Selected without a judgment and
+ * the grammar step picks the cell. Null when the surface spells no authored
+ * article.
+ */
+export function fusedArticleIdentity(surface: string): IdentityMass | null {
+	const articles = candidatesFor(surface).filter(
+		(member) =>
+			member.lemma.kind === "DET" && core(member).pronType === "Art",
+	);
+	const [group, ...rest] = headwordGroups(articles);
+	if (!group || rest.length) return null;
+	const candidate = candidateOf(group, surface);
+	return {
+		candidates: [candidate],
+		mass: { [candidate.key]: 1, NoMatch: 0, Unresolved: 0 },
 	};
 }
 

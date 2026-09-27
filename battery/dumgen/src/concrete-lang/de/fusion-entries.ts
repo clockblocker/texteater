@@ -280,7 +280,8 @@ const abbreviation = (
 	surface: AbbreviationEntry["surface"],
 	kind: string | null,
 	oneLiner: string,
-): AbbreviationEntry => ({ text, surface, kind, oneLiner });
+	options: Pick<AbbreviationEntry, "dotOptional"> = {},
+): AbbreviationEntry => ({ text, surface, kind, oneLiner, ...options });
 
 /**
  * Abbreviations are one Segment whose surface is the expansion. Multi-word
@@ -416,6 +417,22 @@ export const germanAbbreviations: readonly AbbreviationEntry[] = [
 	),
 	abbreviation("Hr.", "Herr", "NOUN", "„Hr.“ steht für die Anrede „Herr“."),
 	abbreviation("Fr.", "Frau", "NOUN", "„Fr.“ steht für die Anrede „Frau“."),
+	// Duden lists the English titles as German nouns (der Mister, die
+	// Missis); British usage writes them without the dot (Mr und Mrs Dursley).
+	abbreviation(
+		"Mr.",
+		"Mister",
+		"NOUN",
+		"„Mr.“ steht für die englische Anrede „Mister“: Herr.",
+		{ dotOptional: true },
+	),
+	abbreviation(
+		"Mrs.",
+		"Missis",
+		"NOUN",
+		"„Mrs.“ steht für die englische Anrede „Missis“: Frau.",
+		{ dotOptional: true },
+	),
 	abbreviation(
 		"Str.",
 		"Straße",

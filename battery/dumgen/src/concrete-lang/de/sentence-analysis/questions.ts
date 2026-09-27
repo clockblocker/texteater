@@ -116,9 +116,9 @@ export function nameArticleQuestions(
 		)
 			continue;
 		questions[`nameArticle_${index}`] = choice(
-			`Is the article part of the fused word ${label(sentence, index)} the definite article of a proper name canonically cited with it, such as the m of im Rhein (der Rhein) or the r of zur Schweiz (die Schweiz)?`,
+			`Is the article part of the fused word ${label(sentence, index)} the definite article of a proper name canonically cited with it, such as the m of im Rhein (der Rhein), the r of zur Schweiz (die Schweiz) or the m of am Alexanderplatz (der Alexanderplatz)? Names of streets, squares, rivers, mountains and buildings are cited with their article, also when the name is unfamiliar or invented (im Birkenweg, in der Lindenallee).`,
 			{
-				Name: "Yes: it is the article this name is cited with",
+				Name: "Yes: it is the article this name is cited with, such as a street or square name (am Alexanderplatz, im Birkenweg)",
 				Other: "No: it belongs to a common noun (im Wald), to a name cited bare (im alten Berlin, beim Peter) or to a larger fixed expression",
 				Unresolved:
 					"Where its article part belongs cannot be defensibly decided",

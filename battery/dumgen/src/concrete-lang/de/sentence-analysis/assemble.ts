@@ -35,6 +35,7 @@ import {
 	candidateKey,
 	candidateOf,
 	candidatesFor,
+	fusedArticleIdentity,
 	headwordGroups,
 	surfaceRealizing,
 } from "./identity.js";
@@ -462,8 +463,9 @@ export function assembleAnalysis(
 	const targets: LexemeTarget[] = [];
 	const headIndexOf = new Map<string, number>();
 	// `name`: the judgment says the article is one a name is cited with
-	// (the m of im Rhein).
-	const fusedArticles: { offset: number; name: boolean }[] = [];
+	// (the m of im Rhein). `surface`: the article the piece stands for.
+	const fusedArticles: { offset: number; name: boolean; surface: string }[] =
+		[];
 	let counter = 0;
 	const nextId = () => `t${++counter}`;
 	const memberRole = (index: number, singleton: boolean): MemberRole => {
@@ -504,6 +506,7 @@ export function assembleAnalysis(
 				} else
 					fusedArticles.push({
 						offset: component.offset,
+						surface: component.surface,
 						name:
 							choiceOf(answers, `nameArticle_${index}`)
 								?.choice === "Name",
@@ -609,6 +612,7 @@ export function assembleAnalysis(
 		...orphans.map((orphan) => ({
 			offset: orphan.members[0]?.offset ?? 0,
 			name: true,
+			surface: null,
 			orphan,
 		})),
 	].sort((a, b) => b.offset - a.offset);
@@ -648,7 +652,9 @@ export function assembleAnalysis(
 				id: nextId(),
 				members: [{ offset: article.offset, role: "Head" }],
 				routeMass: { DET: 1 },
-				identity: null,
+				identity: article.surface
+					? fusedArticleIdentity(article.surface)
+					: null,
 				provenance: "fusion-table:unattached-article",
 			});
 	}
@@ -676,7 +682,11 @@ export function assembleAnalysis(
 			members: target.members.filter((member) => member !== article),
 			provenance: `${target.provenance}+guard:articleScope`,
 		};
-		const standalone = index !== undefined && !fusionOf(index);
+		const fused = index === undefined ? undefined : fusionOf(index);
+		const standalone = index !== undefined && !fused;
+		const piece = fused?.components.find(
+			(component) => component.offset === article.offset,
+		);
 		const id = nextId();
 		if (standalone) headIndexOf.set(id, index);
 		targets.push({
@@ -685,7 +695,9 @@ export function assembleAnalysis(
 			routeMass: { DET: 1 },
 			identity: standalone
 				? identityMassOf(sentence, answers, index)
-				: null,
+				: piece
+					? fusedArticleIdentity(piece.surface)
+					: null,
 			provenance: "guard:articleScope",
 		});
 	}

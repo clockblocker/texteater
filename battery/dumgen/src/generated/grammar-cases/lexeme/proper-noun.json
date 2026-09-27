@@ -57,7 +57,8 @@
 			"grammar-de-propn-dev-neighbor-city-berlin",
 			"grammar-de-propn-accept-v3-place-saarland",
 			"grammar-de-propn-regression-owned-article-struwwelpeter",
-			"grammar-de-propn-regression-bare-name-altes-berlin"
+			"grammar-de-propn-regression-bare-name-altes-berlin",
+			"grammar-de-propn-regression-street-name-fliederweg"
 		]
 	},
 	"cases": {
@@ -1353,6 +1354,58 @@
 				"articleEvidence": null
 			},
 			"explanation": "Berlin is cited bare, so its Lemma has no article and the das before it is not its member."
+		},
+		"grammar-de-propn-regression-street-name-fliederweg": {
+			"input": {
+				"markedContext": "Mr und Mrs Parker wohnen i<TARGET>m</TARGET> <TARGET>Fliederweg</TARGET> Nummer 7.",
+				"members": ["m", "Fliederweg"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Fliederweg",
+					"coreFeatures": {
+						"abbr": null,
+						"article": "Definite",
+						"foreign": null,
+						"gender": "Masc"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["dem", "Fliederweg"],
+				"memberOrthographies": ["Fused", "Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 }
+			}
+		},
+		"grammar-de-propn-regression-bare-city-gender-berlin": {
+			"input": {
+				"markedContext": "Ich wohne im alten <TARGET>Berlin</TARGET>.",
+				"members": ["Berlin"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Berlin",
+					"coreFeatures": {
+						"abbr": null,
+						"article": null,
+						"foreign": null,
+						"gender": "Neut"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+				},
+				"normalizedMembers": ["Berlin"],
+				"memberOrthographies": ["Standard"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
 		}
 	},
 	"origins": {
@@ -1598,6 +1651,16 @@
 		},
 		"grammar-de-propn-regression-bare-name-altes-berlin": {
 			"record": "de/viele-vermissen-das-alte-berlin",
+			"target": 1,
+			"status": "Draft"
+		},
+		"grammar-de-propn-regression-street-name-fliederweg": {
+			"record": "de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
+			"target": 3,
+			"status": "Draft"
+		},
+		"grammar-de-propn-regression-bare-city-gender-berlin": {
+			"record": "de/ich-wohne-im-alten-berlin",
 			"target": 1,
 			"status": "Draft"
 		}

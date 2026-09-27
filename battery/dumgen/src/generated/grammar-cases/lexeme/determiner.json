@@ -1531,6 +1531,38 @@
 			},
 			"idealOutput": { "decision": "Unresolved" },
 			"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved."
+		},
+		"grammar-de-det-regression-unattached-fused-article-dem": {
+			"input": {
+				"markedContext": "Ich wohne i<TARGET>m</TARGET> alten Berlin.",
+				"members": ["m"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "dem",
+					"coreFeatures": {
+						"case": "Dat",
+						"definite": "Def",
+						"extPos": null,
+						"foreign": null,
+						"gender": "Neut",
+						"number": "Sing",
+						"numType": null,
+						"person": null,
+						"polite": null,
+						"poss": null,
+						"pronType": "Art"
+					}
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"normalizedMembers": ["dem"],
+				"memberOrthographies": ["Fused"],
+				"realizationCoverage": "Full"
+			}
 		}
 	},
 	"origins": {
@@ -1728,6 +1760,11 @@
 			"record": "de/wir-brauchen-fuer-den-transport-noch-n-auto",
 			"target": 0,
 			"status": "Reviewed"
+		},
+		"grammar-de-det-regression-unattached-fused-article-dem": {
+			"record": "de/ich-wohne-im-alten-berlin",
+			"target": 0,
+			"status": "Draft"
 		}
 	}
 }

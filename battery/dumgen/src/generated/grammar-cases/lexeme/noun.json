@@ -1608,6 +1608,58 @@
 				]
 			},
 			"explanation": "The noun owns its article and its governed preposition across a genitive attribute; the Surface is die Angst."
+		},
+		"grammar-de-noun-regression-undotted-title-mr": {
+			"input": {
+				"markedContext": "<TARGET>Mr</TARGET> und Mrs Parker wohnen im Fliederweg Nummer 7.",
+				"members": ["Mr"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Mister",
+					"coreFeatures": { "gender": "Masc", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Mister"],
+				"memberOrthographies": ["Shorthand"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		"grammar-de-noun-regression-undotted-title-mrs": {
+			"input": {
+				"markedContext": "Mr und <TARGET>Mrs</TARGET> Parker wohnen im Fliederweg Nummer 7.",
+				"members": ["Mrs"]
+			},
+			"idealOutput": {
+				"lemma": {
+					"canonicalForm": "Missis",
+					"coreFeatures": { "gender": "Fem", "hyph": null }
+				},
+				"surface": {
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"article": "None",
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"normalizedMembers": ["Missis"],
+				"memberOrthographies": ["Shorthand"],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
 		}
 	},
 	"origins": {
@@ -1890,6 +1942,16 @@
 			"record": "de/sie-spuert-die-angst-der-kinder-vor-hunden",
 			"target": 0,
 			"status": "Reviewed"
+		},
+		"grammar-de-noun-regression-undotted-title-mr": {
+			"record": "de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
+			"target": 0,
+			"status": "Draft"
+		},
+		"grammar-de-noun-regression-undotted-title-mrs": {
+			"record": "de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
+			"target": 1,
+			"status": "Draft"
 		}
 	}
 }

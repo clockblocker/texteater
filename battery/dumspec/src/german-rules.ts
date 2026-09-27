@@ -186,10 +186,26 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) owns none: in das alte Berlin, das is a DET of its own.",
+			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, however unfamiliar the name: im Fliederweg gives [m, Fliederweg] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) owns none: in das alte Berlin, das is a DET of its own, and in im alten Berlin so is m.",
 		adrs: ["ADR-0035"],
 		routes: lexeme("PROPN", "DET"),
-		records: ["de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper"],
+		records: [
+			"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper",
+			"de/er-badet-im-rhein",
+			"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
+			"de/ich-wohne-im-alten-berlin",
+		],
+	},
+	{
+		id: "de/title-before-a-name",
+		statement:
+			"A title or form of address before a name (Herr, Frau, Dr., Mr, Mrs) is a common noun of its own, and the name a separate PROPN. It takes the name's case and number, unless it addresses someone. An abbreviated title stands for its expansion, also without the dot British usage drops: Mr und Mrs Parker gives [Mr] NOUN Mister and [Mrs] NOUN Missis.",
+		adrs: ["ADR-0035"],
+		routes: lexeme("NOUN", "PROPN"),
+		records: [
+			"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
+			"de/dipl-ing-mueller-leitet-das-projekt",
+		],
 	},
 ];
 

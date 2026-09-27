@@ -81,14 +81,14 @@ export const lexemeRoutes: Record<string, string> = {
 		"A determiner directly modifying a noun (mein, dieser, kein, welcher, jeder), never the absorbed article der/die/das/ein of a noun",
 	"Lexeme/INTJ": "Interjection",
 	"Lexeme/NOUN":
-		"Common noun with its one absorbed overt article, including substantivized participles, whether or not it is part of a larger expression",
+		"Common noun with its one absorbed overt article, including substantivized participles and a title or form of address before a name (Herr, Frau, Mr, Mrs), whether or not it is part of a larger expression",
 	"Lexeme/NUM": "Numeral",
 	"Lexeme/PART":
 		"Particle, including the infinitive marker zu before an infinitive (schwer zu erklären, versucht zu schlafen)",
 	"Lexeme/PRON":
 		"Pronoun used substantively, or attributive genitive dessen/deren/wessen",
 	"Lexeme/PROPN":
-		"Proper noun, with the definite article it is canonically cited with (die Schweiz); a name cited bare (Berlin) absorbs no article",
+		"Proper noun, with the definite article it is canonically cited with (die Schweiz, die Goethestraße); a name cited bare (Berlin) absorbs no article",
 	"Lexeme/PUNCT": "Punctuation resolvable as its own unit",
 	"Lexeme/SCONJ":
 		"Subordinating conjunction, including fixed multi-member conjunctions and correlators (um/zu, ohne/zu, statt/zu, so/dass); a zu without um, ohne or statt is not one",

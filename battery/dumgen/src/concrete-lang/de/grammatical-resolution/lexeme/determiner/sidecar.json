@@ -182,6 +182,9 @@
 			"idealOutput": { "decision": "Unresolved" },
 			"explanation": "A quoted form with no noun of its own gives no case, number or gender: etwelches could be several Paradigm Cells, and each cell is its own Lemma, so the grammar is Unresolved.",
 			"evaluation": true
+		},
+		"de/ich-wohne-im-alten-berlin#0": {
+			"id": "grammar-de-det-regression-unattached-fused-article-dem"
 		}
 	}
 }

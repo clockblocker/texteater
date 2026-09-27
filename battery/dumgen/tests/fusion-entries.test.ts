@@ -175,6 +175,21 @@ test("abbreviations expand to a surface and the ruled multi-word Kinds hold", ()
 	expect(abbreviationEntry(germanFusionTable, "bzw")).toBeUndefined();
 });
 
+test("a title whose dot is optional is found without it, and only it", () => {
+	// Mr und Mrs Dursley: British usage drops the dot the table authors.
+	for (const [text, surface] of [
+		["Mr.", "Mister"],
+		["Mr", "Mister"],
+		["Mrs", "Missis"],
+	] as const)
+		expect(shorthandSurfaces(germanFusionTable, text), text).toEqual([
+			surface,
+		]);
+	expect(abbreviationEntry(germanFusionTable, "Mr")?.kind).toBe("NOUN");
+	expect(abbreviationEntry(germanFusionTable, "Dr")).toBeUndefined();
+	expect(abbreviationEntry(germanFusionTable, "M")).toBeUndefined();
+});
+
 const words = (...texts: string[]) =>
 	texts.map((text) => ({
 		kind: text === " " ? "Whitespace" : "ResolvableText",

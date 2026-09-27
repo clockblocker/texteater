@@ -57,7 +57,7 @@ test("all development selections are disjoint and production assembly uses only 
 				item.id === "target-classification/de/high-level-whole-unit",
 		),
 	).toMatchObject({
-		caseCount: 616,
+		caseCount: 620,
 		demonstrationCount: 34,
 		evaluationCount: 318,
 	});
@@ -213,6 +213,6 @@ test("all 1130 retained grammar answers project through public operations", asyn
 			count++;
 		}
 	}
-	expect(count).toBe(1108);
+	expect(count).toBe(1113);
 	expect(verifiedRoutes.size).toBe(21);
 }, 30_000);

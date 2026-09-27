@@ -202,6 +202,13 @@
 		"de/viele-vermissen-das-alte-berlin#1": {
 			"id": "grammar-de-propn-regression-bare-name-altes-berlin",
 			"slices": ["articles"]
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7#3": {
+			"id": "grammar-de-propn-regression-street-name-fliederweg",
+			"slices": ["articles"]
+		},
+		"de/ich-wohne-im-alten-berlin#1": {
+			"id": "grammar-de-propn-regression-bare-city-gender-berlin"
 		}
 	}
 }

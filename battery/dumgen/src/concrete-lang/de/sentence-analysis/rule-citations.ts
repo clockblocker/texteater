@@ -129,7 +129,7 @@ export const realizationCriteriaCitations: CitingPrompt = {
 					rule: "de/shared-article-in-coordination",
 					hash: "d21d49079359e0b8",
 				},
-				{ rule: "de/proper-noun-article", hash: "3dcf21812bcf6f15" },
+				{ rule: "de/proper-noun-article", hash: "cf90f857f2b1b648" },
 			],
 		},
 		{

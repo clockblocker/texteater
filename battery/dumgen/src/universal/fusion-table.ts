@@ -75,6 +75,12 @@ export type AbbreviationEntry = {
 	 * numeral follows it (`No. 5`, `No.5`).
 	 */
 	readonly followedBy?: "Numeral";
+	/**
+	 * Also written without its final dot, as British usage writes a title
+	 * (Mr Dursley). Only an entry whose undotted letters are no word of their
+	 * own may set it. Segmentation still cuts at the dotted spelling only.
+	 */
+	readonly dotOptional?: true;
 };
 
 export type FusionTable = {
@@ -219,12 +225,20 @@ function spells(table: FusionTable, authored: string, written: string) {
 	);
 }
 
-/** Lookup of an abbreviation by its text, dots included; `Vgl.` finds `vgl.`. */
+/**
+ * Lookup of an abbreviation by its text, dots included; `Vgl.` finds `vgl.`,
+ * and `Mr` finds a `Mr.` whose dot is optional.
+ */
 export function abbreviationEntry(
 	table: FusionTable,
 	text: string,
 ): AbbreviationEntry | undefined {
-	return table.abbreviations.find((entry) => spells(table, entry.text, text));
+	return table.abbreviations.find(
+		(entry) =>
+			spells(table, entry.text, text) ||
+			(entry.dotOptional === true &&
+				spells(table, entry.text.slice(0, -1), text)),
+	);
 }
 
 /**
