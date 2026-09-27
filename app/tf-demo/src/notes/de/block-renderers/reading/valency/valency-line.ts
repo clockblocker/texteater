@@ -61,7 +61,7 @@ const CASE_SLOT_ORDER = [
  * subject and is not shown.
  *
  * Provisional: where slots go relative to a Phraseme's Fixed words is not
- * decided yet (#595, area 5). This order matches ADR 0034's six examples, and
+ * decided yet (#711). This order matches ADR 0034's six examples, and
  * placing `sich` before the case slots follows German word order
  * (`nimmt sich etwas zu Herzen`). Keep the whole ordering rule here.
  */
