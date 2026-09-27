@@ -8895,6 +8895,44 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "he";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											case: ("Acc" | "Gen") | null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"he/Lexeme/ADP": {
@@ -9741,6 +9779,44 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "he";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											case: ("Acc" | "Gen") | null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"he/Lexeme/NUM": {
@@ -10858,6 +10934,44 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "he";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											case: ("Acc" | "Gen") | null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"he/Morpheme/Circumfix": {
@@ -12106,6 +12220,44 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "he";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											case: ("Acc" | "Gen") | null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"he/Phraseme/Proverb": {

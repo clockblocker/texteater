@@ -11,6 +11,7 @@ import { germanHausLemma } from "../attested-entities/de/lemmas";
 import { germanHausCitationSurface } from "../attested-entities/de/surfaces";
 import { germanGehenLemma, germanGehenReading } from "../fixtures/de-notes";
 import { englishRunReading } from "../fixtures/en-notes";
+import { hebrewKatavReading } from "../fixtures/he-notes";
 
 const revision = "schema-test-1" as StoreRevision;
 
@@ -147,6 +148,48 @@ describe("public storage-facing schemas", () => {
 			expect(rejected.error.issues[0]?.message).toBe(
 				"A Preposition Slot must take a case the ADP Case Table allows its preposition.",
 			);
+	});
+
+	test("Hebrew Reading Knowledge holds caseless Hebrew complements", () => {
+		const schema = getDumdictSchemasFor("he").readingEntrySchema;
+		const al = {
+			unitKind: "Lemma",
+			language: "he",
+			family: "Lexeme",
+			kind: "ADP",
+			canonicalForm: "על",
+			coreFeatures: { abbr: null, case: null },
+		};
+		const entry = (complement: unknown) => ({
+			reading: hebrewKatavReading,
+			attestedTranslations: [],
+			attestations: [],
+			notes: "",
+			knowledge: { valency: [{ status: "Required", complement }] },
+		});
+		expect(
+			schema.safeParse(entry({ kind: "Subject", referent: "Someone" }))
+				.success,
+		).toBe(true);
+		expect(
+			schema.safeParse(
+				entry({
+					kind: "Preposition",
+					preposition: al,
+					referent: "Either",
+				}),
+			).success,
+		).toBe(true);
+		expect(
+			schema.safeParse(
+				entry({
+					kind: "Preposition",
+					preposition: al,
+					case: "Acc",
+					referent: "Either",
+				}),
+			).success,
+		).toBe(false);
 	});
 
 	test("Surface Entries compose Dumling's concrete Surface schemas", () => {

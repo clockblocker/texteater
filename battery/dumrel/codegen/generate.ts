@@ -9,9 +9,11 @@ import { registrations as dumlingOperations } from "../../dumling/codegen/operat
 import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import {
 	directSemanticRelationSchema,
+	germanValencyComplementSchema,
 	governedCaseSchema,
 	governmentProjectionSchema,
 	governmentRelationSchema,
+	hebrewValencyComplementSchema,
 	knowledgeChangeSchema,
 	lexemeUnitShadowSchema,
 	lexicalBreakdownSchema,
@@ -78,6 +80,8 @@ const compiled = compileZodValidationArtifacts({
 		governedCase: governedCaseSchema,
 		valencySlotStatus: valencySlotStatusSchema,
 		valencyReferent: valencyReferentSchema,
+		germanValencyComplement: germanValencyComplementSchema,
+		hebrewValencyComplement: hebrewValencyComplementSchema,
 		valencyComplement: valencyComplementSchema,
 		valencySlot: valencySlotSchema,
 		governmentRelation: governmentRelationSchema,

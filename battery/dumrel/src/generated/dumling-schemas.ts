@@ -287,11 +287,11 @@ export const readingSchema = z.union([
 	Route91.readingSchema,
 	Route92.readingSchema,
 ]);
-export const adpositionLemmaSchema = z.union([
-	Route1.lemmaSchema,
-	Route32.lemmaSchema,
-	Route63.lemmaSchema,
-]);
+export const adpositionLemmaSchemas = {
+	de: Route1.lemmaSchema,
+	en: Route32.lemmaSchema,
+	he: Route63.lemmaSchema,
+};
 export const verbLemmaSchema = z.union([
 	Route16.lemmaSchema,
 	Route47.lemmaSchema,

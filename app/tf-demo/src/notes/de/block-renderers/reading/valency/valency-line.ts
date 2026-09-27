@@ -1,9 +1,11 @@
 import type { NoteDataFor } from "../../../../universal/note/data";
 
-type ValencySlot = NonNullable<
+type FrameSlot = NonNullable<
 	NoteDataFor<"Reading">["knowledge"]["valency"]
 >[number];
-type Complement = ValencySlot["complement"];
+/** German complements are the ones marked by case. */
+type Complement = Extract<FrameSlot["complement"], { case: string }>;
+type ValencySlot = Omit<FrameSlot, "complement"> & { complement: Complement };
 type RenderedCase = Exclude<Complement["case"], "Nom">;
 
 /** One piece of a German Valency Line, in reading order. */
@@ -65,11 +67,11 @@ const CASE_SLOT_ORDER = [
  */
 export function germanValencyLine(
 	lemma: ValencyLemma,
-	frame: readonly ValencySlot[] | undefined,
+	frame: readonly FrameSlot[] | undefined,
 ): readonly ValencyLinePart[] | null {
 	const slots = (frame ?? []).filter(
 		(slot): slot is ValencySlot & { complement: { case: RenderedCase } } =>
-			slot.complement.case !== "Nom",
+			"case" in slot.complement && slot.complement.case !== "Nom",
 	);
 	if (slots.length === 0) return null;
 

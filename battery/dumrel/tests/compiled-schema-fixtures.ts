@@ -1,4 +1,5 @@
 import {
+	alLemma,
 	aufLemma,
 	houseLemma,
 	houseReading,
@@ -128,6 +129,25 @@ export const samples: Record<string, unknown[]> = {
 			case: "Dat",
 			referent: "Either",
 		},
+		{ kind: "Subject", referent: "Someone" },
+		{ kind: "Preposition", preposition: alLemma, referent: "Either" },
+		// Each language's Preposition keeps to its own ADP Lemmas.
+		{
+			kind: "Preposition",
+			preposition: alLemma,
+			case: "Acc",
+			referent: "Either",
+		},
+		{ kind: "Preposition", preposition: aufLemma, referent: "Either" },
+	],
+	germanValencyComplement: [
+		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "Subject", referent: "Someone" },
+	],
+	hebrewValencyComplement: [
+		{ kind: "DirectObject", referent: "Something" },
+		{ kind: "Preposition", preposition: alLemma, referent: "Someone" },
+		{ kind: "Case", case: "Nom", referent: "Someone" },
 	],
 	valencySlot: [
 		{
@@ -147,6 +167,13 @@ export const samples: Record<string, unknown[]> = {
 			relation: "governs",
 			target: aufLemma,
 			case: "Acc",
+			provenance: "direct",
+		},
+		{
+			source: wartenReading,
+			relation: "governs",
+			target: alLemma,
+			case: null,
 			provenance: "direct",
 		},
 	],

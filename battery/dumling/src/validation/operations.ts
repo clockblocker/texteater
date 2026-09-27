@@ -12,6 +12,7 @@ import {
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
+	hebrewValencyAttestationError,
 	isEmojiDescription,
 	isFusedMember,
 	isFusion,
@@ -23,6 +24,7 @@ import {
 	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
+	isHebrewValencyAttestation,
 	isNounArticleAttestation,
 	nonEmptyFeatureBagError,
 	normalizeForm,
@@ -57,6 +59,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-valency.attestation": check(
 		isGermanValencyAttestation,
 		germanValencyAttestationError,
+	),
+	"dumling.he-valency.attestation": check(
+		isHebrewValencyAttestation,
+		hebrewValencyAttestationError,
 	),
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,

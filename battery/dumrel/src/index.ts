@@ -12,9 +12,11 @@ export {
 export { normalizeText } from "./semantics.js";
 export type {
 	DirectSemanticRelation,
+	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,
 	GovernmentRelation,
+	HebrewValencyComplement,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSelectionInput,

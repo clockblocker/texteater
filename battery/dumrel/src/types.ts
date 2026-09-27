@@ -9,9 +9,11 @@ import type {
 
 export type {
 	DirectSemanticRelation,
+	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,
 	GovernmentRelation,
+	HebrewValencyComplement,
 	LexemeUnitShadow,
 	LexicalBreakdown,
 	MorphologicalTree,

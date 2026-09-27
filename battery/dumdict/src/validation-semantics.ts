@@ -152,12 +152,15 @@ function valencyUsesLanguage(
 	);
 }
 
-/** Each Preposition Slot takes a case the ADP Case Table allows its preposition. */
+/**
+ * Each German Preposition Slot takes a case the ADP Case Table allows its
+ * preposition. A Hebrew one names no case, so it has nothing to check.
+ */
 function valencyCasesAllowed(frame: readonly Dumrel.ValencySlot[]): boolean {
 	return frame.every(
 		({ complement }) =>
 			complement.kind !== "Preposition" ||
-			complement.preposition.language !== "de" ||
+			!("case" in complement) ||
 			germanAdpositionAllows(complement.preposition, complement.case),
 	);
 }

@@ -23,6 +23,8 @@ export const dumrelOutputTypeExports = {
 	GovernedCase: "governedCase",
 	ValencySlotStatus: "valencySlotStatus",
 	ValencyReferent: "valencyReferent",
+	GermanValencyComplement: "germanValencyComplement",
+	HebrewValencyComplement: "hebrewValencyComplement",
 	ValencyComplement: "valencyComplement",
 	ValencySlot: "valencySlot",
 	GovernmentRelation: "governmentRelation",

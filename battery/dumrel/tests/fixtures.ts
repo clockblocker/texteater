@@ -54,6 +54,16 @@ export const aufLemma = adposition("auf");
 /** Fixed-case preposition. */
 export const fuerLemma = adposition("für");
 
+/** Hebrew preposition: Hebrew complements mark no case. */
+export const alLemma = {
+	unitKind: "Lemma",
+	language: "he",
+	family: "Lexeme",
+	kind: "ADP",
+	canonicalForm: "על",
+	coreFeatures: { abbr: null, case: null },
+} as const satisfies Dumling.Lemma<"he", "Lexeme", "ADP">;
+
 export const wartenReading = {
 	unitKind: "Reading",
 	lemma: {

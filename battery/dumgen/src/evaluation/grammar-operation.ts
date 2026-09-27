@@ -196,7 +196,7 @@ function withValencyMembers(
 	const words = normalizedSurface.split(" ");
 	const normalized = new Map<number, string>();
 	if ("valencyEvidence" in attestation)
-		for (const slot of attestation.valencyEvidence)
+		for (const slot of attestation.valencyEvidence ?? [])
 			if (slot.member !== null && slot.complement.kind === "Preposition")
 				normalized.set(
 					slot.member,

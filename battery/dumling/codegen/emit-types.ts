@@ -27,6 +27,7 @@ export function outputType(
 							"dumling.fused-member",
 							"dumling.de-adposition.attestation",
 							"dumling.de-valency.attestation",
+							"dumling.he-valency.attestation",
 							"dumling.de-verbal.attestation",
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",

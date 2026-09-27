@@ -39,7 +39,10 @@ function frameOutputSchema(kinds: readonly ComplementKind[]) {
 		type: "string",
 		enum: ["Someone", "Something", "Either"],
 	};
-	const complements: Record<ComplementKind, Record<string, unknown>> = {
+	// German routes allow only these; other languages bring their own kinds.
+	const complements: Partial<
+		Record<ComplementKind, Record<string, unknown>>
+	> = {
 		Case: {
 			type: "object",
 			properties: {

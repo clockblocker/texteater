@@ -30,9 +30,9 @@ Unit Shadow awaiting downstream matching.
 
 **Governed Preposition**:
 a preposition a Reading lexically selects: a Preposition Slot of the Reading's
-Valency Frame, naming an ADP Lemma and the case it assigns in that
-construction (`warten`: `auf` + Acc). An adjunct the sentence happens to
-contain is not one.
+Valency Frame, naming an ADP Lemma and, in German, the case it assigns in
+that construction (`warten`: `auf` + Acc; Hebrew `סמך`: `על`). An adjunct the
+sentence happens to contain is not one.
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:

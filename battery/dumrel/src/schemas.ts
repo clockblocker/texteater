@@ -7,7 +7,7 @@
  */
 import { z } from "zod";
 import {
-	adpositionLemmaSchema,
+	adpositionLemmaSchemas,
 	lemmaSchema,
 	lexemeUnitShadowSchema,
 	lexicalUnitShadowSchema,
@@ -48,7 +48,7 @@ export const valencyReferentSchema = z.enum(valencyReferentValues);
  * Dat) or a governed preposition with the ADP Lemma it selects and the case it
  * assigns in this construction (`warten auf` + Acc, `bestehen auf` + Dat).
  */
-const germanValencyComplementSchema = z.union([
+export const germanValencyComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Case"),
 		case: z.enum(germanComplementCaseValues),
@@ -56,18 +56,42 @@ const germanValencyComplementSchema = z.union([
 	}),
 	z.strictObject({
 		kind: z.literal("Preposition"),
-		preposition: adpositionLemmaSchema,
+		preposition: adpositionLemmaSchemas.de,
 		case: governedCaseSchema,
 		referent: valencyReferentSchema,
 	}),
 ]);
 /**
- * The Slot skeleton is shared; each language brings its own complement
- * vocabulary. Only German defines one so far; another language joins this
- * union with its own complements, and the source-aware check keeps each
- * Reading to its language's.
+ * Hebrew complements, marked by function and preposition with no case: the
+ * subject, the direct object, or a governed preposition with the ADP Lemma it
+ * selects (`סמך על`).
  */
-export const valencyComplementSchema = germanValencyComplementSchema;
+export const hebrewValencyComplementSchema = z.union([
+	z.strictObject({
+		kind: z.literal("Subject"),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("DirectObject"),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Preposition"),
+		preposition: adpositionLemmaSchemas.he,
+		referent: valencyReferentSchema,
+	}),
+]);
+/**
+ * The Slot skeleton is shared; each language brings its own complement
+ * vocabulary, and another language joins by spreading its options here and
+ * keying its routes in `valency-policy.ts`. A Preposition complement names an
+ * ADP Lemma of its own language, so the vocabularies never overlap, and the
+ * source-aware check keeps each Reading to its route's complements.
+ */
+export const valencyComplementSchema = z.union([
+	...germanValencyComplementSchema.options,
+	...hebrewValencyComplementSchema.options,
+]);
 export const valencySlotSchema = z.strictObject({
 	status: valencySlotStatusSchema,
 	complement: valencyComplementSchema,
@@ -304,13 +328,14 @@ export const governmentRelationSchema = z.enum(["governs", "governedBy"]);
  * One edge of Prepositional Government. `governs` runs from the governor
  * Reading to the ADP Lemma of a Preposition Slot in its Valency Frame;
  * `governedBy` is the inferred inverse from each supplied Reading of that ADP
- * Lemma back to the exact governor Reading.
+ * Lemma back to the exact governor Reading. `case` is the case the Slot
+ * assigns, and null in a language whose complements mark none (Hebrew).
  */
 export const governmentProjectionSchema = z.strictObject({
 	source: readingSchema,
 	relation: governmentRelationSchema,
 	target: z.union([lemmaSchema, readingSchema]),
-	case: governedCaseSchema,
+	case: governedCaseSchema.nullable(),
 	provenance: z.enum(["direct", "inferred"]),
 });
 

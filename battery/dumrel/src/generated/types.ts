@@ -2203,6 +2203,26 @@ export type SemanticRelationProjection = {
 export type GovernedCase = "Acc" | "Dat" | "Gen";
 export type ValencySlotStatus = "Required" | "Optional";
 export type ValencyReferent = "Someone" | "Something" | "Either";
+export type GermanValencyComplement =
+	| {
+			kind: "Case";
+			case: "Nom" | "Acc" | "Dat" | "Gen";
+			referent: ValencyReferent;
+	  }
+	| {
+			kind: "Preposition";
+			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
+			case: GovernedCase;
+			referent: ValencyReferent;
+	  };
+export type HebrewValencyComplement =
+	| { kind: "Subject"; referent: ValencyReferent }
+	| { kind: "DirectObject"; referent: ValencyReferent }
+	| {
+			kind: "Preposition";
+			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
+			referent: ValencyReferent;
+	  };
 export type ValencyComplement =
 	| {
 			kind: "Case";
@@ -2211,11 +2231,15 @@ export type ValencyComplement =
 	  }
 	| {
 			kind: "Preposition";
-			preposition:
-				| Dumling.Lemma<"de", "Lexeme", "ADP">
-				| Dumling.Lemma<"en", "Lexeme", "ADP">
-				| Dumling.Lemma<"he", "Lexeme", "ADP">;
+			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
 			case: GovernedCase;
+			referent: ValencyReferent;
+	  }
+	| { kind: "Subject"; referent: ValencyReferent }
+	| { kind: "DirectObject"; referent: ValencyReferent }
+	| {
+			kind: "Preposition";
+			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
 			referent: ValencyReferent;
 	  };
 export type ValencySlot = {
@@ -2510,7 +2534,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Phraseme", "Idiom">
 				| Dumling.Reading<"he", "Phraseme", "Proverb">
 		  );
-	case: GovernedCase;
+	case: GovernedCase | null;
 	provenance: "direct" | "inferred";
 };
 export type ParticipleSource =

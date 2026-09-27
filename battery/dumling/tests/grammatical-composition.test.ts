@@ -859,3 +859,106 @@ test("an adjective or noun Attestation names its owned governed preposition like
 		}).success,
 	).toBe(false);
 });
+test("a Hebrew governor may name its governed preposition with no case", () => {
+	// הוא בחר בבית: the verb owns the ב of בבית, which it governs.
+	const fusion = {
+		spelling: "בבית",
+		components: [
+			{ span: "ב", surface: "ב" },
+			{ span: "", surface: "ה" },
+			{ span: "בית", surface: "בית" },
+		],
+	};
+	const be = {
+		kind: "Preposition",
+		preposition: {
+			unitKind: "Lemma",
+			language: "he",
+			family: "Lexeme",
+			kind: "ADP",
+			canonicalForm: "ב",
+			coreFeatures: { abbr: null, case: null },
+		},
+		referent: "Something",
+	};
+	const subject = { kind: "Subject", referent: "Someone" };
+	const bachar = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "he",
+			normalizedSurface: "בחר",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "he",
+				family: "Lexeme",
+				kind: "VERB",
+				canonicalForm: "בחר",
+				coreFeatures: { hebBinyan: "PAAL", hebExistential: null },
+			},
+			inflectionalFeatures: {
+				definite: null,
+				gender: "Masc",
+				mood: null,
+				number: "Sing",
+				person: "3",
+				polarity: null,
+				tense: "Past",
+				verbForm: null,
+				voice: "Act",
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "בחר", orthography: "Standard" },
+			{ attested: "ב", orthography: "Fused", fusion, component: 0 },
+		],
+		valencyEvidence: [
+			{ member: null, complement: subject },
+			{ member: 1, complement: be },
+		],
+	};
+	expect(parseUnit(bachar).success).toBe(true);
+	const { valencyEvidence: _omitted, ...withoutEvidence } = bachar;
+	expect(parseUnit(withoutEvidence).success).toBe(true);
+	for (const invalid of [
+		[{ member: 0, complement: be }],
+		[{ member: 1, complement: subject }],
+		[{ member: 1, complement: { ...be, case: "Acc" } }],
+		[{ member: 1, complement: be, realizedCase: "Dat" }],
+		[
+			{
+				member: 1,
+				complement: { kind: "Case", case: "Acc", referent: "Someone" },
+			},
+		],
+	])
+		expect(parseUnit({ ...bachar, valencyEvidence: invalid }).success).toBe(
+			false,
+		);
+	// A route that takes no frame takes no valency evidence either.
+	const adverb = {
+		unitKind: "Attestation",
+		realizationCoverage: "Full",
+		surface: {
+			unitKind: "Surface",
+			language: "he",
+			normalizedSurface: "מהר",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "he",
+				family: "Lexeme",
+				kind: "ADV",
+				canonicalForm: "מהר",
+				coreFeatures: { prefix: null },
+			},
+		},
+		members: [{ attested: "מהר", orthography: "Standard" }],
+	};
+	expect(parseUnit(adverb).success).toBe(true);
+	expect(parseUnit({ ...adverb, valencyEvidence: [] }).success).toBe(false);
+});

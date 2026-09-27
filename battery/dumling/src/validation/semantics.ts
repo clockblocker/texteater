@@ -348,6 +348,48 @@ function isOwnedValencyEvidence(
 }
 
 /**
+ * A Hebrew governor Attestation (VERB, ADJ, NOUN, Idiom) may name the valency
+ * slots it realizes (ADR 0034). Each slot names a distinct owned member, or
+ * none. A Preposition slot's member spells its preposition unless it is a
+ * Typo; a Fused member spells its Fusion component, so `ב` of `בבית` in
+ * `בחר בבית` counts.
+ * A Subject or DirectObject slot has no marker member.
+ */
+export function isHebrewValencyAttestation(input: unknown): boolean {
+	const value = input as {
+		valencyEvidence?: {
+			member: number | null;
+			complement:
+				| { kind: "Subject" | "DirectObject" }
+				| {
+						kind: "Preposition";
+						preposition: { canonicalForm: string };
+				  };
+		}[];
+		members: { attested: string; orthography: string }[];
+	};
+	const evidence = value.valencyEvidence ?? [];
+	const named = evidence.flatMap((slot) =>
+		slot.member === null ? [] : [slot.member],
+	);
+	if (new Set(named).size !== named.length) return false;
+	return evidence.every(({ member: index, complement }) => {
+		if (index === null) return true;
+		if (complement.kind !== "Preposition") return false;
+		const member = value.members[index];
+		return (
+			member !== undefined &&
+			(member.orthography === "Typo" ||
+				normalizeForm(member.attested) ===
+					complement.preposition.canonicalForm)
+		);
+	});
+}
+export function hebrewValencyAttestationError(): string {
+	return "Hebrew valency evidence must name distinct owned members spelling its preposition; a Subject or DirectObject slot names no member";
+}
+
+/**
  * A German ADP Attestation records at most one slot: the bare case its
  * complement took (`auf dem Tisch` Dat), marked by no member, in a case the
  * ADP Case Table allows. An ADP with no case-marked complement records none.

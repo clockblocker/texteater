@@ -35,7 +35,8 @@ const relationOrder = ["governs", "governedBy"];
  * source Readings or invalid Knowledge reject the whole projection. An ADP
  * Lemma without supplied Readings still receives its direct edges. Output is
  * sorted by structural source key, relation (governs, governedBy), structural
- * target key, then case. No inputs are mutated.
+ * target key, then case. A Hebrew edge has a null case. No inputs are
+ * mutated.
  */
 export function projectPrepositionalGovernment(
 	entries: readonly ReadingWithKnowledge[],
@@ -87,11 +88,12 @@ export function projectPrepositionalGovernment(
 	for (const { reading, knowledge } of governors)
 		for (const { complement: governed } of knowledge.valency ?? []) {
 			if (governed.kind !== "Preposition") continue;
+			const governedCase = "case" in governed ? governed.case : null;
 			add({
 				source: reading,
 				relation: "governs",
 				target: governed.preposition,
-				case: governed.case,
+				case: governedCase,
 				provenance: "direct",
 			} as GovernmentProjection);
 			for (const preposition of byLemma.get(key(governed.preposition)) ??
@@ -100,7 +102,7 @@ export function projectPrepositionalGovernment(
 					source: preposition,
 					relation: "governedBy",
 					target: reading,
-					case: governed.case,
+					case: governedCase,
 					provenance: "inferred",
 				} as GovernmentProjection);
 		}
@@ -112,7 +114,7 @@ export function projectPrepositionalGovernment(
 				relationOrder.indexOf(left.relation) -
 					relationOrder.indexOf(right.relation) ||
 				compare(key(left.target), key(right.target)) ||
-				compare(left.case, right.case),
+				compare(left.case ?? "", right.case ?? ""),
 		),
 	};
 }

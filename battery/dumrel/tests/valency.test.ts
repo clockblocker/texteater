@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	applyKnowledgeChange,
@@ -8,6 +9,7 @@ import {
 } from "dumrel";
 import { governmentProjectionSchema } from "dumrel/schema";
 import {
+	alLemma,
 	aufLemma,
 	fuerLemma,
 	houseLemma,
@@ -293,4 +295,161 @@ test("projection reads Preposition Slots and infers the preposition side", () =>
 			{ reading: wartenReading, knowledge: {} },
 		]).success,
 	).toBe(false);
+});
+
+const samachLemma = {
+	unitKind: "Lemma",
+	language: "he",
+	family: "Lexeme",
+	kind: "VERB",
+	canonicalForm: "סמך",
+	coreFeatures: { hebBinyan: "PAAL", hebExistential: null },
+} as const satisfies Dumling.Lemma<"he", "Lexeme", "VERB">;
+const samachReading = {
+	unitKind: "Reading",
+	lemma: samachLemma,
+	emojiDescription: "🤝",
+} as const satisfies Dumling.Reading<"he", "Lexeme", "VERB">;
+const todaReading = {
+	unitKind: "Reading",
+	lemma: {
+		unitKind: "Lemma",
+		language: "he",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "תודה",
+		coreFeatures: { abbr: null, gender: "Fem" },
+	},
+	emojiDescription: "🙏",
+} as const satisfies Dumling.Reading<"he", "Lexeme", "NOUN">;
+const subject = { kind: "Subject", referent: "Someone" } as const;
+const al = {
+	kind: "Preposition",
+	preposition: alLemma,
+	referent: "Either",
+} as const;
+
+test("a Hebrew Reading holds a caseless frame its Attestation realizes", () => {
+	// סמך על: `הוא סמך על חבר`, with the governed על an owned member.
+	expect(
+		parseReadingKnowledge({
+			source: samachReading,
+			knowledge: { valency: [required(subject), required(al)] },
+		}),
+	).toEqual({
+		success: true,
+		value: { valency: [required(subject), required(al)] },
+	});
+	const attestation = {
+		unitKind: "Attestation",
+		members: [
+			{ attested: "סמך", orthography: "Standard" },
+			{ attested: "על", orthography: "Standard" },
+		],
+		realizationCoverage: "Full",
+		surface: {
+			unitKind: "Surface",
+			language: "he",
+			normalizedSurface: "סמך",
+			spelling: "Canonical",
+			inflectionalFeatures: {
+				gender: "Masc",
+				number: "Sing",
+				person: "3",
+				tense: "Past",
+				voice: "Act",
+				definite: null,
+				mood: null,
+				polarity: null,
+				verbForm: null,
+			},
+			lemma: samachLemma,
+			surfaceFeatures: null,
+		},
+		valencyEvidence: [
+			{ member: null, complement: subject },
+			{ member: 1, complement: al },
+		],
+	} satisfies Dumling.Attestation<"he", "Lexeme", "VERB">;
+	expect(parseUnit(attestation).success).toBe(true);
+	for (const invalid of [
+		[{ member: 0, complement: al }],
+		[{ member: 2, complement: al }],
+		[{ member: 1, complement: subject }],
+		[
+			{ member: 1, complement: al },
+			{ member: 1, complement: { ...al, referent: "Someone" } },
+		],
+		[{ member: 1, complement: { ...al, case: "Acc" } }],
+		[{ member: 1, complement: al, realizedCase: "Acc" }],
+	])
+		expect(
+			parseUnit({ ...attestation, valencyEvidence: invalid }).success,
+		).toBe(false);
+	const { valencyEvidence: _, ...withoutEvidence } = attestation;
+	expect(parseUnit(withoutEvidence).success).toBe(true);
+});
+
+test("a Hebrew frame takes only its route's Hebrew complements", () => {
+	const germanCase = parseReadingKnowledge({
+		source: samachReading,
+		knowledge: { valency: [required(nom)] },
+	});
+	expect(germanCase.success).toBe(false);
+	if (!germanCase.success)
+		expect(germanCase.error.issues[0]?.path).toEqual([
+			"knowledge",
+			"valency",
+			0,
+			"complement",
+			"kind",
+		]);
+	for (const complement of [
+		aufAcc,
+		{ ...al, case: "Acc" },
+		{ ...al, preposition: { ...alLemma, language: "de" } },
+	] as unknown[])
+		expect(
+			parseReadingKnowledge({
+				source: samachReading,
+				knowledge: { valency: [optional(complement)] },
+			} as never).success,
+		).toBe(false);
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: { valency: [required(subject)] },
+		}).success,
+	).toBe(false);
+	// Hebrew nouns, like German ones, take only governed prepositions.
+	expect(
+		parseReadingKnowledge({
+			source: todaReading,
+			knowledge: { valency: [optional(al)] },
+		}).success,
+	).toBe(true);
+	expect(
+		parseReadingKnowledge({
+			source: todaReading,
+			knowledge: { valency: [optional(subject)] },
+		}).success,
+	).toBe(false);
+});
+
+test("a Hebrew Preposition Slot projects government with no case", () => {
+	const result = projectPrepositionalGovernment([
+		{
+			reading: samachReading,
+			knowledge: { valency: [required(subject), required(al)] },
+		},
+	]);
+	expect(result.success && result.value).toEqual([
+		{
+			source: samachReading,
+			relation: "governs",
+			target: alLemma,
+			case: null,
+			provenance: "direct",
+		},
+	]);
 });
