@@ -147,6 +147,35 @@ describe("compiled unit interface", () => {
 			false,
 		);
 	});
+	test("writes a discontinuous form's open slot as …", () => {
+		const adpRoute = routes.find((route) => route.key === "de/Lexeme/ADP");
+		if (!adpRoute) throw Error("Missing German ADP route");
+		const lemma = (canonicalForm: string) =>
+			({
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "ADP",
+				canonicalForm,
+				coreFeatures: {
+					abbr: null,
+					adpType: "Circ",
+					extPos: null,
+					foreign: null,
+					partType: null,
+				},
+			}) as const;
+		const parsed = (canonicalForm: string) => {
+			const result = parseUnit(lemma(canonicalForm));
+			if (!result.success) throw Error(`Rejected ${canonicalForm}`);
+			return result.chain.value;
+		};
+		expect(parsed("um ... willen")).toEqual(parsed("um … willen"));
+		expect(parsed("um ... willen")).toEqual(lemma("um … willen"));
+		expect(adpRoute.schemas.Lemma.parse(lemma("um ... willen"))).toEqual(
+			lemma("um … willen"),
+		);
+	});
 	test("compares Emoji Descriptions without variation selectors or skin-tone modifiers", () => {
 		const description = (emojiDescription: string) => {
 			const parsed = parseUnit({ ...noun.Reading, emojiDescription });

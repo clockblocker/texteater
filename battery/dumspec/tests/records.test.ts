@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
 	mkdirSync,
 	mkdtempSync,
+	readdirSync,
 	readFileSync,
 	rmSync,
 	writeFileSync,
@@ -85,6 +86,37 @@ describe("the corpus", () => {
 
 	test("spells every Fusion over the Segments of its word", () => {
 		expect(records.flatMap(fusionSpanMismatches)).toEqual([]);
+	});
+
+	// Parsing normalizes ASCII `...` to `…`, which would hide it: read the files.
+	test("writes every open slot of a stored Canonical Form as …", () => {
+		const directory = new URL("../records/", import.meta.url);
+		const asciiSlots = (value: unknown, path: string): string[] => {
+			if (Array.isArray(value))
+				return value.flatMap((item, index) =>
+					asciiSlots(item, `${path}.${index}`),
+				);
+			if (value === null || typeof value !== "object") return [];
+			return Object.entries(value).flatMap(([key, item]) =>
+				key === "canonicalForm" &&
+				typeof item === "string" &&
+				item.includes("...")
+					? [`${path}.${key}: ${item}`]
+					: asciiSlots(item, `${path}.${key}`),
+			);
+		};
+		const failures = readdirSync(directory, {
+			recursive: true,
+			encoding: "utf8",
+		})
+			.filter((file) => file.endsWith(".json"))
+			.flatMap((file) =>
+				asciiSlots(
+					JSON.parse(readFileSync(new URL(file, directory), "utf8")),
+					file,
+				),
+			);
+		expect(failures).toEqual([]);
 	});
 
 	test("seeds both coverages, No Target and a quotation", () => {

@@ -7,8 +7,13 @@ export function hasMarkedFeature(bag: Record<string, unknown>): boolean {
 export function nonEmptyFeatureBagError(): string {
 	return "Feature Bag must contain a marked feature";
 }
+/**
+ * Trims, NFC-normalizes and writes a discontinuous form's open slot as `…`
+ * (U+2026): `um ... willen` is stored as `um … willen`. NFC keeps ASCII `...`
+ * and NFKC would turn `…` into it, so the slot is replaced explicitly.
+ */
 export function normalizeForm(value: string): string {
-	return value.trim().normalize("NFC");
+	return value.trim().normalize("NFC").replaceAll("...", "…");
 }
 const presentationMarks = /[\uFE0E\uFE0F]|\p{Emoji_Modifier}/gu;
 /**

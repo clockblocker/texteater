@@ -153,3 +153,18 @@ test("the table keys a position-dependent case by adpType", () => {
 		germanAdpositionCases({ canonicalForm: "versus", coreFeatures: {} }),
 	).toBeNull();
 });
+
+test("the table finds a circumposition written with … or ASCII ...", () => {
+	const circumposition = (canonicalForm: string) => {
+		const parsed = parseUnit(adposition(canonicalForm, "Circ"));
+		if (!parsed.success || parsed.chain.unitKind !== "Lemma")
+			throw Error(`Dumling rejects ${canonicalForm}`);
+		return parsed.chain.value as Dumling.Lemma<"de", "Lexeme", "ADP">;
+	};
+	const ascii = circumposition("um ... willen");
+	expect(ascii).toEqual(circumposition("um … willen"));
+	expect(germanAdpositionCases(ascii)?.allowed).toEqual(["Gen"]);
+	expect(
+		germanAdpositionCases(adposition("um ... willen", "Circ"))?.allowed,
+	).toEqual(["Gen"]);
+});

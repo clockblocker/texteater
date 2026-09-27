@@ -144,7 +144,7 @@ export const registrations = [
 		construct: "overwrite",
 		implementation: normalizeForm,
 		name: "dumling.normalize-form",
-		version: 1,
+		version: 2,
 	},
 	{
 		construct: "overwrite",

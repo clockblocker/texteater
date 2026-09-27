@@ -96,11 +96,11 @@ const germanAdpositionCaseTable: Readonly<Record<string, Entry>> = {
 		byAdpType: { Post: only("Acc"), Prep: genitiveOrDative },
 	},
 	// Circumpositions.
-	"an ... vorbei": only("Dat"),
-	"über ... hinaus": only("Acc"),
-	"um ... willen": only("Gen"),
-	"von ... an": only("Dat"),
-	"von ... aus": only("Dat"),
+	"an … vorbei": only("Dat"),
+	"über … hinaus": only("Acc"),
+	"um … willen": only("Gen"),
+	"von … an": only("Dat"),
+	"von … aus": only("Dat"),
 };
 
 type AdpositionLemma = {
@@ -110,13 +110,16 @@ type AdpositionLemma = {
 
 /**
  * The cases a German ADP Lemma takes, or null when the ADP Case Table does not
- * list it (a foreign or rare adposition, or `entlang` with no `adpType`).
+ * list it (a foreign or rare adposition, or `entlang` with no `adpType`). A
+ * circumposition's open slot is `…`; an unparsed Lemma's ASCII `...` finds it
+ * too, as Dumling normalizes it.
  */
 export function germanAdpositionCases(
 	lemma: AdpositionLemma,
 ): GermanAdpositionCases | null {
-	const entry = Object.hasOwn(germanAdpositionCaseTable, lemma.canonicalForm)
-		? germanAdpositionCaseTable[lemma.canonicalForm]
+	const key = lemma.canonicalForm.replaceAll("...", "…");
+	const entry = Object.hasOwn(germanAdpositionCaseTable, key)
+		? germanAdpositionCaseTable[key]
 		: undefined;
 	if (!entry) return null;
 	if (!("byAdpType" in entry)) return entry;
