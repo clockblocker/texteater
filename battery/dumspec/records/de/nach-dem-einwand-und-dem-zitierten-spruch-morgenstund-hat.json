@@ -70,7 +70,7 @@
 		{
 			"memberSegmentIndices": [37, 39, 41, 43],
 			"notes": {
-				"rationale": "The unmarked Proverb is contextual route contrast; the marked formula changes topic."
+				"rationale": "wie dem auch sei (however that may be) is a fixed adverbial that closes the digression, a Locution ADV with no comparison forms, never an INTJ. The unmarked Proverb is contextual route contrast."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -81,10 +81,11 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Locution",
-						"kind": "INTJ",
+						"kind": "ADV",
 						"canonicalForm": "wie dem auch sei",
-						"coreFeatures": {}
+						"coreFeatures": { "comparable": null }
 					},
+					"inflectionalFeatures": null,
 					"normalizedSurface": "wie dem auch sei",
 					"spelling": "Canonical",
 					"surfaceFeatures": null

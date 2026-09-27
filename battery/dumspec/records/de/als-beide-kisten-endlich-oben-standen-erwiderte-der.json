@@ -48,9 +48,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [23, 26],
+			"memberSegmentIndices": [23],
 			"notes": {
-				"rationale": "Both positions belong to one emphatically repeated, already-classified formula occurrence."
+				"rationale": "Danke, danke is the one-word formula danke said twice for emphasis. Repetition fixes no new unit, so each danke is its own INTJ target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -60,19 +60,39 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
+						"family": "Lexeme",
 						"kind": "INTJ",
-						"canonicalForm": "danke danke",
-						"coreFeatures": {}
+						"canonicalForm": "danke",
+						"coreFeatures": { "partType": null }
 					},
-					"normalizedSurface": "danke danke",
+					"normalizedSurface": "danke",
 					"spelling": "Canonical",
 					"surfaceFeatures": null
 				},
-				"members": [
-					{ "attested": "Danke", "orthography": "Standard" },
-					{ "attested": "danke", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "Danke", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [26],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "danke",
+						"coreFeatures": { "partType": null }
+					},
+					"normalizedSurface": "danke",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "danke", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

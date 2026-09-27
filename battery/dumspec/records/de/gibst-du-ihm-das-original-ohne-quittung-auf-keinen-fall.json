@@ -42,7 +42,7 @@
 		{
 			"memberSegmentIndices": [20, 22, 24],
 			"notes": {
-				"rationale": "The standalone reply performs a refusal rather than serving as an embedded adverbial."
+				"rationale": "auf keinen Fall is a fixed adverbial, a Locution ADV with no comparison forms. Standing alone as a reply, it still modifies the elided answer (Nein, auf keinen Fall gebe ich es ihm), so it keeps Kind ADV and is no INTJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -53,10 +53,11 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Locution",
-						"kind": "INTJ",
+						"kind": "ADV",
 						"canonicalForm": "auf keinen Fall",
-						"coreFeatures": {}
+						"coreFeatures": { "comparable": null }
 					},
+					"inflectionalFeatures": null,
 					"normalizedSurface": "auf keinen Fall",
 					"spelling": "Canonical",
 					"surfaceFeatures": null

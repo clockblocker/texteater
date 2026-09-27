@@ -404,14 +404,18 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/routine-formula-is-intj",
 		statement:
-			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen, herzlichen Dank, tut mir leid, wie geht's), is an INTJ: a Lexeme when it is one word (danke, willkommen, Entschuldigung!), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge: tut mir leid is one Lemma with an apology Reading and a sympathy Reading. Entschuldigung! and the noun die Entschuldigung are two Lemmas. A merely preferred combination (starker Regen) is no formula, and its words stay separate units.",
+			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen, herzlichen Dank, tut mir leid, wie geht's), is an INTJ: a Lexeme when it is one word (danke, willkommen, Entschuldigung!), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge: tut mir leid is one Lemma with an apology Reading and a sympathy Reading. Entschuldigung! and the noun die Entschuldigung are two Lemmas. A fixed adverbial keeps Kind ADV even as a standalone reply: auf keinen Fall (Gibst du es ihm? – Auf keinen Fall.) and wie dem auch sei are Locution ADV, never INTJ. Words that only stand together are no formula, and each resolves on its own: a merely preferred combination (starker Regen), a repeated formula (Danke, danke! gives two danke targets) and an answer before a formula (nein danke gives [nein] and [danke]).",
 		adrs: ["ADR-0039"],
-		routes: [...lexeme("INTJ"), ...locution("INTJ")],
+		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
 		records: [
 			"de/tut-mir-leid-das-war-mein-fehler",
 			"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
 			"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte",
 			"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans",
+			"de/gibst-du-ihm-das-original-ohne-quittung-auf-keinen-fall",
+			"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat",
+			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
 		],
 	},
 	{

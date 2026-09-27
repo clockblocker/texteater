@@ -39,7 +39,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [14, 16],
+			"memberSegmentIndices": [14],
+			"notes": {
+				"rationale": "Nein danke is compositional: the answer particle nein and the thanks formula danke, each an INTJ target of its own."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -48,19 +51,39 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
+						"family": "Lexeme",
 						"kind": "INTJ",
-						"canonicalForm": "nein danke",
-						"coreFeatures": {}
+						"canonicalForm": "nein",
+						"coreFeatures": { "partType": "Res" }
 					},
-					"normalizedSurface": "nein danke",
+					"normalizedSurface": "nein",
 					"spelling": "Canonical",
 					"surfaceFeatures": null
 				},
-				"members": [
-					{ "attested": "Nein", "orthography": "Standard" },
-					{ "attested": "danke", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "Nein", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [16],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "danke",
+						"coreFeatures": { "partType": null }
+					},
+					"normalizedSurface": "danke",
+					"spelling": "Canonical",
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "danke", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

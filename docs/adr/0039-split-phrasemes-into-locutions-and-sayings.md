@@ -40,7 +40,7 @@ A Locution's Kind is the part of speech the whole acts as:
 | ADP | `in Bezug auf`, and circumpositions: `von … an`, `um … willen` |
 | CCONJ, SCONJ | `entweder … oder`; `so dass`, `als ob`, `um … zu`, `je … desto` (its clause is verb-final) |
 | NUM | `zwölf bis sechzehn`, `vier Komma neun` |
-| INTJ | `Herzlichen Dank`, `Guten Morgen`, `tut mir leid`, `Wie geht's` |
+| INTJ | `herzlichen Dank`, `guten Morgen`, `tut mir leid`, `wie geht's` |
 
 Its route borrows the inflection features and Grundform rule of the Lexeme
 route with the same Kind, narrowed to what a Locution varies. VERB and NOUN
@@ -56,7 +56,7 @@ or adjective predicate: `eine Entscheidung treffen`, `Angst haben`, `Kritik
 replaces the three that `CONTEXT.md`, ADR 0034 and dumspec held.
 
 **Formulas.** A routine formula is an INTJ: a Lexeme when it is one word
-(`Danke`, `Entschuldigung!`), a Locution otherwise. `Entschuldigung!` and the
+(`danke`, `Entschuldigung!`), a Locution otherwise. `Entschuldigung!` and the
 noun `die Entschuldigung` are two Lemmas. DiscourseFormula is gone.
 
 **Saying.** The Family `Saying` has one Kind, `Saying`: a complete saying, a
@@ -181,3 +181,13 @@ cannot see the link.
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): DegreeMarker joins the satellites, for the word that marks an analytic comparative or superlative (`am` in `am liebsten`, `most` in `most beautiful`).
 
 Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): Head and Member Role describe the Family Rule and are not recorded on the Attestation; a shared or elided fixed word leaves the other unit Partial with no evidence; a Locution or Saying has a Breakdown.
+
+Amended on 2026-09-27 (#668): a fixed adverbial keeps Kind ADV even as a
+standalone reply. `auf keinen Fall` (*Gibst du es ihm? – Auf keinen Fall.*)
+and `wie dem auch sei` are Locution ADV with no comparison forms, never INTJ,
+and INTJ stays for true routine formulas (`guten Morgen`, `tut mir leid`).
+Words that only stand together are compositional and resolve word by word: a
+repeated `danke, danke` and `nein danke`. A Canonical Form takes the word's
+lexical casing ([ADR 0002](./0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md),
+amended by #638), so the INTJ examples above are cited `herzlichen Dank`,
+`guten Morgen`, `wie geht's` and `danke`.

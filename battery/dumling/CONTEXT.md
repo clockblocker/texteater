@@ -22,7 +22,7 @@ _Avoid_: multiword Lexeme, for a unit with several Heads
 
 **Locution**:
 A Lemma with two or more Heads: `den Faden verlieren`, `weißer Rabe`, `zum
-Teil`, `entweder … oder`, `von … an`, `Herzlichen Dank`. Its Kind is the part of
+Teil`, `entweder … oder`, `von … an`, `herzlichen Dank`. Its Kind is the part of
 speech the whole acts as, and it inflects like a Lexeme of that Kind, narrowed
 to what the Locution varies. Changes grammar makes to the articles, number and
 possessives of its other words keep the Lemma (`Die Entscheidung wurde
