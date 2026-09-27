@@ -82,6 +82,31 @@ export const hebrewValencyComplementSchema = z.union([
 	}),
 ]);
 /**
+ * English complements, marked by position and preposition with no case: the
+ * subject, the direct object, the indirect object (the first object of `give
+ * him a book`), or a governed preposition with the ADP Lemma it selects
+ * (`depend on`).
+ */
+export const englishValencyComplementSchema = z.union([
+	z.strictObject({
+		kind: z.literal("Subject"),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("DirectObject"),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("IndirectObject"),
+		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Preposition"),
+		preposition: adpositionLemmaSchemas.en,
+		referent: valencyReferentSchema,
+	}),
+]);
+/**
  * The Slot skeleton is shared; each language brings its own complement
  * vocabulary, and another language joins by spreading its options here and
  * keying its routes in `valency-policy.ts`. A Preposition complement names an
@@ -91,6 +116,7 @@ export const hebrewValencyComplementSchema = z.union([
 export const valencyComplementSchema = z.union([
 	...germanValencyComplementSchema.options,
 	...hebrewValencyComplementSchema.options,
+	...englishValencyComplementSchema.options,
 ]);
 export const valencySlotSchema = z.strictObject({
 	status: valencySlotStatusSchema,
@@ -329,7 +355,8 @@ export const governmentRelationSchema = z.enum(["governs", "governedBy"]);
  * Reading to the ADP Lemma of a Preposition Slot in its Valency Frame;
  * `governedBy` is the inferred inverse from each supplied Reading of that ADP
  * Lemma back to the exact governor Reading. `case` is the case the Slot
- * assigns, and null in a language whose complements mark none (Hebrew).
+ * assigns, and null in a language whose complements mark none (Hebrew,
+ * English).
  */
 export const governmentProjectionSchema = z.strictObject({
 	source: readingSchema,

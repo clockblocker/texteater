@@ -1,6 +1,7 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
 	emojiDescriptionError,
+	englishValencyAttestationError,
 	fusedMemberError,
 	fusionError,
 	germanAdpositionAttestationError,
@@ -14,6 +15,7 @@ import {
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
 	isEmojiDescription,
+	isEnglishValencyAttestation,
 	isFusedMember,
 	isFusion,
 	isGermanAdpositionAttestation,
@@ -66,6 +68,13 @@ export const registrations = [
 		implementation: isHebrewValencyAttestation,
 		error: hebrewValencyAttestationError,
 		name: "dumling.he-valency.attestation",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isEnglishValencyAttestation,
+		error: englishValencyAttestationError,
+		name: "dumling.en-valency.attestation",
 		version: 1,
 	},
 	{

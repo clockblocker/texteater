@@ -4933,6 +4933,53 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"en/Lexeme/ADP": {
@@ -6074,6 +6121,53 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"en/Lexeme/NUM": {
@@ -7322,6 +7416,53 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"en/Morpheme/Circumfix": {
@@ -8630,6 +8771,53 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
 		};
 	};
 	"en/Phraseme/Proverb": {

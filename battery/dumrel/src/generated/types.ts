@@ -2223,6 +2223,15 @@ export type HebrewValencyComplement =
 			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
 			referent: ValencyReferent;
 	  };
+export type EnglishValencyComplement =
+	| { kind: "Subject"; referent: ValencyReferent }
+	| { kind: "DirectObject"; referent: ValencyReferent }
+	| { kind: "IndirectObject"; referent: ValencyReferent }
+	| {
+			kind: "Preposition";
+			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
+			referent: ValencyReferent;
+	  };
 export type ValencyComplement =
 	| {
 			kind: "Case";
@@ -2240,6 +2249,14 @@ export type ValencyComplement =
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"he", "Lexeme", "ADP">;
+			referent: ValencyReferent;
+	  }
+	| { kind: "Subject"; referent: ValencyReferent }
+	| { kind: "DirectObject"; referent: ValencyReferent }
+	| { kind: "IndirectObject"; referent: ValencyReferent }
+	| {
+			kind: "Preposition";
+			preposition: Dumling.Lemma<"en", "Lexeme", "ADP">;
 			referent: ValencyReferent;
 	  };
 export type ValencySlot = {

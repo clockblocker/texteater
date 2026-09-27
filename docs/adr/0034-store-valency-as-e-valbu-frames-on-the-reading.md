@@ -37,7 +37,9 @@ vocabulary. German follows E-VALBU and marks complements by case:
 ```
 
 Hebrew marks function and preposition, with no case: Subject, DirectObject
-and Preposition. Each language × Family × Kind route chooses which complements
+and Preposition. English marks position and preposition, with no case:
+Subject, DirectObject, IndirectObject (`him` in `give him a book`) and
+Preposition. Each language × Family × Kind route chooses which complements
 it allows, as [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
 does for Core Features.
 

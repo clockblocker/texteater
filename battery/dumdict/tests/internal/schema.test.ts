@@ -192,6 +192,48 @@ describe("public storage-facing schemas", () => {
 		).toBe(false);
 	});
 
+	test("English Reading Knowledge holds caseless English complements", () => {
+		const schema = getDumdictSchemasFor("en").readingEntrySchema;
+		const on = {
+			unitKind: "Lemma",
+			language: "en",
+			family: "Lexeme",
+			kind: "ADP",
+			canonicalForm: "on",
+			coreFeatures: { abbr: null, extPos: null },
+		};
+		const entry = (complement: unknown) => ({
+			reading: englishRunReading,
+			attestedTranslations: [],
+			attestations: [],
+			notes: "",
+			knowledge: { valency: [{ status: "Required", complement }] },
+		});
+		for (const complement of [
+			{ kind: "IndirectObject", referent: "Someone" },
+			{ kind: "Preposition", preposition: on, referent: "Something" },
+		])
+			expect(schema.safeParse(entry(complement)).success).toBe(true);
+		for (const complement of [
+			{
+				kind: "Preposition",
+				preposition: on,
+				case: "Acc",
+				referent: "Either",
+			},
+			{
+				kind: "Preposition",
+				preposition: {
+					...on,
+					language: "he",
+					coreFeatures: { abbr: null, case: null },
+				},
+				referent: "Either",
+			},
+		])
+			expect(schema.safeParse(entry(complement)).success).toBe(false);
+	});
+
 	test("Surface Entries compose Dumling's concrete Surface schemas", () => {
 		const schema = getDumdictSchemasFor("de").surfaceEntrySchema;
 		const entry = {

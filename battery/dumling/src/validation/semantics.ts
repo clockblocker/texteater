@@ -356,27 +356,30 @@ function isOwnedValencyEvidence(
 	});
 }
 
+type CaselessValencyAttestation = {
+	valencyEvidence?: {
+		member: number | null;
+		complement:
+			| { kind: "Subject" | "DirectObject" | "IndirectObject" }
+			| {
+					kind: "Preposition";
+					preposition: { canonicalForm: string };
+			  };
+	}[];
+	members: { attested: string; orthography: string }[];
+};
+
 /**
- * A Hebrew governor Attestation (VERB, ADJ, NOUN, Idiom) may name the valency
- * slots it realizes (ADR 0034). Each slot names a distinct owned member, or
- * none. A Preposition slot's member spells its preposition unless it is a
- * Typo; a Fused member spells its Fusion component, so `ב` of `בבית` in
- * `בחר בבית` counts.
- * A Subject or DirectObject slot has no marker member.
+ * Caseless valency evidence (Hebrew, English): each slot names a distinct
+ * owned member, or none. A Preposition slot's member spells its preposition,
+ * compared without case, unless it is a Typo. Any other slot has no marker
+ * member.
  */
-export function isHebrewValencyAttestation(input: unknown): boolean {
-	const value = input as {
-		valencyEvidence?: {
-			member: number | null;
-			complement:
-				| { kind: "Subject" | "DirectObject" }
-				| {
-						kind: "Preposition";
-						preposition: { canonicalForm: string };
-				  };
-		}[];
-		members: { attested: string; orthography: string }[];
-	};
+function isCaselessValencyAttestation(
+	input: unknown,
+	language: "he" | "en",
+): boolean {
+	const value = input as CaselessValencyAttestation;
 	const evidence = value.valencyEvidence ?? [];
 	const named = evidence.flatMap((slot) =>
 		slot.member === null ? [] : [slot.member],
@@ -389,13 +392,36 @@ export function isHebrewValencyAttestation(input: unknown): boolean {
 		return (
 			member !== undefined &&
 			(member.orthography === "Typo" ||
-				normalizeForm(member.attested) ===
+				normalizeForm(member.attested).toLocaleLowerCase(language) ===
 					complement.preposition.canonicalForm)
 		);
 	});
 }
+
+/**
+ * A Hebrew governor Attestation (VERB, ADJ, NOUN, Idiom) may name the valency
+ * slots it realizes (ADR 0034). A Fused member spells its Fusion component,
+ * so `ב` of `בבית` in `בחר בבית` counts. A Subject or DirectObject slot has
+ * no marker member.
+ */
+export function isHebrewValencyAttestation(input: unknown): boolean {
+	return isCaselessValencyAttestation(input, "he");
+}
 export function hebrewValencyAttestationError(): string {
 	return "Hebrew valency evidence must name distinct owned members spelling its preposition; a Subject or DirectObject slot names no member";
+}
+
+/**
+ * An English governor Attestation (VERB, ADJ, NOUN, Idiom) may name the
+ * valency slots it realizes (ADR 0034), as a Hebrew one does: `on` of
+ * `depend on`, spelled in any case. A Subject, DirectObject or IndirectObject
+ * slot has no marker member.
+ */
+export function isEnglishValencyAttestation(input: unknown): boolean {
+	return isCaselessValencyAttestation(input, "en");
+}
+export function englishValencyAttestationError(): string {
+	return "English valency evidence must name distinct owned members spelling its preposition; a Subject, DirectObject or IndirectObject slot names no member";
 }
 
 /**

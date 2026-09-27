@@ -14,6 +14,7 @@ import {
 	fuerLemma,
 	houseLemma,
 	houseReading,
+	onLemma,
 	wartenReading,
 } from "./fixtures.js";
 
@@ -448,6 +449,157 @@ test("a Hebrew Preposition Slot projects government with no case", () => {
 			source: samachReading,
 			relation: "governs",
 			target: alLemma,
+			case: null,
+			provenance: "direct",
+		},
+	]);
+});
+
+const englishVerbReading = (canonicalForm: string, emojiDescription: string) =>
+	({
+		unitKind: "Reading",
+		lemma: {
+			unitKind: "Lemma",
+			language: "en",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm,
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				phrasal: null,
+				style: null,
+			},
+		},
+		emojiDescription,
+	}) as const satisfies Dumling.Reading<"en", "Lexeme", "VERB">;
+const giveReading = englishVerbReading("give", "🎁");
+const dependReading = englishVerbReading("depend", "🤝");
+const directObject = { kind: "DirectObject", referent: "Something" } as const;
+const indirectObject = { kind: "IndirectObject", referent: "Someone" } as const;
+const on = {
+	kind: "Preposition",
+	preposition: onLemma,
+	referent: "Something",
+} as const;
+
+test("an English Reading holds a caseless frame by position and preposition", () => {
+	// give him a book: the first object is the IndirectObject.
+	const give = [
+		required(subject),
+		required(directObject),
+		optional(indirectObject),
+	];
+	expect(
+		parseReadingKnowledge({
+			source: giveReading,
+			knowledge: { valency: give },
+		}),
+	).toEqual({ success: true, value: { valency: give } });
+	const depend = [required(subject), required(on)];
+	expect(
+		parseReadingKnowledge({
+			source: dependReading,
+			knowledge: { valency: depend },
+		}),
+	).toEqual({ success: true, value: { valency: depend } });
+	// We depend on accurate labels: the governed on is an owned member.
+	const attestation = {
+		unitKind: "Attestation",
+		members: [
+			{ attested: "depend", orthography: "Standard" },
+			{ attested: "on", orthography: "Standard" },
+		],
+		realizationCoverage: "Full",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "depend",
+			spelling: "Canonical",
+			inflectionalFeatures: null,
+			lemma: dependReading.lemma,
+			surfaceFeatures: null,
+		},
+		valencyEvidence: [
+			{ member: null, complement: subject },
+			{ member: 1, complement: on },
+		],
+	} satisfies Dumling.Attestation<"en", "Lexeme", "VERB">;
+	expect(parseUnit(attestation).success).toBe(true);
+	// A sentence-initial On still spells on.
+	expect(
+		parseUnit({
+			...attestation,
+			members: [
+				attestation.members[0],
+				{ attested: "On", orthography: "Standard" },
+			],
+		}).success,
+	).toBe(true);
+	for (const invalid of [
+		[{ member: 0, complement: on }],
+		[{ member: 1, complement: indirectObject }],
+		[{ member: 1, complement: { ...on, case: "Acc" } }],
+		[{ member: 1, complement: on, realizedCase: "Acc" }],
+		[{ member: 1, complement: { ...al, referent: "Something" } }],
+	])
+		expect(
+			parseUnit({ ...attestation, valencyEvidence: invalid }).success,
+		).toBe(false);
+	const { valencyEvidence: _, ...withoutEvidence } = attestation;
+	expect(parseUnit(withoutEvidence).success).toBe(true);
+});
+
+test("an English frame takes only its route's English complements", () => {
+	const germanCase = parseReadingKnowledge({
+		source: giveReading,
+		knowledge: {
+			valency: [required(subject), optional({ ...nom, case: "Dat" })],
+		},
+	} as never);
+	expect(germanCase.success).toBe(false);
+	if (!germanCase.success)
+		expect(germanCase.error.issues[0]?.path).toEqual([
+			"knowledge",
+			"valency",
+			1,
+			"complement",
+			"kind",
+		]);
+	for (const complement of [
+		aufAcc,
+		al,
+		{ ...on, case: "Acc" },
+		{ ...on, preposition: { ...onLemma, language: "de" } },
+	] as unknown[])
+		expect(
+			parseReadingKnowledge({
+				source: dependReading,
+				knowledge: { valency: [optional(complement)] },
+			} as never).success,
+		).toBe(false);
+	// Neither German nor Hebrew has an IndirectObject.
+	for (const source of [wartenReading, samachReading])
+		expect(
+			parseReadingKnowledge({
+				source,
+				knowledge: { valency: [optional(indirectObject)] },
+			} as never).success,
+		).toBe(false);
+});
+
+test("an English Preposition Slot projects government with no case", () => {
+	const result = projectPrepositionalGovernment([
+		{
+			reading: dependReading,
+			knowledge: { valency: [required(subject), required(on)] },
+		},
+	]);
+	expect(result.success && result.value).toEqual([
+		{
+			source: dependReading,
+			relation: "governs",
+			target: onLemma,
 			case: null,
 			provenance: "direct",
 		},

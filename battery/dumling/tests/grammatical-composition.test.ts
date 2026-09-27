@@ -962,3 +962,96 @@ test("a Hebrew governor may name its governed preposition with no case", () => {
 	expect(parseUnit(adverb).success).toBe(true);
 	expect(parseUnit({ ...adverb, valencyEvidence: [] }).success).toBe(false);
 });
+test("an English governor may name its governed preposition with no case", () => {
+	// We depend on accurate labels: the verb owns the on it governs.
+	const onLemma = {
+		unitKind: "Lemma",
+		language: "en",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm: "on",
+		coreFeatures: { abbr: null, extPos: null },
+	};
+	const on = {
+		kind: "Preposition",
+		preposition: onLemma,
+		referent: "Something",
+	};
+	const subject = { kind: "Subject", referent: "Someone" };
+	const indirectObject = { kind: "IndirectObject", referent: "Someone" };
+	const depend = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "depend",
+			spelling: "Canonical",
+			inflectionalFeatures: null,
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "en",
+				family: "Lexeme",
+				kind: "VERB",
+				canonicalForm: "depend",
+				coreFeatures: {
+					abbr: null,
+					extPos: null,
+					phrasal: null,
+					style: null,
+				},
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "depend", orthography: "Standard" },
+			{ attested: "on", orthography: "Standard" },
+		],
+		valencyEvidence: [
+			{ member: null, complement: subject },
+			{ member: 1, complement: on },
+		],
+	};
+	expect(parseUnit(depend).success).toBe(true);
+	expect(
+		parseUnit({
+			...depend,
+			valencyEvidence: [{ member: null, complement: indirectObject }],
+		}).success,
+	).toBe(true);
+	const { valencyEvidence: _omitted, ...withoutEvidence } = depend;
+	expect(parseUnit(withoutEvidence).success).toBe(true);
+	for (const invalid of [
+		[{ member: 0, complement: on }],
+		[{ member: 1, complement: indirectObject }],
+		[{ member: 1, complement: { ...on, case: "Acc" } }],
+		[{ member: 1, complement: on, realizedCase: "Acc" }],
+		[
+			{
+				member: 1,
+				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+			},
+		],
+	])
+		expect(parseUnit({ ...depend, valencyEvidence: invalid }).success).toBe(
+			false,
+		);
+	// A route that takes no frame takes no valency evidence either.
+	const preposition = {
+		unitKind: "Attestation",
+		realizationCoverage: "Full",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "on",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: onLemma,
+		},
+		members: [{ attested: "on", orthography: "Standard" }],
+	};
+	expect(parseUnit(preposition).success).toBe(true);
+	expect(parseUnit({ ...preposition, valencyEvidence: [] }).success).toBe(
+		false,
+	);
+});

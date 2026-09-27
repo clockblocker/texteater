@@ -90,8 +90,8 @@ valency slots the occurrence realizes as valency evidence, each naming by
 index the owned member that realizes it, such as the governed preposition. A
 governed preposition is an owned member but not a Fixed one, so the
 normalized Surface leaves it out: `wartet`, not `wartet auf`; `stolz`, not
-`stolz auf`. A Hebrew governor (verb, adjective, noun, Idiom) may record
-valency evidence the same way, with no realized case. A German ADP
+`stolz auf`. A Hebrew or English governor (verb, adjective, noun, Idiom) may
+record valency evidence the same way, with no realized case. A German ADP
 Attestation records the case its complement took
 as its realized case: `auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem
 Regen` Dat.
@@ -150,8 +150,10 @@ defines its complements, and each route chooses which it allows. German
 marks them by case: a bare case (`jemandem`, Dat) or a governed preposition
 with the case it assigns (`auf` + Acc), each with a referent of Someone,
 Something or Either. Hebrew marks them by function and preposition, with no
-case: Subject, DirectObject, or a governed preposition (`סמך על`). The
-subject is a Slot too.
+case: Subject, DirectObject, or a governed preposition (`סמך על`). English
+marks them by position and preposition, with no case: Hebrew's set plus
+IndirectObject (`him` in `give him a book`), and `depend on` has a governed
+`on`. The subject is a Slot too.
 _Avoid_: argument, valent, complement slot, Ergänzung
 
 **ADP Case Table**:

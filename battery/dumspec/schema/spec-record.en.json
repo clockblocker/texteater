@@ -651,6 +651,196 @@
 											"Full",
 											"Partial"
 										]
+									},
+									"valencyEvidence": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"member": {
+													"anyOf": [
+														{
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														},
+														{
+															"type": "null"
+														}
+													]
+												},
+												"complement": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Subject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "DirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "IndirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Preposition"
+																},
+																"preposition": {
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Lemma"
+																		},
+																		"language": {
+																			"type": "string",
+																			"const": "en"
+																		},
+																		"family": {
+																			"type": "string",
+																			"const": "Lexeme"
+																		},
+																		"kind": {
+																			"type": "string",
+																			"const": "ADP"
+																		},
+																		"canonicalForm": {
+																			"type": "string",
+																			"minLength": 1
+																		},
+																		"coreFeatures": {
+																			"type": "object",
+																			"properties": {
+																				"abbr": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"Yes"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				},
+																				"extPos": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"ADP",
+																								"ADV",
+																								"SCONJ"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				}
+																			},
+																			"required": [
+																				"abbr",
+																				"extPos"
+																			],
+																			"additionalProperties": false
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"language",
+																		"family",
+																		"kind",
+																		"canonicalForm",
+																		"coreFeatures"
+																	],
+																	"additionalProperties": false
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"preposition",
+																"referent"
+															],
+															"additionalProperties": false
+														}
+													]
+												}
+											},
+											"required": [
+												"member",
+												"complement"
+											],
+											"additionalProperties": false
+										}
 									}
 								},
 								"required": [
@@ -4210,6 +4400,196 @@
 												"type": "null"
 											}
 										]
+									},
+									"valencyEvidence": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"member": {
+													"anyOf": [
+														{
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														},
+														{
+															"type": "null"
+														}
+													]
+												},
+												"complement": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Subject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "DirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "IndirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Preposition"
+																},
+																"preposition": {
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Lemma"
+																		},
+																		"language": {
+																			"type": "string",
+																			"const": "en"
+																		},
+																		"family": {
+																			"type": "string",
+																			"const": "Lexeme"
+																		},
+																		"kind": {
+																			"type": "string",
+																			"const": "ADP"
+																		},
+																		"canonicalForm": {
+																			"type": "string",
+																			"minLength": 1
+																		},
+																		"coreFeatures": {
+																			"type": "object",
+																			"properties": {
+																				"abbr": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"Yes"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				},
+																				"extPos": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"ADP",
+																								"ADV",
+																								"SCONJ"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				}
+																			},
+																			"required": [
+																				"abbr",
+																				"extPos"
+																			],
+																			"additionalProperties": false
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"language",
+																		"family",
+																		"kind",
+																		"canonicalForm",
+																		"coreFeatures"
+																	],
+																	"additionalProperties": false
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"preposition",
+																"referent"
+															],
+															"additionalProperties": false
+														}
+													]
+												}
+											},
+											"required": [
+												"member",
+												"complement"
+											],
+											"additionalProperties": false
+										}
 									}
 								},
 								"required": [
@@ -8497,6 +8877,196 @@
 											"Full",
 											"Partial"
 										]
+									},
+									"valencyEvidence": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"member": {
+													"anyOf": [
+														{
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														},
+														{
+															"type": "null"
+														}
+													]
+												},
+												"complement": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Subject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "DirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "IndirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Preposition"
+																},
+																"preposition": {
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Lemma"
+																		},
+																		"language": {
+																			"type": "string",
+																			"const": "en"
+																		},
+																		"family": {
+																			"type": "string",
+																			"const": "Lexeme"
+																		},
+																		"kind": {
+																			"type": "string",
+																			"const": "ADP"
+																		},
+																		"canonicalForm": {
+																			"type": "string",
+																			"minLength": 1
+																		},
+																		"coreFeatures": {
+																			"type": "object",
+																			"properties": {
+																				"abbr": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"Yes"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				},
+																				"extPos": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"ADP",
+																								"ADV",
+																								"SCONJ"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				}
+																			},
+																			"required": [
+																				"abbr",
+																				"extPos"
+																			],
+																			"additionalProperties": false
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"language",
+																		"family",
+																		"kind",
+																		"canonicalForm",
+																		"coreFeatures"
+																	],
+																	"additionalProperties": false
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"preposition",
+																"referent"
+															],
+															"additionalProperties": false
+														}
+													]
+												}
+											},
+											"required": [
+												"member",
+												"complement"
+											],
+											"additionalProperties": false
+										}
 									}
 								},
 								"required": [
@@ -13320,6 +13890,196 @@
 											"Full",
 											"Partial"
 										]
+									},
+									"valencyEvidence": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"member": {
+													"anyOf": [
+														{
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														},
+														{
+															"type": "null"
+														}
+													]
+												},
+												"complement": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Subject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "DirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "IndirectObject"
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"referent"
+															],
+															"additionalProperties": false
+														},
+														{
+															"type": "object",
+															"properties": {
+																"kind": {
+																	"type": "string",
+																	"const": "Preposition"
+																},
+																"preposition": {
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Lemma"
+																		},
+																		"language": {
+																			"type": "string",
+																			"const": "en"
+																		},
+																		"family": {
+																			"type": "string",
+																			"const": "Lexeme"
+																		},
+																		"kind": {
+																			"type": "string",
+																			"const": "ADP"
+																		},
+																		"canonicalForm": {
+																			"type": "string",
+																			"minLength": 1
+																		},
+																		"coreFeatures": {
+																			"type": "object",
+																			"properties": {
+																				"abbr": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"Yes"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				},
+																				"extPos": {
+																					"anyOf": [
+																						{
+																							"type": "string",
+																							"enum": [
+																								"ADP",
+																								"ADV",
+																								"SCONJ"
+																							]
+																						},
+																						{
+																							"type": "null"
+																						}
+																					]
+																				}
+																			},
+																			"required": [
+																				"abbr",
+																				"extPos"
+																			],
+																			"additionalProperties": false
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"language",
+																		"family",
+																		"kind",
+																		"canonicalForm",
+																		"coreFeatures"
+																	],
+																	"additionalProperties": false
+																},
+																"referent": {
+																	"type": "string",
+																	"enum": [
+																		"Someone",
+																		"Something",
+																		"Either"
+																	]
+																}
+															},
+															"required": [
+																"kind",
+																"preposition",
+																"referent"
+															],
+															"additionalProperties": false
+														}
+													]
+												}
+											},
+											"required": [
+												"member",
+												"complement"
+											],
+											"additionalProperties": false
+										}
 									}
 								},
 								"required": [

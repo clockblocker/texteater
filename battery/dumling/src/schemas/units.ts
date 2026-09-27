@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
 	emojiDescriptionError,
+	englishValencyAttestationError,
 	fusedMemberError,
 	fusionError,
 	germanAdpositionAttestationError,
@@ -12,6 +13,7 @@ import {
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
 	isEmojiDescription,
+	isEnglishValencyAttestation,
 	isFusedMember,
 	isFusion,
 	isGermanAdpositionAttestation,
@@ -28,6 +30,7 @@ import {
 	nounArticleAttestationError,
 } from "../validation/semantics.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
+import { EnAdpositionFeatureBagsSchema } from "./concrete-language/en/lexeme/adposition.js";
 import { HeAdpositionFeatureBagsSchema } from "./concrete-language/he/lexeme/adposition.js";
 
 export const UnitKindSchema = z.enum([
@@ -228,6 +231,43 @@ const hebrewValencyEvidenceSchema = z.array(
 );
 
 /**
+ * English valency complements (ADR 0034), marked by position and preposition
+ * with no case: the subject, the direct object, the indirect object (`him` in
+ * `give him a book`), or a governed preposition's ADP Lemma (`depend on`).
+ */
+const englishComplementSchema = z.union([
+	z.strictObject({ kind: z.literal("Subject"), referent: referentSchema }),
+	z.strictObject({
+		kind: z.literal("DirectObject"),
+		referent: referentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("IndirectObject"),
+		referent: referentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Preposition"),
+		preposition: buildBaseUnitSchemas(
+			{ language: "en", family: "Lexeme", kind: "ADP" },
+			EnAdpositionFeatureBagsSchema.shape.core,
+			undefined,
+		).Lemma,
+		referent: referentSchema,
+	}),
+]);
+
+/**
+ * The English valency slots one occurrence realizes, indexed like German
+ * evidence. English marks no case, so a slot records no realized case.
+ */
+const englishValencyEvidenceSchema = z.array(
+	z.strictObject({
+		member: indexSchema.nullable(),
+		complement: englishComplementSchema,
+	}),
+);
+
+/**
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German, English or Hebrew noun or proper noun, and a Hebrew
  * adjective, names where its article is attested (ADR 0035). A German verbal Attestation names
@@ -235,8 +275,9 @@ const hebrewValencyEvidenceSchema = z.array(
  * governor Kind (VERB, AUX, ADJ, NOUN, Idiom, Collocation) names the valency
  * slots it realizes, such as its governed preposition member (ADR 0034). A
  * German ADP Attestation records the case its complement took as its one
- * bare-case slot, checked against the ADP Case Table. A Hebrew governor
- * (VERB, ADJ, NOUN, Idiom) may name the slots it realizes, with no case.
+ * bare-case slot, checked against the ADP Case Table. A Hebrew or English
+ * governor (VERB, ADJ, NOUN, Idiom) may name the slots it realizes, with no
+ * case.
  */
 export function buildUnitSchemas<
 	L extends string,
@@ -273,6 +314,11 @@ export function buildUnitSchemas<
 		((route.family === "Lexeme" &&
 			["VERB", "ADJ", "NOUN"].includes(route.kind)) ||
 			(route.family === "Phraseme" && route.kind === "Idiom"));
+	const englishGovernor =
+		route.language === "en" &&
+		((route.family === "Lexeme" &&
+			["VERB", "ADJ", "NOUN"].includes(route.kind)) ||
+			(route.family === "Phraseme" && route.kind === "Idiom"));
 	const closedClass =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
@@ -306,6 +352,9 @@ export function buildUnitSchemas<
 			: {}),
 		...(hebrewGovernor
 			? { valencyEvidence: hebrewValencyEvidenceSchema.optional() }
+			: {}),
+		...(englishGovernor
+			? { valencyEvidence: englishValencyEvidenceSchema.optional() }
 			: {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
@@ -355,6 +404,19 @@ export function buildUnitSchemas<
 							>;
 						}
 					: Record<never, never>
+				: Record<never, never>) &
+			(L extends "en"
+				? `${F}/${K}` extends
+						| "Lexeme/VERB"
+						| "Lexeme/ADJ"
+						| "Lexeme/NOUN"
+						| "Phraseme/Idiom"
+					? {
+							valencyEvidence: z.ZodOptional<
+								typeof englishValencyEvidenceSchema
+							>;
+						}
+					: Record<never, never>
 				: Record<never, never>)
 	>;
 	if (articleOwner)
@@ -368,6 +430,10 @@ export function buildUnitSchemas<
 	if (hebrewGovernor)
 		Attestation = Attestation.refine(isHebrewValencyAttestation, {
 			error: hebrewValencyAttestationError,
+		});
+	if (englishGovernor)
+		Attestation = Attestation.refine(isEnglishValencyAttestation, {
+			error: englishValencyAttestationError,
 		});
 	if (verbal)
 		Attestation = Attestation.refine(isGermanVerbalAttestation, {

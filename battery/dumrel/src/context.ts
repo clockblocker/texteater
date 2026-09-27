@@ -66,7 +66,8 @@ function parseRelatedUnit<R extends Dumling.Reading>(
  * A complement the source's route allows. A Preposition complement names an
  * ADP Lemma of the source Language. A German one takes a case the ADP Case
  * Table allows it: `warten` `auf` + Acc and `bestehen` `auf` + Dat, never
- * `für` + Dat. A Hebrew one names no case (`סמך על`).
+ * `für` + Dat. A Hebrew or English one names no case (`סמך על`, `depend
+ * on`).
  */
 function parseValencyComplement<R extends Dumling.Reading>(
 	source: R,
@@ -103,7 +104,7 @@ function parseValencyComplement<R extends Dumling.Reading>(
 			[...path, "preposition", "language"],
 			"A governed preposition must use the source Language",
 		);
-	// Hebrew marks no case, so only German checks the ADP Case Table.
+	// Hebrew and English mark no case, so only German checks the ADP Case Table.
 	if (
 		"case" in complement &&
 		!germanAdpositionAllows(

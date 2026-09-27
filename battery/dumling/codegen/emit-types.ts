@@ -28,6 +28,7 @@ export function outputType(
 							"dumling.de-adposition.attestation",
 							"dumling.de-valency.attestation",
 							"dumling.he-valency.attestation",
+							"dumling.en-valency.attestation",
 							"dumling.de-verbal.attestation",
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",

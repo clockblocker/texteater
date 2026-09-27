@@ -111,7 +111,8 @@ const governedCaseValidator = v.union(
 
 /**
  * A Valency Frame Slot, as the Valency Block reads it: German complements
- * marked by case, then Hebrew ones marked by function and preposition.
+ * marked by case, then Hebrew and English ones marked by function or
+ * position and preposition.
  */
 const valencySlotValidator = v.object({
 	status: v.union(v.literal("Required"), v.literal("Optional")),
@@ -128,7 +129,11 @@ const valencySlotValidator = v.object({
 			referent: valencyReferentValidator,
 		}),
 		v.object({
-			kind: v.union(v.literal("Subject"), v.literal("DirectObject")),
+			kind: v.union(
+				v.literal("Subject"),
+				v.literal("DirectObject"),
+				v.literal("IndirectObject"),
+			),
 			referent: valencyReferentValidator,
 		}),
 		v.object({

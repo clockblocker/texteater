@@ -3,6 +3,7 @@ import {
 	aufLemma,
 	houseLemma,
 	houseReading,
+	onLemma,
 	prefixLemma,
 	wartenReading,
 } from "./fixtures";
@@ -139,6 +140,14 @@ export const samples: Record<string, unknown[]> = {
 			referent: "Either",
 		},
 		{ kind: "Preposition", preposition: aufLemma, referent: "Either" },
+		{ kind: "IndirectObject", referent: "Someone" },
+		{ kind: "Preposition", preposition: onLemma, referent: "Something" },
+		{
+			kind: "Preposition",
+			preposition: onLemma,
+			case: "Acc",
+			referent: "Something",
+		},
 	],
 	germanValencyComplement: [
 		{ kind: "Case", case: "Nom", referent: "Someone" },
@@ -148,6 +157,13 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "DirectObject", referent: "Something" },
 		{ kind: "Preposition", preposition: alLemma, referent: "Someone" },
 		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "IndirectObject", referent: "Someone" },
+	],
+	englishValencyComplement: [
+		{ kind: "IndirectObject", referent: "Someone" },
+		{ kind: "Preposition", preposition: onLemma, referent: "Something" },
+		{ kind: "Preposition", preposition: alLemma, referent: "Someone" },
+		{ kind: "Case", case: "Dat", referent: "Someone" },
 	],
 	valencySlot: [
 		{

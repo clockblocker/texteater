@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"notes": {
-				"rationale": "The Lemma is depend, not a phrasal depend on: on is a preposition the verb governs, not a particle. Government is valency, not identity (ADR 0029), so on stays out of the Lemma and its Canonical Form; it is government recorded per ADR 0034, in the Reading's Valency Frame. On stays an Attestation member, so clicking it opens depend. English has no complement vocabulary yet, so the Attestation records no valencyEvidence entry for on."
+				"rationale": "The Lemma is depend, not a phrasal depend on: on is a preposition the verb governs, not a particle. Government is valency, not identity (ADR 0029), so on stays out of the Lemma and its Canonical Form; it is government recorded per ADR 0034, in the Reading's Valency Frame. On stays an Attestation member, so clicking it opens depend. The Reading's frame is [Subject Required, Preposition(on) Required], and the Attestation's valencyEvidence names on as the member realizing the Preposition slot."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -54,7 +54,24 @@
 						}
 					},
 					"surfaceFeatures": null
-				}
+				},
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "en",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "on",
+								"coreFeatures": { "abbr": null, "extPos": null }
+							},
+							"referent": "Something"
+						}
+					}
+				]
 			}
 		}
 	],

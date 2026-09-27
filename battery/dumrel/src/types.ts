@@ -9,6 +9,7 @@ import type {
 
 export type {
 	DirectSemanticRelation,
+	EnglishValencyComplement,
 	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,

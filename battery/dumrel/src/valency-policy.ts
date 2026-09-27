@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type {
+	EnglishValencyComplement,
 	GermanValencyComplement,
 	HebrewValencyComplement,
 	ValencyComplement,
@@ -10,6 +11,7 @@ type ComplementKind = ValencyComplement["kind"];
 type ComplementsByLanguage = {
 	de: GermanValencyComplement;
 	he: HebrewValencyComplement;
+	en: EnglishValencyComplement;
 };
 type RoutePolicy<Kind extends ComplementKind> = Readonly<
 	Record<string, Readonly<Record<string, readonly Kind[]>>>
@@ -21,6 +23,12 @@ const functionOrPreposition = [
 	"DirectObject",
 	"Preposition",
 ] as const;
+const positionOrPreposition = [
+	"Subject",
+	"DirectObject",
+	"IndirectObject",
+	"Preposition",
+] as const;
 
 /**
  * The complements each language × Family × Kind route lets its Valency Frame
@@ -29,7 +37,8 @@ const functionOrPreposition = [
  * (`Angst vor`); their bare cases are attributes, not valency. Hebrew mirrors
  * the German choices with its own complements: nouns take only governed
  * prepositions, and Idiom is its one framed Phraseme route, since Hebrew has
- * no Collocation route.
+ * no Collocation route. English makes the same choices with its own
+ * complements, and likewise has no Collocation route.
  */
 const valencyPolicy: {
 	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
@@ -55,6 +64,16 @@ const valencyPolicy: {
 		},
 		Phraseme: {
 			Idiom: functionOrPreposition,
+		},
+	},
+	en: {
+		Lexeme: {
+			VERB: positionOrPreposition,
+			ADJ: positionOrPreposition,
+			NOUN: ["Preposition"],
+		},
+		Phraseme: {
+			Idiom: positionOrPreposition,
 		},
 	},
 };

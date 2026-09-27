@@ -25,6 +25,7 @@ export const dumrelOutputTypeExports = {
 	ValencyReferent: "valencyReferent",
 	GermanValencyComplement: "germanValencyComplement",
 	HebrewValencyComplement: "hebrewValencyComplement",
+	EnglishValencyComplement: "englishValencyComplement",
 	ValencyComplement: "valencyComplement",
 	ValencySlot: "valencySlot",
 	GovernmentRelation: "governmentRelation",

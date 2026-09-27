@@ -1,6 +1,7 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
 	emojiDescriptionError,
+	englishValencyAttestationError,
 	fusedMemberError,
 	fusionError,
 	germanAdpositionAttestationError,
@@ -14,6 +15,7 @@ import {
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
 	isEmojiDescription,
+	isEnglishValencyAttestation,
 	isFusedMember,
 	isFusion,
 	isGermanAdpositionAttestation,
@@ -64,6 +66,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.he-valency.attestation": check(
 		isHebrewValencyAttestation,
 		hebrewValencyAttestationError,
+	),
+	"dumling.en-valency.attestation": check(
+		isEnglishValencyAttestation,
+		englishValencyAttestationError,
 	),
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,

@@ -12,6 +12,7 @@ export {
 export { normalizeText } from "./semantics.js";
 export type {
 	DirectSemanticRelation,
+	EnglishValencyComplement,
 	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,

@@ -154,7 +154,8 @@ function valencyUsesLanguage(
 
 /**
  * Each German Preposition Slot takes a case the ADP Case Table allows its
- * preposition. A Hebrew one names no case, so it has nothing to check.
+ * preposition. A Hebrew or English one names no case, so it has nothing to
+ * check.
  */
 function valencyCasesAllowed(frame: readonly Dumrel.ValencySlot[]): boolean {
 	return frame.every(

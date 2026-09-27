@@ -64,6 +64,16 @@ export const alLemma = {
 	coreFeatures: { abbr: null, case: null },
 } as const satisfies Dumling.Lemma<"he", "Lexeme", "ADP">;
 
+/** English preposition: English complements mark no case either. */
+export const onLemma = {
+	unitKind: "Lemma",
+	language: "en",
+	family: "Lexeme",
+	kind: "ADP",
+	canonicalForm: "on",
+	coreFeatures: { abbr: null, extPos: null },
+} as const satisfies Dumling.Lemma<"en", "Lexeme", "ADP">;
+
 export const wartenReading = {
 	unitKind: "Reading",
 	lemma: {
