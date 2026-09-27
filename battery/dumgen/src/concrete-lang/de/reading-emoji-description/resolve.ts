@@ -177,13 +177,14 @@ export function resolveReading(
 			},
 			selection,
 		);
-		if (candidates.includes(emojiDescription))
-			throw new DumgenFailure(
-				"InvalidModelOutput",
-				stage,
-				"Generated Reading collides with a candidate rejected by TypeSafe",
-				route,
-			);
+		// The generator never sees the candidates, so writing a stored one means
+		// the judge's NoMatch was wrong (ADR 0031). Both values are parsed, so
+		// the generated description is the stored one.
+		if (candidates.includes(emojiDescription)) {
+			const reuse = { decision: "Reuse", emojiDescription } as const;
+			recordEvent(scope, "GeneratedReadingCollision", reuse);
+			return reuse;
+		}
 		const resolution = { decision: "New", emojiDescription } as const;
 		recordEvent(scope, "GeneratedReading", resolution);
 		return resolution;

@@ -172,11 +172,20 @@ for (const scenario of [
 		expected: { decision: "New", emojiDescription: "💰" },
 		calls: ["TypeSafe", "Luna"],
 	},
+	// A generated description that is already stored means the NoMatch was
+	// wrong: Reuse the stored one. Both compare as Dumling parses them.
 	{
 		selection: "NoMatch",
-		candidates: ["💰", "💰"],
-		generated: "💰",
-		failure: "InvalidModelOutput",
+		candidates: ["🖱️"],
+		generated: "🖱",
+		expected: { decision: "Reuse", emojiDescription: "🖱" },
+		calls: ["TypeSafe", "Luna"],
+	},
+	{
+		selection: "NoMatch",
+		candidates: ["🖱️", "🖱"],
+		generated: "🖱️",
+		expected: { decision: "Reuse", emojiDescription: "🖱" },
 		calls: ["TypeSafe", "Luna"],
 	},
 	{
@@ -245,13 +254,14 @@ for (const scenario of [
 		) {
 			expect(trace.events.map((event) => event.kind)).toEqual([
 				"ReadingSelection",
+				"GeneratedReadingCollision",
 			]);
 			const selection = trace.calls[0];
 			if (!selection) throw new Error("Missing Reading selection call");
 			expect(
 				(selection.request.input as { candidates: string[] })
 					.candidates,
-			).toEqual(["💰"]);
+			).toEqual(["🖱"]);
 		}
 	});
 test("all retained Reading cases execute the unified API and operation evaluators preserve meaning isolation", async () => {
