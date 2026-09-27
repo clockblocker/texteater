@@ -6,9 +6,7 @@ const lemma = {
 	family: "Lexeme",
 	kind: "AUX",
 	canonicalForm: "haben",
-	coreFeatures: {
-		verbType: null,
-	},
+	coreFeatures: {},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 /** One grammatical use of haben; the serving verb's form selects it (ADR 0026). */

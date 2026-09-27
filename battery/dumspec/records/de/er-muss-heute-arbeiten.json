@@ -14,12 +14,25 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0026"],
+		"rules": [
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "0f3e63e6bfa51754"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "Muss is AUX here because it combines with the overt infinitive arbeiten rather than standing alone as the clause's main predicate."
+				"rationale": "A modal is a VERB with verbType Mod, one Lemma whether it governs an infinitive or an object (ADR 0026). The infinitive it governs is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,8 +62,55 @@
 						"language": "de",
 						"canonicalForm": "müssen",
 						"family": "Lexeme",
-						"kind": "AUX",
-						"coreFeatures": { "verbType": "Mod" }
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": "Mod"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "arbeiten", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "arbeiten",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "arbeiten",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
 					"surfaceFeatures": null
 				}

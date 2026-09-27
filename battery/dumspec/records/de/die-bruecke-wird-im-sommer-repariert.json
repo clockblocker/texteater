@@ -41,7 +41,7 @@
 						"family": "Lexeme",
 						"kind": "AUX",
 						"canonicalForm": "werden",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wird",
 					"spelling": "Canonical",

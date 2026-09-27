@@ -36,7 +36,7 @@
 						"family": "Lexeme",
 						"kind": "AUX",
 						"canonicalForm": "bekommen",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "kriegt",
 					"spelling": "Canonical",

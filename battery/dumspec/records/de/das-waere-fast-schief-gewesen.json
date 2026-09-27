@@ -52,7 +52,7 @@
 						"canonicalForm": "sein",
 						"family": "Lexeme",
 						"kind": "AUX",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -126,7 +126,7 @@
 						"canonicalForm": "sein",
 						"family": "Lexeme",
 						"kind": "AUX",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

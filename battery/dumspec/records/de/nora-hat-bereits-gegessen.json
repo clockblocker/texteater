@@ -36,7 +36,7 @@
 						"family": "Lexeme",
 						"kind": "AUX",
 						"canonicalForm": "haben",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "hat",
 					"spelling": "Canonical",

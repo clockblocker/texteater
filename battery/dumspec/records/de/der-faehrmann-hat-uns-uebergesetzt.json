@@ -16,16 +16,34 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0022", "ADR-0026"],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [4, 8],
 			"notes": {
-				"rationale": "This is the ferry-across participle, with related spelling but a different verbal use."
+				"rationale": "übergesetzt is the ferry-across verb with the separable prefix über (setzte über), not the inseparable übersetzen 'translate' (übersetzt). hat is its perfect auxiliary, so the target is the whole perfect [hat, übergesetzt], like [hat, mitgebracht]."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
+					{ "attested": "hat", "orthography": "Standard" },
 					{ "attested": "übergesetzt", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
@@ -34,17 +52,16 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "übergesetzt",
+					"normalizedSurface": "hat übergesetzt",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"participleForm": "Past",
-						"verbForm": "Part",
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
 						"expletive": null,
-						"perfect": null,
+						"perfect": "Yes",
 						"future": null,
 						"voice": null,
 						"passive": null
@@ -56,7 +73,7 @@
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
+							"hasSepPrefix": "über",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}

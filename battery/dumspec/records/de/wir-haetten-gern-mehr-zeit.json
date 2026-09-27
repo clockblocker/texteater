@@ -16,12 +16,21 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0026"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "The Konjunktiv-like form is mapped to supported mood Sub plus past tense."
+				"rationale": "hätten is possessive haben (to have, here wish to have) in Konjunktiv II, with mood Sub and tense Past. No participle or infinitive follows, so it serves no verb and is VERB haben, not AUX."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -53,8 +62,12 @@
 						"language": "de",
 						"canonicalForm": "haben",
 						"family": "Lexeme",
-						"kind": "AUX",
-						"coreFeatures": { "verbType": null }
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
 					"surfaceFeatures": null
 				}

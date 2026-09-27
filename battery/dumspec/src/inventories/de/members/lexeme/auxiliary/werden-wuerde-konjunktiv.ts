@@ -6,9 +6,7 @@ const lemma = {
 	family: "Lexeme",
 	kind: "AUX",
 	canonicalForm: "werden",
-	coreFeatures: {
-		verbType: null,
-	},
+	coreFeatures: {},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 /** One grammatical use of werden; the serving verb's form selects it (ADR 0026). */

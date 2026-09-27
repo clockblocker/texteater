@@ -38,7 +38,16 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0026", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
@@ -123,7 +132,7 @@
 		{
 			"memberSegmentIndices": [16],
 			"notes": {
-				"rationale": "I kept war under the AUX Lemma sein, following the repo's treatment of finite and participial sein forms as auxiliary/copular rather than splitting off a separate lexical VERB Lemma."
+				"rationale": "war is the copula before the predicative tot, so it is a single-member VERB sein, and tot is an ADJ of its own. sein is AUX only as the auxiliary of a perfect or passive."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -153,8 +162,12 @@
 						"language": "de",
 						"canonicalForm": "sein",
 						"family": "Lexeme",
-						"kind": "AUX",
-						"coreFeatures": { "verbType": null }
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
 					"surfaceFeatures": null
 				}

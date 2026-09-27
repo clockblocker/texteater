@@ -494,7 +494,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "AUX";
 			canonicalForm: string;
-			coreFeatures: { verbType: "Mod" | null };
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -505,7 +505,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "AUX";
 				canonicalForm: string;
-				coreFeatures: { verbType: "Mod" | null };
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
@@ -621,7 +621,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "AUX";
 				canonicalForm: string;
-				coreFeatures: { verbType: "Mod" | null };
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -636,7 +636,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "AUX";
 					canonicalForm: string;
-					coreFeatures: { verbType: "Mod" | null };
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";

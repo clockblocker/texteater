@@ -31,12 +31,22 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0033"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0032", "ADR-0033"],
+		"rules": [
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
-				"rationale": "Die links the relative clause back to Minz und Maunz, so this is the nominative plural relative pronoun, not the article."
+				"rationale": "schreien stands second, so die opens a main clause rather than a verb-final relative clause: it is the demonstrative pronoun, nominative plural, resuming Minz und Maunz."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,7 +66,7 @@
 						"family": "Lexeme",
 						"kind": "PRON",
 						"coreFeatures": {
-							"pronType": "Rel",
+							"pronType": "Dem",
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -93,6 +103,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null
@@ -133,6 +144,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"abbr": null,
 							"foreign": null,
 							"numType": null,

@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "AUX",
 						"canonicalForm": "haben",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "haben",
 					"spelling": "Canonical",

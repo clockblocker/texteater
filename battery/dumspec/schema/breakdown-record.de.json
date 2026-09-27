@@ -2825,24 +2825,7 @@
 													},
 													"coreFeatures": {
 														"type": "object",
-														"properties": {
-															"verbType": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Mod"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															}
-														},
-														"required": [
-															"verbType"
-														],
+														"properties": {},
 														"additionalProperties": false
 													}
 												},

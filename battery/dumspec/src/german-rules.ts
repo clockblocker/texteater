@@ -123,7 +123,7 @@ const verbs: Rule[] = [
 			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (sich lassen, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB"),
-		records: [],
+		records: ["de/er-muss-heute-arbeiten"],
 	},
 	{
 		id: "de/auxiliary-joins-the-verb-it-serves",
@@ -131,7 +131,10 @@ const verbs: Rule[] = [
 			"sein, haben or werden marking perfect, future or passive is never a target on its own. It joins the verb it serves as that unit's auxiliary, and a click on it selects that verb. Standing alone, the same verbs are VERBs with their own meaning: copular sein, haben 'to own', werden 'to become'.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB", "AUX"),
-		records: [],
+		records: [
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/wir-haetten-gern-mehr-zeit",
+		],
 	},
 	{
 		id: "de/copula-stays-apart",
@@ -139,7 +142,10 @@ const verbs: Rule[] = [
 			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ.",
 		adrs: ["ADR-0026", "ADR-0034", "ADR-0036"],
 		routes: [...lexeme("VERB", "ADJ"), ...locution("VERB")],
-		records: ["de/das-wetter-ist-xqzt"],
+		records: [
+			"de/das-wetter-ist-xqzt",
+			"de/er-wog-vielleicht-ein-halbes-lot",
+		],
 	},
 	{
 		id: "de/recipient-passive",
@@ -281,7 +287,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET. Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
 		adrs: [],
 		routes: lexeme("PRON", "DET"),
-		records: [],
+		records: ["de/und-minz-und-maunz-die-schreien"],
 	},
 	{
 		id: "de/possessive-after-article",
@@ -495,7 +501,7 @@ const attestations: Rule[] = [
 			"A verbal Surface describes its whole target. Perfect, future and passive belong to the whole verbal unit and stay empty on an auxiliary's own Surface, and tense describes the finite verb only.",
 		adrs: ["ADR-0022", "ADR-0026"],
 		routes: lexeme("VERB", "AUX"),
-		records: [],
+		records: ["de/der-faehrmann-hat-uns-uebergesetzt"],
 	},
 	{
 		id: "de/verb-core-features",
@@ -503,7 +509,10 @@ const attestations: Rule[] = [
 			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement. verbType Mod marks a modal, one Lemma whether it governs an infinitive or an object.",
 		adrs: ["ADR-0026", "ADR-0029"],
 		routes: lexeme("VERB"),
-		records: [],
+		records: [
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/er-muss-heute-arbeiten",
+		],
 	},
 	{
 		id: "de/partial-coverage",

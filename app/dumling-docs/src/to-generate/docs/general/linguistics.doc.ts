@@ -100,7 +100,7 @@ IDs, click indices, and marked context belong to the calling application.
 
 \`family\` has four values:
 
-| Kind | Use |
+| Family | Use |
 | --- | --- |
 | \`Lexeme\` | lexical identities with one Head, categorized by a Universal Dependencies-style POS tag; satellites such as a particle or reflexive may be part of the Canonical Form (\`sich erinnern\`, \`give up\`) |
 | \`Locution\` | multiword Lemmas with two or more Heads (\`den Faden verlieren\`, \`zum Teil\`), categorized by the POS tag the whole acts as |

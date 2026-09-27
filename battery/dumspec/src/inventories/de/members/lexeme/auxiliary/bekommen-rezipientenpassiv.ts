@@ -6,9 +6,7 @@ const lemma = {
 	family: "Lexeme",
 	kind: "AUX",
 	canonicalForm: "bekommen",
-	coreFeatures: {
-		verbType: null,
-	},
+	coreFeatures: {},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 /** One grammatical use of bekommen; the serving verb's form selects it (ADR 0026). */

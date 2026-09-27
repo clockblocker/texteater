@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "AUX",
 						"canonicalForm": "sein",
-						"coreFeatures": { "verbType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wären",
 					"spelling": "Canonical",
