@@ -77,9 +77,10 @@ as its Segment's own letters.
 _Avoid_: Segment index link
 
 **Stored Segment**:
-One Segment of a stored Sentence. Every German Sentence stores a fused word as
-its pieces, one Segment per component, whether or not intake analysed it:
-`im` is `i` (standing for `in`) and `m` (standing for `dem`). A stored Sentence
+One Segment of a stored Sentence. Every German and English Sentence stores a
+fused word as its pieces, one Segment per component, whether or not intake
+analysed it: `im` is `i` (standing for `in`) and `m` (standing for `dem`), and
+`I'll` is `I` and `'ll`. A stored Sentence
 that holds a whole fused word is broken, and tf-demo refuses it.
 _Avoid_: token, word
 

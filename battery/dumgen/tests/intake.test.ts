@@ -202,7 +202,7 @@ test("an operation trace records the generation configuration its calls executed
 	expect(trace?.generationConfiguration).toEqual(sent);
 });
 
-test("English contractions and abbreviations remain lossless local source units", async () => {
+test("English fused words split into their pieces and abbreviations stay one Segment, losslessly", async () => {
 	const dumgen = createDumgen({
 		judge: async () => {
 			throw Error("Unexpected judgment");
@@ -221,5 +221,8 @@ test("English contractions and abbreviations remain lossless local source units"
 		sentence.segments
 			.filter((s) => s.kind === "ResolvableText")
 			.map((s) => s.text),
-	).toEqual(["Mr.", "Jones", "can't", "sell", "Mary's", "book"]);
+	).toEqual(["Mr.", "Jones", "ca", "n't", "sell", "Mary", "'s", "book"]);
+	expect(sentence.segments.map((s) => s.text).join("")).toBe(
+		"Mr. Jones can't sell Mary's book.",
+	);
 });

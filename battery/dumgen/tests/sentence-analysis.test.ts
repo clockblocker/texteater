@@ -5,6 +5,7 @@ import type {
 	SystemOneResult,
 	TypeSafeExecutor,
 } from "promptsmith/typesafe";
+import { joinFusedWords } from "../src/concrete-lang/de/fused-words.js";
 import {
 	germanAbbreviations,
 	reviewedAbbreviationKinds,
@@ -13,7 +14,6 @@ import {
 	governablePrepositionIn,
 	governablePrepositionLemma,
 } from "../src/concrete-lang/de/governable-prepositions.js";
-import { joinFusedWords } from "../src/concrete-lang/de/segmentation/fused-word-guard.js";
 import { segmentGerman } from "../src/concrete-lang/de/segmentation/segment.js";
 import {
 	headOf,

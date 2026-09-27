@@ -1,2 +1,4 @@
 import { segmentLatin } from "../../../universal/latin-segmentation.js";
-export const segmentEnglish = (text: string) => segmentLatin(text, "en");
+import { englishFusionTable } from "../fusion-entries.js";
+export const segmentEnglish = (text: string) =>
+	segmentLatin(text, "en", englishFusionTable);

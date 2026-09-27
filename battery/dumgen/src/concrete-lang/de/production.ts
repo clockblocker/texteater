@@ -13,6 +13,7 @@ import type {
 	SegmentedSentence,
 } from "../../types.js";
 import { DumgenFailure } from "../../universal/failure.js";
+import { assertFusedWordsSplit } from "../../universal/fused-words.js";
 import { operation, type RequestBudget } from "../../universal/trace.js";
 import {
 	markedContext,
@@ -26,7 +27,6 @@ import { normalizeGrammarSurface } from "./grammatical-resolution/project.js";
 import type { ReferentMode } from "./grammatical-resolution/referent.js";
 import { produceKnowledge } from "./knowledge-production/produce.js";
 import { resolveReading } from "./reading-emoji-description/resolve.js";
-import { assertFusedWordsSplit } from "./segmentation/fused-word-guard.js";
 import { analyzeGermanSentence } from "./sentence-analysis/operation.js";
 import { classifyGermanTarget } from "./target-classification/judgments.js";
 

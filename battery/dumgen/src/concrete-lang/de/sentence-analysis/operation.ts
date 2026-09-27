@@ -4,7 +4,7 @@ import type { DumgenOptions, SegmentedSentence } from "../../../types.js";
 import { judgmentCaller } from "../../../universal/judgment.js";
 import { type OperationScope, recordEvent } from "../../../universal/trace.js";
 import { parse } from "../../../universal/validation.js";
-import { joinFusedWords } from "../segmentation/fused-word-guard.js";
+import { joinFusedWords } from "../fused-words.js";
 import type { SentenceAnalysis } from "./analysis.js";
 import { assembleAnalysis } from "./assemble.js";
 import { slotQuestions } from "./government.js";

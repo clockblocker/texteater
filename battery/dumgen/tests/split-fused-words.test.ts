@@ -72,11 +72,11 @@ test("segmentation splits every German fused word into its pieces", async () => 
 		{ kind: "ResolvableText", text: "auf", surface: "auf" },
 		{ kind: "ResolvableText", text: "s", surface: "das" },
 	]);
-	// Other languages have no German fusion table.
+	// English splits by its own table, not the German one.
 	const english = await Effect.runPromise(
-		unused.segmentSentence({ language: "en", stitchedText: "I am in." }),
+		unused.segmentSentence({ language: "en", stitchedText: "I'm in am." }),
 	);
-	expect(texts(english)).toContain("am");
+	expect(texts(english)).toEqual(["I", "'m", " ", "in", " ", "am", "."]);
 });
 
 const whole: SegmentedSentence<"de"> = {

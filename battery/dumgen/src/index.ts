@@ -4,12 +4,7 @@ export {
 	selectFormAlternatives,
 	selectGrammaticalAlternatives,
 } from "./concrete-lang/de/authored-closed-sets/select.js";
-export {
-	germanFusionOneLiner,
-	isGermanFusedWord,
-	type PieceSegment,
-	splitGermanFusedWords,
-} from "./concrete-lang/de/fused-words.js";
+export { germanFusionOneLiner } from "./concrete-lang/de/fused-words.js";
 export { deriveGrammaticalComponent } from "./concrete-lang/de/grammatical-resolution/components.js";
 export {
 	deriveNounArticle,
@@ -44,4 +39,9 @@ export type {
 } from "./types.js";
 export { createDumgen } from "./universal/dumgen.js";
 export { DumgenFailure, type DumgenFailureTag } from "./universal/failure.js";
+export {
+	type PieceSegment,
+	splitFusedWords,
+	unsplitFusedWordIn,
+} from "./universal/fused-words.js";
 export { validateEncounter } from "./universal/validation.js";

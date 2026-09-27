@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import { isGermanFusedWord, splitGermanFusedWords } from "dumgen/authored";
+import { splitFusedWords, unsplitFusedWordIn } from "dumgen/authored";
 import type { SegmentedSentence, SentenceAnalysis } from "dumgen/types";
 import type {
 	storedSegmentInputValidator,
@@ -64,41 +64,40 @@ export function storedSegmentsOf(
 
 /**
  * The Segments to store for a Sentence no analysis describes, such as a
- * Definition Text or a German Sentence whose analysis failed: a German fused
- * word is still stored as its pieces, exactly as an analysis would place
- * them.
+ * Definition Text, an English Sentence, or a German Sentence whose analysis
+ * failed: a fused word is still stored as its pieces by its Language's fusion
+ * table, exactly as Dumgen's segmentation cuts them (`im` is `i` + `m`,
+ * `I'll` is `I` + `'ll`).
  */
 export function storedSegmentsWithoutAnalysis(
 	sentence: Pick<SegmentedSentence, "language" | "segments">,
 ): readonly StoredSegmentValue[] {
-	return sentence.language === "de"
-		? splitGermanFusedWords(sentence.segments)
-		: sentence.segments.map(({ kind, text }) => ({ kind, text }));
+	return splitFusedWords(sentence.language, sentence.segments).map(
+		({ kind, text, surface }) =>
+			surface === undefined ? { kind, text } : { kind, text, surface },
+	);
 }
 
 /**
- * Fails loudly when a German Sentence would hold a fused word unsplit: every
- * host stores the pieces (ADR 0035), and no bridge reads a whole `im`.
+ * Fails loudly when a Sentence would hold a fused word unsplit by its
+ * Language's fusion table: every host stores the pieces (ADR 0035), and no
+ * bridge reads a whole `im` or `I'll`.
  */
 export function assertPiecesStored(sentence: {
 	readonly language: string;
 	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
 }): void {
-	if (sentence.language !== "de") return;
-	const unsplit = sentence.segments.find(
-		({ kind, text }) =>
-			kind === "ResolvableText" && isGermanFusedWord(text),
-	);
-	if (unsplit)
+	const index = unsplitFusedWordIn(sentence.language, sentence.segments);
+	if (index !== undefined)
 		throw new Error(
-			`A stored Sentence holds the fused word "${unsplit.text}" unsplit; store its pieces.`,
+			`A stored Sentence holds the fused word "${sentence.segments[index]?.text}" unsplit; store its pieces.`,
 		);
 }
 
 /**
  * Checks that stored Segments form their Sentence: contiguous zero-based
  * indices, non-empty text, texts that concatenate to the Stitched Text, and
- * no unsplit German fused word.
+ * no unsplit fused word.
  */
 export function assertStoredSentence(stored: {
 	readonly language: string;

@@ -98,6 +98,33 @@ test("a German Sentence stored without an analysis still holds the pieces", () =
 	).not.toThrow();
 });
 
+test("an English Sentence stored without an analysis holds the pieces by the English table", () => {
+	const segments = storedSegmentsWithoutAnalysis({
+		language: "en",
+		segments: [
+			{ kind: "ResolvableText", text: "I'll" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "won't" },
+		],
+	});
+	expect(segments).toEqual([
+		{ kind: "ResolvableText", text: "I" },
+		{ kind: "ResolvableText", text: "'ll" },
+		{ kind: "Whitespace", text: " " },
+		{ kind: "ResolvableText", text: "wo", surface: "will" },
+		{ kind: "ResolvableText", text: "n't", surface: "not" },
+	]);
+	expect(() =>
+		assertPiecesStored({ language: "en", segments }),
+	).not.toThrow();
+	expect(() =>
+		assertPiecesStored({
+			language: "en",
+			segments: [{ kind: "ResolvableText", text: "England's" }],
+		}),
+	).toThrow('fused word "England\'s" unsplit');
+});
+
 test("a stored German Sentence with an unsplit fused word fails loudly", () => {
 	const segments = [
 		{ index: 0, kind: "ResolvableText" as const, text: "im" },

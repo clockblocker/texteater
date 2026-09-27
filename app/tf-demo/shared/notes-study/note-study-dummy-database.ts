@@ -1,4 +1,4 @@
-import { splitGermanFusedWords } from "dumgen/authored";
+import { splitFusedWords } from "dumgen/authored";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
@@ -245,7 +245,8 @@ function knowledgeFor(fixture: NoteStudyFixture): Dumrel.ReadingKnowledge {
 
 /** Context words as intake stores them: a fused word (`Am`) as its pieces. */
 function splitLiteral(text: string): readonly Segment[] {
-	return splitGermanFusedWords(
+	return splitFusedWords(
+		"de",
 		text
 			.split(/( )/u)
 			.filter((part) => part !== "")

@@ -131,12 +131,14 @@ export function validateFusionTable(table: FusionTable): void {
 	}
 }
 
-/** Case-insensitive lookup of a fusion by its spelling. */
+const apostrophes = /[’‘´`]/g;
+
+/** Case-insensitive lookup of a fusion by its spelling; typographic apostrophes are normalized (`can’t`). */
 export function fusionEntry(
 	table: FusionTable,
 	form: string,
 ): FusionEntry | undefined {
-	const normalized = form.normalize("NFC").toLocaleLowerCase(table.language);
+	const normalized = fold(table, form);
 	return table.fusions.find((entry) => entry.form === normalized);
 }
 
@@ -227,7 +229,7 @@ export function cliticEntry(
 	table: FusionTable,
 	text: string,
 ): CliticEntry | undefined {
-	const normalized = text.replaceAll(/[’‘´`]/g, "'");
+	const normalized = text.replaceAll(apostrophes, "'");
 	return table.clitics.find((entry) => entry.clitic === normalized);
 }
 
@@ -255,7 +257,10 @@ export type FusedPiece = {
 };
 
 const fold = (table: FusionTable, text: string) =>
-	text.normalize("NFC").toLocaleLowerCase(table.language);
+	text
+		.normalize("NFC")
+		.replaceAll(apostrophes, "'")
+		.toLocaleLowerCase(table.language);
 
 type SegmentText = { readonly kind: string; readonly text: string };
 
@@ -306,7 +311,7 @@ function fusedRunAt(
 	const attached = splitClitic(table, host + clitic);
 	if (
 		attached &&
-		attached.host === host.replaceAll(/[’‘´`]/g, "'") &&
+		attached.host === host.replaceAll(apostrophes, "'") &&
 		cliticEntry(table, clitic) === attached.entry
 	)
 		return {
@@ -357,8 +362,9 @@ export function fusedWordAt(
 }
 
 /**
- * The first ResolvableText Segment that is a whole table fusion (`im` as one
- * Segment). Segmentation always splits one into its pieces (ADR 0035), so a
+ * The first ResolvableText Segment that is a whole fused word: a table fusion
+ * (`im`, `won't`) or a host with its attached clitic (`geht's`, `I'll`) as one
+ * Segment. Segmentation always splits one into its pieces (ADR 0035), so a
  * Sentence that still holds one did not come from Dumgen.
  */
 export function unsplitFusedWord(
@@ -368,10 +374,32 @@ export function unsplitFusedWord(
 	const index = segments.findIndex(
 		(segment, position) =>
 			segment.kind === "ResolvableText" &&
-			fusionEntry(table, segment.text) !== undefined &&
+			splitFusedWord(table, segment.text) !== undefined &&
 			fusedRunAt(table, segments, position) === undefined,
 	);
 	return index === -1 ? undefined : index;
+}
+
+/**
+ * A whole fused word as the Segments segmentation cuts it into: a table
+ * fusion's pieces, each with the surface it stands for when the table names
+ * one word (`won't` is `wo` standing for `will` and `n't` standing for
+ * `not`), or a host and its attached clitic (`I'll` is `I` and `'ll`), each
+ * keeping its own letters. Undefined for any other word.
+ */
+export function splitFusedWord(
+	table: FusionTable,
+	text: string,
+): readonly { readonly text: string; readonly surface?: string }[] | undefined {
+	const fusion = fusedWordSegments(table, text);
+	if (fusion) return fusion;
+	const attached = splitClitic(table, text);
+	return (
+		attached && [
+			{ text: text.slice(0, attached.host.length) },
+			{ text: text.slice(attached.host.length) },
+		]
+	);
 }
 
 /**
@@ -392,18 +420,22 @@ export function shorthandSurfaces(
 
 /**
  * The attached clitic at the end of a word, with its host, or undefined.
- * Typographic apostrophes are normalized before matching.
+ * Typographic apostrophes are normalized before matching, and the host is
+ * returned normalized; it has as many characters as the written host. A bare
+ * apostrophe clitic (English `boys'`) attaches only after an s, so a dropped
+ * letter (`goin'`) or a closing quote stays with its word.
  */
 export function splitClitic(
 	table: FusionTable,
 	word: string,
 ): { host: string; entry: CliticEntry } | undefined {
-	const normalized = word.replaceAll(/[’‘´`]/g, "'");
+	const normalized = word.replaceAll(apostrophes, "'");
 	for (const entry of table.clitics) {
 		if (entry.attachment === "Free") continue;
 		if (!normalized.endsWith(entry.clitic)) continue;
 		const host = normalized.slice(0, -entry.clitic.length);
 		if (!host || !/[\p{L}\p{M}]$/u.test(host)) continue;
+		if (entry.clitic === "'" && !/s$/iu.test(host)) continue;
 		if (
 			entry.hosts &&
 			!entry.hosts.includes(host.toLocaleLowerCase(table.language))

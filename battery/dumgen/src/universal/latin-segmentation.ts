@@ -16,7 +16,6 @@ import {
 
 const graphemes = new Intl.Segmenter("de", { granularity: "grapheme" });
 const abbreviation = /^(?:[\p{L}]\.){2,}|^[\p{L}]\.(?: [\p{L}]\.)+/u;
-const englishAbbreviations = /^(?:Mr|Mrs|Ms|Dr|Prof|St|etc|vs)\./iu;
 const internalApostrophe = /^[\p{L}\p{M}]+(?:[’'][\p{L}\p{M}]+)+/u;
 const trailingApostrophe = /^[\p{L}\p{M}]+[’']/u;
 const word = /^[\p{L}\p{M}\p{N}]+(?:[-‐‑][\p{L}\p{M}\p{N}]+)*[-‐‑]?/u;
@@ -34,15 +33,15 @@ const emoticon = /^(?::[-^]?[)(]|;[-^]?\))/u;
 const punctuationRun = /^(?:[?!]+|\.{3}|…+)/u;
 
 /**
- * Shared Latin-script scanner. A language with a fusion table cuts its
- * abbreviations, apostrophe clitics and fused words where the table says
- * (Dumgen ADR 0004): `im` is the Segments `i` and `m` (ADR 0035). English
- * keeps its own abbreviation list and whole contractions.
+ * Shared Latin-script scanner. Each language cuts its abbreviations,
+ * apostrophe clitics and fused words where its fusion table says (Dumgen ADR
+ * 0004): `im` is the Segments `i` and `m`, `I'll` is `I` and `'ll`, and
+ * `won't` is `wo` and `n't` (ADR 0035).
  */
 export function segmentLatin(
 	stitchedText: string,
 	language: "de" | "en",
-	table?: FusionTable,
+	table: FusionTable,
 ): SourceSegmentation {
 	assertStitchedText(stitchedText);
 	const segments: Segment[] = [];
@@ -140,11 +139,8 @@ export function segmentLatin(
 			continue;
 		}
 
-		const abbreviationValue = table
-			? (leadingAbbreviation(table, rest) ??
-				rest.match(abbreviation)?.[0])
-			: (rest.match(abbreviation)?.[0] ??
-				rest.match(englishAbbreviations)?.[0]);
+		const abbreviationValue =
+			leadingAbbreviation(table, rest) ?? rest.match(abbreviation)?.[0];
 		if (abbreviationValue) {
 			pushSegment(
 				segments,
@@ -157,7 +153,7 @@ export function segmentLatin(
 			continue;
 		}
 
-		const freeClitic = table ? leadingFreeClitic(table, rest) : undefined;
+		const freeClitic = leadingFreeClitic(table, rest);
 		if (freeClitic) {
 			pushSegment(
 				segments,
@@ -171,21 +167,10 @@ export function segmentLatin(
 		}
 
 		const lexicalApostrophe = rest.match(internalApostrophe)?.[0];
-		const attached =
-			table && lexicalApostrophe
-				? splitClitic(table, lexicalApostrophe)
-				: undefined;
-		if (lexicalApostrophe && attached) {
-			// The apostrophe belongs to the clitic: geht's is geht + 's.
-			const { host } = attached;
-			pushSegment(segments, trace, "ResolvableText", host, "clitic-host");
-			pushSegment(
-				segments,
-				trace,
-				"ResolvableText",
-				lexicalApostrophe.slice(host.length),
-				"attached-clitic",
-			);
+		if (
+			lexicalApostrophe &&
+			pushApostropheWord(segments, trace, table, lexicalApostrophe)
+		) {
 			offset += lexicalApostrophe.length;
 			continue;
 		}
@@ -202,6 +187,13 @@ export function segmentLatin(
 		}
 
 		const possessiveApostrophe = rest.match(trailingApostrophe)?.[0];
+		if (
+			possessiveApostrophe &&
+			pushApostropheWord(segments, trace, table, possessiveApostrophe)
+		) {
+			offset += possessiveApostrophe.length;
+			continue;
+		}
 		if (possessiveApostrophe) {
 			pushSegment(
 				segments,
@@ -265,19 +257,8 @@ export function segmentLatin(
 
 		const wordValue = rest.match(word)?.[0];
 		if (wordValue) {
-			const pieces = table
-				? fusedWordSegments(table, wordValue)
-				: undefined;
-			if (pieces)
-				for (const piece of pieces)
-					pushSegment(
-						segments,
-						trace,
-						"ResolvableText",
-						piece.text,
-						"fused-word-piece",
-						piece.surface,
-					);
+			const pieces = fusedWordSegments(table, wordValue);
+			if (pieces) pushFusionPieces(segments, trace, pieces);
 			else
 				pushSegment(
 					segments,
@@ -331,6 +312,61 @@ export function segmentLatin(
 	}
 
 	return finalizeSegmentation(stitchedText, segments, trace);
+}
+
+function pushFusionPieces(
+	segments: Segment[],
+	trace: SourceSegmentationTraceEntry[],
+	pieces: readonly { readonly text: string; readonly surface?: string }[],
+): void {
+	for (const piece of pieces)
+		pushSegment(
+			segments,
+			trace,
+			"ResolvableText",
+			piece.text,
+			"fused-word-piece",
+			piece.surface,
+		);
+}
+
+/**
+ * Cuts a word written with an apostrophe where the table says, and reports
+ * whether it did. A table fusion splits into its pieces (`won't` is `wo` +
+ * `n't`, `let's` is `let` + `'s` standing for `us`). Otherwise a known
+ * attached clitic splits off its host and keeps the apostrophe: `geht's` is
+ * `geht` + `'s`, `I'll` is `I` + `'ll`, and the plural possessive `boys'` is
+ * `boys` + `'`. The host keeps its source letters.
+ */
+function pushApostropheWord(
+	segments: Segment[],
+	trace: SourceSegmentationTraceEntry[],
+	table: FusionTable,
+	written: string,
+): boolean {
+	const pieces = fusedWordSegments(table, written);
+	if (pieces) {
+		pushFusionPieces(segments, trace, pieces);
+		return true;
+	}
+	const attached = splitClitic(table, written);
+	if (!attached) return false;
+	const hostLength = attached.host.length;
+	pushSegment(
+		segments,
+		trace,
+		"ResolvableText",
+		written.slice(0, hostLength),
+		"clitic-host",
+	);
+	pushSegment(
+		segments,
+		trace,
+		"ResolvableText",
+		written.slice(hostLength),
+		"attached-clitic",
+	);
+	return true;
 }
 
 function detachTrailingPunctuation(value: string): {

@@ -12,7 +12,7 @@
  */
 import { Effect } from "effect";
 import { createTypeSafeExecutor } from "promptsmith/typesafe";
-import { joinFusedWords } from "../../src/concrete-lang/de/segmentation/fused-word-guard.js";
+import { joinFusedWords } from "../../src/concrete-lang/de/fused-words.js";
 import { segmentGerman } from "../../src/concrete-lang/de/segmentation/segment.js";
 import type { SentenceAnalysis } from "../../src/concrete-lang/de/sentence-analysis/analysis.js";
 import {

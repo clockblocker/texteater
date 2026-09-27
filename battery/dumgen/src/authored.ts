@@ -14,12 +14,7 @@ export {
 	selectFormAlternatives,
 	selectGrammaticalAlternatives,
 } from "./concrete-lang/de/authored-closed-sets/select.js";
-export {
-	germanFusionOneLiner,
-	isGermanFusedWord,
-	type PieceSegment,
-	splitGermanFusedWords,
-} from "./concrete-lang/de/fused-words.js";
+export { germanFusionOneLiner } from "./concrete-lang/de/fused-words.js";
 export { deriveGrammaticalComponent } from "./concrete-lang/de/grammatical-resolution/components.js";
 export {
 	deriveNounArticle,
@@ -28,3 +23,8 @@ export {
 } from "./concrete-lang/de/grammatical-resolution/noun-article-reference.js";
 export { slotsAt } from "./concrete-lang/de/sentence-analysis/analysis.js";
 export { DumgenFailure, type DumgenFailureTag } from "./universal/failure.js";
+export {
+	type PieceSegment,
+	splitFusedWords,
+	unsplitFusedWordIn,
+} from "./universal/fused-words.js";

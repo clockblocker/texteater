@@ -4,10 +4,10 @@ import {
 	ParsingError,
 	parseCompiledValidation,
 } from "dumval/runtime";
-import { assertFusedWordsSplit } from "../concrete-lang/de/segmentation/fused-word-guard.js";
 import { validationRegistry } from "../generated/linked-validation.js";
 import type { Encounter, SegmentedSentence } from "../types.js";
 import { DumgenFailure } from "./failure.js";
+import { assertFusedWordsSplit } from "./fused-words.js";
 
 const registry: CompiledValidationRegistry = validationRegistry;
 export function parse<T>(
