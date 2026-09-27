@@ -168,3 +168,56 @@ test("the table finds a circumposition written with … or ASCII ...", () => {
 		germanAdpositionCases(adposition("um ... willen", "Circ"))?.allowed,
 	).toEqual(["Gen"]);
 });
+
+test("a Locution governor's preposition slot is checked like a Lexeme's", () => {
+	const locution = (grammaticalCase: string): Dumling.Attestation => {
+		const parsed = parseUnit({
+			unitKind: "Attestation",
+			members: [
+				{ attested: "Angst", orthography: "Standard" },
+				{ attested: "vor", orthography: "Standard" },
+				{ attested: "hat", orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
+			expletiveEvidence: null,
+			valencyEvidence: [
+				{
+					member: 1,
+					complement: {
+						kind: "Preposition",
+						preposition: adposition("vor"),
+						case: grammaticalCase,
+						referent: "Either",
+					},
+					realizedCase: grammaticalCase,
+				},
+			],
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: "Angst hat",
+				spelling: "Canonical",
+				surfaceFeatures: null,
+				inflectionalFeatures: null,
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Locution",
+					kind: "VERB",
+					canonicalForm: "Angst haben",
+					coreFeatures: {},
+				},
+			},
+		});
+		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+			throw Error(`Dumling rejects Angst haben vor + ${grammaticalCase}`);
+		return parsed.chain.value;
+	};
+	expect(attestationAdpositionCaseIssues(locution("Dat"))).toEqual([]);
+	expect(attestationAdpositionCaseIssues(locution("Gen"))).toEqual([
+		{
+			path: "valencyEvidence.0.complement.case",
+			message: "vor does not take Gen",
+		},
+	]);
+});

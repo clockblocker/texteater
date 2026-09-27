@@ -98,22 +98,45 @@ const makeDeRelMap = () =>
 			),
 			X: request(select()),
 		},
-		Phraseme: {
-			Aphorism: request(
-				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-			),
-			Collocation: request(
-				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				framed,
-			),
-			DiscourseFormula: request(
-				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-			),
-			Idiom: request(
+		// A Locution route requests what the Lexeme route with its Kind does,
+		// with a frame where that route has one (ADR 0039). Locution Type,
+		// Saying Type and Formula Role join in #667.
+		Locution: {
+			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 				framed,
 			),
-			Proverb: request(
+			ADP: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			ADV: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			CCONJ: request(select("synonym", "antonym", "nearAntonym")),
+			DET: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			INTJ: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			NOUN: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				framed,
+			),
+			NUM: request(select("synonym")),
+			PRON: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			SCONJ: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			VERB: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				framed,
+			),
+		},
+		Saying: {
+			Saying: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 			),
 		},

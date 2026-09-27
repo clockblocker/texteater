@@ -24,10 +24,12 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
+	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
+	sayingCanonicalFormError,
 } from "../validation/semantics.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
 import { EnAdpositionFeatureBagsSchema } from "./concrete-language/en/lexeme/adposition.js";
@@ -41,6 +43,11 @@ export const UnitKindSchema = z.enum([
 ]);
 
 const normalizedFormSchema = z.string().overwrite(normalizeForm).min(1);
+/** A Saying is written as a sentence without final punctuation (ADR 0039). */
+const sayingCanonicalFormSchema = normalizedFormSchema.refine(
+	isSayingCanonicalForm,
+	{ error: sayingCanonicalFormError },
+);
 const emojiDescriptionSchema = z
 	.string()
 	.overwrite(normalizeEmojiDescription)
@@ -118,7 +125,10 @@ function buildBaseUnitSchemas<
 		language: z.literal(route.language),
 		family: z.literal(route.family),
 		kind: z.literal(route.kind),
-		canonicalForm: normalizedFormSchema,
+		canonicalForm:
+			route.family === "Saying"
+				? sayingCanonicalFormSchema
+				: normalizedFormSchema,
 		coreFeatures: core,
 	});
 	const surfaceShape = {
@@ -270,14 +280,16 @@ const englishValencyEvidenceSchema = z.array(
 /**
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German, English or Hebrew noun or proper noun, and a Hebrew
- * adjective, names where its article is attested (ADR 0035). A German verbal Attestation names
- * its owned subject-expletive member as evidence (ADR 0022). Every German
- * governor Kind (VERB, AUX, ADJ, NOUN, Idiom, Collocation) names the valency
- * slots it realizes, such as its governed preposition member (ADR 0034). A
- * German ADP Attestation records the case its complement took as its one
- * bare-case slot; dumspec checks it against the ADP Case Table. A Hebrew or
- * English governor (VERB, ADJ, NOUN, Idiom) may name the slots it realizes,
- * with no case.
+ * adjective, names where its article is attested (ADR 0035). A German verbal
+ * Attestation names its owned subject-expletive member as evidence (ADR
+ * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
+ * AUX) names the valency slots it realizes, such as its governed preposition
+ * member (ADR 0034). A German ADP Lexeme Attestation records the case its
+ * complement took as its one bare-case slot; dumspec checks it against the
+ * ADP Case Table. A Hebrew or English governor (a Lexeme or Locution VERB,
+ * ADJ or NOUN) may name the slots it realizes, with no case. A Locution route
+ * is a governor where the Lexeme route of its Kind is (ADR 0039); the Kind
+ * alone never decides, since Lexeme and Locution share Kind names.
  */
 export function buildUnitSchemas<
 	L extends string,
@@ -296,32 +308,27 @@ export function buildUnitSchemas<
 		(["NOUN", "PROPN"].includes(route.kind)
 			? ["de", "en", "he"].includes(route.language)
 			: route.kind === "ADJ" && route.language === "he");
+	const lexemeOrLocution =
+		route.family === "Lexeme" || route.family === "Locution";
 	const verbal =
 		route.language === "de" &&
 		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
-			(route.family === "Phraseme" &&
-				["Idiom", "Collocation"].includes(route.kind)));
+			(route.family === "Locution" && route.kind === "VERB"));
 	const adposition =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
 		route.kind === "ADP";
 	const adnominalGovernor =
 		route.language === "de" &&
-		route.family === "Lexeme" &&
+		lexemeOrLocution &&
 		["ADJ", "NOUN"].includes(route.kind);
-	const hebrewGovernor =
-		route.language === "he" &&
-		((route.family === "Lexeme" &&
-			["VERB", "ADJ", "NOUN"].includes(route.kind)) ||
-			(route.family === "Phraseme" && route.kind === "Idiom"));
-	const englishGovernor =
-		route.language === "en" &&
-		((route.family === "Lexeme" &&
-			["VERB", "ADJ", "NOUN"].includes(route.kind)) ||
-			(route.family === "Phraseme" && route.kind === "Idiom"));
+	const caselessGovernor =
+		lexemeOrLocution && ["VERB", "ADJ", "NOUN"].includes(route.kind);
+	const hebrewGovernor = route.language === "he" && caselessGovernor;
+	const englishGovernor = route.language === "en" && caselessGovernor;
 	const closedClass =
 		route.language === "de" &&
-		route.family === "Lexeme" &&
+		lexemeOrLocution &&
 		["PRON", "DET"].includes(route.kind);
 	let Surface = base.Surface;
 	if (closedClass)
@@ -376,7 +383,10 @@ export function buildUnitSchemas<
 					: Record<never, never>
 				: Record<never, never>) &
 			(L extends "de"
-				? K extends "VERB" | "AUX" | "Idiom" | "Collocation"
+				? `${F}/${K}` extends
+						| "Lexeme/VERB"
+						| "Lexeme/AUX"
+						| "Locution/VERB"
 					? {
 							expletiveEvidence: z.ZodNullable<
 								typeof memberSchema
@@ -386,10 +396,13 @@ export function buildUnitSchemas<
 					: Record<never, never>
 				: Record<never, never>) &
 			(L extends "de"
-				? F extends "Lexeme"
-					? K extends "ADP" | "ADJ" | "NOUN"
-						? { valencyEvidence: typeof valencyEvidenceSchema }
-						: Record<never, never>
+				? `${F}/${K}` extends
+						| "Lexeme/ADP"
+						| "Lexeme/ADJ"
+						| "Lexeme/NOUN"
+						| "Locution/ADJ"
+						| "Locution/NOUN"
+					? { valencyEvidence: typeof valencyEvidenceSchema }
 					: Record<never, never>
 				: Record<never, never>) &
 			(L extends "he"
@@ -397,7 +410,9 @@ export function buildUnitSchemas<
 						| "Lexeme/VERB"
 						| "Lexeme/ADJ"
 						| "Lexeme/NOUN"
-						| "Phraseme/Idiom"
+						| "Locution/VERB"
+						| "Locution/ADJ"
+						| "Locution/NOUN"
 					? {
 							valencyEvidence: z.ZodOptional<
 								typeof hebrewValencyEvidenceSchema
@@ -410,7 +425,9 @@ export function buildUnitSchemas<
 						| "Lexeme/VERB"
 						| "Lexeme/ADJ"
 						| "Lexeme/NOUN"
-						| "Phraseme/Idiom"
+						| "Locution/VERB"
+						| "Locution/ADJ"
+						| "Locution/NOUN"
 					? {
 							valencyEvidence: z.ZodOptional<
 								typeof englishValencyEvidenceSchema

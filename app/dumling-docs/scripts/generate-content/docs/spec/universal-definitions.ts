@@ -19,13 +19,19 @@ function morpheme(kind: Dumling.Kind, definition: string): KindDefinition {
 	return { definition, family: "Morpheme", kind };
 }
 
-function phraseme(kind: Dumling.Kind, definition: string): KindDefinition {
-	return { definition, family: "Phraseme", kind };
+/** A Locution's Kind is the UD part of speech the whole acts as (ADR 0039). */
+function locution(kind: Dumling.Kind, examples: string): KindDefinition {
+	return {
+		definition: `A Locution, a Lemma with two or more Heads, that acts as \`${kind}\`: ${examples}. It inflects like a Lexeme \`${kind}\`, narrowed to what the Locution varies.`,
+		family: "Locution",
+		kind,
+	};
 }
 
 /**
  * The universal Kinds in page order, each with the short definition its
- * `/u/` index page shows. Lexeme Kinds are UD parts of speech.
+ * `/u/` index page shows. Lexeme and Locution Kinds are UD parts of speech,
+ * so a Kind is named with its Family.
  */
 export const kindDefinitions: readonly KindDefinition[] = [
 	udPos("ADJ", "adjectives"),
@@ -61,17 +67,23 @@ export const kindDefinitions: readonly KindDefinition[] = [
 	),
 	morpheme("ToneMarking", "A tone pattern that marks a distinction."),
 	morpheme("Duplifix", "An affix made by repeating part of the stem."),
-	phraseme("DiscourseFormula", "A fixed conversational routine."),
-	phraseme("Aphorism", "An established maxim with a known author."),
-	phraseme("Proverb", "A traditional complete saying."),
-	phraseme(
-		"Idiom",
-		"An established expression whose meaning is not the sum of its words.",
-	),
-	phraseme(
-		"Collocation",
-		"A conventional multiword expression with restricted word choice and a non-idiomatic meaning.",
-	),
+	locution("ADJ", "`fix und fertig`"),
+	locution("ADV", "`zum Teil`, `ganz und gar`"),
+	locution("INTJ", "`Herzlichen Dank`, `tut mir leid`"),
+	locution("NOUN", "`weißer Rabe`, `blinder Passagier`"),
+	locution("VERB", "`den Faden verlieren`, `eine Entscheidung treffen`"),
+	locution("ADP", "`in Bezug auf`, `von … an`"),
+	locution("CCONJ", "`entweder … oder`"),
+	locution("DET", "`was für ein`"),
+	locution("NUM", "`zwölf bis sechzehn`"),
+	locution("PRON", "`was für einer`"),
+	locution("SCONJ", "`so dass`, `als ob`"),
+	{
+		definition:
+			"A complete saying: a Proverb (`Morgenstund hat Gold im Mund`) or a Winged Word (`Sein oder Nichtsein`). Its Canonical Form is written as a sentence without final punctuation.",
+		family: "Saying",
+		kind: "Saying",
+	},
 ];
 
 type EvidenceFieldDefinition = Readonly<{

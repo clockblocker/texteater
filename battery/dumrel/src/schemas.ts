@@ -126,7 +126,7 @@ export const valencySlotSchema = z.strictObject({
 /**
  * The owning Reading's Valency Frame: its governed complements in order. The
  * governor owns every claim; a preposition's side is a read-time projection.
- * Fixed parts (a separable prefix, a lexical reflexive, a Phraseme's wording)
+ * Fixed parts (a separable prefix, a lexical reflexive, a Locution's wording)
  * come from Lemma identity and are never Slots.
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);

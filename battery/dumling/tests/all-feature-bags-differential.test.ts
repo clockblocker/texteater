@@ -2,14 +2,15 @@ import { expect, test } from "bun:test";
 import { z } from "zod";
 import fixtures from "./fixtures/legacy-feature-acceptance.json";
 
-// Clitic is no Morpheme Kind (ADR 0035): its routes are retired.
-const retired = /^[a-z]+\/morpheme\/clitic\.ts$/;
+// Clitic is no Morpheme Kind (ADR 0035), and the Phraseme Family is split
+// into Locution and Saying (ADR 0039): their routes are retired.
+const retired = /^[a-z]+\/(morpheme\/clitic|phraseme\/[a-z-]+)\.ts$/;
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 	if (retired.test(route)) continue;
 	// A noun marks its article on every Surface and a proper noun in its Core
 	// (ADR 0035), so the legacy shapes, which leave it out, are all rejected.
 	const supersededShape =
-		/^de\/(lexeme\/(verb|auxiliary|noun)|phraseme\/(idiom|collocation))\.ts$|^en\/lexeme\/noun\.ts$|^(de|en|he)\/lexeme\/proper-noun\.ts$/.test(
+		/^de\/lexeme\/(verb|auxiliary|noun)\.ts$|^en\/lexeme\/noun\.ts$|^(de|en|he)\/lexeme\/proper-noun\.ts$/.test(
 			route,
 		);
 	test(`retained Feature Bag acceptance: ${route}`, async () => {

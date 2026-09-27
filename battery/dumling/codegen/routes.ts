@@ -4,8 +4,8 @@ import { buildUnitSchemas } from "../src/schemas/units.js";
 import {
 	LemmaFamilySchema,
 	MorphemeKindSchema,
-	PhrasemeKindSchema,
 	PosSchema,
+	SayingKindSchema,
 	SupportedLanguageSchema,
 } from "../src/schemas/universal/index.js";
 
@@ -28,9 +28,11 @@ const lexemeKinds: Record<string, string> = {
 	symbol: "SYM",
 	other: "X",
 };
+// Lexeme and Locution Kinds are UPOS tags and share their file names.
 const kindSchemas = {
 	Lexeme: PosSchema,
-	Phraseme: PhrasemeKindSchema,
+	Locution: PosSchema,
+	Saying: SayingKindSchema,
 	Morpheme: MorphemeKindSchema,
 };
 export async function loadRoutes() {
@@ -51,7 +53,7 @@ export async function loadRoutes() {
 			);
 			const stem = file.slice(0, -3);
 			const kind = kindSchemas[family].parse(
-				family === "Lexeme"
+				family === "Lexeme" || family === "Locution"
 					? lexemeKinds[stem]
 					: stem
 							.split("-")

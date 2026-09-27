@@ -17,8 +17,8 @@ The Lemma owns properties that remain stable across forms and attestations:
 
 - \`language\`: the concrete language, such as \`de\`, \`en\`, or \`he\`
 - \`canonicalForm\`: the normalized form used to name the Lemma
-- \`family\`: the broad class: \`Lexeme\`, \`Morpheme\`, or \`Phraseme\`
-- \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Idiom\`
+- \`family\`: the broad class: \`Lexeme\`, \`Locution\`, \`Saying\`, or \`Morpheme\`
+- \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Saying\`
 - \`coreFeatures\`: the stable grammatical features that complete its identity
 
 Together these fields are Lemma identity. Homonyms share one Lemma unless
@@ -98,11 +98,12 @@ IDs, click indices, and marked context belong to the calling application.
 
 | Kind | Use |
 | --- | --- |
-| \`Lexeme\` | lexical identities, including fixed multi-member realizations, categorized by one whole-unit Universal Dependencies-style POS tag |
+| \`Lexeme\` | lexical identities with one Head, categorized by a Universal Dependencies-style POS tag; satellites such as a particle or reflexive may be part of the Canonical Form (\`sich erinnern\`, \`give up\`) |
+| \`Locution\` | multiword Lemmas with two or more Heads (\`den Faden verlieren\`, \`zum Teil\`), categorized by the POS tag the whole acts as |
+| \`Saying\` | complete sayings, proverbs and winged words, with the one Kind \`Saying\` |
 | \`Morpheme\` | roots, prefixes, suffixes, and related sub-word units |
-| \`Phraseme\` | multi-word or formulaic expressions such as idioms and proverbs |
 
-\`kind\` is the public subtype field for all three families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
+\`kind\` is the public subtype field for all four families. A Kind may repeat across Families (\`Lexeme/VERB\`, \`Locution/VERB\`), so a route is always language, Family and Kind. The package does not expose separate public discriminator names like \`pos\` or \`morphemeKind\`.
 
 ## Reading
 

@@ -60,7 +60,13 @@ export function attestationAdpositionCaseIssues(
 	}[];
 	return slots.flatMap(({ complement, realizedCase }, index) => {
 		const path = `valencyEvidence.${index}`;
-		if (lemma.kind === "ADP" && complement.kind === "Case")
+		// The table lists Lexeme ADPs, circumpositions (`um … willen`) among
+		// them; a Kind never implies its Family (ADR 0039).
+		if (
+			lemma.family === "Lexeme" &&
+			lemma.kind === "ADP" &&
+			complement.kind === "Case"
+		)
 			return germanAdpositionAllows(
 				lemma as AdpositionLemma,
 				realizedCase,

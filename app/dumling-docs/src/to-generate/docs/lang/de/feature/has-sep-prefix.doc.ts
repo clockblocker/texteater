@@ -2,8 +2,7 @@ import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirror
 import { specExample } from "../../../../../lib/docs/spec-examples.ts";
 
 const mitgebrachtParticiple = specExample(
-	"de/die-peitsche-hat-er-mitgebracht",
-	1,
+	"de/die-peitsche-hat-er-mitgebracht-2",
 );
 const hinauslaufenInfinitive = specExample("de/er-versucht-hinauszulaufen");
 const passAufImperative = specExample("de/pass-auf-dich-auf");

@@ -15,6 +15,17 @@ export function nonEmptyFeatureBagError(): string {
 export function normalizeForm(value: string): string {
 	return value.trim().normalize("NFC").replaceAll("...", "…");
 }
+const finalPunctuation = /[.!?,;:…‽]$/u;
+/**
+ * A Saying's Canonical Form is written as a sentence, with its internal
+ * punctuation and no final punctuation: `Wer rastet, der rostet` (ADR 0039).
+ */
+export function isSayingCanonicalForm(value: string): boolean {
+	return !finalPunctuation.test(value);
+}
+export function sayingCanonicalFormError(): string {
+	return "A Saying's Canonical Form has no final punctuation";
+}
 const presentationMarks = /[\uFE0E\uFE0F]|\p{Emoji_Modifier}/gu;
 /**
  * An Emoji Description compares without variation selectors or skin-tone
@@ -396,7 +407,7 @@ function isCaselessValencyAttestation(
 }
 
 /**
- * A Hebrew governor Attestation (VERB, ADJ, NOUN, Idiom) may name the valency
+ * A Hebrew governor Attestation (VERB, ADJ, NOUN) may name the valency
  * slots it realizes (ADR 0034). A Fused member spells its Fusion component,
  * so `ב` of `בבית` in `בחר בבית` counts. A Subject or DirectObject slot has
  * no marker member.
@@ -409,7 +420,7 @@ export function hebrewValencyAttestationError(): string {
 }
 
 /**
- * An English governor Attestation (VERB, ADJ, NOUN, Idiom) may name the
+ * An English governor Attestation (VERB, ADJ, NOUN) may name the
  * valency slots it realizes (ADR 0034), as a Hebrew one does: `on` of
  * `depend on`, spelled in any case. A Subject, DirectObject or IndirectObject
  * slot has no marker member.

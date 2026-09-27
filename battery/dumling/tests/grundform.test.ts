@@ -433,6 +433,162 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: true });
 	});
+	test("a VERB Locution cites its infinitive", () => {
+		const germanInfinitive = {
+			...infinitive,
+			expletive: null,
+			perfect: null,
+			future: null,
+			passive: null,
+		};
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/VERB", {
+					canonical: "den Faden verlieren",
+					features: germanInfinitive,
+				}),
+			),
+		).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/VERB", {
+					canonical: "den Faden verlieren",
+					form: "hat den Faden verloren",
+					features: {
+						...germanInfinitive,
+						verbForm: "Fin",
+						mood: "Ind",
+						number: "Sing",
+						person: "3",
+						tense: "Pres",
+						perfect: "Yes",
+					},
+				}),
+			),
+		).toEqual({ success: true, value: false });
+		const { voice: _voice, ...english } = infinitive;
+		expect(
+			checkIfGrundform(
+				surface("en/Locution/VERB", {
+					canonical: "kick the bucket",
+					features: { ...english, voice: null },
+				}),
+			),
+		).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("en/Locution/VERB", {
+					canonical: "kick the bucket",
+					form: "kicked the bucket",
+					features: {
+						...english,
+						verbForm: "Fin",
+						mood: "Ind",
+						tense: "Past",
+						voice: null,
+					},
+				}),
+			),
+		).toEqual({ success: true, value: false });
+	});
+	test("a NOUN Locution cites its nominative singular", () => {
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/NOUN", {
+					canonical: "weißer Rabe",
+					core: { gender: "Masc" },
+					features: { case: "Nom", number: "Sing" },
+				}),
+			),
+		).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/NOUN", {
+					canonical: "weißer Rabe",
+					form: "weißen Raben",
+					core: { gender: "Masc" },
+					features: { case: "Dat", number: "Plur" },
+				}),
+			),
+		).toEqual({ success: true, value: false });
+		expect(
+			checkIfGrundform(
+				surface("en/Locution/NOUN", {
+					canonical: "walk in the park",
+					features: { number: "Sing" },
+				}),
+			),
+		).toEqual({ success: true, value: true });
+	});
+	test("an ADJ Locution cites its undeclined positive, not an attributive form", () => {
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/ADJ", {
+					canonical: "fix und fertig",
+					features: {
+						degree: "Pos",
+						case: null,
+						gender: null,
+						number: null,
+					},
+				}),
+			),
+		).toEqual({ success: true, value: true });
+		// die fix und fertigen Läufer
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/ADJ", {
+					canonical: "fix und fertig",
+					form: "fix und fertigen",
+					features: {
+						degree: "Pos",
+						case: "Nom",
+						gender: null,
+						number: "Plur",
+					},
+				}),
+			),
+		).toEqual({ success: true, value: false });
+	});
+	test("an invariant Locution is Grundform by its spelling", () => {
+		const value = surface("de/Locution/ADV", { canonical: "ganz und gar" });
+		expect("inflectionalFeatures" in value).toBe(false);
+		expect(checkIfGrundform(value)).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/ADV", {
+					canonical: "ganz und gar",
+					form: "ganz und",
+				}),
+			),
+		).toEqual({ success: true, value: false });
+	});
+	test("a Saying compares its words only", () => {
+		for (const form of [
+			"Wer rastet, der rostet",
+			"Wer rastet, der rostet!",
+			"Wer rastet der rostet.",
+		])
+			expect(
+				checkIfGrundform(
+					surface("de/Saying/Saying", {
+						canonical: "Wer rastet, der rostet",
+						form,
+					}),
+				),
+				form,
+			).toEqual({ success: true, value: true });
+		for (const form of ["Wer rastet, rostet", "wer rastet, der rostet"])
+			expect(
+				checkIfGrundform(
+					surface("de/Saying/Saying", {
+						canonical: "Wer rastet, der rostet",
+						form,
+					}),
+				),
+				form,
+			).toEqual({ success: true, value: false });
+	});
 	test("all routes assess without throwing; routes without inflection use form evidence", () => {
 		for (const route of routes) {
 			const value = surface(route.key);

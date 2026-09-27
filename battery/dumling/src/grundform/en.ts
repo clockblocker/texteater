@@ -13,6 +13,9 @@ const infinitive: GrundformRule = {
 };
 const noun: GrundformRule = { features: { number: ["Sing", "Ptan"] } };
 const positive: GrundformRule = { features: { degree: ["Pos"] } };
+const verb: GrundformRule = {
+	features: { ...infinitive.features, voice: [null] },
+};
 function englishAuxiliary(surface: Surface): GrundformRule {
 	const form = surface.lemma.canonicalForm;
 	if (["be", "have", "do"].includes(form)) return infinitive;
@@ -42,5 +45,8 @@ export const englishRules = {
 	"en/Lexeme/NOUN": noun,
 	"en/Lexeme/PROPN": noun,
 	"en/Lexeme/SYM": lexicalConvention,
-	"en/Lexeme/VERB": { features: { ...infinitive.features, voice: [null] } },
+	"en/Lexeme/VERB": verb,
+	// A Locution borrows the rule of the Lexeme route with its Kind (ADR 0039).
+	"en/Locution/NOUN": noun,
+	"en/Locution/VERB": verb,
 } as const;

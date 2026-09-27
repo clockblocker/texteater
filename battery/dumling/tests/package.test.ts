@@ -144,7 +144,7 @@ import {surfaceSchema as prefix} from "dumling/schema/de/morpheme/prefix";
 // @ts-expect-error The route has no inflectional field.
 prefix.shape.inflectionalFeatures;
 // @ts-expect-error No schema module exists for an unsupported route.
-import type * as Unsupported from "dumling/schema/en/phraseme/collocation";
+import type * as Unsupported from "dumling/schema/he/locution/verb";
 `,
 		);
 		await writeFile(
@@ -219,7 +219,7 @@ test("a noun schema imports only its noun route and the ADP route", async () => 
 	if (!result.metafile) throw Error("Missing dependency graph");
 	const paths = Object.keys(result.metafile.inputs);
 	const routes = paths.filter((path) =>
-		/schemas\/concrete-language\/[^/]+\/(lexeme|morpheme|phraseme)\//.test(
+		/schemas\/concrete-language\/[^/]+\/(lexeme|locution|saying|morpheme)\//.test(
 			path,
 		),
 	);

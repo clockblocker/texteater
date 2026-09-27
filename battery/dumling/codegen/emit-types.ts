@@ -32,6 +32,7 @@ export function outputType(
 							"dumling.de-verbal.attestation",
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",
+							"dumling.saying.canonical-form",
 							"dumling.normalize-form",
 							"dumling.normalize-emoji-description",
 						]).has(effect[1])

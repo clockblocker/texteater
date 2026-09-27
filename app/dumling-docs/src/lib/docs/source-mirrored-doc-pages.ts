@@ -75,11 +75,13 @@ function defaultUniversalStubDescription(
 				return "Overview of morpheme subpages in the public concept tree.";
 			}
 			return `${label} page in the public morpheme tree.`;
-		case "phraseme":
+		case "locution":
 			if (options.leaf === undefined) {
-				return "Overview of phraseme subpages in the public concept tree.";
+				return "Overview of locution subpages in the public concept tree.";
 			}
-			return `${label} page in the public phraseme tree.`;
+			return `${label} page in the public locution tree.`;
+		case "saying":
+			return `${label} page in the public saying tree.`;
 		case "feature":
 			if (options.leaf === undefined) {
 				return "Overview of grammatical, attestation, and surface feature pages.";

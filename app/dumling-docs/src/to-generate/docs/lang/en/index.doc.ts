@@ -17,13 +17,14 @@ The English route and feature pages live under [/en/](/en/).
 
 ## Supported Lemma Families
 
-English supports the same public Lemma families as the other implemented language packs:
+English supports the same public Lemma families as the other implemented language packs, with its own Kinds:
 
 | \`family\` | \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
-| \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
+| \`Locution\` | \`ADP\`, \`ADV\`, \`INTJ\`, \`NOUN\`, \`SCONJ\`, \`VERB\` |
+| \`Saying\` | \`Saying\` |
 ## Common Feature Areas
 
 English feature schemas are intentionally narrower than the abstract ontology.

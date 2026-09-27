@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { DiscourseFormulaRoleSchema } from "./custom/discourse-formula-role.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
@@ -62,7 +61,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	degree: DegreeSchema,
 	deixis: DeixisSchema,
 	deixisRef: DeixisRefSchema,
-	discourseFormulaRole: DiscourseFormulaRoleSchema,
 	evident: EvidentSchema,
 	extPos: ExtPosSchema,
 	foreign: ForeignSchema,

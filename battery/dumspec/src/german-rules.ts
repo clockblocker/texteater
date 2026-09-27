@@ -2,15 +2,27 @@ import type { Rule, RuleRoute } from "./types.js";
 
 const lexeme = (...kinds: RuleRoute["kind"][]): RuleRoute[] =>
 	kinds.map((kind) => ({ language: "de", family: "Lexeme", kind }));
-const phraseme = (...kinds: RuleRoute["kind"][]): RuleRoute[] =>
-	kinds.map((kind) => ({ language: "de", family: "Phraseme", kind }));
-const everyPhraseme = phraseme(
-	"Idiom",
-	"Collocation",
-	"DiscourseFormula",
-	"Proverb",
-	"Aphorism",
+const locution = (...kinds: RuleRoute["kind"][]): RuleRoute[] =>
+	kinds.map((kind) => ({ language: "de", family: "Locution", kind }));
+const everyLocution = locution(
+	"VERB",
+	"NOUN",
+	"ADJ",
+	"ADV",
+	"ADP",
+	"CCONJ",
+	"SCONJ",
+	"DET",
+	"PRON",
+	"NUM",
+	"INTJ",
 );
+const saying: RuleRoute[] = [
+	{ language: "de", family: "Saying", kind: "Saying" },
+];
+// The phraseme Rules keep their Phraseme-era statements until #668 rewrites
+// them; their routes already name the Locution and Saying routes (ADR 0039).
+const everyMultiword = [...everyLocution, ...saying];
 
 /** Which Segments form one unit, whatever its route. */
 const units: Rule[] = [
@@ -35,7 +47,7 @@ const units: Rule[] = [
 		statement:
 			"Every word belongs to exactly one target: the biggest unit it is part of. A word inside an idiom or a collocation has no target of its own in the sentence; the multiword unit leads to it through the Lemma's Breakdown.",
 		adrs: ["ADR-0041", "dumgen/ADR-0007"],
-		routes: everyPhraseme,
+		routes: everyMultiword,
 		records: [],
 	},
 	{
@@ -80,7 +92,7 @@ const verbs: Rule[] = [
 		adrs: ["ADR-0029", "ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
-			...phraseme("Collocation", "Idiom"),
+			...locution("VERB", "ADJ", "NOUN"),
 		],
 		records: ["de/pass-auf-dich-auf"],
 	},
@@ -126,7 +138,7 @@ const verbs: Rule[] = [
 		statement:
 			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ.",
 		adrs: ["ADR-0026", "ADR-0034", "ADR-0036"],
-		routes: [...lexeme("VERB", "ADJ"), ...phraseme("Collocation")],
+		routes: [...lexeme("VERB", "ADJ"), ...locution("VERB")],
 		records: ["de/das-wetter-ist-xqzt"],
 	},
 	{
@@ -317,7 +329,7 @@ const phrasemes: Rule[] = [
 		statement:
 			"A word is a fixed member of an expression when the expression needs this word, or one of a narrow set, in its slot: an ordinary synonym would break it. A fixed article or preposition counts through the word that carries it (ins Feuer, zur Verfügung). A preposition the expression governs for a free complement (weiß Bescheid über die Pläne) is valency, not a fixed member.",
 		adrs: ["ADR-0034", "dumgen/ADR-0007"],
-		routes: everyPhraseme,
+		routes: everyMultiword,
 		records: [],
 	},
 	{
@@ -325,7 +337,7 @@ const phrasemes: Rule[] = [
 		statement:
 			"A Funktionsverbgefüge, a support verb with its predicate noun (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Angst haben, Bescheid wissen), is one Collocation. Its members are the verb, the noun, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs. Free arguments and adverbs stay outside: stellt den Schülern Material zur Verfügung gives [stellt, zu, r, Verfügung]. An ordinary verb with a free object (eine Cola bringen) is not a Collocation.",
 		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007"],
-		routes: phraseme("Collocation"),
+		routes: locution("VERB"),
 		records: [],
 	},
 	{
@@ -333,7 +345,7 @@ const phrasemes: Rule[] = [
 		statement:
 			"An established expression whose meaning here is not the sum of its words is an Idiom, with or without a noun (den Faden verlieren, das Eis brechen, es in sich haben). The same words used literally are separate units. A click on any fixed member, a fixed article or preposition included, selects the whole Idiom.",
 		adrs: ["dumgen/ADR-0007"],
-		routes: phraseme("Idiom"),
+		routes: everyLocution,
 		records: [],
 	},
 	{
@@ -341,7 +353,7 @@ const phrasemes: Rule[] = [
 		statement:
 			"A discourse formula is a fixed conversational routine (Guten Morgen, Herzlichen Dank, Wie geht's). A proverb is a traditional complete saying (Morgenstund hat Gold im Mund), and an aphorism an established maxim with a known author (Zeit ist Geld). A merely preferred combination (starker Regen) has no expression of its own, and its words stay separate units.",
 		adrs: ["dumgen/ADR-0007"],
-		routes: phraseme("DiscourseFormula", "Proverb", "Aphorism"),
+		routes: [...locution("INTJ"), ...saying],
 		records: [],
 	},
 ];
@@ -425,10 +437,7 @@ const attestations: Rule[] = [
 		statement:
 			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or an Idiom, discourse formula, proverb or aphorism with a fixed word left out. A split target, or one with free words between its members, is still Full.",
 		adrs: ["ADR-0003", "ADR-0004"],
-		routes: [
-			...lexeme("NOUN"),
-			...phraseme("Idiom", "DiscourseFormula", "Proverb", "Aphorism"),
-		],
+		routes: [...lexeme("NOUN"), ...everyMultiword],
 		records: [],
 	},
 ];

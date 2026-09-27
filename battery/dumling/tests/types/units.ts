@@ -18,8 +18,20 @@ type _UnsupportedMorpheme = Lemma<"de", "Morpheme", "ToneMarking">;
 declare const prefix: Surface<"de", "Morpheme", "Prefix">;
 // @ts-expect-error A route without an inflectional bag has no Surface field.
 prefix.inflectionalFeatures;
-// @ts-expect-error English has no Collocation route.
-type _WrongLanguage = Unit<"Reading", "en", "Phraseme", "Collocation">;
+// @ts-expect-error Hebrew has no Locution VERB route.
+type _WrongLanguage = Unit<"Reading", "he", "Locution", "VERB">;
+// @ts-expect-error A Saying Kind is Saying, never a part of speech.
+type _WrongSayingKind = Lemma<"de", "Saying", "INTJ">;
+// A Kind repeats across Families: Lexeme VERB and Locution VERB are two routes.
+declare const locution: Lemma<"de", "Locution", "VERB">;
+const _locutionFamily: "Locution" = locution.family;
+const _locutionCore: Record<string, never> = locution.coreFeatures;
+declare const locutionNoun: Lemma<"de", "Locution", "NOUN">;
+const _locutionGender: "Fem" | "Masc" | "Neut" | null =
+	locutionNoun.coreFeatures.gender;
+declare const saying: Surface<"de", "Saying", "Saying">;
+// @ts-expect-error A Saying never inflects.
+saying.inflectionalFeatures;
 // @ts-expect-error German noun _gender is restricted.
 const _wrongGender: "Com" = noun.coreFeatures.gender;
 declare const reading: Reading<"de", "Lexeme", "NOUN">;
@@ -43,9 +55,9 @@ if (selected.success) {
 // @ts-expect-error Expected coordinates remain correlated.
 parseUnit(null, {
 	unitKind: "Lemma",
-	language: "en",
-	family: "Phraseme",
-	kind: "Collocation",
+	language: "he",
+	family: "Locution",
+	kind: "VERB",
 });
 const broad = parseUnit(null);
 if (broad.success) {

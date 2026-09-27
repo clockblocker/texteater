@@ -2891,6 +2891,1427 @@ export interface UnitMap {
 			}>;
 		};
 	};
+	"de/Locution/ADJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "ADJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				degree: ("Cmp" | "Pos" | "Sup") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "ADJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					degree: ("Cmp" | "Pos" | "Sup") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
+		};
+	};
+	"de/Locution/ADP": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "ADP";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADP";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADP";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "ADP";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/ADV": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "ADV";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "ADV";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/CCONJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "CCONJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "CCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "CCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "CCONJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/DET": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "DET";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "DET";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "DET";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "DET";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/INTJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "INTJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "INTJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/NOUN": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "NOUN";
+			canonicalForm: string;
+			coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "NOUN";
+				canonicalForm: string;
+				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				number: ("Plur" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "NOUN";
+				canonicalForm: string;
+				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "NOUN";
+					canonicalForm: string;
+					coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					number: ("Plur" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
+		};
+	};
+	"de/Locution/NUM": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "NUM";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "NUM";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "NUM";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "NUM";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/PRON": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "PRON";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "PRON";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
+				number: ("Plur" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "PRON";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "PRON";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
+					number: ("Plur" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/SCONJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "SCONJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "SCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "SCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "SCONJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"de/Locution/VERB": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Locution";
+			kind: "VERB";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "VERB";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures:
+				| (
+						| {
+								mood: ("Ind" | "Sub") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: ("Past" | "Pres") | null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: ("Ind" | "Sub") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: ("Past" | "Pres") | null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Inf";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Inf";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: null;
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Pass";
+								passive: "Process" | "Recipient";
+						  }
+				  )
+				| null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Locution";
+				kind: "VERB";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Locution";
+					kind: "VERB";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures:
+					| (
+							| {
+									mood: ("Ind" | "Sub") | null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: ("Past" | "Pres") | null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: ("Ind" | "Sub") | null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: ("Past" | "Pres") | null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Inf";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Inf";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: null;
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Pass";
+									passive: "Process" | "Recipient";
+							  }
+					  )
+					| null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+			expletiveEvidence:
+				| (
+						| {
+								attested: string;
+								orthography: "Standard" | "Typo" | "Shorthand";
+						  }
+						| {
+								attested: string;
+								orthography: "Fused";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: {
+									abbr: "Yes" | null;
+									adpType: ("Circ" | "Post" | "Prep") | null;
+									extPos: ("ADV" | "SCONJ") | null;
+									foreign: "Yes" | null;
+									partType: "Vbp" | null;
+								};
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
+		};
+	};
 	"de/Morpheme/Circumfix": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -3755,12 +5176,12 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
-	"de/Phraseme/Aphorism": {
+	"de/Saying/Saying": {
 		Lemma: {
 			unitKind: "Lemma";
 			language: "de";
-			family: "Phraseme";
-			kind: "Aphorism";
+			family: "Saying";
+			kind: "Saying";
 			canonicalForm: string;
 			coreFeatures: Record<string, never>;
 		};
@@ -3770,8 +5191,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "de";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -3784,8 +5205,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "de";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -3799,966 +5220,8 @@ export interface UnitMap {
 				lemma: {
 					unitKind: "Lemma";
 					language: "de";
-					family: "Phraseme";
-					kind: "Aphorism";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"de/Phraseme/Collocation": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Phraseme";
-			kind: "Collocation";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Collocation";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures:
-				| (
-						| {
-								mood: ("Ind" | "Sub") | null;
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: ("Ind" | "Sub") | null;
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: "Imp";
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: "Imp";
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Inf";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Inf";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Part";
-								participleForm: ("Present" | "Past") | null;
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Part";
-								participleForm: ("Present" | "Past") | null;
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-				  )
-				| null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Collocation";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Phraseme";
-					kind: "Collocation";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures:
-					| (
-							| {
-									mood: ("Ind" | "Sub") | null;
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: ("Ind" | "Sub") | null;
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: "Imp";
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: "Imp";
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Inf";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Inf";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Part";
-									participleForm: ("Present" | "Past") | null;
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Part";
-									participleForm: ("Present" | "Past") | null;
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-					  )
-					| null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence:
-				| (
-						| {
-								attested: string;
-								orthography: "Standard" | "Typo" | "Shorthand";
-						  }
-						| {
-								attested: string;
-								orthography: "Fused";
-								fusion: {
-									spelling: string;
-									components: [
-										{ span: string; surface: string },
-										{ span: string; surface: string },
-										...Array<{
-											span: string;
-											surface: string;
-										}>,
-									];
-								};
-								component: number;
-						  }
-				  )
-				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
-									foreign: "Yes" | null;
-									partType: "Vbp" | null;
-								};
-							};
-							case: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
-		};
-	};
-	"de/Phraseme/DiscourseFormula": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-			canonicalForm: string;
-			coreFeatures: {
-				discourseFormulaRole:
-					| (
-							| "Greeting"
-							| "Farewell"
-							| "Apology"
-							| "Thanks"
-							| "Acknowledgment"
-							| "Refusal"
-							| "Request"
-							| "Reaction"
-							| "Initiation"
-							| "Transition"
-					  )
-					| null;
-			};
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: {
-					discourseFormulaRole:
-						| (
-								| "Greeting"
-								| "Farewell"
-								| "Apology"
-								| "Thanks"
-								| "Acknowledgment"
-								| "Refusal"
-								| "Request"
-								| "Reaction"
-								| "Initiation"
-								| "Transition"
-						  )
-						| null;
-				};
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: {
-					discourseFormulaRole:
-						| (
-								| "Greeting"
-								| "Farewell"
-								| "Apology"
-								| "Thanks"
-								| "Acknowledgment"
-								| "Refusal"
-								| "Request"
-								| "Reaction"
-								| "Initiation"
-								| "Transition"
-						  )
-						| null;
-				};
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Phraseme";
-					kind: "DiscourseFormula";
-					canonicalForm: string;
-					coreFeatures: {
-						discourseFormulaRole:
-							| (
-									| "Greeting"
-									| "Farewell"
-									| "Apology"
-									| "Thanks"
-									| "Acknowledgment"
-									| "Refusal"
-									| "Request"
-									| "Reaction"
-									| "Initiation"
-									| "Transition"
-							  )
-							| null;
-					};
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"de/Phraseme/Idiom": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Phraseme";
-			kind: "Idiom";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures:
-				| (
-						| {
-								mood: ("Ind" | "Sub") | null;
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: ("Ind" | "Sub") | null;
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: ("Past" | "Pres") | null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: "Imp";
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: "Imp";
-								number: ("Plur" | "Sing") | null;
-								person: ("1" | "2" | "3") | null;
-								tense: null;
-								verbForm: "Fin";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Inf";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Inf";
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Part";
-								participleForm: ("Present" | "Past") | null;
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: null;
-								passive: null;
-						  }
-						| {
-								mood: null;
-								number: null;
-								person: null;
-								tense: null;
-								verbForm: "Part";
-								participleForm: ("Present" | "Past") | null;
-								expletive: "Subject" | null;
-								perfect: "Yes" | null;
-								future: "Yes" | null;
-								voice: "Pass";
-								passive: "Process" | "Recipient";
-						  }
-				  )
-				| null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Phraseme";
-					kind: "Idiom";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures:
-					| (
-							| {
-									mood: ("Ind" | "Sub") | null;
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: ("Ind" | "Sub") | null;
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: ("Past" | "Pres") | null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: "Imp";
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: "Imp";
-									number: ("Plur" | "Sing") | null;
-									person: ("1" | "2" | "3") | null;
-									tense: null;
-									verbForm: "Fin";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Inf";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Inf";
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Part";
-									participleForm: ("Present" | "Past") | null;
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: null;
-									passive: null;
-							  }
-							| {
-									mood: null;
-									number: null;
-									person: null;
-									tense: null;
-									verbForm: "Part";
-									participleForm: ("Present" | "Past") | null;
-									expletive: "Subject" | null;
-									perfect: "Yes" | null;
-									future: "Yes" | null;
-									voice: "Pass";
-									passive: "Process" | "Recipient";
-							  }
-					  )
-					| null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-			expletiveEvidence:
-				| (
-						| {
-								attested: string;
-								orthography: "Standard" | "Typo" | "Shorthand";
-						  }
-						| {
-								attested: string;
-								orthography: "Fused";
-								fusion: {
-									spelling: string;
-									components: [
-										{ span: string; surface: string },
-										{ span: string; surface: string },
-										...Array<{
-											span: string;
-											surface: string;
-										}>,
-									];
-								};
-								component: number;
-						  }
-				  )
-				| null;
-			valencyEvidence: Array<{
-				member: number | null;
-				complement:
-					| {
-							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  }
-					| {
-							kind: "Preposition";
-							preposition: {
-								unitKind: "Lemma";
-								language: "de";
-								family: "Lexeme";
-								kind: "ADP";
-								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
-									foreign: "Yes" | null;
-									partType: "Vbp" | null;
-								};
-							};
-							case: "Acc" | "Dat" | "Gen";
-							referent: "Someone" | "Something" | "Either";
-					  };
-				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
-			}>;
-		};
-	};
-	"de/Phraseme/Proverb": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Phraseme";
-			kind: "Proverb";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Phraseme";
-					kind: "Proverb";
+					family: "Saying";
+					kind: "Saying";
 					canonicalForm: string;
 					coreFeatures: Record<string, never>;
 				};
@@ -7465,6 +7928,698 @@ export interface UnitMap {
 				| undefined;
 		};
 	};
+	"en/Locution/ADP": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "ADP";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "ADP";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "ADP";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "ADP";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"en/Locution/ADV": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "ADV";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "ADV";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"en/Locution/INTJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "INTJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "INTJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"en/Locution/NOUN": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "NOUN";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "NOUN";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				number: ("Plur" | "Ptan" | "Sing") | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "NOUN";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "NOUN";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					number: ("Plur" | "Ptan" | "Sing") | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
+		};
+	};
+	"en/Locution/SCONJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "SCONJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "SCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "SCONJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "SCONJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"en/Locution/VERB": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Locution";
+			kind: "VERB";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "VERB";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				mood: ("Imp" | "Ind" | "Sub") | null;
+				number: ("Plur" | "Sing") | null;
+				person: ("1" | "2" | "3") | null;
+				tense: ("Past" | "Pres") | null;
+				verbForm: ("Fin" | "Ger" | "Inf" | "Part") | null;
+				voice: "Pass" | null;
+			} | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Locution";
+				kind: "VERB";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Locution";
+					kind: "VERB";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					mood: ("Imp" | "Ind" | "Sub") | null;
+					number: ("Plur" | "Sing") | null;
+					person: ("1" | "2" | "3") | null;
+					tense: ("Past" | "Pres") | null;
+					verbForm: ("Fin" | "Ger" | "Inf" | "Part") | null;
+					voice: "Pass" | null;
+				} | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+			valencyEvidence?:
+				| Array<{
+						member: number | null;
+						complement:
+							| {
+									kind: "Subject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "DirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "IndirectObject";
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  }
+							| {
+									kind: "Preposition";
+									preposition: {
+										unitKind: "Lemma";
+										language: "en";
+										family: "Lexeme";
+										kind: "ADP";
+										canonicalForm: string;
+										coreFeatures: {
+											abbr: "Yes" | null;
+											extPos:
+												| ("ADP" | "ADV" | "SCONJ")
+												| null;
+										};
+									};
+									referent:
+										| "Someone"
+										| "Something"
+										| "Either";
+							  };
+				  }>
+				| undefined;
+		};
+	};
 	"en/Morpheme/Circumfix": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -8425,12 +9580,12 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
-	"en/Phraseme/Aphorism": {
+	"en/Saying/Saying": {
 		Lemma: {
 			unitKind: "Lemma";
 			language: "en";
-			family: "Phraseme";
-			kind: "Aphorism";
+			family: "Saying";
+			kind: "Saying";
 			canonicalForm: string;
 			coreFeatures: Record<string, never>;
 		};
@@ -8440,8 +9595,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "en";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -8454,8 +9609,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "en";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -8469,403 +9624,8 @@ export interface UnitMap {
 				lemma: {
 					unitKind: "Lemma";
 					language: "en";
-					family: "Phraseme";
-					kind: "Aphorism";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"en/Phraseme/DiscourseFormula": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "en";
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-			canonicalForm: string;
-			coreFeatures: {
-				discourseFormulaRole:
-					| (
-							| "Greeting"
-							| "Farewell"
-							| "Apology"
-							| "Thanks"
-							| "Acknowledgment"
-							| "Refusal"
-							| "Request"
-							| "Reaction"
-							| "Initiation"
-							| "Transition"
-					  )
-					| null;
-			};
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "en";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: {
-					discourseFormulaRole:
-						| (
-								| "Greeting"
-								| "Farewell"
-								| "Apology"
-								| "Thanks"
-								| "Acknowledgment"
-								| "Refusal"
-								| "Request"
-								| "Reaction"
-								| "Initiation"
-								| "Transition"
-						  )
-						| null;
-				};
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: {
-					discourseFormulaRole:
-						| (
-								| "Greeting"
-								| "Farewell"
-								| "Apology"
-								| "Thanks"
-								| "Acknowledgment"
-								| "Refusal"
-								| "Request"
-								| "Reaction"
-								| "Initiation"
-								| "Transition"
-						  )
-						| null;
-				};
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "en";
-				lemma: {
-					unitKind: "Lemma";
-					language: "en";
-					family: "Phraseme";
-					kind: "DiscourseFormula";
-					canonicalForm: string;
-					coreFeatures: {
-						discourseFormulaRole:
-							| (
-									| "Greeting"
-									| "Farewell"
-									| "Apology"
-									| "Thanks"
-									| "Acknowledgment"
-									| "Refusal"
-									| "Request"
-									| "Reaction"
-									| "Initiation"
-									| "Transition"
-							  )
-							| null;
-					};
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"en/Phraseme/Idiom": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "en";
-			family: "Phraseme";
-			kind: "Idiom";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "en";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "en";
-				lemma: {
-					unitKind: "Lemma";
-					language: "en";
-					family: "Phraseme";
-					kind: "Idiom";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-			valencyEvidence?:
-				| Array<{
-						member: number | null;
-						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "IndirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "Preposition";
-									preposition: {
-										unitKind: "Lemma";
-										language: "en";
-										family: "Lexeme";
-										kind: "ADP";
-										canonicalForm: string;
-										coreFeatures: {
-											abbr: "Yes" | null;
-											extPos:
-												| ("ADP" | "ADV" | "SCONJ")
-												| null;
-										};
-									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  };
-				  }>
-				| undefined;
-		};
-	};
-	"en/Phraseme/Proverb": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "en";
-			family: "Phraseme";
-			kind: "Proverb";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "en";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "en";
-				lemma: {
-					unitKind: "Lemma";
-					language: "en";
-					family: "Phraseme";
-					kind: "Proverb";
+					family: "Saying";
+					kind: "Saying";
 					canonicalForm: string;
 					coreFeatures: Record<string, never>;
 				};
@@ -11162,6 +11922,198 @@ export interface UnitMap {
 				| undefined;
 		};
 	};
+	"he/Locution/ADV": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "he";
+			family: "Locution";
+			kind: "ADV";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "he";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Locution";
+				kind: "ADV";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "he";
+				lemma: {
+					unitKind: "Lemma";
+					language: "he";
+					family: "Locution";
+					kind: "ADV";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
+	"he/Locution/INTJ": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "he";
+			family: "Locution";
+			kind: "INTJ";
+			canonicalForm: string;
+			coreFeatures: Record<string, never>;
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "he";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			normalizedSurface: string;
+			spelling: "Canonical" | "Variant";
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Locution";
+				kind: "INTJ";
+				canonicalForm: string;
+				coreFeatures: Record<string, never>;
+			};
+			emojiDescription: string;
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "he";
+				lemma: {
+					unitKind: "Lemma";
+					language: "he";
+					family: "Locution";
+					kind: "INTJ";
+					canonicalForm: string;
+					coreFeatures: Record<string, never>;
+				};
+				normalizedSurface: string;
+				spelling: "Canonical" | "Variant";
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
 	"he/Morpheme/Circumfix": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -12122,12 +13074,12 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
-	"he/Phraseme/Aphorism": {
+	"he/Saying/Saying": {
 		Lemma: {
 			unitKind: "Lemma";
 			language: "he";
-			family: "Phraseme";
-			kind: "Aphorism";
+			family: "Saying";
+			kind: "Saying";
 			canonicalForm: string;
 			coreFeatures: Record<string, never>;
 		};
@@ -12137,8 +13089,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "he";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -12151,8 +13103,8 @@ export interface UnitMap {
 			lemma: {
 				unitKind: "Lemma";
 				language: "he";
-				family: "Phraseme";
-				kind: "Aphorism";
+				family: "Saying";
+				kind: "Saying";
 				canonicalForm: string;
 				coreFeatures: Record<string, never>;
 			};
@@ -12166,334 +13118,8 @@ export interface UnitMap {
 				lemma: {
 					unitKind: "Lemma";
 					language: "he";
-					family: "Phraseme";
-					kind: "Aphorism";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"he/Phraseme/DiscourseFormula": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "he";
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "he";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "DiscourseFormula";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "he";
-				lemma: {
-					unitKind: "Lemma";
-					language: "he";
-					family: "Phraseme";
-					kind: "DiscourseFormula";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"he/Phraseme/Idiom": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "he";
-			family: "Phraseme";
-			kind: "Idiom";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "he";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "Idiom";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "he";
-				lemma: {
-					unitKind: "Lemma";
-					language: "he";
-					family: "Phraseme";
-					kind: "Idiom";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-			valencyEvidence?:
-				| Array<{
-						member: number | null;
-						complement:
-							| {
-									kind: "Subject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "DirectObject";
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  }
-							| {
-									kind: "Preposition";
-									preposition: {
-										unitKind: "Lemma";
-										language: "he";
-										family: "Lexeme";
-										kind: "ADP";
-										canonicalForm: string;
-										coreFeatures: {
-											abbr: "Yes" | null;
-											case: ("Acc" | "Gen") | null;
-										};
-									};
-									referent:
-										| "Someone"
-										| "Something"
-										| "Either";
-							  };
-				  }>
-				| undefined;
-		};
-	};
-	"he/Phraseme/Proverb": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "he";
-			family: "Phraseme";
-			kind: "Proverb";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "he";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Phraseme";
-				kind: "Proverb";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "he";
-				lemma: {
-					unitKind: "Lemma";
-					language: "he";
-					family: "Phraseme";
-					kind: "Proverb";
+					family: "Saying";
+					kind: "Saying";
 					canonicalForm: string;
 					coreFeatures: Record<string, never>;
 				};

@@ -46,7 +46,7 @@ function* corruptions(
 }
 describe("compiled unit interface", () => {
 	test("all unit routes preserve canonical outputs and malformed nested acceptance", () => {
-		expect(routes).toHaveLength(93);
+		expect(routes).toHaveLength(102);
 		for (const route of routes) {
 			const fixtures = unitFixtures(route, z);
 			for (const kind of Object.values(UnitKind)) {
@@ -265,6 +265,71 @@ describe("compiled unit interface", () => {
 				).toBe(false);
 			}
 		}
+	});
+	test("a Kind repeats across Families, so the Family is part of the route", () => {
+		const lexemeRoute = routes.find(
+			(route) => route.key === "de/Lexeme/VERB",
+		);
+		const locutionRoute = routes.find(
+			(route) => route.key === "de/Locution/VERB",
+		);
+		if (!lexemeRoute || !locutionRoute) throw Error("Missing VERB routes");
+		const locution = unitFixtures(locutionRoute, z).Lemma;
+		const parsed = parseUnit(locution);
+		expect(parsed.success && parsed.chain.family).toBe("Locution");
+		expect(
+			parseUnit(locution, {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "VERB",
+			}).success,
+		).toBe(false);
+		// A Lexeme VERB's Core Features do not fit the Locution VERB route.
+		expect(
+			parseUnit({
+				...locution,
+				coreFeatures: unitFixtures(lexemeRoute, z).Lemma.coreFeatures,
+			}).success,
+		).toBe(false);
+		expect(parseUnit({ ...locution, family: "Phraseme" }).success).toBe(
+			false,
+		);
+	});
+	test("a Saying's Canonical Form keeps internal punctuation and has no final punctuation", () => {
+		const sayingRoute = routes.find(
+			(route) => route.key === "de/Saying/Saying",
+		);
+		if (!sayingRoute) throw Error("Missing Saying route");
+		const { Lemma, Reading } = unitFixtures(sayingRoute, z);
+		for (const canonicalForm of [
+			"Wer rastet, der rostet",
+			"Sein oder Nichtsein, das ist hier die Frage",
+		]) {
+			expect(parseUnit({ ...Lemma, canonicalForm }).success).toBe(true);
+			expect(
+				sayingRoute.schemas.Lemma.safeParse({ ...Lemma, canonicalForm })
+					.success,
+			).toBe(true);
+		}
+		for (const canonicalForm of [
+			"Wer rastet, der rostet.",
+			"Wer rastet, der rostet!",
+			"Sein oder Nichtsein?",
+		]) {
+			expect(parseUnit({ ...Lemma, canonicalForm }).success).toBe(false);
+			expect(
+				parseUnit({ ...Reading, lemma: { ...Lemma, canonicalForm } })
+					.success,
+			).toBe(false);
+			expect(
+				sayingRoute.schemas.Lemma.safeParse({ ...Lemma, canonicalForm })
+					.success,
+			).toBe(false);
+		}
+		expect(
+			parseUnit({ ...noun.Lemma, canonicalForm: "z.B." }).success,
+		).toBe(true);
 	});
 	test("compilation rejects unregistered custom behavior", () => {
 		expect(() =>

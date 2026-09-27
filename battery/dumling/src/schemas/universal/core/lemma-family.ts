@@ -1,12 +1,19 @@
 import { z } from "zod";
 
-const PHRASEME = z.literal("Phraseme");
 const LEXEME = z.literal("Lexeme");
+const LOCUTION = z.literal("Locution");
+const SAYING = z.literal("Saying");
 const MORPHEME = z.literal("Morpheme");
 
+/**
+ * A route is language, Family and Kind (ADR 0039). A Kind may repeat across
+ * Families (Lexeme VERB, Locution VERB), so the Kind alone never names the
+ * Family.
+ */
 export const LemmaFamilySchema = z.enum([
-	PHRASEME.value,
 	LEXEME.value,
+	LOCUTION.value,
+	SAYING.value,
 	MORPHEME.value,
 ]);
 export const LemmaFamily = LemmaFamilySchema.enum;

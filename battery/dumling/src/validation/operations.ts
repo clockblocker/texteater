@@ -28,10 +28,12 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
+	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
+	sayingCanonicalFormError,
 } from "./semantics.js";
 
 function check(
@@ -96,6 +98,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.feature-bag.marked": check(
 		hasMarkedFeature,
 		nonEmptyFeatureBagError,
+	),
+	"dumling.saying.canonical-form": check(
+		isSayingCanonicalForm,
+		sayingCanonicalFormError,
 	),
 	"dumling.emoji-description": check(
 		isEmojiDescription,

@@ -65,6 +65,17 @@ export type KnowledgeSelectionInput = {
 		| { language: "de"; family: "Lexeme"; kind: "SCONJ" }
 		| { language: "de"; family: "Lexeme"; kind: "SYM" }
 		| { language: "de"; family: "Lexeme"; kind: "VERB" }
+		| { language: "de"; family: "Locution"; kind: "ADJ" }
+		| { language: "de"; family: "Locution"; kind: "ADP" }
+		| { language: "de"; family: "Locution"; kind: "ADV" }
+		| { language: "de"; family: "Locution"; kind: "CCONJ" }
+		| { language: "de"; family: "Locution"; kind: "DET" }
+		| { language: "de"; family: "Locution"; kind: "INTJ" }
+		| { language: "de"; family: "Locution"; kind: "NOUN" }
+		| { language: "de"; family: "Locution"; kind: "NUM" }
+		| { language: "de"; family: "Locution"; kind: "PRON" }
+		| { language: "de"; family: "Locution"; kind: "SCONJ" }
+		| { language: "de"; family: "Locution"; kind: "VERB" }
 		| { language: "de"; family: "Morpheme"; kind: "Circumfix" }
 		| { language: "de"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "de"; family: "Morpheme"; kind: "Infix" }
@@ -74,11 +85,7 @@ export type KnowledgeSelectionInput = {
 		| { language: "de"; family: "Morpheme"; kind: "Suffix" }
 		| { language: "de"; family: "Morpheme"; kind: "Suffixoid" }
 		| { language: "de"; family: "Morpheme"; kind: "Transfix" }
-		| { language: "de"; family: "Phraseme"; kind: "Aphorism" }
-		| { language: "de"; family: "Phraseme"; kind: "Collocation" }
-		| { language: "de"; family: "Phraseme"; kind: "DiscourseFormula" }
-		| { language: "de"; family: "Phraseme"; kind: "Idiom" }
-		| { language: "de"; family: "Phraseme"; kind: "Proverb" }
+		| { language: "de"; family: "Saying"; kind: "Saying" }
 		| { language: "en"; family: "Lexeme"; kind: "ADJ" }
 		| { language: "en"; family: "Lexeme"; kind: "ADP" }
 		| { language: "en"; family: "Lexeme"; kind: "ADV" }
@@ -96,6 +103,12 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Lexeme"; kind: "SCONJ" }
 		| { language: "en"; family: "Lexeme"; kind: "SYM" }
 		| { language: "en"; family: "Lexeme"; kind: "VERB" }
+		| { language: "en"; family: "Locution"; kind: "ADP" }
+		| { language: "en"; family: "Locution"; kind: "ADV" }
+		| { language: "en"; family: "Locution"; kind: "INTJ" }
+		| { language: "en"; family: "Locution"; kind: "NOUN" }
+		| { language: "en"; family: "Locution"; kind: "SCONJ" }
+		| { language: "en"; family: "Locution"; kind: "VERB" }
 		| { language: "en"; family: "Morpheme"; kind: "Circumfix" }
 		| { language: "en"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "en"; family: "Morpheme"; kind: "Infix" }
@@ -106,10 +119,7 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Morpheme"; kind: "Suffixoid" }
 		| { language: "en"; family: "Morpheme"; kind: "ToneMarking" }
 		| { language: "en"; family: "Morpheme"; kind: "Transfix" }
-		| { language: "en"; family: "Phraseme"; kind: "Aphorism" }
-		| { language: "en"; family: "Phraseme"; kind: "DiscourseFormula" }
-		| { language: "en"; family: "Phraseme"; kind: "Idiom" }
-		| { language: "en"; family: "Phraseme"; kind: "Proverb" }
+		| { language: "en"; family: "Saying"; kind: "Saying" }
 		| { language: "he"; family: "Lexeme"; kind: "ADJ" }
 		| { language: "he"; family: "Lexeme"; kind: "ADP" }
 		| { language: "he"; family: "Lexeme"; kind: "ADV" }
@@ -127,6 +137,8 @@ export type KnowledgeSelectionInput = {
 		| { language: "he"; family: "Lexeme"; kind: "SCONJ" }
 		| { language: "he"; family: "Lexeme"; kind: "SYM" }
 		| { language: "he"; family: "Lexeme"; kind: "VERB" }
+		| { language: "he"; family: "Locution"; kind: "ADV" }
+		| { language: "he"; family: "Locution"; kind: "INTJ" }
 		| { language: "he"; family: "Morpheme"; kind: "Circumfix" }
 		| { language: "he"; family: "Morpheme"; kind: "Duplifix" }
 		| { language: "he"; family: "Morpheme"; kind: "Infix" }
@@ -137,10 +149,7 @@ export type KnowledgeSelectionInput = {
 		| { language: "he"; family: "Morpheme"; kind: "Suffixoid" }
 		| { language: "he"; family: "Morpheme"; kind: "ToneMarking" }
 		| { language: "he"; family: "Morpheme"; kind: "Transfix" }
-		| { language: "he"; family: "Phraseme"; kind: "Aphorism" }
-		| { language: "he"; family: "Phraseme"; kind: "DiscourseFormula" }
-		| { language: "he"; family: "Phraseme"; kind: "Idiom" }
-		| { language: "he"; family: "Phraseme"; kind: "Proverb" };
+		| { language: "he"; family: "Saying"; kind: "Saying" };
 	settings?: KnowledgeSettings | undefined;
 };
 export type DirectSemanticRelation =
@@ -169,6 +178,47 @@ export type UnitShadow =
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB" }
+	| { language: "de"; canonicalForm: string; family: "Locution"; kind: "ADJ" }
+	| { language: "de"; canonicalForm: string; family: "Locution"; kind: "ADP" }
+	| { language: "de"; canonicalForm: string; family: "Locution"; kind: "ADV" }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "CCONJ";
+	  }
+	| { language: "de"; canonicalForm: string; family: "Locution"; kind: "DET" }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "INTJ";
+	  }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "NOUN";
+	  }
+	| { language: "de"; canonicalForm: string; family: "Locution"; kind: "NUM" }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "PRON";
+	  }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "SCONJ";
+	  }
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "VERB";
+	  }
 	| {
 			language: "de";
 			canonicalForm: string;
@@ -226,32 +276,8 @@ export type UnitShadow =
 	| {
 			language: "de";
 			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Aphorism";
-	  }
-	| {
-			language: "de";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Collocation";
-	  }
-	| {
-			language: "de";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-	  }
-	| {
-			language: "de";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Idiom";
-	  }
-	| {
-			language: "de";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Proverb";
+			family: "Saying";
+			kind: "Saying";
 	  }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
@@ -270,6 +296,32 @@ export type UnitShadow =
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "VERB" }
+	| { language: "en"; canonicalForm: string; family: "Locution"; kind: "ADP" }
+	| { language: "en"; canonicalForm: string; family: "Locution"; kind: "ADV" }
+	| {
+			language: "en";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "INTJ";
+	  }
+	| {
+			language: "en";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "NOUN";
+	  }
+	| {
+			language: "en";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "SCONJ";
+	  }
+	| {
+			language: "en";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "VERB";
+	  }
 	| {
 			language: "en";
 			canonicalForm: string;
@@ -333,26 +385,8 @@ export type UnitShadow =
 	| {
 			language: "en";
 			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Aphorism";
-	  }
-	| {
-			language: "en";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-	  }
-	| {
-			language: "en";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Idiom";
-	  }
-	| {
-			language: "en";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Proverb";
+			family: "Saying";
+			kind: "Saying";
 	  }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
@@ -371,6 +405,13 @@ export type UnitShadow =
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "VERB" }
+	| { language: "he"; canonicalForm: string; family: "Locution"; kind: "ADV" }
+	| {
+			language: "he";
+			canonicalForm: string;
+			family: "Locution";
+			kind: "INTJ";
+	  }
 	| {
 			language: "he";
 			canonicalForm: string;
@@ -434,26 +475,8 @@ export type UnitShadow =
 	| {
 			language: "he";
 			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Aphorism";
-	  }
-	| {
-			language: "he";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "DiscourseFormula";
-	  }
-	| {
-			language: "he";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Idiom";
-	  }
-	| {
-			language: "he";
-			canonicalForm: string;
-			family: "Phraseme";
-			kind: "Proverb";
+			family: "Saying";
+			kind: "Saying";
 	  };
 export type LexemeUnitShadow =
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
@@ -657,32 +680,74 @@ export type MorphologicalTreeNode =
 				| {
 						language: "de";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Aphorism";
+						family: "Locution";
+						kind: "ADJ";
 				  }
 				| {
 						language: "de";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Collocation";
+						family: "Locution";
+						kind: "ADP";
 				  }
 				| {
 						language: "de";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "DiscourseFormula";
+						family: "Locution";
+						kind: "ADV";
 				  }
 				| {
 						language: "de";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Idiom";
+						family: "Locution";
+						kind: "CCONJ";
 				  }
 				| {
 						language: "de";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Proverb";
+						family: "Locution";
+						kind: "DET";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "INTJ";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "NOUN";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "NUM";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "PRON";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "SCONJ";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "VERB";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
+						family: "Saying";
+						kind: "Saying";
 				  }
 				| {
 						language: "en";
@@ -789,26 +854,44 @@ export type MorphologicalTreeNode =
 				| {
 						language: "en";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Aphorism";
+						family: "Locution";
+						kind: "ADP";
 				  }
 				| {
 						language: "en";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "DiscourseFormula";
+						family: "Locution";
+						kind: "ADV";
 				  }
 				| {
 						language: "en";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Idiom";
+						family: "Locution";
+						kind: "INTJ";
 				  }
 				| {
 						language: "en";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Proverb";
+						family: "Locution";
+						kind: "NOUN";
+				  }
+				| {
+						language: "en";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "SCONJ";
+				  }
+				| {
+						language: "en";
+						canonicalForm: string;
+						family: "Locution";
+						kind: "VERB";
+				  }
+				| {
+						language: "en";
+						canonicalForm: string;
+						family: "Saying";
+						kind: "Saying";
 				  }
 				| {
 						language: "he";
@@ -915,26 +998,20 @@ export type MorphologicalTreeNode =
 				| {
 						language: "he";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Aphorism";
+						family: "Locution";
+						kind: "ADV";
 				  }
 				| {
 						language: "he";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "DiscourseFormula";
+						family: "Locution";
+						kind: "INTJ";
 				  }
 				| {
 						language: "he";
 						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Idiom";
-				  }
-				| {
-						language: "he";
-						canonicalForm: string;
-						family: "Phraseme";
-						kind: "Proverb";
+						family: "Saying";
+						kind: "Saying";
 				  };
 	  }
 	| { nodeKind: "structure"; children: Array<MorphologicalTreeNode> };
@@ -964,6 +1041,17 @@ export type SemanticRelations =
 						| Dumling.Reading<"de", "Lexeme", "SCONJ">
 						| Dumling.Reading<"de", "Lexeme", "SYM">
 						| Dumling.Reading<"de", "Lexeme", "VERB">
+						| Dumling.Reading<"de", "Locution", "ADJ">
+						| Dumling.Reading<"de", "Locution", "ADP">
+						| Dumling.Reading<"de", "Locution", "ADV">
+						| Dumling.Reading<"de", "Locution", "CCONJ">
+						| Dumling.Reading<"de", "Locution", "DET">
+						| Dumling.Reading<"de", "Locution", "INTJ">
+						| Dumling.Reading<"de", "Locution", "NOUN">
+						| Dumling.Reading<"de", "Locution", "NUM">
+						| Dumling.Reading<"de", "Locution", "PRON">
+						| Dumling.Reading<"de", "Locution", "SCONJ">
+						| Dumling.Reading<"de", "Locution", "VERB">
 						| Dumling.Reading<"de", "Morpheme", "Circumfix">
 						| Dumling.Reading<"de", "Morpheme", "Duplifix">
 						| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -973,11 +1061,7 @@ export type SemanticRelations =
 						| Dumling.Reading<"de", "Morpheme", "Suffix">
 						| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 						| Dumling.Reading<"de", "Morpheme", "Transfix">
-						| Dumling.Reading<"de", "Phraseme", "Aphorism">
-						| Dumling.Reading<"de", "Phraseme", "Collocation">
-						| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Reading<"de", "Phraseme", "Idiom">
-						| Dumling.Reading<"de", "Phraseme", "Proverb">
+						| Dumling.Reading<"de", "Saying", "Saying">
 						| Dumling.Reading<"en", "Lexeme", "ADJ">
 						| Dumling.Reading<"en", "Lexeme", "ADP">
 						| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -995,6 +1079,12 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Lexeme", "SCONJ">
 						| Dumling.Reading<"en", "Lexeme", "SYM">
 						| Dumling.Reading<"en", "Lexeme", "VERB">
+						| Dumling.Reading<"en", "Locution", "ADP">
+						| Dumling.Reading<"en", "Locution", "ADV">
+						| Dumling.Reading<"en", "Locution", "INTJ">
+						| Dumling.Reading<"en", "Locution", "NOUN">
+						| Dumling.Reading<"en", "Locution", "SCONJ">
+						| Dumling.Reading<"en", "Locution", "VERB">
 						| Dumling.Reading<"en", "Morpheme", "Circumfix">
 						| Dumling.Reading<"en", "Morpheme", "Duplifix">
 						| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -1005,10 +1095,7 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 						| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 						| Dumling.Reading<"en", "Morpheme", "Transfix">
-						| Dumling.Reading<"en", "Phraseme", "Aphorism">
-						| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Reading<"en", "Phraseme", "Idiom">
-						| Dumling.Reading<"en", "Phraseme", "Proverb">
+						| Dumling.Reading<"en", "Saying", "Saying">
 						| Dumling.Reading<"he", "Lexeme", "ADJ">
 						| Dumling.Reading<"he", "Lexeme", "ADP">
 						| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -1026,6 +1113,8 @@ export type SemanticRelations =
 						| Dumling.Reading<"he", "Lexeme", "SCONJ">
 						| Dumling.Reading<"he", "Lexeme", "SYM">
 						| Dumling.Reading<"he", "Lexeme", "VERB">
+						| Dumling.Reading<"he", "Locution", "ADV">
+						| Dumling.Reading<"he", "Locution", "INTJ">
 						| Dumling.Reading<"he", "Morpheme", "Circumfix">
 						| Dumling.Reading<"he", "Morpheme", "Duplifix">
 						| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -1036,10 +1125,7 @@ export type SemanticRelations =
 						| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 						| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 						| Dumling.Reading<"he", "Morpheme", "Transfix">
-						| Dumling.Reading<"he", "Phraseme", "Aphorism">
-						| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Reading<"he", "Phraseme", "Idiom">
-						| Dumling.Reading<"he", "Phraseme", "Proverb">
+						| Dumling.Reading<"he", "Saying", "Saying">
 				  >
 				| undefined;
 	  }
@@ -1064,6 +1150,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1073,11 +1170,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1095,6 +1188,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1105,10 +1204,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1126,6 +1222,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1136,10 +1234,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 			nearSynonym?:
@@ -1161,6 +1256,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1170,11 +1276,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1192,6 +1294,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1202,10 +1310,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1223,6 +1328,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1233,10 +1340,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 			antonym?:
@@ -1258,6 +1362,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1267,11 +1382,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1289,6 +1400,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1299,10 +1416,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1320,6 +1434,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1330,10 +1446,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 			nearAntonym?:
@@ -1355,6 +1468,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1364,11 +1488,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1386,6 +1506,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1396,10 +1522,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1417,6 +1540,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1427,10 +1552,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 			hypernym?:
@@ -1452,6 +1574,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1461,11 +1594,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1483,6 +1612,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1493,10 +1628,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1514,6 +1646,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1524,10 +1658,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 			holonym?:
@@ -1549,6 +1680,17 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"de", "Lexeme", "SYM">
 						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
 						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1558,11 +1700,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffix">
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
-						| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"de", "Phraseme", "Collocation">
-						| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"de", "Phraseme", "Idiom">
-						| Dumling.Lemma<"de", "Phraseme", "Proverb">
+						| Dumling.Lemma<"de", "Saying", "Saying">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1580,6 +1718,12 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"en", "Lexeme", "SYM">
 						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
 						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1590,10 +1734,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
-						| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"en", "Phraseme", "Idiom">
-						| Dumling.Lemma<"en", "Phraseme", "Proverb">
+						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1611,6 +1752,8 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 						| Dumling.Lemma<"he", "Lexeme", "SYM">
 						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
 						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 						| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1621,10 +1764,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
-						| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-						| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-						| Dumling.Lemma<"he", "Phraseme", "Idiom">
-						| Dumling.Lemma<"he", "Phraseme", "Proverb">
+						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
 	  };
@@ -1678,6 +1818,17 @@ export type KnowledgeChange =
 				| Dumling.Reading<"de", "Lexeme", "SCONJ">
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -1687,11 +1838,7 @@ export type KnowledgeChange =
 				| Dumling.Reading<"de", "Morpheme", "Suffix">
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
-				| Dumling.Reading<"de", "Phraseme", "Aphorism">
-				| Dumling.Reading<"de", "Phraseme", "Collocation">
-				| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"de", "Phraseme", "Idiom">
-				| Dumling.Reading<"de", "Phraseme", "Proverb">
+				| Dumling.Reading<"de", "Saying", "Saying">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -1709,6 +1856,12 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Lexeme", "SCONJ">
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -1719,10 +1872,7 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
-				| Dumling.Reading<"en", "Phraseme", "Aphorism">
-				| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"en", "Phraseme", "Idiom">
-				| Dumling.Reading<"en", "Phraseme", "Proverb">
+				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -1740,6 +1890,8 @@ export type KnowledgeChange =
 				| Dumling.Reading<"he", "Lexeme", "SCONJ">
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -1750,10 +1902,7 @@ export type KnowledgeChange =
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
-				| Dumling.Reading<"he", "Phraseme", "Aphorism">
-				| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"he", "Phraseme", "Idiom">
-				| Dumling.Reading<"he", "Phraseme", "Proverb">
+				| Dumling.Reading<"he", "Saying", "Saying">
 			>;
 	  }
 	| {
@@ -1779,6 +1928,17 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
+				| Dumling.Lemma<"de", "Locution", "ADJ">
+				| Dumling.Lemma<"de", "Locution", "ADP">
+				| Dumling.Lemma<"de", "Locution", "ADV">
+				| Dumling.Lemma<"de", "Locution", "CCONJ">
+				| Dumling.Lemma<"de", "Locution", "DET">
+				| Dumling.Lemma<"de", "Locution", "INTJ">
+				| Dumling.Lemma<"de", "Locution", "NOUN">
+				| Dumling.Lemma<"de", "Locution", "NUM">
+				| Dumling.Lemma<"de", "Locution", "PRON">
+				| Dumling.Lemma<"de", "Locution", "SCONJ">
+				| Dumling.Lemma<"de", "Locution", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -1788,11 +1948,7 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"de", "Morpheme", "Suffix">
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
-				| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"de", "Phraseme", "Collocation">
-				| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"de", "Phraseme", "Idiom">
-				| Dumling.Lemma<"de", "Phraseme", "Proverb">
+				| Dumling.Lemma<"de", "Saying", "Saying">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1810,6 +1966,12 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
+				| Dumling.Lemma<"en", "Locution", "ADP">
+				| Dumling.Lemma<"en", "Locution", "ADV">
+				| Dumling.Lemma<"en", "Locution", "INTJ">
+				| Dumling.Lemma<"en", "Locution", "NOUN">
+				| Dumling.Lemma<"en", "Locution", "SCONJ">
+				| Dumling.Lemma<"en", "Locution", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -1820,10 +1982,7 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
-				| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"en", "Phraseme", "Idiom">
-				| Dumling.Lemma<"en", "Phraseme", "Proverb">
+				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1841,6 +2000,8 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
+				| Dumling.Lemma<"he", "Locution", "ADV">
+				| Dumling.Lemma<"he", "Locution", "INTJ">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -1851,10 +2012,7 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
-				| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"he", "Phraseme", "Idiom">
-				| Dumling.Lemma<"he", "Phraseme", "Proverb">
+				| Dumling.Lemma<"he", "Saying", "Saying">
 			>;
 	  }
 	| {
@@ -1930,6 +2088,17 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"de", "Lexeme", "SCONJ">
 		| Dumling.Reading<"de", "Lexeme", "SYM">
 		| Dumling.Reading<"de", "Lexeme", "VERB">
+		| Dumling.Reading<"de", "Locution", "ADJ">
+		| Dumling.Reading<"de", "Locution", "ADP">
+		| Dumling.Reading<"de", "Locution", "ADV">
+		| Dumling.Reading<"de", "Locution", "CCONJ">
+		| Dumling.Reading<"de", "Locution", "DET">
+		| Dumling.Reading<"de", "Locution", "INTJ">
+		| Dumling.Reading<"de", "Locution", "NOUN">
+		| Dumling.Reading<"de", "Locution", "NUM">
+		| Dumling.Reading<"de", "Locution", "PRON">
+		| Dumling.Reading<"de", "Locution", "SCONJ">
+		| Dumling.Reading<"de", "Locution", "VERB">
 		| Dumling.Reading<"de", "Morpheme", "Circumfix">
 		| Dumling.Reading<"de", "Morpheme", "Duplifix">
 		| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -1939,11 +2108,7 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"de", "Morpheme", "Suffix">
 		| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"de", "Morpheme", "Transfix">
-		| Dumling.Reading<"de", "Phraseme", "Aphorism">
-		| Dumling.Reading<"de", "Phraseme", "Collocation">
-		| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"de", "Phraseme", "Idiom">
-		| Dumling.Reading<"de", "Phraseme", "Proverb">
+		| Dumling.Reading<"de", "Saying", "Saying">
 		| Dumling.Reading<"en", "Lexeme", "ADJ">
 		| Dumling.Reading<"en", "Lexeme", "ADP">
 		| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -1961,6 +2126,12 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Lexeme", "SCONJ">
 		| Dumling.Reading<"en", "Lexeme", "SYM">
 		| Dumling.Reading<"en", "Lexeme", "VERB">
+		| Dumling.Reading<"en", "Locution", "ADP">
+		| Dumling.Reading<"en", "Locution", "ADV">
+		| Dumling.Reading<"en", "Locution", "INTJ">
+		| Dumling.Reading<"en", "Locution", "NOUN">
+		| Dumling.Reading<"en", "Locution", "SCONJ">
+		| Dumling.Reading<"en", "Locution", "VERB">
 		| Dumling.Reading<"en", "Morpheme", "Circumfix">
 		| Dumling.Reading<"en", "Morpheme", "Duplifix">
 		| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -1971,10 +2142,7 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
-		| Dumling.Reading<"en", "Phraseme", "Aphorism">
-		| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"en", "Phraseme", "Idiom">
-		| Dumling.Reading<"en", "Phraseme", "Proverb">
+		| Dumling.Reading<"en", "Saying", "Saying">
 		| Dumling.Reading<"he", "Lexeme", "ADJ">
 		| Dumling.Reading<"he", "Lexeme", "ADP">
 		| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -1992,6 +2160,8 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"he", "Lexeme", "SCONJ">
 		| Dumling.Reading<"he", "Lexeme", "SYM">
 		| Dumling.Reading<"he", "Lexeme", "VERB">
+		| Dumling.Reading<"he", "Locution", "ADV">
+		| Dumling.Reading<"he", "Locution", "INTJ">
 		| Dumling.Reading<"he", "Morpheme", "Circumfix">
 		| Dumling.Reading<"he", "Morpheme", "Duplifix">
 		| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2002,10 +2172,7 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"he", "Morpheme", "Transfix">
-		| Dumling.Reading<"he", "Phraseme", "Aphorism">
-		| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"he", "Phraseme", "Idiom">
-		| Dumling.Reading<"he", "Phraseme", "Proverb">;
+		| Dumling.Reading<"he", "Saying", "Saying">;
 	relation: SemanticRelation;
 	target:
 		| (
@@ -2026,6 +2193,17 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
+				| Dumling.Lemma<"de", "Locution", "ADJ">
+				| Dumling.Lemma<"de", "Locution", "ADP">
+				| Dumling.Lemma<"de", "Locution", "ADV">
+				| Dumling.Lemma<"de", "Locution", "CCONJ">
+				| Dumling.Lemma<"de", "Locution", "DET">
+				| Dumling.Lemma<"de", "Locution", "INTJ">
+				| Dumling.Lemma<"de", "Locution", "NOUN">
+				| Dumling.Lemma<"de", "Locution", "NUM">
+				| Dumling.Lemma<"de", "Locution", "PRON">
+				| Dumling.Lemma<"de", "Locution", "SCONJ">
+				| Dumling.Lemma<"de", "Locution", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -2035,11 +2213,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"de", "Morpheme", "Suffix">
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
-				| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"de", "Phraseme", "Collocation">
-				| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"de", "Phraseme", "Idiom">
-				| Dumling.Lemma<"de", "Phraseme", "Proverb">
+				| Dumling.Lemma<"de", "Saying", "Saying">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2057,6 +2231,12 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
+				| Dumling.Lemma<"en", "Locution", "ADP">
+				| Dumling.Lemma<"en", "Locution", "ADV">
+				| Dumling.Lemma<"en", "Locution", "INTJ">
+				| Dumling.Lemma<"en", "Locution", "NOUN">
+				| Dumling.Lemma<"en", "Locution", "SCONJ">
+				| Dumling.Lemma<"en", "Locution", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -2067,10 +2247,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
-				| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"en", "Phraseme", "Idiom">
-				| Dumling.Lemma<"en", "Phraseme", "Proverb">
+				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2088,6 +2265,8 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
+				| Dumling.Lemma<"he", "Locution", "ADV">
+				| Dumling.Lemma<"he", "Locution", "INTJ">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -2098,10 +2277,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
-				| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"he", "Phraseme", "Idiom">
-				| Dumling.Lemma<"he", "Phraseme", "Proverb">
+				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
 		| (
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
@@ -2121,6 +2297,17 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"de", "Lexeme", "SCONJ">
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -2130,11 +2317,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"de", "Morpheme", "Suffix">
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
-				| Dumling.Reading<"de", "Phraseme", "Aphorism">
-				| Dumling.Reading<"de", "Phraseme", "Collocation">
-				| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"de", "Phraseme", "Idiom">
-				| Dumling.Reading<"de", "Phraseme", "Proverb">
+				| Dumling.Reading<"de", "Saying", "Saying">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2152,6 +2335,12 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Lexeme", "SCONJ">
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -2162,10 +2351,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
-				| Dumling.Reading<"en", "Phraseme", "Aphorism">
-				| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"en", "Phraseme", "Idiom">
-				| Dumling.Reading<"en", "Phraseme", "Proverb">
+				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2183,6 +2369,8 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"he", "Lexeme", "SCONJ">
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2193,10 +2381,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
-				| Dumling.Reading<"he", "Phraseme", "Aphorism">
-				| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"he", "Phraseme", "Idiom">
-				| Dumling.Reading<"he", "Phraseme", "Proverb">
+				| Dumling.Reading<"he", "Saying", "Saying">
 		  );
 	provenance: "direct" | "inferred";
 };
@@ -2283,6 +2468,17 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"de", "Lexeme", "SCONJ">
 		| Dumling.Reading<"de", "Lexeme", "SYM">
 		| Dumling.Reading<"de", "Lexeme", "VERB">
+		| Dumling.Reading<"de", "Locution", "ADJ">
+		| Dumling.Reading<"de", "Locution", "ADP">
+		| Dumling.Reading<"de", "Locution", "ADV">
+		| Dumling.Reading<"de", "Locution", "CCONJ">
+		| Dumling.Reading<"de", "Locution", "DET">
+		| Dumling.Reading<"de", "Locution", "INTJ">
+		| Dumling.Reading<"de", "Locution", "NOUN">
+		| Dumling.Reading<"de", "Locution", "NUM">
+		| Dumling.Reading<"de", "Locution", "PRON">
+		| Dumling.Reading<"de", "Locution", "SCONJ">
+		| Dumling.Reading<"de", "Locution", "VERB">
 		| Dumling.Reading<"de", "Morpheme", "Circumfix">
 		| Dumling.Reading<"de", "Morpheme", "Duplifix">
 		| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -2292,11 +2488,7 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"de", "Morpheme", "Suffix">
 		| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"de", "Morpheme", "Transfix">
-		| Dumling.Reading<"de", "Phraseme", "Aphorism">
-		| Dumling.Reading<"de", "Phraseme", "Collocation">
-		| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"de", "Phraseme", "Idiom">
-		| Dumling.Reading<"de", "Phraseme", "Proverb">
+		| Dumling.Reading<"de", "Saying", "Saying">
 		| Dumling.Reading<"en", "Lexeme", "ADJ">
 		| Dumling.Reading<"en", "Lexeme", "ADP">
 		| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2314,6 +2506,12 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Lexeme", "SCONJ">
 		| Dumling.Reading<"en", "Lexeme", "SYM">
 		| Dumling.Reading<"en", "Lexeme", "VERB">
+		| Dumling.Reading<"en", "Locution", "ADP">
+		| Dumling.Reading<"en", "Locution", "ADV">
+		| Dumling.Reading<"en", "Locution", "INTJ">
+		| Dumling.Reading<"en", "Locution", "NOUN">
+		| Dumling.Reading<"en", "Locution", "SCONJ">
+		| Dumling.Reading<"en", "Locution", "VERB">
 		| Dumling.Reading<"en", "Morpheme", "Circumfix">
 		| Dumling.Reading<"en", "Morpheme", "Duplifix">
 		| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -2324,10 +2522,7 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
-		| Dumling.Reading<"en", "Phraseme", "Aphorism">
-		| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"en", "Phraseme", "Idiom">
-		| Dumling.Reading<"en", "Phraseme", "Proverb">
+		| Dumling.Reading<"en", "Saying", "Saying">
 		| Dumling.Reading<"he", "Lexeme", "ADJ">
 		| Dumling.Reading<"he", "Lexeme", "ADP">
 		| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2345,6 +2540,8 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"he", "Lexeme", "SCONJ">
 		| Dumling.Reading<"he", "Lexeme", "SYM">
 		| Dumling.Reading<"he", "Lexeme", "VERB">
+		| Dumling.Reading<"he", "Locution", "ADV">
+		| Dumling.Reading<"he", "Locution", "INTJ">
 		| Dumling.Reading<"he", "Morpheme", "Circumfix">
 		| Dumling.Reading<"he", "Morpheme", "Duplifix">
 		| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2355,10 +2552,7 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"he", "Morpheme", "Transfix">
-		| Dumling.Reading<"he", "Phraseme", "Aphorism">
-		| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-		| Dumling.Reading<"he", "Phraseme", "Idiom">
-		| Dumling.Reading<"he", "Phraseme", "Proverb">;
+		| Dumling.Reading<"he", "Saying", "Saying">;
 	relation: GovernmentRelation;
 	target:
 		| (
@@ -2379,6 +2573,17 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
+				| Dumling.Lemma<"de", "Locution", "ADJ">
+				| Dumling.Lemma<"de", "Locution", "ADP">
+				| Dumling.Lemma<"de", "Locution", "ADV">
+				| Dumling.Lemma<"de", "Locution", "CCONJ">
+				| Dumling.Lemma<"de", "Locution", "DET">
+				| Dumling.Lemma<"de", "Locution", "INTJ">
+				| Dumling.Lemma<"de", "Locution", "NOUN">
+				| Dumling.Lemma<"de", "Locution", "NUM">
+				| Dumling.Lemma<"de", "Locution", "PRON">
+				| Dumling.Lemma<"de", "Locution", "SCONJ">
+				| Dumling.Lemma<"de", "Locution", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -2388,11 +2593,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"de", "Morpheme", "Suffix">
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
-				| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"de", "Phraseme", "Collocation">
-				| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"de", "Phraseme", "Idiom">
-				| Dumling.Lemma<"de", "Phraseme", "Proverb">
+				| Dumling.Lemma<"de", "Saying", "Saying">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2410,6 +2611,12 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
+				| Dumling.Lemma<"en", "Locution", "ADP">
+				| Dumling.Lemma<"en", "Locution", "ADV">
+				| Dumling.Lemma<"en", "Locution", "INTJ">
+				| Dumling.Lemma<"en", "Locution", "NOUN">
+				| Dumling.Lemma<"en", "Locution", "SCONJ">
+				| Dumling.Lemma<"en", "Locution", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -2420,10 +2627,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
-				| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"en", "Phraseme", "Idiom">
-				| Dumling.Lemma<"en", "Phraseme", "Proverb">
+				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2441,6 +2645,8 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
+				| Dumling.Lemma<"he", "Locution", "ADV">
+				| Dumling.Lemma<"he", "Locution", "INTJ">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -2451,10 +2657,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
-				| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"he", "Phraseme", "Idiom">
-				| Dumling.Lemma<"he", "Phraseme", "Proverb">
+				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
 		| (
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
@@ -2474,6 +2677,17 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"de", "Lexeme", "SCONJ">
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -2483,11 +2697,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"de", "Morpheme", "Suffix">
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
-				| Dumling.Reading<"de", "Phraseme", "Aphorism">
-				| Dumling.Reading<"de", "Phraseme", "Collocation">
-				| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"de", "Phraseme", "Idiom">
-				| Dumling.Reading<"de", "Phraseme", "Proverb">
+				| Dumling.Reading<"de", "Saying", "Saying">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2505,6 +2715,12 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Lexeme", "SCONJ">
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -2515,10 +2731,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
-				| Dumling.Reading<"en", "Phraseme", "Aphorism">
-				| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"en", "Phraseme", "Idiom">
-				| Dumling.Reading<"en", "Phraseme", "Proverb">
+				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2536,6 +2749,8 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Lexeme", "SCONJ">
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2546,10 +2761,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
-				| Dumling.Reading<"he", "Phraseme", "Aphorism">
-				| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"he", "Phraseme", "Idiom">
-				| Dumling.Reading<"he", "Phraseme", "Proverb">
+				| Dumling.Reading<"he", "Saying", "Saying">
 		  );
 	case: GovernedCase | null;
 	provenance: "direct" | "inferred";
@@ -2583,6 +2795,17 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Lexeme", "SCONJ">
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -2592,11 +2815,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Morpheme", "Suffix">
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
-				| Dumling.Reading<"de", "Phraseme", "Aphorism">
-				| Dumling.Reading<"de", "Phraseme", "Collocation">
-				| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"de", "Phraseme", "Idiom">
-				| Dumling.Reading<"de", "Phraseme", "Proverb">
+				| Dumling.Reading<"de", "Saying", "Saying">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2614,6 +2833,12 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Lexeme", "SCONJ">
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -2624,10 +2849,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
-				| Dumling.Reading<"en", "Phraseme", "Aphorism">
-				| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"en", "Phraseme", "Idiom">
-				| Dumling.Reading<"en", "Phraseme", "Proverb">
+				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2645,6 +2867,8 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Lexeme", "SCONJ">
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2655,10 +2879,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
-				| Dumling.Reading<"he", "Phraseme", "Aphorism">
-				| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"he", "Phraseme", "Idiom">
-				| Dumling.Reading<"he", "Phraseme", "Proverb">;
+				| Dumling.Reading<"he", "Saying", "Saying">;
 			relation: "participleSource";
 			target:
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
@@ -2678,6 +2899,17 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
+				| Dumling.Lemma<"de", "Locution", "ADJ">
+				| Dumling.Lemma<"de", "Locution", "ADP">
+				| Dumling.Lemma<"de", "Locution", "ADV">
+				| Dumling.Lemma<"de", "Locution", "CCONJ">
+				| Dumling.Lemma<"de", "Locution", "DET">
+				| Dumling.Lemma<"de", "Locution", "INTJ">
+				| Dumling.Lemma<"de", "Locution", "NOUN">
+				| Dumling.Lemma<"de", "Locution", "NUM">
+				| Dumling.Lemma<"de", "Locution", "PRON">
+				| Dumling.Lemma<"de", "Locution", "SCONJ">
+				| Dumling.Lemma<"de", "Locution", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -2687,11 +2919,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Morpheme", "Suffix">
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
-				| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"de", "Phraseme", "Collocation">
-				| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"de", "Phraseme", "Idiom">
-				| Dumling.Lemma<"de", "Phraseme", "Proverb">
+				| Dumling.Lemma<"de", "Saying", "Saying">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2709,6 +2937,12 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
+				| Dumling.Lemma<"en", "Locution", "ADP">
+				| Dumling.Lemma<"en", "Locution", "ADV">
+				| Dumling.Lemma<"en", "Locution", "INTJ">
+				| Dumling.Lemma<"en", "Locution", "NOUN">
+				| Dumling.Lemma<"en", "Locution", "SCONJ">
+				| Dumling.Lemma<"en", "Locution", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -2719,10 +2953,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
-				| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"en", "Phraseme", "Idiom">
-				| Dumling.Lemma<"en", "Phraseme", "Proverb">
+				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2740,6 +2971,8 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
+				| Dumling.Lemma<"he", "Locution", "ADV">
+				| Dumling.Lemma<"he", "Locution", "INTJ">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -2750,10 +2983,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
-				| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"he", "Phraseme", "Idiom">
-				| Dumling.Lemma<"he", "Phraseme", "Proverb">;
+				| Dumling.Lemma<"he", "Saying", "Saying">;
 			meaning: ParticipleMeaning;
 			provenance: "direct";
 	  }
@@ -2776,6 +3006,17 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"de", "Lexeme", "SYM">
 				| Dumling.Lemma<"de", "Lexeme", "VERB">
+				| Dumling.Lemma<"de", "Locution", "ADJ">
+				| Dumling.Lemma<"de", "Locution", "ADP">
+				| Dumling.Lemma<"de", "Locution", "ADV">
+				| Dumling.Lemma<"de", "Locution", "CCONJ">
+				| Dumling.Lemma<"de", "Locution", "DET">
+				| Dumling.Lemma<"de", "Locution", "INTJ">
+				| Dumling.Lemma<"de", "Locution", "NOUN">
+				| Dumling.Lemma<"de", "Locution", "NUM">
+				| Dumling.Lemma<"de", "Locution", "PRON">
+				| Dumling.Lemma<"de", "Locution", "SCONJ">
+				| Dumling.Lemma<"de", "Locution", "VERB">
 				| Dumling.Lemma<"de", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"de", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"de", "Morpheme", "Infix">
@@ -2785,11 +3026,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Morpheme", "Suffix">
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
-				| Dumling.Lemma<"de", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"de", "Phraseme", "Collocation">
-				| Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"de", "Phraseme", "Idiom">
-				| Dumling.Lemma<"de", "Phraseme", "Proverb">
+				| Dumling.Lemma<"de", "Saying", "Saying">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2807,6 +3044,12 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"en", "Lexeme", "SYM">
 				| Dumling.Lemma<"en", "Lexeme", "VERB">
+				| Dumling.Lemma<"en", "Locution", "ADP">
+				| Dumling.Lemma<"en", "Locution", "ADV">
+				| Dumling.Lemma<"en", "Locution", "INTJ">
+				| Dumling.Lemma<"en", "Locution", "NOUN">
+				| Dumling.Lemma<"en", "Locution", "SCONJ">
+				| Dumling.Lemma<"en", "Locution", "VERB">
 				| Dumling.Lemma<"en", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"en", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"en", "Morpheme", "Infix">
@@ -2817,10 +3060,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
-				| Dumling.Lemma<"en", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"en", "Phraseme", "Idiom">
-				| Dumling.Lemma<"en", "Phraseme", "Proverb">
+				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2838,6 +3078,8 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Lexeme", "SCONJ">
 				| Dumling.Lemma<"he", "Lexeme", "SYM">
 				| Dumling.Lemma<"he", "Lexeme", "VERB">
+				| Dumling.Lemma<"he", "Locution", "ADV">
+				| Dumling.Lemma<"he", "Locution", "INTJ">
 				| Dumling.Lemma<"he", "Morpheme", "Circumfix">
 				| Dumling.Lemma<"he", "Morpheme", "Duplifix">
 				| Dumling.Lemma<"he", "Morpheme", "Infix">
@@ -2848,10 +3090,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
-				| Dumling.Lemma<"he", "Phraseme", "Aphorism">
-				| Dumling.Lemma<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Lemma<"he", "Phraseme", "Idiom">
-				| Dumling.Lemma<"he", "Phraseme", "Proverb">;
+				| Dumling.Lemma<"he", "Saying", "Saying">;
 			relation: "participialAdjective";
 			target:
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
@@ -2871,6 +3110,17 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Lexeme", "SCONJ">
 				| Dumling.Reading<"de", "Lexeme", "SYM">
 				| Dumling.Reading<"de", "Lexeme", "VERB">
+				| Dumling.Reading<"de", "Locution", "ADJ">
+				| Dumling.Reading<"de", "Locution", "ADP">
+				| Dumling.Reading<"de", "Locution", "ADV">
+				| Dumling.Reading<"de", "Locution", "CCONJ">
+				| Dumling.Reading<"de", "Locution", "DET">
+				| Dumling.Reading<"de", "Locution", "INTJ">
+				| Dumling.Reading<"de", "Locution", "NOUN">
+				| Dumling.Reading<"de", "Locution", "NUM">
+				| Dumling.Reading<"de", "Locution", "PRON">
+				| Dumling.Reading<"de", "Locution", "SCONJ">
+				| Dumling.Reading<"de", "Locution", "VERB">
 				| Dumling.Reading<"de", "Morpheme", "Circumfix">
 				| Dumling.Reading<"de", "Morpheme", "Duplifix">
 				| Dumling.Reading<"de", "Morpheme", "Infix">
@@ -2880,11 +3130,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Morpheme", "Suffix">
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
-				| Dumling.Reading<"de", "Phraseme", "Aphorism">
-				| Dumling.Reading<"de", "Phraseme", "Collocation">
-				| Dumling.Reading<"de", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"de", "Phraseme", "Idiom">
-				| Dumling.Reading<"de", "Phraseme", "Proverb">
+				| Dumling.Reading<"de", "Saying", "Saying">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2902,6 +3148,12 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Lexeme", "SCONJ">
 				| Dumling.Reading<"en", "Lexeme", "SYM">
 				| Dumling.Reading<"en", "Lexeme", "VERB">
+				| Dumling.Reading<"en", "Locution", "ADP">
+				| Dumling.Reading<"en", "Locution", "ADV">
+				| Dumling.Reading<"en", "Locution", "INTJ">
+				| Dumling.Reading<"en", "Locution", "NOUN">
+				| Dumling.Reading<"en", "Locution", "SCONJ">
+				| Dumling.Reading<"en", "Locution", "VERB">
 				| Dumling.Reading<"en", "Morpheme", "Circumfix">
 				| Dumling.Reading<"en", "Morpheme", "Duplifix">
 				| Dumling.Reading<"en", "Morpheme", "Infix">
@@ -2912,10 +3164,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
-				| Dumling.Reading<"en", "Phraseme", "Aphorism">
-				| Dumling.Reading<"en", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"en", "Phraseme", "Idiom">
-				| Dumling.Reading<"en", "Phraseme", "Proverb">
+				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2933,6 +3182,8 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Lexeme", "SCONJ">
 				| Dumling.Reading<"he", "Lexeme", "SYM">
 				| Dumling.Reading<"he", "Lexeme", "VERB">
+				| Dumling.Reading<"he", "Locution", "ADV">
+				| Dumling.Reading<"he", "Locution", "INTJ">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
 				| Dumling.Reading<"he", "Morpheme", "Infix">
@@ -2943,10 +3194,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
-				| Dumling.Reading<"he", "Phraseme", "Aphorism">
-				| Dumling.Reading<"he", "Phraseme", "DiscourseFormula">
-				| Dumling.Reading<"he", "Phraseme", "Idiom">
-				| Dumling.Reading<"he", "Phraseme", "Proverb">;
+				| Dumling.Reading<"he", "Saying", "Saying">;
 			provenance: "inferred";
 	  };
 export type PluralPattern =

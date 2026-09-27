@@ -67,11 +67,17 @@ const languageNames: Readonly<Record<Dumling.Language, string>> = {
 const familyOrder: Readonly<Record<Dumling.Family, number>> = {
 	Lexeme: 0,
 	Morpheme: 1,
-	Phraseme: 2,
+	Locution: 2,
+	Saying: 3,
 };
 
+// A Kind repeats across Families (Lexeme VERB, Locution VERB), so a
+// definition is keyed by both.
 const kindIndex = new Map(
-	kindDefinitions.map((definition, index) => [definition.kind, index]),
+	kindDefinitions.map((definition, index) => [
+		`${definition.family}/${definition.kind}`,
+		index,
+	]),
 );
 
 function kebab(name: string): string {
@@ -110,18 +116,22 @@ function link(text: string, routeId: string): string {
 	return `[${text}](${publicHrefForRouteId(routeId)})`;
 }
 
-function kindOrder(kind: Dumling.Kind): number {
-	const index = kindIndex.get(kind);
+function kindOrder(family: Dumling.Family, kind: Dumling.Kind): number {
+	const index = kindIndex.get(`${family}/${kind}`);
 	if (index === undefined) {
 		throw new Error(
-			`Kind ${kind} has no universal definition in universal-definitions.ts.`,
+			`${family} Kind ${kind} has no universal definition in universal-definitions.ts.`,
 		);
 	}
 	return index;
 }
 
 function routeOrder(route: Pick<SchemaRoute, "family" | "kind">): number {
-	return 1000 * familyOrder[route.family] + kindOrder(route.kind) + 1;
+	return (
+		1000 * familyOrder[route.family] +
+		kindOrder(route.family, route.kind) +
+		1
+	);
 }
 
 function renderValues(accepted: AcceptedValues): string {
@@ -620,7 +630,11 @@ export function buildSpecPages(input: SpecPagesInput): {
 		);
 	}
 	for (const { family, kind, definition } of kindDefinitions) {
-		if (routes.some((route) => route.kind === kind)) {
+		if (
+			routes.some(
+				(route) => route.family === family && route.kind === kind,
+			)
+		) {
 			pages.push(
 				universalKindPage(
 					family,

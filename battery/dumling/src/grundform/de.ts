@@ -60,6 +60,12 @@ function germanClosedClass(surface: Surface): GrundformRule {
 	};
 }
 
+/**
+ * A Locution route borrows the rule of the Lexeme route with its Kind (ADR
+ * 0039): `den Faden verlieren` cites its infinitive, `weißer Rabe` its
+ * nominative singular, `fix und fertig` its undeclined positive. An invariant
+ * Locution or a Saying has no bag, so its spelling decides.
+ */
 export const germanRules = {
 	"de/Lexeme/ADJ": adjective,
 	"de/Lexeme/ADV": { features: { degree: ["Pos"] } },
@@ -72,6 +78,10 @@ export const germanRules = {
 	"de/Lexeme/PROPN": noun,
 	"de/Lexeme/SYM": lexicalConvention,
 	"de/Lexeme/VERB": infinitive,
-	"de/Phraseme/Collocation": infinitive,
-	"de/Phraseme/Idiom": infinitive,
+	"de/Locution/ADJ": adjective,
+	"de/Locution/DET": germanClosedClass,
+	"de/Locution/NOUN": noun,
+	"de/Locution/NUM": lexicalConvention,
+	"de/Locution/PRON": germanClosedClass,
+	"de/Locution/VERB": infinitive,
 } as const;

@@ -32,7 +32,8 @@ export type DocCitePageFamily =
 	| "kind"
 	| "pos"
 	| "morpheme"
-	| "phraseme"
+	| "locution"
+	| "saying"
 	| "feature"
 	| "feature-attestation"
 	| "feature-surface";

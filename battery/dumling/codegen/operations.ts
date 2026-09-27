@@ -28,10 +28,12 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isNounArticleAttestation,
+	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	nounArticleAttestationError,
+	sayingCanonicalFormError,
 } from "../src/validation/semantics.js";
 
 export const registrations = [
@@ -131,6 +133,13 @@ export const registrations = [
 		implementation: hasMarkedFeature,
 		error: nonEmptyFeatureBagError,
 		name: "dumling.feature-bag.marked",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSayingCanonicalForm,
+		error: sayingCanonicalFormError,
+		name: "dumling.saying.canonical-form",
 		version: 1,
 	},
 	{

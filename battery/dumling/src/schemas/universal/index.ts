@@ -3,12 +3,11 @@ export * from "./core/pos.js";
 export * from "./core/supported-language.js";
 export * from "./core/unit-kind/lemma-kind.js";
 export * from "./core/unit-kind/morpheme-kind.js";
-export * from "./core/unit-kind/phraseme-kind.js";
+export * from "./core/unit-kind/saying-kind.js";
 export type {
 	IsUniversalFeatureBags,
 	UniversalFeatureBags,
 } from "./features/catalog.js";
-export { DiscourseFormulaRole } from "./features/custom/discourse-formula-role.js";
 export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";

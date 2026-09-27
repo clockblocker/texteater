@@ -8903,6 +8903,744 @@
 													},
 													"family": {
 														"type": "string",
+														"const": "Locution"
+													},
+													"kind": {
+														"type": "string",
+														"const": "ADV"
+													},
+													"canonicalForm": {
+														"type": "string",
+														"minLength": 1
+													},
+													"coreFeatures": {
+														"type": "object",
+														"properties": {},
+														"additionalProperties": false
+													}
+												},
+												"required": [
+													"unitKind",
+													"language",
+													"family",
+													"kind",
+													"canonicalForm",
+													"coreFeatures"
+												],
+												"additionalProperties": false
+											},
+											"normalizedSurface": {
+												"type": "string",
+												"minLength": 1
+											},
+											"spelling": {
+												"type": "string",
+												"enum": [
+													"Canonical",
+													"Variant"
+												]
+											},
+											"surfaceFeatures": {
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"historicalStatus": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"const": "Archaic"
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"historicalStatus"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "null"
+													}
+												]
+											}
+										},
+										"required": [
+											"unitKind",
+											"language",
+											"lemma",
+											"normalizedSurface",
+											"spelling",
+											"surfaceFeatures"
+										],
+										"additionalProperties": false
+									},
+									"members": {
+										"type": "array",
+										"prefixItems": [
+											{
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"attested": {
+																"type": "string",
+																"minLength": 1
+															},
+															"orthography": {
+																"type": "string",
+																"enum": [
+																	"Standard",
+																	"Typo",
+																	"Shorthand"
+																]
+															}
+														},
+														"required": [
+															"attested",
+															"orthography"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"attested": {
+																"type": "string",
+																"minLength": 1
+															},
+															"orthography": {
+																"type": "string",
+																"const": "Fused"
+															},
+															"fusion": {
+																"type": "object",
+																"properties": {
+																	"spelling": {
+																		"type": "string",
+																		"minLength": 1
+																	},
+																	"components": {
+																		"type": "array",
+																		"prefixItems": [
+																			{
+																				"type": "object",
+																				"properties": {
+																					"span": {
+																						"type": "string"
+																					},
+																					"surface": {
+																						"type": "string",
+																						"minLength": 1
+																					}
+																				},
+																				"required": [
+																					"span",
+																					"surface"
+																				],
+																				"additionalProperties": false
+																			},
+																			{
+																				"type": "object",
+																				"properties": {
+																					"span": {
+																						"type": "string"
+																					},
+																					"surface": {
+																						"type": "string",
+																						"minLength": 1
+																					}
+																				},
+																				"required": [
+																					"span",
+																					"surface"
+																				],
+																				"additionalProperties": false
+																			}
+																		],
+																		"items": {
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		}
+																	}
+																},
+																"required": [
+																	"spelling",
+																	"components"
+																],
+																"additionalProperties": false
+															},
+															"component": {
+																"type": "integer",
+																"minimum": 0,
+																"maximum": 9007199254740991
+															}
+														},
+														"required": [
+															"attested",
+															"orthography",
+															"fusion",
+															"component"
+														],
+														"additionalProperties": false
+													}
+												]
+											}
+										],
+										"items": {
+											"anyOf": [
+												{
+													"type": "object",
+													"properties": {
+														"attested": {
+															"type": "string",
+															"minLength": 1
+														},
+														"orthography": {
+															"type": "string",
+															"enum": [
+																"Standard",
+																"Typo",
+																"Shorthand"
+															]
+														}
+													},
+													"required": [
+														"attested",
+														"orthography"
+													],
+													"additionalProperties": false
+												},
+												{
+													"type": "object",
+													"properties": {
+														"attested": {
+															"type": "string",
+															"minLength": 1
+														},
+														"orthography": {
+															"type": "string",
+															"const": "Fused"
+														},
+														"fusion": {
+															"type": "object",
+															"properties": {
+																"spelling": {
+																	"type": "string",
+																	"minLength": 1
+																},
+																"components": {
+																	"type": "array",
+																	"prefixItems": [
+																		{
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		},
+																		{
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		}
+																	],
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"span": {
+																				"type": "string"
+																			},
+																			"surface": {
+																				"type": "string",
+																				"minLength": 1
+																			}
+																		},
+																		"required": [
+																			"span",
+																			"surface"
+																		],
+																		"additionalProperties": false
+																	}
+																}
+															},
+															"required": [
+																"spelling",
+																"components"
+															],
+															"additionalProperties": false
+														},
+														"component": {
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														}
+													},
+													"required": [
+														"attested",
+														"orthography",
+														"fusion",
+														"component"
+													],
+													"additionalProperties": false
+												}
+											]
+										}
+									},
+									"realizationCoverage": {
+										"type": "string",
+										"enum": [
+											"Full",
+											"Partial"
+										]
+									}
+								},
+								"required": [
+									"unitKind",
+									"surface",
+									"members",
+									"realizationCoverage"
+								],
+								"additionalProperties": false
+							},
+							{
+								"type": "object",
+								"properties": {
+									"unitKind": {
+										"type": "string",
+										"const": "Attestation"
+									},
+									"surface": {
+										"type": "object",
+										"properties": {
+											"unitKind": {
+												"type": "string",
+												"const": "Surface"
+											},
+											"language": {
+												"type": "string",
+												"const": "he"
+											},
+											"lemma": {
+												"type": "object",
+												"properties": {
+													"unitKind": {
+														"type": "string",
+														"const": "Lemma"
+													},
+													"language": {
+														"type": "string",
+														"const": "he"
+													},
+													"family": {
+														"type": "string",
+														"const": "Locution"
+													},
+													"kind": {
+														"type": "string",
+														"const": "INTJ"
+													},
+													"canonicalForm": {
+														"type": "string",
+														"minLength": 1
+													},
+													"coreFeatures": {
+														"type": "object",
+														"properties": {},
+														"additionalProperties": false
+													}
+												},
+												"required": [
+													"unitKind",
+													"language",
+													"family",
+													"kind",
+													"canonicalForm",
+													"coreFeatures"
+												],
+												"additionalProperties": false
+											},
+											"normalizedSurface": {
+												"type": "string",
+												"minLength": 1
+											},
+											"spelling": {
+												"type": "string",
+												"enum": [
+													"Canonical",
+													"Variant"
+												]
+											},
+											"surfaceFeatures": {
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"historicalStatus": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"const": "Archaic"
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"historicalStatus"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "null"
+													}
+												]
+											}
+										},
+										"required": [
+											"unitKind",
+											"language",
+											"lemma",
+											"normalizedSurface",
+											"spelling",
+											"surfaceFeatures"
+										],
+										"additionalProperties": false
+									},
+									"members": {
+										"type": "array",
+										"prefixItems": [
+											{
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"attested": {
+																"type": "string",
+																"minLength": 1
+															},
+															"orthography": {
+																"type": "string",
+																"enum": [
+																	"Standard",
+																	"Typo",
+																	"Shorthand"
+																]
+															}
+														},
+														"required": [
+															"attested",
+															"orthography"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"attested": {
+																"type": "string",
+																"minLength": 1
+															},
+															"orthography": {
+																"type": "string",
+																"const": "Fused"
+															},
+															"fusion": {
+																"type": "object",
+																"properties": {
+																	"spelling": {
+																		"type": "string",
+																		"minLength": 1
+																	},
+																	"components": {
+																		"type": "array",
+																		"prefixItems": [
+																			{
+																				"type": "object",
+																				"properties": {
+																					"span": {
+																						"type": "string"
+																					},
+																					"surface": {
+																						"type": "string",
+																						"minLength": 1
+																					}
+																				},
+																				"required": [
+																					"span",
+																					"surface"
+																				],
+																				"additionalProperties": false
+																			},
+																			{
+																				"type": "object",
+																				"properties": {
+																					"span": {
+																						"type": "string"
+																					},
+																					"surface": {
+																						"type": "string",
+																						"minLength": 1
+																					}
+																				},
+																				"required": [
+																					"span",
+																					"surface"
+																				],
+																				"additionalProperties": false
+																			}
+																		],
+																		"items": {
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		}
+																	}
+																},
+																"required": [
+																	"spelling",
+																	"components"
+																],
+																"additionalProperties": false
+															},
+															"component": {
+																"type": "integer",
+																"minimum": 0,
+																"maximum": 9007199254740991
+															}
+														},
+														"required": [
+															"attested",
+															"orthography",
+															"fusion",
+															"component"
+														],
+														"additionalProperties": false
+													}
+												]
+											}
+										],
+										"items": {
+											"anyOf": [
+												{
+													"type": "object",
+													"properties": {
+														"attested": {
+															"type": "string",
+															"minLength": 1
+														},
+														"orthography": {
+															"type": "string",
+															"enum": [
+																"Standard",
+																"Typo",
+																"Shorthand"
+															]
+														}
+													},
+													"required": [
+														"attested",
+														"orthography"
+													],
+													"additionalProperties": false
+												},
+												{
+													"type": "object",
+													"properties": {
+														"attested": {
+															"type": "string",
+															"minLength": 1
+														},
+														"orthography": {
+															"type": "string",
+															"const": "Fused"
+														},
+														"fusion": {
+															"type": "object",
+															"properties": {
+																"spelling": {
+																	"type": "string",
+																	"minLength": 1
+																},
+																"components": {
+																	"type": "array",
+																	"prefixItems": [
+																		{
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		},
+																		{
+																			"type": "object",
+																			"properties": {
+																				"span": {
+																					"type": "string"
+																				},
+																				"surface": {
+																					"type": "string",
+																					"minLength": 1
+																				}
+																			},
+																			"required": [
+																				"span",
+																				"surface"
+																			],
+																			"additionalProperties": false
+																		}
+																	],
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"span": {
+																				"type": "string"
+																			},
+																			"surface": {
+																				"type": "string",
+																				"minLength": 1
+																			}
+																		},
+																		"required": [
+																			"span",
+																			"surface"
+																		],
+																		"additionalProperties": false
+																	}
+																}
+															},
+															"required": [
+																"spelling",
+																"components"
+															],
+															"additionalProperties": false
+														},
+														"component": {
+															"type": "integer",
+															"minimum": 0,
+															"maximum": 9007199254740991
+														}
+													},
+													"required": [
+														"attested",
+														"orthography",
+														"fusion",
+														"component"
+													],
+													"additionalProperties": false
+												}
+											]
+										}
+									},
+									"realizationCoverage": {
+										"type": "string",
+										"enum": [
+											"Full",
+											"Partial"
+										]
+									}
+								},
+								"required": [
+									"unitKind",
+									"surface",
+									"members",
+									"realizationCoverage"
+								],
+								"additionalProperties": false
+							},
+							{
+								"type": "object",
+								"properties": {
+									"unitKind": {
+										"type": "string",
+										"const": "Attestation"
+									},
+									"surface": {
+										"type": "object",
+										"properties": {
+											"unitKind": {
+												"type": "string",
+												"const": "Surface"
+											},
+											"language": {
+												"type": "string",
+												"const": "he"
+											},
+											"lemma": {
+												"type": "object",
+												"properties": {
+													"unitKind": {
+														"type": "string",
+														"const": "Lemma"
+													},
+													"language": {
+														"type": "string",
+														"const": "he"
+													},
+													"family": {
+														"type": "string",
 														"const": "Morpheme"
 													},
 													"kind": {
@@ -12593,1285 +13331,11 @@
 													},
 													"family": {
 														"type": "string",
-														"const": "Phraseme"
+														"const": "Saying"
 													},
 													"kind": {
 														"type": "string",
-														"const": "Aphorism"
-													},
-													"canonicalForm": {
-														"type": "string",
-														"minLength": 1
-													},
-													"coreFeatures": {
-														"type": "object",
-														"properties": {},
-														"additionalProperties": false
-													}
-												},
-												"required": [
-													"unitKind",
-													"language",
-													"family",
-													"kind",
-													"canonicalForm",
-													"coreFeatures"
-												],
-												"additionalProperties": false
-											},
-											"normalizedSurface": {
-												"type": "string",
-												"minLength": 1
-											},
-											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
-												]
-											},
-											"surfaceFeatures": {
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"historicalStatus": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"const": "Archaic"
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															}
-														},
-														"required": [
-															"historicalStatus"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "null"
-													}
-												]
-											}
-										},
-										"required": [
-											"unitKind",
-											"language",
-											"lemma",
-											"normalizedSurface",
-											"spelling",
-											"surfaceFeatures"
-										],
-										"additionalProperties": false
-									},
-									"members": {
-										"type": "array",
-										"prefixItems": [
-											{
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"enum": [
-																	"Standard",
-																	"Typo",
-																	"Shorthand"
-																]
-															}
-														},
-														"required": [
-															"attested",
-															"orthography"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"const": "Fused"
-															},
-															"fusion": {
-																"type": "object",
-																"properties": {
-																	"spelling": {
-																		"type": "string",
-																		"minLength": 1
-																	},
-																	"components": {
-																		"type": "array",
-																		"prefixItems": [
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			},
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			}
-																		],
-																		"items": {
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	}
-																},
-																"required": [
-																	"spelling",
-																	"components"
-																],
-																"additionalProperties": false
-															},
-															"component": {
-																"type": "integer",
-																"minimum": 0,
-																"maximum": 9007199254740991
-															}
-														},
-														"required": [
-															"attested",
-															"orthography",
-															"fusion",
-															"component"
-														],
-														"additionalProperties": false
-													}
-												]
-											}
-										],
-										"items": {
-											"anyOf": [
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"enum": [
-																"Standard",
-																"Typo",
-																"Shorthand"
-															]
-														}
-													},
-													"required": [
-														"attested",
-														"orthography"
-													],
-													"additionalProperties": false
-												},
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"const": "Fused"
-														},
-														"fusion": {
-															"type": "object",
-															"properties": {
-																"spelling": {
-																	"type": "string",
-																	"minLength": 1
-																},
-																"components": {
-																	"type": "array",
-																	"prefixItems": [
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		},
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	],
-																	"items": {
-																		"type": "object",
-																		"properties": {
-																			"span": {
-																				"type": "string"
-																			},
-																			"surface": {
-																				"type": "string",
-																				"minLength": 1
-																			}
-																		},
-																		"required": [
-																			"span",
-																			"surface"
-																		],
-																		"additionalProperties": false
-																	}
-																}
-															},
-															"required": [
-																"spelling",
-																"components"
-															],
-															"additionalProperties": false
-														},
-														"component": {
-															"type": "integer",
-															"minimum": 0,
-															"maximum": 9007199254740991
-														}
-													},
-													"required": [
-														"attested",
-														"orthography",
-														"fusion",
-														"component"
-													],
-													"additionalProperties": false
-												}
-											]
-										}
-									},
-									"realizationCoverage": {
-										"type": "string",
-										"enum": [
-											"Full",
-											"Partial"
-										]
-									}
-								},
-								"required": [
-									"unitKind",
-									"surface",
-									"members",
-									"realizationCoverage"
-								],
-								"additionalProperties": false
-							},
-							{
-								"type": "object",
-								"properties": {
-									"unitKind": {
-										"type": "string",
-										"const": "Attestation"
-									},
-									"surface": {
-										"type": "object",
-										"properties": {
-											"unitKind": {
-												"type": "string",
-												"const": "Surface"
-											},
-											"language": {
-												"type": "string",
-												"const": "he"
-											},
-											"lemma": {
-												"type": "object",
-												"properties": {
-													"unitKind": {
-														"type": "string",
-														"const": "Lemma"
-													},
-													"language": {
-														"type": "string",
-														"const": "he"
-													},
-													"family": {
-														"type": "string",
-														"const": "Phraseme"
-													},
-													"kind": {
-														"type": "string",
-														"const": "DiscourseFormula"
-													},
-													"canonicalForm": {
-														"type": "string",
-														"minLength": 1
-													},
-													"coreFeatures": {
-														"type": "object",
-														"properties": {},
-														"additionalProperties": false
-													}
-												},
-												"required": [
-													"unitKind",
-													"language",
-													"family",
-													"kind",
-													"canonicalForm",
-													"coreFeatures"
-												],
-												"additionalProperties": false
-											},
-											"normalizedSurface": {
-												"type": "string",
-												"minLength": 1
-											},
-											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
-												]
-											},
-											"surfaceFeatures": {
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"historicalStatus": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"const": "Archaic"
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															}
-														},
-														"required": [
-															"historicalStatus"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "null"
-													}
-												]
-											}
-										},
-										"required": [
-											"unitKind",
-											"language",
-											"lemma",
-											"normalizedSurface",
-											"spelling",
-											"surfaceFeatures"
-										],
-										"additionalProperties": false
-									},
-									"members": {
-										"type": "array",
-										"prefixItems": [
-											{
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"enum": [
-																	"Standard",
-																	"Typo",
-																	"Shorthand"
-																]
-															}
-														},
-														"required": [
-															"attested",
-															"orthography"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"const": "Fused"
-															},
-															"fusion": {
-																"type": "object",
-																"properties": {
-																	"spelling": {
-																		"type": "string",
-																		"minLength": 1
-																	},
-																	"components": {
-																		"type": "array",
-																		"prefixItems": [
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			},
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			}
-																		],
-																		"items": {
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	}
-																},
-																"required": [
-																	"spelling",
-																	"components"
-																],
-																"additionalProperties": false
-															},
-															"component": {
-																"type": "integer",
-																"minimum": 0,
-																"maximum": 9007199254740991
-															}
-														},
-														"required": [
-															"attested",
-															"orthography",
-															"fusion",
-															"component"
-														],
-														"additionalProperties": false
-													}
-												]
-											}
-										],
-										"items": {
-											"anyOf": [
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"enum": [
-																"Standard",
-																"Typo",
-																"Shorthand"
-															]
-														}
-													},
-													"required": [
-														"attested",
-														"orthography"
-													],
-													"additionalProperties": false
-												},
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"const": "Fused"
-														},
-														"fusion": {
-															"type": "object",
-															"properties": {
-																"spelling": {
-																	"type": "string",
-																	"minLength": 1
-																},
-																"components": {
-																	"type": "array",
-																	"prefixItems": [
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		},
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	],
-																	"items": {
-																		"type": "object",
-																		"properties": {
-																			"span": {
-																				"type": "string"
-																			},
-																			"surface": {
-																				"type": "string",
-																				"minLength": 1
-																			}
-																		},
-																		"required": [
-																			"span",
-																			"surface"
-																		],
-																		"additionalProperties": false
-																	}
-																}
-															},
-															"required": [
-																"spelling",
-																"components"
-															],
-															"additionalProperties": false
-														},
-														"component": {
-															"type": "integer",
-															"minimum": 0,
-															"maximum": 9007199254740991
-														}
-													},
-													"required": [
-														"attested",
-														"orthography",
-														"fusion",
-														"component"
-													],
-													"additionalProperties": false
-												}
-											]
-										}
-									},
-									"realizationCoverage": {
-										"type": "string",
-										"enum": [
-											"Full",
-											"Partial"
-										]
-									}
-								},
-								"required": [
-									"unitKind",
-									"surface",
-									"members",
-									"realizationCoverage"
-								],
-								"additionalProperties": false
-							},
-							{
-								"type": "object",
-								"properties": {
-									"unitKind": {
-										"type": "string",
-										"const": "Attestation"
-									},
-									"surface": {
-										"type": "object",
-										"properties": {
-											"unitKind": {
-												"type": "string",
-												"const": "Surface"
-											},
-											"language": {
-												"type": "string",
-												"const": "he"
-											},
-											"lemma": {
-												"type": "object",
-												"properties": {
-													"unitKind": {
-														"type": "string",
-														"const": "Lemma"
-													},
-													"language": {
-														"type": "string",
-														"const": "he"
-													},
-													"family": {
-														"type": "string",
-														"const": "Phraseme"
-													},
-													"kind": {
-														"type": "string",
-														"const": "Idiom"
-													},
-													"canonicalForm": {
-														"type": "string",
-														"minLength": 1
-													},
-													"coreFeatures": {
-														"type": "object",
-														"properties": {},
-														"additionalProperties": false
-													}
-												},
-												"required": [
-													"unitKind",
-													"language",
-													"family",
-													"kind",
-													"canonicalForm",
-													"coreFeatures"
-												],
-												"additionalProperties": false
-											},
-											"normalizedSurface": {
-												"type": "string",
-												"minLength": 1
-											},
-											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
-												]
-											},
-											"surfaceFeatures": {
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"historicalStatus": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"const": "Archaic"
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															}
-														},
-														"required": [
-															"historicalStatus"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "null"
-													}
-												]
-											}
-										},
-										"required": [
-											"unitKind",
-											"language",
-											"lemma",
-											"normalizedSurface",
-											"spelling",
-											"surfaceFeatures"
-										],
-										"additionalProperties": false
-									},
-									"members": {
-										"type": "array",
-										"prefixItems": [
-											{
-												"anyOf": [
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"enum": [
-																	"Standard",
-																	"Typo",
-																	"Shorthand"
-																]
-															}
-														},
-														"required": [
-															"attested",
-															"orthography"
-														],
-														"additionalProperties": false
-													},
-													{
-														"type": "object",
-														"properties": {
-															"attested": {
-																"type": "string",
-																"minLength": 1
-															},
-															"orthography": {
-																"type": "string",
-																"const": "Fused"
-															},
-															"fusion": {
-																"type": "object",
-																"properties": {
-																	"spelling": {
-																		"type": "string",
-																		"minLength": 1
-																	},
-																	"components": {
-																		"type": "array",
-																		"prefixItems": [
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			},
-																			{
-																				"type": "object",
-																				"properties": {
-																					"span": {
-																						"type": "string"
-																					},
-																					"surface": {
-																						"type": "string",
-																						"minLength": 1
-																					}
-																				},
-																				"required": [
-																					"span",
-																					"surface"
-																				],
-																				"additionalProperties": false
-																			}
-																		],
-																		"items": {
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	}
-																},
-																"required": [
-																	"spelling",
-																	"components"
-																],
-																"additionalProperties": false
-															},
-															"component": {
-																"type": "integer",
-																"minimum": 0,
-																"maximum": 9007199254740991
-															}
-														},
-														"required": [
-															"attested",
-															"orthography",
-															"fusion",
-															"component"
-														],
-														"additionalProperties": false
-													}
-												]
-											}
-										],
-										"items": {
-											"anyOf": [
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"enum": [
-																"Standard",
-																"Typo",
-																"Shorthand"
-															]
-														}
-													},
-													"required": [
-														"attested",
-														"orthography"
-													],
-													"additionalProperties": false
-												},
-												{
-													"type": "object",
-													"properties": {
-														"attested": {
-															"type": "string",
-															"minLength": 1
-														},
-														"orthography": {
-															"type": "string",
-															"const": "Fused"
-														},
-														"fusion": {
-															"type": "object",
-															"properties": {
-																"spelling": {
-																	"type": "string",
-																	"minLength": 1
-																},
-																"components": {
-																	"type": "array",
-																	"prefixItems": [
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		},
-																		{
-																			"type": "object",
-																			"properties": {
-																				"span": {
-																					"type": "string"
-																				},
-																				"surface": {
-																					"type": "string",
-																					"minLength": 1
-																				}
-																			},
-																			"required": [
-																				"span",
-																				"surface"
-																			],
-																			"additionalProperties": false
-																		}
-																	],
-																	"items": {
-																		"type": "object",
-																		"properties": {
-																			"span": {
-																				"type": "string"
-																			},
-																			"surface": {
-																				"type": "string",
-																				"minLength": 1
-																			}
-																		},
-																		"required": [
-																			"span",
-																			"surface"
-																		],
-																		"additionalProperties": false
-																	}
-																}
-															},
-															"required": [
-																"spelling",
-																"components"
-															],
-															"additionalProperties": false
-														},
-														"component": {
-															"type": "integer",
-															"minimum": 0,
-															"maximum": 9007199254740991
-														}
-													},
-													"required": [
-														"attested",
-														"orthography",
-														"fusion",
-														"component"
-													],
-													"additionalProperties": false
-												}
-											]
-										}
-									},
-									"realizationCoverage": {
-										"type": "string",
-										"enum": [
-											"Full",
-											"Partial"
-										]
-									},
-									"valencyEvidence": {
-										"type": "array",
-										"items": {
-											"type": "object",
-											"properties": {
-												"member": {
-													"anyOf": [
-														{
-															"type": "integer",
-															"minimum": 0,
-															"maximum": 9007199254740991
-														},
-														{
-															"type": "null"
-														}
-													]
-												},
-												"complement": {
-													"anyOf": [
-														{
-															"type": "object",
-															"properties": {
-																"kind": {
-																	"type": "string",
-																	"const": "Subject"
-																},
-																"referent": {
-																	"type": "string",
-																	"enum": [
-																		"Someone",
-																		"Something",
-																		"Either"
-																	]
-																}
-															},
-															"required": [
-																"kind",
-																"referent"
-															],
-															"additionalProperties": false
-														},
-														{
-															"type": "object",
-															"properties": {
-																"kind": {
-																	"type": "string",
-																	"const": "DirectObject"
-																},
-																"referent": {
-																	"type": "string",
-																	"enum": [
-																		"Someone",
-																		"Something",
-																		"Either"
-																	]
-																}
-															},
-															"required": [
-																"kind",
-																"referent"
-															],
-															"additionalProperties": false
-														},
-														{
-															"type": "object",
-															"properties": {
-																"kind": {
-																	"type": "string",
-																	"const": "Preposition"
-																},
-																"preposition": {
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Lemma"
-																		},
-																		"language": {
-																			"type": "string",
-																			"const": "he"
-																		},
-																		"family": {
-																			"type": "string",
-																			"const": "Lexeme"
-																		},
-																		"kind": {
-																			"type": "string",
-																			"const": "ADP"
-																		},
-																		"canonicalForm": {
-																			"type": "string",
-																			"minLength": 1
-																		},
-																		"coreFeatures": {
-																			"type": "object",
-																			"properties": {
-																				"abbr": {
-																					"anyOf": [
-																						{
-																							"type": "string",
-																							"enum": [
-																								"Yes"
-																							]
-																						},
-																						{
-																							"type": "null"
-																						}
-																					]
-																				},
-																				"case": {
-																					"anyOf": [
-																						{
-																							"type": "string",
-																							"enum": [
-																								"Acc",
-																								"Gen"
-																							]
-																						},
-																						{
-																							"type": "null"
-																						}
-																					]
-																				}
-																			},
-																			"required": [
-																				"abbr",
-																				"case"
-																			],
-																			"additionalProperties": false
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"language",
-																		"family",
-																		"kind",
-																		"canonicalForm",
-																		"coreFeatures"
-																	],
-																	"additionalProperties": false
-																},
-																"referent": {
-																	"type": "string",
-																	"enum": [
-																		"Someone",
-																		"Something",
-																		"Either"
-																	]
-																}
-															},
-															"required": [
-																"kind",
-																"preposition",
-																"referent"
-															],
-															"additionalProperties": false
-														}
-													]
-												}
-											},
-											"required": [
-												"member",
-												"complement"
-											],
-											"additionalProperties": false
-										}
-									}
-								},
-								"required": [
-									"unitKind",
-									"surface",
-									"members",
-									"realizationCoverage"
-								],
-								"additionalProperties": false
-							},
-							{
-								"type": "object",
-								"properties": {
-									"unitKind": {
-										"type": "string",
-										"const": "Attestation"
-									},
-									"surface": {
-										"type": "object",
-										"properties": {
-											"unitKind": {
-												"type": "string",
-												"const": "Surface"
-											},
-											"language": {
-												"type": "string",
-												"const": "he"
-											},
-											"lemma": {
-												"type": "object",
-												"properties": {
-													"unitKind": {
-														"type": "string",
-														"const": "Lemma"
-													},
-													"language": {
-														"type": "string",
-														"const": "he"
-													},
-													"family": {
-														"type": "string",
-														"const": "Phraseme"
-													},
-													"kind": {
-														"type": "string",
-														"const": "Proverb"
+														"const": "Saying"
 													},
 													"canonicalForm": {
 														"type": "string",

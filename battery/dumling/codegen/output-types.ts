@@ -7,6 +7,7 @@ export const dumlingTypePreservingOperations = [
 	"dumling.de-pronoun.core",
 	"dumling.de-determiner.core",
 	"dumling.emoji-description",
+	"dumling.saying.canonical-form",
 	"dumling.normalize-form",
 	"dumling.normalize-emoji-description",
 ];

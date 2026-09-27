@@ -34,11 +34,11 @@ const positionOrPreposition = [
  * The complements each language × Family × Kind route lets its Valency Frame
  * hold, chosen per route the way ADR 0032 chooses Core Features. A route
  * missing here takes no frame. German nouns take only governed prepositions
- * (`Angst vor`); their bare cases are attributes, not valency. Hebrew mirrors
- * the German choices with its own complements: nouns take only governed
- * prepositions, and Idiom is its one framed Phraseme route, since Hebrew has
- * no Collocation route. English makes the same choices with its own
- * complements, and likewise has no Collocation route.
+ * (`Angst vor`); their bare cases are attributes, not valency. A Locution
+ * route takes the frame of the Lexeme route with its Kind (ADR 0039): `Angst
+ * haben vor`. Hebrew mirrors the German choices with its own complements:
+ * nouns take only governed prepositions, and it has no framed Locution route
+ * yet. English makes the same choices with its own complements.
  */
 const valencyPolicy: {
 	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
@@ -51,9 +51,10 @@ const valencyPolicy: {
 			ADJ: caseOrPreposition,
 			NOUN: ["Preposition"],
 		},
-		Phraseme: {
-			Collocation: caseOrPreposition,
-			Idiom: caseOrPreposition,
+		Locution: {
+			VERB: caseOrPreposition,
+			ADJ: caseOrPreposition,
+			NOUN: ["Preposition"],
 		},
 	},
 	he: {
@@ -62,9 +63,6 @@ const valencyPolicy: {
 			ADJ: functionOrPreposition,
 			NOUN: ["Preposition"],
 		},
-		Phraseme: {
-			Idiom: functionOrPreposition,
-		},
 	},
 	en: {
 		Lexeme: {
@@ -72,8 +70,9 @@ const valencyPolicy: {
 			ADJ: positionOrPreposition,
 			NOUN: ["Preposition"],
 		},
-		Phraseme: {
-			Idiom: positionOrPreposition,
+		Locution: {
+			VERB: positionOrPreposition,
+			NOUN: ["Preposition"],
 		},
 	},
 };

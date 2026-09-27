@@ -42,6 +42,12 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	// The first German number value is plural, whose agreement has no gender.
 	if (route.key === "de/Lexeme/DET") sample.core.gender = null;
 	const bag = route.bag.parse(sample);
+	// A DET or PRON Locution's first number value is plural too.
+	if (
+		["de/Locution/DET", "de/Locution/PRON"].includes(route.key) &&
+		bag.inflectional
+	)
+		Object.assign(bag.inflectional, { gender: null });
 	// A Paradigm Cell coordinate is marked in Core or on the Surface, never both.
 	if (
 		(route.key === "de/Lexeme/DET" || route.key === "de/Lexeme/PRON") &&
@@ -63,9 +69,11 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		bag.inflectional
 	)
 		Object.assign(bag.inflectional, { article: "None" });
-	const verbal =
-		route.language === "de" &&
-		["VERB", "AUX", "Idiom", "Collocation"].includes(route.kind);
+	const verbal = [
+		"de/Lexeme/VERB",
+		"de/Lexeme/AUX",
+		"de/Locution/VERB",
+	].includes(route.key);
 	if (verbal && bag.inflectional)
 		Object.assign(bag.inflectional, { expletive: null });
 	const Lemma = {
@@ -111,7 +119,12 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		].includes(route.key)
 			? { articleEvidence: null }
 			: {}),
-		...(["de/Lexeme/ADJ", "de/Lexeme/NOUN"].includes(route.key)
+		...([
+			"de/Lexeme/ADJ",
+			"de/Lexeme/NOUN",
+			"de/Locution/ADJ",
+			"de/Locution/NOUN",
+		].includes(route.key)
 			? { valencyEvidence: [] }
 			: {}),
 	};

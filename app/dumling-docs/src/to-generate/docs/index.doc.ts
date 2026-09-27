@@ -30,7 +30,7 @@ Classical linguistic segmenters are usually built around tokens and grammar. Tha
 
 In a UD-style analysis, _"give up"_ is split into parts: **give** is the verbal head, and **up** is a particle attached to it. Dumling can still borrow that POS vocabulary, but it also gives applications a way to treat _"give up"_ as one lexical unit when that is the meaning-bearing unit the learner needs.
 
-This also matters for phrasemes:
+This also matters for Locutions:
 
 - _During my [walk] in a park, I saw a squirrel._
 
@@ -40,7 +40,7 @@ This also matters for phrasemes:
 - _This exam was a [walk] in the park._
 
     Here the click resolves through the multi-segment Surface _"walk in the
-    park"_ to the idiomatic Phraseme Lemma _"walk in the park"_.
+    park"_ to the idiomatic Locution Lemma _"walk in the park"_.
 
 An Attestation is not forced to be contiguous. Its ordered members can preserve
 discontinuous evidence while still resolving to the larger Surface and Lemma.
@@ -57,7 +57,7 @@ Dumling focuses on lexical classification for learning tools:
 - **Surface**: the normalized contextual form, such as _"gave up"_
 - **Attestation**: click-independent occurrence evidence with one or more exact, source-ordered members
 - **Reading**: foundational semantic value formed by one Lemma and one emoji description
-- Lemma family: \`Lexeme\`, \`Morpheme\`, or \`Phraseme\`
+- Lemma family: \`Lexeme\`, \`Locution\`, \`Saying\`, or \`Morpheme\`
 - member orthography: whether each attested member is standard text or a typo
 - Surface spelling and Attestation realization coverage: licensed variants and genuinely partial realizations
 - learner-relevant Surface features, such as archaic status
