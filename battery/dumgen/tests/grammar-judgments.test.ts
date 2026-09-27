@@ -7,6 +7,7 @@ import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resol
 import review from "../src/evaluation/redesign/review-cases.json";
 import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
 import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
+import idiomProjection from "../src/generated/grammar-cases/phraseme/idiom.json";
 import proverbProjection from "../src/generated/grammar-cases/phraseme/proverb.json";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";
@@ -493,7 +494,7 @@ test("uncertain headword judgment stops without copying or generating", async ()
 function markedEncounter(
 	id: string,
 	markedContext: string,
-	kind: "VERB" | "NOUN" | "Proverb" = "VERB",
+	kind: "VERB" | "NOUN" | "Idiom" | "Proverb" = "VERB",
 ) {
 	const segments: { text: string; kind: string }[] = [];
 	const members: number[] = [];
@@ -518,7 +519,8 @@ function markedEncounter(
 	return validateEncounter({
 		sentence: { id, language: "de", segments },
 		target: {
-			family: kind === "Proverb" ? "Phraseme" : "Lexeme",
+			family:
+				kind === "Idiom" || kind === "Proverb" ? "Phraseme" : "Lexeme",
 			kind,
 			memberSegmentIndices: members,
 		},
@@ -578,6 +580,96 @@ for (const [id, rejected] of [
 			example.idealOutput.normalizedMembers.join(" "),
 		);
 	});
+
+/** A reviewed Idiom whose judge copies its joined members as the headword. */
+async function copiedIdiom(
+	markedContext: string,
+	idealOutput: unknown,
+): Promise<{ canonicalForm: string; traces: OperationTrace[] }> {
+	const traces: OperationTrace[] = [];
+	const output = await Effect.runPromise(
+		createDumgen({
+			...grammarFixture(idealOutput, {
+				canonical: "CandidateIsCanonical",
+			}),
+			onOperation: (trace) => traces.push(trace),
+		}).resolveGrammar({
+			...markedEncounter("idiom", markedContext, "Idiom"),
+			contextAvailable: false,
+		}),
+	);
+	return { canonicalForm: output.surface.lemma.canonicalForm, traces };
+}
+
+for (const id of [
+	"grammar-de-idiom-faden-perfect-full",
+	"grammar-de-idiom-schneider-past-full",
+] as const)
+	test(`a copied finite Idiom surface is no headword, so Luna generates it: ${id}`, async () => {
+		const example = idiomProjection.cases[id];
+		const { canonicalForm, traces } = await copiedIdiom(
+			example.input.markedContext,
+			example.idealOutput,
+		);
+		expect(canonicalForm).toBe(example.idealOutput.lemma.canonicalForm);
+		expect(traces[0]?.calls[1]?.request).toHaveProperty(
+			"stage",
+			"generateCanonicalForm",
+		);
+		expect(traces[0]?.events).toContainEqual({
+			kind: "VerbalSurfaceCanonicalForm",
+			data: {
+				rejected: example.input.members.join(" "),
+				answer: "CandidateIsCanonical",
+			},
+		});
+	});
+
+for (const id of [
+	"grammar-de-idiom-fettnaepfchen-infinitive-full",
+	"grammar-de-idiom-grass-citation",
+] as const)
+	test(`an infinitive or citation Idiom keeps its copied wording: ${id}`, async () => {
+		const example = idiomProjection.cases[id];
+		const { canonicalForm, traces } = await copiedIdiom(
+			example.input.markedContext,
+			example.idealOutput,
+		);
+		expect(canonicalForm).toBe(example.idealOutput.lemma.canonicalForm);
+		expect(traces[0]?.calls).toHaveLength(1);
+	});
+
+test("a present plural verb ending an Idiom is spelled as its infinitive", async () => {
+	const { canonicalForm, traces } = await copiedIdiom(
+		"Ich fürchte, dass sie <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verlieren</TARGET>.",
+		{
+			lemma: { canonicalForm: "den Faden verlieren", coreFeatures: {} },
+			surface: {
+				spelling: "Canonical",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					mood: "Ind",
+					number: "Plur",
+					person: "3",
+					tense: "Pres",
+					verbForm: "Fin",
+					expletive: null,
+					perfect: null,
+					future: null,
+					voice: null,
+					passive: null,
+				},
+			},
+			normalizedMembers: ["den", "Faden", "verlieren"],
+			memberOrthographies: ["Standard", "Standard", "Standard"],
+			realizationCoverage: "Full",
+			expletiveEvidence: null,
+			valencyEvidence: [],
+		},
+	);
+	expect(canonicalForm).toBe("den Faden verlieren");
+	expect(traces[0]?.calls).toHaveLength(1);
+});
 
 for (const [id, canonicalForm] of [
 	["grammar-de-verb-full-modal-mag", "mögen"],

@@ -1273,6 +1273,40 @@ export function resolveGrammarJudgments(
 						(text === canonicalFormCandidate ||
 							input.members.includes(text) ||
 							spelledMembers.includes(text));
+					// A verbal Idiom is cited with its infinitive last (den Faden
+					// verlieren), so its joined members are no headword under a
+					// Surface whose verb is not spelled as that infinitive: a
+					// finite, participial or composed one (hat den Faden
+					// verloren, schlägt zwei Fliegen). Only a present plural
+					// verb ending the members is spelled as its infinitive
+					// (dass sie den Faden verlieren). A null bag is a citation
+					// or a nonverbal Idiom and keeps its wording.
+					const copiedVerbalSurface = (text: string) => {
+						const bag = surface.inflectionalFeatures as Record<
+							string,
+							unknown
+						> | null;
+						if (
+							encounter.target.kind !== "Idiom" ||
+							text !== canonicalFormCandidate ||
+							!bag?.verbForm
+						)
+							return false;
+						if (
+							[bag.perfect, bag.future, bag.passive].some(
+								(value) => value != null,
+							)
+						)
+							return true;
+						if (bag.verbForm === "Inf") return false;
+						return !(
+							bag.verbForm === "Fin" &&
+							bag.tense === "Pres" &&
+							bag.number === "Plur" &&
+							(bag.person === "1" || bag.person === "3") &&
+							infinitiveShaped(text.split(" ").at(-1) ?? "")
+						);
+					};
 					const rejection =
 						chosen === undefined
 							? undefined
@@ -1281,13 +1315,15 @@ export function resolveGrammarJudgments(
 								: encounter.target.kind === "VERB" &&
 										!infinitiveShaped(chosen)
 									? "NonInfinitiveCanonicalForm"
-									: copiedInflectedNoun(chosen)
-										? "InflectedNounCanonicalForm"
-										: withGovernedPreposition(chosen)
-											? "GovernedPrepositionCanonicalForm"
-											: withOwnedArticle(chosen)
-												? "ArticledNameCanonicalForm"
-												: undefined;
+									: copiedVerbalSurface(chosen)
+										? "VerbalSurfaceCanonicalForm"
+										: copiedInflectedNoun(chosen)
+											? "InflectedNounCanonicalForm"
+											: withGovernedPreposition(chosen)
+												? "GovernedPrepositionCanonicalForm"
+												: withOwnedArticle(chosen)
+													? "ArticledNameCanonicalForm"
+													: undefined;
 					const rejected = rejection !== undefined;
 					if (rejection)
 						recordEvent(scope, rejection, {
