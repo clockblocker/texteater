@@ -70,7 +70,7 @@ export type LexemeTarget = {
 	readonly members: readonly Member[];
 	/** Mass per Lexeme Kind, `Unresolved` included. */
 	readonly routeMass: Readonly<Record<string, number>>;
-	/** Present only when the head's spelling enumerates authored candidates. */
+	/** Present only when the head's spelling, or the article a fused piece stands for, enumerates authored candidates. */
 	readonly identity: IdentityMass | null;
 	/** How the target came to be: `vote`, `fusion-table`, or an assembly guard. */
 	readonly provenance: string;

@@ -553,6 +553,20 @@ test("a name cited bare leaves the article it takes its own DET", async () => {
 		{ members: "alten/Head", route: "ADJ", provenance: "vote" },
 		{ members: "Berlin/Head", route: "PROPN", provenance: "vote" },
 	]);
+	// The table says m is the article dem, so a click on it reads DET [m]
+	// from the analysis instead of falling back to classification.
+	const m = targetOf(analysis, 11);
+	if (!m) throw Error("Expected the article piece's target");
+	expect(selectIdentity(m, headOf(m))).toMatchObject({
+		state: "Selected",
+		candidate: { kind: "DET", headword: "dem", pronType: "Art" },
+		share: 1,
+	});
+	expect(resolvedUnitAt(analysis, 11)).toEqual({
+		family: "Lexeme",
+		kind: "DET",
+		offsets: [11],
+	});
 });
 
 test("a standalone article the matrix left alone joins its noun like a fused one", async () => {

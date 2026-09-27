@@ -1084,6 +1084,10 @@
 		"target-de-fused-article-im-wald-click-m": "9af359697ea60ccc",
 		"target-de-fused-article-im-wald-click-wald": "af83d6a5b9dd8a2f",
 		"target-de-fused-article-im-wald-click-i": "cbcf9e3247a57d19",
-		"target-de-fused-article-aufs-ende-click-s": "066449f6980e9a60"
+		"target-de-fused-article-aufs-ende-click-s": "066449f6980e9a60",
+		"target-de-regression-undotted-title-click-mr": "c8f7e881f189c3cb",
+		"target-de-regression-street-name-click-m": "fdd486e0a4a42f64",
+		"target-de-regression-street-name-click-fliederweg": "3c68b66f47d4b9c9",
+		"target-de-regression-bare-name-click-m": "dabbb88e016d545c"
 	}
 }

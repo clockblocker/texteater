@@ -85,6 +85,8 @@ export const targetCriteriaCitations: CitingPrompt = {
 					rule: "de/abbreviation-is-one-segment",
 					hash: "83496aec178971f1",
 				},
+				{ rule: "de/title-before-a-name", hash: "dd531115e2c8a2ef" },
+				{ rule: "de/proper-noun-article", hash: "cf90f857f2b1b648" },
 				{
 					rule: "de/funktionsverbgefuege-are-collocations",
 					hash: "b8fe4c62585a561d",
@@ -119,7 +121,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 					rule: "de/shared-article-in-coordination",
 					hash: "d21d49079359e0b8",
 				},
-				{ rule: "de/proper-noun-article", hash: "3dcf21812bcf6f15" },
+				{ rule: "de/proper-noun-article", hash: "cf90f857f2b1b648" },
 			],
 		},
 		{

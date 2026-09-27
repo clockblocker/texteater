@@ -615,7 +615,11 @@
 		"target-de-governed-adjective-fronted-click-auf",
 		"target-de-governed-noun-click-vor",
 		"target-de-governed-collocation-angst-haben-click-vor",
-		"target-de-governed-collocation-bescheid-click-ueber"
+		"target-de-governed-collocation-bescheid-click-ueber",
+		"target-de-regression-undotted-title-click-mr",
+		"target-de-regression-street-name-click-m",
+		"target-de-regression-street-name-click-fliederweg",
+		"target-de-regression-bare-name-click-m"
 	],
 	"demonstrationIds": [
 		"target-de-demo-perfect-arbeiten-click-habe",
@@ -3245,6 +3249,122 @@
 			},
 			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation, not a fixed one; die Pläne is its free complement (ADR 0034).",
 			"contaminationKeys": ["target-stimulus:bescheid-wissen-ueber"]
+		},
+		"target-de-regression-undotted-title-click-mr": {
+			"input": {
+				"clickedSegmentIndex": 0,
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Mr" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "und" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Mrs" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Parker" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "wohnen" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "i" },
+					{ "kind": "ResolvableText", "text": "m" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Fliederweg" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Nummer" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "7" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "NOUN",
+				"memberSegmentIndices": [0]
+			}
+		},
+		"target-de-regression-street-name-click-m": {
+			"input": {
+				"clickedSegmentIndex": 11,
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Mr" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "und" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Mrs" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Parker" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "wohnen" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "i" },
+					{ "kind": "ResolvableText", "text": "m" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Fliederweg" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Nummer" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "7" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "PROPN",
+				"memberSegmentIndices": [11, 13]
+			}
+		},
+		"target-de-regression-street-name-click-fliederweg": {
+			"input": {
+				"clickedSegmentIndex": 13,
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Mr" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "und" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Mrs" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Parker" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "wohnen" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "i" },
+					{ "kind": "ResolvableText", "text": "m" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Fliederweg" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Nummer" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "7" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "PROPN",
+				"memberSegmentIndices": [11, 13]
+			}
+		},
+		"target-de-regression-bare-name-click-m": {
+			"input": {
+				"clickedSegmentIndex": 5,
+				"segments": [
+					{ "kind": "ResolvableText", "text": "Ich" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "wohne" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "i" },
+					{ "kind": "ResolvableText", "text": "m" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "alten" },
+					{ "kind": "Whitespace", "text": " " },
+					{ "kind": "ResolvableText", "text": "Berlin" },
+					{ "kind": "Punctuation", "text": "." }
+				]
+			},
+			"idealOutput": {
+				"family": "Lexeme",
+				"kind": "DET",
+				"memberSegmentIndices": [5]
+			}
 		}
 	}
 }

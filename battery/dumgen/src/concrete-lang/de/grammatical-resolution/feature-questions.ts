@@ -86,7 +86,7 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"lemma.coreFeatures.article": {
 		question:
-			"Is this name canonically cited with the definite article, as a dictionary gives it? Many names are: regions and landscapes (das Saarland, die Pfalz, das Elsass), rivers, lakes and mountains (der Rhein, der Bodensee), some countries (die Schweiz, die Niederlande), organizations, institutions and companies (die NATO, die Lufthansa), and titles of works cited with their article (der Struwwelpeter, die Blechtrommel), whose article inflects (in der Blechtrommel). Most cities, most countries and personal names are cited bare. Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz), and a capital on a sentence-initial article (Die Lufthansa) is only its position.",
+			"Is this name canonically cited with the definite article, as a dictionary gives it? Many names are: regions and landscapes (das Saarland, die Pfalz, das Elsass), rivers, lakes and mountains (der Rhein, der Bodensee), streets, squares and buildings, however unfamiliar the name (die Goethestraße, der Birkenweg, der Alexanderplatz), some countries (die Schweiz, die Niederlande), organizations, institutions and companies (die NATO, die Lufthansa), and titles of works cited with their article (der Struwwelpeter, die Blechtrommel), whose article inflects (in der Blechtrommel). Most cities, most countries and personal names are cited bare. Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz), and a capital on a sentence-initial article (Die Lufthansa) is only its position.",
 		values: {
 			Definite:
 				"The name is canonically cited with its definite article, which it owns as its first member wherever the sentence shows it",
@@ -101,7 +101,7 @@ const meanings: Readonly<Record<string, Meaning>> = {
 		unmarked:
 			"The lexical identity has no marked grammatical gender, for example a plural-only identity; not missing evidence for an otherwise gendered noun",
 		byKind: {
-			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Plural-only names have unmarked gender.",
+			PROPN: "What grammatical gender is established for this name by conventional lexical usage or contextual agreement? Familiar name conventions are lexical evidence; do not guess the gender of an unfamiliar person from name shape alone. Names of towns and of countries cited bare are neuter (das alte Berlin, das geteilte Deutschland); a name cited with its article takes that article's gender (die Schweiz, der Rhein). A compound name of a place, street or building takes the gender of its last element, as a compound noun does, even when the name itself is unfamiliar: der Birkenweg (der Weg), die Goethestraße (die Straße). Plural-only names have unmarked gender.",
 			PRON: "If this is a pillar pronoun (personal, der/die/das, wer/was, jemand, einer), what grammatical gender belongs to its Paradigm Cell? A personal pronoun marks gender only in a third-person singular cell: er/ihn are Masc, es Neut, sie/ihr/ihrer Fem. ihm and genitive seiner are the cells of er (Masc) or es (Neut); the gender of what they stand for decides, as it does for dem and dessen. wer-forms are Masc and was-forms Neut. Plural agreement has no marked gender. A stem pronoun (dieser, keiner, meiner, alle) keeps gender on its Surface, not in Core.",
 			DET: "If this is a definite or indefinite article (der, die, das, ein, eine), what grammatical gender belongs to its Paradigm Cell? It is the lexical gender of the noun the article modifies. Plural agreement has no marked gender. Every other determiner keeps gender on its Surface, not in Core.",
 		},
@@ -281,7 +281,7 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"surface.inflectionalFeatures.case": {
 		question:
-			"If this occurrence has nominal inflection, what Case does the marked target bear in this sentence? Use its own syntactic role and government; direct address has unmarked Case.",
+			"If this occurrence has nominal inflection, what Case does the marked target bear in this sentence? Use its own syntactic role and government; direct address has unmarked Case. A title before a name bears its name's Case, not the unmarked Case of address: Herr Meier wartet gives Nom, mit Frau Müller gives Dat.",
 		values: grammaticalCase,
 		unmarked:
 			"Case is not marked here, including direct address or an inapplicable nominal-inflection premise",
@@ -517,7 +517,7 @@ const inflectionPolicies: Readonly<
 	Record<string, { marked: string; citation: string }>
 > = {
 	NOUN: {
-		marked: "Contextual noun with Case/Number, even when spelled like its headword; direct address can have Number with unmarked Case",
+		marked: "Contextual noun with Case/Number, even when spelled like its headword, including a title before a name (Herr Meier, Mrs Smith), which takes its name's Case and Number; direct address can have Number with unmarked Case",
 		citation: "Dictionary-only mention without contextual noun inflection",
 	},
 	PROPN: {

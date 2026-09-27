@@ -1673,6 +1673,18 @@
 			"slices": ["governed-preposition"],
 			"contaminationKeys": ["target-stimulus:bescheid-wissen-ueber"],
 			"explanation": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation, not a fixed one; die Pläne is its free complement (ADR 0034)."
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7@0": {
+			"id": "target-de-regression-undotted-title-click-mr"
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7@11": {
+			"id": "target-de-regression-street-name-click-m"
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7@13": {
+			"id": "target-de-regression-street-name-click-fliederweg"
+		},
+		"de/ich-wohne-im-alten-berlin@5": {
+			"id": "target-de-regression-bare-name-click-m"
 		}
 	}
 }

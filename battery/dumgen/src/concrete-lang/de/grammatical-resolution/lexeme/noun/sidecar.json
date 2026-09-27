@@ -239,6 +239,12 @@
 			"id": "grammar-de-noun-governed-article-angst-vor",
 			"evaluation": true,
 			"slices": ["governed"]
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7#0": {
+			"id": "grammar-de-noun-regression-undotted-title-mr"
+		},
+		"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7#1": {
+			"id": "grammar-de-noun-regression-undotted-title-mrs"
 		}
 	}
 }
