@@ -1,11 +1,17 @@
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
 export { type SpecCheck, type SpecIssue, SpecRecordError } from "./issues.js";
-export { findSpecRecord, loadSpecRecords } from "./load.js";
+export {
+	findSpecRecord,
+	loadSpecRecords,
+	loadSpecWorklist,
+	type WorklistEntry,
+} from "./load.js";
 export { ruleStatementHash, rules } from "./rules.js";
 export type {
 	AdrId,
 	CitingPrompt,
 	Coverage,
+	LegacyCase,
 	NoTarget,
 	ParagraphCitation,
 	Provenance,
@@ -21,4 +27,5 @@ export type {
 	SpecRecord,
 	SpecRecordId,
 	SpecTarget,
+	TextRecord,
 } from "./types.js";

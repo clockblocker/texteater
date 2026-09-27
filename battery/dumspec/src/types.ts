@@ -87,6 +87,19 @@ export type Provenance =
 	| { kind: "Authored" }
 	| { kind: "Quoted"; work: string; author: string; year: number };
 
+/**
+ * A Dumgen case imported verbatim (ADR 0037), kept until it is reshaped into
+ * typed fields. A record holding one stays on the worklist.
+ */
+export interface LegacyCase {
+	/** The file the case came from, relative to the repository root. */
+	source: string;
+	caseId: string;
+	/** The Segments the case marked, when it marked some. */
+	memberSegmentIndices?: readonly number[];
+	case: unknown;
+}
+
 /** One sentence of the golden corpus (ADR 0037). */
 export interface SpecRecord {
 	id: SpecRecordId;
@@ -99,6 +112,18 @@ export interface SpecRecord {
 	status: ReviewStatus;
 	sources: Sources;
 	provenance: Provenance;
+	legacy?: readonly LegacyCase[];
+}
+
+/**
+ * Raw text as a reader supplies it, before intake makes a sentence of it.
+ * Its path under `records/`, `text/<name>`, is its id.
+ */
+export interface TextRecord {
+	id: string;
+	sourceText: string;
+	status: ReviewStatus;
+	legacy?: readonly LegacyCase[];
 }
 
 export type RuleRoute = Pick<Dumling.UnitRoute, "language" | "family" | "kind">;

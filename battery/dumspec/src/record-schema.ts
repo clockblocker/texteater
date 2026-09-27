@@ -5,6 +5,18 @@ const textSchema = z.string().min(1);
 
 const adrIdPattern = /^(?:[a-z][a-z0-9-]*\/)?ADR-\d{4}$/u;
 const ruleHashPattern = /^[0-9a-f]{16}$/u;
+const reviewStatusSchema = z.enum(["Draft", "Reviewed"]);
+
+/**
+ * A case imported from Dumgen as it was, until it is reshaped into typed
+ * fields. `memberSegmentIndices` places its marked words in the record.
+ */
+const legacyCaseSchema = z.strictObject({
+	source: textSchema,
+	caseId: textSchema,
+	memberSegmentIndices: z.array(indexSchema).min(1).optional(),
+	case: z.unknown(),
+});
 
 /**
  * The shape of one record file. The loader validates Attestations with
@@ -30,7 +42,7 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 			)
 			.min(1),
 		coverage: z.enum(["Full", "Partial"]),
-		status: z.enum(["Draft", "Reviewed"]),
+		status: reviewStatusSchema,
 		provenance: z.discriminatedUnion("kind", [
 			z.strictObject({ kind: z.literal("Authored") }),
 			z.strictObject({
@@ -72,5 +84,14 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 		noTarget: z.array(
 			z.strictObject({ segment: indexSchema, reason: textSchema }),
 		),
+		legacy: z.array(legacyCaseSchema).optional(),
 	});
 }
+
+/** The shape of one Text Record file under `records/text/`. */
+export const textRecordFileSchema = z.strictObject({
+	$schema: z.string().optional(),
+	sourceText: z.string().min(1),
+	status: reviewStatusSchema,
+	legacy: z.array(legacyCaseSchema).optional(),
+});

@@ -18,7 +18,16 @@ const record = findSpecRecord(records, "de/ich-bin-im-wald");
 ```
 
 `loadSpecRecords` reads the files with `node:fs`, so call it in build-time
-code. It throws a `SpecRecordError` that lists every failing check.
+code. It throws a `SpecRecordError` that lists every failing check of a
+Reviewed record, and of any record whose file is malformed.
+
+A Draft record may fail the current Dumling model. `loadSpecRecords` leaves
+it out, and `loadSpecWorklist` lists it with its failing checks, beside every
+record whose `legacy` list still holds a case imported verbatim from Dumgen.
+Raw texts for intake are Text Records under `records/text/`, with the schema
+`schema/text-record.json`. `bun run worklist` prints the worklist; after a
+model change, `bun run demote-broken-reviewed` demotes each Reviewed record
+the change broke to Draft.
 
 `rules` holds the classification Rules, each with an id such as
 `de/noun-owns-its-article`, a statement, the ADRs it rests on, its routes and

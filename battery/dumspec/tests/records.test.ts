@@ -1,10 +1,22 @@
 import { describe, expect, test } from "bun:test";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { demoteBrokenReviewed } from "../scripts/demote-broken-reviewed.js";
 import { checkCitations } from "../src/check-citations.js";
 import { checkRecord } from "../src/check-record.js";
-import { findSpecRecord, loadSpecRecords, rules } from "../src/index.js";
+import {
+	findSpecRecord,
+	loadSpecRecords,
+	loadSpecWorklist,
+	rules,
+} from "../src/index.js";
 import { readRecords } from "../src/load.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 import { negativeFixtures, seedJson } from "./negative-fixtures.js";
@@ -32,6 +44,25 @@ describe("the corpus", () => {
 				rules,
 			}),
 		).toEqual([]);
+	});
+
+	test("reports the worklist of failing Drafts and imported cases", () => {
+		const worklist = loadSpecWorklist();
+		const imported = worklist.flatMap((entry) =>
+			entry.legacy.map((legacy) => `${legacy.source} ${legacy.caseId}`),
+		);
+		for (const entry of worklist) {
+			expect(entry.issues.length + entry.legacy.length).toBeGreaterThan(
+				0,
+			);
+			if (entry.status === "Reviewed") expect(entry.issues).toEqual([]);
+		}
+		expect(imported.length).toBe(new Set(imported).size);
+		console.log(
+			`${worklist.length} records on the worklist (bun run worklist): ${
+				worklist.filter((entry) => entry.issues.length > 0).length
+			} Drafts failing a check, ${imported.length} imported cases`,
+		);
 	});
 
 	test("spells every Fusion over the Segments of its word", () => {
@@ -111,12 +142,13 @@ describe("negative fixtures", () => {
 			);
 		});
 
-	test("the loader reports invalid JSON and every failing record at once", () => {
+	test("the loader reports invalid JSON and every failing Reviewed record at once", () => {
 		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
 		try {
 			mkdirSync(join(directory, "de"));
 			writeFileSync(join(directory, "de/broken.json"), "{");
 			const outOfOrder = seedJson("de/pass-auf-dich-auf");
+			outOfOrder.status = "Reviewed";
 			outOfOrder.targets[0].memberSegmentIndices = [2, 0, 6];
 			writeFileSync(
 				join(directory, "de/out-of-order.json"),
@@ -137,4 +169,112 @@ describe("negative fixtures", () => {
 			rmSync(directory, { recursive: true });
 		}
 	});
+
+	test("the loader puts failing Drafts and imported cases on the worklist", () => {
+		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
+		try {
+			mkdirSync(join(directory, "de"));
+			mkdirSync(join(directory, "text"));
+			const legacy = [
+				{ source: "gold.json", caseId: "case-1", case: { any: 1 } },
+			];
+			const outOfOrder = seedJson("de/pass-auf-dich-auf");
+			outOfOrder.targets[0].memberSegmentIndices = [2, 0, 6];
+			writeFileSync(
+				join(directory, "de/out-of-order.json"),
+				JSON.stringify(outOfOrder),
+			);
+			const imported = seedJson("de/ich-bin-im-wald");
+			imported.status = "Reviewed";
+			imported.legacy = legacy;
+			writeFileSync(
+				join(directory, "de/imported.json"),
+				JSON.stringify(imported),
+			);
+			const shapeless = seedJson("de/ich-bin-im-wald");
+			shapeless.legacy = [{ source: "gold.json" }];
+			writeFileSync(
+				join(directory, "de/shapeless.json"),
+				JSON.stringify(shapeless),
+			);
+			writeFileSync(
+				join(directory, "text/raw.json"),
+				JSON.stringify({
+					sourceText: "Das H aus",
+					status: "Draft",
+					legacy,
+				}),
+			);
+			const {
+				records: loaded,
+				textRecords,
+				issues,
+				worklist,
+			} = readRecords(directory);
+			expect(loaded.map((record) => record.id)).toEqual(["de/imported"]);
+			expect(textRecords.map((record) => record.sourceText)).toEqual([
+				"Das H aus",
+			]);
+			expect(
+				new Set(
+					issues.map((issue) => `${issue.record} ${issue.check}`),
+				),
+			).toEqual(new Set(["de/shapeless Shape"]));
+			expect(
+				worklist.map((entry) => [
+					entry.record,
+					entry.status,
+					[...new Set(entry.issues.map((issue) => issue.check))],
+					entry.legacy.length,
+				]),
+			).toEqual([
+				["de/imported", "Reviewed", [], 1],
+				["de/out-of-order", "Draft", ["Members"], 0],
+				["text/raw", "Draft", [], 1],
+			]);
+		} finally {
+			rmSync(directory, { recursive: true });
+		}
+	});
+
+	test("the demotion script demotes Reviewed records failing their checks", () => {
+		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
+		const write = (id: string, record: unknown) =>
+			writeFileSync(
+				join(directory, `${id}.json`),
+				`${JSON.stringify(record, null, "\t")}\n`,
+			);
+		try {
+			mkdirSync(join(directory, "de"));
+			const valid = seedJson("de/ich-bin-im-wald");
+			valid.status = "Reviewed";
+			write("de/valid", valid);
+			const broken = seedJson("de/pass-auf-dich-auf");
+			broken.status = "Reviewed";
+			broken.targets[1].attestation.surface.lemma.coreFeatures = {};
+			write("de/broken", broken);
+			const draft = seedJson("de/pass-auf-dich-auf");
+			draft.targets[0].memberSegmentIndices = [2, 0, 6];
+			write("de/draft", draft);
+
+			expect(demoteBrokenReviewed(directory)).toEqual(["de/broken"]);
+			expect(seedFile(directory, "de/broken")).toEqual({
+				...broken,
+				status: "Draft",
+			});
+			expect(seedFile(directory, "de/valid").status).toBe("Reviewed");
+			const { issues, worklist } = readRecords(directory);
+			expect(issues).toEqual([]);
+			expect(worklist.map((entry) => entry.record)).toEqual([
+				"de/broken",
+				"de/draft",
+			]);
+		} finally {
+			rmSync(directory, { recursive: true });
+		}
+	});
 });
+
+function seedFile(directory: string, id: string) {
+	return JSON.parse(readFileSync(join(directory, `${id}.json`), "utf8"));
+}

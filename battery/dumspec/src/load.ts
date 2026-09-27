@@ -3,27 +3,43 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { checkRecord } from "./check-record.js";
 import { type SpecIssue, SpecRecordError } from "./issues.js";
-import type { SpecRecord, SpecRecordId } from "./types.js";
+import { textRecordFileSchema } from "./record-schema.js";
+import type {
+	LegacyCase,
+	ReviewStatus,
+	SpecRecord,
+	SpecRecordId,
+	TextRecord,
+} from "./types.js";
 
 const recordsDirectory = fileURLToPath(new URL("../records/", import.meta.url));
+const textPrefix = "text/";
 
-/** Reads and checks every record file under a directory, sorted by id. */
-export function readRecords(directory: string): {
-	records: SpecRecord[];
-	issues: SpecIssue[];
-} {
-	const records: SpecRecord[] = [];
-	const issues: SpecIssue[] = [];
+/**
+ * A record that needs work: the checks a Draft fails against the current
+ * model, and the imported cases it still holds verbatim.
+ */
+export interface WorklistEntry {
+	record: SpecRecordId;
+	status: ReviewStatus;
+	issues: readonly SpecIssue[];
+	legacy: readonly LegacyCase[];
+}
+
+function readJsonFiles(directory: string, issues: SpecIssue[]) {
+	const files: { id: string; input: unknown }[] = [];
 	const ids = readdirSync(directory, { recursive: true, encoding: "utf8" })
 		.filter((path) => path.endsWith(".json"))
 		.map((path) => path.replaceAll("\\", "/").slice(0, -".json".length))
 		.toSorted();
-	for (const id of ids) {
-		let input: unknown;
+	for (const id of ids)
 		try {
-			input = JSON.parse(
-				readFileSync(join(directory, `${id}.json`), "utf8"),
-			);
+			files.push({
+				id,
+				input: JSON.parse(
+					readFileSync(join(directory, `${id}.json`), "utf8"),
+				),
+			});
 		} catch (error) {
 			issues.push({
 				record: id,
@@ -31,25 +47,94 @@ export function readRecords(directory: string): {
 				path: "",
 				message: `Invalid JSON: ${(error as Error).message}`,
 			});
+		}
+	return files;
+}
+
+/**
+ * Reads and checks every record file under a directory, sorted by id. A Draft
+ * that parses but fails a check against the current model goes on the
+ * worklist instead of failing; so does every record holding imported cases.
+ * A Reviewed record must pass. Text Records, under `text/`, are checked for
+ * shape only and join the worklist while they hold imported cases.
+ */
+export function readRecords(directory: string): {
+	records: SpecRecord[];
+	textRecords: TextRecord[];
+	issues: SpecIssue[];
+	worklist: WorklistEntry[];
+} {
+	const records: SpecRecord[] = [];
+	const textRecords: TextRecord[] = [];
+	const issues: SpecIssue[] = [];
+	const worklist: WorklistEntry[] = [];
+	for (const { id, input } of readJsonFiles(directory, issues)) {
+		if (id.startsWith(textPrefix)) {
+			const file = textRecordFileSchema.safeParse(input);
+			if (!file.success) {
+				for (const error of file.error.issues)
+					issues.push({
+						record: id,
+						check: "Shape",
+						path: error.path.join("."),
+						message: error.message,
+					});
+				continue;
+			}
+			const { sourceText, status, legacy } = file.data;
+			textRecords.push({
+				id,
+				sourceText,
+				status,
+				...(legacy === undefined ? {} : { legacy }),
+			});
+			if (legacy?.length)
+				worklist.push({ record: id, status, issues: [], legacy });
 			continue;
 		}
 		const checked = checkRecord(id, input);
-		if (checked.success) records.push(checked.record);
+		if (checked.success) {
+			records.push(checked.record);
+			const { status, legacy } = checked.record;
+			if (legacy?.length)
+				worklist.push({ record: id, status, issues: [], legacy });
+		} else if (
+			checked.status === "Draft" &&
+			checked.issues.every(
+				(issue) => issue.check !== "Id" && issue.check !== "Shape",
+			)
+		)
+			worklist.push({
+				record: id,
+				status: "Draft",
+				issues: checked.issues,
+				legacy: checked.legacy ?? [],
+			});
 		else issues.push(...checked.issues);
 	}
-	return { records, issues };
+	return { records, textRecords, issues, worklist };
 }
 
 /**
  * Loads every Spec Record from the package's `records/` directory, sorted by
  * id. Each record has passed its strict Attestation, Segment, member-order,
- * coverage and Grundform checks. Throws `SpecRecordError` listing every issue
- * when any record fails. Reads the file system, so call it at build time.
+ * coverage and Grundform checks; a Draft that fails them is left out and
+ * listed by `loadSpecWorklist`. Throws `SpecRecordError` listing every issue
+ * when a Reviewed record fails, or any record has a bad id or shape. Reads
+ * the file system, so call it at build time.
  */
 export function loadSpecRecords(): readonly SpecRecord[] {
 	const { records, issues } = readRecords(recordsDirectory);
 	if (issues.length > 0) throw new SpecRecordError(issues);
 	return records;
+}
+
+/**
+ * The records that still need work, sorted by id: Drafts failing a check
+ * against the current model, and records holding imported cases verbatim.
+ */
+export function loadSpecWorklist(): readonly WorklistEntry[] {
+	return readRecords(recordsDirectory).worklist;
 }
 
 /** The record whose id is `id`, if any. */

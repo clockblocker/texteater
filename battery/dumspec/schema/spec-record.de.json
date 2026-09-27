@@ -19174,6 +19174,38 @@
 				],
 				"additionalProperties": false
 			}
+		},
+		"legacy": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"source": {
+						"type": "string",
+						"minLength": 1
+					},
+					"caseId": {
+						"type": "string",
+						"minLength": 1
+					},
+					"memberSegmentIndices": {
+						"minItems": 1,
+						"type": "array",
+						"items": {
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 9007199254740991
+						}
+					},
+					"case": {}
+				},
+				"required": [
+					"source",
+					"caseId",
+					"case"
+				],
+				"additionalProperties": false
+			}
 		}
 	},
 	"required": [

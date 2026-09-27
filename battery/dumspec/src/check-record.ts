@@ -3,14 +3,26 @@ import type * as Dumling from "dumling/types";
 import { z } from "zod";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { recordFileSchema } from "./record-schema.js";
-import type { SpecRecord, SpecRecordId, SpecTarget } from "./types.js";
+import type {
+	LegacyCase,
+	ReviewStatus,
+	SpecRecord,
+	SpecRecordId,
+	SpecTarget,
+} from "./types.js";
 
 const idPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
 const fileSchema = recordFileSchema(z.unknown());
 
+/** A failed record names its status and imported cases once its shape parses. */
 export type RecordCheck =
 	| { success: true; record: SpecRecord }
-	| { success: false; issues: SpecIssue[] };
+	| {
+			success: false;
+			issues: SpecIssue[];
+			status?: ReviewStatus;
+			legacy?: readonly LegacyCase[];
+	  };
 
 /**
  * Runs every check that needs only the record itself: its id, shape, strict
@@ -34,7 +46,8 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			issue("Shape", error.path.join("."), error.message);
 		return { success: false, issues };
 	}
-	const { sentence, segments, targets, noTarget, coverage } = file.data;
+	const { sentence, segments, targets, noTarget, coverage, status, legacy } =
+		file.data;
 
 	if (segments.map((segment) => segment.text).join("") !== sentence)
 		issue(
@@ -166,7 +179,13 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			"A record has a target or No Target entry",
 		);
 
-	if (issues.length > 0 || !language) return { success: false, issues };
+	if (issues.length > 0 || !language)
+		return {
+			success: false,
+			issues,
+			status,
+			...(legacy === undefined ? {} : { legacy }),
+		};
 	return {
 		success: true,
 		record: {
@@ -177,9 +196,10 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			targets: parsedTargets,
 			noTarget,
 			coverage,
-			status: file.data.status,
+			status,
 			sources: file.data.sources,
 			provenance: file.data.provenance,
+			...(legacy === undefined ? {} : { legacy }),
 		},
 	};
 }
