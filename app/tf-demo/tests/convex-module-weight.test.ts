@@ -27,7 +27,8 @@ const FORBIDDEN_INPUTS = [
 	/\/dumdict\/dist\/runtime\.js$/,
 	/\/zod\//,
 ];
-const DUM_PACKAGE_INPUT = /\/(?:dumgen|dumdict|dumling|dumrel|dumval)\/dist\//;
+const DUM_PACKAGE_INPUT =
+	/\/(?:dumgen|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
 
 const convexRoot = join(import.meta.dir, "..", "convex");
 
