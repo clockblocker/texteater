@@ -34,6 +34,10 @@ describe("the corpus", () => {
 		).toEqual([]);
 	});
 
+	test("spells every Fusion over the Segments of its word", () => {
+		expect(records.flatMap(fusionSpanMismatches)).toEqual([]);
+	});
+
 	test("seeds both coverages, No Target and a quotation", () => {
 		const has = (
 			predicate: (record: (typeof records)[number]) => boolean,
@@ -49,6 +53,50 @@ describe("the corpus", () => {
 		);
 	});
 });
+
+/**
+ * A Fused member's Fusion must spell the Segments around it: each lettered
+ * component is one Segment, in order and adjacent, and a hidden component
+ * (the letterless ה of בבית) has no Segment.
+ */
+function fusionSpanMismatches(record: (typeof records)[number]): string[] {
+	const texts = record.segments.map((segment) => segment.text);
+	return record.targets.flatMap((target, t) =>
+		target.attestation.members.flatMap((member, m) => {
+			if (member.orthography !== "Fused") return [];
+			const at = target.memberSegmentIndices[m] ?? -1;
+			const spans = member.fusion.components.map(
+				(component) => component.span,
+			);
+			const before = spans
+				.slice(0, member.component)
+				.filter((span) => span !== "");
+			const after = spans
+				.slice(member.component + 1)
+				.filter((span) => span !== "");
+			const start = at - before.length;
+			const expected = [
+				...before,
+				spans[member.component] ?? "",
+				...after,
+			];
+			const actual =
+				start < 0 ? [] : texts.slice(start, start + expected.length);
+			return sameStrings(actual, expected)
+				? []
+				: [
+						`${record.id} targets.${t}.members.${m}: ${JSON.stringify(expected)} is not Segments ${JSON.stringify(actual)}`,
+					];
+		}),
+	);
+}
+
+function sameStrings(left: readonly string[], right: readonly string[]) {
+	return (
+		left.length === right.length &&
+		left.every((text, index) => text === right[index])
+	);
+}
 
 describe("negative fixtures", () => {
 	for (const fixture of negativeFixtures)
