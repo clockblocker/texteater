@@ -103,6 +103,36 @@ function parseStoredGermanLemma(lemma: Doc<"lemmas">): Dumling.Lemma<"de"> {
 }
 
 /**
+ * Dictionary-wide Reading counts for the neighbourhood's Lemmas that hold fewer
+ * than two of their Readings here. Projection closes over a Lemma target only
+ * when its Lemma has exactly one Reading (ADR 0011), and a Lemma with two
+ * loaded Readings is already homonymous; a count of two means two or more.
+ */
+async function countLemmaReadings(
+	ctx: QueryCtx,
+	neighborhood: RelationNeighborhood,
+) {
+	const loaded = new Map<Id<"lemmas">, number>();
+	for (const reading of neighborhood.readings.values())
+		loaded.set(reading.lemmaId, (loaded.get(reading.lemmaId) ?? 0) + 1);
+	return Promise.all(
+		[...neighborhood.lemmas.values()]
+			.filter((lemma) => (loaded.get(lemma._id) ?? 0) < 2)
+			.map(async (lemma) => ({
+				lemma: parseStoredGermanLemma(lemma),
+				readingCount: (
+					await ctx.db
+						.query("readings")
+						.withIndex("by_lemma_id", (q) =>
+							q.eq("lemmaId", lemma._id),
+						)
+						.take(2)
+				).length,
+			})),
+	);
+}
+
+/**
  * Loads the Reading's relation neighbourhood up to its caps. Past a cap it
  * stops adding and marks the result truncated, so an oversized neighbourhood
  * still yields the relations it loaded, in index order.
@@ -390,6 +420,7 @@ async function loadTargetedRelationProjections(
 		throw new Error("Relation neighborhood is missing its source Reading.");
 	const projected = projectSemanticRelations(entries, {
 		source: sourceReading,
+		readingCounts: await countLemmaReadings(ctx, neighborhood),
 	});
 	if (!projected.success) throw projected.error;
 	const projections = projected.value.map(

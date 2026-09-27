@@ -1574,3 +1574,52 @@ describe("Reading Note relation neighbourhood caps", () => {
 		expect(loaded.resolved.length).toBeLessThanOrEqual(50);
 	});
 });
+
+describe("Reading Note relation closure", () => {
+	test("closure counts a Lemma's Readings outside the loaded neighbourhood", async () => {
+		const t = createTestConvex();
+		const gehenLemmaId = await insertDictionaryLemma(t, gehenLemma);
+		const gehenId = await insertReading(t, gehenLemmaId, gehenReading);
+		const laufenLemmaId = await insertDictionaryLemma(t, laufenLemma);
+		const laufenId = await insertReading(t, laufenLemmaId, laufenReading);
+		const springenLemmaId = await insertDictionaryLemma(t, springenLemma);
+		const springenId = await insertReading(
+			t,
+			springenLemmaId,
+			springenReading,
+		);
+		await t.run(async (ctx) => {
+			await ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId: gehenId,
+				targetLemmaId: laufenLemmaId,
+				relation: "hypernym",
+			});
+			await ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId: laufenId,
+				targetLemmaId: springenLemmaId,
+				relation: "synonym",
+			});
+		});
+		// springen gets laufen's inferred hyponym gehen through their synonym
+		// link, which the Lemma-mode inverse carries to gehen's Lemma.
+		const hyponyms = async () =>
+			(
+				await t.run((ctx) => loadRelationProjections(ctx, springenId))
+			).resolved.filter(
+				(projection) => projection.relation === "hyponym",
+			);
+		expect(await hyponyms()).toEqual([
+			expect.objectContaining({
+				targetCanonicalForm: "gehen",
+				provenance: "inferred",
+			}),
+		]);
+		// springen's note never loads this second gehen Reading, but it makes
+		// gehen homonymous, so the inverse no longer substitutes.
+		await insertReading(t, gehenLemmaId, {
+			...gehenReading,
+			emojiDescription: "🧭",
+		});
+		expect(await hyponyms()).toEqual([]);
+	});
+});
