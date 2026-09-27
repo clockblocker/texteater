@@ -40,7 +40,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"number": "Plur",
 						"gender": null
 					},
@@ -51,6 +51,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": null,
 							"abbr": null,
 							"foreign": null,
 							"numType": null,

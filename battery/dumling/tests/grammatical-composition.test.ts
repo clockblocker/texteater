@@ -776,6 +776,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				canonicalForm: "stolz",
 				coreFeatures: {
 					abbr: null,
+					comparable: "Yes",
 					foreign: null,
 					numType: null,
 					variant: null,

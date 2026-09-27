@@ -267,7 +267,15 @@ export function checkTargets(
 
 		if (target.grundform !== undefined) {
 			const verdict = checkIfGrundform(attestation.surface);
-			if (verdict.success && verdict.value !== target.grundform)
+			// A stated verdict Dumling cannot assess is not checked, so it fails
+			// (ADR 0042).
+			if (!verdict.success)
+				issue(
+					"Grundform",
+					`${path}.grundform`,
+					`Dumling cannot assess this Surface's Grundform: ${verdict.error.message}`,
+				);
+			else if (verdict.value !== target.grundform)
 				issue(
 					"Grundform",
 					`${path}.grundform`,

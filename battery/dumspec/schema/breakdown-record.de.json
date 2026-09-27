@@ -34,7 +34,24 @@
 						},
 						"coreFeatures": {
 							"type": "object",
-							"properties": {},
+							"properties": {
+								"comparable": {
+									"anyOf": [
+										{
+											"type": "string",
+											"enum": [
+												"Yes"
+											]
+										},
+										{
+											"type": "null"
+										}
+									]
+								}
+							},
+							"required": [
+								"comparable"
+							],
 							"additionalProperties": false
 						}
 					},
@@ -112,7 +129,24 @@
 						},
 						"coreFeatures": {
 							"type": "object",
-							"properties": {},
+							"properties": {
+								"comparable": {
+									"anyOf": [
+										{
+											"type": "string",
+											"enum": [
+												"Yes"
+											]
+										},
+										{
+											"type": "null"
+										}
+									]
+								}
+							},
+							"required": [
+								"comparable"
+							],
 							"additionalProperties": false
 						}
 					},
@@ -678,6 +712,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"foreign": {
 																"anyOf": [
 																	{
@@ -721,6 +768,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"foreign",
 															"numType",
 															"variant"
@@ -2057,6 +2105,19 @@
 													"coreFeatures": {
 														"type": "object",
 														"properties": {
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"foreign": {
 																"anyOf": [
 																	{
@@ -2103,6 +2164,7 @@
 															}
 														},
 														"required": [
+															"comparable",
 															"foreign",
 															"numType",
 															"pronType"

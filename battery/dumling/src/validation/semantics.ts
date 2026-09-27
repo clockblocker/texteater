@@ -476,3 +476,24 @@ export function isGermanVerbalSurface(input: unknown): boolean {
 export function germanVerbalSurfaceError(): string {
 	return "Subject-expletive Surface requires normalized es and compatible verbal agreement";
 }
+
+/**
+ * Comparability decides Degree on a German or English ADV or ADJ Surface (ADR
+ * 0042). A comparable Lemma's Surface always marks it, `Pos` in a citation
+ * (`mild`) included. A non-comparable Lemma's never does, which leaves a
+ * non-comparable ADV no inflection and an ADJ only its attributive case,
+ * gender and number (`der tote Mann`).
+ */
+export function isComparabilitySurface(input: unknown): boolean {
+	const value = input as {
+		lemma: { coreFeatures: { comparable?: string | null } };
+		inflectionalFeatures: { degree?: unknown } | null;
+	};
+	const degree = value.inflectionalFeatures?.degree ?? null;
+	return value.lemma.coreFeatures.comparable === "Yes"
+		? degree !== null
+		: degree === null;
+}
+export function comparabilitySurfaceError(): string {
+	return "A comparable ADV or ADJ Surface marks Degree, Pos in a citation included; a non-comparable one never does";
+}

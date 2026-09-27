@@ -48,6 +48,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"abbr": null,
 							"foreign": null,
 							"numType": null,

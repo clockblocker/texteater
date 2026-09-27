@@ -12,14 +12,17 @@ Here is the complete breakdown of `schweigend`.
 ## Lemma
 
 The Lemma is its grammatical identity. In this sentence, `schweigend` is an
-adjective in its positive form, not an inflected use of the verb `schweigen`.
+adjective, not an inflected use of the verb `schweigen`. It has no comparison
+forms, so its Core records `comparable: null`.
 
 <!-- README_BLOCK:lemma -->
 
 ## Surface
 
 The Surface records the normalized form and the grammatical evidence for this
-realization of the Lemma.
+realization of the Lemma. A non-comparable adjective never marks Degree, and
+this adverbial use marks no case, gender or number, so the inflection is
+`null`.
 
 <!-- README_BLOCK:surface -->
 

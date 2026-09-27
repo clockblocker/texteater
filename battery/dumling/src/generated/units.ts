@@ -9,6 +9,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				comparable: "Yes" | null;
 				foreign: "Yes" | null;
 				numType: ("Card" | "Ord") | null;
 				variant: "Short" | null;
@@ -25,6 +26,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					foreign: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
@@ -50,6 +52,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					foreign: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
@@ -70,6 +73,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						comparable: "Yes" | null;
 						foreign: "Yes" | null;
 						numType: ("Card" | "Ord") | null;
 						variant: "Short" | null;
@@ -314,6 +318,7 @@ export interface UnitMap {
 			kind: "ADV";
 			canonicalForm: string;
 			coreFeatures: {
+				comparable: "Yes" | null;
 				foreign: "Yes" | null;
 				numType: ("Card" | "Mult") | null;
 				pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
@@ -329,6 +334,7 @@ export interface UnitMap {
 				kind: "ADV";
 				canonicalForm: string;
 				coreFeatures: {
+					comparable: "Yes" | null;
 					foreign: "Yes" | null;
 					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
@@ -350,6 +356,7 @@ export interface UnitMap {
 				kind: "ADV";
 				canonicalForm: string;
 				coreFeatures: {
+					comparable: "Yes" | null;
 					foreign: "Yes" | null;
 					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
@@ -369,6 +376,7 @@ export interface UnitMap {
 					kind: "ADV";
 					canonicalForm: string;
 					coreFeatures: {
+						comparable: "Yes" | null;
 						foreign: "Yes" | null;
 						numType: ("Card" | "Mult") | null;
 						pronType:
@@ -2898,7 +2906,7 @@ export interface UnitMap {
 			family: "Locution";
 			kind: "ADJ";
 			canonicalForm: string;
-			coreFeatures: Record<string, never>;
+			coreFeatures: { comparable: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -2909,7 +2917,7 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADJ";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
@@ -2929,7 +2937,7 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADJ";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -2944,7 +2952,7 @@ export interface UnitMap {
 					family: "Locution";
 					kind: "ADJ";
 					canonicalForm: string;
-					coreFeatures: Record<string, never>;
+					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
@@ -3131,7 +3139,7 @@ export interface UnitMap {
 			family: "Locution";
 			kind: "ADV";
 			canonicalForm: string;
-			coreFeatures: Record<string, never>;
+			coreFeatures: { comparable: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -3142,11 +3150,14 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				degree: ("Cmp" | "Pos" | "Sup") | null;
+			} | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -3156,7 +3167,7 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -3171,11 +3182,14 @@ export interface UnitMap {
 					family: "Locution";
 					kind: "ADV";
 					canonicalForm: string;
-					coreFeatures: Record<string, never>;
+					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					degree: ("Cmp" | "Pos" | "Sup") | null;
+				} | null;
 			};
 			members: [
 				(
@@ -5281,6 +5295,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				comparable: "Yes" | null;
 				extPos: ("ADP" | "ADV" | "SCONJ") | null;
 				numForm: ("Combi" | "Word") | null;
 				numType: ("Frac" | "Ord") | null;
@@ -5298,6 +5313,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					extPos: ("ADP" | "ADV" | "SCONJ") | null;
 					numForm: ("Combi" | "Word") | null;
 					numType: ("Frac" | "Ord") | null;
@@ -5321,6 +5337,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					extPos: ("ADP" | "ADV" | "SCONJ") | null;
 					numForm: ("Combi" | "Word") | null;
 					numType: ("Frac" | "Ord") | null;
@@ -5342,6 +5359,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						comparable: "Yes" | null;
 						extPos: ("ADP" | "ADV" | "SCONJ") | null;
 						numForm: ("Combi" | "Word") | null;
 						numType: ("Frac" | "Ord") | null;
@@ -5562,6 +5580,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
+				comparable: "Yes" | null;
 				extPos: ("ADP" | "ADV" | "CCONJ" | "SCONJ") | null;
 				numForm: "Word" | null;
 				numType: ("Frac" | "Mult" | "Ord") | null;
@@ -5602,6 +5621,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					extPos: ("ADP" | "ADV" | "CCONJ" | "SCONJ") | null;
 					numForm: "Word" | null;
 					numType: ("Frac" | "Mult" | "Ord") | null;
@@ -5655,6 +5675,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
+					comparable: "Yes" | null;
 					extPos: ("ADP" | "ADV" | "CCONJ" | "SCONJ") | null;
 					numForm: "Word" | null;
 					numType: ("Frac" | "Mult" | "Ord") | null;
@@ -5706,6 +5727,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
+						comparable: "Yes" | null;
 						extPos: ("ADP" | "ADV" | "CCONJ" | "SCONJ") | null;
 						numForm: "Word" | null;
 						numType: ("Frac" | "Mult" | "Ord") | null;
@@ -8031,7 +8053,7 @@ export interface UnitMap {
 			family: "Locution";
 			kind: "ADV";
 			canonicalForm: string;
-			coreFeatures: Record<string, never>;
+			coreFeatures: { comparable: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -8042,11 +8064,14 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			inflectionalFeatures: {
+				degree: ("Cmp" | "Pos" | "Sup") | null;
+			} | null;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -8056,7 +8081,7 @@ export interface UnitMap {
 				family: "Locution";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: Record<string, never>;
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -8071,11 +8096,14 @@ export interface UnitMap {
 					family: "Locution";
 					kind: "ADV";
 					canonicalForm: string;
-					coreFeatures: Record<string, never>;
+					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+				inflectionalFeatures: {
+					degree: ("Cmp" | "Pos" | "Sup") | null;
+				} | null;
 			};
 			members: [
 				(

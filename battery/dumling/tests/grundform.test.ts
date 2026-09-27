@@ -49,6 +49,15 @@ function surface(
 	if (result.chain.unitKind !== "Surface") throw Error("Expected Surface");
 	return result.chain.value;
 }
+/** Whether Dumling accepts the Surface `surface` would build. */
+function validates(...args: Parameters<typeof surface>): boolean {
+	try {
+		surface(...args);
+		return true;
+	} catch {
+		return false;
+	}
+}
 function errorOf(value: Surface) {
 	const result = checkIfGrundform(value);
 	if (result.success)
@@ -551,14 +560,27 @@ describe("Grundform assessment", () => {
 		).toEqual({ success: true, value: false });
 	});
 	test("an invariant Locution is Grundform by its spelling", () => {
-		const value = surface("de/Locution/ADV", { canonical: "ganz und gar" });
+		const value = surface("de/Locution/INTJ", {
+			canonical: "Herzlichen Dank",
+		});
 		expect("inflectionalFeatures" in value).toBe(false);
 		expect(checkIfGrundform(value)).toEqual({ success: true, value: true });
+		// A non-comparable ADV Locution marks no Degree (ADR 0042).
+		const adverb = { core: { comparable: null }, features: null };
+		expect(
+			checkIfGrundform(
+				surface("de/Locution/ADV", {
+					canonical: "ganz und gar",
+					...adverb,
+				}),
+			),
+		).toEqual({ success: true, value: true });
 		expect(
 			checkIfGrundform(
 				surface("de/Locution/ADV", {
 					canonical: "ganz und gar",
 					form: "ganz und",
+					...adverb,
 				}),
 			),
 		).toEqual({ success: true, value: false });
@@ -588,6 +610,182 @@ describe("Grundform assessment", () => {
 				),
 				form,
 			).toEqual({ success: true, value: false });
+	});
+	describe("comparability decides Degree and Grundform (ADR 0042)", () => {
+		const yes = { comparable: "Yes" };
+		const no = { comparable: null };
+		const agreement = { case: null, gender: null, number: null };
+		test("a non-comparable ADV is Grundform by its spelling and marks no Degree", () => {
+			for (const [key, canonical] of [
+				["de/Lexeme/ADV", "hier"],
+				["en/Lexeme/ADV", "here"],
+			] as const) {
+				expect(
+					checkIfGrundform(
+						surface(key, { canonical, core: no, features: null }),
+					),
+				).toEqual({ success: true, value: true });
+				expect(
+					validates(key, {
+						canonical,
+						core: no,
+						features: { degree: "Pos" },
+					}),
+				).toBe(false);
+			}
+		});
+		test("a comparable ADV marks Degree and cites its positive", () => {
+			for (const [key, canonical, comparative] of [
+				["de/Lexeme/ADV", "oft", "öfter"],
+				["en/Lexeme/ADV", "fast", "faster"],
+			] as const) {
+				expect(
+					validates(key, { canonical, core: yes, features: null }),
+				).toBe(false);
+				expect(
+					checkIfGrundform(
+						surface(key, {
+							canonical,
+							core: yes,
+							features: { degree: "Pos" },
+						}),
+					),
+				).toEqual({ success: true, value: true });
+				expect(
+					checkIfGrundform(
+						surface(key, {
+							canonical,
+							form: comparative,
+							core: yes,
+							features: { degree: "Cmp" },
+						}),
+					),
+				).toEqual({ success: true, value: false });
+			}
+		});
+		test("a comparable ADJ cites its positive; without Degree it is rejected", () => {
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/ADJ", {
+						canonical: "mild",
+						core: yes,
+						features: { degree: "Pos", ...agreement },
+					}),
+				),
+			).toEqual({ success: true, value: true });
+			expect(
+				validates("de/Lexeme/ADJ", {
+					canonical: "mild",
+					core: yes,
+					features: null,
+				}),
+			).toBe(false);
+			expect(
+				checkIfGrundform(
+					surface("en/Lexeme/ADJ", {
+						canonical: "fast",
+						core: yes,
+						features: { degree: "Pos" },
+					}),
+				),
+			).toEqual({ success: true, value: true });
+			expect(
+				checkIfGrundform(
+					surface("en/Lexeme/ADJ", {
+						canonical: "fast",
+						form: "faster",
+						core: yes,
+						features: { degree: "Cmp" },
+					}),
+				),
+			).toEqual({ success: true, value: false });
+			expect(
+				validates("en/Lexeme/ADJ", {
+					canonical: "fast",
+					core: yes,
+					features: null,
+				}),
+			).toBe(false);
+		});
+		test("a non-comparable ADJ is Grundform uninflected; an attributive form is not", () => {
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/ADJ", {
+						canonical: "tot",
+						core: no,
+						features: null,
+					}),
+				),
+			).toEqual({ success: true, value: true });
+			// der tote Mann, den toten Mann
+			const attributive = {
+				case: "Acc",
+				degree: null,
+				gender: "Masc",
+				number: "Sing",
+			};
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/ADJ", {
+						canonical: "tot",
+						form: "toten",
+						core: no,
+						features: attributive,
+					}),
+				),
+			).toEqual({ success: true, value: false });
+			for (const degree of ["Pos", "Cmp"])
+				expect(
+					validates("de/Lexeme/ADJ", {
+						canonical: "tot",
+						core: no,
+						features: { ...attributive, degree },
+					}),
+				).toBe(false);
+			expect(
+				checkIfGrundform(
+					surface("en/Lexeme/ADJ", {
+						canonical: "dead",
+						core: no,
+						features: null,
+					}),
+				),
+			).toEqual({ success: true, value: true });
+		});
+		test("ADV and ADJ Locutions take the same Core Feature and rule", () => {
+			expect(
+				validates("de/Locution/ADJ", {
+					canonical: "fix und fertig",
+					core: yes,
+					features: null,
+				}),
+			).toBe(false);
+			expect(
+				checkIfGrundform(
+					surface("de/Locution/ADJ", {
+						canonical: "fix und fertig",
+						core: no,
+						features: null,
+					}),
+				),
+			).toEqual({ success: true, value: true });
+			expect(
+				checkIfGrundform(
+					surface("en/Locution/ADV", {
+						canonical: "by and large",
+						core: no,
+						features: null,
+					}),
+				),
+			).toEqual({ success: true, value: true });
+			expect(
+				validates("en/Locution/ADV", {
+					canonical: "by and large",
+					core: no,
+					features: { degree: "Pos" },
+				}),
+			).toBe(false);
+		});
 	});
 	test("all routes assess without throwing; routes without inflection use form evidence", () => {
 		for (const route of routes) {

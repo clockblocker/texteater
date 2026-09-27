@@ -266,7 +266,9 @@ function pronominalAdverb(
 		family: "Lexeme",
 		kind: "ADV",
 		canonicalForm: form,
+		// A pronominal adverb has no comparison forms (ADR 0042).
 		coreFeatures: {
+			comparable: null,
 			foreign: null,
 			numType: null,
 			pronType: entry.pronType,

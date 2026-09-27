@@ -1,4 +1,5 @@
 import type { Surface } from "../types.js";
+import { adjective, adverb } from "./comparability.js";
 import type { GrundformRule } from "./features.js";
 import { lexicalConvention } from "./lemma-rule.js";
 
@@ -12,7 +13,6 @@ const infinitive: GrundformRule = {
 	},
 };
 const noun: GrundformRule = { features: { number: ["Sing", "Ptan"] } };
-const positive: GrundformRule = { features: { degree: ["Pos"] } };
 const verb: GrundformRule = {
 	features: { ...infinitive.features, voice: [null] },
 };
@@ -38,8 +38,9 @@ function englishAuxiliary(surface: Surface): GrundformRule {
 }
 
 export const englishRules = {
-	"en/Lexeme/ADJ": positive,
-	"en/Lexeme/ADV": positive,
+	// An English ADJ marks only Degree, never agreement (ADR 0042).
+	"en/Lexeme/ADJ": adjective([]),
+	"en/Lexeme/ADV": adverb,
 	"en/Lexeme/AUX": englishAuxiliary,
 	"en/Lexeme/DET": lexicalConvention,
 	"en/Lexeme/NOUN": noun,
@@ -47,6 +48,7 @@ export const englishRules = {
 	"en/Lexeme/SYM": lexicalConvention,
 	"en/Lexeme/VERB": verb,
 	// A Locution borrows the rule of the Lexeme route with its Kind (ADR 0039).
+	"en/Locution/ADV": adverb,
 	"en/Locution/NOUN": noun,
 	"en/Locution/VERB": verb,
 } as const;

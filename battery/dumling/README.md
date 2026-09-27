@@ -14,7 +14,8 @@ Here is the complete breakdown of `schweigend`.
 ## Lemma
 
 The Lemma is its grammatical identity. In this sentence, `schweigend` is an
-adjective in its positive form, not an inflected use of the verb `schweigen`.
+adjective, not an inflected use of the verb `schweigen`. It has no comparison
+forms, so its Core records `comparable: null`.
 
 ```ts
 import type * as Dumling from "dumling/types";
@@ -27,6 +28,7 @@ const lemma = {
 	kind: "ADJ",
 	coreFeatures: {
 		abbr: null,
+		comparable: null,
 		foreign: null,
 		numType: null,
 		variant: null,
@@ -37,7 +39,9 @@ const lemma = {
 ## Surface
 
 The Surface records the normalized form and the grammatical evidence for this
-realization of the Lemma.
+realization of the Lemma. A non-comparable adjective never marks Degree, and
+this adverbial use marks no case, gender or number, so the inflection is
+`null`.
 
 ```ts
 const surface = {
@@ -45,12 +49,7 @@ const surface = {
 	language: "de",
 	normalizedSurface: "schweigend",
 	spelling: "Canonical",
-	inflectionalFeatures: {
-		case: null,
-		degree: "Pos",
-		gender: null,
-		number: null,
-	},
+	inflectionalFeatures: null,
 	lemma,
 	surfaceFeatures: null,
 } satisfies Dumling.Surface<"de", "Lexeme", "ADJ">;

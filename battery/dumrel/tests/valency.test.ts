@@ -42,6 +42,7 @@ const stolzReading = {
 		canonicalForm: "stolz",
 		coreFeatures: {
 			abbr: null,
+			comparable: "Yes",
 			foreign: null,
 			numType: null,
 			variant: null,

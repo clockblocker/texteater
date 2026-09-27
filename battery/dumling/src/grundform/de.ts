@@ -1,5 +1,9 @@
 import type { Surface } from "../types.js";
 import {
+	adverb,
+	adjective as comparabilityAdjective,
+} from "./comparability.js";
+import {
 	type FeatureRequirements,
 	type GrundformRule,
 	inflectionalFeatures,
@@ -20,9 +24,7 @@ const infinitive: GrundformRule = {
 		passive: [null],
 	},
 };
-const adjective: GrundformRule = {
-	features: { degree: ["Pos"], case: [null], gender: [null], number: [null] },
-};
+const adjective = comparabilityAdjective(["case", "gender", "number"]);
 function noun(surface: Surface): GrundformRule {
 	const features: FeatureRequirements = { case: ["Nom"] };
 	if (inflectionalFeatures(surface)?.number === "Plur")
@@ -63,12 +65,13 @@ function germanClosedClass(surface: Surface): GrundformRule {
 /**
  * A Locution route borrows the rule of the Lexeme route with its Kind (ADR
  * 0039): `den Faden verlieren` cites its infinitive, `weißer Rabe` its
- * nominative singular, `fix und fertig` its undeclined positive. An invariant
- * Locution or a Saying has no bag, so its spelling decides.
+ * nominative singular, `fix und fertig` its undeclined positive, and a
+ * non-comparable ADV Locution (`zum Teil`) its spelling. An invariant Locution
+ * or a Saying has no bag, so its spelling decides.
  */
 export const germanRules = {
 	"de/Lexeme/ADJ": adjective,
-	"de/Lexeme/ADV": { features: { degree: ["Pos"] } },
+	"de/Lexeme/ADV": adverb,
 	"de/Lexeme/AUX": infinitive,
 	"de/Lexeme/DET": germanClosedClass,
 	"de/Lexeme/NOUN": noun,
@@ -79,6 +82,7 @@ export const germanRules = {
 	"de/Lexeme/SYM": lexicalConvention,
 	"de/Lexeme/VERB": infinitive,
 	"de/Locution/ADJ": adjective,
+	"de/Locution/ADV": adverb,
 	"de/Locution/DET": germanClosedClass,
 	"de/Locution/NOUN": noun,
 	"de/Locution/NUM": lexicalConvention,

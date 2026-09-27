@@ -11,6 +11,7 @@ const lemma = {
 	kind: "ADJ",
 	coreFeatures: {
 		abbr: null,
+		comparable: null,
 		foreign: null,
 		numType: null,
 		variant: null,
@@ -24,12 +25,7 @@ const surface = {
 	language: "de",
 	normalizedSurface: "schweigend",
 	spelling: "Canonical",
-	inflectionalFeatures: {
-		case: null,
-		degree: "Pos",
-		gender: null,
-		number: null,
-	},
+	inflectionalFeatures: null,
 	lemma,
 	surfaceFeatures: null,
 } satisfies Dumling.Surface<"de", "Lexeme", "ADJ">;

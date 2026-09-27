@@ -14,7 +14,10 @@ import type { Surface } from "./types.js";
  * A supplied Variant spelling is trusted as an accepted spelling alternative;
  * this function does not perform spell checking or infer missing grammar.
  * Routes without represented inflection use the canonical form/variant evidence.
- * A Saying's spelling is compared by its words only (ADR 0039).
+ * A Saying's spelling is compared by its words only (ADR 0039). A German or
+ * English ADV or ADJ is assessed from its Lemma's comparability (ADR 0042):
+ * a comparable one cites its positive, and a non-comparable one without
+ * inflection (`hier`, `tot`) is Grundform by its spelling.
  * A noun's article is not part of its form (ADR 0035), so no rule reads it.
  * Parse unknown input with parseUnit first. No field or caller override stores
  * the assessment, and neither the Surface nor its feature bags are modified.

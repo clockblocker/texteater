@@ -22,12 +22,18 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -40,6 +46,7 @@
 						"kind": "ADV",
 						"canonicalForm": "hier",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null

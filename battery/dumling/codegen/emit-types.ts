@@ -18,6 +18,7 @@ export function outputType(
 						effect[0] === "operation" &&
 						!new Set([
 							"dumling.feature-bag.marked",
+							"dumling.comparability.surface",
 							"dumling.de-pronoun.core",
 							"dumling.de-determiner.core",
 							"dumling.de-closed-class.surface",

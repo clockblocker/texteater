@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ComparableSchema } from "./custom/comparable.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
@@ -56,6 +57,7 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	aspect: AspectSchema,
 	case: CaseSchema,
 	clusivity: ClusivitySchema,
+	comparable: ComparableSchema,
 	conjType: ConjTypeSchema,
 	definite: DefiniteSchema,
 	degree: DegreeSchema,

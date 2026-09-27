@@ -12,6 +12,7 @@ import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 export const EnAdverbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
+		comparable: EN_FEATURE_SCHEMA.comparable,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract([
 			"ADP",
 			"ADV",

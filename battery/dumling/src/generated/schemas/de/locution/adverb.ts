@@ -5,7 +5,7 @@ import { buildUnitSchemas } from "../../../../schemas/units.js";
 const schemas = buildUnitSchemas(
 	{ language: "de", family: "Locution", kind: "ADV" },
 	featureBags.shape.core,
-	undefined,
+	featureBags.shape.inflectional,
 );
 export const lemmaSchema = schemas.Lemma;
 export const surfaceSchema = schemas.Surface;

@@ -240,6 +240,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"extPos": {
 																"anyOf": [
 																	{
@@ -299,6 +312,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"extPos",
 															"numForm",
 															"numType",
@@ -1310,6 +1324,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"extPos": {
 																"anyOf": [
 																	{
@@ -1420,6 +1447,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"extPos",
 															"numForm",
 															"numType",
@@ -9489,7 +9517,24 @@
 													},
 													"coreFeatures": {
 														"type": "object",
-														"properties": {},
+														"properties": {
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"comparable"
+														],
 														"additionalProperties": false
 													}
 												},
@@ -9540,6 +9585,37 @@
 														"type": "null"
 													}
 												]
+											},
+											"inflectionalFeatures": {
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"degree": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Cmp",
+																			"Pos",
+																			"Sup"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"degree"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "null"
+													}
+												]
 											}
 										},
 										"required": [
@@ -9548,7 +9624,8 @@
 											"lemma",
 											"normalizedSurface",
 											"spelling",
-											"surfaceFeatures"
+											"surfaceFeatures",
+											"inflectionalFeatures"
 										],
 										"additionalProperties": false
 									},

@@ -73,7 +73,24 @@
 						},
 						"coreFeatures": {
 							"type": "object",
-							"properties": {},
+							"properties": {
+								"comparable": {
+									"anyOf": [
+										{
+											"type": "string",
+											"enum": [
+												"Yes"
+											]
+										},
+										{
+											"type": "null"
+										}
+									]
+								}
+							},
+							"required": [
+								"comparable"
+							],
 							"additionalProperties": false
 						}
 					},
@@ -464,6 +481,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"extPos": {
 																"anyOf": [
 																	{
@@ -523,6 +553,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"extPos",
 															"numForm",
 															"numType",
@@ -1534,6 +1565,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"extPos": {
 																"anyOf": [
 																	{
@@ -1644,6 +1688,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"extPos",
 															"numForm",
 															"numType",

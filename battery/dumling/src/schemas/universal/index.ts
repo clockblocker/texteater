@@ -8,6 +8,7 @@ export type {
 	IsUniversalFeatureBags,
 	UniversalFeatureBags,
 } from "./features/catalog.js";
+export { Comparable } from "./features/custom/comparable.js";
 export { LexicallyReflexive } from "./features/custom/lexically-reflexive.js";
 export { Phrasal } from "./features/custom/phrasal.js";
 export type { HasSepPrefix } from "./features/custom/separable.js";

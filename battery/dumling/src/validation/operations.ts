@@ -1,5 +1,6 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
+	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
 	fusedMemberError,
@@ -14,6 +15,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
 	isFusedMember,
@@ -49,6 +51,10 @@ function check(
 				};
 }
 export const validationOperations: ValidationOperations = {
+	"dumling.comparability.surface": check(
+		isComparabilitySurface,
+		comparabilitySurfaceError,
+	),
 	"dumling.de-verbal.surface": check(
 		isGermanVerbalSurface,
 		germanVerbalSurfaceError,

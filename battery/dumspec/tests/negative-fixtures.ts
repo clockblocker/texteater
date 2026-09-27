@@ -189,6 +189,21 @@ export const negativeFixtures: {
 		},
 	},
 	{
+		// A plural noun needs its Lemma's plural-only convention, so Dumling
+		// returns an assessment error instead of a verdict (ADR 0042).
+		name: "a Grundform verdict Dumling cannot assess",
+		seed: "de/ich-bin-im-wald",
+		check: "Grundform",
+		edit: (record) => {
+			const target = record.targets[1];
+			Object.assign(target.attestation.surface.inflectionalFeatures, {
+				case: "Nom",
+				number: "Plur",
+			});
+			target.grundform = true;
+		},
+	},
+	{
 		name: "an ADP realized in a case the ADP Case Table does not allow",
 		seed: "de/das-buch-liegt-auf-dem-tisch",
 		check: "AdpositionCase",

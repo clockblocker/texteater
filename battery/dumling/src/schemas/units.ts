@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
 	fusedMemberError,
@@ -12,6 +13,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
 	isFusedMember,
@@ -326,11 +328,20 @@ export function buildUnitSchemas<
 		lexemeOrLocution && ["VERB", "ADJ", "NOUN"].includes(route.kind);
 	const hebrewGovernor = route.language === "he" && caselessGovernor;
 	const englishGovernor = route.language === "en" && caselessGovernor;
+	// Comparability decides Degree on German and English ADV and ADJ (ADR 0042).
+	const comparability =
+		["de", "en"].includes(route.language) &&
+		lexemeOrLocution &&
+		["ADV", "ADJ"].includes(route.kind);
 	const closedClass =
 		route.language === "de" &&
 		lexemeOrLocution &&
 		["PRON", "DET"].includes(route.kind);
 	let Surface = base.Surface;
+	if (comparability)
+		Surface = Surface.refine(isComparabilitySurface, {
+			error: comparabilitySurfaceError,
+		});
 	if (closedClass)
 		Surface = Surface.refine(isGermanClosedClassSurface, {
 			error: germanClosedClassSurfaceError,

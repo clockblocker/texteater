@@ -169,6 +169,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null
@@ -202,6 +203,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null

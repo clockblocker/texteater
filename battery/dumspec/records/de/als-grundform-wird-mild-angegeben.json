@@ -18,12 +18,18 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -37,6 +43,7 @@
 						"canonicalForm": "mild",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -45,7 +52,12 @@
 					"normalizedSurface": "mild",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [{ "attested": "mild", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

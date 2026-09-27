@@ -1,5 +1,6 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
+	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
 	fusedMemberError,
@@ -14,6 +15,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
 	isFusedMember,
@@ -37,6 +39,13 @@ import {
 } from "../src/validation/semantics.js";
 
 export const registrations = [
+	{
+		construct: "custom",
+		implementation: isComparabilitySurface,
+		error: comparabilitySurfaceError,
+		name: "dumling.comparability.surface",
+		version: 1,
+	},
 	{
 		construct: "custom",
 		implementation: isGermanVerbalSurface,

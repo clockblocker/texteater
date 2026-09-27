@@ -240,6 +240,19 @@
 																	}
 																]
 															},
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"foreign": {
 																"anyOf": [
 																	{
@@ -283,6 +296,7 @@
 														},
 														"required": [
 															"abbr",
+															"comparable",
 															"foreign",
 															"numType",
 															"variant"
@@ -1619,6 +1633,19 @@
 													"coreFeatures": {
 														"type": "object",
 														"properties": {
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															},
 															"foreign": {
 																"anyOf": [
 																	{
@@ -1665,6 +1692,7 @@
 															}
 														},
 														"required": [
+															"comparable",
 															"foreign",
 															"numType",
 															"pronType"
@@ -11639,7 +11667,24 @@
 													},
 													"coreFeatures": {
 														"type": "object",
-														"properties": {},
+														"properties": {
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"comparable"
+														],
 														"additionalProperties": false
 													}
 												},
@@ -12676,7 +12721,24 @@
 													},
 													"coreFeatures": {
 														"type": "object",
-														"properties": {},
+														"properties": {
+															"comparable": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Yes"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"comparable"
+														],
 														"additionalProperties": false
 													}
 												},
@@ -12727,6 +12789,37 @@
 														"type": "null"
 													}
 												]
+											},
+											"inflectionalFeatures": {
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"degree": {
+																"anyOf": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Cmp",
+																			"Pos",
+																			"Sup"
+																		]
+																	},
+																	{
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": [
+															"degree"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "null"
+													}
+												]
 											}
 										},
 										"required": [
@@ -12735,7 +12828,8 @@
 											"lemma",
 											"normalizedSurface",
 											"spelling",
-											"surfaceFeatures"
+											"surfaceFeatures",
+											"inflectionalFeatures"
 										],
 										"additionalProperties": false
 									},

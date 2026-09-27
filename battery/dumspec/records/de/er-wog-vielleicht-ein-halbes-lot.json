@@ -179,7 +179,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Masc",
 						"number": "Sing"
 					},
@@ -190,6 +190,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": "Ord",
 							"abbr": null,
 							"foreign": null,
@@ -223,6 +224,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": null,
 							"abbr": null,
 							"foreign": null,
 							"numType": null,
