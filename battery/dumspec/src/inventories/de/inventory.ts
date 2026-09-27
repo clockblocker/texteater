@@ -96,6 +96,7 @@ import { member as m79 } from "./members/lexeme/pronoun/personal/uns-first-perso
 import { member as m80 } from "./members/lexeme/pronoun/personal/uns-first-person-plural-dative.js";
 import { member as m81 } from "./members/lexeme/pronoun/personal/unser-first-person-plural-genitive.js";
 import { member as m78 } from "./members/lexeme/pronoun/personal/wir-first-person-plural-nominative.js";
+import { member as reflexivity } from "./members/lexeme/pronoun/reflexive/sich-reflexivity.js";
 import { member as m99 } from "./members/lexeme/pronoun/reflexive/sich-third-person-accusative.js";
 import { member as m100 } from "./members/lexeme/pronoun/reflexive/sich-third-person-dative.js";
 import { member as m161 } from "./members/lexeme/pronoun/relative/das-neuter-singular-accusative.js";
@@ -120,7 +121,8 @@ import { reviewedPronouns } from "./pronoun-paradigms.js";
 /**
  * Every German authored member: the article and PRON pillar cells, the
  * invariant determiners, the AUX Readings (one per grammatical use, ADR
- * 0026), the stem determiners and pronouns, and the pronominal adverbs.
+ * 0026), the reflexivity unit, the stem determiners and pronouns, and the
+ * pronominal adverbs.
  */
 export const authoredMembers = [
 	article_das_neuter_singular_accusative,
@@ -204,6 +206,7 @@ export const authoredMembers = [
 	m94,
 	m99,
 	m100,
+	reflexivity,
 	m126,
 	m134,
 	m135,

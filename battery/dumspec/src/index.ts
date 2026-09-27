@@ -7,6 +7,8 @@ export {
 	authoredRealizations,
 	closedVerbForms,
 	type ReviewedMember,
+	reflexiveDrillDown,
+	reflexivityUnit,
 	reviewedDeterminers,
 	reviewedPronouns,
 	type SurfaceCell,

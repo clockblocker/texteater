@@ -7,6 +7,8 @@ import {
 	authoredMembers,
 	authoredRealizations,
 	closedVerbForms,
+	reflexiveDrillDown,
+	reflexivityUnit,
 	subjectExpletiveEs,
 } from "../src/inventories.js";
 
@@ -299,5 +301,57 @@ describe("the German authored inventory", () => {
 		);
 		expect(authoredMembers).toContain(subjectExpletiveEs);
 		expect(closedVerbForms.müssen).toContain("muß");
+	});
+
+	test("authors the reflexivity unit a reflexive drills down to (system ADR 0041)", () => {
+		const { lemma, reading, knowledge } = reflexivityUnit;
+		expect(authoredMembers).toContain(reflexivityUnit);
+		expect(parseUnit(lemma).success).toBe(true);
+		expect(parseUnit(reading).success).toBe(true);
+		expect(
+			parseReadingKnowledge({ source: reading, knowledge }).success,
+		).toBe(true);
+		// PRON sich with no case, person or number: neither the Acc nor the Dat cell.
+		expect(lemma).toMatchObject({ kind: "PRON", canonicalForm: "sich" });
+		expect(lemma.coreFeatures).toMatchObject({
+			pronType: "Prs",
+			case: null,
+			person: null,
+			number: null,
+		});
+		// No spelling realizes it; a free sich stays a case cell.
+		expect(
+			authoredRealizations.some(
+				({ member }) => member === reflexivityUnit,
+			),
+		).toBe(false);
+	});
+
+	test("drills down from a reflexive to the reflexivity unit, never a case cell", () => {
+		const verb = (
+			canonicalForm: string,
+			lexicallyReflexive: "Yes" | null,
+		) =>
+			({
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "VERB",
+				canonicalForm,
+				coreFeatures: {
+					hasSepPrefix: null,
+					lexicallyReflexive,
+					verbType: null,
+				},
+			}) as const;
+		// er schämt sich takes the Acc, er bildet sich etwas ein the Dat.
+		for (const reflexive of [
+			verb("sich schämen", "Yes"),
+			verb("sich einbilden", "Yes"),
+		]) {
+			expect(parseUnit(reflexive).success).toBe(true);
+			expect(reflexiveDrillDown(reflexive)).toBe(reflexivityUnit);
+		}
+		expect(reflexiveDrillDown(verb("warten", null))).toBeUndefined();
 	});
 });

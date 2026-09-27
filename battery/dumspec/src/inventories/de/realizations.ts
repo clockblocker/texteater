@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
 import { reviewedDeterminers } from "./determiner-paradigms.js";
+import { reflexivityUnit } from "./drill-down.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
@@ -158,15 +159,18 @@ function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
 /**
  * Every spelling that realizes an authored DET, PRON or AUX member: a stem's
  * spellings with the cell each marks, a pillar's own spelling, the licensed
- * aliases, and every form of an auxiliary.
+ * aliases, and every form of an auxiliary. No spelling realizes the
+ * reflexivity unit: a free sich is an Acc or Dat cell, and only drill-down
+ * reaches the unit.
  */
 export const authoredRealizations: readonly AuthoredRealization[] =
 	authoredMembers.flatMap((member) => {
 		const { lemma } = member;
 		if (
-			lemma.kind !== "DET" &&
-			lemma.kind !== "PRON" &&
-			lemma.kind !== "AUX"
+			member === reflexivityUnit ||
+			(lemma.kind !== "DET" &&
+				lemma.kind !== "PRON" &&
+				lemma.kind !== "AUX")
 		)
 			return [];
 		const aliases =
