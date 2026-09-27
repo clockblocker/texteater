@@ -68,6 +68,8 @@ test("an ADP occurrence takes a case the ADP Case Table allows", () => {
 		["entlang", "Acc", "Post"],
 		["entlang", "Gen", "Prep"],
 		["versus", "Acc", "Prep"],
+		// Unlisted, so any oblique case until #652 decides.
+		["à", "Dat", "Prep"],
 	] as const)
 		expect(
 			attestationAdpositionCaseIssues(
@@ -147,11 +149,55 @@ test("the table keys a position-dependent case by adpType", () => {
 			canonicalForm: "entlang",
 			coreFeatures: { adpType },
 		})?.allowed;
-	expect(entlang("Post")).toEqual(["Acc"]);
+	expect(entlang("Post")).toEqual(["Acc", "Dat"]);
 	expect(entlang("Prep")).toEqual(["Gen", "Dat"]);
+	// Duden gives à no case; what an unlisted adposition records is #652.
 	expect(
-		germanAdpositionCases({ canonicalForm: "versus", coreFeatures: {} }),
+		germanAdpositionCases({ canonicalForm: "à", coreFeatures: {} }),
 	).toBeNull();
+});
+
+test("laut, ab, zufolge and binnen take the cases the table lists", () => {
+	const passes = (
+		canonicalForm: string,
+		realizedCase: string,
+		adpType = "Prep",
+	) =>
+		attestationAdpositionCaseIssues(
+			adpAttestation(canonicalForm, realizedCase, adpType),
+		).length === 0;
+	// laut dem Bericht, laut des Berichts; not laut + Acc.
+	expect(passes("laut", "Dat")).toBe(true);
+	expect(passes("laut", "Gen")).toBe(true);
+	expect(passes("laut", "Acc")).toBe(false);
+	// ab dem 1. Mai, ab ersten Mai; not ab + Gen.
+	expect(passes("ab", "Dat")).toBe(true);
+	expect(passes("ab", "Acc")).toBe(true);
+	expect(passes("ab", "Gen")).toBe(false);
+	// dem Bericht zufolge; Post zufolge + Gen fails, Prep zufolge takes it.
+	expect(passes("zufolge", "Dat", "Post")).toBe(true);
+	expect(passes("zufolge", "Gen", "Post")).toBe(false);
+	expect(passes("zufolge", "Gen", "Prep")).toBe(true);
+	// binnen einer Woche.
+	expect(passes("binnen", "Dat")).toBe(true);
+});
+
+test("the table lists the new circumpositions with …", () => {
+	for (const [canonicalForm, allowed] of [
+		["von … her", ["Dat"]],
+		["um … herum", ["Acc"]],
+		["auf … hin", ["Acc"]],
+		["zu … hin", ["Dat"]],
+		["über … hinweg", ["Acc"]],
+		["von … wegen", ["Gen"]],
+		["an … entlang", ["Dat"]],
+	] as const)
+		expect(
+			germanAdpositionCases({
+				canonicalForm,
+				coreFeatures: { adpType: "Circ" },
+			})?.allowed,
+		).toEqual(allowed);
 });
 
 test("the table finds a circumposition written with … or ASCII ...", () => {
