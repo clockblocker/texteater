@@ -33,9 +33,11 @@ import {
 } from "./draft.js";
 import { germanRelationTargetKindsByFamily as kinds } from "./families.js";
 import {
-	parseParticipleSource,
-	participleSourceOutputSchema,
-	participleSourcePrompt,
+	parseParticipleForm,
+	participleFormOutputSchema,
+	participleFormPrompt,
+	participleFormQuestion,
+	participleMeaningQuestion,
 } from "./participle-source.js";
 import {
 	mergedPlural,
@@ -187,14 +189,16 @@ export function produceKnowledge(
 				return changes.length ? { changes } : null;
 			});
 		/**
-		 * The verb an adjectival participle's form comes from and whether this
-		 * Reading's meaning is a sense of it (ADR 0036), or no contribution for
-		 * a plain adjective. Published with the final batch, like the other
+		 * The verb an adjectival participle's form comes from, named by
+		 * generation and checked by a form-only judgment, and whether this
+		 * Reading's meaning is a sense of it, settled by a second judgment
+		 * (ADR 0036). A plain adjective makes no contribution and no
+		 * judgment. Published with the final batch, like the other
 		 * structured aspects.
 		 */
 		const participleSource = () =>
-			Effect.map(
-				executeGeneration(
+			Effect.gen(function* () {
+				const { id, output: form } = yield* executeGeneration(
 					options,
 					scope,
 					{
@@ -202,23 +206,87 @@ export function produceKnowledge(
 						route,
 						input: { ...state, aspect: "participleSource" },
 						configuration: effectiveConfiguration(options, route),
-						systemPrompt: participleSourcePrompt,
-						outputSchema: participleSourceOutputSchema,
+						systemPrompt: participleFormPrompt,
+						outputSchema: participleFormOutputSchema,
 					},
-					(output) => {
-						const draft = parseParticipleSource(output, route);
-						return draft
-							? projectKnowledge(
-									reading,
-									{ participleSource: null },
-									{ participleSource: draft },
-								)
-							: null;
-					},
+					(output) =>
+						parseParticipleForm(
+							output,
+							reading.lemma.canonicalForm,
+							route,
+						),
 					[],
-				),
-				({ output }) => output,
-			);
+				);
+				if (!form) return null;
+				const judge = judgmentCaller(options);
+				const [{ output: formJudgment }, { output: meaningJudgment }] =
+					yield* Effect.all(
+						[
+							judge(
+								stage,
+								route,
+								{
+									adjective: reading.lemma.canonicalForm,
+									verb: form.source,
+									preterite: form.preterite,
+								},
+								participleFormQuestion(
+									reading.lemma.canonicalForm,
+									form,
+								),
+								scope,
+								[id],
+							),
+							judge(
+								stage,
+								route,
+								JSON.parse(
+									JSON.stringify({
+										...state,
+										sourceVerb: form.source,
+									}),
+								),
+								participleMeaningQuestion(form.source),
+								scope,
+								[id],
+							),
+						],
+						{ concurrency: "unbounded" },
+					);
+				const checked = formJudgment.answers.form;
+				const meaning = meaningJudgment.answers.meaning;
+				if (checked?.type !== "choice" || meaning?.type !== "choice")
+					throw Error("Expected form and meaning choices");
+				// The judge rejects a verb that does not build this form.
+				if (checked.choice === "NotParticiple") {
+					recordEvent(scope, "RejectedParticipleSource", {
+						source: form.source,
+					});
+					return null;
+				}
+				if (
+					checked.choice === "Unresolved" ||
+					meaning.choice === "Unresolved"
+				)
+					return yield* Effect.fail(
+						new DumgenFailure(
+							"Unresolved",
+							stage,
+							"The participle's form or meaning is unresolved",
+							route,
+						),
+					);
+				return projectKnowledge(
+					reading,
+					{ participleSource: null },
+					{
+						participleSource: {
+							...form,
+							meaning: meaning.choice as Dumrel.ParticipleMeaning,
+						},
+					},
+				);
+			});
 		/**
 		 * The noun's plural: the model names its plural forms only when
 		 * requested, and code derives their patterns (#597). The pattern this

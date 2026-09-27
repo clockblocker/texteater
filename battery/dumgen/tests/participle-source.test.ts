@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { Effect } from "effect";
+import { choiceAnswers } from "../src/testing/execution-fixture.js";
 import type { KnowledgeInput } from "../src/types.js";
 import { createDumgen } from "../src/universal/dumgen.js";
 
@@ -45,6 +46,8 @@ function produce(
 	input: KnowledgeInput<"de">,
 	source: unknown,
 	incremental: unknown[] = [],
+	meaning = "Verbal",
+	form = "Participle",
 ) {
 	return Effect.runPromise(
 		createDumgen({
@@ -53,9 +56,10 @@ function produce(
 				"participleSource"
 					? { output: source }
 					: { output: { text: "Ein Zustand." } },
-			judge: async () => {
-				throw Error("No judgment expected");
-			},
+			judge: async (request) =>
+				choiceAnswers(request.questions, (id) =>
+					id === "form" ? form : meaning,
+				),
 			onKnowledgeContribution: (changes) =>
 				incremental.push(...changes.map((change) => change.aspect)),
 		}).produceKnowledge(input),
@@ -66,7 +70,12 @@ test("an adjectival participle names its source VERB Lemma, published only with 
 	const incremental: unknown[] = [];
 	const result = await produce(
 		adjective("umgestürzt", "umgestürzt"),
-		{ source: "umstürzen", separablePrefix: "um", meaning: "Verbal" },
+		{
+			source: "umstürzen",
+			separablePrefix: "um",
+			preterite: "stürzte um",
+			participle: "umgestürzt",
+		},
 		incremental,
 	);
 	expect(result.failures).toEqual([]);
@@ -98,7 +107,8 @@ test("a reflexive source verb is lexicallyReflexive", async () => {
 	const result = await produce(adjective("verliebt", "verliebt"), {
 		source: "sich verlieben",
 		separablePrefix: null,
-		meaning: "Verbal",
+		preterite: "verliebte sich",
+		participle: "verliebt",
 	});
 	expect(
 		result.changes.find((change) => change.aspect === "participleSource"),
@@ -116,12 +126,31 @@ test("a reflexive source verb is lexicallyReflexive", async () => {
 	});
 });
 
-test("a drifted Reading keeps the verb its form names and records the drift", async () => {
-	const result = await produce(adjective("gelassen", "gelassen"), {
-		source: "lassen",
+test("a participle that is not the adjective's form is no source", async () => {
+	const result = await produce(adjective("verlegen", "verlegen"), {
+		source: "verlegen",
 		separablePrefix: null,
-		meaning: "Drifted",
+		preterite: "verlegte",
+		participle: "verlegt",
 	});
+	expect(result.failures).toEqual([]);
+	expect(result.changes.map((change) => change.aspect)).toEqual([
+		"definition",
+	]);
+});
+
+test("a drifted Reading keeps the verb its form names and records the drift", async () => {
+	const result = await produce(
+		adjective("gelassen", "gelassen"),
+		{
+			source: "lassen",
+			separablePrefix: null,
+			preterite: "ließ",
+			participle: "gelassen",
+		},
+		[],
+		"Drifted",
+	);
 	expect(
 		result.changes.find((change) => change.aspect === "participleSource"),
 	).toMatchObject({
@@ -133,20 +162,38 @@ test("a plain adjective is no contribution; a malformed source is an attributabl
 	const plain = await produce(adjective("schnell", "schnell"), {
 		source: null,
 		separablePrefix: null,
-		meaning: null,
+		preterite: null,
+		participle: null,
 	});
 	expect(plain.failures).toEqual([]);
 	expect(plain.changes.map((change) => change.aspect)).toEqual([
 		"definition",
 	]);
+	const answer = {
+		source: "kochen",
+		separablePrefix: null,
+		preterite: "kochte",
+		participle: "gekocht",
+	};
 	for (const source of [
-		{ source: "gekocht", separablePrefix: null, meaning: "Verbal" },
-		{ source: "kochen", separablePrefix: "ab", meaning: "Verbal" },
-		{ source: null, separablePrefix: "ab", meaning: null },
-		{ source: null, separablePrefix: null, meaning: "Drifted" },
-		{ source: "kochen", separablePrefix: null, meaning: null },
-		{ source: "kochen", separablePrefix: null, meaning: "Lexicalized" },
+		{ ...answer, source: "gekocht" },
+		{ ...answer, separablePrefix: "ab" },
+		{
+			source: null,
+			separablePrefix: "ab",
+			preterite: null,
+			participle: null,
+		},
+		{
+			source: null,
+			separablePrefix: null,
+			preterite: null,
+			participle: "gekocht",
+		},
+		{ ...answer, participle: null },
+		{ ...answer, preterite: null },
 		{ source: "kochen", separablePrefix: null },
+		{ ...answer, meaning: "Verbal" },
 	]) {
 		const invalid = await produce(adjective("gekocht", "gekocht"), source);
 		expect(invalid.changes.map((change) => change.aspect)).toEqual([
@@ -156,4 +203,43 @@ test("a plain adjective is no contribution; a malformed source is an attributabl
 			{ aspect: "participleSource", code: "InvalidModelOutput" },
 		]);
 	}
+});
+
+test("a verb the judge finds builds no such participle is no source", async () => {
+	const result = await produce(
+		adjective("verschieden", "verschieden"),
+		{
+			source: "verschieden",
+			separablePrefix: null,
+			preterite: "verschied",
+			participle: "verschieden",
+		},
+		[],
+		"Drifted",
+		"NotParticiple",
+	);
+	expect(result.failures).toEqual([]);
+	expect(result.changes.map((change) => change.aspect)).toEqual([
+		"definition",
+	]);
+});
+
+test("an unresolved meaning stores no source and fails the aspect", async () => {
+	const result = await produce(
+		adjective("gekocht", "gekocht"),
+		{
+			source: "kochen",
+			separablePrefix: null,
+			preterite: "kochte",
+			participle: "gekocht",
+		},
+		[],
+		"Unresolved",
+	);
+	expect(result.changes.map((change) => change.aspect)).toEqual([
+		"definition",
+	]);
+	expect(result.failures).toMatchObject([
+		{ aspect: "participleSource", code: "Unresolved" },
+	]);
 });

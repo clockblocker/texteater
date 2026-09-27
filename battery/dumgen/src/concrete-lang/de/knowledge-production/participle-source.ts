@@ -1,51 +1,99 @@
 import type * as Dumling from "dumling/types";
-import { normalizeText, participleMeaningValues } from "dumrel";
+import { normalizeText } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { DumgenFailure } from "../../../universal/failure.js";
+import { choice } from "../../../universal/questions.js";
 import { infinitiveShaped } from "../grammatical-resolution/infinitive-shape.js";
 
 /**
- * What the model names for an adjectival participle: the verb its form comes
- * from and whether this Reading's meaning is a sense of that verb, or null.
+ * What the model names for an adjectival participle's form: the verb whose
+ * participle it is, with its separable prefix.
  */
-export type ParticipleSourceDraft = {
+export type ParticipleFormDraft = {
 	readonly source: string;
 	readonly separablePrefix: string | null;
+	/** The verb's third person singular Präteritum, evidence for the form check. */
+	readonly preterite: string;
+};
+
+/** A form draft with the meaning the judgment settled for this Reading. */
+export type ParticipleSourceDraft = ParticipleFormDraft & {
 	readonly meaning: Dumrel.ParticipleMeaning;
 };
 
 /**
- * Two separate questions (ADR 0036): the form names the verb for every
- * Reading of the adjective, and the Reading's sense decides its meaning.
+ * The first of two questions (ADR 0036): the form alone names the verb, the
+ * same for every Reading of the adjective. The model also spells the verb's
+ * participle, so code checks the form.
  */
-export const participleSourcePrompt =
-	"The fixed exact German ADJ Reading in its marked context may be a participle. Answer two separate questions. First, source, by form alone: if the adjective's Canonical Form is the Partizip I or Partizip II of a German verb, return that verb's dictionary infinitive as source, lowercase, with sich when the verb is reflexive in the sense the adjective comes from (erholt: sich erholen), and its separable prefix as separablePrefix, else null (abgerissen: abreißen, ab). The form decides even when the adjective's meaning has moved far from the verb (geschickt: schicken; erhaben: erheben; abgefahren: abfahren, ab). Return {source:null,separablePrefix:null,meaning:null} for a plain adjective (rot, fleißig), an un- form (ungewaschen), and a word the verb does not build as its participle (bescheiden 'modest': the verb bescheiden forms beschieden). Never return the adjective itself, a noun or a phrase. Second, meaning, by this Reading's sense, whose anchor is its emojiDescription: Verbal when the Reading means the action or resulting state of a sense the verb has, figurative senses included (gekocht: kochen; aufgeregt: aufregen; gesetzt 🪑 'seated': setzen), and Drifted when no sense of the verb means it (geschickt 'skilful': schicken; gesetzt 🧓 'staid': setzen; erhaben 'sublime': erheben). One adjective's Readings can differ in meaning while sharing the source.";
+export const participleFormPrompt =
+	"Say which German verb the fixed exact ADJ Reading's Canonical Form is a participle of, by form alone. The Canonical Form is a participle when it is, letter for letter, the Partizip II or the Partizip I of a German verb. Its meaning does not matter: a participle whose meaning moved away from its verb still names that verb (geschickt 'skilful': schicken; erhaben 'sublime': erheben). " +
+	"Return the verb's principal parts in order. source: its dictionary infinitive, lowercase, with sich when the verb is reflexive in the sense the adjective comes from (erholt: sich erholen); separablePrefix: its separable prefix, else null; preterite: its third person singular Präteritum; participle: its Partizip II, or its Partizip I for an adjective in -end, which equals the Canonical Form. Examples: abgefahren: abfahren, ab, fuhr ab, abgefahren; erhaben: erheben, null, erhob, erhaben; lachend: lachen, null, lachte, lachend. " +
+	"The source is an infinitive, so it is never the adjective itself, except for a verb whose Partizip II is spelled like its infinitive (verlassen: verlassen). " +
+	"Return all four null for a plain adjective (rot, fleißig), an un- form (ungewaschen), and a word no verb builds as its participle, even when a verb is spelled like it (bescheiden 'modest': the verb bescheiden builds beschieden).";
 
-export const participleSourceOutputSchema = {
+export const participleFormOutputSchema = {
 	type: "object",
 	properties: {
 		source: { type: ["string", "null"] },
 		separablePrefix: { type: ["string", "null"] },
-		meaning: {
-			anyOf: [
-				{ type: "string", enum: ["Verbal", "Drifted"] },
-				{ type: "null" },
-			],
-		},
+		preterite: { type: ["string", "null"] },
+		participle: { type: ["string", "null"] },
 	},
-	required: ["source", "separablePrefix", "meaning"],
+	required: ["source", "separablePrefix", "preterite", "participle"],
 	additionalProperties: false,
 } as const;
 
 /**
- * Validates the model's answer. The source must be infinitive-shaped, a
- * separable prefix must open the verb without being all of it, and a source
- * needs a meaning; anything else is invalid output, not a missing source.
+ * Checks the generated verb by form alone: is the adjective that verb's
+ * participle? Its state holds no sentence, so no meaning can sway it.
  */
-export function parseParticipleSource(
+export function participleFormQuestion(
+	adjective: string,
+	form: ParticipleFormDraft,
+) {
+	const verb = form.source;
+	return {
+		form: choice(
+			`A proposer claims the German verb ${verb} (Präteritum ${form.preterite}) has ${adjective} as its participle. Check the claim by conjugating ${verb} yourself: is ${verb} a German verb, and is ${adjective}, letter for letter, its Partizip II or its Partizip I? Compare spellings only: geschickt is the Partizip II of schicken, erhaben of erheben, verlassen of verlassen, and lachend the Partizip I of lachen. A word spelled like the verb's infinitive counts only when the verb builds its Partizip II that way: the verb bescheiden builds beschieden, so bescheiden is not its participle.`,
+			{
+				Participle: `${adjective} is a participle of ${verb}`,
+				NotParticiple: `${verb} builds no participle spelled ${adjective}, or is no German verb`,
+				Unresolved: "Cannot defensibly decide",
+			},
+		),
+	};
+}
+
+/**
+ * The second question, asked per Reading once the form names a verb: is this
+ * Reading's meaning a sense of that verb?
+ */
+export function participleMeaningQuestion(verb: string) {
+	return {
+		meaning: choice(
+			`The fixed ADJ Reading's form is a participle of the verb ${verb}. Is its meaning in this sentence, anchored by its emojiDescription, a sense of ${verb}? Test it by paraphrasing the sentence with ${verb}: die gekochten Eier are eggs someone has cooked; ein geschickter Handwerker is skilful, not sent (schicken).`,
+			{
+				Verbal: `The adjective here means an action or resulting state of a sense ${verb} has today, figurative senses included: ein aufgeregtes Kind is a child something has excited (aufregen); ein gesetzter 🪑 Gast has been seated (setzen).`,
+				Drifted: `No sense of ${verb} paraphrases this meaning; the verb only explains the form: ein erhabener Anblick is sublime, not raised (erheben); ein gesetzter 🧓 Herr is staid, not seated (setzen).`,
+				Unresolved: "Cannot defensibly decide",
+			},
+		),
+	};
+}
+
+/**
+ * Validates the model's form answer. The source must be infinitive-shaped and
+ * a separable prefix must open the verb without being all of it; anything
+ * else is invalid output, not a missing source. A participle that is not the
+ * adjective's Canonical Form means no verb builds that form (`verlegen`
+ * 'embarrassed': the verb `verlegen` builds `verlegt`), so there is no source.
+ */
+export function parseParticipleForm(
 	output: unknown,
+	adjective: string,
 	route: string,
-): ParticipleSourceDraft | null {
+): ParticipleFormDraft | null {
 	const invalid = (message: string) =>
 		new DumgenFailure(
 			"InvalidModelOutput",
@@ -53,41 +101,46 @@ export function parseParticipleSource(
 			message,
 			route,
 		);
+	const fields = ["source", "separablePrefix", "preterite", "participle"];
 	if (
 		!output ||
 		typeof output !== "object" ||
-		Object.keys(output).length !== 3 ||
-		!("source" in output) ||
-		!("separablePrefix" in output) ||
-		!("meaning" in output)
+		Object.keys(output).length !== fields.length ||
+		fields.some((field) => !(field in output))
 	)
-		throw invalid("Expected only source, separablePrefix and meaning");
-	const { source, separablePrefix, meaning } = output as Record<
+		throw invalid(
+			"Expected only source, separablePrefix, preterite and participle",
+		);
+	const { source, separablePrefix, preterite, participle } = output as Record<
 		string,
 		unknown
 	>;
 	if (source === null) {
-		if (separablePrefix !== null || meaning !== null)
-			throw invalid("A separable prefix or meaning needs a source verb");
+		if (
+			separablePrefix !== null ||
+			preterite !== null ||
+			participle !== null
+		)
+			throw invalid("Only a source verb has principal parts");
 		return null;
 	}
+	if (typeof preterite !== "string")
+		throw invalid("Expected the source verb's preterite");
 	if (typeof source !== "string" || !infinitiveShaped(normalizeText(source)))
 		throw invalid("Expected an infinitive-shaped source verb");
-	if (!participleMeaningValues.includes(meaning as Dumrel.ParticipleMeaning))
-		throw invalid("Expected a Verbal or Drifted meaning");
+	if (typeof participle !== "string")
+		throw invalid("Expected the source verb's participle");
+	if (normalizeText(participle) !== normalizeText(adjective)) return null;
 	const verb = normalizeText(source);
-	const drafted = {
-		source: verb,
-		meaning: meaning as Dumrel.ParticipleMeaning,
-	};
-	if (separablePrefix === null) return { ...drafted, separablePrefix };
+	const parts = { source: verb, preterite: normalizeText(preterite) };
+	if (separablePrefix === null) return { ...parts, separablePrefix };
 	if (typeof separablePrefix !== "string")
 		throw invalid("Expected a separable prefix or null");
 	const prefix = normalizeText(separablePrefix);
 	const stem = verb.startsWith("sich ") ? verb.slice("sich ".length) : verb;
 	if (!prefix || !stem.startsWith(prefix) || stem === prefix)
 		throw invalid("The separable prefix must open the source verb");
-	return { ...drafted, separablePrefix: prefix };
+	return { ...parts, separablePrefix: prefix };
 }
 
 /**
@@ -97,7 +150,7 @@ export function parseParticipleSource(
  * verb's own Readings.
  */
 export function participleSourceLemma(
-	draft: ParticipleSourceDraft,
+	draft: ParticipleFormDraft,
 ): Dumling.Lemma<"de", "Lexeme", "VERB"> {
 	return {
 		unitKind: "Lemma",

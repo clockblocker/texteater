@@ -26,14 +26,22 @@ export function knowledgeFixture(
 			if (!analysis || typeof analysis !== "object") return { output };
 			if (input.aspect === "valency")
 				return { output: { valency: analysis.valency ?? [] } };
-			if (input.aspect === "participleSource")
+			if (input.aspect === "participleSource") {
+				const { reading } = request.input as {
+					reading?: { lemma?: { canonicalForm?: string } };
+				};
+				const source = analysis.participleSource;
 				return {
 					output: {
-						source: analysis.participleSource?.verb ?? null,
+						source: source?.verb ?? null,
 						separablePrefix: null,
-						meaning: analysis.participleSource?.meaning ?? null,
+						preterite: source ? "preterite" : null,
+						participle: source
+							? (reading?.lemma?.canonicalForm ?? null)
+							: null,
 					},
 				};
+			}
 			if (input.aspect)
 				return {
 					output: {
@@ -62,6 +70,15 @@ export function knowledgeFixture(
 			};
 		},
 		judge: async (request) => {
+			if (
+				Object.hasOwn(request.questions, "form") ||
+				Object.hasOwn(request.questions, "meaning")
+			)
+				return choiceAnswers(request.questions, (id) =>
+					id === "form"
+						? "Participle"
+						: (analysis.participleSource?.meaning ?? "Unresolved"),
+				);
 			const { candidates } = request.state as { candidates: string[] };
 			return choiceAnswers(request.questions, (id) => {
 				const candidate = candidates[Number(id.split("_")[1])];
