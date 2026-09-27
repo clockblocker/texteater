@@ -61,7 +61,9 @@ _Avoid_: components, drill-down segmentation
 **Canonical Form**:
 The normalized form that names a Lemma and participates in its identity. It
 takes the word's lexical casing, never its position: sentence-initial `Wegen`
-is the Lemma `wegen`.
+is the Lemma `wegen`. An open slot in a discontinuous form is `…` (U+2026)
+with a space on each side: `um … willen`. ASCII `...` is accepted on input and
+stored as `…`.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
