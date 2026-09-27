@@ -132,6 +132,31 @@ export interface SpecRecord {
 }
 
 /**
+ * A Breakdown Record's path under `records/`, without `.json`:
+ * `breakdown/de/den-faden-verlieren`. The second part is its language.
+ */
+export type BreakdownRecordId = string;
+
+/**
+ * One multiword Lemma's Breakdown (ADR 0041), the gold for `Segment.Unit`
+ * (Dumgen ADR 0007): the Lemma's wording as its sentence, segmented, and
+ * the Lexeme targets it breaks down into. No target covers the whole
+ * wording, and every ResolvableText Segment is in exactly one target.
+ */
+export interface BreakdownRecord {
+	id: BreakdownRecordId;
+	language: Dumling.Language;
+	/** The Locution or Saying broken down. */
+	lemma: Dumling.Lemma;
+	/** The Lemma's Canonical Form. */
+	sentence: string;
+	segments: readonly Segment[];
+	targets: readonly SpecTarget[];
+	status: ReviewStatus;
+	sources: Sources;
+}
+
+/**
  * Raw text as a reader supplies it, before intake makes a sentence of it.
  * Its path under `records/`, `text/<name>`, is its id.
  */

@@ -9,6 +9,7 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkBreakdownRecord } from "../src/check-breakdown.js";
 import { checkRecord } from "../src/check-record.js";
 import type { SpecRecordId } from "../src/types.js";
 
@@ -24,8 +25,10 @@ export function demoteBrokenReviewed(directory: string): SpecRecordId[] {
 		const path = join(directory, `${id}.json`);
 		const text = readFileSync(path, "utf8");
 		const input: { status?: unknown } = JSON.parse(text);
-		if (input.status !== "Reviewed" || checkRecord(id, input).success)
-			continue;
+		const check = id.startsWith("breakdown/")
+			? checkBreakdownRecord
+			: checkRecord;
+		if (input.status !== "Reviewed" || check(id, input).success) continue;
 		writeFileSync(
 			path,
 			text.replace(/"status":\s*"Reviewed"/u, '"status": "Draft"'),

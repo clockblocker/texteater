@@ -7,6 +7,7 @@ import { recordFileSchema } from "./record-schema.js";
 import type {
 	LegacyCase,
 	ReviewStatus,
+	Segment,
 	Sources,
 	SpecRecord,
 	SpecRecordId,
@@ -78,6 +79,103 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { sentence, segments, targets, noTarget, coverage, status, legacy } =
 		file.data;
 
+	const { parsedTargets, claims, resolvable } = checkTargets(
+		{ sentence, segments, targets, status },
+		language,
+		issue,
+	);
+	for (const [n, entry] of noTarget.entries()) {
+		if (!resolvable(entry.segment)) {
+			issue(
+				"Coverage",
+				`noTarget.${n}.segment`,
+				"No Target names a ResolvableText Segment",
+			);
+			continue;
+		}
+		claims[entry.segment] = (claims[entry.segment] ?? 0) + 1;
+	}
+	for (const [index, count] of claims.entries()) {
+		if (count > 1)
+			issue(
+				"Coverage",
+				`segments.${index}`,
+				"A Segment belongs to at most one target or No Target entry",
+			);
+		else if (count === 0 && coverage === "Full" && resolvable(index))
+			issue(
+				"Coverage",
+				`segments.${index}`,
+				`Full coverage leaves ${JSON.stringify(segments[index]?.text)} in no target or No Target entry`,
+			);
+	}
+	if (targets.length === 0 && noTarget.length === 0)
+		issue(
+			"Coverage",
+			"targets",
+			"A record has a target or No Target entry",
+		);
+	const uncited = uncitedIssue(id, status, file.data.sources);
+	if (uncited) issues.push(uncited);
+
+	if (issues.length > 0 || !language)
+		return {
+			success: false,
+			issues,
+			status,
+			...(legacy === undefined ? {} : { legacy }),
+			targetsWithoutReading: targetsWithoutReading(targets),
+		};
+	return {
+		success: true,
+		record: {
+			id,
+			language,
+			sentence,
+			segments,
+			targets: parsedTargets,
+			noTarget,
+			coverage,
+			status,
+			sources: file.data.sources,
+			provenance: file.data.provenance,
+			...(legacy === undefined ? {} : { legacy }),
+		},
+	};
+}
+
+/** The indices of the targets that name no Reading. */
+export function targetsWithoutReading(
+	targets: readonly { reading?: unknown }[],
+): number[] {
+	return targets.flatMap((target, t) =>
+		target.reading === undefined ? [t] : [],
+	);
+}
+
+type TargetFile = z.infer<typeof fileSchema>["targets"][number];
+
+/**
+ * The checks a sentence record and a Breakdown Record share: the Segments
+ * spell the sentence, and each target's members, strict Attestation, ADP
+ * cases, Reading and Grundform. Returns the parsed targets and how many
+ * targets claim each Segment.
+ */
+export function checkTargets(
+	record: {
+		sentence: string;
+		segments: readonly Segment[];
+		targets: readonly TargetFile[];
+		status: ReviewStatus;
+	},
+	language: Dumling.Language | undefined,
+	issue: (check: SpecCheck, path: string, message: string) => void,
+): {
+	parsedTargets: SpecTarget[];
+	claims: number[];
+	resolvable: (index: number) => boolean;
+} {
+	const { sentence, segments, targets, status } = record;
 	if (segments.map((segment) => segment.text).join("") !== sentence)
 		issue(
 			"Segments",
@@ -186,67 +284,7 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			...(target.notes === undefined ? {} : { notes: target.notes }),
 		});
 	}
-
-	for (const [n, entry] of noTarget.entries()) {
-		if (!resolvable(entry.segment)) {
-			issue(
-				"Coverage",
-				`noTarget.${n}.segment`,
-				"No Target names a ResolvableText Segment",
-			);
-			continue;
-		}
-		claims[entry.segment] = (claims[entry.segment] ?? 0) + 1;
-	}
-	for (const [index, count] of claims.entries()) {
-		if (count > 1)
-			issue(
-				"Coverage",
-				`segments.${index}`,
-				"A Segment belongs to at most one target or No Target entry",
-			);
-		else if (count === 0 && coverage === "Full" && resolvable(index))
-			issue(
-				"Coverage",
-				`segments.${index}`,
-				`Full coverage leaves ${JSON.stringify(segments[index]?.text)} in no target or No Target entry`,
-			);
-	}
-	if (targets.length === 0 && noTarget.length === 0)
-		issue(
-			"Coverage",
-			"targets",
-			"A record has a target or No Target entry",
-		);
-	const uncited = uncitedIssue(id, status, file.data.sources);
-	if (uncited) issues.push(uncited);
-
-	if (issues.length > 0 || !language)
-		return {
-			success: false,
-			issues,
-			status,
-			...(legacy === undefined ? {} : { legacy }),
-			targetsWithoutReading: targets.flatMap((target, t) =>
-				target.reading === undefined ? [t] : [],
-			),
-		};
-	return {
-		success: true,
-		record: {
-			id,
-			language,
-			sentence,
-			segments,
-			targets: parsedTargets,
-			noTarget,
-			coverage,
-			status,
-			sources: file.data.sources,
-			provenance: file.data.provenance,
-			...(legacy === undefined ? {} : { legacy }),
-		},
-	};
+	return { parsedTargets, claims, resolvable };
 }
 
 /**
@@ -301,7 +339,8 @@ function checkReading(
 	return { value: reading, issues: [] };
 }
 
-function sameValue(left: unknown, right: unknown): boolean {
+/** Deep equality of JSON values, key order aside. */
+export function sameValue(left: unknown, right: unknown): boolean {
 	if (Object.is(left, right)) return true;
 	if (Array.isArray(left))
 		return (

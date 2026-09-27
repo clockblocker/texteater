@@ -3,6 +3,9 @@ import type { SpecRecordId } from "./types.js";
 export type SpecCheck =
 	| "Id"
 	| "Shape"
+	| "Lemma"
+	| "Wording"
+	| "Breakdown"
 	| "Attestation"
 	| "Reading"
 	| "AdpositionCase"

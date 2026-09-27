@@ -1,10 +1,16 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { checkRecord, uncitedIssue } from "./check-record.js";
+import { checkBreakdownRecord } from "./check-breakdown.js";
+import {
+	checkRecord,
+	targetsWithoutReading,
+	uncitedIssue,
+} from "./check-record.js";
 import { type SpecIssue, SpecRecordError } from "./issues.js";
 import { textRecordFileSchema } from "./record-schema.js";
 import type {
+	BreakdownRecord,
 	LegacyCase,
 	ReviewStatus,
 	SpecRecord,
@@ -14,6 +20,7 @@ import type {
 
 const recordsDirectory = fileURLToPath(new URL("../records/", import.meta.url));
 const textPrefix = "text/";
+const breakdownPrefix = "breakdown/";
 
 /**
  * A record that needs work: the checks a Draft fails against the current
@@ -58,16 +65,19 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
  * that parses but fails a check against the current model goes on the
  * worklist instead of failing; so does every record holding imported cases,
  * and every Draft with a target that names no Reading. A Reviewed record must
- * pass. Text Records, under `text/`, are checked for shape and a Reviewed
- * one's Rule citation, and join the worklist while they hold imported cases.
+ * pass. Breakdown Records, under `breakdown/`, are handled alike. Text
+ * Records, under `text/`, are checked for shape and a Reviewed one's Rule
+ * citation, and join the worklist while they hold imported cases.
  */
 export function readRecords(directory: string): {
 	records: SpecRecord[];
+	breakdownRecords: BreakdownRecord[];
 	textRecords: TextRecord[];
 	issues: SpecIssue[];
 	worklist: WorklistEntry[];
 } {
 	const records: SpecRecord[] = [];
+	const breakdownRecords: BreakdownRecord[] = [];
 	const textRecords: TextRecord[] = [];
 	const issues: SpecIssue[] = [];
 	const worklist: WorklistEntry[] = [];
@@ -107,20 +117,24 @@ export function readRecords(directory: string): {
 				});
 			continue;
 		}
-		const checked = checkRecord(id, input);
+		const checked = id.startsWith(breakdownPrefix)
+			? checkBreakdownRecord(id, input)
+			: checkRecord(id, input);
 		if (checked.success) {
-			records.push(checked.record);
-			const { status, legacy, targets } = checked.record;
-			const targetsWithoutReading = targets.flatMap((target, t) =>
-				target.reading === undefined ? [t] : [],
-			);
-			if (legacy?.length || targetsWithoutReading.length > 0)
+			if ("lemma" in checked.record)
+				breakdownRecords.push(checked.record);
+			else records.push(checked.record);
+			const { status, targets } = checked.record;
+			const legacy =
+				"legacy" in checked.record ? (checked.record.legacy ?? []) : [];
+			const unnamed = targetsWithoutReading(targets);
+			if (legacy.length > 0 || unnamed.length > 0)
 				worklist.push({
 					record: id,
 					status,
 					issues: [],
-					legacy: legacy ?? [],
-					targetsWithoutReading,
+					legacy,
+					targetsWithoutReading: unnamed,
 				});
 		} else if (
 			checked.status === "Draft" &&
@@ -137,7 +151,7 @@ export function readRecords(directory: string): {
 			});
 		else issues.push(...checked.issues);
 	}
-	return { records, textRecords, issues, worklist };
+	return { records, breakdownRecords, textRecords, issues, worklist };
 }
 
 /**
@@ -155,9 +169,21 @@ export function loadSpecRecords(): readonly SpecRecord[] {
 }
 
 /**
+ * Loads every Breakdown Record from the package's `records/breakdown/`
+ * directory, sorted by id, under the same terms as `loadSpecRecords`: a Draft
+ * that fails a check is left out and listed by `loadSpecWorklist`, and a
+ * failing Reviewed record throws `SpecRecordError`.
+ */
+export function loadBreakdownRecords(): readonly BreakdownRecord[] {
+	const { breakdownRecords, issues } = readRecords(recordsDirectory);
+	if (issues.length > 0) throw new SpecRecordError(issues);
+	return breakdownRecords;
+}
+
+/**
  * The records that still need work, sorted by id: Drafts failing a check
  * against the current model, records holding imported cases verbatim, and
- * Drafts with a target that names no Reading.
+ * Drafts with a target that names no Reading. Breakdown Records included.
  */
 export function loadSpecWorklist(): readonly WorklistEntry[] {
 	return readRecords(recordsDirectory).worklist;

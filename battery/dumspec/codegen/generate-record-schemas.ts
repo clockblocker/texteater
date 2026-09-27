@@ -1,13 +1,16 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { z } from "zod";
 import {
+	breakdownRecordFileSchema,
 	recordFileSchema,
 	textRecordFileSchema,
 } from "../src/record-schema.js";
 
 // Emits one record JSON Schema per language, with each target's Attestation
-// drawn from Dumling's per-route schemas, and one for Text Records, so a
-// record's `$schema` gives editors completion and validation.
+// drawn from Dumling's per-route schemas, one Breakdown Record Schema per
+// language, with its Locution and Saying Lemmas and Lexeme Attestations, and
+// one for Text Records, so a record's `$schema` gives editors completion and
+// validation.
 const dumlingSchemas = new URL(
 	"../../dumling/src/generated/schemas/",
 	import.meta.url,
@@ -32,20 +35,27 @@ for (const language of ["de", "en", "he"] as const) {
 		.filter((path) => path.endsWith(".ts"))
 		.map((path) => path.slice(0, -".ts".length))
 		.toSorted();
-	const attestations = await Promise.all(
-		routes.map(
-			async (route) =>
-				(
-					(await import(`dumling/schema/${language}/${route}`)) as {
-						attestationSchema: z.ZodType;
-					}
-				).attestationSchema,
-		),
+	const schemas = await Promise.all(
+		routes.map(async (route) => ({
+			route,
+			...((await import(`dumling/schema/${language}/${route}`)) as {
+				lemmaSchema: z.ZodType;
+				attestationSchema: z.ZodType;
+			}),
+		})),
 	);
-	const [first, ...rest] = attestations;
-	if (!first) throw Error(`Dumling has no ${language} routes`);
+	const union = (members: z.ZodType[], of: string) => {
+		const [first, ...rest] = members;
+		if (!first) throw Error(`Dumling has no ${language} ${of}`);
+		return rest.length === 0 ? first : z.union([first, ...rest]);
+	};
 	const { $schema, ...body } = z.toJSONSchema(
-		recordFileSchema(z.union([first, ...rest])),
+		recordFileSchema(
+			union(
+				schemas.map((schema) => schema.attestationSchema),
+				"routes",
+			),
+		),
 		{ io: "input", unrepresentable: "any" },
 	);
 	await emit(`spec-record.${language}`, {
@@ -53,6 +63,31 @@ for (const language of ["de", "en", "he"] as const) {
 		$id: `https://unpkg.com/dumspec/schema/spec-record.${language}.json`,
 		title: `Dumspec ${language} Spec Record`,
 		...body,
+	});
+	const { $schema: breakdownSchema, ...breakdownBody } = z.toJSONSchema(
+		breakdownRecordFileSchema(
+			union(
+				schemas
+					.filter(({ route }) =>
+						/^(?:locution|saying)\//u.test(route),
+					)
+					.map((schema) => schema.lemmaSchema),
+				"Locution or Saying routes",
+			),
+			union(
+				schemas
+					.filter(({ route }) => route.startsWith("lexeme/"))
+					.map((schema) => schema.attestationSchema),
+				"Lexeme routes",
+			),
+		),
+		{ io: "input", unrepresentable: "any" },
+	);
+	await emit(`breakdown-record.${language}`, {
+		$schema: breakdownSchema,
+		$id: `https://unpkg.com/dumspec/schema/breakdown-record.${language}.json`,
+		title: `Dumspec ${language} Breakdown Record`,
+		...breakdownBody,
 	});
 }
 const { $schema, ...body } = z.toJSONSchema(textRecordFileSchema, {

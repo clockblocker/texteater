@@ -41,6 +41,14 @@ the Reading's Emoji Description; a Reviewed target must, a Draft may not yet.
 A record's path is its identity.
 _Avoid_: case, example, gold case, fixture
 
+**Breakdown Record**:
+One Locution's or Saying's Breakdown, the gold for `Segment.Unit`: the
+Lemma, its Canonical Form as the sentence with its Segments, and the Lexeme
+targets the wording breaks down into, each naming its Reading. Every
+ResolvableText Segment is in exactly one target, and no target returns the
+whole Lemma. Its path, `breakdown/<language>/<name>`, is its identity.
+_Avoid_: inner layer, component record
+
 **Coverage**:
 How much of a Spec Record's sentence is annotated. Full means every
 ResolvableText Segment is in exactly one target or one No Target entry;

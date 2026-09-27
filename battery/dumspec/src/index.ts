@@ -26,6 +26,7 @@ export {
 export { type SpecCheck, type SpecIssue, SpecRecordError } from "./issues.js";
 export {
 	findSpecRecord,
+	loadBreakdownRecords,
 	loadSpecRecords,
 	loadSpecWorklist,
 	type WorklistEntry,
@@ -33,6 +34,8 @@ export {
 export { ruleStatementHash, rules } from "./rules.js";
 export type {
 	AdrId,
+	BreakdownRecord,
+	BreakdownRecordId,
 	CitingPrompt,
 	Coverage,
 	LegacyCase,

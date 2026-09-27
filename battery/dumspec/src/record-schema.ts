@@ -50,6 +50,37 @@ const readingSchema = z.strictObject({
 	),
 });
 
+const segmentsSchema = z
+	.array(
+		z.strictObject({
+			kind: z.enum([
+				"ResolvableText",
+				"OpaqueText",
+				"Whitespace",
+				"Punctuation",
+			]),
+			text: textSchema,
+			surface: textSchema.optional(),
+		}),
+	)
+	.min(1);
+
+/** One target: an Attestation, its members' Segments and its Reading. */
+function targetSchema<A extends z.ZodType>(attestation: A) {
+	return z.strictObject({
+		memberSegmentIndices: z.array(indexSchema).min(1),
+		attestation,
+		reading: readingSchema.optional(),
+		grundform: z.boolean().optional(),
+		notes: z
+			.strictObject({
+				rationale: textSchema.optional(),
+				knownMistakes: z.array(textSchema).optional(),
+			})
+			.optional(),
+	});
+}
+
 /**
  * The shape of one record file. The loader validates Attestations with
  * Dumling's `parseUnit`; the JSON Schema emitter passes Dumling's Attestation
@@ -59,20 +90,7 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 	return z.strictObject({
 		$schema: z.string().optional(),
 		sentence: textSchema,
-		segments: z
-			.array(
-				z.strictObject({
-					kind: z.enum([
-						"ResolvableText",
-						"OpaqueText",
-						"Whitespace",
-						"Punctuation",
-					]),
-					text: textSchema,
-					surface: textSchema.optional(),
-				}),
-			)
-			.min(1),
+		segments: segmentsSchema,
 		coverage: z.enum(["Full", "Partial"]),
 		status: reviewStatusSchema,
 		provenance: z.discriminatedUnion("kind", [
@@ -85,24 +103,33 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 			}),
 		]),
 		sources: sourcesSchema,
-		targets: z.array(
-			z.strictObject({
-				memberSegmentIndices: z.array(indexSchema).min(1),
-				attestation,
-				reading: readingSchema.optional(),
-				grundform: z.boolean().optional(),
-				notes: z
-					.strictObject({
-						rationale: textSchema.optional(),
-						knownMistakes: z.array(textSchema).optional(),
-					})
-					.optional(),
-			}),
-		),
+		targets: z.array(targetSchema(attestation)),
 		noTarget: z.array(
 			z.strictObject({ segment: indexSchema, reason: textSchema }),
 		),
 		legacy: z.array(legacyCaseSchema).optional(),
+	});
+}
+
+/**
+ * The shape of one Breakdown Record file under `records/breakdown/`: the
+ * multiword Lemma, its wording as the sentence, and the wording's Lexeme
+ * targets. The loader validates the Lemma and Attestations with Dumling's
+ * `parseUnit`; the JSON Schema emitter passes Dumling's Locution and Saying
+ * Lemma schemas and its Lexeme Attestation schemas.
+ */
+export function breakdownRecordFileSchema<
+	L extends z.ZodType,
+	A extends z.ZodType,
+>(lemma: L, attestation: A) {
+	return z.strictObject({
+		$schema: z.string().optional(),
+		lemma,
+		sentence: textSchema,
+		segments: segmentsSchema,
+		status: reviewStatusSchema,
+		sources: sourcesSchema,
+		targets: z.array(targetSchema(attestation)),
 	});
 }
 
