@@ -19,7 +19,7 @@ import {
 } from "../src/index.js";
 import { readRecords } from "../src/load.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
-import { negativeFixtures, seedJson } from "./negative-fixtures.js";
+import { negativeFixtures, review, seedJson } from "./negative-fixtures.js";
 
 const records = loadSpecRecords();
 
@@ -52,16 +52,25 @@ describe("the corpus", () => {
 			entry.legacy.map((legacy) => `${legacy.source} ${legacy.caseId}`),
 		);
 		for (const entry of worklist) {
-			expect(entry.issues.length + entry.legacy.length).toBeGreaterThan(
-				0,
-			);
-			if (entry.status === "Reviewed") expect(entry.issues).toEqual([]);
+			expect(
+				entry.issues.length +
+					entry.legacy.length +
+					entry.targetsWithoutReading.length,
+			).toBeGreaterThan(0);
+			if (entry.status === "Reviewed") {
+				expect(entry.issues).toEqual([]);
+				expect(entry.targetsWithoutReading).toEqual([]);
+			}
 		}
 		expect(imported.length).toBe(new Set(imported).size);
 		console.log(
 			`${worklist.length} records on the worklist (bun run worklist): ${
 				worklist.filter((entry) => entry.issues.length > 0).length
-			} Drafts failing a check, ${imported.length} imported cases`,
+			} Drafts failing a check, ${
+				worklist.filter(
+					(entry) => entry.targetsWithoutReading.length > 0,
+				).length
+			} with a target naming no Reading, ${imported.length} imported cases`,
 		);
 	});
 
@@ -147,8 +156,7 @@ describe("negative fixtures", () => {
 		try {
 			mkdirSync(join(directory, "de"));
 			writeFileSync(join(directory, "de/broken.json"), "{");
-			const outOfOrder = seedJson("de/pass-auf-dich-auf");
-			outOfOrder.status = "Reviewed";
+			const outOfOrder = review(seedJson("de/pass-auf-dich-auf"));
 			outOfOrder.targets[0].memberSegmentIndices = [2, 0, 6];
 			writeFileSync(
 				join(directory, "de/out-of-order.json"),
@@ -170,7 +178,7 @@ describe("negative fixtures", () => {
 		}
 	});
 
-	test("the loader puts failing Drafts and imported cases on the worklist", () => {
+	test("the loader puts failing Drafts, imported cases and targets without a Reading on the worklist", () => {
 		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
 		try {
 			mkdirSync(join(directory, "de"));
@@ -184,12 +192,17 @@ describe("negative fixtures", () => {
 				join(directory, "de/out-of-order.json"),
 				JSON.stringify(outOfOrder),
 			);
-			const imported = seedJson("de/ich-bin-im-wald");
-			imported.status = "Reviewed";
+			const imported = review(seedJson("de/ich-bin-im-wald"));
 			imported.legacy = legacy;
 			writeFileSync(
 				join(directory, "de/imported.json"),
 				JSON.stringify(imported),
+			);
+			const unnamed = seedJson("de/pass-auf-dich-auf");
+			unnamed.targets[0].reading = { emojiDescription: "👀" };
+			writeFileSync(
+				join(directory, "de/unnamed.json"),
+				JSON.stringify(unnamed),
 			);
 			const shapeless = seedJson("de/ich-bin-im-wald");
 			shapeless.legacy = [{ source: "gold.json" }];
@@ -211,7 +224,16 @@ describe("negative fixtures", () => {
 				issues,
 				worklist,
 			} = readRecords(directory);
-			expect(loaded.map((record) => record.id)).toEqual(["de/imported"]);
+			expect(loaded.map((record) => record.id)).toEqual([
+				"de/imported",
+				"de/unnamed",
+			]);
+			const wald = loaded[0]?.targets[1];
+			expect(wald?.reading?.unitKind).toBe("Reading");
+			expect(wald?.reading?.emojiDescription).toBe("👀");
+			expect(wald?.reading?.lemma).toEqual(
+				wald?.attestation.surface.lemma,
+			);
 			expect(textRecords.map((record) => record.sourceText)).toEqual([
 				"Das H aus",
 			]);
@@ -226,11 +248,13 @@ describe("negative fixtures", () => {
 					entry.status,
 					[...new Set(entry.issues.map((issue) => issue.check))],
 					entry.legacy.length,
+					entry.targetsWithoutReading,
 				]),
 			).toEqual([
-				["de/imported", "Reviewed", [], 1],
-				["de/out-of-order", "Draft", ["Members"], 0],
-				["text/raw", "Draft", [], 1],
+				["de/imported", "Reviewed", [], 1, []],
+				["de/out-of-order", "Draft", ["Members"], 0, [0, 1]],
+				["de/unnamed", "Draft", [], 0, [1]],
+				["text/raw", "Draft", [], 1, []],
 			]);
 		} finally {
 			rmSync(directory, { recursive: true });
@@ -246,18 +270,21 @@ describe("negative fixtures", () => {
 			);
 		try {
 			mkdirSync(join(directory, "de"));
-			const valid = seedJson("de/ich-bin-im-wald");
-			valid.status = "Reviewed";
-			write("de/valid", valid);
-			const broken = seedJson("de/pass-auf-dich-auf");
-			broken.status = "Reviewed";
+			write("de/valid", review(seedJson("de/ich-bin-im-wald")));
+			const broken = review(seedJson("de/pass-auf-dich-auf"));
 			broken.targets[1].attestation.surface.lemma.coreFeatures = {};
 			write("de/broken", broken);
 			const draft = seedJson("de/pass-auf-dich-auf");
 			draft.targets[0].memberSegmentIndices = [2, 0, 6];
 			write("de/draft", draft);
+			const unnamed = seedJson("de/ich-bin-im-wald");
+			unnamed.status = "Reviewed";
+			write("de/unnamed", unnamed);
 
-			expect(demoteBrokenReviewed(directory)).toEqual(["de/broken"]);
+			expect(demoteBrokenReviewed(directory)).toEqual([
+				"de/broken",
+				"de/unnamed",
+			]);
 			expect(seedFile(directory, "de/broken")).toEqual({
 				...broken,
 				status: "Draft",
@@ -268,6 +295,7 @@ describe("negative fixtures", () => {
 			expect(worklist.map((entry) => entry.record)).toEqual([
 				"de/broken",
 				"de/draft",
+				"de/unnamed",
 			]);
 		} finally {
 			rmSync(directory, { recursive: true });

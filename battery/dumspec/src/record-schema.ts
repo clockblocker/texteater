@@ -19,6 +19,17 @@ const legacyCaseSchema = z.strictObject({
 });
 
 /**
+ * The Reading a target attests, named by its Emoji Description (ADR 0031).
+ * Its Lemma is the target's; the loader checks the Reading with Dumling's
+ * `parseUnit`.
+ */
+const readingSchema = z.strictObject({
+	emojiDescription: textSchema.describe(
+		"One to four emoji: the Reading's identity, as Dumling normalizes it",
+	),
+});
+
+/**
  * The shape of one record file. The loader validates Attestations with
  * Dumling's `parseUnit`; the JSON Schema emitter passes Dumling's Attestation
  * schemas so editors can complete them.
@@ -72,6 +83,7 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 			z.strictObject({
 				memberSegmentIndices: z.array(indexSchema).min(1),
 				attestation,
+				reading: readingSchema.optional(),
 				grundform: z.boolean().optional(),
 				notes: z
 					.strictObject({

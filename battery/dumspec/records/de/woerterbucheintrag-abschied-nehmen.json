@@ -10,7 +10,7 @@
 		{ "kind": "ResolvableText", "text": "nehmen" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],

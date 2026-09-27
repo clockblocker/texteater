@@ -14,7 +14,10 @@ import type {
 const idPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
 const fileSchema = recordFileSchema(z.unknown());
 
-/** A failed record names its status and imported cases once its shape parses. */
+/**
+ * A failed record names its status, its imported cases and the targets that
+ * name no Reading once its shape parses.
+ */
 export type RecordCheck =
 	| { success: true; record: SpecRecord }
 	| {
@@ -22,11 +25,13 @@ export type RecordCheck =
 			issues: SpecIssue[];
 			status?: ReviewStatus;
 			legacy?: readonly LegacyCase[];
+			targetsWithoutReading?: readonly number[];
 	  };
 
 /**
  * Runs every check that needs only the record itself: its id, shape, strict
- * Attestations, Segments, member order, coverage and Grundform.
+ * Attestations and Readings, Segments, member order, coverage and Grundform.
+ * A Reviewed target must name its Reading; a Draft target may not yet.
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const issues: SpecIssue[] = [];
@@ -128,6 +133,10 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 				);
 		}
 
+		const reading = checkReading(target.reading, attestation, status);
+		for (const failure of reading.issues)
+			issue("Reading", `${path}.${failure.path}`, failure.message);
+
 		if (target.grundform !== undefined) {
 			const verdict = checkIfGrundform(attestation.surface);
 			if (verdict.success && verdict.value !== target.grundform)
@@ -140,6 +149,7 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 		parsedTargets.push({
 			attestation,
 			memberSegmentIndices: indices,
+			...(reading.value === undefined ? {} : { reading: reading.value }),
 			...(target.grundform === undefined
 				? {}
 				: { grundform: target.grundform }),
@@ -185,6 +195,9 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			issues,
 			status,
 			...(legacy === undefined ? {} : { legacy }),
+			targetsWithoutReading: targets.flatMap((target, t) =>
+				target.reading === undefined ? [t] : [],
+			),
 		};
 	return {
 		success: true,
@@ -202,6 +215,58 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 			...(legacy === undefined ? {} : { legacy }),
 		},
 	};
+}
+
+/**
+ * Builds the target's Reading from its Attestation's Lemma and authored Emoji
+ * Description, and checks it with Dumling's Reading schema. A Reviewed target
+ * must name one.
+ */
+function checkReading(
+	authored: { emojiDescription: string } | undefined,
+	attestation: Dumling.Attestation,
+	status: ReviewStatus,
+): {
+	value?: Dumling.Reading;
+	issues: { path: string; message: string }[];
+} {
+	if (authored === undefined)
+		return {
+			issues:
+				status === "Reviewed"
+					? [
+							{
+								path: "reading",
+								message: "A Reviewed target names its Reading",
+							},
+						]
+					: [],
+		};
+	const parsed = parseUnit({
+		unitKind: "Reading",
+		lemma: attestation.surface.lemma,
+		emojiDescription: authored.emojiDescription,
+	});
+	if (!parsed.success)
+		return {
+			issues: parsed.error.issues.map((error) => ({
+				path: ["reading", ...error.path].join("."),
+				message: error.message,
+			})),
+		};
+	if (parsed.chain.unitKind !== "Reading")
+		return { issues: [{ path: "reading", message: "Expected a Reading" }] };
+	const reading = parsed.chain.value;
+	if (reading.emojiDescription !== authored.emojiDescription)
+		return {
+			issues: [
+				{
+					path: "reading.emojiDescription",
+					message: `Store the Emoji Description as parseUnit normalizes it: ${JSON.stringify(reading.emojiDescription)}`,
+				},
+			],
+		};
+	return { value: reading, issues: [] };
 }
 
 function sameValue(left: unknown, right: unknown): boolean {

@@ -22,7 +22,9 @@ Route), closed set, catalog member
 **Spec Record**:
 One sentence of the golden corpus with its Segments, its targets and their
 notes. A target is a full Dumling Attestation plus the Segment each member
-is; it is never only a Family and Kind. A record's path is its identity.
+is; it is never only a Family and Kind. A target also names its Reading by
+the Reading's Emoji Description; a Reviewed target must, a Draft may not yet.
+A record's path is its identity.
 _Avoid_: case, example, gold case, fixture
 
 **Coverage**:
@@ -70,7 +72,8 @@ _Avoid_: migrated case, fixture
 
 **Worklist**:
 The records that need work: Drafts failing a check against the current
-Dumling model, and records holding Imported Cases.
+Dumling model, records holding Imported Cases, and Drafts with a target that
+names no Reading.
 _Avoid_: backlog, review queue
 
 **Provenance**:

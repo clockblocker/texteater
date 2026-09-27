@@ -19125,6 +19125,20 @@
 							}
 						]
 					},
+					"reading": {
+						"type": "object",
+						"properties": {
+							"emojiDescription": {
+								"type": "string",
+								"minLength": 1,
+								"description": "One to four emoji: the Reading's identity, as Dumling normalizes it"
+							}
+						},
+						"required": [
+							"emojiDescription"
+						],
+						"additionalProperties": false
+					},
 					"grundform": {
 						"type": "boolean"
 					},

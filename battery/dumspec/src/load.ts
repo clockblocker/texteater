@@ -17,13 +17,15 @@ const textPrefix = "text/";
 
 /**
  * A record that needs work: the checks a Draft fails against the current
- * model, and the imported cases it still holds verbatim.
+ * model, the imported cases it still holds verbatim, and the indices of its
+ * targets that name no Reading yet.
  */
 export interface WorklistEntry {
 	record: SpecRecordId;
 	status: ReviewStatus;
 	issues: readonly SpecIssue[];
 	legacy: readonly LegacyCase[];
+	targetsWithoutReading: readonly number[];
 }
 
 function readJsonFiles(directory: string, issues: SpecIssue[]) {
@@ -54,8 +56,9 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
 /**
  * Reads and checks every record file under a directory, sorted by id. A Draft
  * that parses but fails a check against the current model goes on the
- * worklist instead of failing; so does every record holding imported cases.
- * A Reviewed record must pass. Text Records, under `text/`, are checked for
+ * worklist instead of failing; so does every record holding imported cases,
+ * and every Draft with a target that names no Reading. A Reviewed record must
+ * pass. Text Records, under `text/`, are checked for
  * shape only and join the worklist while they hold imported cases.
  */
 export function readRecords(directory: string): {
@@ -89,15 +92,30 @@ export function readRecords(directory: string): {
 				...(legacy === undefined ? {} : { legacy }),
 			});
 			if (legacy?.length)
-				worklist.push({ record: id, status, issues: [], legacy });
+				worklist.push({
+					record: id,
+					status,
+					issues: [],
+					legacy,
+					targetsWithoutReading: [],
+				});
 			continue;
 		}
 		const checked = checkRecord(id, input);
 		if (checked.success) {
 			records.push(checked.record);
-			const { status, legacy } = checked.record;
-			if (legacy?.length)
-				worklist.push({ record: id, status, issues: [], legacy });
+			const { status, legacy, targets } = checked.record;
+			const targetsWithoutReading = targets.flatMap((target, t) =>
+				target.reading === undefined ? [t] : [],
+			);
+			if (legacy?.length || targetsWithoutReading.length > 0)
+				worklist.push({
+					record: id,
+					status,
+					issues: [],
+					legacy: legacy ?? [],
+					targetsWithoutReading,
+				});
 		} else if (
 			checked.status === "Draft" &&
 			checked.issues.every(
@@ -109,6 +127,7 @@ export function readRecords(directory: string): {
 				status: "Draft",
 				issues: checked.issues,
 				legacy: checked.legacy ?? [],
+				targetsWithoutReading: checked.targetsWithoutReading ?? [],
 			});
 		else issues.push(...checked.issues);
 	}
@@ -131,7 +150,8 @@ export function loadSpecRecords(): readonly SpecRecord[] {
 
 /**
  * The records that still need work, sorted by id: Drafts failing a check
- * against the current model, and records holding imported cases verbatim.
+ * against the current model, records holding imported cases verbatim, and
+ * Drafts with a target that names no Reading.
  */
 export function loadSpecWorklist(): readonly WorklistEntry[] {
 	return readRecords(recordsDirectory).worklist;

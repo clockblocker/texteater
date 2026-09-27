@@ -11,6 +11,17 @@ export function seedJson(id: string): RecordJson {
 }
 
 /**
+ * Marks a seed record Reviewed and gives it what a Reviewed record needs
+ * beyond a Draft: a Reading on every target.
+ */
+export function review(record: RecordJson): RecordJson {
+	record.status = "Reviewed";
+	for (const target of record.targets)
+		target.reading = { emojiDescription: "👀" };
+	return record;
+}
+
+/**
  * Negative fixtures for the per-record checks: each edits one seed record so
  * that exactly one check fails.
  */
@@ -120,6 +131,34 @@ export const negativeFixtures: {
 			record.noTarget = [
 				{ segment: 7, reason: "Duplicated on purpose." },
 			];
+		},
+	},
+	{
+		name: "a Reviewed target without its Reading",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			review(record);
+			delete record.targets[1].reading;
+		},
+	},
+	{
+		name: "a Reading whose Emoji Description is not emoji",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = { emojiDescription: "watch" };
+		},
+	},
+	{
+		name: "an Emoji Description parseUnit would normalize",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			// 🖱 with a variation selector, which Dumling drops.
+			record.targets[0].reading = {
+				emojiDescription: "\u{1F5B1}\u{FE0F}",
+			};
 		},
 	},
 	{

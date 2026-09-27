@@ -6,7 +6,9 @@ follow, and the Authored Inventories of closed-class units.
 
 Each record is one JSON file under `records/<language>/`, and its path without
 `.json` is its id. It holds the sentence and its Segments, and its targets,
-each a full Dumling Attestation with the Segment of every member. Point a
+each a full Dumling Attestation with the Segment of every member. A target
+names its Reading as `reading: { "emojiDescription": "🧵" }`; the loaded
+target carries the Dumling Reading built from its Attestation's Lemma. Point a
 record's `$schema` at `schema/spec-record.<language>.json` for completion.
 
 ```ts
@@ -23,7 +25,9 @@ Reviewed record, and of any record whose file is malformed.
 
 A Draft record may fail the current Dumling model. `loadSpecRecords` leaves
 it out, and `loadSpecWorklist` lists it with its failing checks, beside every
-record whose `legacy` list still holds a case imported verbatim from Dumgen.
+record whose `legacy` list still holds a case imported verbatim from Dumgen
+and every Draft with a target that names no Reading. A Reviewed target must
+name its Reading.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
 model change, `bun run demote-broken-reviewed` demotes each Reviewed record

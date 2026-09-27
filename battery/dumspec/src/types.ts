@@ -48,6 +48,12 @@ export interface Segment {
 export interface SpecTarget {
 	attestation: Dumling.Attestation;
 	memberSegmentIndices: readonly number[];
+	/**
+	 * The Reading the target attests: the Attestation's Lemma with the
+	 * authored Emoji Description, its identity (ADR 0031). A Reviewed target
+	 * names it; a Draft may not yet.
+	 */
+	reading?: Dumling.Reading;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */
 	grundform?: boolean;
 	notes?: {
