@@ -20,6 +20,19 @@ reflexive reaches the reflexivity unit, never a case cell of `sich`.
 _Avoid_: Fixed Catalog (Dumgen's term for the members that bound a Closed
 Route), closed set, catalog member
 
+**ADP Case Table**:
+The closed, authored list of a language's adpositions with the cases each
+takes: the allowed cases, a preferred case where the others are colloquial,
+and whether it is two-way. German keys it by Canonical Form and, where
+position changes the case, by `adpType`: `für` {Acc}, `auf` {Acc, Dat}
+two-way, `wegen` {Gen, Dat} preferring Gen, `entlang` Post {Acc} and Prep
+{Gen, Dat}. Case is not ADP Core, since no two German ADPs differ by case
+alone. It is a fact about the language, so Dumling types a frame's
+preposition and case without it (ADR 0041). Dumspec checks that a
+governor's Preposition Slot and an ADP occurrence's realized case, in its
+records and inventories, are cases the table allows.
+_Avoid_: governed case, governedCase, case government feature
+
 **Spec Record**:
 One sentence of the golden corpus with its Segments, its targets and their
 notes. A target is a full Dumling Attestation plus the Segment each member

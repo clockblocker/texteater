@@ -188,4 +188,24 @@ export const negativeFixtures: {
 			record.targets[1].grundform = true;
 		},
 	},
+	{
+		name: "an ADP realized in a case the ADP Case Table does not allow",
+		seed: "de/das-buch-liegt-auf-dem-tisch",
+		check: "AdpositionCase",
+		edit: (record) => {
+			const [slot] = record.targets[0].attestation.valencyEvidence;
+			slot.complement.case = "Gen";
+			slot.realizedCase = "Gen";
+		},
+	},
+	{
+		name: "a governed preposition in a case the ADP Case Table does not allow",
+		seed: "de/auf-ihn-bin-ich-stolz",
+		check: "AdpositionCase",
+		edit: (record) => {
+			const [slot] = record.targets[0].attestation.valencyEvidence;
+			slot.complement.case = "Gen";
+			slot.realizedCase = "Gen";
+		},
+	},
 ];

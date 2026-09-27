@@ -275,9 +275,9 @@ const englishValencyEvidenceSchema = z.array(
  * governor Kind (VERB, AUX, ADJ, NOUN, Idiom, Collocation) names the valency
  * slots it realizes, such as its governed preposition member (ADR 0034). A
  * German ADP Attestation records the case its complement took as its one
- * bare-case slot, checked against the ADP Case Table. A Hebrew or English
- * governor (VERB, ADJ, NOUN, Idiom) may name the slots it realizes, with no
- * case.
+ * bare-case slot; dumspec checks it against the ADP Case Table. A Hebrew or
+ * English governor (VERB, ADJ, NOUN, Idiom) may name the slots it realizes,
+ * with no case.
  */
 export function buildUnitSchemas<
 	L extends string,

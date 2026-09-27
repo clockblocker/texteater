@@ -1,5 +1,4 @@
-import { germanAdpositionCases } from "dumling";
-import { authoredMembers } from "dumspec/inventories";
+import { authoredMembers, germanAdpositionCases } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import { modelSchemas } from "../../../generated/model-schemas.js";

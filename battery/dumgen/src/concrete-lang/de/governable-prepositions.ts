@@ -1,10 +1,10 @@
-import { germanAdpositionCases } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
+import { germanAdpositionCases } from "dumspec/inventories";
 
 /**
  * Reviewed German prepositions a governor can lexically select. Their cases
- * come from Dumling's ADP Case Table (`für` Acc; `auf` two-way, so
+ * come from dumspec's ADP Case Table (`für` Acc; `auf` two-way, so
  * `warten auf` + Acc and `bestehen auf` + Dat). The Lemma shape matches what
  * Grammatical Resolution produces for the same preposition, so stored claims
  * join the preposition's own Readings.

@@ -63,7 +63,7 @@ test("a two-way preposition takes the construction's case", () => {
 		success: true,
 		value: { valency: [required(nom), optional(aufAcc)] },
 	});
-	// `bestehen auf` + Dat: the ADP Case Table allows `auf` both cases.
+	// `bestehen auf` + Dat: a governed preposition names any oblique case.
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
@@ -73,29 +73,28 @@ test("a two-way preposition takes the construction's case", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional({ ...aufAcc, case: "Gen" })] },
+			knowledge: { valency: [optional({ ...aufAcc, case: "Nom" })] },
 		}).success,
 	).toBe(false);
 });
 
-test("a preposition rejects a case the ADP Case Table does not allow it", () => {
-	const parsed = parseReadingKnowledge({
-		source: wartenReading,
-		knowledge: {
-			valency: [
-				optional({ ...aufAcc, preposition: fuerLemma, case: "Dat" }),
-			],
-		},
-	});
-	expect(parsed.success).toBe(false);
-	if (!parsed.success)
-		expect(parsed.error.issues[0]?.path).toEqual([
-			"knowledge",
-			"valency",
-			0,
-			"complement",
-			"case",
-		]);
+// Which cases a preposition takes is a fact about German: dumspec checks
+// frames against its ADP Case Table (ADR 0041).
+test("Dumrel leaves a preposition's case to dumspec's ADP Case Table", () => {
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: {
+				valency: [
+					optional({
+						...aufAcc,
+						preposition: fuerLemma,
+						case: "Dat",
+					}),
+				],
+			},
+		}).success,
+	).toBe(true);
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
@@ -216,7 +215,7 @@ test("Contribute adds missing Slots, Correct replaces the frame, Retract removes
 			kind: "Contribute",
 			aspect: "valency",
 			value: [
-				optional({ ...aufAcc, preposition: fuerLemma, case: "Gen" }),
+				optional({ ...aufAcc, preposition: fuerLemma, case: "Nom" }),
 			],
 		},
 	});

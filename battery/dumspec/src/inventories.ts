@@ -2,12 +2,19 @@
  * The Authored Inventories: closed-class units authored instead of generated,
  * each with its Reading and reviewed Reading Knowledge. German holds the AUX
  * Readings, the PRON and DET pillar cells and stems, the reflexivity unit a
- * reflexive drills down to, and the pronominal adverbs.
+ * reflexive drills down to, and the pronominal adverbs. It also holds the
+ * German ADP Case Table, the cases each adposition takes.
  *
  * This entry reads no files and loads neither Zod nor the record checks, so a
  * host inside a database transaction or another short-lived isolate can
  * import it (ADR 0025). The package root re-exports it.
  */
+export {
+	type GermanAdpositionCase,
+	type GermanAdpositionCases,
+	germanAdpositionAllows,
+	germanAdpositionCases,
+} from "./inventories/de/adposition-cases.js";
 export { closedVerbForms } from "./inventories/de/closed-verb-paradigms.js";
 export { reviewedDeterminers } from "./inventories/de/determiner-paradigms.js";
 export {

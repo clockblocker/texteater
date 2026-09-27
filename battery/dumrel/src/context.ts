@@ -1,5 +1,5 @@
 import { ParsingError } from "common-utils";
-import { germanAdpositionAllows, parseUnit } from "dumling";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { fingerprint } from "./fingerprint.js";
 import type {
@@ -65,10 +65,9 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 
 /**
  * A complement the source's route allows. A Preposition complement names an
- * ADP Lemma of the source Language. A German one takes a case the ADP Case
- * Table allows it: `warten` `auf` + Acc and `bestehen` `auf` + Dat, never
- * `für` + Dat. A Hebrew or English one names no case (`סמך על`, `depend
- * on`).
+ * ADP Lemma of the source Language. A German one names an oblique case, and
+ * dumspec checks it against the ADP Case Table (ADR 0041). A Hebrew or
+ * English one names no case (`סמך על`, `depend on`).
  */
 function parseValencyComplement<R extends Dumling.Reading>(
 	source: R,
@@ -104,18 +103,6 @@ function parseValencyComplement<R extends Dumling.Reading>(
 		return issue(
 			[...path, "preposition", "language"],
 			"A governed preposition must use the source Language",
-		);
-	// Hebrew and English mark no case, so only German checks the ADP Case Table.
-	if (
-		"case" in complement &&
-		!germanAdpositionAllows(
-			preposition as typeof complement.preposition,
-			complement.case,
-		)
-	)
-		return issue(
-			[...path, "case"],
-			`${preposition.canonicalForm} does not take ${complement.case}`,
 		);
 	return { ...complement, preposition } as ValencyComplement;
 }

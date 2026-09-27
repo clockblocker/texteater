@@ -46,7 +46,8 @@ const genitiveOrDative: GermanAdpositionCases = {
  * the case, by `adpType` (`den Fluss entlang` Acc, `entlang des Flusses` Gen).
  * It covers the governable prepositions and every adposition Grammatical
  * Resolution produces in its reviewed cases. Case is grammar, not Lemma
- * identity (ADR 0034): no two German ADPs differ by case alone.
+ * identity (ADR 0034): no two German ADPs differ by case alone. It is a fact
+ * about German, so it lives here and not in Dumling (ADR 0041).
  */
 const germanAdpositionCaseTable: Readonly<Record<string, Entry>> = {
 	// Two-way prepositions.

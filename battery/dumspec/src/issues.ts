@@ -5,6 +5,7 @@ export type SpecCheck =
 	| "Shape"
 	| "Attestation"
 	| "Reading"
+	| "AdpositionCase"
 	| "Segments"
 	| "Members"
 	| "Coverage"

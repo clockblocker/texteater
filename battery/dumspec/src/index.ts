@@ -1,3 +1,8 @@
+export {
+	type AdpositionCaseIssue,
+	attestationAdpositionCaseIssues,
+	frameAdpositionCaseIssues,
+} from "./check-adposition-cases.js";
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
 export {
 	type AuthoredMember,
@@ -6,6 +11,10 @@ export {
 	authoredMembers,
 	authoredRealizations,
 	closedVerbForms,
+	type GermanAdpositionCase,
+	type GermanAdpositionCases,
+	germanAdpositionAllows,
+	germanAdpositionCases,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,

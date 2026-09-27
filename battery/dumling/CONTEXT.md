@@ -214,19 +214,9 @@ Something or Either. Hebrew marks them by function and preposition, with no
 case: Subject, DirectObject, or a governed preposition (`סמך על`). English
 marks them by position and preposition, with no case: Hebrew's set plus
 IndirectObject (`him` in `give him a book`), and `depend on` has a governed
-`on`. The subject is a Slot too.
+`on`. The subject is a Slot too. Which cases a German preposition takes is
+dumspec's ADP Case Table, not part of the model.
 _Avoid_: argument, valent, complement slot, Ergänzung
-
-**ADP Case Table**:
-The closed, authored list of a language's adpositions with the cases each
-takes: the allowed cases, a preferred case where the others are colloquial,
-and whether it is two-way. German keys it by Canonical Form and, where
-position changes the case, by `adpType`: `für` {Acc}, `auf` {Acc, Dat}
-two-way, `wegen` {Gen, Dat} preferring Gen, `entlang` Post {Acc} and Prep
-{Gen, Dat}. Case is not ADP Core, since no two German ADPs differ by case
-alone. A governor's Preposition Slot and an ADP occurrence's realized case
-must be cases the table allows.
-_Avoid_: governed case, governedCase, case government feature
 
 ### German classifications
 

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { frameAdpositionCaseIssues } from "../src/check-adposition-cases.js";
 import {
 	type AuthoredMember,
 	authoredMembers,
@@ -124,6 +125,16 @@ describe("the German authored inventory", () => {
 				? []
 				: [`${name(member)}: ${parsed.error.message}`];
 		});
+		expect(failures).toEqual([]);
+	});
+
+	test("every Valency Frame takes cases the ADP Case Table allows", () => {
+		const failures = authoredMembers.flatMap((member) =>
+			frameAdpositionCaseIssues(member.knowledge.valency ?? []).map(
+				(found) =>
+					`${name(member)}: valency.${found.path}: ${found.message}`,
+			),
+		);
 		expect(failures).toEqual([]);
 	});
 
