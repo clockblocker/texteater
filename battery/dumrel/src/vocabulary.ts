@@ -52,3 +52,36 @@ export const pluralPatternValues = [
 
 /** A noun with no plural pattern: no plural (`Milch`) or no singular (`Leute`). */
 export const pluralMarkerValues = ["NoPlural", "PluralOnly"] as const;
+
+/**
+ * Whether a Locution's Reading means more than its words (Idiom: `ins Gras
+ * beißen`) or has a verb that only supports its predicate (Collocation: `eine
+ * Entscheidung treffen`). A Locution with neither (`zum Teil`) stores none
+ * (ADR 0039).
+ */
+export const locutionTypeValues = ["Idiom", "Collocation"] as const;
+
+/**
+ * Whether a Saying's Reading is a Proverb (`Morgenstund hat Gold im Mund`) or
+ * a Winged Word, a line from a known source (`Sein oder Nichtsein`) (ADR
+ * 0039).
+ */
+export const sayingTypeValues = ["Proverb", "WingedWord"] as const;
+
+/**
+ * What a routine formula does in conversation (ADR 0039). An INTJ Reading
+ * stores one, so `tut mir leid` has an Apology Reading and a Sympathy Reading.
+ */
+export const formulaRoleValues = [
+	"Greeting",
+	"Farewell",
+	"Thanks",
+	"Apology",
+	"Sympathy",
+	"Request",
+	"Acknowledgment",
+	"Refusal",
+	"Reaction",
+	"Initiation",
+	"Transition",
+] as const;

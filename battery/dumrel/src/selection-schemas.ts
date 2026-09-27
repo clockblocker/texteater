@@ -22,6 +22,9 @@ export const knowledgeSettingsSchema = z.strictObject({
 	valency: settingsLeaf,
 	participleSource: settingsLeaf,
 	pluralPattern: settingsLeaf,
+	locutionType: settingsLeaf,
+	sayingType: settingsLeaf,
+	formulaRole: settingsLeaf,
 	translations: z
 		.strictObject({ en: settingsLeaf, ru: settingsLeaf })
 		.optional(),
@@ -46,6 +49,9 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 	valency: maskLeaf,
 	participleSource: maskLeaf,
 	pluralPattern: maskLeaf,
+	locutionType: maskLeaf,
+	sayingType: maskLeaf,
+	formulaRole: maskLeaf,
 	translations: z.strictObject({ en: maskLeaf, ru: maskLeaf }).optional(),
 	semanticRelations: z
 		.strictObject({

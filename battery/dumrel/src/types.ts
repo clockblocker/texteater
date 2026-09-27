@@ -10,6 +10,7 @@ import type {
 export type {
 	DirectSemanticRelation,
 	EnglishValencyComplement,
+	FormulaRole,
 	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,
@@ -17,6 +18,7 @@ export type {
 	HebrewValencyComplement,
 	LexemeUnitShadow,
 	LexicalBreakdown,
+	LocutionType,
 	MorphologicalTree,
 	MorphologicalTreeNode,
 	NounPlural,
@@ -26,6 +28,7 @@ export type {
 	ParticipleSource,
 	PendingSemanticRelation,
 	PluralPattern,
+	SayingType,
 	SemanticRelation,
 	SemanticRelationProjection,
 	TranslationLanguage,
@@ -40,16 +43,29 @@ export type MorphologicalTreeStructure = MorphologicalTree["root"];
 /** A Reading's governed complements in order; never empty. */
 export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
 export type NonEmptyStrings = [string, ...string[]];
+/**
+ * The Families a Semantic Relation from this Family may reach: Lexeme and
+ * Locution share one relation space, and every other Family relates only
+ * within itself (ADR 0039).
+ */
+export type RelationFamily<F extends Dumling.Family> = F extends
+	| "Lexeme"
+	| "Locution"
+	? "Lexeme" | "Locution"
+	: F;
 export type RelatedLemma<R extends Dumling.Reading> = Extract<
 	Dumling.Lemma,
-	{ language: R["lemma"]["language"]; family: R["lemma"]["family"] }
+	{
+		language: R["lemma"]["language"];
+		family: RelationFamily<R["lemma"]["family"]>;
+	}
 >;
 export type RelatedReading<R extends Dumling.Reading> = Extract<
 	Dumling.Reading,
 	{
 		lemma: {
 			language: R["lemma"]["language"];
-			family: R["lemma"]["family"];
+			family: RelationFamily<R["lemma"]["family"]>;
 		};
 	}
 >;

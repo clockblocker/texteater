@@ -8,6 +8,9 @@ export type KnowledgeSettings = {
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
 	pluralPattern?: boolean | undefined;
+	locutionType?: boolean | undefined;
+	sayingType?: boolean | undefined;
+	formulaRole?: boolean | undefined;
 	translations?:
 		| { en?: boolean | undefined; ru?: boolean | undefined }
 		| undefined;
@@ -32,6 +35,9 @@ export type KnowledgeRequestMask = {
 	valency?: null | undefined;
 	participleSource?: null | undefined;
 	pluralPattern?: null | undefined;
+	locutionType?: null | undefined;
+	sayingType?: null | undefined;
+	formulaRole?: null | undefined;
 	translations?: { en?: null | undefined; ru?: null | undefined } | undefined;
 	semanticRelations?:
 		| {
@@ -1780,6 +1786,9 @@ export type ReadingKnowledge = {
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
 	pluralPattern?: NounPlural | undefined;
+	locutionType?: LocutionType | undefined;
+	sayingType?: SayingType | undefined;
+	formulaRole?: FormulaRole | undefined;
 };
 export type KnowledgeChange =
 	| {
@@ -2049,6 +2058,22 @@ export type KnowledgeChange =
 			value: NounPlural;
 	  }
 	| { kind: "Retract"; aspect: "pluralPattern" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "locutionType";
+			value: LocutionType;
+	  }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "sayingType";
+			value: SayingType;
+	  }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "formulaRole";
+			value: FormulaRole;
+	  }
+	| { kind: "Retract"; aspect: "locutionType" | "sayingType" | "formulaRole" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "morphologicalTree";
@@ -3208,3 +3233,20 @@ export type PluralPattern =
 	| "S"
 	| "Other";
 export type NounPlural = Array<PluralPattern> | ("NoPlural" | "PluralOnly");
+export type LocutionType = "Idiom" | "Collocation";
+export type SayingType = {
+	type: "Proverb" | "WingedWord";
+	attribution?: string | undefined;
+};
+export type FormulaRole =
+	| "Greeting"
+	| "Farewell"
+	| "Thanks"
+	| "Apology"
+	| "Sympathy"
+	| "Request"
+	| "Acknowledgment"
+	| "Refusal"
+	| "Reaction"
+	| "Initiation"
+	| "Transition";

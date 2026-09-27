@@ -13,6 +13,7 @@ export { normalizeText } from "./semantics.js";
 export type {
 	DirectSemanticRelation,
 	EnglishValencyComplement,
+	FormulaRole,
 	GermanValencyComplement,
 	GovernedCase,
 	GovernmentProjection,
@@ -23,6 +24,7 @@ export type {
 	KnowledgeSelectionInput,
 	KnowledgeSettings,
 	LexicalBreakdown,
+	LocutionType,
 	MorphologicalTree,
 	MorphologicalTreeNode,
 	MorphologicalTreeStructure,
@@ -38,6 +40,8 @@ export type {
 	ReadingWithKnowledge,
 	RelatedLemma,
 	RelatedReading,
+	RelationFamily,
+	SayingType,
 	SemanticRelation,
 	SemanticRelationProjection,
 	SemanticRelations,
@@ -52,7 +56,10 @@ export type {
 export { allowedComplementKinds } from "./valency-policy.js";
 export {
 	directSemanticRelationValues,
+	formulaRoleValues,
 	governedCaseValues,
+	locutionTypeValues,
 	participleMeaningValues,
+	sayingTypeValues,
 	translationLanguageValues,
 } from "./vocabulary.js";

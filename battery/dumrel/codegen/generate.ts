@@ -10,6 +10,7 @@ import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import {
 	directSemanticRelationSchema,
 	englishValencyComplementSchema,
+	formulaRoleSchema,
 	germanValencyComplementSchema,
 	governedCaseSchema,
 	governmentProjectionSchema,
@@ -18,6 +19,7 @@ import {
 	knowledgeChangeSchema,
 	lexemeUnitShadowSchema,
 	lexicalBreakdownSchema,
+	locutionTypeSchema,
 	morphologicalTreeNodeSchema,
 	morphologicalTreeSchema,
 	nounPluralSchema,
@@ -28,6 +30,7 @@ import {
 	pendingSemanticRelationSchema,
 	pluralPatternSchema,
 	readingKnowledgeSchema,
+	sayingTypeSchema,
 	semanticProjectionInputSchema,
 	semanticRelationProjectionSchema,
 	semanticRelationSchema,
@@ -95,6 +98,9 @@ const compiled = compileZodValidationArtifacts({
 		participleProjection: participleProjectionSchema,
 		pluralPattern: pluralPatternSchema,
 		nounPlural: nounPluralSchema,
+		locutionType: locutionTypeSchema,
+		sayingType: sayingTypeSchema,
+		formulaRole: formulaRoleSchema,
 	},
 	operations,
 });

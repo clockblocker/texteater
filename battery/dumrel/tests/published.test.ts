@@ -30,7 +30,8 @@ test("published schema composition retains the structured Knowledge types", asyn
 	).toBe('type BreakdownFamily = "Lexeme"');
 }, 30_000);
 
-test("published operations infer the source Family without narrowing the target Kind", async () => {
+// Lexeme and Locution share one relation space (ADR 0039).
+test("published operations infer the source's relation space without narrowing the target Kind", async () => {
 	for (const name of ["ParsedTargetFamily", "ChangedTargetFamily"]) {
 		expect(
 			await inferredType(consumer, {
@@ -38,7 +39,7 @@ test("published operations infer the source Family without narrowing the target 
 				full: true,
 				backend: "typescript7",
 			}),
-		).toBe(`type ${name} = "Lexeme"`);
+		).toBe(`type ${name} = "Lexeme" | "Locution"`);
 	}
 	expect(
 		await inferredType(consumer, {

@@ -21,8 +21,8 @@ import { pluralPatternValues } from "./vocabulary.js";
  * Reading targets support synonym only and require targetKind: "reading",
  * including retractions. The Valency Frame: Contribute appends the Slots whose
  * complement the frame lacks, Correct replaces the frame, and Retract removes
- * the frame or, given a complement, that one Slot. A Participle Source is
- * atomic like a definition. A noun's plural: Contribute adds the Plural
+ * the frame or, given a complement, that one Slot. A Participle Source,
+ * Locution Type, Saying Type and Formula Role are atomic like a definition. A noun's plural: Contribute adds the Plural
  * Patterns it lacks, and a NoPlural or PluralOnly marker is atomic. Failure
  * returns ParsingError without a partial value.
  */
@@ -72,6 +72,9 @@ function apply<R extends Dumling.Reading>(
 		case "morphologicalTree":
 		case "lexicalBreakdown":
 		case "participleSource":
+		case "locutionType":
+		case "sayingType":
+		case "formulaRole":
 			return applyAtomic(knowledge, canonical);
 	}
 }
@@ -217,7 +220,10 @@ type AtomicChange = Extract<
 			| "definition"
 			| "morphologicalTree"
 			| "lexicalBreakdown"
-			| "participleSource";
+			| "participleSource"
+			| "locutionType"
+			| "sayingType"
+			| "formulaRole";
 	}
 >;
 function applyAtomic<R extends Dumling.Reading>(

@@ -51,6 +51,19 @@ Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds
 the patterns it lacks, and a marker is atomic. `germanPluralPattern` derives a
 pattern from a singular and a plural (`Mutter`, `Muttern` → `En`).
 
+Three atomic aspects type a multiword or formulaic Reading without splitting
+its Lemma (ADR 0039). `locutionType` marks a Locution Reading as an `Idiom`
+or, for a VERB Locution, a `Collocation`, or is absent when it is neither
+(`zum Teil`). `sayingType`
+marks a Saying Reading as a `Proverb` or a `WingedWord`, with an optional
+`attribution`. `formulaRole` records what a Lexeme or Locution INTJ Reading
+does as a routine formula, so `tut mir leid` has an `Apology` Reading and a
+`Sympathy` Reading.
+
+A Semantic Relation stays in its source's language and relation space.
+Lexeme and Locution share one space (`ins Gras beißen` ↔ `sterben`); a Saying
+relates only to Sayings and a Morpheme only to Morphemes.
+
 The `dumrel/schema` entrypoint exposes the canonical composable Zod schemas.
 The package build compiles those schemas into lightweight runtime validation
 and generated structural declarations. Normal imports and `dumrel/types` do

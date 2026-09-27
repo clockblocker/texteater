@@ -15,11 +15,21 @@ const participial = { ...framed, participleSource: null } as const;
 /** A noun records how it forms its plural: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#597). */
 const nominal = { ...framed, pluralPattern: null } as const;
 
+/** A routine formula records what it does in conversation (ADR 0039). */
+const formula = { formulaRole: null } as const;
+/** A Locution records whether it is an Idiom or a Collocation, if either (ADR 0039). */
+const locution = { locutionType: null } as const;
+
 function request(
 	relations: readonly SemanticRelation[],
 	extra: Pick<
 		KnowledgeRequestMask,
-		"valency" | "participleSource" | "pluralPattern"
+		| "valency"
+		| "participleSource"
+		| "pluralPattern"
+		| "locutionType"
+		| "sayingType"
+		| "formulaRole"
 	> = {},
 ): KnowledgeRequestMask {
 	const base = {
@@ -59,6 +69,7 @@ const makeDeRelMap = () =>
 			),
 			INTJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				formula,
 			),
 			NOUN: request(
 				select(
@@ -99,45 +110,68 @@ const makeDeRelMap = () =>
 			X: request(select()),
 		},
 		// A Locution route requests what the Lexeme route with its Kind does,
-		// with a frame where that route has one (ADR 0039). Locution Type,
-		// Saying Type and Formula Role join in #667.
+		// with a frame where that route has one, and its Locution Type (ADR
+		// 0039). A Locution INTJ also records its Formula Role.
 		Locution: {
 			ADJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				framed,
+				{
+					...framed,
+					...locution,
+				},
 			),
 			ADP: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				locution,
 			),
 			ADV: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				locution,
 			),
-			CCONJ: request(select("synonym", "antonym", "nearAntonym")),
+			CCONJ: request(
+				select("synonym", "antonym", "nearAntonym"),
+				locution,
+			),
 			DET: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				locution,
 			),
 			INTJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				{
+					...locution,
+					...formula,
+				},
 			),
 			NOUN: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				framed,
+				{
+					...framed,
+					...locution,
+				},
 			),
-			NUM: request(select("synonym")),
+			NUM: request(select("synonym"), locution),
 			PRON: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				locution,
 			),
 			SCONJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				locution,
 			),
 			VERB: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
-				framed,
+				{
+					...framed,
+					...locution,
+				},
 			),
 		},
+		// A Saying relates only to Sayings and records its Saying Type.
 		Saying: {
 			Saying: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+				{ sayingType: null },
 			),
 		},
 		Morpheme: {

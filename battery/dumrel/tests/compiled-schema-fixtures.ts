@@ -21,6 +21,10 @@ export const samples: Record<string, unknown[]> = {
 		{ semanticRelations: { synonym: [houseLemma] } },
 		{ pluralPattern: ["UmlautE", "En"] },
 		{ pluralPattern: "NoPlural" },
+		{ locutionType: "Idiom" },
+		{ sayingType: { type: "WingedWord", attribution: "  Shakespeare " } },
+		{ sayingType: { type: "Proverb" } },
+		{ formulaRole: "Sympathy" },
 		{
 			valency: [
 				{
@@ -106,9 +110,25 @@ export const samples: Record<string, unknown[]> = {
 		{ kind: "Contribute", aspect: "pluralPattern", value: ["En", "S"] },
 		{ kind: "Correct", aspect: "pluralPattern", value: "PluralOnly" },
 		{ kind: "Retract", aspect: "pluralPattern" },
+		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
+		{
+			kind: "Correct",
+			aspect: "sayingType",
+			value: { type: "WingedWord", attribution: "Goethe" },
+		},
+		{ kind: "Contribute", aspect: "formulaRole", value: "Apology" },
+		{ kind: "Retract", aspect: "locutionType" },
+		{ kind: "Retract", aspect: "sayingType" },
+		{ kind: "Retract", aspect: "formulaRole" },
 	],
 	pluralPattern: ["NoEnding", "UmlautEr", "Other"],
 	nounPlural: [["UmlautOnly"], ["En", "S"], "NoPlural", "PluralOnly"],
+	locutionType: ["Idiom", "Collocation"],
+	sayingType: [
+		{ type: "Proverb" },
+		{ type: "WingedWord", attribution: " Büchmann " },
+	],
+	formulaRole: ["Greeting", "Sympathy", "Transition"],
 	participleMeaning: ["Verbal", "Drifted"],
 	participleSource: [{ verb: wartenReading.lemma, meaning: "Verbal" }],
 	participleRelation: ["participleSource", "participialAdjective"],

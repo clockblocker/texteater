@@ -55,12 +55,79 @@ function parseRelatedUnit<R extends Dumling.Reading>(
 			[...path, "language"],
 			"A Semantic Relation target must use the source Language",
 		);
-	if (lemma.family !== source.lemma.family)
+	if (relationSpace(lemma.family) !== relationSpace(source.lemma.family))
 		return issue(
 			[...path, "family"],
-			"A Semantic Relation target must use the source Family",
+			"A Semantic Relation target must share the source's relation space: Lexeme and Locution relate to each other, a Saying only to Sayings, a Morpheme only to Morphemes",
 		);
 	return target;
+}
+
+/**
+ * Lexeme and Locution share one relation space (`ins Gras beißen` ↔
+ * `sterben`); every other Family relates only within itself (ADR 0039).
+ */
+function relationSpace(family: Dumling.Family): Dumling.Family {
+	return family === "Locution" ? "Lexeme" : family;
+}
+
+type RouteAspect = "locutionType" | "sayingType" | "formulaRole";
+/**
+ * The routes each type aspect belongs to (ADR 0039): Locution Type to a
+ * Locution, Saying Type to a Saying, and Formula Role to a Lexeme or Locution
+ * INTJ. The Kind alone never decides, since Lexeme and Locution share Kinds.
+ */
+const routeAspects: Readonly<
+	Record<
+		RouteAspect,
+		{
+			applies: (lemma: Dumling.Lemma) => boolean;
+			message: string;
+		}
+	>
+> = {
+	locutionType: {
+		applies: (lemma) => lemma.family === "Locution",
+		message: "Only a Locution Reading has a Locution Type",
+	},
+	sayingType: {
+		applies: (lemma) => lemma.family === "Saying",
+		message: "Only a Saying Reading has a Saying Type",
+	},
+	formulaRole: {
+		applies: (lemma) =>
+			lemma.kind === "INTJ" &&
+			(lemma.family === "Lexeme" || lemma.family === "Locution"),
+		message: "Only an INTJ Reading has a Formula Role",
+	},
+};
+
+function routeAspectIssue<R extends Dumling.Reading>(
+	source: R,
+	aspect: RouteAspect,
+	path: Path,
+): ParsingError | undefined {
+	const { applies, message } = routeAspects[aspect];
+	return applies(source.lemma) ? undefined : issue(path, message);
+}
+
+/**
+ * A Collocation's verb only supports its noun or adjective predicate (`eine
+ * Entscheidung treffen`), so only a VERB Locution is one. An Idiom may be any
+ * Kind (`weißer Rabe`, `unter vier Augen`).
+ */
+function locutionTypeIssue<R extends Dumling.Reading>(
+	source: R,
+	value: string,
+	path: Path,
+): ParsingError | undefined {
+	return value === "Collocation" && source.lemma.kind !== "VERB"
+		? issue(path, "Only a VERB Locution is a Collocation")
+		: undefined;
+}
+
+function isRouteAspect(aspect: string): aspect is RouteAspect {
+	return Object.hasOwn(routeAspects, aspect);
 }
 
 /**
@@ -191,6 +258,21 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge,
 ): ReadingKnowledge<R> | ParsingError {
 	const result = structuredClone(knowledge) as ReadingKnowledge;
+	for (const aspect of Object.keys(routeAspects) as RouteAspect[])
+		if (result[aspect] !== undefined) {
+			const failure = routeAspectIssue(source, aspect, [
+				"knowledge",
+				aspect,
+			]);
+			if (failure) return failure;
+		}
+	if (result.locutionType) {
+		const failure = locutionTypeIssue(source, result.locutionType, [
+			"knowledge",
+			"locutionType",
+		]);
+		if (failure) return failure;
+	}
 	if (result.pluralPattern) {
 		const plural = parseNounPlural(source, result.pluralPattern, [
 			"knowledge",
@@ -238,6 +320,20 @@ export function contextualizeChange<R extends Dumling.Reading>(
 	source: R,
 	change: KnowledgeChange,
 ): KnowledgeChange<R> | ParsingError {
+	if (isRouteAspect(change.aspect) && change.kind !== "Retract") {
+		const failure = routeAspectIssue(source, change.aspect, [
+			"change",
+			"aspect",
+		]);
+		if (failure) return failure;
+	}
+	if (change.aspect === "locutionType" && change.kind !== "Retract") {
+		const failure = locutionTypeIssue(source, change.value, [
+			"change",
+			"value",
+		]);
+		if (failure) return failure;
+	}
 	if (change.aspect === "pluralPattern" && change.kind !== "Retract") {
 		const plural = parseNounPlural(source, change.value, [
 			"change",

@@ -20,11 +20,14 @@ import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
 	directSemanticRelationValues,
+	formulaRoleValues,
 	germanComplementCaseValues,
 	governedCaseValues,
+	locutionTypeValues,
 	participleMeaningValues,
 	pluralMarkerValues,
 	pluralPatternValues,
+	sayingTypeValues,
 	translationLanguageValues,
 	valencyReferentValues,
 	valencySlotStatusValues,
@@ -156,6 +159,20 @@ export const nounPluralSchema = z.union([
 	z.enum(pluralMarkerValues),
 ]);
 
+/** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
+export const locutionTypeSchema = z.enum(locutionTypeValues);
+/**
+ * A Saying Reading's type, with who it is attributed to where that is known
+ * (`Sein oder Nichtsein`: WingedWord, Shakespeare). Never a Lemma split (ADR
+ * 0039).
+ */
+export const sayingTypeSchema = z.strictObject({
+	type: z.enum(sayingTypeValues),
+	attribution: normalizedTextSchema.optional(),
+});
+/** What an INTJ Reading does as a routine formula (ADR 0039). */
+export const formulaRoleSchema = z.enum(formulaRoleValues);
+
 type MorphologicalNode =
 	| {
 			nodeKind: "morphemeReading";
@@ -229,6 +246,9 @@ export const readingKnowledgeSchema = z.strictObject({
 	valency: valencyFrameSchema.optional(),
 	participleSource: participleSourceSchema.optional(),
 	pluralPattern: nounPluralSchema.optional(),
+	locutionType: locutionTypeSchema.optional(),
+	sayingType: sayingTypeSchema.optional(),
+	formulaRole: formulaRoleSchema.optional(),
 });
 
 const setKinds = z.enum(["Contribute", "Correct"]);
@@ -312,6 +332,25 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.literal("pluralPattern"),
+	}),
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("locutionType"),
+		value: locutionTypeSchema,
+	}),
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("sayingType"),
+		value: sayingTypeSchema,
+	}),
+	z.strictObject({
+		kind: setKinds,
+		aspect: z.literal("formulaRole"),
+		value: formulaRoleSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Retract"),
+		aspect: z.enum(["locutionType", "sayingType", "formulaRole"]),
 	}),
 	z.strictObject({
 		kind: setKinds,
