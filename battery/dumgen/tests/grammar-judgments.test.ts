@@ -7,6 +7,7 @@ import { possiblyInflectedNoun } from "../src/concrete-lang/de/grammatical-resol
 import review from "../src/evaluation/redesign/review-cases.json";
 import nounProjection from "../src/generated/grammar-cases/lexeme/noun.json";
 import verbProjection from "../src/generated/grammar-cases/lexeme/verb.json";
+import collocationProjection from "../src/generated/grammar-cases/phraseme/collocation.json";
 import idiomProjection from "../src/generated/grammar-cases/phraseme/idiom.json";
 import proverbProjection from "../src/generated/grammar-cases/phraseme/proverb.json";
 import { grammarFixture } from "../src/testing.js";
@@ -494,7 +495,7 @@ test("uncertain headword judgment stops without copying or generating", async ()
 function markedEncounter(
 	id: string,
 	markedContext: string,
-	kind: "VERB" | "NOUN" | "Idiom" | "Proverb" = "VERB",
+	kind: "VERB" | "NOUN" | "Idiom" | "Collocation" | "Proverb" = "VERB",
 ) {
 	const segments: { text: string; kind: string }[] = [];
 	const members: number[] = [];
@@ -520,7 +521,9 @@ function markedEncounter(
 		sentence: { id, language: "de", segments },
 		target: {
 			family:
-				kind === "Idiom" || kind === "Proverb" ? "Phraseme" : "Lexeme",
+				kind === "Idiom" || kind === "Collocation" || kind === "Proverb"
+					? "Phraseme"
+					: "Lexeme",
 			kind,
 			memberSegmentIndices: members,
 		},
@@ -581,10 +584,11 @@ for (const [id, rejected] of [
 		);
 	});
 
-/** A reviewed Idiom whose judge copies its joined members as the headword. */
-async function copiedIdiom(
+/** A reviewed Phraseme whose judge copies its joined members as the headword. */
+async function copiedPhraseme(
 	markedContext: string,
 	idealOutput: unknown,
+	kind: "Idiom" | "Collocation" = "Idiom",
 ): Promise<{ canonicalForm: string; traces: OperationTrace[] }> {
 	const traces: OperationTrace[] = [];
 	const output = await Effect.runPromise(
@@ -594,7 +598,7 @@ async function copiedIdiom(
 			}),
 			onOperation: (trace) => traces.push(trace),
 		}).resolveGrammar({
-			...markedEncounter("idiom", markedContext, "Idiom"),
+			...markedEncounter("idiom", markedContext, kind),
 			contextAvailable: false,
 		}),
 	);
@@ -607,7 +611,7 @@ for (const id of [
 ] as const)
 	test(`a copied finite Idiom surface is no headword, so Luna generates it: ${id}`, async () => {
 		const example = idiomProjection.cases[id];
-		const { canonicalForm, traces } = await copiedIdiom(
+		const { canonicalForm, traces } = await copiedPhraseme(
 			example.input.markedContext,
 			example.idealOutput,
 		);
@@ -625,13 +629,28 @@ for (const id of [
 		});
 	});
 
+for (const [id, citation] of [
+	["grammar-de-coll-antrag-present-full", false],
+	["grammar-de-coll-abschied-citation", true],
+] as const)
+	test(`a Collocation keeps its copied wording only as a citation: ${id}`, async () => {
+		const example = collocationProjection.cases[id];
+		const { canonicalForm, traces } = await copiedPhraseme(
+			example.input.markedContext,
+			example.idealOutput,
+			"Collocation",
+		);
+		expect(canonicalForm).toBe(example.idealOutput.lemma.canonicalForm);
+		expect(traces[0]?.calls).toHaveLength(citation ? 1 : 2);
+	});
+
 for (const id of [
 	"grammar-de-idiom-fettnaepfchen-infinitive-full",
 	"grammar-de-idiom-grass-citation",
 ] as const)
 	test(`an infinitive or citation Idiom keeps its copied wording: ${id}`, async () => {
 		const example = idiomProjection.cases[id];
-		const { canonicalForm, traces } = await copiedIdiom(
+		const { canonicalForm, traces } = await copiedPhraseme(
 			example.input.markedContext,
 			example.idealOutput,
 		);
@@ -640,7 +659,7 @@ for (const id of [
 	});
 
 test("a present plural verb ending an Idiom is spelled as its infinitive", async () => {
-	const { canonicalForm, traces } = await copiedIdiom(
+	const { canonicalForm, traces } = await copiedPhraseme(
 		"Ich fürchte, dass sie <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verlieren</TARGET>.",
 		{
 			lemma: { canonicalForm: "den Faden verlieren", coreFeatures: {} },
