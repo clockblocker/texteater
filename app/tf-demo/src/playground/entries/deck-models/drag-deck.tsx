@@ -105,6 +105,7 @@ import {
 	HEADER_REM,
 	LOOSE_CARD_REM,
 	PILE_HEIGHT_REM,
+	VELOCITY_SAMPLE_MS,
 } from "./motion-spec";
 import { PresentationView } from "./note-view";
 import { GROUND_LIST_WIDTH, GroundList, PaneBarFace } from "./pane-chrome";
@@ -960,6 +961,7 @@ function CompassRuntime({
 			lifted: false,
 			v: { vx: 0, vy: 0 },
 			last: { x: event.clientX, y: event.clientY, t: now },
+			sampled: { x: event.clientX, y: event.clientY, t: now },
 			gap: null,
 		};
 		dragRef.current = d;
@@ -1017,6 +1019,7 @@ function CompassRuntime({
 			lifted: true,
 			v: { vx: 0, vy: 0 },
 			last: { x: lift.x, y: lift.y, t: now },
+			sampled: { x: lift.x, y: lift.y, t: now },
 			gap: null,
 		};
 		dragRef.current = d;
@@ -1329,10 +1332,24 @@ function CompassRuntime({
 		const { h } = d;
 		const dx = event.clientX - d.start.x;
 		const dy = event.clientY - d.start.y;
-		const dt = Math.max(1, event.timeStamp - d.last.t);
-		const vx = (event.clientX - d.last.x) / dt;
-		const vy = (event.clientY - d.last.y) / dt;
-		d.v = { vx: d.v.vx * 0.6 + vx * 0.4, vy: d.v.vy * 0.6 + vy * 0.4 };
+		const span = event.timeStamp - d.sampled.t;
+		if (span >= VELOCITY_SAMPLE_MS) {
+			const vx = (event.clientX - d.sampled.x) / span;
+			const vy = (event.clientY - d.sampled.y) / span;
+			/* a hand that had stopped starts its speed afresh: what it had
+			   before the pause is not carried into the next move */
+			const keep =
+				event.timeStamp - d.last.t > VELOCITY_STALE_MS ? 0 : 0.6;
+			d.v = {
+				vx: d.v.vx * keep + vx * (1 - keep),
+				vy: d.v.vy * keep + vy * (1 - keep),
+			};
+			d.sampled = {
+				x: event.clientX,
+				y: event.clientY,
+				t: event.timeStamp,
+			};
+		}
 		d.last = { x: event.clientX, y: event.clientY, t: event.timeStamp };
 		/* a swiped Card is placed by the swipe, on its rubber band */
 		if (d.phase !== "swiping") {

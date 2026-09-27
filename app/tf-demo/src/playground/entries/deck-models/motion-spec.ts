@@ -298,6 +298,13 @@ export const LEAVING = tween(160);
  */
 export const THROW_PROJECTION_MS = 160;
 
+/**
+ * The shortest span, in ms, a hand's speed is read over: about a frame
+ * at 120 Hz. Two pointer events a hair apart would read a twitch of a
+ * few px as a throw, so a sample waits until this much time has passed.
+ */
+export const VELOCITY_SAMPLE_MS = 8;
+
 /* ---------------------------------------------------------------- hold */
 
 /**

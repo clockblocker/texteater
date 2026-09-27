@@ -158,6 +158,8 @@ export type Drag = {
 	readonly lifted: boolean;
 	v: { vx: number; vy: number };
 	last: { x: number; y: number; t: number };
+	/** Where the hand was when `v` last took a reading. */
+	sampled: { x: number; y: number; t: number };
 	/**
 	 * A Card torn off a swipe sits this far from the finger, where the
 	 * rubber band held it, and the gap closes on its own spring. `stop`
