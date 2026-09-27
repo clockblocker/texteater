@@ -15,6 +15,7 @@ import {
 	houseLemma,
 	houseReading,
 	onLemma,
+	vorLemma,
 	wartenReading,
 } from "./fixtures.js";
 
@@ -76,6 +77,24 @@ test("a two-way preposition takes the construction's case", () => {
 			knowledge: { valency: [optional({ ...aufAcc, case: "Nom" })] },
 		}).success,
 	).toBe(false);
+});
+
+test("a subjectless verb's frame has no Nom slot", () => {
+	// `mir graut vor dem Winter`: the experiencer is a Dat slot, not a subject.
+	const grauenReading = {
+		...wartenReading,
+		lemma: { ...wartenReading.lemma, canonicalForm: "grauen" },
+		emojiDescription: "😨",
+	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
+	const dat = { kind: "Case", case: "Dat", referent: "Someone" } as const;
+	const vorDat = { ...aufDat, preposition: vorLemma } as const;
+	const valency = [required(dat), optional(vorDat)];
+	expect(
+		parseReadingKnowledge({
+			source: grauenReading,
+			knowledge: { valency },
+		}),
+	).toEqual({ success: true, value: { valency } });
 });
 
 // Which cases a preposition takes is a fact about German: dumspec checks

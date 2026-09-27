@@ -43,8 +43,11 @@ Preposition. Each language × Family × Kind route chooses which complements
 it allows, as [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
 does for Core Features.
 
-The subject is a slot too, so its case is recorded: `mir graut`, `mich
-friert`. Collocations and Idioms have frames on their Readings like Lexemes.
+The subject is a slot too. In German it is always Nom, and it is not
+rendered. A verb with no subject has no Nom slot, and its experiencer is a Dat
+or Acc slot: `mir graut vor` is Required Dat, Optional `vor` + Dat. An
+expletive `es` is never a slot ([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)).
+Collocations and Idioms have frames on their Readings like Lexemes.
 A Required slot is how an expression states the valency it demands:
 `jemandem auf den Keks gehen` has a Required Dat slot, which is exactly what
 the learner error *Du gehst mich auf den Keks* gets wrong.

@@ -214,7 +214,8 @@ Something or Either. Hebrew marks them by function and preposition, with no
 case: Subject, DirectObject, or a governed preposition (`סמך על`). English
 marks them by position and preposition, with no case: Hebrew's set plus
 IndirectObject (`him` in `give him a book`), and `depend on` has a governed
-`on`. The subject is a Slot too. Which cases a German preposition takes is
+`on`. The subject is a Slot too; in German it is a Nom Slot, and a
+subjectless verb (`mir graut vor`) has none. Which cases a German preposition takes is
 dumspec's ADP Case Table, not part of the model.
 _Avoid_: argument, valent, complement slot, Ergänzung
 

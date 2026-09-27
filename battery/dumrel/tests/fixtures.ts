@@ -53,6 +53,8 @@ const adposition = (canonicalForm: string) =>
 export const aufLemma = adposition("auf");
 /** Fixed-case preposition. */
 export const fuerLemma = adposition("für");
+/** Governed by `grauen` with Dat: `mir graut vor dem Winter`. */
+export const vorLemma = adposition("vor");
 
 /** Hebrew preposition: Hebrew complements mark no case. */
 export const alLemma = {
