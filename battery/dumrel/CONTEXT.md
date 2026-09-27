@@ -41,11 +41,22 @@ preposition's side of the link is projected, never stored.
 _Avoid_: governing verb (adjectives, nouns and Locutions govern too)
 
 **Participle Source**:
-the VERB Lemma a Participial Adjective's Reading comes from, stored in that
-Reading's Knowledge (`gekocht`: `kochen`; `verliebt`: `sich verlieben`). It
-is a grammatical link, not a Semantic Relation. The verb's side, its
-participial adjectives, is projected, never stored.
+the VERB Lemma whose participle a Participial Adjective's form is, with the
+Reading's Participle Meaning, stored in that Reading's Knowledge (`gekocht`:
+`kochen`; `verliebt`: `sich verlieben`). The form alone names the verb, so
+every Reading of one adjective names the same verb. It is a grammatical link,
+not a Semantic Relation. The verb's side, its participial adjectives, is
+projected from the verb's Lemma, never stored.
 _Avoid_: base verb, derivation relation, participle relation
+
+**Participle Meaning**:
+whether a Reading with a Participle Source means a sense of its verb
+(Verbal: `gekocht`, `gebildet` 'educated') or has drifted from all of them
+(Drifted: `gelassen` 😌 from `lassen`, `verschieden` ↔️ 'different' from
+`verscheiden`). Readings of one adjective can differ: `verschieden` ⚰️
+'deceased' is Verbal. A Drifted Reading is not among its verb's participial
+adjectives.
+_Avoid_: lexicalized (lexicalized `gebildet` is still Verbal), etymology
 
 **Plural Pattern**:
 how a German noun forms its plural from its singular: no ending, umlaut only,

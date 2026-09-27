@@ -154,8 +154,9 @@ lights the members of one occurrence inside it. It is presentation state and
 adds no identity.
 
 **Lemma Note**:
-A projection of one Lemma and its Readings. It adds no identity beyond the
-Lemma and Reading records it presents.
+A projection of one Lemma and its Readings. A VERB's Lemma Note also lists
+the Readings that name it as their Participle Source with a Verbal meaning.
+It adds no identity beyond the Lemma and Reading records it presents.
 
 **Surface Note**:
 A projection of one normalized orthographic form in one language, aggregating

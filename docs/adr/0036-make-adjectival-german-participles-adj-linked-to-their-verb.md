@@ -62,3 +62,31 @@ adjective, and a Knowledge aspect a host must honor.
 The golden set is the `target-classification/de/high-level-whole-unit:participle-boundary`
 slice of the Canonical Classification Corpus. Map:
 [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended on 2026-09-27: three parts of the link change.
+
+A host that lacks the source verb no longer stores a Reading for it. The
+Reading was generated from the adjective's sentence, and an Emoji Description
+cannot be merged, split or relabelled ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
+So *Er blieb gelassen* gave `lassen` a permanent 😌 'calm' Reading, and every
+later judge call saw it. The ADJ Reading's Knowledge still stores the full
+VERB Lemma. Until a Lemma with that identity is stored, the link points at the
+verb's Unit Shadow, like any other missing target. The link matches the Lemma,
+never the Shadow, because a Shadow has no Core Features.
+
+The inverse starts at the verb's Lemma, not at each of its Readings. The claim
+names a Lemma, so the verb's Lemma Note lists its participial adjectives and no
+Reading of the verb does. Otherwise every sense of `verwenden` would list
+`verwandt`. No verb Reading is ever chosen from the adjective's sentence. ADR
+0011's rule that an inverse needs a target reaching exactly one Reading governs
+Semantic Relation inverses on Readings. This inverse never lands on a Reading,
+so the rule does not apply.
+
+`participleSource` is `{ verb, meaning }`. The verb comes from the adjective's
+form alone, so *verschieden* always names `verscheiden`, and a form the verb
+does not build still has none (*verlegen*). The Participle Meaning, `Verbal` or
+`Drifted`, is judged per Reading: *gebildet* 'educated' is Verbal because
+`bilden` means to educate, *verschieden* ⚰️ 'deceased' is Verbal, and
+*verschieden* ↔️ 'different', *gelassen*, *bekannt*, *verwandt*, *besessen*
+'obsessed' and *spannend* are Drifted. A Drifted Reading keeps its link, shown
+as "historically the participle of", and gets no inverse.

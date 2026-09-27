@@ -39,10 +39,12 @@ derives the inverse `governedBy` edges from Preposition Slots over a
 dictionary inventory, so a preposition lists its Governors without storing
 them.
 
-`participleSource` records the VERB Lemma an adjectival participle Reading
-comes from (`gekocht` stores `kochen`). `projectParticipleSources` derives
-the inverse `participialAdjective` edges from the verb's Lemma, so a verb
-lists its participial adjectives without storing them.
+`participleSource` records the VERB Lemma an adjectival participle Reading's
+form comes from and whether the Reading's meaning is a sense of it
+(`gekocht` stores `kochen`, Verbal; `gelassen` 😌 stores `lassen`, Drifted).
+`projectParticipleSources` derives the inverse `participialAdjective` edges
+from the verb's Lemma for Verbal Readings, so a verb lists its participial
+adjectives without storing them.
 
 `pluralPattern` records how a German NOUN Reading forms its plural: the Plural
 Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds
