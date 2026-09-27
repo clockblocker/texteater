@@ -45,13 +45,18 @@ A member of a unit that is a word of its own there, as opposed to a
 satellite. A Lexeme has one; a Locution has two or more.
 
 **Member Role**:
-What a member is inside its unit: Head, or one of the satellites
-SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
-Auxiliary and DegreeMarker. An Article belongs to the Head of the phrase it
-opens: the noun, or the word standing in for an elided noun (`[den, roten]`,
-`[the, rich]`). A DegreeMarker marks an analytic comparative or superlative:
-`am liebsten` is `gern` Sup over `[am, liebsten]`, `most beautiful` is
-`beautiful` Sup.
+What a member is inside its unit: Head, or a satellite such as an article,
+auxiliary or governed preposition. It states the Rule that tells a Lexeme
+from a Locution and is not recorded on the Attestation; where a consumer
+needs one member, a targeted evidence field names it (`articleEvidence`,
+`valencyEvidence`). An Article belongs to the Head of the phrase it opens:
+the noun, or the word standing in for an elided noun (`[den, roten]`).
+
+**Breakdown**:
+The Lexemes a Locution or Saying is made of, each a real Reading, reached
+from the multiword Lemma's Note (`den Faden verlieren`: `Faden`,
+`verlieren`). It belongs to the Lemma, not to an occurrence.
+_Avoid_: components, drill-down segmentation
 
 **Canonical Form**:
 The normalized form that names a Lemma and participates in its identity. It

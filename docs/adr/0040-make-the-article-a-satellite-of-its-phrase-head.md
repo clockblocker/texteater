@@ -144,3 +144,5 @@ whether noun `definite` survives beyond the construct state.
   `am liebsten` record changes from `[a, m, liebsten]` to `[am, liebsten]`.
 - tf-demo's German noun header derives its article from the Lemma's gender.
 - Every change under `battery/dumgen/src` recompiles the relation verdict.
+
+Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): the article is identified by `articleEvidence`, not a Member Role, and the agreement check and DET-cell derivation live in dumspec.

@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0007
 ---
 
 # Segment in two layers: Lexeme Targets and Phraseme Targets

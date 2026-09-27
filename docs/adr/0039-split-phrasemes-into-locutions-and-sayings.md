@@ -179,3 +179,5 @@ cannot see the link.
   [#595](https://github.com/clockblocker/texteater/issues/595), area 5.
 
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): DegreeMarker joins the satellites, for the word that marks an analytic comparative or superlative (`am` in `am liebsten`, `most` in `most beautiful`).
+
+Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): Head and Member Role describe the Family Rule and are not recorded on the Attestation; a shared or elided fixed word leaves the other unit Partial with no evidence; a Locution or Saying has a Breakdown.
