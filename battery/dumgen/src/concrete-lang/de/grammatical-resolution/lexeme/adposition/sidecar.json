@@ -1,5 +1,7 @@
 {
-	"slices": {},
+	"slices": {
+		"casing": "A Canonical Form and its members take the word's lexical casing, never its position; a casing error stays a Typo (ADR 0002)."
+	},
 	"cases": {
 		"de/sie-faehrt-mit-dem-bus-zur-arbeit#0": {
 			"id": "grammar-de-adp-demo-prep-mit-dat",
@@ -55,7 +57,8 @@
 		},
 		"de/anstatt-dass-er-klagte-half-er-sofort#0": {
 			"id": "grammar-de-adp-dev-extpos-sconj-anstatt",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/im-finale-spielt-koeln-versus-berlin#0": {
 			"id": "grammar-de-adp-dev-foreign-versus-acc",
@@ -63,7 +66,8 @@
 		},
 		"de/entlang-des-kanals-stehen-alte-pappeln#0": {
 			"id": "grammar-de-adp-dev-prep-entlang-gen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#0": {
 			"id": "grammar-de-adp-dev-adp-before-unmarked-particle",
@@ -91,7 +95,8 @@
 		},
 		"de/waehrend-des-konzerts-blieb-ihr-handy-aus#0": {
 			"id": "grammar-de-adp-accept-prep-waehrend-gen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/der-schluessel-liegt-zwischen-den-buechern#0": {
 			"id": "grammar-de-adp-accept-two-way-zwischen-dat",
@@ -115,7 +120,8 @@
 		},
 		"de/dank-des-schnellen-einsatzes-blieb-niemand-verletzt#0": {
 			"id": "grammar-de-adp-accept-alternating-dank",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/die-sperrung-gilt-bis-naechsten-montag#0": {
 			"id": "grammar-de-adp-accept-prep-bis-acc",
@@ -131,11 +137,13 @@
 		},
 		"de/wegen-des-sturms-blieb-die-faehre-im-hafen#0": {
 			"id": "grammar-de-adp-dev-sentence-initial-wegen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/das-paket-liegt-unter-dem-tisch#0": {
 			"id": "grammar-de-adp-dev-casing-typo-unter",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/sie-protestiert-egen-den-neuen-plan#0": {
 			"id": "grammar-de-adp-dev-lexical-typo-gegen",
@@ -155,7 +163,8 @@
 		},
 		"de/behufs-einer-pruefung-wurden-die-akten-versiegelt#0": {
 			"id": "grammar-de-adp-accept-archaic-behufs",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/er-legte-das-band-auf-das-geschenk#0": {
 			"id": "grammar-de-adp-dev-two-way-auf-acc",

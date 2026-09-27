@@ -23,7 +23,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [0, 4],
+			"notes": {
+				"rationale": "A noun owns the article opening its phrase across a numeral, as across an adjective: the sentence-initial Die is the owned article, normalized to die (ADR 0035)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -41,16 +44,17 @@
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"article": "None",
+						"article": "Definite",
 						"case": "Nom",
 						"number": "Plur"
 					}
 				},
 				"members": [
+					{ "attested": "Die", "orthography": "Standard" },
 					{ "attested": "Mädchen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
+				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"valencyEvidence": []
 			}
 		}

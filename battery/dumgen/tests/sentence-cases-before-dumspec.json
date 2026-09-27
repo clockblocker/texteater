@@ -46,7 +46,8 @@
 			"sentence-de-government-interesse-an",
 			"sentence-de-government-bescheid-wissen",
 			"sentence-de-government-warten-auf"
-		]
+		],
+		"klitik": ["sentence-de-klitik"]
 	},
 	"cases": {
 		"sentence-de-kakao": "dc6fd5e17ee34008",
@@ -61,7 +62,7 @@
 		"sentence-de-museum": "e87ebcc2fdf83b78",
 		"sentence-de-genitiv": "ad0e1516674a3cc0",
 		"sentence-de-typo": "dc967647dd374d38",
-		"sentence-de-klitik": "c0fd722b56deeb6b",
+		"sentence-de-klitik": "67d101ff02538eed",
 		"sentence-de-verfuegung": "1170f4b49f8d11ee",
 		"sentence-de-manche": "f481994d6a2f1f70",
 		"sentence-de-fremd": "cec9f48a3a65329c",

@@ -1,6 +1,7 @@
 {
 	"slices": {
-		"referent-context": "Pronoun forms whose cell only the referent decides (ADR 0018, #606): given the neighbouring Sentences, alone in a one-Sentence Text, and alone while more exists, where resolution may ask for the neighbours."
+		"referent-context": "Pronoun forms whose cell only the referent decides (ADR 0018, #606): given the neighbouring Sentences, alone in a one-Sentence Text, and alone while more exists, where resolution may ask for the neighbours.",
+		"casing": "A Canonical Form and its members take the word's lexical casing, never its position; formal Sie keeps its capital and a lowercase formal sie is a Typo (ADR 0002)."
 	},
 	"cases": {
 		"de/bitte-gib-mir-den-schluessel#0": {
@@ -125,19 +126,23 @@
 		},
 		"de/wer-kommt-heute#0": {
 			"id": "grammar-de-pron-fixed-wer",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/wen-rufst-du-an#0": {
 			"id": "grammar-de-pron-fixed-wen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/wessen-bedarf-es-noch#0": {
 			"id": "grammar-de-pron-fixed-wessen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/jemand-wartet-vor-der-tuer#0": {
 			"id": "grammar-de-pron-fixed-jemand-jemand",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/ich-sehe-jemanden-vor-der-tuer#0": {
 			"id": "grammar-de-pron-fixed-jemand-jemanden",
@@ -149,7 +154,8 @@
 		},
 		"de/niemand-wartet-vor-der-tuer#0": {
 			"id": "grammar-de-pron-fixed-niemand-niemand",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/ich-sehe-niemanden-vor-der-tuer#0": {
 			"id": "grammar-de-pron-fixed-niemand-niemanden",
@@ -575,7 +581,8 @@
 		},
 		"de/herr-yilmaz-sie-beginnen-bitte-mit-dem-bericht#0": {
 			"id": "grammar-de-pron-dev-formal-sie-nom",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/nach-der-besprechung-gebe-ich-dir-die-notizen-zurueck#0": {
 			"id": "grammar-de-pron-accept-v4-personal-dir-dat",
@@ -852,7 +859,8 @@
 		},
 		"de/frau-doktor-bitte-setzen-sie-sich-an-den-tisch#0": {
 			"id": "grammar-de-pron-dev-formal-lowercase-typo",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"grammar-de-pron-accept-v4-foreign-he": {
 			"input": {

@@ -88,7 +88,8 @@
 			"sentence-de-government-angst-vor",
 			"sentence-de-government-interesse-an",
 			"sentence-de-government-bescheid-wissen"
-		]
+		],
+		"klitik": ["sentence-de-klitik"]
 	},
 	"cases": {
 		"sentence-de-das-wetter-ist-xqzt": {

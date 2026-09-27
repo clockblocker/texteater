@@ -88,7 +88,7 @@ async function run(
 	};
 	const questions: Questions = {
 		...membershipQuestions(input),
-		route: routeQuestion,
+		route: routeQuestion(input),
 	};
 	const articleIndices = sentence.segments.flatMap((segment, index) =>
 		segment.kind === "ResolvableText" &&

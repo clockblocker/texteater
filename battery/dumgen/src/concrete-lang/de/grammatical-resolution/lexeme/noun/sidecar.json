@@ -1,6 +1,8 @@
 {
 	"slices": {
-		"governed": "A noun takes in its governed preposition as a member (ADR 0034)."
+		"governed": "A noun takes in its governed preposition as a member (ADR 0034).",
+		"articles": "A noun owns the article opening its phrase, across numerals too, and an owned article marks the noun's agreement (ADR 0035).",
+		"casing": "A Canonical Form and its members take the word's lexical casing, never its position; a casing error stays a Typo (ADR 0002)."
 	},
 	"cases": {
 		"de/der-aufstieg-und-abstieg#0": {
@@ -85,7 +87,8 @@
 		},
 		"de/das-maedchen-wartet-vor-der-schule#0": {
 			"id": "grammar-de-noun-dev-nom-sing-maedchen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/wir-besuchen-die-stadt-am-wochenende#0": {
 			"id": "grammar-de-noun-dev-acc-sing-stadt",
@@ -125,7 +128,8 @@
 		},
 		"de/die-drei-maedchen-spielen-draussen#0": {
 			"id": "grammar-de-noun-accept-invariant-plur-maedchen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/die-ferien-beginnen-morgen#0": {
 			"id": "grammar-de-noun-accept-plural-only-ferien",
@@ -137,11 +141,13 @@
 		},
 		"de/die-redaktion-fuehrt-fotografie-als-leitform-die#0": {
 			"id": "grammar-de-noun-dev-variant-photographie",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/sie-streichelt-die-katze-vorsichtig#0": {
 			"id": "grammar-de-noun-dev-lowercase-katze",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/der-odem-des-greises-ging-schwer#0": {
 			"id": "grammar-de-noun-dev-archaic-odem",
@@ -197,7 +203,8 @@
 		},
 		"de/wir-bleiben-im-wald#0": {
 			"id": "grammar-de-noun-regression-fusion-im-wald",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/wir-gehen-zum-wald#0": {
 			"id": "grammar-de-noun-regression-fusion-zum-wald",

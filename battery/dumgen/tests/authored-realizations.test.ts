@@ -288,7 +288,9 @@ test("the sentence-initial flag marks a target whose first member is the first R
 				{ kind: "ResolvableText", text: "Er" },
 			],
 			2,
-			2,
+			// A mid-sentence capital on a pronoun other than formal Sie is a
+			// casing Typo of er (ADR 0002), found without a second lookup.
+			1,
 		],
 	] as const) {
 		const traces: OperationTrace[] = [];

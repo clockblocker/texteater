@@ -944,6 +944,35 @@ test("a name cited with its article owns it: Wir fahren in die Schweiz", async (
 	);
 });
 
+test("a name's definite article written right before it is owned, capitalized or not: Die Deutsche Bank", async () => {
+	// Membership settles what the classifier decided: the name is cited with
+	// the article it took in, so neither the Core article nor a citation
+	// mention is asked, and the sentence-initial Die is normalized to die.
+	const resolve = name(
+		"Die Deutsche Bank veröffentlichte den Bericht",
+		["Die", "Deutsche", "Bank"],
+		"Deutsche Bank",
+		"Definite",
+		"Fem",
+		"Acc",
+	);
+	const result = await resolve({
+		"lemma.coreFeatures.article": "Unmarked",
+		inflection: "Citation",
+	}).catch((error: unknown) => error);
+	expect(result).not.toBeInstanceOf(Error);
+	const attestation = result as Awaited<ReturnType<typeof resolve>>;
+	expect(attestation.surface.lemma.coreFeatures).toHaveProperty(
+		"article",
+		"Definite",
+	);
+	expect(attestation).toHaveProperty("articleEvidence", {
+		kind: "Owned",
+		member: 0,
+	});
+	expect(attestation.surface.normalizedSurface).toBe("Deutsche Bank");
+});
+
 test("a name owns the article piece of a fused word: Er badet im Rhein", async () => {
 	const result = await name(
 		"Er badet im Rhein",

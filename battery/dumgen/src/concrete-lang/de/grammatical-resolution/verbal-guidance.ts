@@ -7,8 +7,7 @@ handeln; in both, um is the owned member recorded as
 valency evidence, never a Lemma feature. These are
 not unsupported mixed-POS groups and do not require a new es-prefixed Lemma.
 Use person 3 and number Sing for these complete targets
-when finite. Retain tense from the verb. Normalize ordinary sentence-initial verb
-capitalization to lowercase (Gibt es -> gibt es).
+when finite. Retain tense from the verb.
 The target's grammatical auxiliaries
 contribute to the whole Surface; a separate modal or other unmarked target
 contributes no finite features. Membership and the VERB/ADJ route are fixed.

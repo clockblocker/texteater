@@ -50,7 +50,7 @@ const attachmentRules =
 const nounArticlePolicy = `Select one licensed article the supplied noun shares, using the whole sentence independently of previous clicks. The noun owns no article of its own: an owned article would be its first supplied member. Candidates are possible analyses of source occurrences, not proof of attachment. Shared means an article licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Shared der for Abstieg, and im Wald und Feld gives Shared dem for Feld. ${attachmentRules}`;
 
 /** A proper noun owns only the article it is canonically cited with (ADR 0035). */
-const properNounArticlePolicy = `Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. ${attachmentRules} A proper noun owns an article only when the name is canonically cited with the definite article (die Schweiz, der Rhein, the m in im Rhein). An article before a name cited bare (das alte Berlin, colloquial der Peter) is its own DET, and an article inside a title's own wording (Die Physiker) is part of the name: choose None for both.`;
+const properNounArticlePolicy = `Select one licensed article attachment for the supplied noun, using the whole sentence independently of previous clicks. Candidates are possible analyses of source occurrences, not proof of attachment. Owned means a true article that is this noun's first supplied member: a standalone article (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or a shortened article ('ne Frage). Shared means an article the noun does not own, licensed by compatible nominal coordination: der Aufstieg und Abstieg gives Owned for Aufstieg and Shared for Abstieg, and im Wald und Feld gives Shared dem for Feld. ${attachmentRules} A proper noun owns an article only when the name is canonically cited with the definite article (die Schweiz, der Rhein, the m in im Rhein). A title cited with its article (der Struwwelpeter, Die Blechtrommel) is such a name: it owns that article, capitalized or not. An article before a name cited bare (das alte Berlin, colloquial der Peter) is its own DET: choose None.`;
 
 /**
  * Candidate spelling establishes possible analyses from raw source text, so the
@@ -119,20 +119,35 @@ const ownerOf = (encounter: Encounter): ArticleOwner =>
 	encounter.target.kind === "PROPN" ? "PROPN" : "NOUN";
 
 /**
- * Whether membership alone attaches the target's article: a noun owns the
- * article that is its first member. A proper noun owns one only when cited
- * with it, so its attachment stays a judgment.
+ * The article membership alone attaches (ADR 0035): a noun owns the article
+ * that is its first member. A proper noun owns a definite one written right
+ * before the rest of the name (die Deutsche Bank, m in im Rhein): the
+ * classifier takes in only the article a name is cited with. An article
+ * with words between (das alte Berlin) stays a judgment, as does a shared
+ * one.
  */
+export function ownedArticle(
+	encounter: Encounter,
+	candidates: ReadonlyMap<string, ArticleCandidate>,
+): ArticleCandidate | undefined {
+	const next = encounter.target.memberSegmentIndices[1];
+	return [...candidates.values()].find(
+		(candidate) =>
+			candidate.realization === "Owned" &&
+			(ownerOf(encounter) === "NOUN" ||
+				(candidate.article === "Definite" &&
+					next !== undefined &&
+					encounter.sentence.segments
+						.slice(candidate.segmentIndex + 1, next)
+						.every((segment) => segment.kind === "Whitespace"))),
+	);
+}
+
 function ownsArticle(
 	encounter: Encounter,
-	candidates: Map<string, ArticleCandidate>,
+	candidates: ReadonlyMap<string, ArticleCandidate>,
 ): boolean {
-	return (
-		ownerOf(encounter) === "NOUN" &&
-		[...candidates.values()].some(
-			(candidate) => candidate.realization === "Owned",
-		)
-	);
+	return ownedArticle(encounter, candidates) !== undefined;
 }
 
 /** Speculative article questions asked together with the noun feature questions. */

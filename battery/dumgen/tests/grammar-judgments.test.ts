@@ -559,7 +559,8 @@ test("a saying keeps its capital initial against LowerInitial", async () => {
 
 for (const [id, rejected] of [
 	["grammar-de-verb-prep-free-reflexive-erholen-im", "erholt sich"],
-	["grammar-de-verb-imperative-lauf", "Lauf"],
+	// Offered in lexical casing: the sentence-initial capital is position.
+	["grammar-de-verb-imperative-lauf", "lauf"],
 ] as const)
 	test(`CandidateIsCanonical for finite ${rejected} generates the Canonical Form`, async () => {
 		const example = verbProjection.cases[id];

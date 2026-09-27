@@ -1,7 +1,9 @@
 {
 	"slices": {
 		"participle-boundary": "The golden participle boundary (ADR 0036): an adjectival use of a participle, attributive, adverbial or predicative after sein, is an ADJ linked to its source VERB; only the perfect and the passive are VERB. Mostly minimal pairs across that line. Explanations name the expected Participle Source, which classification does not score.",
-		"governed-preposition": "Every governor takes in its governed preposition (ADR 0034): an adjective beside a copula, a fronted preposition, a noun with no verb around, and a present Collocation taking the click through the largest-unit rule."
+		"governed-preposition": "Every governor takes in its governed preposition (ADR 0034): an adjective beside a copula, a fronted preposition, a noun with no verb around, and a present Collocation taking the click through the largest-unit rule.",
+		"articles-and-fusions": "A noun owns the one article opening its phrase, and a click on a piece of a fused word opens the unit that owns that piece (ADR 0035): the #637 failures and passing controls.",
+		"written-expansions": "A written-out expansion of a table abbreviation (zum Teil for z.T.) is one unit where it is used as that fixed expression, and a click on any of its words opens it."
 	},
 	"cases": {
 		"target-de-core-kakao": {},
@@ -66,8 +68,12 @@
 		"target-de-boundary-multi-verb-click-spazieren": {},
 		"target-de-diagnostic-copula-click-bleibt": {},
 		"target-de-diagnostic-idiom-oel-click-goss": {},
-		"target-de-diagnostic-idiom-oel-click-oel": {},
-		"target-de-diagnostic-idiom-oel-click-feuer": {},
+		"target-de-diagnostic-idiom-oel-click-oel": {
+			"slices": ["articles-and-fusions"]
+		},
+		"target-de-diagnostic-idiom-oel-click-feuer": {
+			"slices": ["articles-and-fusions"]
+		},
 		"target-de-diagnostic-idiom-oel-near-zusaetzliches": {},
 		"target-de-demo-idiom-faden-click-verlor": {},
 		"target-de-demo-idiom-faden-click-faden": {},
@@ -501,7 +507,8 @@
 			"id": "target-de-noun-article-adjective-article",
 			"evaluation": true,
 			"contaminationKeys": ["noun-article-adjective-article"],
-			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"slices": ["articles-and-fusions"]
 		},
 		"de/der-aufstieg-und-abstieg-und-umstieg@10": {
 			"id": "target-de-noun-article-long-coordination",
@@ -513,7 +520,8 @@
 			"id": "target-de-noun-article-repeated-article",
 			"evaluation": true,
 			"contaminationKeys": ["noun-article-repeated-article"],
-			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-nested-head": {
 			"evaluation": true
@@ -522,7 +530,8 @@
 			"id": "target-de-noun-article-nested-complement",
 			"evaluation": true,
 			"contaminationKeys": ["noun-article-nested-complement"],
-			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member."
+			"explanation": "Article ownership follows nominal scope and the closest eligible noun; shared evidence adds no member.",
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-quoted-click-der-of-aufstieg": {
 			"evaluation": true
@@ -555,7 +564,8 @@
 			"evaluation": true
 		},
 		"target-de-noun-article-cross-hike-click-dem-of-jungen": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-hike-click-jungen": {
 			"evaluation": true
@@ -564,19 +574,22 @@
 			"evaluation": true
 		},
 		"target-de-noun-article-cross-hike-click-flasche": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-weather-click-der-of-weg": {
 			"evaluation": true
 		},
 		"target-de-noun-article-cross-weather-click-weg": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-weather-click-das-of-wetter": {
 			"evaluation": true
 		},
 		"target-de-noun-article-cross-weather-click-wetter": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-predicate-click-der-of-lehrer": {
 			"evaluation": true
@@ -585,13 +598,16 @@
 			"evaluation": true
 		},
 		"target-de-noun-article-cross-predicate-click-der-of-vater": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-predicate-click-vater": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-predicate-click-des-of-mädchens": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-noun-article-cross-predicate-click-mädchens": {
 			"evaluation": true
@@ -858,31 +874,36 @@
 			"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. Source: https://grammis.ids-mannheim.de/vggf/2202"
 		},
 		"target-de-route-construction-fusion": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"de/ich-bin-im-wald@5": {
 			"id": "target-de-fused-article-im-wald-click-m",
 			"evaluation": true,
 			"contaminationKeys": ["target-fusion:im-wald"],
-			"explanation": "The article piece m of im stands for dem and is the owned article of Wald, joining the noun like a standalone article (ADR 0035)."
+			"explanation": "The article piece m of im stands for dem and is the owned article of Wald, joining the noun like a standalone article (ADR 0035).",
+			"slices": ["articles-and-fusions"]
 		},
 		"de/ich-bin-im-wald@7": {
 			"id": "target-de-fused-article-im-wald-click-wald",
 			"evaluation": true,
 			"contaminationKeys": ["target-fusion:im-wald"],
-			"explanation": "Wald owns the article piece m of im, so the noun target is m and Wald (ADR 0035)."
+			"explanation": "Wald owns the article piece m of im, so the noun target is m and Wald (ADR 0035).",
+			"slices": ["articles-and-fusions"]
 		},
 		"de/ich-bin-im-wald@4": {
 			"id": "target-de-fused-article-im-wald-click-i",
 			"evaluation": true,
 			"contaminationKeys": ["target-fusion:im-wald"],
-			"explanation": "The preposition piece i of im stands for in and is a singleton ADP; its article piece belongs to Wald (ADR 0035)."
+			"explanation": "The preposition piece i of im stands for in and is a singleton ADP; its article piece belongs to Wald (ADR 0035).",
+			"slices": ["articles-and-fusions"]
 		},
 		"de/er-wartet-aufs-ende@5": {
 			"id": "target-de-fused-article-aufs-ende-click-s",
 			"evaluation": true,
 			"contaminationKeys": ["target-fusion:aufs-ende"],
-			"explanation": "s in aufs stands for das and is the owned article of Ende, while auf is the preposition wartet governs (ADR 0035)."
+			"explanation": "s in aufs stands for das and is the owned article of Ende, while auf is the preposition wartet governs (ADR 0035).",
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-route-lexeme-cconj-click-je": {
 			"evaluation": true
@@ -897,16 +918,20 @@
 			"evaluation": true
 		},
 		"target-de-boundary-idiom-click-brach": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-boundary-idiom-click-das": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-boundary-idiom-click-eis": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-boundary-idiom-near-endlich": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles-and-fusions"]
 		},
 		"target-de-boundary-literal-eis-click-brach": {
 			"evaluation": true
@@ -1137,10 +1162,12 @@
 			"evaluation": true
 		},
 		"target-de-abbreviation-zum-beispiel-click-beispiel": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["written-expansions"]
 		},
 		"target-de-abbreviation-zum-beispiel-click-zum": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["written-expansions"]
 		},
 		"de/er-kam-spaet-d-h-nach-mitternacht@7": {
 			"id": "target-de-abbreviation-dh-click-dh",
@@ -1152,13 +1179,15 @@
 			"id": "target-de-abbreviation-das-heisst-click-heißt",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:das-heisst"],
-			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here."
+			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here.",
+			"slices": ["written-expansions"]
 		},
 		"de/er-kam-spaet-das-heisst-nach-mitternacht@7": {
 			"id": "target-de-abbreviation-das-heisst-click-das",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:das-heisst"],
-			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here."
+			"explanation": "Written out, das heißt is one CCONJ unit; heißt is not the verb here.",
+			"slices": ["written-expansions"]
 		},
 		"de/anna-kauft-obst-gemuese-usw-auf-dem-markt@9": {
 			"id": "target-de-abbreviation-usw-click-usw",
@@ -1176,13 +1205,15 @@
 			"id": "target-de-abbreviation-und-so-weiter-click-weiter",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:und-so-weiter"],
-			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here."
+			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here.",
+			"slices": ["written-expansions"]
 		},
 		"de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt@9": {
 			"id": "target-de-abbreviation-und-so-weiter-click-und",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:und-so-weiter"],
-			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here."
+			"explanation": "Written out, und so weiter is a three-member ADV unit; und is not a free conjunction here.",
+			"slices": ["written-expansions"]
 		},
 		"de/sie-kam-u-a-wegen-des-wetters@4": {
 			"id": "target-de-abbreviation-ua-click-ua",
@@ -1212,13 +1243,15 @@
 			"id": "target-de-abbreviation-oder-aehnliches-click-ähnliches",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:oder-aehnliches"],
-			"explanation": "Written out, oder Ähnliches is one ADV unit."
+			"explanation": "Written out, oder Ähnliches is one ADV unit.",
+			"slices": ["written-expansions"]
 		},
 		"de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern@9": {
 			"id": "target-de-abbreviation-oder-aehnliches-click-oder",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:oder-aehnliches"],
-			"explanation": "Written out, oder Ähnliches is one ADV unit."
+			"explanation": "Written out, oder Ähnliches is one ADV unit.",
+			"slices": ["written-expansions"]
 		},
 		"de/die-strasse-ist-z-t-gesperrt@6": {
 			"id": "target-de-abbreviation-zt-click-zt",
@@ -1230,13 +1263,15 @@
 			"id": "target-de-abbreviation-zum-teil-click-teil",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:zum-teil"],
-			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here."
+			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here.",
+			"slices": ["written-expansions"]
 		},
 		"de/die-strasse-ist-zum-teil-gesperrt@6": {
 			"id": "target-de-abbreviation-zum-teil-click-zum",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:zum-teil"],
-			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here."
+			"explanation": "Written out, zum Teil is one ADV unit; Teil is not a free noun here.",
+			"slices": ["articles-and-fusions", "written-expansions"]
 		},
 		"de/sie-liest-v-a-romane@4": {
 			"id": "target-de-abbreviation-va-click-va",
@@ -1248,13 +1283,15 @@
 			"id": "target-de-abbreviation-vor-allem-click-allem",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:vor-allem"],
-			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here."
+			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here.",
+			"slices": ["written-expansions"]
 		},
 		"de/sie-liest-vor-allem-romane@4": {
 			"id": "target-de-abbreviation-vor-allem-click-vor",
 			"evaluation": true,
 			"contaminationKeys": ["abbreviation:vor-allem"],
-			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here."
+			"explanation": "Written out, vor allem is one ADV unit; allem is not a free pronoun here.",
+			"slices": ["written-expansions"]
 		},
 		"de/im-allgemeinen-ist-der-zug-puenktlich@3": {
 			"id": "target-de-abbreviation-im-allgemeinen-click-allgemeinen",

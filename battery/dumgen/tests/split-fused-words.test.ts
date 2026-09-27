@@ -220,29 +220,117 @@ test("the click-time fallback resolves Wald in Ich bin im Wald with its fused ar
 	expect(parseUnit(attestation).success).toBe(true);
 });
 
-test("a noun target may hold one article, a fused article piece included", async () => {
-	// The preposition piece before the article piece is no noun member.
-	const sentence = sentenceOf("Ich bin im Wald");
-	const { dumgen } = classifier([4, 5, 7], "Lexeme/NOUN");
-	expect(
-		await Effect.runPromise(
-			Effect.either(
-				dumgen.classifyTarget({ sentence, clickedSegmentIndex: 7 }),
-			),
+/** The target the classifier assembles from injected answers, or its failure. */
+async function classified(
+	text: string,
+	clicked: number,
+	members: readonly number[],
+	route: string,
+) {
+	const { dumgen } = classifier(members, route);
+	return Effect.runPromise(
+		Effect.either(
+			dumgen.classifyTarget({
+				sentence: sentenceOf(text),
+				clickedSegmentIndex: clicked,
+			}),
 		),
-	).toMatchObject({ _tag: "Left", left: { _tag: "Unresolved" } });
-	const twoArticles = sentenceOf("Der Mann im Wald");
-	const run = classifier([0, 5, 7], "Lexeme/NOUN");
+	);
+}
+
+test("a click on a piece opens the unit that owns it, never the whole written word", async () => {
+	// Ich0 bin2 i4 m5 Wald7: the article piece opens the noun's phrase, so
+	// the preposition piece before it is no noun member.
 	expect(
-		await Effect.runPromise(
-			Effect.either(
-				run.dumgen.classifyTarget({
-					sentence: twoArticles,
-					clickedSegmentIndex: 7,
-				}),
-			),
+		await classified("Ich bin im Wald", 7, [4, 5, 7], "Lexeme/NOUN"),
+	).toMatchObject({ right: { memberSegmentIndices: [5, 7] } });
+	// Clicking i opens ADP in alone, without the article written onto it or
+	// the noun that article opens.
+	expect(
+		await classified("Ich bin im Wald", 4, [4, 5, 7], "Lexeme/ADP"),
+	).toMatchObject({ right: { kind: "ADP", memberSegmentIndices: [4] } });
+	expect(
+		await classified("Ich bin im Wald", 4, [4, 7], "Lexeme/ADP"),
+	).toMatchObject({ right: { kind: "ADP", memberSegmentIndices: [4] } });
+	// Er0 wartet2 auf4 s5 Ende7: the verb governing auf is outside the noun
+	// too, and the fused article piece is its one article.
+	expect(
+		await classified(
+			"Er wartet aufs Ende.",
+			5,
+			[2, 4, 5, 7],
+			"Lexeme/NOUN",
 		),
+	).toMatchObject({ right: { memberSegmentIndices: [5, 7] } });
+	// A unit other than the noun and the ADP may own every piece.
+	expect(
+		await classified(
+			"Die Straße ist zum Teil gesperrt.",
+			6,
+			[6, 7, 9],
+			"Lexeme/ADV",
+		),
+	).toMatchObject({ right: { memberSegmentIndices: [6, 7, 9] } });
+	expect(
+		await classified(
+			"Er stellt es zur Verfügung.",
+			9,
+			[2, 6, 7, 9],
+			"Phraseme/Collocation",
+		),
+	).toMatchObject({ right: { memberSegmentIndices: [2, 6, 7, 9] } });
+});
+
+test("a noun target may hold one article, a fused article piece included, and needs its noun", async () => {
+	// Der0 Mann2 i4 m5 Wald7: nothing before the fused article piece is the
+	// noun's, a stray article included.
+	expect(
+		await classified("Der Mann im Wald", 7, [0, 5, 7], "Lexeme/NOUN"),
+	).toMatchObject({ right: { memberSegmentIndices: [5, 7] } });
+	// Der0 Mann2 und4 der6 Wald8: two standalone articles stop.
+	expect(
+		await classified("Der Mann und der Wald", 8, [0, 6, 8], "Lexeme/NOUN"),
 	).toMatchObject({ _tag: "Left", left: { _tag: "Unresolved" } });
+	// Die0 Straße2 ist4 zu6 m7 Teil9: an article piece alone is no noun.
+	expect(
+		await classified(
+			"Die Straße ist zum Teil gesperrt.",
+			7,
+			[7],
+			"Lexeme/NOUN",
+		),
+	).toMatchObject({
+		_tag: "Left",
+		left: { message: expect.stringContaining("needs its noun") },
+	});
+	// The one-article rule is the noun's: an Idiom holds its verb and its
+	// noun's article (Mit0 einem2 Witz4 brach6 sie8 das10 Eis12).
+	expect(
+		await classified(
+			"Mit einem Witz brach sie das Eis.",
+			12,
+			[6, 10, 12],
+			"Phraseme/Idiom",
+		),
+	).toMatchObject({ right: { memberSegmentIndices: [6, 10, 12] } });
+});
+
+test("a written-out abbreviation is offered to the judge as one fixed expression", async () => {
+	const { dumgen, traces } = classifier([7, 9], "Lexeme/ADV");
+	await Effect.runPromise(
+		dumgen.classifyTarget({
+			sentence: sentenceOf("Die Straße ist zum Teil gesperrt."),
+			clickedSegmentIndex: 6,
+		}),
+	);
+	const request = traces[0]?.calls[0]?.request;
+	if (!request || !("questions" in request))
+		throw Error("Expected a classification judgment");
+	expect(request.input).toMatchObject({
+		fixedExpansions: [
+			"<s6>, <s7>, <s9> spell zum Teil, which z.T. abbreviates: used as that fixed expression, it is one ADV whose members are all of them.",
+		],
+	});
 });
 
 const adverb = {

@@ -1,5 +1,7 @@
 {
-	"slices": {},
+	"slices": {
+		"casing": "A Canonical Form and its members take the word's lexical casing, never its position (ADR 0002)."
+	},
 	"cases": {
 		"de/der-hund-schlaeft-vor-der-tuer#0": {
 			"id": "grammar-de-det-demo-definite-article-der",
@@ -51,11 +53,13 @@
 		},
 		"de/welch-ein-glueck-dass-niemand-verletzt-wurde#0": {
 			"id": "grammar-de-det-dev-exclamative-welch",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/welchen-weg-nehmen-wir-nach-dem-bahnhof#0": {
 			"id": "grammar-de-det-dev-interrogative-welchen",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/er-versprach-puenktliche-lieferung-welchem-versprechen#0": {
 			"id": "grammar-de-det-dev-relative-welchem",
@@ -67,7 +71,8 @@
 		},
 		"de/alle-stuehle-stehen-schon-im-saal#0": {
 			"id": "grammar-de-det-dev-total-alle",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/sie-pruefte-beide-geraete-vor-dem-versand#0": {
 			"id": "grammar-de-det-dev-total-beide",
@@ -75,7 +80,8 @@
 		},
 		"de/viele-buecher-wurden-an-die-schule-gespendet#0": {
 			"id": "grammar-de-det-dev-indefinite-viele",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/heute-kamen-weniger-als-zwanzig-besucher#0": {
 			"id": "grammar-de-det-dev-comparative-weniger",
@@ -128,7 +134,8 @@
 		},
 		"de/ein-kran-hebt-die-schwere-kiste-auf-das-dach#0": {
 			"id": "grammar-de-det-accept-v4-indefinite-ein",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/mit-jenem-schluessel-oeffnet-die-hausmeisterin-den-keller#0": {
 			"id": "grammar-de-det-accept-v4-demonstrative-jenem",
@@ -144,7 +151,8 @@
 		},
 		"de/jeder-schritt-wird-im-pruefprotokoll-dokumentiert#0": {
 			"id": "grammar-de-det-accept-v4-total-jeder",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["casing"]
 		},
 		"de/du-hilfst-deinem-bruder-beim-aufbau-des-schranks#0": {
 			"id": "grammar-de-det-accept-v4-possessive-deinem",

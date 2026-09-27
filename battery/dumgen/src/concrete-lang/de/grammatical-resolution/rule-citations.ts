@@ -25,7 +25,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 			{ rule: "de/core-features-are-identity", hash: "240b45072e01295e" },
 			{
 				rule: "de/canonical-form-is-the-headword",
-				hash: "af3037e882625dcc",
+				hash: "1c65ae47bc4fdc44",
 			},
 		],
 	}),
@@ -37,7 +37,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 			implements: [
 				{
 					rule: "de/canonical-form-is-the-headword",
-					hash: "af3037e882625dcc",
+					hash: "1c65ae47bc4fdc44",
 				},
 			],
 		},
@@ -86,11 +86,11 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 		opens: "German NOUN article features",
 		implements: [
 			{ rule: "de/noun-article-feature", hash: "1238c072e266ea82" },
-			{ rule: "de/noun-owns-its-article", hash: "973eb75f84c89928" },
-			{ rule: "de/fused-word-pieces", hash: "03c130dd30e6af58" },
+			{ rule: "de/noun-owns-its-article", hash: "59844f5069e822af" },
+			{ rule: "de/fused-word-pieces", hash: "ea4da5398c35d674" },
 			{
 				rule: "de/canonical-form-is-the-headword",
-				hash: "af3037e882625dcc",
+				hash: "1c65ae47bc4fdc44",
 			},
 			{
 				rule: "de/shared-article-in-coordination",

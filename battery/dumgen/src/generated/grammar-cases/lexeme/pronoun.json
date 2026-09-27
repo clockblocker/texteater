@@ -236,6 +236,15 @@
 			"grammar-de-pron-referent-sie-in-sentence-fem",
 			"grammar-de-pron-referent-sie-in-sentence-plur",
 			"grammar-de-pron-referent-sie-nom-agreement"
+		],
+		"casing": [
+			"grammar-de-pron-fixed-wer",
+			"grammar-de-pron-fixed-wen",
+			"grammar-de-pron-fixed-wessen",
+			"grammar-de-pron-fixed-jemand-jemand",
+			"grammar-de-pron-fixed-niemand-niemand",
+			"grammar-de-pron-dev-formal-sie-nom",
+			"grammar-de-pron-dev-formal-lowercase-typo"
 		]
 	},
 	"cases": {

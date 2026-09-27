@@ -1,5 +1,7 @@
 {
-	"slices": {},
+	"slices": {
+		"articles": "A proper noun cited with its definite article owns it, a title cited with its article included; a name cited bare owns none (ADR 0035)."
+	},
 	"cases": {
 		"de/maria-eroeffnet-heute-die-ausstellung#0": {
 			"id": "grammar-de-propn-demo-person-maria",
@@ -63,7 +65,8 @@
 		},
 		"de/im-sommer-besucht-sie-die-schweiz#0": {
 			"id": "grammar-de-propn-dev-place-schweiz",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/seit-april-arbeitet-er-in-den-niederlanden#0": {
 			"id": "grammar-de-propn-dev-place-niederlanden",
@@ -71,7 +74,8 @@
 		},
 		"de/die-deutsche-bank-veroeffentlichte-den-bericht#0": {
 			"id": "grammar-de-propn-dev-org-deutsche-bank",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/die-spd-beschloss-ein-neues-programm#0": {
 			"id": "grammar-de-propn-dev-org-spd",
@@ -87,7 +91,8 @@
 		},
 		"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper#0": {
 			"id": "grammar-de-propn-dev-work-zauberfloete",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/der-katalog-nennt-den-titel-der-prozess#0": {
 			"id": "grammar-de-propn-dev-work-prozess",
@@ -127,7 +132,8 @@
 		},
 		"de/die-stadt-berlin-waechst-weiterhin-schnell#0": {
 			"id": "grammar-de-propn-dev-neighbor-city-berlin",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/peter-kam-zuerst-doch-peter-ging-als-letzter#0": {
 			"id": "grammar-de-propn-dev-repeated-second-peter",
@@ -143,7 +149,8 @@
 		},
 		"de/saarland-meldet-steigende-besucherzahlen#0": {
 			"id": "grammar-de-propn-accept-v3-place-saarland",
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["articles"]
 		},
 		"de/der-bus-durchquert-garmisch-partenkirchen-am-nachmittag#0": {
 			"id": "grammar-de-propn-accept-v3-multi-garmisch-partenkirchen",
@@ -189,10 +196,12 @@
 			"id": "grammar-de-propn-regression-fused-article-rhein"
 		},
 		"de/sieh-einmal-hier-steht-er#6": {
-			"id": "grammar-de-propn-regression-owned-article-struwwelpeter"
+			"id": "grammar-de-propn-regression-owned-article-struwwelpeter",
+			"slices": ["articles"]
 		},
 		"de/viele-vermissen-das-alte-berlin#1": {
-			"id": "grammar-de-propn-regression-bare-name-altes-berlin"
+			"id": "grammar-de-propn-regression-bare-name-altes-berlin",
+			"slices": ["articles"]
 		}
 	}
 }

@@ -44,7 +44,17 @@
 		"grammar-de-adp-dev-two-way-auf-acc",
 		"grammar-de-adp-dev-fused-in-dat"
 	],
-	"slices": {},
+	"slices": {
+		"casing": [
+			"grammar-de-adp-dev-extpos-sconj-anstatt",
+			"grammar-de-adp-dev-prep-entlang-gen",
+			"grammar-de-adp-accept-prep-waehrend-gen",
+			"grammar-de-adp-accept-alternating-dank",
+			"grammar-de-adp-dev-sentence-initial-wegen",
+			"grammar-de-adp-dev-casing-typo-unter",
+			"grammar-de-adp-accept-archaic-behufs"
+		]
+	},
 	"cases": {
 		"grammar-de-adp-demo-prep-mit-dat": {
 			"input": {

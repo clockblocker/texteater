@@ -255,10 +255,11 @@ const verbalRoles = new Set<RoleAnswer>([
 
 /**
  * The one-Head invariant: a group with two Heads is split at them. A
- * non-head follows the Head it scored the higher Include with; a verbal role
- * landing on a non-VERB Head, a governed preposition on a Head that governs
- * nothing, or an Article on a Head that is neither a noun nor a name,
- * becomes a singleton.
+ * non-head follows the Head it scored the higher Include with, a verbal role
+ * among the VERB Heads only (the 's of Wie geht's joins geht, not Wie); a
+ * verbal role with no VERB Head, a governed preposition on a Head that
+ * governs nothing, or an Article on a Head that is neither a noun nor a
+ * name, becomes a singleton.
  */
 function splitMultiHead(
 	sentence: SegmentedSentence<"de">,
@@ -273,13 +274,18 @@ function splitMultiHead(
 	const singletons: number[] = [];
 	for (const member of word.members) {
 		if (roleOf(answers, member) === "Head") continue;
-		const best = [...heads].sort(
+		const role = roleOf(answers, member);
+		const verbHeads = heads.filter(
+			(head) => winner(routeMassOf(answers, [head])) === "VERB",
+		);
+		const best = [
+			...(verbalRoles.has(role) && verbHeads.length ? verbHeads : heads),
+		].sort(
 			(a, b) =>
 				(include(answers, member, b) ?? 0) -
 				(include(answers, member, a) ?? 0),
 		)[0];
 		if (best === undefined) continue;
-		const role = roleOf(answers, member);
 		const headKind = winner(routeMassOf(answers, [best]));
 		if (
 			(verbalRoles.has(role) && headKind !== "VERB") ||
@@ -547,6 +553,43 @@ export function assembleAnalysis(
 			identity: identityMassOf(sentence, answers, headIndex),
 			provenance: word.unresolved ? `guard:${word.unresolved}` : "vote",
 		});
+	}
+	// A clitic written onto its verb with a verbal role joins that verb
+	// (ADR 0035): the 's of Wie geht's is the expletive of gehen, however
+	// its membership scored.
+	for (const clitic of [...targets]) {
+		const [member] = clitic.members;
+		if (
+			clitic.members.length !== 1 ||
+			!member ||
+			!verbalRoles.has(member.role as RoleAnswer)
+		)
+			continue;
+		const index = [...placement.pieces].find(([, placed]) =>
+			placed.some((piece) => piece.offset === member.offset),
+		)?.[0];
+		const hostPieces =
+			index !== undefined &&
+			sentence.segments[index - 1]?.kind === "ResolvableText"
+				? placement.pieces.get(index - 1)
+				: undefined;
+		const hostOffset = hostPieces?.at(-1)?.offset;
+		const host = targets.find(
+			(target) =>
+				target !== clitic &&
+				winner(target.routeMass) === "VERB" &&
+				target.members.some((other) => other.offset === hostOffset),
+		);
+		if (!host) continue;
+		targets[targets.indexOf(host)] = {
+			...host,
+			members: [...host.members, member].sort(
+				(a, b) => a.offset - b.offset,
+			),
+			provenance: `${host.provenance}+clitic`,
+		};
+		targets.splice(targets.indexOf(clitic), 1);
+		headIndexOf.delete(clitic.id);
 	}
 	// Every article no noun holds yet, fused or standalone, takes one path:
 	// it joins the noun its phrase opens onto when that noun has no article

@@ -86,13 +86,13 @@ const meanings: Readonly<Record<string, Meaning>> = {
 	},
 	"lemma.coreFeatures.article": {
 		question:
-			"Is this name canonically cited with the definite article, as a dictionary gives it (die Schweiz, der Rhein, die Niederlande, die NATO, das Saarland, der Struwwelpeter)? Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz).",
+			"Is this name canonically cited with the definite article, as a dictionary gives it? Many names are: regions and landscapes (das Saarland, die Pfalz, das Elsass), rivers, lakes and mountains (der Rhein, der Bodensee), some countries (die Schweiz, die Niederlande), organizations, institutions and companies (die NATO, die Lufthansa), and titles of works cited with their article (der Struwwelpeter, die Blechtrommel), whose article inflects (in der Blechtrommel). Most cities, most countries and personal names are cited bare. Judge the name's citation, not this sentence: the answer holds even where the sentence shows no article (Saarland meldet, unsere Schweiz), and a capital on a sentence-initial article (Die Lufthansa) is only its position.",
 		values: {
 			Definite:
 				"The name is canonically cited with its definite article, which it owns as its first member wherever the sentence shows it",
 		},
 		unmarked:
-			"The name is cited bare (Berlin, Anna, Deutschland), even where this sentence gives it an article of its own (das alte Berlin, colloquial der Peter), or an article is part of a title's own wording (Die Physiker)",
+			"The name is cited bare (Berlin, Anna, Deutschland), even where this sentence gives it an article of its own (das alte Berlin, colloquial der Peter)",
 	},
 	"lemma.coreFeatures.gender": {
 		question:

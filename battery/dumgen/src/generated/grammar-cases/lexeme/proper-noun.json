@@ -49,7 +49,17 @@
 		"grammar-de-propn-accept-v3-variant-preussen",
 		"grammar-de-propn-accept-v3-plural-balearen"
 	],
-	"slices": {},
+	"slices": {
+		"articles": [
+			"grammar-de-propn-dev-place-schweiz",
+			"grammar-de-propn-dev-org-deutsche-bank",
+			"grammar-de-propn-dev-work-zauberfloete",
+			"grammar-de-propn-dev-neighbor-city-berlin",
+			"grammar-de-propn-accept-v3-place-saarland",
+			"grammar-de-propn-regression-owned-article-struwwelpeter",
+			"grammar-de-propn-regression-bare-name-altes-berlin"
+		]
+	},
 	"cases": {
 		"grammar-de-propn-demo-person-maria": {
 			"input": {
@@ -350,25 +360,25 @@
 			},
 			"idealOutput": {
 				"lemma": {
-					"canonicalForm": "Die Physiker",
+					"canonicalForm": "Physiker",
 					"coreFeatures": {
 						"abbr": null,
-						"article": null,
+						"article": "Definite",
 						"foreign": null,
-						"gender": "Masc"
+						"gender": null
 					}
 				},
 				"surface": {
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
 				},
-				"normalizedMembers": ["Die", "Physiker"],
+				"normalizedMembers": ["die", "Physiker"],
 				"memberOrthographies": ["Standard", "Standard"],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			},
-			"explanation": "A supplied article inside an ordinary contextual work-title object remains a member and the title is Inflection, not a Citation mention."
+			"explanation": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in den Physikern): Canonical Form Physiker with Core article Definite (ADR 0035). The title is a plural-only name, so it agrees as a plural and has no gender. It is contextual Inflection, not a Citation mention."
 		},
 		"grammar-de-propn-demo-integrated-lego": {
 			"input": {
@@ -614,10 +624,10 @@
 			},
 			"idealOutput": {
 				"lemma": {
-					"canonicalForm": "Die Zauberflöte",
+					"canonicalForm": "Zauberflöte",
 					"coreFeatures": {
 						"abbr": null,
-						"article": null,
+						"article": "Definite",
 						"foreign": null,
 						"gender": "Fem"
 					}
@@ -627,12 +637,12 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
 				},
-				"normalizedMembers": ["Die", "Zauberflöte"],
+				"normalizedMembers": ["die", "Zauberflöte"],
 				"memberOrthographies": ["Standard", "Standard"],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			},
-			"explanation": "The article is a supplied member of the fixed work title, not a neighboring DET to remove."
+			"explanation": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in der Zauberflöte): Canonical Form Zauberflöte with Core article Definite (ADR 0035)."
 		},
 		"grammar-de-propn-dev-work-prozess": {
 			"input": {

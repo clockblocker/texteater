@@ -62,7 +62,14 @@
 		"governed": [
 			"grammar-de-noun-governed-angst-vor",
 			"grammar-de-noun-governed-article-angst-vor"
-		]
+		],
+		"articles": [
+			"grammar-de-noun-dev-nom-sing-maedchen",
+			"grammar-de-noun-accept-invariant-plur-maedchen",
+			"grammar-de-noun-dev-variant-photographie",
+			"grammar-de-noun-regression-fusion-im-wald"
+		],
+		"casing": ["grammar-de-noun-dev-lowercase-katze"]
 	},
 	"cases": {
 		"grammar-de-noun-demo-shared-abstieg": {
@@ -807,8 +814,8 @@
 		},
 		"grammar-de-noun-accept-invariant-plur-maedchen": {
 			"input": {
-				"markedContext": "Die drei <TARGET>Mädchen</TARGET> spielen draußen.",
-				"members": ["Mädchen"]
+				"markedContext": "<TARGET>Die</TARGET> drei <TARGET>Mädchen</TARGET> spielen draußen.",
+				"members": ["Die", "Mädchen"]
 			},
 			"idealOutput": {
 				"lemma": {
@@ -819,17 +826,18 @@
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"article": "None",
+						"article": "Definite",
 						"case": "Nom",
 						"number": "Plur"
 					}
 				},
-				"normalizedMembers": ["Mädchen"],
-				"memberOrthographies": ["Standard"],
+				"normalizedMembers": ["die", "Mädchen"],
+				"memberOrthographies": ["Standard", "Standard"],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
+				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"valencyEvidence": []
-			}
+			},
+			"explanation": "A noun owns the article opening its phrase across a numeral, as across an adjective: the sentence-initial Die is the owned article, normalized to die (ADR 0035)."
 		},
 		"grammar-de-noun-accept-plural-only-ferien": {
 			"input": {

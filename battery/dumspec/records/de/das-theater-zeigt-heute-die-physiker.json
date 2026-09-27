@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"notes": {
-				"rationale": "A supplied article inside an ordinary contextual work-title object remains a member and the title is Inflection, not a Citation mention."
+				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in den Physikern): Canonical Form Physiker with Core article Definite (ADR 0035). The title is a plural-only name, so it agrees as a plural and has no gender. It is contextual Inflection, not a Citation mention."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,25 +39,25 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PROPN",
-						"canonicalForm": "Die Physiker",
+						"canonicalForm": "Physiker",
 						"coreFeatures": {
 							"abbr": null,
-							"article": null,
+							"article": "Definite",
 							"foreign": null,
-							"gender": "Masc"
+							"gender": null
 						}
 					},
-					"normalizedSurface": "Die Physiker",
+					"normalizedSurface": "Physiker",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
 				},
 				"members": [
 					{ "attested": "Die", "orthography": "Standard" },
 					{ "attested": "Physiker", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			}
 		}
 	],

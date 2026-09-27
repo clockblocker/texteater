@@ -1372,12 +1372,8 @@
 						"text": "geht"
 					},
 					{
-						"kind": "Punctuation",
-						"text": "'"
-					},
-					{
 						"kind": "ResolvableText",
-						"text": "s"
+						"text": "'s"
 					},
 					{
 						"kind": "Whitespace",
@@ -1419,7 +1415,7 @@
 								"role": "Head"
 							},
 							{
-								"offset": 9,
+								"offset": 8,
 								"role": "Expletive"
 							}
 						]
@@ -1449,7 +1445,7 @@
 					}
 				]
 			},
-			"explanation": "An apostrophe clitic: `s` stands for `es`, the expletive of `es geht`; the greeting is a DiscourseFormula over three words."
+			"explanation": "The apostrophe stays inside its Segment (ADR 0035): `'s` is one Fused piece of geht's standing for `es`, the expletive of `es geht`; the greeting Wie geht's dir is a DiscourseFormula over the words Wie, geht (holding `'s`) and dir."
 		},
 		"sentence-de-verfuegung": {
 			"input": {

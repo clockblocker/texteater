@@ -33,6 +33,12 @@ import { grammarFeatureFields } from "./feature-schema.js";
 import { infinitiveShaped } from "./infinitive-shape.js";
 import { possiblyInflectedNoun } from "./inflected-noun.js";
 import {
+	lexicalCandidate,
+	lexicalCasing,
+	lowerInitial,
+	nounMemberRoles,
+} from "./lexical-casing.js";
+import {
 	ambiguousPieces,
 	attestedMember,
 	type MemberOrthography,
@@ -42,6 +48,7 @@ import {
 	nounArticleCandidates,
 	nounArticleQuestions,
 	nounArticleState,
+	ownedArticle as ownedArticleOf,
 	resolveNounArticle,
 } from "./noun-article.js";
 import { type GrammarOutput, joinMembers } from "./project.js";
@@ -286,8 +293,17 @@ export function resolveGrammarJudgments(
 		const tableSpelled = spellings.every(
 			(_, position) => (tableTexts[position] ?? []).length > 0,
 		);
+		// Offered in lexical casing: sentence-initial Wegen is the Lemma wegen.
 		const canonicalFormCandidate = joinMembers(
-			spelledMembers,
+			encounter.target.family === "Lexeme"
+				? lexicalCandidate({
+						kind: encounter.target.kind,
+						sentence: encounter.sentence,
+						firstSegmentIndex:
+							encounter.target.memberSegmentIndices[0],
+						members: spelledMembers,
+					})
+				: spelledMembers,
 			gluedMembers,
 		);
 		// jev takes an offered candidate almost always (E2: CandidateIsNotCanonical
@@ -331,14 +347,13 @@ export function resolveGrammarJudgments(
 						),
 					)
 				: undefined;
-		// A noun owns the article that is its first member (ADR 0035). A proper
-		// noun owns one only when cited with it, which stays a judgment.
-		const ownedArticle =
-			encounter.target.kind === "NOUN" && articleCandidates
-				? [...articleCandidates.values()].find(
-						(candidate) => candidate.realization === "Owned",
-					)
-				: undefined;
+		// A noun owns the article that is its first member, and a proper noun
+		// the definite one written right before it (ADR 0035).
+		const ownedArticle = articleCandidates
+			? ownedArticleOf(encounter, articleCandidates)
+			: undefined;
+		const citedWithArticle =
+			encounter.target.kind === "PROPN" && ownedArticle !== undefined;
 		// Every source here sets Lemma precision. A preposition is never a
 		// noun's headword, so a governed one is not offered, nor is an owned
 		// article, standalone, fused or shortened.
@@ -488,7 +503,11 @@ export function resolveGrammarJudgments(
 		);
 		const bagFeature =
 			inflectionFeatures.length === 1 ? inflectionFeatures[0] : undefined;
-		if (catalog.has("surface.inflectionalFeatures") && !bagFeature)
+		// An owned article agrees with its noun, so the noun is inflected in
+		// context and never a citation mention (ADR 0035).
+		const inflectionBag =
+			catalog.has("surface.inflectionalFeatures") && !bagFeature;
+		if (inflectionBag && !ownedArticle)
 			questions.inflection = inflectionQuestion(encounter.target.kind);
 		for (const [path, field] of catalog) {
 			if (
@@ -505,10 +524,12 @@ export function resolveGrammarJudgments(
 				(path.endsWith(".article") || path.endsWith(".case"))
 			)
 				continue;
-			// The attached article settles a name's Case like a noun's.
+			// The attached article settles a name's Case like a noun's, and
+			// the one it owns settles its Core article.
 			if (
 				encounter.target.kind === "PROPN" &&
-				path === "surface.inflectionalFeatures.case"
+				(path === "surface.inflectionalFeatures.case" ||
+					(citedWithArticle && path === "lemma.coreFeatures.article"))
 			)
 				continue;
 			if (verbal && path.endsWith(".voice")) continue; // Voice follows the judged passive construction.
@@ -608,7 +629,7 @@ export function resolveGrammarJudgments(
 			);
 		else if (encounter.target.kind !== "DET")
 			questions.canonical = choice(
-				`Under \`policy.canonicalForm\`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in \`markedContext\`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.${encounter.target.kind === "PROPN" ? " A name's headword excludes the article it is cited with (Schweiz for die Schweiz), but keeps an article that is part of a title's own wording (Die Physiker)." : ""}`,
+				`Under \`policy.canonicalForm\`, which supplied text exactly equals the dictionary Canonical Form of the fixed whole target in \`markedContext\`? Select the joined candidate, an alternative, or missing text. A noun headword excludes its compositional article; do not copy an inflected noun just because its spelling is Canonical.${encounter.target.kind === "PROPN" ? " A name's headword excludes the article it is cited with (Schweiz for die Schweiz), a title's included (Blechtrommel for Die Blechtrommel)." : ""}`,
 				{
 					...Object.fromEntries(
 						canonicalFormAlternatives.map((text, index) => [
@@ -830,6 +851,10 @@ export function resolveGrammarJudgments(
 						core[key] = tableCore[key];
 						continue;
 					}
+					if (citedWithArticle && key === "article") {
+						core[key] = "Definite";
+						continue;
+					}
 					const answer = selected(path);
 					if (field.open) {
 						core[key] = null;
@@ -858,9 +883,9 @@ export function resolveGrammarJudgments(
 						? { historicalStatus: "Archaic" }
 						: null,
 			};
-			if (questions.inflection) {
+			if (inflectionBag) {
 				surface.inflectionalFeatures = null;
-				if (selected("inflection") === "Marked") {
+				if (ownedArticle || selected("inflection") === "Marked") {
 					const bag: Record<string, unknown> = {};
 					const form = verbal
 						? selected("surface.inflectionalFeatures.verbForm")
@@ -981,14 +1006,44 @@ export function resolveGrammarJudgments(
 					? selected(`normalization_${index}`)
 					: "Keep",
 			);
-			// The referent's cell settles a sentence-initial capital: formal Sie
-			// keeps it, any other cell has ordinary capitalization.
-			if (cell && sentenceInitial && normalizationModes.length === 1) {
-				const formal = cell.polite === "Form";
-				if (!formal && normalizationModes[0] === "Keep")
-					normalizationModes[0] = "LowerInitial";
-				if (formal && normalizationModes[0] === "LowerInitial")
-					normalizationModes[0] = "Keep";
+			// A Lexeme's members take their words' lexical casing, never their
+			// position (ADR 0002): code settles it, and formal Sie, a Paradigm
+			// Cell the referent may choose, keeps its capital.
+			if (encounter.target.family === "Lexeme") {
+				const tableSpelledAt = (position: number) =>
+					tableSurfaces[position] !== undefined;
+				const roles =
+					encounter.target.kind === "NOUN"
+						? nounMemberRoles(input.members, tableSpelledAt)
+						: input.members.map((_, position) =>
+								tableSpelledAt(position) ? "Other" : "Head",
+							);
+				for (const [position, text] of input.members.entries()) {
+					const mode = normalizationModes[position];
+					const segmentIndex =
+						encounter.target.memberSegmentIndices[position];
+					const orthography = memberOrthographies[position];
+					if (
+						mode === "Generate" ||
+						segmentIndex === undefined ||
+						orthography === undefined
+					)
+						continue;
+					const casing = lexicalCasing({
+						kind: encounter.target.kind,
+						sentence: encounter.sentence,
+						segmentIndex,
+						text,
+						orthography,
+						formal: (cell?.polite ?? core.polite) === "Form",
+						role: roles[position] ?? "Other",
+						first: position === 0,
+					});
+					if (!casing) continue;
+					normalizationModes[position] = casing.mode;
+					if (casing.orthography)
+						memberOrthographies[position] = casing.orthography;
+				}
 			}
 			// A saying's capital initial is part of its wording, not ordinary
 			// sentence-initial capitalization, and its Canonical Form keeps it.
@@ -1187,19 +1242,29 @@ export function resolveGrammarJudgments(
 						text !== properWithoutArticle &&
 						text.toLocaleLowerCase("de") ===
 							canonicalFormCandidate.toLocaleLowerCase("de");
+					// A Variant Surface is spelled unlike its Lemma, so the
+					// headword is never its own letters: Photographie is a
+					// Variant of Fotografie.
+					const copiedVariant = (text: string) =>
+						surface.spelling === "Variant" &&
+						(text === canonicalFormCandidate ||
+							input.members.includes(text) ||
+							spelledMembers.includes(text));
 					const rejection =
 						chosen === undefined
 							? undefined
-							: encounter.target.kind === "VERB" &&
-									!infinitiveShaped(chosen)
-								? "NonInfinitiveCanonicalForm"
-								: copiedInflectedNoun(chosen)
-									? "InflectedNounCanonicalForm"
-									: withGovernedPreposition(chosen)
-										? "GovernedPrepositionCanonicalForm"
-										: withOwnedArticle(chosen)
-											? "ArticledNameCanonicalForm"
-											: undefined;
+							: copiedVariant(chosen)
+								? "VariantCanonicalForm"
+								: encounter.target.kind === "VERB" &&
+										!infinitiveShaped(chosen)
+									? "NonInfinitiveCanonicalForm"
+									: copiedInflectedNoun(chosen)
+										? "InflectedNounCanonicalForm"
+										: withGovernedPreposition(chosen)
+											? "GovernedPrepositionCanonicalForm"
+											: withOwnedArticle(chosen)
+												? "ArticledNameCanonicalForm"
+												: undefined;
 					const rejected = rejection !== undefined;
 					if (rejection)
 						recordEvent(scope, rejection, {
@@ -1216,6 +1281,28 @@ export function resolveGrammarJudgments(
 				}
 			}
 
+			// A headword copied from a capitalized member takes that member's
+			// lexical casing too: Wegen opening the sentence is the Lemma wegen.
+			// A noun's headword copied from its miscased member keeps the
+			// noun's capital: katze is a Typo of Katze.
+			const [firstMember] = input.members;
+			const headword = lemma.canonicalForm;
+			if (
+				encounter.target.family === "Lexeme" &&
+				normalizationModes[0] === "LowerInitial" &&
+				firstMember !== undefined &&
+				typeof headword === "string" &&
+				headword.startsWith(firstMember) &&
+				!copiesHeadword
+			)
+				lemma.canonicalForm = lowerInitial(headword);
+			const recased = input.members.findIndex(
+				(text, position) =>
+					normalizationModes[position] === "UpperInitial" &&
+					text === headword,
+			);
+			if (encounter.target.kind === "NOUN" && recased !== -1)
+				lemma.canonicalForm = normalizedMembers[recased];
 			try {
 				parse(
 					`grammar/${route}`,

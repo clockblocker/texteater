@@ -44,7 +44,16 @@
 		"grammar-de-det-accept-v4-variant-n",
 		"grammar-de-det-accept-v4-archaic-etwelches"
 	],
-	"slices": {},
+	"slices": {
+		"casing": [
+			"grammar-de-det-dev-exclamative-welch",
+			"grammar-de-det-dev-interrogative-welchen",
+			"grammar-de-det-dev-total-alle",
+			"grammar-de-det-dev-indefinite-viele",
+			"grammar-de-det-accept-v4-indefinite-ein",
+			"grammar-de-det-accept-v4-total-jeder"
+		]
+	},
 	"cases": {
 		"grammar-de-det-demo-definite-article-der": {
 			"input": {

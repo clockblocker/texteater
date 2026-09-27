@@ -157,13 +157,14 @@ const nouns: Rule[] = [
 	{
 		id: "de/noun-owns-its-article",
 		statement:
-			"A common noun owns the article that opens its own noun phrase, even across adjectives: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ. A click on the article selects the noun. An article cut off from the noun by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare noun stays bare.",
+			"A common noun owns the article that opens its own noun phrase, even across adjectives and numerals: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. A click on the article selects the noun. An article cut off from the noun by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare noun stays bare.",
 		adrs: ["ADR-0004", "ADR-0009", "ADR-0035"],
 		routes: lexeme("NOUN"),
 		records: [
 			"de/das-wetter-ist-xqzt",
 			"de/es-zog-der-wilde-jaegersmann",
 			"de/ich-bin-im-wald",
+			"de/die-drei-maedchen-spielen-draussen",
 		],
 	},
 	{
@@ -185,10 +186,10 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. A name cited bare (Berlin, Anna) owns none: in das alte Berlin, das is a DET of its own.",
+			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) owns none: in das alte Berlin, das is a DET of its own.",
 		adrs: ["ADR-0035"],
 		routes: lexeme("PROPN", "DET"),
-		records: [],
+		records: ["de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper"],
 	},
 ];
 
@@ -196,7 +197,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/fused-word-pieces",
 		statement:
-			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem), zur is zu and r (der), geht's is geht and 's (es). Outside a fixed expression, a preposition piece is a single-member ADP and an article piece belongs to the noun its phrase opens onto: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN, and in Er wartet aufs Ende, auf joins wartet and s joins Ende. Inside a fixed expression (Öl ins Feuer gießen, zur Verfügung stellen) both pieces are members.",
+			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem), zur is zu and r (der), geht's is geht and 's (es). Outside a fixed expression, a preposition piece is a single-member ADP and an article piece belongs to the noun its phrase opens onto: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN, and in Er wartet aufs Ende, auf joins wartet and s joins Ende. Inside a fixed expression (Öl ins Feuer gießen, zur Verfügung stellen) both pieces are members. A click on a piece opens the unit that owns that piece, never the whole written word, and a fused article piece is its noun's one article: [s, Ende].",
 		adrs: ["ADR-0027", "ADR-0035", "dumgen/ADR-0004"],
 		routes: lexeme("ADP", "NOUN"),
 		records: ["de/ich-bin-im-wald"],
@@ -321,7 +322,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. A noun's is the bare noun, without its article. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
+			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen, and a noun keeps its capital. A noun's is the bare noun, without its article. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
 		records: [],

@@ -98,7 +98,7 @@ export const realizationCriteriaCitations: CitingPrompt = {
 		{
 			opens: "A fused preposition and article",
 			implements: [
-				{ rule: "de/fused-word-pieces", hash: "03c130dd30e6af58" },
+				{ rule: "de/fused-word-pieces", hash: "ea4da5398c35d674" },
 			],
 		},
 		{
@@ -120,7 +120,7 @@ export const realizationCriteriaCitations: CitingPrompt = {
 		{
 			opens: "German common nouns include",
 			implements: [
-				{ rule: "de/noun-owns-its-article", hash: "973eb75f84c89928" },
+				{ rule: "de/noun-owns-its-article", hash: "59844f5069e822af" },
 				{
 					rule: "de/only-der-and-ein-are-articles",
 					hash: "7651166ee526ad94",
@@ -129,7 +129,7 @@ export const realizationCriteriaCitations: CitingPrompt = {
 					rule: "de/shared-article-in-coordination",
 					hash: "d21d49079359e0b8",
 				},
-				{ rule: "de/proper-noun-article", hash: "67cf3967298affa3" },
+				{ rule: "de/proper-noun-article", hash: "3dcf21812bcf6f15" },
 			],
 		},
 		{

@@ -34,7 +34,7 @@
 		{
 			"memberSegmentIndices": [9, 11],
 			"notes": {
-				"rationale": "The article is a supplied member of the fixed work title, not a neighboring DET to remove."
+				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in der Zauberflöte): Canonical Form Zauberflöte with Core article Definite (ADR 0035)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,15 +46,15 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PROPN",
-						"canonicalForm": "Die Zauberflöte",
+						"canonicalForm": "Zauberflöte",
 						"coreFeatures": {
 							"abbr": null,
-							"article": null,
+							"article": "Definite",
 							"foreign": null,
 							"gender": "Fem"
 						}
 					},
-					"normalizedSurface": "Die Zauberflöte",
+					"normalizedSurface": "Zauberflöte",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
@@ -64,7 +64,7 @@
 					{ "attested": "Zauberflöte", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			}
 		}
 	],

@@ -1,6 +1,7 @@
 {
 	"slices": {
-		"governed": "Every governor takes in its governed preposition (ADR 0034)."
+		"governed": "Every governor takes in its governed preposition (ADR 0034).",
+		"klitik": "An apostrophe stays inside its Segment: geht's is geht and 's, and 's is the expletive of gehen (ADR 0035)."
 	},
 	"cases": {
 		"sentence-de-kakao": {
@@ -40,7 +41,8 @@
 			"evaluation": true
 		},
 		"sentence-de-klitik": {
-			"evaluation": true
+			"evaluation": true,
+			"slices": ["klitik"]
 		},
 		"sentence-de-verfuegung": {
 			"evaluation": true
