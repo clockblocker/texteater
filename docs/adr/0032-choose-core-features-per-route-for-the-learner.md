@@ -96,3 +96,5 @@ a set.
 Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): a route is `language/Family/Kind`, unique as a triple, and a Kind name may repeat across Families. A Locution route borrows the inflection features and Grundform rule of the Lexeme route with its Kind. `discourseFormulaRole` leaves Core for the Formula Role in Reading Knowledge.
 
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): the article's DET cell is derived from the Article satellite's spelling and its Head's case, number and gender, not from a noun `article` feature.
+
+Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): German and English ADV and ADJ record comparability in Core. It decides whether their Surfaces mark Degree.

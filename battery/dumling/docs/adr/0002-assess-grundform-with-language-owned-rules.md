@@ -29,3 +29,5 @@ change leaves other Hebrew routes' feature vocabularies intact.
 This replaces the initial marked-feature heuristic in ADR 0001. That heuristic
 classified an explicitly marked infinitive as Inflection and missing grammar
 as Citation. No compatibility with its exports or future IDs is required.
+
+Amended by [system ADR 0042](../../../../docs/adr/0042-record-comparability-on-adv-and-adj-lemmas.md): the Grundform rule for German and English ADV and ADJ depends on the Lemma's comparability. A comparable Lemma needs Degree `Pos`. A non-comparable ADV or ADJ with no inflection is Grundform by its spelling, as a closed-class word without inflection already is.

@@ -84,6 +84,15 @@ are Core by what serves the learner best, so the same feature can be Core on
 one route and inflectional on another.
 _Avoid_: Inherent Features
 
+**Comparability**:
+A Core Feature of German and English ADV and ADJ Lemmas. It says whether the
+Lemma has comparison forms of its own. Inflected forms count (`schneller`,
+`faster`), and so do suppletive ones (`lieber` for `gern`, `better` for `good`).
+Periphrastic `more` does not count. Every Surface of a comparable Lemma marks
+Degree, including `Pos` on a citation. No Surface of a non-comparable Lemma
+(`hier`, `tot`) marks Degree.
+_Avoid_: Gradability
+
 **Paradigm Cell**:
 One combination of case, number, gender or reflexivity in a closed, authored
 paradigm. In a pillar, a paradigm whose forms a learner memorizes one by one,

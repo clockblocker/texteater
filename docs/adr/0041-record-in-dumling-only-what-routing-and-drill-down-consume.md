@@ -90,3 +90,5 @@ pointer to the Lemma.
   segmentation ADRs.
 - Decided in [#664](https://github.com/clockblocker/texteater/issues/664) on
   [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumspec.

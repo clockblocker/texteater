@@ -270,6 +270,14 @@ const pronounsAndAdjectives: Rule[] = [
 		records: [],
 	},
 	{
+		id: "de/comparability-is-lexical",
+		statement:
+			"An ADV or ADJ Lemma is comparable when the dictionary gives it comparison forms, suppletive ones included: gern → lieber, am liebsten. A colloquial form such as töter does not count. Every Surface of a comparable Lemma marks Degree, Pos in a citation (mild), a predicative use (wird mild) and an adverbial use (singt laut). No Surface of a non-comparable Lemma (hier, heute, tot, entzwei) marks Degree. Such a Surface has no inflection, except that an attributive ADJ marks case, gender and number (der tote Mann).",
+		adrs: ["ADR-0042"],
+		routes: lexeme("ADJ", "ADV"),
+		records: [],
+	},
+	{
 		id: "de/attributive-adjective-stands-alone",
 		statement:
 			"An attributive adjective or participle is a single-member target. The article before it and the noun after it belong to the noun: in ein alter Mann, alter gives [alter] ADJ, and in der wartende Kunde, der belongs to [der, Kunde].",
