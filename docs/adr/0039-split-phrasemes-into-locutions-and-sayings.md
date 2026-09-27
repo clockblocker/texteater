@@ -104,6 +104,29 @@ members, and the replacing words resolve on their own.
   s]`, and `Kunstgras` is its own NOUN. The fused article stays with the
   Locution. Any other replacement breaks it (`in den Rasen beißen`).
 
+**Shared and elided words.** A fixed word that serves two Locutions belongs to
+the one it stands in, and the other is Partial with evidence pointing at it,
+as a shared article is
+([ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md)).
+
+- Gapping: in `Sie traf die Entscheidung, er die Vorbereitungen`, `traf`
+  belongs to `eine Entscheidung treffen`, and `Vorbereitungen treffen` is
+  `[die, Vorbereitungen]`, Partial, with evidence pointing at `traf`.
+- Right node raising: in `Sie hat die Pläne zur Kenntnis und die Kritik ernst
+  genommen`, `genommen` belongs to `ernst nehmen`, and `zur Kenntnis nehmen`
+  is Partial with evidence pointing at it.
+- Only a complement left: in `Ich habe Angst vor Hunden, mein Bruder vor
+  Katzen`, the second `Angst haben` is `[vor]`, Partial, with evidence
+  pointing at `Angst` and `habe`.
+
+A fixed noun carried only by a pronoun (`Morgen treffe ich sie`, after `Hast du
+schon eine Entscheidung getroffen?`) is ideally a Partial `eine Entscheidung
+treffen` over `[treffe]`: given the sentence alone, resolution asks for more
+context, as it does for referent-ambiguous pronouns
+([#606](https://github.com/clockblocker/texteater/issues/606)). Resolving
+`treffe` as the VERB `treffen` is an accepted fallback when the classifier
+cannot see the link.
+
 **Relations.** Lexeme and Locution share one relation space: `ins Gras beißen`
 ↔ `sterben`, `eine Entscheidung treffen` ↔ `entscheiden`, `zum Teil` ↔
 `teilweise`. Sayings relate only to Sayings.
