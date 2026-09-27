@@ -22,12 +22,20 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "901ea6bcfe2138c5"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12],
+			"memberSegmentIndices": [4, 6, 12],
+			"notes": {
+				"rationale": "vorbei stands in the right bracket and vorbeiführen an + Dat is a dictionary particle verb in this sense, so vorbei is the separable particle and an the governed preposition, though a prepositional phrase precedes it. Out of the bracket, as in der Weg an der Kirche vorbei, an … vorbei is a circumposition."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -37,30 +45,56 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "an ... vorbei",
+						"kind": "VERB",
+						"canonicalForm": "vorbeiführen",
 						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Circ",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
+							"hasSepPrefix": "vorbei",
+							"lexicallyReflexive": null,
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "an vorbei",
+					"normalizedSurface": "führt vorbei",
 					"spelling": "Canonical",
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
 				"members": [
+					{ "attested": "führt", "orthography": "Standard" },
 					{ "attested": "an", "orthography": "Standard" },
 					{ "attested": "vorbei", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 1,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
 							"case": "Dat",
 							"referent": "Either"
 						},

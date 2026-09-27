@@ -22,12 +22,20 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "901ea6bcfe2138c5"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12],
+			"memberSegmentIndices": [4, 6, 12],
+			"notes": {
+				"rationale": "hinaus stands in the right bracket and hinausreichen über + Acc is a dictionary particle verb in this sense, so hinaus is the separable particle and über the governed preposition, though a prepositional phrase precedes it."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -37,32 +45,58 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "über ... hinaus",
+						"kind": "VERB",
+						"canonicalForm": "hinausreichen",
 						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Circ",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
+							"hasSepPrefix": "hinaus",
+							"lexicallyReflexive": null,
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "über hinaus",
+					"normalizedSurface": "reicht hinaus",
 					"spelling": "Canonical",
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
 				"members": [
+					{ "attested": "reicht", "orthography": "Standard" },
 					{ "attested": "über", "orthography": "Standard" },
 					{ "attested": "hinaus", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 1,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "über",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
 							"case": "Acc",
-							"referent": "Either"
+							"referent": "Something"
 						},
 						"realizedCase": "Acc"
 					}

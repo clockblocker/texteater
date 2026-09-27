@@ -113,47 +113,60 @@
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "Fort is treated as the standalone directional adverb here. Even with the overt motion verb `geht`, the fronted `Fort geht ...` sequence does not by itself force the lexicalized separable verb `fortgehen`, so dumling keeps the compositional `gehen` + directional-adverb analysis.",
-				"knownMistakes": [
-					"I previously over-read `Fort` as a partial attestation of the separable verb `fortgehen`. Under the stricter directional-item rule, this line is better kept as plain `gehen` plus the standalone directional adverb `fort`, because the form itself does not force the lexicalized verb analysis."
-				]
+				"rationale": "Fort is fronted, outside the verbal bracket, and fortgehen is a dictionary particle verb in this sense. A verb owns its separable particle wherever it stands, so Fort and geht are one VERB unless a reviewer finds Fort a free adverb here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{
-						"attested": "Fort",
-						"orthography": "Standard"
-					}
-				],
-				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "fort",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "fort",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "VERB",
+						"canonicalForm": "fortgehen",
 						"coreFeatures": {
-							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"hasSepPrefix": "fort",
+							"lexicallyReflexive": null,
+							"verbType": null
 						}
 					},
-					"surfaceFeatures": null
-				}
+					"normalizedSurface": "fort geht",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "Fort", "orthography": "Standard" },
+					{ "attested": "geht", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{

@@ -90,7 +90,12 @@ const verbs: Rule[] = [
 			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition ADP only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen).",
 		adrs: ["ADR-0004", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: lexeme("VERB", "ADP"),
-		records: [],
+		records: [
+			"de/der-radweg-fuehrt-an-der-schule-vorbei",
+			"de/die-wirkung-reicht-ueber-das-jahr-hinaus",
+			"de/der-weg-an-der-kirche-vorbei-ist-gesperrt",
+			"de/von-der-terrasse-aus-sieht-man-den-see",
+		],
 	},
 	{
 		id: "de/pronominal-adverb-stands-alone",

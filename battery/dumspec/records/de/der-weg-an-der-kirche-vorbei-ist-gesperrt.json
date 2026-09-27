@@ -1,22 +1,22 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Von der Terrasse aus sieht man den See.",
+	"sentence": "Der Weg an der Kirche vorbei ist gesperrt.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Von" },
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Weg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Terrasse" },
+		{ "kind": "ResolvableText", "text": "Kirche" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aus" },
+		{ "kind": "ResolvableText", "text": "vorbei" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sieht" },
+		{ "kind": "ResolvableText", "text": "ist" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "man" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "See" },
+		{ "kind": "ResolvableText", "text": "gesperrt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -34,7 +34,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 6],
+			"memberSegmentIndices": [4, 10],
+			"notes": {
+				"rationale": "an der Kirche vorbei is one constituent inside the noun phrase, outside any verbal bracket, so an … vorbei is a circumposition taking Dat. In der Radweg führt an der Schule vorbei the same words in the bracket give vorbeiführen."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -45,7 +48,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"canonicalForm": "von ... aus",
+						"canonicalForm": "an ... vorbei",
 						"coreFeatures": {
 							"abbr": null,
 							"adpType": "Circ",
@@ -54,13 +57,13 @@
 							"partType": null
 						}
 					},
-					"normalizedSurface": "von aus",
+					"normalizedSurface": "an vorbei",
 					"spelling": "Canonical",
 					"surfaceFeatures": null
 				},
 				"members": [
-					{ "attested": "Von", "orthography": "Standard" },
-					{ "attested": "aus", "orthography": "Standard" }
+					{ "attested": "an", "orthography": "Standard" },
+					{ "attested": "vorbei", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [

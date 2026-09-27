@@ -34,27 +34,42 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0033"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0033"],
+		"rules": [
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "901ea6bcfe2138c5"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [13],
+			"memberSegmentIndices": [13, 15],
 			"notes": {
-				"rationale": "The attested member is analyzed as the plain finite verb `lief` from lemma `laufen`. The following `hinaus` is treated separately as a directional adverb rather than being folded into a larger separable-verb payload here.",
-				"knownMistakes": [
-					"I previously inflated the selected finite verb into the separable verb `hinauslaufen`. With the directional-item rule tightened, the safer analysis here is the ordinary finite verb `laufen`, while `hinaus` is handled separately as an adverb."
-				]
+				"rationale": "hinaus stands in the right bracket and hinauslaufen is a dictionary particle verb in this sense, so lief and hinaus are one VERB. ins Feld is a free adjunct."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "lief", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "lief",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "hinauslaufen",
+						"coreFeatures": {
+							"hasSepPrefix": "hinaus",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "lief hinaus",
 					"spelling": "Canonical",
+					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -66,57 +81,15 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "laufen",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [15],
-			"notes": {
-				"rationale": "Hinaus is treated as the standalone directional adverb here. In an ambiguous motion clause like `lief hinaus`, dumling now leans toward `Verb + directional adverb` unless the form itself or stronger context clearly forces a separable-verb analysis.",
-				"knownMistakes": [
-					"I previously forced `hinaus` into the separable verb `hinauslaufen`. Under the stricter directional-item rule, this sentence is better analyzed as plain `laufen` plus the standalone directional adverb `hinaus`, because nothing in the form itself disambiguates toward the lexicalized verb."
-				]
-			},
-			"attestation": {
-				"unitKind": "Attestation",
+					}
+				},
 				"members": [
+					{ "attested": "lief", "orthography": "Standard" },
 					{ "attested": "hinaus", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"inflectionalFeatures": null,
-					"language": "de",
-					"normalizedSurface": "hinaus",
-					"spelling": "Canonical",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "hinaus",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"coreFeatures": {
-							"foreign": null,
-							"numType": null,
-							"pronType": null
-						}
-					},
-					"surfaceFeatures": null
-				}
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{
