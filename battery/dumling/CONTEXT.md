@@ -46,8 +46,12 @@ satellite. A Lexeme has one; a Locution has two or more.
 
 **Member Role**:
 What a member is inside its unit: Head, or one of the satellites
-SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article and
-Auxiliary.
+SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
+Auxiliary and DegreeMarker. An Article belongs to the Head of the phrase it
+opens: the noun, or the word standing in for an elided noun (`[den, roten]`,
+`[the, rich]`). A DegreeMarker marks an analytic comparative or superlative:
+`am liebsten` is `gern` Sup over `[am, liebsten]`, `most beautiful` is
+`beautiful` Sup.
 
 **Canonical Form**:
 The normalized form that names a Lemma and participates in its identity. It
@@ -92,12 +96,11 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
 It carries its normalized form, spelling status, and applicable inflectional
-features. A noun's article is the inflectional feature `article` (Definite,
-Indefinite or None) in German and English and `definite` in Hebrew; its
-normalized form is the noun's own letters, and a host adds the article when it
-displays the noun. A proper noun canonically cited with its article (`die
-Schweiz`) has `article: Definite` as a Core Feature instead; one cited bare
-(`Berlin`) has none. Verbal subject expletives are composition expressed by
+features. A German or English noun Surface is the noun's own letters and says
+nothing about its article; `books` is one Surface. Hebrew keeps `definite`. A
+proper noun canonically cited with its article (`die Schweiz`) has
+`article: Definite` as a Core Feature; one cited bare (`Berlin`) has none.
+Verbal subject expletives are composition expressed by
 grammatical features. Component values are derived separately. The Lemma
 remains the bare noun or ordinary verb.
 
@@ -111,10 +114,11 @@ _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 **Attestation**:
 A fleeting occurrence of one Surface, represented by ordered attested members
 and Full or Partial Realization Coverage. It has value equality but no durable
-identity. A member's orthography is Standard, Typo, Fused or Shorthand. A
-noun's article is an owned member, fused or not: `im Wald` attests `[m, Wald]`
-with Full coverage. A shared article gives Partial coverage and stays article
-evidence, not a member. A component with no letters of its own, such as the
+identity. A member's orthography is Standard, Typo, Fused or Shorthand. An
+article is an Article member of its Head, fused or not: `im Wald` attests
+`[m, Wald]` with Full coverage, and the article must agree with the Head's
+case, number and gender. A shared article gives Partial coverage and stays
+article evidence, not a member. A component with no letters of its own, such as the
 hidden article in Hebrew `בבית`, leaves its owner Partial, pointing at the
 Fusion component. German verbal Attestations retain
 subject-expletive source orthography as evidence for an owned member. Every

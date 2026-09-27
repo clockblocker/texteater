@@ -142,3 +142,5 @@ morph.
   area 2.
 
 Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): `zum Teil` is a Locution/ADV and `das Eis brechen` a Locution/VERB, both still owning every piece of their fused words. The rest of this ADR stands.
+
+Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): German and English common nouns have no `article` feature. The article is an Article satellite of the Head of its phrase, which is the noun or, when the noun is elided, the word standing in for it (`[den, roten]`, `[the, rich]`), and a bare-cited proper noun owns the article it takes (`[das, Berlin]`). Agreement is checked on the Attestation. The rest of this ADR stands.

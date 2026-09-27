@@ -71,7 +71,7 @@ _Avoid_: confidence, idiomaticity
 **Member**:
 one Segment inside a Lexeme Target with its Member Role: Head,
 SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
-Auxiliary, or Unresolved. Roles say what a member is inside its target; they
+Auxiliary, DegreeMarker, or Unresolved. Roles say what a member is inside its target; they
 do not move membership. A GovernedPreposition member belongs to a verb, an
 adjective or a noun, wherever it stands (`stolz` with `auf` in `Auf ihn bin
 ich stolz`).

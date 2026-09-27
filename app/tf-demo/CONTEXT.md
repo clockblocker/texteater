@@ -161,10 +161,11 @@ It adds no identity beyond the Lemma and Reading records it presents.
 **Surface Note**:
 A projection of one normalized orthographic form in one language, aggregating
 its typed Lemma analyses without assigning the Note an outer Family or Kind.
-A noun Surface is displayed with the article derived from its features:
-Surface `Wald` (Dat, Sing, Definite) reads `dem Wald`. A proper noun cited with
-its article takes it from its Core `article`: Surface `Schweiz` (Dat, Sing)
-reads `der Schweiz`. English nouns display no article.
+A German noun's header shows the definite article of its Lemma's gender, so
+the learner remembers the gender: `der Wald`. A proper noun cited with its
+article takes it from its Core `article`: Surface `Schweiz` (Dat, Sing) reads
+`der Schweiz`. An occurrence shows the article members it attests. English
+nouns display no article.
 
 **Crossroad Note**:
 A projection of one Spelling Crossroad: every Reading whose Lemma's Canonical

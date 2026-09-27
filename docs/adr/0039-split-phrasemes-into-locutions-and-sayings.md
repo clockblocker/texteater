@@ -177,3 +177,5 @@ cannot see the link.
   #128 moot.
 - Decided in [#663](https://github.com/clockblocker/texteater/issues/663) on
   [#595](https://github.com/clockblocker/texteater/issues/595), area 5.
+
+Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): DegreeMarker joins the satellites, for the word that marks an analytic comparative or superlative (`am` in `am liebsten`, `most` in `most beautiful`).
