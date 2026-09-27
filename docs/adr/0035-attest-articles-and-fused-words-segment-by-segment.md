@@ -64,7 +64,27 @@ Schweiz`, `der Rhein`, `der Struwwelpeter`, English `the Netherlands`, Hebrew
 the Lemma's identity, and its members and display follow the common noun's
 (`in [der Schweiz]`). A proper noun cited bare (`Berlin`, `Anna`) has no
 `article` feature. An article it takes in a sentence (`das alte Berlin`, a
-colloquial `der Peter`) stays its own DET.
+colloquial `der Peter`) stays its own DET. A title cited with its article is
+no exception, because the article inflects (`in der Zauberflöte`): `Die
+Zauberflöte` is Canonical Form `Zauberflöte` with Core `article: Definite`, like
+`der Struwwelpeter`.
+
+**Where the article stands.** A noun owns the article that opens its phrase,
+across adjectives, numerals and extended attributes: `Die drei Mädchen` attests
+`[Die, Mädchen]`. The owned article's member is normalized to lowercase like any
+closed-class word, so a sentence-initial `Die` is `die`.
+
+**Clicking a piece.** A click on a piece resolves to the unit that owns that
+piece, never to the whole written word. Clicking `i` in `im Wald` opens ADP `in`
+alone, and clicking `m` opens `Wald`. A fused article piece counts as the one
+article of its noun (`[s, Ende]`). A Phraseme may own every piece of a fused
+word (`zum Teil` is `[zu, m, Teil]`), and the one-article rule for nouns does
+not apply to it.
+
+**Apostrophes.** An apostrophe belongs to the Segment it marks. `geht's` is
+the Segments `geht` and `'s`, and `'s` stands for `es`. It is never a
+Punctuation Segment beside a bare `s`. In `Wie geht's dir`, `'s` is the
+expletive member of `gehen`, and the formula includes it.
 
 **What segmentation splits off is a syntactic word.** Each piece resolves to
 a Lexeme of its own Kind, never a Morpheme. Clitic is retired as a Morpheme

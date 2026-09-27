@@ -17,7 +17,9 @@ A lexical Lemma whose fixed realization may have one or more members. Lexeme is
 one Family, not a synonym for Lemma.
 
 **Canonical Form**:
-The normalized form that names a Lemma and participates in its identity.
+The normalized form that names a Lemma and participates in its identity. It
+takes the word's lexical casing, never its position: sentence-initial `Wegen`
+is the Lemma `wegen`.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
