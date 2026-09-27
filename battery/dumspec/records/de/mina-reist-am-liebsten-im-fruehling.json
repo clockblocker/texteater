@@ -6,8 +6,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "reist" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "ResolvableText", "text": "am" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "liebsten" },
 		{ "kind": "Whitespace", "text": " " },
@@ -21,15 +20,20 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0040", "ADR-0042"],
+		"rules": [
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 5, 7],
+			"memberSegmentIndices": [4, 6],
 			"notes": {
-				"rationale": "Both authoritative members form the complete periphrastic superlative Surface."
+				"rationale": "am before a superlative marks the degree and stands for no other words, so it is one Segment and a member of the ADV it marks: [am, liebsten] is gern (Sup), the suppletive superlative of a comparable Lemma. In im Frühling, im still splits into i and m.",
+				"knownMistakes": [
+					"Splitting am into a (an) and m (dem): m would derive a DET cell with no noun to agree with."
+				]
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -43,6 +47,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gern",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"pronType": null
@@ -54,30 +59,7 @@
 					"inflectionalFeatures": { "degree": "Sup" }
 				},
 				"members": [
-					{
-						"attested": "a",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "am",
-							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 0
-					},
-					{
-						"attested": "m",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "am",
-							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 1
-					},
+					{ "attested": "am", "orthography": "Standard" },
 					{ "attested": "liebsten", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"

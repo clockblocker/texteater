@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wer steht am nächsten?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "am" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nächsten" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0040", "ADR-0042"],
+		"rules": [
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 6],
+			"notes": {
+				"rationale": "am before a superlative is one Segment and a member of the adjective whose degree it marks: [am, nächsten] is nah (Sup), used adverbially. Minimal pair: in Am nächsten Morgen, Am splits into A (an) and m (dem), and nächst is the lexical adjective for next.",
+				"knownMistakes": [
+					"Splitting am into a (an) and m (dem): m would derive a DET cell with no noun to agree with."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "am", "orthography": "Standard" },
+					{ "attested": "nächsten", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "am nächsten",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Sup",
+						"gender": null,
+						"number": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "nah",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

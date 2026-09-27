@@ -19,8 +19,118 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+		],
+		"references": []
+	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "Before a noun phrase, Am splits into A (an) and m (dem): A is the ADP an, whose complement took the dative. Before a superlative, am would be one Segment instead (Wer steht am nächsten?)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "A",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "Am",
+							"components": [
+								{ "span": "A", "surface": "an" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "an",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "an",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [1, 5],
+			"notes": {
+				"rationale": "m stands for dem and is the article of Morgen, owned across the adjective nächsten. It derives the DET cell dem Dat.Masc.Sg."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "Am",
+							"components": [
+								{ "span": "A", "surface": "an" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Morgen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Morgen",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Morgen",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
 		{
 			"memberSegmentIndices": [3],
 			"notes": {
@@ -44,7 +154,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Masc",
 						"number": "Sing"
 					},
@@ -56,6 +166,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -92,6 +203,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

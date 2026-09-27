@@ -171,10 +171,14 @@ const participles: Rule[] = [
 	{
 		id: "de/participial-adjective",
 		statement:
-			"A participle outside a perfect or passive is a single-member ADJ: attributive (die gebratenen Zwiebeln), adverbial (ging pfeifend davon) or predicative (wirkte erschöpft). Lexicalized participles such as überzeugend and gelassen are ADJ too. The participle's own objects, adverbs, agents and prepositional phrases are free words: in der von allen gelobte Koch, only gelobte is the target. A substantivized participle is a NOUN.",
-		adrs: ["ADR-0036"],
+			"A participle outside a perfect or passive is a single-member ADJ: attributive (die gebratenen Zwiebeln), adverbial (ging pfeifend davon) or predicative (wirkte erschöpft). Lexicalized participles such as überzeugend and gelassen are ADJ too. The participle's own objects, adverbs, agents and prepositional phrases are free words: in der von allen gelobte Koch, only gelobte is the target. A substantivized participle or adjective is a NOUN, capitalized and owning its article like any noun: der Reisende, der Alte, das Gute, die Reichen. Its ending follows the determiner (der Alte, ein Alter), and the Surface's letters record it. A participle or adjective whose noun is elided stays lowercase and ADJ, and it owns the article as the Head of its phrase: der alte in tiefer als der alte gives [der, alte] ADJ.",
+		adrs: ["ADR-0036", "ADR-0040"],
 		routes: lexeme("ADJ", "NOUN"),
-		records: [],
+		records: [
+			"de/der-reisende-wartete-draussen",
+			"de/der-reisende-haendler-wartete-draussen",
+			"de/der-neue-brunnen-ist-tiefer-als-der-alte",
+		],
 	},
 ];
 
@@ -182,14 +186,20 @@ const nouns: Rule[] = [
 	{
 		id: "de/noun-owns-its-article",
 		statement:
-			"A common noun owns the article that opens its own noun phrase, even across adjectives and numerals: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. A click on the article selects the noun. An article cut off from the noun by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare noun stays bare.",
-		adrs: ["ADR-0004", "ADR-0009", "ADR-0035"],
-		routes: lexeme("NOUN"),
+			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head. The Head is the noun: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. When the noun is elided, the word standing in for it is the Head: Ich nehme den roten gives [den, roten] ADJ, and Der meine gives [Der, meine] PRON. An article cut off from its Head by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare Head stays bare. The article is a member, never a feature: a noun's Surface records no article, and in a sentence it marks case and number. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none. The article's spelling, read through its fused or shortened form, names a cell of der or ein for its Head's case, number and gender, and that cell is its DET: im Wald gives m, which is dem Dat.Masc.Sg.",
+		adrs: ["ADR-0004", "ADR-0009", "ADR-0035", "ADR-0040", "ADR-0041"],
+		routes: lexeme("NOUN", "PROPN", "ADJ", "NUM", "PRON"),
 		records: [
 			"de/das-wetter-ist-xqzt",
 			"de/es-zog-der-wilde-jaegersmann",
 			"de/ich-bin-im-wald",
 			"de/die-drei-maedchen-spielen-draussen",
+			"de/der-neue-brunnen-ist-tiefer-als-der-alte",
+			"de/der-reisende-wartete-draussen",
+			"de/ein-verletzter-lag-am-strassenrand",
+			"de/am-naechsten-morgen-war-alles-anders",
+			"de/das-kind-spielt-im-garten",
+			"de/er-zaehlt-eins-und-kauft-danach-einen-mantel",
 		],
 	},
 	{
@@ -198,7 +208,11 @@ const nouns: Rule[] = [
 			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN.",
 		adrs: ["ADR-0009", "ADR-0035"],
 		routes: lexeme("NOUN", "DET"),
-		records: ["de/ich-bin-im-wald"],
+		records: [
+			"de/ich-bin-im-wald",
+			"de/da-steht-ne-kiste-auf-dem-flur",
+			"de/wir-brauchen-fuer-den-transport-noch-n-auto",
+		],
 	},
 	{
 		id: "de/shared-article-in-coordination",
@@ -211,14 +225,15 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, however unfamiliar the name: im Fliederweg gives [m, Fliederweg] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) owns none: in das alte Berlin, das is a DET of its own, and in im alten Berlin so is m.",
-		adrs: ["ADR-0035"],
-		routes: lexeme("PROPN", "DET"),
+			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, however unfamiliar the name: im Fliederweg gives [m, Fliederweg] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) has no Core article and still owns the article that opens its phrase, as the Head: das alte Berlin gives [das, Berlin] PROPN, and im alten Berlin gives [i] ADP and [m, Berlin] PROPN.",
+		adrs: ["ADR-0035", "ADR-0040"],
+		routes: lexeme("PROPN"),
 		records: [
 			"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper",
 			"de/er-badet-im-rhein",
 			"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
 			"de/ich-wohne-im-alten-berlin",
+			"de/viele-vermissen-das-alte-berlin",
 		],
 	},
 	{
@@ -238,10 +253,16 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/fused-word-pieces",
 		statement:
-			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem), zur is zu and r (der), geht's is geht and 's (es). Outside a fixed expression, a preposition piece is a single-member ADP and an article piece belongs to the noun its phrase opens onto: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN, and in Er wartet aufs Ende, auf joins wartet and s joins Ende. Inside a fixed expression (Öl ins Feuer gießen, zur Verfügung stellen) both pieces are members. A click on a piece opens the unit that owns that piece, never the whole written word, and a fused article piece is its noun's one article: [s, Ende].",
-		adrs: ["ADR-0027", "ADR-0035", "dumgen/ADR-0004"],
-		routes: lexeme("ADP", "NOUN"),
-		records: ["de/ich-bin-im-wald"],
+			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem), zur is zu and r (der), geht's is geht and 's (es). Outside a fixed expression, a preposition piece is a single-member ADP and an article piece belongs to the noun its phrase opens onto: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN, and in Er wartet aufs Ende, auf joins wartet and s joins Ende. Inside a fixed expression (Öl ins Feuer gießen, zur Verfügung stellen) both pieces are members. A click on a piece opens the unit that owns that piece, never the whole written word, and a fused article piece is its noun's one article: [s, Ende]. am before a superlative is no fused word: it stands for no other words, so it is one Segment and a member of the word whose degree it marks: Mina reist am liebsten gives [am, liebsten] ADV gern, and Wer steht am nächsten? gives [am, nächsten] ADJ nah. Before a noun phrase am still splits: Am nächsten Morgen gives [A] ADP an and [m, Morgen] NOUN.",
+		adrs: ["ADR-0027", "ADR-0035", "ADR-0040", "dumgen/ADR-0004"],
+		routes: lexeme("ADP", "NOUN", "ADJ", "ADV"),
+		records: [
+			"de/ich-bin-im-wald",
+			"de/mina-reist-am-liebsten-im-fruehling",
+			"de/wer-steht-am-naechsten",
+			"de/von-allen-arbeitet-sie-am-sorgfaeltigsten",
+			"de/am-naechsten-morgen-war-alles-anders",
+		],
 	},
 	{
 		id: "de/abbreviation-is-one-segment",
@@ -265,8 +286,8 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/possessive-after-article",
 		statement:
-			"In der meine and der meinige, the article is a separate DET and meine or meinige a PRON. The article does not join them the way it joins a noun.",
-		adrs: [],
+			"In der meine, der meinige and der eine, the pronoun stands in for an elided noun, so it is the Head of its phrase and owns the article the way a noun does: Der meine ist rot gives [Der, meine] PRON. The article is no DET target of its own.",
+		adrs: ["ADR-0040"],
 		routes: lexeme("PRON", "DET"),
 		records: [],
 	},
@@ -458,14 +479,6 @@ const attestations: Rule[] = [
 			"A Surface leaves its inflection empty only for a dictionary citation, or for an invariant use its route leaves unmarked. An empty inflection states that structure; it never stands for uncertainty.",
 		adrs: ["ADR-0032"],
 		routes: [],
-		records: [],
-	},
-	{
-		id: "de/noun-article-feature",
-		statement:
-			"A noun's Surface records the article it owns or shares as article: Definite, Indefinite, or None for a bare noun or a noun with a non-article determiner. A noun in a sentence always marks case and number, even with article None. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none.",
-		adrs: ["ADR-0035"],
-		routes: lexeme("NOUN"),
 		records: [],
 	},
 	{

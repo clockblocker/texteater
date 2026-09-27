@@ -2,7 +2,7 @@ import { defineLanguageOverlayPage } from "../../../../../../../lib/docs/source-
 import { specExample } from "../../../../../../../lib/docs/spec-examples.ts";
 
 const struwwelpeter = specExample("de/sieh-einmal-hier-steht-er", 6);
-const berlin = specExample("de/viele-vermissen-das-alte-berlin", 1);
+const berlin = specExample("de/viele-vermissen-das-alte-berlin");
 
 const document = defineLanguageOverlayPage({
 	description: "German PROPN.",

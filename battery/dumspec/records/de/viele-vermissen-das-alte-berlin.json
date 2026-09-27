@@ -2,106 +2,35 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Viele vermissen das alte Berlin.",
 	"segments": [
-		{
-			"kind": "ResolvableText",
-			"text": "Viele"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "vermissen"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "das"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "alte"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "Berlin"
-		},
-		{
-			"kind": "Punctuation",
-			"text": "."
-		}
+		{ "kind": "ResolvableText", "text": "Viele" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vermissen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Berlin" },
+		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
-	"provenance": {
-		"kind": "Authored"
-	},
+	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "8f0c5d0f9338a32b" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [4, 8],
 			"notes": {
-				"rationale": "Berlin is a name cited bare, so it owns no article: das is the definite article the phrase takes here, and it stays its own DET."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{
-						"attested": "das",
-						"orthography": "Standard"
-					}
-				],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "das",
-					"spelling": "Canonical",
-					"inflectionalFeatures": null,
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "das",
-						"family": "Lexeme",
-						"kind": "DET",
-						"coreFeatures": {
-							"case": "Acc",
-							"gender": "Neut",
-							"number": "Sing",
-							"definite": "Def",
-							"pronType": "Art",
-							"extPos": null,
-							"foreign": null,
-							"numType": null,
-							"person": null,
-							"polite": null,
-							"poss": null
-						}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"notes": {
-				"rationale": "Berlin is cited bare, so its Lemma has no article and the das before it is not its member."
+				"rationale": "Berlin is a name cited bare, so its Lemma has no Core article, and it owns the article its phrase takes here, across the adjective alte: [das, Berlin]. das derives the DET cell das Acc.Neut.Sg.",
+				"knownMistakes": [
+					"Making das a DET target of its own: a click on an article never resolves to its DET."
+				]
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -124,19 +53,14 @@
 					"normalizedSurface": "Berlin",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"number": "Sing"
-					}
+					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
 				},
 				"members": [
-					{
-						"attested": "Berlin",
-						"orthography": "Standard"
-					}
+					{ "attested": "das", "orthography": "Standard" },
+					{ "attested": "Berlin", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			}
 		}
 	],

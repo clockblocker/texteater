@@ -10,8 +10,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "ResolvableText", "text": "am" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "sorgfältigsten" },
 		{ "kind": "Punctuation", "text": "." }
@@ -20,13 +19,18 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0040", "ADR-0042"],
+		"rules": [
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [11],
+			"memberSegmentIndices": [8, 10],
+			"notes": {
+				"rationale": "am before a superlative is one Segment and a member of the adjective whose degree it marks: [am, sorgfältigsten] is sorgfältig (Sup), used adverbially."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -40,12 +44,13 @@
 						"canonicalForm": "sorgfältig",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
-					"normalizedSurface": "sorgfältigsten",
+					"normalizedSurface": "am sorgfältigsten",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -56,6 +61,7 @@
 					}
 				},
 				"members": [
+					{ "attested": "am", "orthography": "Standard" },
 					{ "attested": "sorgfältigsten", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",

@@ -12,8 +12,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "dieser" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "ResolvableText", "text": "am" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "frühesten" },
 		{ "kind": "Whitespace", "text": " " },
@@ -24,13 +23,18 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0040", "ADR-0042"],
+		"rules": [
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [10, 11, 13],
+			"memberSegmentIndices": [10, 12],
+			"notes": {
+				"rationale": "am before a superlative is one Segment and a member of the word whose degree it marks: [am, frühesten] is the adverbially used ADJ früh (Sup). An adverbially used adjective stays ADJ."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -40,47 +44,33 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "früh",
 						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"variant": null
 						}
 					},
 					"normalizedSurface": "am frühesten",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "degree": "Sup" }
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Sup",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
-					{
-						"attested": "a",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "am",
-							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 0
-					},
-					{
-						"attested": "m",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "am",
-							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 1
-					},
+					{ "attested": "am", "orthography": "Standard" },
 					{ "attested": "frühesten", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

@@ -24,7 +24,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -49,6 +52,49 @@
 				},
 				"members": [{ "attested": "als", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [12, 14],
+			"notes": {
+				"rationale": "The noun Brunnen is elided, so the adjective standing in for it is the Head of its phrase and owns the article: [der, alte] is ADJ alt. It stays lowercase and ADJ; a nominalized der Alte would be a NOUN."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "alt",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "alte",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "alte", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
 			}
 		}
 	],

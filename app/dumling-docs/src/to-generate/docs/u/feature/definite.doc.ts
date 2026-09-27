@@ -1,7 +1,6 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
-const derArticle = specExample("de/viele-vermissen-das-alte-berlin");
 const bateiConstructState = specExample("he/batei-hasefer-nisgeru-mukdam");
 const habayitAttestation = specExample("he/chazarti-labayit");
 
@@ -27,7 +26,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Definite.html) f
 
 If \`definite\` is absent or \`undefined\`, the item has no recorded definiteness value.
 `,
-	examples: [derArticle, bateiConstructState, habayitAttestation],
+	examples: [bateiConstructState, habayitAttestation],
 	subsections: [
 		{
 			heading: "Use",

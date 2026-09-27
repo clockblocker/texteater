@@ -21,45 +21,54 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [4, 6],
+			"notes": {
+				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Kiste. Its DET cell is derived: ne is eine Nom.Fem.Sg.",
+				"knownMistakes": [
+					"Making the article a DET target of its own: a click on an article never resolves to its DET."
+				]
+			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "ne", "orthography": "Shorthand" },
+					{ "attested": "Kiste", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Kiste",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "Kiste",
 						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "eine",
-						"coreFeatures": {
-							"case": "Nom",
-							"definite": "Ind",
-							"extPos": null,
-							"foreign": null,
-							"gender": "Fem",
-							"number": "Sing",
-							"numType": "Card",
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Art"
-						}
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
 					},
-					"normalizedSurface": "ne",
-					"spelling": "Variant",
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ne", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

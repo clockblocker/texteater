@@ -34,19 +34,25 @@ const articleCells: readonly AuthoredMember[] = authoredMembers.filter(
 );
 
 /**
- * The shortened articles a Shorthand member may spell, with the article
- * forms each stands for: `'ne Frage` is `eine Frage`, and `'n` is `ein` or
- * `einen`.
+ * The shortened articles a Shorthand member may spell, with or without the
+ * apostrophe, and the article forms each stands for: `'ne Frage` is `eine
+ * Frage`, and `n Auto` is `ein Auto`.
  */
-const shorthands: Readonly<Record<string, readonly string[]>> = {
-	"'n": ["ein", "einen"],
-	"'ne": ["eine"],
-	"'nem": ["einem"],
-	"'nen": ["einen"],
-	"'ner": ["einer"],
-	"'nes": ["eines"],
-	"'s": ["das"],
-};
+const shorthands: Readonly<Record<string, readonly string[]>> =
+	Object.fromEntries(
+		Object.entries({
+			n: ["ein", "einen"],
+			ne: ["eine"],
+			nem: ["einem"],
+			nen: ["einen"],
+			ner: ["einer"],
+			nes: ["eines"],
+			s: ["das"],
+		}).flatMap(([spelling, forms]) => [
+			[spelling, forms],
+			[`'${spelling}`, forms],
+		]),
+	);
 
 /**
  * The article forms a member spells, read through its Fusion or Shorthand
