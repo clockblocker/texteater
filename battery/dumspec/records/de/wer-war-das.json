@@ -28,7 +28,14 @@
 					"language": "de",
 					"normalizedSurface": "wer",
 					"spelling": "Canonical",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -42,9 +49,9 @@
 							"person": null,
 							"polite": null,
 							"poss": null,
-							"case": "Nom",
+							"case": null,
 							"number": null,
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"surfaceFeatures": null

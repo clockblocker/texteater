@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "The occurrence realizes the niemandem Lemma with Dat Case in Core."
+				"rationale": "niemandem is the Dat Surface of the stem Lemma niemand; its case is on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,10 +39,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "niemandem",
+						"canonicalForm": "niemand",
 						"coreFeatures": {
-							"case": "Dat",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -55,7 +55,14 @@
 					"normalizedSurface": "niemandem",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "niemandem", "orthography": "Standard" }

@@ -35,10 +35,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "jedermanns",
+						"canonicalForm": "jedermann",
 						"coreFeatures": {
-							"case": "Gen",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -51,7 +51,14 @@
 					"normalizedSurface": "jedermanns",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "jedermanns", "orthography": "Standard" }

@@ -36,13 +36,14 @@ as its infinitive.
 
 Whether a feature is Core or inflectional is chosen per language, Family and
 Kind. English PRON and the German pillars (personal pronouns, the \`der\` and
-\`ein\` articles, the \`der\`-series pronouns, \`wer\`, \`jemand\`) put case,
-number and gender in Lemma identity, so each paradigm cell is its own Lemma:
-German \`mich\` and \`mir\`, \`dem\` and \`den\`, English \`me\` and \`my\`. A
-German word made of a stem and article endings, such as \`dieser\` or \`mein\`,
-is one Lemma whose Surfaces carry case, number and gender: \`diesem\` is a
-Surface of \`dieser\`. German contextual reflexiveness belongs to the Surface's
-inflectional features; English \`myself\` is its own Lemma.
+\`ein\` articles, the \`der\`-series pronouns) put case, number and gender in
+Lemma identity, so each paradigm cell is its own Lemma: German \`mich\` and
+\`mir\`, \`dem\` and \`den\`, English \`me\` and \`my\`. A German word that puts
+another paradigm's endings on its own stem, such as \`dieser\`, \`mein\`,
+\`wer\` or \`jemand\`, is one Lemma whose Surfaces carry case, number and
+gender: \`diesem\` is a Surface of \`dieser\`, and \`wem\` of \`wer\`. German
+contextual reflexiveness belongs to the Surface's inflectional features; English
+\`myself\` is its own Lemma.
 
 ## Reading
 

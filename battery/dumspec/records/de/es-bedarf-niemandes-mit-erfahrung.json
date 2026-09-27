@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "The occurrence realizes the niemandes Lemma with Gen Case in Core."
+				"rationale": "niemandes is the Gen Surface of the stem Lemma niemand; its case is on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -37,10 +37,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "niemandes",
+						"canonicalForm": "niemand",
 						"coreFeatures": {
-							"case": "Gen",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -53,7 +53,14 @@
 					"normalizedSurface": "niemandes",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "niemandes", "orthography": "Standard" }

@@ -138,10 +138,6 @@ export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
 const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 	nichts: ["nix"],
 	es: ["s"],
-	jemanden: ["jemand"],
-	jemandem: ["jemand"],
-	niemanden: ["niemand"],
-	niemandem: ["niemand"],
 };
 /**
  * Licensed alternate spellings of one pronoun Lemma rather than of every Lemma

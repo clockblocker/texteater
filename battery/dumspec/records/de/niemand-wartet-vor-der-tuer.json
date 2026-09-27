@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "The occurrence realizes the niemand Lemma with Nom Case in Core."
+				"rationale": "niemand is the Nom Surface of the stem Lemma niemand; its case is on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,8 +39,8 @@
 						"kind": "PRON",
 						"canonicalForm": "niemand",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -53,7 +53,14 @@
 					"normalizedSurface": "niemand",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "Niemand", "orthography": "Standard" }

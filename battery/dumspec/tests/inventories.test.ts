@@ -13,6 +13,31 @@ import {
 const name = ({ lemma, reading }: AuthoredMember) =>
 	`${lemma.kind}/${lemma.canonicalForm} ${reading.emojiDescription} ${JSON.stringify(lemma.coreFeatures)}`;
 
+/** The Surface a stem PRON's spelling realizes, marking the cell it names. */
+function pronounSurface(
+	{ lemma }: AuthoredMember,
+	spelled: string,
+	cell: Readonly<Record<string, string | null>>,
+) {
+	return {
+		unitKind: "Surface",
+		language: "de",
+		lemma,
+		normalizedSurface: spelled,
+		spelling: "Canonical",
+		surfaceFeatures: null,
+		inflectionalFeatures: {
+			case: null,
+			gender: null,
+			number: null,
+			"gender[psor]": null,
+			"number[psor]": null,
+			reflex: null,
+			...cell,
+		},
+	};
+}
+
 function field(value: unknown, key: string): unknown {
 	return value && typeof value === "object" && key in value
 		? (value as Record<string, unknown>)[key]
@@ -125,6 +150,121 @@ describe("the German authored inventory", () => {
 			expect(spelled).not.toBe("");
 			expect(["DET", "PRON", "AUX"]).toContain(member.lemma.kind);
 		}
+	});
+
+	test("authors per cell only the pillars (system ADR 0032)", () => {
+		// A per-cell Lemma fixes its case in Core. Only a paradigm whose forms
+		// cannot be derived from another is a pillar: the personal pronouns,
+		// the der and ein articles with pronominal einer, and the der-series.
+		const einTable = new Set(["einer", "eine", "eines", "einem", "einen"]);
+		const derSeries = new Set([
+			"der",
+			"die",
+			"das",
+			"den",
+			"dem",
+			"denen",
+			"dessen",
+			"deren",
+			"derer",
+		]);
+		const isPillar = ({ lemma }: AuthoredMember) => {
+			const { pronType } = lemma.coreFeatures as { pronType?: string };
+			if (lemma.kind === "DET") return pronType === "Art";
+			if (pronType === "Prs") return true;
+			if (pronType === "Ind") return einTable.has(lemma.canonicalForm);
+			return (
+				(pronType === "Dem" || pronType === "Rel") &&
+				derSeries.has(lemma.canonicalForm)
+			);
+		};
+		const strays = authoredMembers.filter(
+			(member) =>
+				(member.lemma.kind === "PRON" || member.lemma.kind === "DET") &&
+				(field(member.lemma.coreFeatures, "case") ?? null) !== null &&
+				!isPillar(member),
+		);
+		expect(strays.map(name)).toEqual([]);
+	});
+
+	test("a stem's spellings are Surfaces Dumling accepts", () => {
+		const failures = authoredRealizations.flatMap(
+			({ member, spelled, inflection }) => {
+				if (member.lemma.kind !== "PRON" || !inflection) return [];
+				const parsed = parseUnit(
+					pronounSurface(member, spelled, inflection),
+				);
+				return parsed.success
+					? []
+					: [`${name(member)} ${spelled}: ${parsed.error.message}`];
+			},
+		);
+		expect(failures).toEqual([]);
+	});
+
+	test("jemand, niemand and wer/was are stems (system ADR 0032)", () => {
+		const lemmasSpelled = (spelled: string) =>
+			authoredRealizations
+				.filter(
+					(realization) =>
+						realization.spelled === spelled &&
+						realization.member.lemma.kind === "PRON" &&
+						field(
+							realization.member.lemma.coreFeatures,
+							"extPos",
+						) === null,
+				)
+				.map(({ member, inflection }) => ({
+					canonicalForm: member.lemma.canonicalForm,
+					pronType: field(member.lemma.coreFeatures, "pronType"),
+					inflection,
+				}));
+		// wem is the Dat Surface of wer, as diesem is of dieser.
+		expect(lemmasSpelled("wem")).toEqual(
+			["Int", "Rel"].map((pronType) => ({
+				canonicalForm: "wer",
+				pronType,
+				inflection: { case: "Dat", number: null, gender: "Masc" },
+			})),
+		);
+		const wer = authoredMembers.find(
+			({ lemma }) =>
+				lemma.canonicalForm === "wer" &&
+				field(lemma.coreFeatures, "pronType") === "Int",
+		);
+		if (!wer) throw Error("No interrogative wer");
+		expect(
+			parseUnit(
+				pronounSurface(wer, "wem", {
+					case: "Dat",
+					number: null,
+					gender: "Masc",
+				}),
+			).success,
+		).toBe(true);
+		// Genitive wessen is one spelling of wer for both genders.
+		expect(
+			lemmasSpelled("wessen")
+				.filter(({ pronType }) => pronType === "Int")
+				.map(({ canonicalForm, inflection }) => [
+					canonicalForm,
+					inflection?.gender,
+				]),
+		).toEqual([
+			["wer", "Masc"],
+			["wer", "Neut"],
+		]);
+		for (const [spelled, cited] of [
+			["was", "wer"],
+			["jemandem", "jemand"],
+			["niemanden", "niemand"],
+			["jedermanns", "jedermann"],
+		] as const)
+			expect(
+				new Set(
+					lemmasSpelled(spelled).map((lemma) => lemma.canonicalForm),
+				),
+			).toEqual(new Set([cited]));
 	});
 
 	test("reaches the units a Note drills down to without generation", () => {

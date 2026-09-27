@@ -58,17 +58,7 @@ import { member as m139 } from "./members/lexeme/pronoun/demonstrative/die-femin
 import { member as m138 } from "./members/lexeme/pronoun/demonstrative/die-feminine-singular-nominative.js";
 import { member as m141 } from "./members/lexeme/pronoun/demonstrative/die-plural-accusative.js";
 import { member as m140 } from "./members/lexeme/pronoun/demonstrative/die-plural-nominative.js";
-import { member as m120 } from "./members/lexeme/pronoun/indefinite/jemand-singular-nominative.js";
-import { member as m122 } from "./members/lexeme/pronoun/indefinite/jemandem-singular-dative.js";
-import { member as m121 } from "./members/lexeme/pronoun/indefinite/jemanden-singular-accusative.js";
-import { member as m118 } from "./members/lexeme/pronoun/interrogative/wem-dative.js";
-import { member as m117 } from "./members/lexeme/pronoun/interrogative/wen-accusative.js";
-import { member as m116 } from "./members/lexeme/pronoun/interrogative/wer-nominative.js";
-import { member as m119 } from "./members/lexeme/pronoun/interrogative/wessen-genitive.js";
 import { member as m126 } from "./members/lexeme/pronoun/negative/nichts.js";
-import { member as m123 } from "./members/lexeme/pronoun/negative/niemand-singular-nominative.js";
-import { member as m125 } from "./members/lexeme/pronoun/negative/niemandem-singular-dative.js";
-import { member as m124 } from "./members/lexeme/pronoun/negative/niemanden-singular-accusative.js";
 import { member as m64 } from "./members/lexeme/pronoun/personal/deiner-second-person-informal-singular-genitive.js";
 import { member as m62 } from "./members/lexeme/pronoun/personal/dich-second-person-informal-singular-accusative.js";
 import { member as m63 } from "./members/lexeme/pronoun/personal/dir-second-person-informal-singular-dative.js";
@@ -214,16 +204,6 @@ export const authoredMembers = [
 	m94,
 	m99,
 	m100,
-	m116,
-	m117,
-	m118,
-	m119,
-	m120,
-	m121,
-	m122,
-	m123,
-	m124,
-	m125,
 	m126,
 	m134,
 	m135,

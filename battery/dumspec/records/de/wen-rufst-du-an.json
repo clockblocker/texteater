@@ -23,7 +23,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "The free interrogative keeps its exact normalized case form as the learner-facing Lemma."
+				"rationale": "wen is the Acc Surface of the stem Lemma wer; the interrogative marks its case and gender on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,9 +35,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "wen",
+						"canonicalForm": "wer",
 						"coreFeatures": {
-							"case": "Acc",
+							"case": null,
 							"number": null,
 							"extPos": null,
 							"foreign": null,
@@ -45,13 +45,20 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "wen",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": "Masc",
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [{ "attested": "Wen", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

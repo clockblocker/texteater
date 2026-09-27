@@ -39,9 +39,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "wem",
+						"canonicalForm": "wer",
 						"coreFeatures": {
-							"case": "Dat",
+							"case": null,
 							"number": null,
 							"extPos": null,
 							"foreign": null,
@@ -49,13 +49,20 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "wem",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": "Masc",
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [{ "attested": "Wem", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

@@ -23,7 +23,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "Wessen asks for a thing here, so it is the neuter genitive of was, not the masculine genitive of wer."
+				"rationale": "Wessen asks for a thing here, so it is the neuter genitive Surface of wer (the was forms), not the masculine one."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,9 +35,9 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "wessen",
+						"canonicalForm": "wer",
 						"coreFeatures": {
-							"case": "Gen",
+							"case": null,
 							"number": null,
 							"extPos": null,
 							"foreign": null,
@@ -45,13 +45,20 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": "Neut"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "wessen",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": "Neut",
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "Wessen", "orthography": "Standard" }

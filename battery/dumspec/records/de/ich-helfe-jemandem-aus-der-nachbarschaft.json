@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "The occurrence realizes the jemandem Lemma with Dat Case in Core."
+				"rationale": "jemandem is the Dat Surface of the stem Lemma jemand; its case is on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,10 +39,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "jemandem",
+						"canonicalForm": "jemand",
 						"coreFeatures": {
-							"case": "Dat",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -55,7 +55,14 @@
 					"normalizedSurface": "jemandem",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "jemandem", "orthography": "Standard" }

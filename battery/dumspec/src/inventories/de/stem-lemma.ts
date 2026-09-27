@@ -2,10 +2,13 @@ import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 
-/** The case, number and agreement gender one Surface of a stem Lemma marks. */
+/**
+ * The case, number and agreement gender one Surface of a stem Lemma marks.
+ * Number is null only for a paradigm that never marks it (wer/was).
+ */
 export type SurfaceCell = {
 	readonly case: "Nom" | "Acc" | "Dat" | "Gen";
-	readonly number: "Sing" | "Plur";
+	readonly number: "Sing" | "Plur" | null;
 	readonly gender: "Masc" | "Neut" | "Fem" | null;
 };
 /** A reviewed spelling; a stem Lemma's spellings name the cell they realize. */

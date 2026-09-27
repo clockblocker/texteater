@@ -35,8 +35,8 @@
 						"kind": "PRON",
 						"canonicalForm": "jedermann",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -49,7 +49,14 @@
 					"normalizedSurface": "jedermann",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "jedermann", "orthography": "Standard" }

@@ -37,7 +37,7 @@
 						"kind": "PRON",
 						"canonicalForm": "wer",
 						"coreFeatures": {
-							"case": "Nom",
+							"case": null,
 							"number": null,
 							"extPos": null,
 							"foreign": null,
@@ -45,13 +45,20 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "wer",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [{ "attested": "Wer", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

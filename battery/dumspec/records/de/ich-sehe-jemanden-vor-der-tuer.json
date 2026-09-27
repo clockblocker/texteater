@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "The occurrence realizes the jemanden Lemma with Acc Case in Core."
+				"rationale": "jemanden is the Acc Surface of the stem Lemma jemand; its case is on the Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,10 +39,10 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "jemanden",
+						"canonicalForm": "jemand",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
+							"case": null,
+							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
@@ -55,7 +55,14 @@
 					"normalizedSurface": "jemanden",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					}
 				},
 				"members": [
 					{ "attested": "jemanden", "orthography": "Standard" }

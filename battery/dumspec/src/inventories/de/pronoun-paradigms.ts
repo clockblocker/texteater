@@ -22,9 +22,11 @@ const description = (
 	ru: string[],
 ): PronounDescription => ({ core: { pronType }, emoji, definition, en, ru });
 const reviewed: ReviewedPronoun[] = [];
-// Pillars (personal, der-series, wer/was, jemand, einer) are one Lemma per
-// cell and are pushed explicitly below. Every add() is a stem with borrowed
-// article endings: one Lemma whose Surfaces mark the cell (system ADR 0032).
+// A pillar's forms cannot be derived from another paradigm (system ADR 0032).
+// Pillars are one Lemma per cell: the personal and der-series cells are member
+// files, and derer, attributive dessen and deren, and einer are pushed
+// explicitly below. Every add() is a stem with borrowed endings: one Lemma
+// whose Surfaces mark the cell.
 const add = (
 	table: PronounTable,
 	meaning: PronounDescription,
@@ -159,83 +161,64 @@ for (const pronType of ["Int", "Rel"] as const) {
 	);
 }
 
-// wer takes masculine agreement and was neuter (Wer hat seinen Schirm
-// vergessen? Was ist es?), so gender tells their cells apart; neither marks
-// number. The shared genitive wessen is two Lemmas, Masc and Neut, like
-// uns/Acc and uns/Dat. Interrogative wer/wen/wem/wessen are member files.
+// wer/was is the der-pronoun pattern on w- (der, den, dem, dessen; das), so it
+// is a stem: one Lemma per use, cited wer, whose Surfaces mark case and the
+// gender each form agrees with (system ADR 0032). wer takes masculine
+// agreement and was neuter (Wer hat seinen Schirm vergessen? Was ist es?);
+// neither marks number, and was has no dative. Genitive wessen spells both
+// genders.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-wer-was.xml?lang=de
-for (const pronType of ["Int", "Rel"] as const) {
-	const thing = description(
-		pronType,
-		pronType === "Int" ? "❓" : "🔗",
-		pronType === "Int"
-			? "Fragt nach einer Sache, einem Sachverhalt oder einer Handlung."
-			: "Bezeichnet in einem freien Relativsatz die gemeinte Sache oder den Sachverhalt.",
-		[pronType === "Int" ? "what" : "whatever; what"],
-		[pronType === "Int" ? "что" : "что; то, что"],
-	);
-	for (const grammaticalCase of ["Nom", "Acc"] as const)
+{
+	const cell = (
+		grammaticalCase: SurfaceCell["case"],
+		gender: "Masc" | "Neut",
+	): SurfaceCell => ({ case: grammaticalCase, number: null, gender });
+	const spellings: AuthoredSpelling[] = [
+		{ spelled: "wer", cell: cell("Nom", "Masc") },
+		{ spelled: "wen", cell: cell("Acc", "Masc") },
+		{ spelled: "wem", cell: cell("Dat", "Masc") },
+		{ spelled: "wessen", cell: cell("Gen", "Masc") },
+		{ spelled: "was", cell: cell("Nom", "Neut") },
+		{ spelled: "was", cell: cell("Acc", "Neut") },
+		{ spelled: "wessen", cell: cell("Gen", "Neut") },
+	];
+	for (const pronType of ["Int", "Rel"] as const) {
+		const emoji = pronType === "Int" ? "❓" : "🔗";
 		reviewed.push(
-			pronounMember(form("was", "vas"), thing, {
-				case: grammaticalCase,
-				gender: "Neut",
-			}),
+			pronounStemOf(
+				form("wer", "veːɐ̯"),
+				pronType === "Int"
+					? description(
+							pronType,
+							emoji,
+							"Fragt nach einer Person (wer, wen, wem, wessen) oder nach einer Sache, einem Sachverhalt oder einer Handlung (was, wessen).",
+							["who", "what"],
+							["кто", "что"],
+						)
+					: description(
+							pronType,
+							emoji,
+							"Leitet einen Relativsatz ein, meist ohne eigenes Bezugswort, und bezeichnet die gemeinte Person (wer, wen, wem, wessen) oder Sache (was, wessen).",
+							["whoever; who", "whatever; what"],
+							["кто; тот, кто", "что; то, что"],
+						),
+				spellings,
+			),
 		);
-	reviewed.push(
-		pronounMember(
-			form("wessen", "ˈvɛsən"),
-			{
-				...thing,
-				en: [pronType === "Int" ? "of what" : "of whatever; of what"],
-				ru: [pronType === "Int" ? "чего" : "чего; того, чего"],
-			},
-			{ case: "Gen", gender: "Neut" },
-		),
-	);
-	if (pronType === "Rel") {
-		const person = description(
-			pronType,
-			"🔗",
-			"Bezeichnet in einem freien Relativsatz die gemeinte Person.",
-			["whoever"],
-			["кто; тот, кто"],
-		);
-		for (const [text, ipa, grammaticalCase] of [
-			["wer", "veːɐ̯", "Nom"],
-			["wen", "veːn", "Acc"],
-			["wem", "veːm", "Dat"],
-			["wessen", "ˈvɛsən", "Gen"],
-		] as const)
-			reviewed.push(
-				pronounMember(
-					form(text, ipa),
-					grammaticalCase === "Gen"
-						? {
-								...person,
-								en: ["whose; of whoever"],
-								ru: ["чей; того, кого"],
-							}
-						: person,
-					{ case: grammaticalCase, gender: "Masc" },
-				),
-			);
-	}
-	// Attributive wessen is the genitive of wer: it asks for or names a
-	// possessor person. It keeps the pronoun's own Gen, not the noun's case.
-	reviewed.push(
-		pronounMember(
-			form("wessen", "ˈvɛsən"),
-			{
-				...thing,
+		// Attributive wessen is the genitive of wer: it asks for or names a
+		// possessor person. extPos DET keeps it apart from the stem, and it has
+		// one form, so it is an invariant Lemma.
+		reviewed.push(
+			pronounMember(form("wessen", "ˈvɛsən"), {
 				core: { pronType, extPos: "DET" },
+				emoji,
 				definition:
 					"Bezeichnet fragend oder relativisch die Person, der das folgende Nomen zugeordnet ist.",
 				en: ["whose"],
 				ru: ["чей"],
-			},
-			{ case: "Gen", gender: "Masc" },
-		),
-	);
+			}),
+		);
+	}
 }
 
 // Only deren is attributive. Standalone demonstrative derer points ahead to a
@@ -590,68 +573,58 @@ for (const [stem, ipa] of [
 	);
 }
 
-// jemand and niemand are pillars: their Nom/Acc/Dat cells are member files and
-// their genitives are added here; uninflected Acc/Dat remain variants.
+// jemand and niemand take article endings on their own stem, optional in use
+// (mit jemand), and irgendjemand is jemand with irgend- in front, so each is a
+// stem: one Lemma whose Surfaces mark the cell (system ADR 0032). They are
+// singular and genderless; the bare stem also spells Acc and Dat.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jemand3.html?lang=de
-for (const [stem, ipa, pronType, definition, en, ru] of [
+for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 	[
 		"jemand",
 		"ˈjeːmant",
 		"Ind",
+		"👤",
 		"Bezeichnet eine unbestimmte Person.",
-		"someone",
+		"someone; somebody",
 		"кто-то",
 	],
 	[
 		"niemand",
 		"ˈniːmant",
 		"Neg",
+		"🚫",
 		"Verneint, dass eine Person gemeint ist oder die Aussage erfüllt.",
-		"nobody",
+		"nobody; no one",
 		"никто",
 	],
-] as const)
-	reviewed.push(
-		pronounMember(
-			form(`${stem}es`, `${ipa.slice(0, -1)}dəs`, `${stem}s`),
-			description(
-				pronType,
-				pronType === "Neg" ? "🚫" : "👤",
-				definition,
-				[en],
-				[ru],
-			),
-			{ case: "Gen", number: "Sing" },
-		),
-	);
-// irgendjemand is jemand with irgend- in front and fully predictable forms, so
-// it is a stem: one Lemma whose Surfaces mark the cell (system ADR 0032).
-{
+	[
+		"irgendjemand",
+		"ˈɪʁɡəntˌjeːmant",
+		"Ind",
+		"👤",
+		"Bezeichnet eine beliebige, nicht näher bestimmte Person.",
+		"anyone; someone",
+		"кто-нибудь",
+	],
+] as const) {
 	const cell = (grammaticalCase: SurfaceCell["case"]): SurfaceCell => ({
 		case: grammaticalCase,
 		number: "Sing",
 		gender: null,
 	});
 	const spellings: AuthoredSpelling[] = [
-		{ spelled: "irgendjemand", cell: cell("Nom") },
-		{ spelled: "irgendjemanden", cell: cell("Acc") },
-		{ spelled: "irgendjemand", cell: cell("Acc") },
-		{ spelled: "irgendjemandem", cell: cell("Dat") },
-		{ spelled: "irgendjemand", cell: cell("Dat") },
-		{ spelled: "irgendjemandes", cell: cell("Gen") },
-		{ spelled: "irgendjemands", cell: cell("Gen") },
+		{ spelled: stem, cell: cell("Nom") },
+		{ spelled: `${stem}en`, cell: cell("Acc") },
+		{ spelled: stem, cell: cell("Acc") },
+		{ spelled: `${stem}em`, cell: cell("Dat") },
+		{ spelled: stem, cell: cell("Dat") },
+		{ spelled: `${stem}es`, cell: cell("Gen") },
+		{ spelled: `${stem}s`, cell: cell("Gen") },
 	];
-	const meaning = description(
-		"Ind",
-		"👤",
-		"Bezeichnet eine beliebige, nicht näher bestimmte Person.",
-		["anyone; someone"],
-		["кто-нибудь"],
-	);
 	reviewed.push(
 		pronounStemOf(
-			form("irgendjemand", "ˈɪʁɡəntˌjeːmant"),
-			meaning,
+			form(stem, ipa),
+			description(pronType, emoji, definition, [en], [ru]),
 			spellings,
 		),
 	);
@@ -846,15 +819,19 @@ for (const [stem, ipa, person, polite, en, ru] of [
 	);
 }
 
-// jedermann has invariant Nom/Acc/Dat and a distinct Gen jedermanns.
+// jedermann has one form for Nom, Acc and Dat and a genitive jedermanns, the
+// noun's -s on its own stem. Its forms derive from another paradigm, so it is
+// a stem (system ADR 0032).
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jedermann3.html?lang=de
-for (const grammaticalCase of ["Nom", "Acc", "Dat", "Gen"] as const)
+{
+	const cell = (grammaticalCase: SurfaceCell["case"]): SurfaceCell => ({
+		case: grammaticalCase,
+		number: "Sing",
+		gender: null,
+	});
 	reviewed.push(
-		pronounMember(
-			form(
-				grammaticalCase === "Gen" ? "jedermanns" : "jedermann",
-				grammaticalCase === "Gen" ? "ˈjeːdɐmans" : "ˈjeːdɐman",
-			),
+		pronounStemOf(
+			form("jedermann", "ˈjeːdɐman"),
 			description(
 				"Tot",
 				"🌐",
@@ -862,9 +839,15 @@ for (const grammaticalCase of ["Nom", "Acc", "Dat", "Gen"] as const)
 				["everyone; everybody"],
 				["каждый; все"],
 			),
-			{ case: grammaticalCase, number: "Sing" },
+			[
+				{ spelled: "jedermann", cell: cell("Nom") },
+				{ spelled: "jedermann", cell: cell("Acc") },
+				{ spelled: "jedermann", cell: cell("Dat") },
+				{ spelled: "jedermanns", cell: cell("Gen") },
+			],
 		),
 	);
+}
 
 /** Reviewed coverage matrix, including exact identities and their alternate realizations. */
 export const reviewedPronouns: readonly ReviewedPronoun[] = reviewed;
