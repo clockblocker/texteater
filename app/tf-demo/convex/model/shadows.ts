@@ -7,9 +7,10 @@ import {
 	lexemeKindValues,
 	morphemeKindValues,
 	phrasemeKindValues,
+	type StructuralShadowAspect,
 } from "./validators";
 
-const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
+export const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
 const lexemeKinds = new Set<string>(lexemeKindValues);
 const morphemeKinds = new Set<string>(morphemeKindValues);
@@ -29,7 +30,7 @@ export type ShadowDescriptor = {
 
 export type StructuralShadowReference = {
 	readonly descriptor: ShadowDescriptor;
-	readonly aspect: "morphologicalTree" | "lexicalBreakdown";
+	readonly aspect: StructuralShadowAspect;
 	readonly path: string;
 };
 
@@ -221,6 +222,23 @@ export function collectStructuralShadowReferences(
 			});
 		}
 	}
+	const verb = participleSourceVerb(knowledge);
+	if (verb !== undefined) {
+		const descriptor = normalizeShadowDescriptor({
+			language: verb.language,
+			canonicalForm: verb.canonicalForm,
+			family: verb.family,
+			kind: verb.kind,
+		});
+		if (descriptor.family !== "Lexeme" || descriptor.kind !== "VERB") {
+			throw new Error("A Participle Source must be a VERB Lexeme.");
+		}
+		references.push({
+			descriptor,
+			aspect: "participleSource",
+			path: "verb",
+		});
+	}
 	if (references.length > MAX_STRUCTURAL_REFERENCES_PER_READING) {
 		throw new Error(
 			`Reading Knowledge supports at most ${MAX_STRUCTURAL_REFERENCES_PER_READING} structural Shadow references.`,
@@ -336,13 +354,26 @@ export async function syncStructuralShadowReferences(
 	);
 }
 
-/** The Lemma key of a stored Participle Source (ADR 0036), if any. */
-function participleSourceKey(knowledge: unknown): string | undefined {
+/**
+ * The VERB Lemma a stored Participle Source names (ADR 0036), if any. The
+ * Lemma, not its Shadow, is the link's identity: the Shadow carries no Core
+ * Features, so `umfahren` with and without its separable prefix share one.
+ */
+export function participleSourceVerb(
+	knowledge: unknown,
+): Dumling.Lemma | undefined {
 	const source =
 		knowledge && typeof knowledge === "object"
 			? Reflect.get(knowledge, "participleSource")
 			: undefined;
-	return source ? lemmaIdentityKey(source) : undefined;
+	if (source === undefined) return undefined;
+	return requireRecord(source, "Participle Source") as Dumling.Lemma;
+}
+
+/** The Lemma key of a stored Participle Source, so its verb finds the adjective. */
+function participleSourceKey(knowledge: unknown): string | undefined {
+	const verb = participleSourceVerb(knowledge);
+	return verb ? lemmaIdentityKey(verb) : undefined;
 }
 
 /**

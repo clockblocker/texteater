@@ -123,6 +123,19 @@ export const segmentResolutionStateValidator = v.union(
 	v.object({ kind: v.literal("PermanentFailure") }),
 );
 
+/**
+ * The Knowledge aspect a structural Shadow reference sits in. A Participle
+ * Source refers to its verb's Shadow until that verb is stored (ADR 0036).
+ */
+export const structuralShadowAspectValidator = v.union(
+	v.literal("morphologicalTree"),
+	v.literal("lexicalBreakdown"),
+	v.literal("participleSource"),
+);
+export type StructuralShadowAspect = Infer<
+	typeof structuralShadowAspectValidator
+>;
+
 /** A hidden Text that holds one Reading's Knowledge definition as a Sentence. */
 export const textOriginValidator = v.object({
 	kind: v.literal("Definition"),

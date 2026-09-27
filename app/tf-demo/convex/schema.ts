@@ -37,6 +37,7 @@ import {
 	storedKnowledgeSettingsValidator,
 	storedSegmentValidator,
 	storedSentenceAnalysisValidator,
+	structuralShadowAspectValidator,
 	surfaceSpellingValidator,
 	textOriginValidator,
 	translationLanguageValidator,
@@ -266,10 +267,7 @@ export default defineSchema({
 	structuralShadowReferences: defineTable({
 		shadowId: v.id("shadows"),
 		ownerReadingKey: v.string(),
-		aspect: v.union(
-			v.literal("morphologicalTree"),
-			v.literal("lexicalBreakdown"),
-		),
+		aspect: structuralShadowAspectValidator,
 		path: v.string(),
 		locatorKey: v.string(),
 	})

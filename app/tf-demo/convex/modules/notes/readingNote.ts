@@ -11,6 +11,7 @@ import {
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
+import { structuralShadowAspectValidator } from "../../model/validators";
 import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
 	projectSentenceView,
@@ -86,10 +87,7 @@ const readingNoteReadingValidator = v.object({
 });
 
 const structuralShadowProjectionValidator = v.object({
-	aspect: v.union(
-		v.literal("morphologicalTree"),
-		v.literal("lexicalBreakdown"),
-	),
+	aspect: structuralShadowAspectValidator,
 	path: v.string(),
 	descriptor: unitShadowProjectionValidator,
 	target: v.object({

@@ -12,7 +12,11 @@ import {
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
-import { semanticRelationValidator } from "../../model/validators";
+import {
+	type StructuralShadowAspect,
+	semanticRelationValidator,
+	structuralShadowAspectValidator,
+} from "../../model/validators";
 import {
 	featureProjectionValidator,
 	projectFeaturesForPresentation,
@@ -54,10 +58,7 @@ export const shadowReferencePageValidator = v.object({
 			),
 			structuralReferences: v.array(
 				v.object({
-					aspect: v.union(
-						v.literal("morphologicalTree"),
-						v.literal("lexicalBreakdown"),
-					),
+					aspect: structuralShadowAspectValidator,
 					path: v.string(),
 				}),
 			),
@@ -361,7 +362,7 @@ async function loadShadowReferencePage(
 				relation: Dumrel.SemanticRelation;
 			}[];
 			structuralReferences: {
-				aspect: "morphologicalTree" | "lexicalBreakdown";
+				aspect: StructuralShadowAspect;
 				path: string;
 			}[];
 		}
@@ -470,7 +471,7 @@ async function loadShadowReferencePage(
 
 function collectStructuralReferenceAt(
 	knowledge: unknown,
-	aspect: "morphologicalTree" | "lexicalBreakdown",
+	aspect: StructuralShadowAspect,
 	path: string,
 ) {
 	const references = collectStructuralShadowReferences(knowledge);

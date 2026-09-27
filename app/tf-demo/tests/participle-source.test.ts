@@ -6,10 +6,7 @@ import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
-import {
-	asksParticipleSource,
-	contributedParticipleSource,
-} from "../server/participleSource";
+import { asksParticipleSource } from "../server/participleSource";
 import {
 	createTestConvex,
 	submitText,
@@ -89,17 +86,6 @@ test("only a base run of an ADJ Reading without a stored source asks for its Par
 			knowledge: {},
 		}),
 	).toBe(false);
-	expect(
-		contributedParticipleSource([
-			{ kind: "Contribute", aspect: "definition", value: "x" },
-			SOURCE_CHANGE,
-		]),
-	).toEqual(KOCHEN);
-	expect(
-		contributedParticipleSource([
-			{ kind: "Retract", aspect: "participleSource" },
-		]),
-	).toBeNull();
 });
 
 /** One running Knowledge attempt for a stored, encountered `gekocht`. */
@@ -164,15 +150,11 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 	});
 }
 
-function publishSource(
-	t: TestConvexDb,
-	participleSourceReading?: Dumling.Reading<"de">,
-) {
+function publishSource(t: TestConvexDb) {
 	return t.mutation(internal.knowledgeGeneration.publish, {
 		attemptKey: "participle",
 		final: true,
 		reading: GEKOCHT_READING,
-		...(participleSourceReading ? { participleSourceReading } : {}),
 		changes: [SOURCE_CHANGE],
 		pendingRelations: [],
 		productionEvidence: {
@@ -190,35 +172,44 @@ function publishSource(
 	});
 }
 
-test("a missing source verb is stored with its Reading, and each note shows its side of the link", async () => {
+/** Stores a VERB Lemma with one Reading, as a later encounter of it would. */
+function storeVerb(t: TestConvexDb, reading: Dumling.Reading<"de">) {
+	return t.run(async (ctx) => {
+		const lemmaId = await ctx.db.insert("lemmas", {
+			lemmaKey: lemmaIdentityKey(reading.lemma),
+			language: "de",
+			family: reading.lemma.family,
+			kind: reading.lemma.kind,
+			canonicalForm: reading.lemma.canonicalForm,
+			coreFeatures: reading.lemma.coreFeatures,
+		});
+		const readingId = await ctx.db.insert("readings", {
+			readingKey: readingIdentityKey(reading),
+			lemmaId,
+			emojiDescription: reading.emojiDescription,
+		});
+		return { lemmaId, readingId };
+	});
+}
+
+test("a missing source verb stays a Unit Shadow and no Reading is minted for it", async () => {
 	const t = createTestConvex();
 	const visitorId = "visitor-1";
 	const adjectiveId = await seedAdjective(t, visitorId);
-	expect(await publishSource(t, KOCHEN_READING)).toEqual({
-		status: "Committed",
-	});
-	const verb = await t.run(async (ctx) => {
-		const lemma = await ctx.db
-			.query("lemmas")
-			.withIndex("by_lemma_key", (q) =>
-				q.eq("lemmaKey", lemmaIdentityKey(KOCHEN)),
-			)
-			.unique();
-		const readings = lemma
-			? await ctx.db
-					.query("readings")
-					.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-					.collect()
-			: [];
-		return { lemma, readings };
-	});
-	expect(verb.lemma?.canonicalForm).toBe("kochen");
+	expect(await publishSource(t)).toEqual({ status: "Committed" });
 	expect(
-		verb.readings.map(({ emojiDescription }) => emojiDescription),
-	).toEqual(["🍲"]);
-	const [verbReading] = verb.readings;
-	if (!verb.lemma || !verbReading)
-		throw new Error("Expected the source verb.");
+		(await t.run((ctx) => ctx.db.query("readings").collect())).map(
+			({ emojiDescription }) => emojiDescription,
+		),
+	).toEqual(["🥔"]);
+	const shadow = await t.run((ctx) => ctx.db.query("shadows").unique());
+	expect(shadow).toMatchObject({
+		language: "de",
+		canonicalForm: "kochen",
+		family: "Lexeme",
+		kind: "VERB",
+	});
+	if (!shadow) throw new Error("Expected the source verb's Shadow.");
 
 	const adjectiveNote = await t.query(api.readingNotes.get, {
 		readingId: adjectiveId,
@@ -229,11 +220,42 @@ test("a missing source verb is stored with its Reading, and each note shows its 
 		{
 			relation: "participleSource",
 			targetCanonicalForm: "kochen",
-			target: { kind: "Lemma", lemmaId: verb.lemma._id },
+			target: { kind: "Shadow", shadowId: shadow._id },
+		},
+	]);
+	const shadowNote = await t.query(api.shadowNotes.get, {
+		shadowId: shadow._id,
+	});
+	expect(shadowNote?.references.page).toMatchObject([
+		{
+			reading: { readingId: adjectiveId, canonicalForm: "gekocht" },
+			structuralReferences: [
+				{ aspect: "participleSource", path: "verb" },
+			],
+		},
+	]);
+});
+
+test("the link reaches the source verb once it is stored, and each note shows its side", async () => {
+	const t = createTestConvex();
+	const visitorId = "visitor-1";
+	const adjectiveId = await seedAdjective(t, visitorId);
+	expect(await publishSource(t)).toEqual({ status: "Committed" });
+	const verb = await storeVerb(t, KOCHEN_READING);
+
+	const adjectiveNote = await t.query(api.readingNotes.get, {
+		readingId: adjectiveId,
+		visitorId,
+	});
+	expect(adjectiveNote?.participleLinks).toEqual([
+		{
+			relation: "participleSource",
+			targetCanonicalForm: "kochen",
+			target: { kind: "Lemma", lemmaId: verb.lemmaId },
 		},
 	]);
 	const verbNote = await t.query(api.readingNotes.get, {
-		readingId: verbReading._id,
+		readingId: verb.readingId,
 		visitorId,
 	});
 	expect(verbNote?.participleLinks).toEqual([
@@ -245,33 +267,22 @@ test("a missing source verb is stored with its Reading, and each note shows its 
 	]);
 });
 
-test("a source verb that already has a Reading gains no second one", async () => {
+test("a stored verb with other Core Features is not the source", async () => {
 	const t = createTestConvex();
-	await seedAdjective(t, "visitor-1");
-	await t.run(async (ctx) => {
-		const lemmaId = await ctx.db.insert("lemmas", {
-			lemmaKey: lemmaIdentityKey(KOCHEN),
-			language: "de",
-			family: "Lexeme",
-			kind: "VERB",
-			canonicalForm: "kochen",
-			coreFeatures: KOCHEN.coreFeatures,
-		});
-		await ctx.db.insert("readings", {
-			readingKey: readingIdentityKey({
-				...KOCHEN_READING,
-				emojiDescription: "👨‍🍳",
-			}),
-			lemmaId,
-			emojiDescription: "👨‍🍳",
-		});
+	const visitorId = "visitor-1";
+	const adjectiveId = await seedAdjective(t, visitorId);
+	expect(await publishSource(t)).toEqual({ status: "Committed" });
+	// Same Canonical Form and Kind, so the same Unit Shadow, but another Lemma.
+	await storeVerb(t, {
+		...KOCHEN_READING,
+		lemma: {
+			...KOCHEN,
+			coreFeatures: { ...KOCHEN.coreFeatures, lexicallyReflexive: "Yes" },
+		},
 	});
-	expect(await publishSource(t, KOCHEN_READING)).toEqual({
-		status: "Committed",
+	const adjectiveNote = await t.query(api.readingNotes.get, {
+		readingId: adjectiveId,
+		visitorId,
 	});
-	expect(
-		(await t.run((ctx) => ctx.db.query("readings").collect())).map(
-			({ emojiDescription }) => emojiDescription,
-		),
-	).toEqual(["🥔", "👨‍🍳"]);
+	expect(adjectiveNote?.participleLinks?.[0]?.target.kind).toBe("Shadow");
 });

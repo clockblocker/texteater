@@ -3,7 +3,7 @@ import { selectKnowledge } from "dumrel";
 
 /**
  * Whether one Knowledge run asks for the Reading's Participle Source (ADR
- * 0034). Only a base run of an applicable Reading that stores none asks. The
+ * 0036). Only a base run of an applicable Reading that stores none asks. The
  * aspect stays outside the coverage request: a plain adjective answers with no
  * contribution and must still reach Full.
  */
@@ -22,19 +22,4 @@ export function asksParticipleSource(
 		route: { language, family, kind } as never,
 	});
 	return selected.success && selected.value.participleSource === null;
-}
-
-/** The source VERB Lemma a batch of generated changes contributes, if any. */
-export function contributedParticipleSource(
-	changes: readonly unknown[],
-): Dumling.Lemma<"de"> | null {
-	for (const change of changes)
-		if (
-			change &&
-			typeof change === "object" &&
-			Reflect.get(change, "aspect") === "participleSource" &&
-			Reflect.get(change, "kind") !== "Retract"
-		)
-			return Reflect.get(change, "value") as Dumling.Lemma<"de">;
-	return null;
 }

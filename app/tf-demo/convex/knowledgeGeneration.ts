@@ -7,13 +7,8 @@ import {
 	knowledgeRequestComplete,
 	withoutAnsweredValency,
 } from "../server/knowledgeCompletion";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import { parseGermanReading } from "../server/operationalParsing";
-import {
-	internalMutation,
-	type MutationCtx,
-	mutation,
-} from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
 import { canonicalJson } from "./model/canonicalJson";
@@ -272,41 +267,6 @@ export const promoteWaiting = internalMutation({
 	},
 });
 
-/**
- * Stores the source verb a Participle Source names when the dictionary has no
- * Reading of it yet, so the link always has a target (ADR 0035). A Lemma that
- * gained a Reading since the action looked keeps it.
- */
-async function ensureParticipleSourceReading(
-	ctx: MutationCtx,
-	reading: ReturnType<typeof parseGermanReading>,
-): Promise<void> {
-	const lemma = await ctx.db
-		.query("lemmas")
-		.withIndex("by_lemma_key", (q) =>
-			q.eq("lemmaKey", lemmaIdentityKey(reading.lemma)),
-		)
-		.unique();
-	if (
-		lemma &&
-		(await ctx.db
-			.query("readings")
-			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-			.first())
-	)
-		return;
-	const stored = await createDumdictTransaction(ctx).ensureReadingEntry({
-		entry: {
-			reading,
-			attestedTranslations: [],
-			attestations: [],
-			notes: "",
-		},
-	});
-	if (stored.status !== "committed")
-		throw new Error("The Participle Source's verb could not be stored.");
-}
-
 const BASE_TEXT_ASPECTS = new Set([
 	"definition",
 	"transcription",
@@ -331,8 +291,6 @@ export const publish = internalMutation({
 		attemptKey: v.string(),
 		final: v.boolean(),
 		reading: v.any(),
-		/** A final batch's new source-verb Reading for its Participle Source. */
-		participleSourceReading: v.optional(v.any()),
 		changes: v.array(v.any()),
 		pendingRelations: v.array(v.any()),
 		productionEvidence: knowledgeProductionEvidenceValidator,
@@ -460,11 +418,6 @@ export const publish = internalMutation({
 			);
 			return { status: "Rejected" as const, message };
 		}
-		if (args.final && args.participleSourceReading)
-			await ensureParticipleSourceReading(
-				ctx,
-				parseGermanReading(args.participleSourceReading),
-			);
 		const reading = await ctx.db.get(attempt.readingId);
 		if (!reading || reading.readingKey !== attempt.ownerReadingKey) {
 			throw new Error(

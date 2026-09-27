@@ -14,6 +14,7 @@ import {
 	structuralShadowLocatorKey,
 	syncStructuralShadowReferences,
 } from "./model/shadows";
+import type { StructuralShadowAspect } from "./model/validators";
 
 const MAX_BACKFILL_PAGE_SIZE = 50;
 const MAX_STRUCTURAL_BACKFILL_OWNERS = 8;
@@ -172,7 +173,7 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 async function loadExpectedStructuralReference(
 	ctx: QueryCtx,
 	ownerReadingKey: string,
-	aspect: "morphologicalTree" | "lexicalBreakdown",
+	aspect: StructuralShadowAspect,
 	path: string,
 ) {
 	const accumulated = await ctx.db

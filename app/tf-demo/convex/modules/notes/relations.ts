@@ -17,6 +17,11 @@ import {
 } from "../../../server/operationalParsing";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
+import {
+	MAX_STRUCTURAL_REFERENCES_PER_READING,
+	shadowIsCompatible,
+	structuralShadowLocatorKey,
+} from "../../model/shadows";
 import { semanticRelationValidator } from "../../model/validators";
 
 const MAX_RELATIONS_PER_NOTE = 50;
@@ -551,13 +556,59 @@ export const participleLinkValidator = v.object({
 	target: v.union(
 		v.object({ kind: v.literal("Lemma"), lemmaId: v.id("lemmas") }),
 		v.object({ kind: v.literal("Reading"), readingId: v.id("readings") }),
+		v.object({ kind: v.literal("Shadow"), shadowId: v.id("shadows") }),
 	),
 });
 
 /**
+ * Where a Participle Source link leads: the stored VERB Lemma, matched by its
+ * full identity, or the Unit Shadow the adjective's Knowledge refers to while
+ * the verb is missing. Null when neither is stored.
+ */
+async function participleSourceTarget(
+	ctx: QueryCtx,
+	ownerReadingKey: string,
+	verb: Dumling.Lemma,
+): Promise<Infer<typeof participleLinkValidator>["target"] | null> {
+	const lemma = await ctx.db
+		.query("lemmas")
+		.withIndex("by_lemma_key", (q) =>
+			q.eq("lemmaKey", lemmaIdentityKey(verb)),
+		)
+		.unique();
+	if (lemma) return { kind: "Lemma", lemmaId: lemma._id };
+	const references = await ctx.db
+		.query("structuralShadowReferences")
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
+		)
+		.take(MAX_STRUCTURAL_REFERENCES_PER_READING + 1);
+	const reference = references.find(
+		({ aspect, locatorKey }) =>
+			aspect === "participleSource" &&
+			locatorKey ===
+				structuralShadowLocatorKey(
+					ownerReadingKey,
+					"participleSource",
+					"verb",
+				),
+	);
+	const shadow = reference ? await ctx.db.get(reference.shadowId) : null;
+	return shadow &&
+		shadowIsCompatible(shadow, {
+			language: verb.language,
+			canonicalForm: verb.canonicalForm,
+			family: verb.family,
+			kind: verb.kind,
+		})
+		? { kind: "Shadow", shadowId: shadow._id }
+		: null;
+}
+
+/**
  * The Participle Source edges whose source is this Reading, projected by
  * Dumrel over the Reading and the participial adjectives stored against its
- * Lemma. A target missing from the dictionary shows no link.
+ * Lemma. A source verb missing from the dictionary links to its Unit Shadow.
  */
 export async function loadParticipleLinks(
 	ctx: QueryCtx,
@@ -615,17 +666,16 @@ export async function loadParticipleLinks(
 	for (const edge of projected.value) {
 		if (readingFingerprint(edge.source) !== source.readingKey) continue;
 		if (edge.target.unitKind === "Lemma") {
-			const target = await ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", lemmaIdentityKey(edge.target)),
-				)
-				.unique();
+			const target = await participleSourceTarget(
+				ctx,
+				source.readingKey,
+				edge.target,
+			);
 			if (target)
 				links.push({
 					relation: edge.relation,
-					targetCanonicalForm: target.canonicalForm,
-					target: { kind: "Lemma", lemmaId: target._id },
+					targetCanonicalForm: edge.target.canonicalForm,
+					target,
 				});
 			continue;
 		}

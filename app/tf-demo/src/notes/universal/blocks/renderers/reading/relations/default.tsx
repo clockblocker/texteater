@@ -108,22 +108,45 @@ export const renderDefaultReadingRelations = (({
 								<span className="text-sm text-ink-muted compact:text-xs">
 									{PARTICIPLE_LABELS[relation]}
 								</span>
-								{links.map((link) => (
-									<LinkButton
-										key={
-											link.target.kind === "Reading"
-												? link.target.readingId
-												: link.target.lemmaId
-										}
-										onClick={() =>
-											PresentationCapabilities.follow(
-												link.target,
-											)
-										}
-									>
-										{link.targetCanonicalForm}
-									</LinkButton>
-								))}
+								{links.map((link) =>
+									link.target.kind === "Shadow" ? (
+										// A source verb not stored yet is a
+										// Unit Shadow, locked like a pending
+										// relation target.
+										<LinkButton
+											key={link.target.shadowId}
+											tone="shadow"
+											onClick={() =>
+												PresentationCapabilities.follow(
+													link.target,
+												)
+											}
+											aria-label={`${PARTICIPLE_LABELS[relation]} Unit Shadow ${link.targetCanonicalForm}`}
+										>
+											<LockIcon
+												aria-hidden="true"
+												strokeWidth={1.5}
+												className="me-1"
+											/>
+											{link.targetCanonicalForm}
+										</LinkButton>
+									) : (
+										<LinkButton
+											key={
+												link.target.kind === "Reading"
+													? link.target.readingId
+													: link.target.lemmaId
+											}
+											onClick={() =>
+												PresentationCapabilities.follow(
+													link.target,
+												)
+											}
+										>
+											{link.targetCanonicalForm}
+										</LinkButton>
+									),
+								)}
 							</li>
 						);
 					})}
