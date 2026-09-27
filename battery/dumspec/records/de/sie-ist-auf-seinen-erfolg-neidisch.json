@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist auf seinen Erfolg neidisch.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seinen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Erfolg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neidisch" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-envious",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "demo-envious",
+				"kind": "ADJ",
+				"lemma": "neidisch",
+				"context": "Sie ist auf seinen Erfolg <TARGET>neidisch</TARGET>.",
+				"meaning": "Envious of someone else's advantage. Use an emotional association; avoid depicting the particular success or person.",
+				"accepted": ["😒💚"],
+				"demo": true
+			}
+		}
+	]
+}

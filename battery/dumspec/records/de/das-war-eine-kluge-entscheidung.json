@@ -1,0 +1,92 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das war eine kluge Entscheidung.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kluge" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Entscheidung" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-05-klug-decision",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Das war eine <TARGET>kluge</TARGET> Entscheidung.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "klug",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🧭",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "vernünftig", "kind": "ADJ" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "The context fixes the sensible/appropriate Reading, for which vernünftig is close; intelligent favors cognitive capacity and would switch to another klug Reading.",
+				"sources": [
+					{
+						"title": "Duden: klug",
+						"url": "https://www.duden.de/rechtschreibung/klug",
+						"supports": "Documents sensible or appropriate and intellectual Readings of klug."
+					},
+					{
+						"title": "Duden: intelligent",
+						"url": "https://www.duden.de/rechtschreibung/intelligent",
+						"supports": "Defines intelligent through possession or display of intelligence."
+					},
+					{
+						"title": "Dumling generated docs source: Linguistics",
+						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+						"supports": "Allows distinct semantic Readings to share one grammatical Lemma."
+					}
+				],
+				"contaminationKeys": ["relation-de-klug-sensible"]
+			}
+		}
+	]
+}

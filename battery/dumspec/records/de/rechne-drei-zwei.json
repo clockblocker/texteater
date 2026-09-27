@@ -1,0 +1,68 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Rechne drei + zwei.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Rechne" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "drei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "OpaqueText", "text": "+" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zwei" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-33-plus-symbol",
+			"case": {
+				"input": {
+					"markedContext": "Rechne drei <TARGET>+</TARGET> zwei.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "+",
+							"family": "Lexeme",
+							"kind": "SYM",
+							"coreFeatures": {
+								"foreign": null,
+								"numType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "➕",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": [{ "canonicalForm": "−", "kind": "SYM" }],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Under the mathematical-operator Reading, plus and minus form a conventional reversive/opposing pair; the spelled word plus is another target identity.",
+				"contaminationKeys": ["relation-de-plus-operator"]
+			}
+		}
+	]
+}

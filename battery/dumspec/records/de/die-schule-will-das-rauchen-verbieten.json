@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Schule will das Rauchen verbieten.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schule" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "will" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rauchen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verbieten" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-forbid",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "fresh-forbid",
+				"kind": "VERB",
+				"lemma": "verbieten",
+				"context": "Die Schule will das Rauchen <TARGET>verbieten</TARGET>.",
+				"meaning": "Not allow something",
+				"accepted": ["🚫", "⛔"],
+				"rejected": ["🚬"]
+			}
+		}
+	]
+}

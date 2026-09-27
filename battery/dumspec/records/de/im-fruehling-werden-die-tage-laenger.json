@@ -1,0 +1,56 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im Frühling werden die Tage länger.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "I", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frühling" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "werden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tage" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "länger" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-become-longer",
+			"memberSegmentIndices": [5],
+			"case": {
+				"id": "become-longer",
+				"kind": "VERB",
+				"lemma": "werden",
+				"context": "Im Frühling <TARGET>werden</TARGET> die Tage länger.",
+				"meaning": "Become; change into a state",
+				"accepted": ["➡️", "🔄", "🐛➡️🦋", "🔜", "⏩"],
+				"rejected": [
+					"📏",
+					"☀️",
+					"🌸",
+					"📅",
+					"🌞",
+					"⏳",
+					"📏⬆️",
+					"⬆️",
+					"↗️",
+					"📈"
+				]
+			}
+		}
+	]
+}

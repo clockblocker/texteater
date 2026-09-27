@@ -1,0 +1,81 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der gerettete Käfer war noch lebendig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gerettete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Käfer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lebendig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-ant-01-lebendig",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Der gerettete Käfer war noch <TARGET>lebendig</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "lebendig",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🫀",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "antonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"antonym": [{ "canonicalForm": "tot", "kind": "ADJ" }]
+					}
+				},
+				"explanation": "The marked biological readings of lebendig and tot form a directly sourced complementary opposition.",
+				"sources": [
+					{
+						"title": "Duden: lebendig",
+						"url": "https://www.duden.de/rechtschreibung/lebendig",
+						"supports": "Documents the biological alive Reading of lebendig."
+					},
+					{
+						"title": "Duden: tot",
+						"url": "https://www.duden.de/rechtschreibung/tot",
+						"supports": "Documents the complementary biological state tot."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-lebendig-beetle-2026"
+				]
+			}
+		}
+	]
+}

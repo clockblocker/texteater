@@ -1,0 +1,328 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Als der Aufstieg anstrengender wurde, sagte die Wanderführerin: „Der Gipfel ist nah.“",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Als" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Aufstieg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "anstrengender" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sagte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wanderführerin" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gipfel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nah" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Punctuation", "text": "“" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-der-of-aufstieg",
+			"memberSegmentIndices": [2, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [2, 4]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-aufstieg",
+			"memberSegmentIndices": [2, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [2, 4]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-die-of-wanderführerin",
+			"memberSegmentIndices": [13, 15],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 13,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [13, 15]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-wanderführerin",
+			"memberSegmentIndices": [13, 15],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 15,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [13, 15]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-der-of-gipfel",
+			"memberSegmentIndices": [19, 21],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 19,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [19, 21]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-noun-article-cross-quoted-click-gipfel",
+			"memberSegmentIndices": [19, 21],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 21,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Als" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Aufstieg" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "anstrengender" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wurde" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sagte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wanderführerin" },
+						{ "kind": "Punctuation", "text": ":" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "Punctuation", "text": "„" },
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gipfel" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nah" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Punctuation", "text": "“" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [19, 21]
+				},
+				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
+				"contaminationKeys": ["noun-article-cross:quoted"]
+			}
+		}
+	]
+}

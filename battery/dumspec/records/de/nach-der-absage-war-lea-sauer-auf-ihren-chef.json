@@ -1,0 +1,97 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach der Absage war Lea sauer auf ihren Chef.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Absage" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lea" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sauer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Chef" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-sauer-angry",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Nach der Absage war Lea <TARGET>sauer</TARGET> auf ihren Chef.",
+					"lemma": "sauer",
+					"existingEmojiDescriptions": ["🍋"]
+				},
+				"idealOutput": { "emojiDescription": "😠" },
+				"explanation": "Angry, not sour-tasting. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-sauer-angry",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-sauer-angry",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Nach der Absage war Lea "
+								},
+								{ "kind": "ResolvableText", "text": "sauer" },
+								{
+									"kind": "OpaqueText",
+									"text": " auf ihren Chef."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "sauer",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🍋"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "😠" },
+				"explanation": "Angry, not sour-tasting. New."
+			}
+		}
+	]
+}

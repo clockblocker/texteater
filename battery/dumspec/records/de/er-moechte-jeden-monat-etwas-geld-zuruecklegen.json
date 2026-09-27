@@ -1,0 +1,46 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er möchte jeden Monat etwas Geld zurücklegen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "möchte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "jeden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Monat" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "etwas" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geld" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zurücklegen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-reserve",
+			"memberSegmentIndices": [12],
+			"case": {
+				"id": "demo-reserve",
+				"kind": "VERB",
+				"lemma": "zurücklegen",
+				"context": "Er möchte jeden Monat etwas Geld <TARGET>zurücklegen</TARGET>.",
+				"meaning": "Set money aside in reserve. Depict keeping or accumulating funds rather than spending, falling value, or a low price.",
+				"accepted": ["💰📥"],
+				"demo": true
+			}
+		}
+	]
+}

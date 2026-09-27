@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie wartet am Bahnhof.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wartet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bahnhof" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0027", "ADR-0035"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-fusion-am",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wartet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "a" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Bahnhof" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADP",
+					"memberSegmentIndices": [4]
+				},
+				"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the German preposition-article contraction category.",
+				"contaminationKeys": ["target-construction:fusion:am"]
+			}
+		}
+	]
+}

@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Werkstatt ersetzte den gerissenen Zylinderkopf des Motors.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Werkstatt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ersetzte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gerissenen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zylinderkopf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Motors" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-hyp-02-zylinderkopf-null",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Die Werkstatt ersetzte den gerissenen <TARGET>Zylinderkopf</TARGET> des Motors.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Zylinderkopf",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Masc", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🔧",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "hypernym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": { "hypernym": null }
+				},
+				"explanation": "Zylinder is the containing technical whole, not a broader category of Zylinderkopf.",
+				"sources": [
+					{
+						"title": "Duden: Zylinderkopf",
+						"url": "https://www.duden.de/rechtschreibung/Zylinderkopf",
+						"supports": "Defines Zylinderkopf as the upper closing component of a Zylinder."
+					},
+					{
+						"title": "Duden: Zylinder",
+						"url": "https://www.duden.de/rechtschreibung/Zylinder",
+						"supports": "Documents Zylinder as the technical whole rather than a broader category."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Separates broader-category Hypernym from part-to-whole Holonym."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-zylinderkopf-engine-2026"
+				]
+			}
+		}
+	]
+}

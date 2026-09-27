@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ich möchte dir den Schlüssel zurückgeben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "möchte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schlüssel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zurückgeben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-return",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "demo-return",
+				"kind": "VERB",
+				"lemma": "zurückgeben",
+				"context": "Ich möchte dir den Schlüssel <TARGET>zurückgeben</TARGET>.",
+				"meaning": "Give something back. Hand and backward arrow preserve the stable action, without encoding the incidental key.",
+				"accepted": ["🤲↩️"],
+				"demo": true
+			}
+		}
+	]
+}

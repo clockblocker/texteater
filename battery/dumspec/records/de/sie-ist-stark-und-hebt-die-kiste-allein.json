@@ -1,0 +1,48 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist stark und hebt die Kiste allein.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stark" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hebt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kiste" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "allein" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-strong-person",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "strong-person",
+				"kind": "ADJ",
+				"lemma": "stark",
+				"context": "Sie ist <TARGET>stark</TARGET> und hebt die Kiste allein.",
+				"meaning": "Having great strength",
+				"accepted": ["💪"],
+				"rejected": ["😓", "📦"]
+			}
+		}
+	]
+}

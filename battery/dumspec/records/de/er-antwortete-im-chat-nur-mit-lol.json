@@ -1,0 +1,94 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er antwortete im Chat nur mit lol.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "antwortete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Chat" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nur" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lol" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-x-lol-laughter-reuse",
+			"memberSegmentIndices": [13],
+			"case": {
+				"input": {
+					"markedContext": "Er antwortete im Chat nur mit <TARGET>lol</TARGET>.",
+					"lemma": "lol",
+					"existingEmojiDescriptions": ["😂"]
+				},
+				"idealOutput": { "emojiDescription": "😂" },
+				"explanation": "The chat expression marks laughter. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-x-lol-laughter-reuse",
+			"memberSegmentIndices": [13],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-x-lol-laughter-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Er antwortete im Chat nur mit "
+								},
+								{ "kind": "ResolvableText", "text": "lol" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "X",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "X",
+						"canonicalForm": "lol",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"hyph": null,
+							"numType": null
+						}
+					},
+					"candidates": ["😂"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "😂"
+				},
+				"explanation": "The chat expression marks laughter. Reuse."
+			}
+		}
+	]
+}

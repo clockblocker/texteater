@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der leere Koffer ist überraschend leicht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leere" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Koffer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "überraschend" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leicht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-leicht-weight",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Der leere Koffer ist überraschend <TARGET>leicht</TARGET>.",
+					"lemma": "leicht",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🪶" },
+				"explanation": "Low weight. First reading. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-leicht-weight",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-leicht-weight",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Der leere Koffer ist überraschend "
+								},
+								{ "kind": "ResolvableText", "text": "leicht" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "leicht",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🪶" },
+				"explanation": "Low weight. First reading. New."
+			}
+		}
+	]
+}

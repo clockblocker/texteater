@@ -1,0 +1,172 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er stellt sich vor dem Publikum vor.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stellt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Publikum" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-repeated-vor-near-first-vor",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stellt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dem" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Publikum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADP",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "The first same-spelled occurrence introduces the following nominal phrase and is a standalone Lexeme/ADP; occurrence indices prevent it from being confused with the later detached verb particle. Source: https://universaldependencies.org/u/pos/ADP.html",
+				"contaminationKeys": [
+					"target-lexical-unit:sich-vorstellen:repeated-preposition"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-repeated-vor-click-stellt",
+			"memberSegmentIndices": [2, 4, 12],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stellt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dem" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Publikum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2, 4, 12]
+				},
+				"explanation": "IDS establishes detached-prefix verbs. The final same-spelled occurrence is the particle belonging with the finite stem, while the earlier preposition remains outside the Lexeme/VERB target. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
+				"contaminationKeys": [
+					"target-lexical-unit:sich-vorstellen:repeated-preposition"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-repeated-vor-click-sich",
+			"memberSegmentIndices": [2, 4, 12],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stellt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dem" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Publikum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2, 4, 12]
+				},
+				"explanation": "IDS establishes detached-prefix verbs. The final same-spelled occurrence is the particle belonging with the finite stem, while the earlier preposition remains outside the Lexeme/VERB target. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
+				"contaminationKeys": [
+					"target-lexical-unit:sich-vorstellen:repeated-preposition"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-repeated-vor-click-final-vor",
+			"memberSegmentIndices": [2, 4, 12],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 12,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stellt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dem" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Publikum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "vor" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2, 4, 12]
+				},
+				"explanation": "IDS establishes detached-prefix verbs. The final same-spelled occurrence is the particle belonging with the finite stem, while the earlier preposition remains outside the Lexeme/VERB target. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
+				"contaminationKeys": [
+					"target-lexical-unit:sich-vorstellen:repeated-preposition"
+				]
+			}
+		}
+	]
+}

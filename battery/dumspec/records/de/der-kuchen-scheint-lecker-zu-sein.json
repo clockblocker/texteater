@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Kuchen scheint lecker zu sein.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kuchen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "scheint" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lecker" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sein" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-seem",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "demo-seem",
+				"kind": "VERB",
+				"lemma": "scheinen",
+				"context": "Der Kuchen <TARGET>scheint</TARGET> lecker zu sein.",
+				"meaning": "Seem, look, give an impression. Depict only the impression; lecker belongs to its own lemma, so no yummy face.",
+				"accepted": ["👀💭", "👀"],
+				"demo": true
+			}
+		}
+	]
+}

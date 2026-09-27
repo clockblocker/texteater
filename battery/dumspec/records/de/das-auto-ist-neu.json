@@ -1,0 +1,90 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Auto ist neu.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Auto" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neu" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-det-der-neighbor-car-isolation",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Das</TARGET> Auto ist neu.",
+					"lemma": "der",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "👉" },
+				"explanation": "Definite article. The car is the referent, not the determiner's meaning."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-det-der-neighbor-car-isolation",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-det-der-neighbor-car-isolation",
+							"language": "de",
+							"segments": [
+								{ "kind": "ResolvableText", "text": "Das" },
+								{
+									"kind": "OpaqueText",
+									"text": " Auto ist neu."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "DET",
+							"memberSegmentIndices": [0]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "das",
+						"coreFeatures": {
+							"case": "Nom",
+							"definite": "Def",
+							"extPos": null,
+							"foreign": null,
+							"gender": "Neut",
+							"number": "Sing",
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Art"
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "👉" },
+				"explanation": "Exact reviewed identity supplies its authored Reading. Definite article. The car is the referent, not the determiner's meaning."
+			}
+		}
+	]
+}

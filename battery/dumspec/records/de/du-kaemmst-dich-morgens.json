@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Du kämmst dich morgens.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kämmst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "morgens" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-optional-reflexive-click-dich",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Du" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "kämmst" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "morgens" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "PRON",
+					"memberSegmentIndices": [4]
+				},
+				"explanation": "IDS distinguishes the lexically required pronoun of an inherently reflexive verb from an ordinary anaphoric object. Issue #82 groups beeile mich but keeps the contextual pronoun in kämmst dich separate. Source: https://grammis.ids-mannheim.de/progr%40mm/5205"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-optional-reflexive-click-kaemmst",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Du" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "kämmst" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "morgens" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2]
+				},
+				"explanation": "IDS distinguishes the lexically required pronoun of an inherently reflexive verb from an ordinary anaphoric object. Issue #82 groups beeile mich but keeps the contextual pronoun in kämmst dich separate. Source: https://grammis.ids-mannheim.de/progr%40mm/5205"
+			}
+		}
+	]
+}

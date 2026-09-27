@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Absatz meines Stiefels ist abgebrochen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Absatz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "meines" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stiefels" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "abgebrochen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-noun-absatz-heel-new",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Der <TARGET>Absatz</TARGET> meines Stiefels ist abgebrochen.",
+					"lemma": "Absatz",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "👠" },
+				"explanation": "Shoe heel. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-noun-absatz-heel-new",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-noun-absatz-heel-new",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Der " },
+								{ "kind": "ResolvableText", "text": "Absatz" },
+								{
+									"kind": "OpaqueText",
+									"text": " meines Stiefels ist abgebrochen."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Absatz",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "👠" },
+				"explanation": "Shoe heel. New."
+			}
+		}
+	]
+}

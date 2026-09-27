@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "  äh\t ich   geh jetz  ",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-core/de-noisy",
+			"case": {
+				"input": {
+					"id": "de-noisy",
+					"sourceText": "  äh\t ich   geh jetz  "
+				},
+				"idealOutput": {
+					"id": "de-noisy",
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "äh ich geh jetz"
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-core/5",
+			"case": {
+				"input": "  äh\t ich   geh jetz  ",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "äh ich geh jetz"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,64 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er zeigt großes Interesse an Musik.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zeigt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "großes" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Interesse" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Musik" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-government-interesse-an",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zeigt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "großes" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Interesse" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "an" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Musik" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"slots": [
+						{
+							"governors": [16],
+							"offset": 26,
+							"preposition": "an",
+							"case": "Dat",
+							"referent": "Something"
+						}
+					]
+				},
+				"explanation": "The noun Interesse governs an with the dative."
+			}
+		}
+	]
+}

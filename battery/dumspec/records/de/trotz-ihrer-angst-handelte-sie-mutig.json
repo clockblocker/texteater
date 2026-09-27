@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Trotz ihrer Angst handelte sie mutig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Trotz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihrer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Angst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "handelte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mutig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-brave",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "fresh-brave",
+				"kind": "ADJ",
+				"lemma": "mutig",
+				"context": "Trotz ihrer Angst handelte sie <TARGET>mutig</TARGET>.",
+				"meaning": "Acting with courage despite fear",
+				"accepted": ["🦁"],
+				"rejected": ["😨", "💪", "🦁💪"]
+			}
+		}
+	]
+}

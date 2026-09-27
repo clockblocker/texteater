@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Trotz des Regens gingen wir spazieren.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Trotz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Regens" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gingen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "spazieren" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-22-trotz",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Trotz</TARGET> des Regens gingen wir spazieren.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "trotz",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": null,
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "☔",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "ungeachtet", "kind": "ADP" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Ungeachtet shares the concessive relation but is systematically more formal, so only Near Synonym passes.",
+				"contaminationKeys": ["relation-de-trotz-despite"]
+			}
+		}
+	]
+}

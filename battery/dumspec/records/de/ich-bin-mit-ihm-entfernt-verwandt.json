@@ -1,0 +1,72 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ich bin mit ihm entfernt verwandt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entfernt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verwandt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-05-verwandt",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Ich bin mit ihm entfernt <TARGET>verwandt</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "verwandt",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "👪",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "verwenden",
+						"meaning": "Drifted"
+					}
+				},
+				"explanation": "Verwandt is a Partizip II of verwenden by form; 'related by family' is no sense of verwenden 'to use'.",
+				"sources": [
+					{
+						"title": "Duden: verwandt",
+						"url": "https://www.duden.de/rechtschreibung/verwandt",
+						"supports": "Gives verwandt 'related' as an adjective."
+					}
+				]
+			}
+		}
+	]
+}

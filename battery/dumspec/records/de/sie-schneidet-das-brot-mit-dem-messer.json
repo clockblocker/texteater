@@ -1,0 +1,60 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie schneidet das Brot mit dem Messer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schneidet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brot" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Messer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-government-schneiden-adjunct",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schneidet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Brot" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dem" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Messer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"slots": []
+				},
+				"explanation": "mit is a free instrument adjunct."
+			}
+		}
+	]
+}

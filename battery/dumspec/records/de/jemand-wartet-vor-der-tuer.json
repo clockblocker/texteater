@@ -62,5 +62,77 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-pron-jemand-person-reuse",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Jemand</TARGET> wartet vor der Tür.",
+					"lemma": "jemand",
+					"existingEmojiDescriptions": ["👤"]
+				},
+				"idealOutput": {
+					"emojiDescription": "👤"
+				},
+				"explanation": "An unspecified person. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-pron-jemand-person-reuse",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-pron-jemand-person-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "ResolvableText",
+									"text": "Jemand"
+								},
+								{
+									"kind": "OpaqueText",
+									"text": " wartet vor der Tür."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "PRON",
+							"memberSegmentIndices": [0]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "jemand",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": null
+						}
+					},
+					"candidates": ["👤"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "👤"
+				},
+				"explanation": "Exact reviewed identity supplies its authored Reading. An unspecified person. Reuse."
+			}
+		}
+	]
 }

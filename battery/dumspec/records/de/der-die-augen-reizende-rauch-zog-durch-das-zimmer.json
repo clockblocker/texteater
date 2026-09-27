@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der die Augen reizende Rauch zog durch das Zimmer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Augen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "reizende" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rauch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zog" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "durch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zimmer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-participle-boundary-reizend-adj-productive-attributive",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Augen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "reizende" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Rauch" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zog" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "durch" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zimmer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "ADJ reizend, Participle Source reizen. Attributive, so adjectival even with its own object die Augen.",
+				"sources": [
+					{
+						"title": "grammis: Partizip I",
+						"url": "https://grammis.ids-mannheim.de/terminologie/1996",
+						"supports": "A non-lexicalized Partizip I keeps its verbal valency"
+					}
+				]
+			}
+		}
+	]
+}

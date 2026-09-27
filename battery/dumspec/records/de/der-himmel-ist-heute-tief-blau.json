@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Himmel ist heute tief blau.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Himmel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "tief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blau" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-blau-colour",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Der Himmel ist heute tief <TARGET>blau</TARGET>.",
+					"lemma": "blau",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🟦" },
+				"explanation": "Blue colour. First reading. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-blau-colour",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-blau-colour",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Der Himmel ist heute tief "
+								},
+								{ "kind": "ResolvableText", "text": "blau" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "blau",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🟦" },
+				"explanation": "Blue colour. First reading. New."
+			}
+		}
+	]
+}

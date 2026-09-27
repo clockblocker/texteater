@@ -68,5 +68,48 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-collocation-past",
+			"memberSegmentIndices": [2, 4],
+			"case": {
+				"input": {
+					"markedContext": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Collocation",
+						"canonicalForm": "Abschied nehmen",
+						"coreFeatures": {}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "say goodbye",
+						"ru": "прощаться"
+					}
+				},
+				"explanation": "A past-tense collocation translates as an infinitive phrase.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["take leave", "bid farewell"],
+						"ru": ["попрощаться", "проститься"]
+					},
+					"rejected": {
+						"en": ["said goodbye", "took leave"],
+						"ru": ["попрощались", "простились"]
+					}
+				}
+			}
+		}
+	]
 }

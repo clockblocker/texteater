@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das war eine verrückte Idee.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verrückte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Idee" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-participle-boundary-verrueckt-adj-attributive",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "war" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eine" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "verrückte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Idee" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "ADJ verrückt, Participle Source verrücken. Attributive, in the lexicalized sense 'crazy'.",
+				"sources": [
+					{
+						"title": "Duden: verrueckt",
+						"url": "https://www.duden.de/rechtschreibung/verrueckt",
+						"supports": "verrückt is an Adjektiv entry separate from the verb verrücken"
+					}
+				]
+			}
+		}
+	]
+}

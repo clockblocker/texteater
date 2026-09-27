@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Der Kaffe ist heiß.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-core/de-typo",
+			"case": {
+				"input": {
+					"id": "de-typo",
+					"sourceText": "Der Kaffe ist heiß."
+				},
+				"idealOutput": {
+					"id": "de-typo",
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Der Kaffe ist heiß."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-core/3",
+			"case": {
+				"input": "Der Kaffe ist heiß.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Der Kaffe ist heiß."
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,92 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im Garten zog eine Amsel einen Wurm aus dem Rasen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "I", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Garten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zog" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Amsel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wurm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rasen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-hyp-01-amsel",
+			"memberSegmentIndices": [9],
+			"case": {
+				"input": {
+					"markedContext": "Im Garten zog eine <TARGET>Amsel</TARGET> einen Wurm aus dem Rasen.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Amsel",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🐦",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "hypernym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"hypernym": [
+							{ "canonicalForm": "Drossel", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "Drossel is the directly evidenced nearest useful category for Amsel.",
+				"sources": [
+					{
+						"title": "Duden: Amsel",
+						"url": "https://www.duden.de/rechtschreibung/Amsel",
+						"supports": "Defines Amsel as a Drossel."
+					},
+					{
+						"title": "Duden: Drossel",
+						"url": "https://www.duden.de/rechtschreibung/Drossel_Singvogel",
+						"supports": "Defines the directly evidenced broader Drossel category."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Defines Hypernym as the direct narrower-to-broader relation."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-amsel-garden-2026"
+				]
+			}
+		}
+	]
+}

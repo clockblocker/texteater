@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das war ein ausgezeichneter Vortrag.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ausgezeichneter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Vortrag" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-participle-boundary-ausgezeichnet-adj-attributive",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "war" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ein" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ausgezeichneter" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Vortrag" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "ADJ ausgezeichnet, Participle Source auszeichnen. Attributive, in the lexicalized sense 'excellent'.",
+				"sources": [
+					{
+						"title": "Duden: ausgezeichnet",
+						"url": "https://www.duden.de/rechtschreibung/ausgezeichnet",
+						"supports": "ausgezeichnet has its own Adjektiv entry meaning 'sehr gut, hervorragend'"
+					}
+				]
+			}
+		}
+	]
+}

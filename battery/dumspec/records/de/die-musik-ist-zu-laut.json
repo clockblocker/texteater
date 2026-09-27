@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Musik ist zu laut.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Musik" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "laut" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-loud",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "fresh-loud",
+				"kind": "ADJ",
+				"lemma": "laut",
+				"context": "Die Musik ist zu <TARGET>laut</TARGET>.",
+				"meaning": "Making a lot of sound",
+				"accepted": ["🔊", "📢"],
+				"rejected": ["🤫"]
+			}
+		}
+	]
+}

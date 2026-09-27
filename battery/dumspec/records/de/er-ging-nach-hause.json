@@ -71,5 +71,52 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-verb-past-ging",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "go",
+						"ru": "идти"
+					}
+				},
+				"explanation": "A simple past translates as the infinitive.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": ["пойти", "уйти", "уходить"]
+					},
+					"rejected": {
+						"en": ["went"],
+						"ru": ["пошёл", "ушёл"]
+					}
+				}
+			}
+		}
+	]
 }

@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach dem Wolkenbruch war der Mantel völlig nass.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wolkenbruch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mantel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "völlig" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nass" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-ant-02-nass",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"markedContext": "Nach dem Wolkenbruch war der Mantel völlig <TARGET>nass</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "nass",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "💧",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "antonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"antonym": [
+							{ "canonicalForm": "trocken", "kind": "ADJ" }
+						]
+					}
+				},
+				"explanation": "Nass and trocken are conventional opposite endpoints of the moisture scale.",
+				"sources": [
+					{
+						"title": "Duden: nass",
+						"url": "https://www.duden.de/rechtschreibung/nass",
+						"supports": "Documents nass as soaked with liquid."
+					},
+					{
+						"title": "Duden: trocken",
+						"url": "https://www.duden.de/rechtschreibung/trocken",
+						"supports": "Documents trocken as the conventional moisture-scale opposite."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-nass-raincoat-2026"
+				]
+			}
+		}
+	]
+}

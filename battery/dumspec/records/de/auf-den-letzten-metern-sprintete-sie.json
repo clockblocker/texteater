@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Auf den letzten Metern sprintete sie.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "letzten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Metern" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sprintete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-basic-05-sprinten",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Auf den letzten Metern <TARGET>sprintete</TARGET> sie.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "sprinten",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🏃💨",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "laufen", "kind": "VERB" }
+						]
+					}
+				},
+				"explanation": "Primary lexicography defines sprinten as short-distance highest-speed running, directly supporting the broader action laufen.",
+				"sources": [
+					{
+						"title": "Duden: sprinten",
+						"url": "https://www.duden.de/rechtschreibung/sprinten",
+						"supports": "Defines sprinten as covering a short distance at highest speed and colloquially as running fast."
+					}
+				],
+				"contaminationKeys": ["relation-de-sprinten-run"]
+			}
+		}
+	]
+}

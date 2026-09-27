@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "אניי הולך.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-he-core/he-typo",
+			"case": {
+				"input": {
+					"id": "he-typo",
+					"sourceText": "אניי הולך."
+				},
+				"idealOutput": {
+					"id": "he-typo",
+					"decision": "Accepted",
+					"language": "he",
+					"stitchedText": "אניי הולך."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-he-core/6",
+			"case": {
+				"input": "אניי הולך.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "he",
+					"stitchedText": "אניי הולך."
+				}
+			}
+		}
+	]
+}

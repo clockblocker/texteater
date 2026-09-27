@@ -1,0 +1,49 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Auf Eva kann man zählen; sie ist zuverlässig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Eva" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kann" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "man" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zählen" },
+		{ "kind": "Punctuation", "text": ";" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zuverlässig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-reliable-person",
+			"memberSegmentIndices": [15],
+			"case": {
+				"id": "reliable-person",
+				"kind": "ADJ",
+				"lemma": "zuverlässig",
+				"context": "Auf Eva kann man zählen; sie ist <TARGET>zuverlässig</TARGET>.",
+				"meaning": "Dependable; can be relied upon",
+				"accepted": ["🤝✅", "✅", "🤝"],
+				"rejected": ["💪"]
+			}
+		}
+	]
+}

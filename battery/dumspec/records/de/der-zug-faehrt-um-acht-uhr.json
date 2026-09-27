@@ -1,0 +1,89 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Zug fährt um acht Uhr.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zug" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fährt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "acht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Uhr" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-um-clock-time",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
+					"lemma": "um",
+					"existingEmojiDescriptions": ["🔄", "💬", "🔗"]
+				},
+				"idealOutput": { "emojiDescription": "⏰" },
+				"explanation": "Clock point. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-um-clock-time",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-um-clock-time",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Der Zug fährt "
+								},
+								{ "kind": "ResolvableText", "text": "um" },
+								{ "kind": "OpaqueText", "text": " acht Uhr." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "um",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": ["🔄", "💬", "🔗"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "⏰" },
+				"explanation": "Clock point. New."
+			}
+		}
+	]
+}

@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der kürzlich verschiedene Dichter wurde in seiner Heimatstadt beigesetzt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kürzlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verschiedene" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dichter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seiner" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Heimatstadt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "beigesetzt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-03-verschieden-deceased",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Der kürzlich <TARGET>verschiedene</TARGET> Dichter wurde in seiner Heimatstadt beigesetzt.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "verschieden",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⚰️",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "verscheiden",
+						"meaning": "Verbal"
+					}
+				},
+				"explanation": "Here verschieden means 'deceased', the resulting state of verscheiden; the same form as the 'different' Reading, with another meaning.",
+				"sources": [
+					{
+						"title": "Duden: verscheiden",
+						"url": "https://www.duden.de/rechtschreibung/verscheiden",
+						"supports": "Defines verscheiden as 'to die' with Partizip II verschieden."
+					}
+				]
+			}
+		}
+	]
+}

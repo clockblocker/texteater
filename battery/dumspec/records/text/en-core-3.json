@@ -1,0 +1,19 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "  Hello\t there!  ",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-en-core/3",
+			"case": {
+				"input": "  Hello\t there!  ",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "en",
+					"stitchedText": "Hello there!"
+				}
+			}
+		}
+	]
+}

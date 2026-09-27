@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist sehr stolz auf ihren Sohn.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stolz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sohn" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0034"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-government-stolz-auf",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sehr" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stolz" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihren" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Sohn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"slots": [
+						{
+							"governors": [13],
+							"offset": 19,
+							"preposition": "auf",
+							"case": "Acc",
+							"referent": "Someone"
+						}
+					],
+					"targets": [
+						{
+							"kind": "VERB",
+							"members": [{ "offset": 4 }]
+						},
+						{
+							"kind": "ADJ",
+							"members": [
+								{ "offset": 13, "role": "Head" },
+								{ "offset": 19, "role": "GovernedPreposition" }
+							]
+						}
+					],
+					"phrasemes": []
+				},
+				"explanation": "The adjective stolz governs auf with the accusative and takes it in as a member; the copula ist stays its own word and forms no expression with stolz (ADR 0034)."
+			}
+		}
+	]
+}

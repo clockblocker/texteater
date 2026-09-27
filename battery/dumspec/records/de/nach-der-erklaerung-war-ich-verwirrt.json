@@ -1,0 +1,44 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach der Erklärung war ich verwirrt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Erklärung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verwirrt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-confused",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "demo-confused",
+				"kind": "ADJ",
+				"lemma": "verwirrt",
+				"context": "Nach der Erklärung war ich <TARGET>verwirrt</TARGET>.",
+				"meaning": "Unable to understand clearly",
+				"accepted": ["😕❓", "😕"],
+				"demo": true
+			}
+		}
+	]
+}

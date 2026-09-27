@@ -1,0 +1,76 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Während der Pause lernten wir.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Während" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Pause" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lernten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-46-waehrend-adposition",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Während</TARGET> der Pause lernten wir.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "während",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": null,
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⏳",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "innerhalb", "kind": "ADP" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Salvaged from the retired unit-shadow homograph pair: the adpositional Reading locates the event inside a nominal time span, which innerhalb shares; its spatial anchoring keeps the pair Near rather than exact Synonym and must not pull the subordinator's relations across the homograph.",
+				"contaminationKeys": ["relation-de-waehrend-adposition"]
+			}
+		}
+	]
+}

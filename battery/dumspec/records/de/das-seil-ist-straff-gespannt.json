@@ -1,0 +1,63 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Seil ist straff gespannt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Seil" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "straff" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gespannt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-participle-boundary-gespannt-adj-state-passive",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 8,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Seil" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "straff" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gespannt" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"memberSegmentIndices": [8]
+				},
+				"explanation": "ADJ gespannt, Participle Source spannen. sein with a participle outside the perfect is the copula plus an ADJ, so ist stays a separate VERB and straff is free.",
+				"sources": [
+					{
+						"title": "grammis: Partizip II",
+						"url": "https://grammis.ids-mannheim.de/terminologie/181",
+						"supports": "Partizip II is a verb form"
+					}
+				]
+			}
+		}
+	]
+}

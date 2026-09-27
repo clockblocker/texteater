@@ -1,0 +1,86 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die kabellose Maus braucht neue Batterien.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kabellose" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Maus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "braucht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neue" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Batterien" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-noun-maus-computer-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Die kabellose <TARGET>Maus</TARGET> braucht neue Batterien.",
+					"lemma": "Maus",
+					"existingEmojiDescriptions": ["🐭", "🖱️"]
+				},
+				"idealOutput": { "emojiDescription": "🖱️" },
+				"explanation": "Same computer device with a contextual detail. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-noun-maus-computer-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-noun-maus-computer-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Die kabellose "
+								},
+								{ "kind": "ResolvableText", "text": "Maus" },
+								{
+									"kind": "OpaqueText",
+									"text": " braucht neue Batterien."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Maus",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": ["🐭", "🖱️"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "🖱️" },
+				"explanation": "Same computer device with a contextual detail. Reuse."
+			}
+		}
+	]
+}

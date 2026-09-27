@@ -1,0 +1,188 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Museum öffnet z.B. am Montag erst um zehn.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Museum" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "öffnet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "z.B." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Montag" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zehn" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0009"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-abbreviation-zb-click-zb",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Museum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "öffnet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "z.B." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "a" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Montag" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "erst" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "um" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zehn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADV",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "A dotted abbreviation is one Segment; its whole-unit Kind is the expansion's (ADR 0009, issue 498).",
+				"contaminationKeys": ["abbreviation:zum-beispiel"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-museum",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Museum" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "öffnet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "z.B." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "a" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Montag" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "erst" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "um" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zehn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 0, "role": "Article" },
+								{ "offset": 4, "role": "Head" }
+							]
+						},
+						{
+							"kind": "VERB",
+							"members": [{ "offset": 11 }]
+						},
+						{
+							"kind": "ADV",
+							"members": [{ "offset": 18 }]
+						},
+						{
+							"kind": "ADP",
+							"members": [{ "offset": 23 }]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 24, "role": "Article" },
+								{ "offset": 26, "role": "Head" }
+							]
+						},
+						{
+							"kind": "ADV",
+							"members": [{ "offset": 33 }]
+						},
+						{
+							"kind": "ADP",
+							"members": [{ "offset": 38 }]
+						},
+						{
+							"kind": "NUM",
+							"members": [{ "offset": 41 }]
+						}
+					],
+					"phrasemes": [],
+					"slots": []
+				},
+				"explanation": "A dotted abbreviation and the fusion `am`."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-verb-intransitive-reflexive",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Das Museum <TARGET>öffnet</TARGET> z.B. am Montag erst um zehn.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "öffnen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "open", "ru": "открываться" }
+				},
+				"explanation": "Intransitive öffnen (the museum opens) needs the Russian reflexive -ся; transitive открывать is another valency.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": ["открыться"]
+					},
+					"rejected": {
+						"en": ["opens"],
+						"ru": ["открывать", "открывается"]
+					}
+				}
+			}
+		}
+	]
+}

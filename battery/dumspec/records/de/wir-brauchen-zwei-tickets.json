@@ -1,0 +1,60 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir brauchen zwei Tickets.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "brauchen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zwei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tickets" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-29-zwei",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Wir brauchen <TARGET>zwei</TARGET> Tickets.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "zwei",
+							"family": "Lexeme",
+							"kind": "NUM",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": "Card"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "2️⃣",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "synonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": { "synonym": null }
+				},
+				"explanation": "No distinct exact-equivalent Lemma is adjudicated; the source Lemma and inflected Surfaces are forbidden, so the sole requested Synonym is null.",
+				"contaminationKeys": ["relation-de-zwei-number"]
+			}
+		}
+	]
+}

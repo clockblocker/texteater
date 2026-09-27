@@ -1,0 +1,71 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Buch liegt noch ungelesen auf dem Tisch.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Buch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "liegt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ungelesen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tisch" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-10-ungelesen-null",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Das Buch liegt noch <TARGET>ungelesen</TARGET> auf dem Tisch.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "ungelesen",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "📕",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": { "participleSource": null },
+				"explanation": "An un- form has no Participle Source: there is no verb ungelesen.",
+				"sources": [
+					{
+						"title": "Duden: ungelesen",
+						"url": "https://www.duden.de/rechtschreibung/ungelesen",
+						"supports": "Gives ungelesen as an adjective."
+					}
+				]
+			}
+		}
+	]
+}

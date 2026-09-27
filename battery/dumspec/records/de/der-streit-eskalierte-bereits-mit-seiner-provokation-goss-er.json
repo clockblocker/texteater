@@ -1,0 +1,291 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Streit eskalierte bereits. Mit seiner Provokation goss er zusätzliches Öl ins Feuer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Streit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eskalierte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bereits" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seiner" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Provokation" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "goss" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zusätzliches" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Öl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Feuer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-idiom-oel-click-goss",
+			"memberSegmentIndices": [15, 21, 23, 24, 26],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 15,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Streit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eskalierte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bereits" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "seiner" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Provokation" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "goss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zusätzliches" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Öl" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Feuer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [15, 21, 23, 24, 26]
+				},
+				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:oel-ins-feuer-giessen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-idiom-oel-click-oel",
+			"memberSegmentIndices": [15, 21, 23, 24, 26],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 21,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Streit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eskalierte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bereits" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "seiner" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Provokation" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "goss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zusätzliches" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Öl" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Feuer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [15, 21, 23, 24, 26]
+				},
+				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:oel-ins-feuer-giessen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-idiom-oel-click-ins",
+			"memberSegmentIndices": [15, 21, 23, 24, 26],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 23,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Streit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eskalierte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bereits" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "seiner" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Provokation" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "goss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zusätzliches" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Öl" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Feuer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [15, 21, 23, 24, 26]
+				},
+				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:oel-ins-feuer-giessen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-idiom-oel-click-feuer",
+			"memberSegmentIndices": [15, 21, 23, 24, 26],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 26,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Streit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eskalierte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bereits" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "seiner" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Provokation" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "goss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zusätzliches" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Öl" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Feuer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [15, 21, 23, 24, 26]
+				},
+				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:oel-ins-feuer-giessen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-diagnostic-idiom-oel-near-zusaetzliches",
+			"memberSegmentIndices": [19],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 19,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Streit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "eskalierte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bereits" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mit" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "seiner" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Provokation" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "goss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zusätzliches" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Öl" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Feuer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADJ",
+					"memberSegmentIndices": [19]
+				},
+				"explanation": "The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:oel-ins-feuer-giessen"
+				]
+			}
+		}
+	]
+}

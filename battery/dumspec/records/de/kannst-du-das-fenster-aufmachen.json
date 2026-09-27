@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Kannst du das Fenster aufmachen?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Kannst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fenster" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aufmachen" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-open",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "demo-open",
+				"kind": "VERB",
+				"lemma": "aufmachen",
+				"context": "Kannst du das Fenster <TARGET>aufmachen</TARGET>?",
+				"meaning": "Open something. The window is incidental; reuse the open-state mnemonic for other objects.",
+				"accepted": ["🔓"],
+				"demo": true
+			}
+		}
+	]
+}

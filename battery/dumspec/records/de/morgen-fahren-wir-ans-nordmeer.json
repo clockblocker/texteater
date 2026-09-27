@@ -1,0 +1,59 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Morgen fahren wir ans Nordmeer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fahren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an", "surface": "an" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nordmeer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0027", "ADR-0035"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-fusion-ans",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fahren" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wir" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "an" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Nordmeer" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADP",
+					"memberSegmentIndices": [6]
+				},
+				"explanation": "Construction/Fusion is retired (system ADR 0027): a fused preposition and article is two Segments in production, the preposition its own ADP word and the article piece the following noun's Article. Segments split the fused word (ADR 0035), so clicking its preposition piece selects that piece alone as ADP; the article piece belongs to the following noun. IDS establishes the fused-preposition category with zum.",
+				"contaminationKeys": ["target-construction:fusion:ans"]
+			}
+		}
+	]
+}

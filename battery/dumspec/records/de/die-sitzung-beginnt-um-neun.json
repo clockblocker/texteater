@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Sitzung beginnt um neun.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sitzung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "beginnt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neun" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-42-beginnen-alternative",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "beginnen",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "▶️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": [
+							{ "canonicalForm": "anfangen", "kind": "VERB" }
+						],
+						"nearSynonym": [
+							{ "canonicalForm": "starten", "kind": "VERB" }
+						],
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				},
+				"explanation": "Anfangen is adjudicated as equivalent here; starten is event-type/register restricted. Einsetzen is recorded as a bounded alternative target set.",
+				"contaminationKeys": ["relation-de-beginnen-start"]
+			}
+		}
+	]
+}

@@ -1,0 +1,77 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Vereinigten Staaten liegen in Nordamerika.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Vereinigten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Staaten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "liegen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nordamerika" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-38-vereinigte-staaten",
+			"memberSegmentIndices": [2, 4],
+			"case": {
+				"input": {
+					"markedContext": "Die <TARGET>Vereinigten Staaten</TARGET> liegen in Nordamerika.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Vereinigte Staaten",
+							"family": "Lexeme",
+							"kind": "PROPN",
+							"coreFeatures": {
+								"abbr": null,
+								"article": "Definite",
+								"foreign": null,
+								"gender": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🇺🇸",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Staat", "kind": "NOUN" }
+						],
+						"holonym": [
+							{ "canonicalForm": "Nordamerika", "kind": "PROPN" }
+						]
+					}
+				},
+				"explanation": "A fixed multi-word proper name remains one Lexeme/PROPN; it is an instance of Staat and geographically part of Nordamerika, never a Phraseme.",
+				"contaminationKeys": ["relation-de-vereinigte-staaten"]
+			}
+		}
+	]
+}

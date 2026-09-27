@@ -67,5 +67,66 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-referential-es-0",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Es"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "liegt"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "auf"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "dem"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Tisch"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "PRON",
+					"memberSegmentIndices": [0]
+				},
+				"explanation": "This es is outside lexically selected subject-expletive composition.",
+				"contaminationKeys": ["subject-es:referential-es"]
+			}
+		}
+	]
 }

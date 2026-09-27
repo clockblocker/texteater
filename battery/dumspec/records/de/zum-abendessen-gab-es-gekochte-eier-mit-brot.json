@@ -1,0 +1,77 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Zum Abendessen gab es gekochte Eier mit Brot.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Abendessen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gab" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gekochte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Eier" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brot" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-07-gekocht",
+			"memberSegmentIndices": [9],
+			"case": {
+				"input": {
+					"markedContext": "Zum Abendessen gab es <TARGET>gekochte</TARGET> Eier mit Brot.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "gekocht",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🍳",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "kochen",
+						"meaning": "Verbal"
+					}
+				},
+				"explanation": "Gekocht is the resulting state of kochen 'to boil, to cook'.",
+				"sources": [
+					{
+						"title": "Duden: kochen",
+						"url": "https://www.duden.de/rechtschreibung/kochen",
+						"supports": "Defines kochen as boiling or cooking food."
+					}
+				]
+			}
+		}
+	]
+}

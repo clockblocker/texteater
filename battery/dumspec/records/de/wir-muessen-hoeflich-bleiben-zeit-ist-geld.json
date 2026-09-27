@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir müssen höflich bleiben: Zeit ist Geld.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müssen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "höflich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleiben" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zeit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geld" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"caseId": "relation-demo-zeit-ist-geld",
+			"memberSegmentIndices": [9, 11, 13],
+			"case": {
+				"input": {
+					"markedContext": "Wir müssen höflich bleiben: <TARGET>Zeit ist Geld</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Zeit ist Geld",
+							"family": "Phraseme",
+							"kind": "Aphorism",
+							"coreFeatures": {},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⏳",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "No same-Family expression preserves this aphorism's proposition and stance; money-themed sayings are thematic associations, and the demo teaches the conservative null under the same-Family rule.",
+				"contaminationKeys": ["relation-de-zeit-ist-geld"]
+			}
+		}
+	]
+}

@@ -1,0 +1,128 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Kaninchen fraß auf der Wiese. Dabei biss es ins Gras.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kaninchen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fraß" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wiese" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dabei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "biss" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gras" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-literal-gras-click-biss",
+			"memberSegmentIndices": [15],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 15,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kaninchen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fraß" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wiese" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Dabei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "biss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "es" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gras" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [15]
+				},
+				"explanation": "The feeding scene makes biss ins Gras a physical, compositional occurrence rather than the familiar death idiom. Issue #82 therefore selects only the clicked verb or noun Lexeme. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": ["target-lexical-unit:ins-gras-beissen"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-literal-gras-click-gras",
+			"memberSegmentIndices": [20, 22],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 22,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kaninchen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fraß" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Wiese" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Dabei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "biss" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "es" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "in" },
+						{ "kind": "ResolvableText", "text": "s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gras" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [20, 22]
+				},
+				"explanation": "The feeding scene makes biss ins Gras a physical, compositional occurrence rather than the familiar death idiom. Issue #82 therefore selects only the clicked verb or noun Lexeme; the noun owns the article piece s of ins (ADR 0035). Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": ["target-lexical-unit:ins-gras-beissen"]
+			}
+		}
+	]
+}

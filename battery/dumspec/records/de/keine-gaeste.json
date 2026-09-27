@@ -1,0 +1,41 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "keine Gäste",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "keine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gäste" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-negative-det-keine-plur",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "keine" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gäste" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "DET",
+					"memberSegmentIndices": [0]
+				}
+			}
+		}
+	]
+}

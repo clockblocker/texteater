@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das ist nicht wahr.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wahr" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-30-nicht",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Das ist <TARGET>nicht</TARGET> wahr.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "nicht",
+							"family": "Lexeme",
+							"kind": "PART",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"partType": null,
+								"polarity": "Neg"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🚫",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "keineswegs", "kind": "ADV" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Keineswegs shares negation but adds emphatic intensity and differs grammatically, allowing Near Synonym but blocking exact equivalence.",
+				"contaminationKeys": ["relation-de-nicht-negation"]
+			}
+		}
+	]
+}

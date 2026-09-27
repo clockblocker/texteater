@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Pudel wartet vor der Tür.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Pudel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wartet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tür" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-basic-03-pudel",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Der <TARGET>Pudel</TARGET> wartet vor der Tür.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Pudel",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Masc", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🐩",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Hund", "kind": "NOUN" }
+						],
+						"holonym": null
+					}
+				},
+				"explanation": "Every poodle is a dog and Hund is the nearest useful category; Tier is too distant and Pfote is a part, not a category.",
+				"sources": [
+					{
+						"title": "Duden: Pudel",
+						"url": "https://www.duden.de/rechtschreibung/Pudel",
+						"supports": "Defines Pudel as a dog."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Defines Hypernym as the direct narrower-to-broader relation."
+					}
+				],
+				"contaminationKeys": ["relation-de-pudel-dog"]
+			}
+		}
+	]
+}

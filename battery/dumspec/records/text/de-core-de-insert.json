@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Ich sehe dasHaus.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-core/de-insert",
+			"case": {
+				"input": {
+					"id": "de-insert",
+					"sourceText": "Ich sehe dasHaus."
+				},
+				"idealOutput": {
+					"id": "de-insert",
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Ich sehe das Haus."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-core/2",
+			"case": {
+				"input": "Ich sehe dasHaus.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Ich sehe das Haus."
+				}
+			}
+		}
+	]
+}

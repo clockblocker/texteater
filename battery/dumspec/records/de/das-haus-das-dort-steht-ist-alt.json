@@ -1,0 +1,97 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Haus, das dort steht, ist alt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haus" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dort" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+			"memberSegmentIndices": [5],
+			"case": {
+				"input": {
+					"markedContext": "Das Haus, <TARGET>das</TARGET> dort steht, ist alt.",
+					"lemma": "der",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🔗" },
+				"explanation": "Relative pronoun. The house is its antecedent, not the pronoun's meaning."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+			"memberSegmentIndices": [5],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Das Haus, " },
+								{ "kind": "ResolvableText", "text": "das" },
+								{
+									"kind": "OpaqueText",
+									"text": " dort steht, ist alt."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "PRON",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "das",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rel",
+							"gender": "Neut"
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🔗" },
+				"explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The house is its antecedent, not the pronoun's meaning."
+			}
+		}
+	]
+}

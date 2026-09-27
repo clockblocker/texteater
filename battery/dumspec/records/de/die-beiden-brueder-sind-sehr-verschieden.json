@@ -1,0 +1,72 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die beiden Brüder sind sehr verschieden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "beiden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brüder" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sind" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verschieden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-02-verschieden-different",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Die beiden Brüder sind sehr <TARGET>verschieden</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "verschieden",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "↔️",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "verscheiden",
+						"meaning": "Drifted"
+					}
+				},
+				"explanation": "The form is the Partizip II of verscheiden 'to pass away'; 'different' is no sense of that verb.",
+				"sources": [
+					{
+						"title": "Duden: verschieden",
+						"url": "https://www.duden.de/rechtschreibung/verschieden",
+						"supports": "Gives verschieden 'different' as an adjective."
+					}
+				]
+			}
+		}
+	]
+}

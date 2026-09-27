@@ -1,0 +1,45 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im Wald ist es ganz still.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "I", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wald" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "still" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-silent-forest",
+			"memberSegmentIndices": [11],
+			"case": {
+				"id": "silent-forest",
+				"kind": "ADJ",
+				"lemma": "still",
+				"context": "Im Wald ist es ganz <TARGET>still</TARGET>.",
+				"meaning": "Without sound",
+				"accepted": ["🤫", "🔇"],
+				"rejected": ["🔇🚫", "🔊🚫", "🚫🔊", "🌲🤫", "🌳", "🌲", "🌲🔇"]
+			}
+		}
+	]
+}

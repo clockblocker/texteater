@@ -1,0 +1,101 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie spart um im Sommer zu reisen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "spart" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sommer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "reisen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0009"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-lexeme-sconj-um-zu-click-um",
+			"memberSegmentIndices": [4, 11],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "spart" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "um" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Sommer" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "reisen" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "SCONJ",
+					"memberSegmentIndices": [4, 11]
+				},
+				"explanation": "ADR 0009 treats um and zu as the ordered fixed members of one Lexeme/SCONJ; the purpose-clause material between them remains free context. Source: https://universaldependencies.org/u/pos/SCONJ.html",
+				"contaminationKeys": ["target-lexeme:sconj:um-zu"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-lexeme-sconj-um-zu-click-zu",
+			"memberSegmentIndices": [4, 11],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 11,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "spart" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "um" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Sommer" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "reisen" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "SCONJ",
+					"memberSegmentIndices": [4, 11]
+				},
+				"explanation": "Clicking either fixed anchor returns the same source-ordered um zu Lexeme/SCONJ membership. Source: https://universaldependencies.org/u/pos/SCONJ.html",
+				"contaminationKeys": ["target-lexeme:sconj:um-zu"]
+			}
+		}
+	]
+}

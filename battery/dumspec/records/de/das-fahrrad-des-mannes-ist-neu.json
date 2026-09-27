@@ -58,5 +58,51 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-noun-genitive-singular",
+			"memberSegmentIndices": [4, 6],
+			"case": {
+				"input": {
+					"markedContext": "Das Fahrrad <TARGET>des</TARGET> <TARGET>Mannes</TARGET> ist neu.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Mann",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "man",
+						"ru": "мужчина"
+					}
+				},
+				"explanation": "A genitive noun translates in the nominative singular.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": []
+					},
+					"rejected": {
+						"en": [],
+						"ru": ["мужчины"]
+					}
+				}
+			}
+		}
+	]
 }

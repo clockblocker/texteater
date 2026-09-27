@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das verletzte Körperteil wurde untersucht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verletzte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Körperteil" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "untersucht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-20-koerperteil-inverse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Das verletzte <TARGET>Körperteil</TARGET> wurde untersucht.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Körperteil",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Neut", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🩻",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{
+								"canonicalForm": "anatomische Struktur",
+								"kind": "NOUN"
+							}
+						],
+						"holonym": [
+							{ "canonicalForm": "Körper", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "Körperteil is an anatomical structure and part of a Körper; Pfote is a narrower inverse-only Hyponym judgment.",
+				"contaminationKeys": ["relation-de-koerperteil-body-part"]
+			}
+		}
+	]
+}

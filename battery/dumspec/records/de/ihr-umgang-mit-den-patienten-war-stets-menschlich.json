@@ -1,0 +1,95 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ihr Umgang mit den Patienten war stets menschlich.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ihr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Umgang" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Patienten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stets" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "menschlich" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-menschlich-humane",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"markedContext": "Ihr Umgang mit den Patienten war stets <TARGET>menschlich</TARGET>.",
+					"lemma": "menschlich",
+					"existingEmojiDescriptions": ["🧑"]
+				},
+				"idealOutput": { "emojiDescription": "❤️" },
+				"explanation": "Humane and compassionate, not merely human. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-menschlich-humane",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-menschlich-humane",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Ihr Umgang mit den Patienten war stets "
+								},
+								{
+									"kind": "ResolvableText",
+									"text": "menschlich"
+								},
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "menschlich",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🧑"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "❤️" },
+				"explanation": "Humane and compassionate, not merely human. New."
+			}
+		}
+	]
+}

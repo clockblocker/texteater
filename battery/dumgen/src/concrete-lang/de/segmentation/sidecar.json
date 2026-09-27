@@ -1,0 +1,8 @@
+{
+	"path": "intake/prompt-source.ts",
+	"route": "intake",
+	"demonstrationIds": [
+		"intake-de-core"
+	],
+	"localDemonstrations": []
+}

@@ -1,0 +1,89 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Lampe hängt über dem Tisch.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lampe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hängt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "über" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tisch" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-ueber-above",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Die Lampe hängt <TARGET>über</TARGET> dem Tisch.",
+					"lemma": "über",
+					"existingEmojiDescriptions": ["🔗"]
+				},
+				"idealOutput": { "emojiDescription": "⬆️" },
+				"explanation": "Above, not a generic connector. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-ueber-above",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-ueber-above",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Die Lampe hängt "
+								},
+								{ "kind": "ResolvableText", "text": "über" },
+								{ "kind": "OpaqueText", "text": " dem Tisch." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "über",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": ["🔗"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "⬆️" },
+				"explanation": "Above, not a generic connector. New."
+			}
+		}
+	]
+}

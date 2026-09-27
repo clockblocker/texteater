@@ -1,0 +1,94 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Diese Anleitung ist leicht zu verstehen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Diese" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Anleitung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verstehen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-leicht-easy-reuse",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Diese Anleitung ist <TARGET>leicht</TARGET> zu verstehen.",
+					"lemma": "leicht",
+					"existingEmojiDescriptions": ["🪶", "✅"]
+				},
+				"idealOutput": { "emojiDescription": "✅" },
+				"explanation": "Easy to understand. Same broad difficulty reading. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-leicht-easy-reuse",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-leicht-easy-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Diese Anleitung ist "
+								},
+								{ "kind": "ResolvableText", "text": "leicht" },
+								{
+									"kind": "OpaqueText",
+									"text": " zu verstehen."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "leicht",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🪶", "✅"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "✅"
+				},
+				"explanation": "Easy to understand. Same broad difficulty reading. Reuse."
+			}
+		}
+	]
+}

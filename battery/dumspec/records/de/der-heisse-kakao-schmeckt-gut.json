@@ -1,0 +1,142 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der heiße Kakao schmeckt gut.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heiße" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kakao" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schmeckt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gut" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-core-kakao",
+			"memberSegmentIndices": [0, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "heiße" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kakao" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schmeckt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gut" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NOUN",
+					"memberSegmentIndices": [0, 4]
+				},
+				"explanation": "The owned article and common noun are one NOUN target; other words stay separate.",
+				"contaminationKeys": ["target-stimulus:kakao"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-kakao",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "heiße" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kakao" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schmeckt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gut" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 0, "role": "Article" },
+								{ "offset": 10, "role": "Head" }
+							]
+						},
+						{
+							"kind": "ADJ",
+							"members": [{ "offset": 4 }]
+						},
+						{
+							"kind": "VERB",
+							"members": [{ "offset": 16 }]
+						},
+						{
+							"kind": "ADJ",
+							"members": [{ "offset": 25 }]
+						}
+					],
+					"phrasemes": []
+				},
+				"explanation": "The owned article joins the noun across an adjective."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-adj-no-neighbour-bleed",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Der heiße Kakao schmeckt <TARGET>gut</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gut",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "good", "ru": "хороший" }
+				},
+				"explanation": "gut keeps its own meaning; tasty belongs to schmecken, and an adverb changes the part of speech.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": []
+					},
+					"rejected": {
+						"en": ["tasty"],
+						"ru": ["вкусный", "хорошо"]
+					}
+				}
+			}
+		}
+	]
+}

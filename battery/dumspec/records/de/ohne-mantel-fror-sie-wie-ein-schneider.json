@@ -78,5 +78,57 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-idiom-established-equivalent",
+			"memberSegmentIndices": [4, 8, 10, 12],
+			"case": {
+				"input": {
+					"markedContext": "Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "frieren wie ein Schneider",
+						"coreFeatures": {}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "freeze to the bone",
+						"ru": "сильно мёрзнуть"
+					}
+				},
+				"explanation": "An idiom translates as an established equivalent, not a word-for-word calque.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [
+							"be freezing cold",
+							"be very cold",
+							"freeze one's butt off"
+						],
+						"ru": [
+							"мёрзнуть как цуцик",
+							"мёрзнуть как собака",
+							"продрогнуть до костей",
+							"дрожать от холода"
+						]
+					},
+					"rejected": {
+						"en": ["freeze like a tailor", "froze like a tailor"],
+						"ru": ["мёрзнуть как портной", "мёрзла как собака"]
+					}
+				}
+			}
+		}
+	]
 }

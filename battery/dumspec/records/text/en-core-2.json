@@ -1,0 +1,19 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Isee the house.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-en-core/2",
+			"case": {
+				"input": "Isee the house.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "en",
+					"stitchedText": "I see the house."
+				}
+			}
+		}
+	]
+}

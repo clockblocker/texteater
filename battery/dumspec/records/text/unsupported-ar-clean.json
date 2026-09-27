@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "أنا ذاهب إلى البيت.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-unsupported/ar-clean",
+			"case": {
+				"input": {
+					"id": "ar-clean",
+					"sourceText": "أنا ذاهب إلى البيت."
+				},
+				"idealOutput": {
+					"id": "ar-clean",
+					"decision": "UnsupportedLanguage",
+					"language": null,
+					"stitchedText": "أنا ذاهب إلى البيت."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-unsupported/2",
+			"case": {
+				"input": "أنا ذاهب إلى البيت.",
+				"idealOutput": {
+					"decision": "UnsupportedLanguage"
+				}
+			}
+		}
+	]
+}

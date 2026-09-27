@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Hurra, wir haben gewonnen!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Hurra" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "haben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gewonnen" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-intj-hurra-celebration-new",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Hurra</TARGET>, wir haben gewonnen!",
+					"lemma": "Hurra",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🎉" },
+				"explanation": "A stable exclamation of celebration. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-intj-hurra-celebration-new",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-intj-hurra-celebration-new",
+							"language": "de",
+							"segments": [
+								{ "kind": "ResolvableText", "text": "Hurra" },
+								{
+									"kind": "OpaqueText",
+									"text": ", wir haben gewonnen!"
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "INTJ",
+							"memberSegmentIndices": [0]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "Hurra",
+						"coreFeatures": { "partType": null }
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🎉" },
+				"explanation": "A stable exclamation of celebration. New."
+			}
+		}
+	]
+}

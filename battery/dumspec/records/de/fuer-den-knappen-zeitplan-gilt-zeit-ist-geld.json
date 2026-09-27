@@ -1,0 +1,95 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Für den knappen Zeitplan gilt: Zeit ist Geld.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Für" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "knappen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zeitplan" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gilt" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zeit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geld" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-phraseme-aphorism-zeit-ist-geld",
+			"memberSegmentIndices": [11, 13, 15],
+			"case": {
+				"input": {
+					"markedContext": "Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
+					"lemma": "Zeit ist Geld",
+					"existingEmojiDescriptions": ["⏳💰"]
+				},
+				"idealOutput": { "emojiDescription": "⏳💰" },
+				"explanation": "The aphorism equates time with money. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-phraseme-aphorism-zeit-ist-geld",
+			"memberSegmentIndices": [11, 13, 15],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-phraseme-aphorism-zeit-ist-geld",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Für den knappen Zeitplan gilt: "
+								},
+								{ "kind": "ResolvableText", "text": "Zeit" },
+								{ "kind": "OpaqueText", "text": " " },
+								{ "kind": "ResolvableText", "text": "ist" },
+								{ "kind": "OpaqueText", "text": " " },
+								{ "kind": "ResolvableText", "text": "Geld" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Phraseme",
+							"kind": "Aphorism",
+							"memberSegmentIndices": [1, 3, 5]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Aphorism",
+						"canonicalForm": "Zeit ist Geld",
+						"coreFeatures": {}
+					},
+					"candidates": ["⏳💰"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "⏳💰"
+				},
+				"explanation": "The aphorism equates time with money. Reuse."
+			}
+		}
+	]
+}

@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das stimmt nicht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stimmt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-part-nicht-negation-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Das stimmt <TARGET>nicht</TARGET>.",
+					"lemma": "nicht",
+					"existingEmojiDescriptions": ["🚫"]
+				},
+				"idealOutput": { "emojiDescription": "🚫" },
+				"explanation": "Ordinary negation. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-part-nicht-negation-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-part-nicht-negation-reuse",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Das stimmt " },
+								{ "kind": "ResolvableText", "text": "nicht" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "PART",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "nicht",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"partType": null,
+							"polarity": "Neg"
+						}
+					},
+					"candidates": ["🚫"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "🚫"
+				},
+				"explanation": "Ordinary negation. Reuse."
+			}
+		}
+	]
+}

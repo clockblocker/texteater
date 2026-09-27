@@ -70,5 +70,78 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-anticipatory-es-0",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Es"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "freut"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "mich"
+						},
+						{
+							"kind": "Punctuation",
+							"text": ","
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "dass"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "du"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "kommst"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "PRON",
+					"memberSegmentIndices": [0]
+				},
+				"explanation": "This es is outside lexically selected subject-expletive composition.",
+				"contaminationKeys": ["subject-es:anticipatory-es"]
+			}
+		}
+	]
 }

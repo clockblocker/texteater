@@ -1,0 +1,84 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist körperlich sehr stark.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "körperlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stark" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-06-stark-physical",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Sie ist körperlich sehr <TARGET>stark</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "stark",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "💪",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "kräftig", "kind": "ADJ" }
+						],
+						"antonym": [
+							{ "canonicalForm": "schwach", "kind": "ADJ" }
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "The physical-strength Reading supports kräftig and the scalar opposite schwach; heftig belongs to the intensity Reading found in starker Regen.",
+				"sources": [
+					{
+						"title": "Dumling generated docs source: Linguistics",
+						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+						"supports": "Allows the physical-strength and intensity meanings to remain distinct Readings of one Lemma."
+					}
+				],
+				"contaminationKeys": ["relation-de-stark-physical"]
+			}
+		}
+	]
+}

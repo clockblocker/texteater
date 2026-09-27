@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Jeder Gast erhielt ein Glas.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Jeder" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gast" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erhielt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Glas" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-27-jeder",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Jeder</TARGET> Gast erhielt ein Glas.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "jeder",
+							"family": "Lexeme",
+							"kind": "DET",
+							"coreFeatures": {
+								"case": null,
+								"definite": null,
+								"extPos": null,
+								"foreign": null,
+								"gender": null,
+								"number": null,
+								"numType": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Tot"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🌐",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": [
+							{ "canonicalForm": "kein", "kind": "DET" }
+						]
+					}
+				},
+				"explanation": "Jeder and kein conventionally contrast universal and zero quantity but are not logical complements because intermediate quantities exist.",
+				"contaminationKeys": ["relation-de-jeder-every"]
+			}
+		}
+	]
+}

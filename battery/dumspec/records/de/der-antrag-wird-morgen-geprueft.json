@@ -1,0 +1,81 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Antrag wird morgen geprüft.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Antrag" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geprüft" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-aux-werden-passive",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Der Antrag <TARGET>wird</TARGET> morgen geprüft.",
+					"lemma": "werden",
+					"existingEmojiDescriptions": ["🔮"]
+				},
+				"idealOutput": { "emojiDescription": "🔄" },
+				"explanation": "Passive auxiliary use, not future prediction. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-aux-werden-passive",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-aux-werden-passive",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Der Antrag " },
+								{ "kind": "ResolvableText", "text": "wird" },
+								{
+									"kind": "OpaqueText",
+									"text": " morgen geprüft."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "AUX",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "AUX",
+						"canonicalForm": "werden",
+						"coreFeatures": { "verbType": null }
+					},
+					"candidates": ["🔮"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🔄" },
+				"explanation": "Exact reviewed identity supplies its authored Reading. Passive auxiliary use, not future prediction. New."
+			}
+		}
+	]
+}

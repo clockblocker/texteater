@@ -1,0 +1,51 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Lärm macht mich müde.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lärm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "macht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müde" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-make-tired",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "make-tired",
+				"kind": "VERB",
+				"lemma": "machen",
+				"context": "Der Lärm <TARGET>macht</TARGET> mich müde.",
+				"meaning": "Cause someone or something to be in a state",
+				"accepted": ["➡️", "🛠️", "🔨", "👉➡️", "⚙️"],
+				"rejected": [
+					"😴",
+					"🥱",
+					"💤",
+					"🔊",
+					"😴🔊",
+					"🔊😴",
+					"🥱🔊",
+					"😩"
+				]
+			}
+		}
+	]
+}

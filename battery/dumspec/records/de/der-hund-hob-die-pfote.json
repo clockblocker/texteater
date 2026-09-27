@@ -1,0 +1,93 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Hund hob die Pfote.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hund" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hob" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Pfote" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-demo-pfote-anchor",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Der Hund hob die <TARGET>Pfote</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Pfote",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🐾",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "Tatze", "kind": "NOUN" }
+						],
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Körperteil", "kind": "NOUN" }
+						],
+						"holonym": [{ "canonicalForm": "Tier", "kind": "NOUN" }]
+					}
+				},
+				"explanation": "The approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.",
+				"sources": [
+					{
+						"title": "Duden: Pfote",
+						"url": "https://www.duden.de/rechtschreibung/Pfote",
+						"supports": "Defines Pfote as the foot of various mammals and supports an animal bearer."
+					},
+					{
+						"title": "Duden: Tatze",
+						"url": "https://www.duden.de/rechtschreibung/Tatze",
+						"supports": "Restricts Tatze to larger predators, supporting Near Synonym rather than exact Synonym."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Separates broader-category Hypernym from whole-bearing Holonym."
+					}
+				],
+				"contaminationKeys": ["relation-de-pfote-paw"]
+			}
+		}
+	]
+}

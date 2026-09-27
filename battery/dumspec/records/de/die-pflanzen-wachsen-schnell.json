@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Pflanzen wachsen schnell.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Pflanzen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wachsen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schnell" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-grow-plant",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "grow-plant",
+				"kind": "VERB",
+				"lemma": "wachsen",
+				"context": "Die Pflanzen <TARGET>wachsen</TARGET> schnell.",
+				"meaning": "Increase in size or develop",
+				"accepted": ["🌱", "🌱⬆️", "📈"],
+				"rejected": ["💧"]
+			}
+		}
+	]
+}

@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Mit diesem Zug setzt sie den König schachmatt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "diesem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zug" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "setzt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "König" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schachmatt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-zug-chess-move",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
+					"lemma": "Zug",
+					"existingEmojiDescriptions": ["🚆", "💨", "🧲", "➡️"]
+				},
+				"idealOutput": { "emojiDescription": "➡️" },
+				"explanation": "Chess move. ➡️ already fits."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-zug-chess-move",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-zug-chess-move",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Mit diesem " },
+								{ "kind": "ResolvableText", "text": "Zug" },
+								{
+									"kind": "OpaqueText",
+									"text": " setzt sie den König schachmatt."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Zug",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"candidates": ["🚆", "💨", "🧲", "➡️"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "➡️" },
+				"explanation": "Chess move. ➡️ already fits."
+			}
+		}
+	]
+}

@@ -1,0 +1,75 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das ist auf jeden Fall richtig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "jeden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fall" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "richtig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"caseId": "relation-adv-36-auf-jeden-fall",
+			"memberSegmentIndices": [4, 6, 8],
+			"case": {
+				"input": {
+					"markedContext": "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "auf jeden Fall",
+							"family": "Phraseme",
+							"kind": "DiscourseFormula",
+							"coreFeatures": { "discourseFormulaRole": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "✅",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": [
+							{
+								"canonicalForm": "auf keinen Fall",
+								"kind": "DiscourseFormula"
+							}
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Auf keinen Fall is the conventional complete-phraseme opposition; the former Lexeme adverb definitiv leaves the DiscourseFormula Family inventory and is dropped by the same-Family filter.",
+				"contaminationKeys": ["relation-de-auf-jeden-fall"]
+			}
+		}
+	]
+}

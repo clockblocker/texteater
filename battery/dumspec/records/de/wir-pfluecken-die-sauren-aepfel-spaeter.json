@@ -1,0 +1,94 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir pflücken die sauren Äpfel später.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "pflücken" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sauren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Äpfel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "später" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-sauer-acidic-reuse",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Wir pflücken die <TARGET>sauren</TARGET> Äpfel später.",
+					"lemma": "sauer",
+					"existingEmojiDescriptions": ["🍋"]
+				},
+				"idealOutput": { "emojiDescription": "🍋" },
+				"explanation": "Same sour taste across bearer and inflection. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-sauer-acidic-reuse",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-sauer-acidic-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Wir pflücken die "
+								},
+								{ "kind": "ResolvableText", "text": "sauren" },
+								{
+									"kind": "OpaqueText",
+									"text": " Äpfel später."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "sauer",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🍋"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "🍋"
+				},
+				"explanation": "Same sour taste across bearer and inflection. Reuse."
+			}
+		}
+	]
+}

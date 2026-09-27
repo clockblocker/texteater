@@ -1,0 +1,174 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Morgenstund hat Gold im Mund.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgenstund" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hat" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gold" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mund" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-proverb-click-morgenstund",
+			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgenstund" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "hat" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gold" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mund" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Proverb",
+					"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
+				},
+				"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-proverb-click-hat",
+			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgenstund" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "hat" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gold" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mund" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Proverb",
+					"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
+				},
+				"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-proverb-click-gold",
+			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgenstund" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "hat" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gold" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mund" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Proverb",
+					"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
+				},
+				"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-proverb-click-im",
+			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgenstund" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "hat" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gold" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mund" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Proverb",
+					"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
+				},
+				"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-proverb-click-mund",
+			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 9,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Morgenstund" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "hat" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Gold" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "i" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Mund" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Proverb",
+					"memberSegmentIndices": [0, 2, 4, 6, 7, 9]
+				},
+				"explanation": "This IDS proverb study identifies Morgenstund hat Gold im Mund as a proverb. Issue #82 product policy projects that evidence to Phraseme/Proverb and includes every fixed written component in source order. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf"
+			}
+		}
+	]
+}

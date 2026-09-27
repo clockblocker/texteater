@@ -1,0 +1,69 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er lächelte verlegen und sah zu Boden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lächelte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verlegen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sah" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Boden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-09-verlegen-null",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Er lächelte <TARGET>verlegen</TARGET> und sah zu Boden.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "verlegen",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "😳",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": { "participleSource": null },
+				"explanation": "Verlegen 'embarrassed' is not a participle form: the verb verlegen forms verlegt.",
+				"sources": [
+					{
+						"title": "Duden: verlegen (Adjektiv)",
+						"url": "https://www.duden.de/rechtschreibung/verlegen_Adjektiv",
+						"supports": "Gives verlegen 'embarrassed' as an adjective."
+					}
+				]
+			}
+		}
+	]
+}

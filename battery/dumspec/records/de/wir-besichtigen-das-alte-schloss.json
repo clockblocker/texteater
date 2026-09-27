@@ -1,0 +1,43 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir besichtigen das alte Schloss.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "besichtigen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schloss" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-castle-visit",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "castle-visit",
+				"kind": "NOUN",
+				"lemma": "Schloss",
+				"gender": "Neut",
+				"context": "Wir besichtigen das alte <TARGET>Schloss</TARGET>.",
+				"meaning": "Castle or palace",
+				"accepted": ["🏰", "🏯"],
+				"rejected": ["🔒"]
+			}
+		}
+	]
+}

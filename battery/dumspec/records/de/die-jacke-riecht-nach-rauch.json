@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Jacke riecht nach Rauch.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jacke" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "riecht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rauch" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-nach-sensory-characteristic",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
+					"lemma": "nach",
+					"existingEmojiDescriptions": ["🧭", "⏭️", "🔗"]
+				},
+				"idealOutput": { "emojiDescription": "👃" },
+				"explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-nach-sensory-characteristic",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-nach-sensory-characteristic",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Die Jacke riecht "
+								},
+								{ "kind": "ResolvableText", "text": "nach" },
+								{ "kind": "OpaqueText", "text": " Rauch." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "nach",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": ["🧭", "⏭️", "🔗"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "👃" },
+				"explanation": "A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New."
+			}
+		}
+	]
+}

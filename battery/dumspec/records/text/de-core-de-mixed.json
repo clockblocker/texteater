@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Das Update ist ready.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-core/de-mixed",
+			"case": {
+				"input": {
+					"id": "de-mixed",
+					"sourceText": "Das Update ist ready."
+				},
+				"idealOutput": {
+					"id": "de-mixed",
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Das Update ist ready."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-core/6",
+			"case": {
+				"input": "Das Update ist ready.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Das Update ist ready."
+				}
+			}
+		}
+	]
+}

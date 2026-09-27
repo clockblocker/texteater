@@ -90,5 +90,69 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-government-warten-auf",
+			"case": {
+				"input": {
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Er"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "wartet"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "auf"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "den"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Nachtbus"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"idealOutput": {
+					"slots": [
+						{
+							"governors": [3],
+							"offset": 10,
+							"preposition": "auf",
+							"case": "Acc",
+							"referent": "Something"
+						}
+					]
+				},
+				"explanation": "warten governs auf with the accusative."
+			}
+		}
+	]
 }

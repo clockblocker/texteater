@@ -1,0 +1,84 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Blutplasma wurde untersucht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Blutplasma" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "untersucht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-15-blutplasma",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Das <TARGET>Blutplasma</TARGET> wurde untersucht.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Blutplasma",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Neut", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🩸",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Flüssigkeit", "kind": "NOUN" }
+						],
+						"holonym": [{ "canonicalForm": "Blut", "kind": "NOUN" }]
+					}
+				},
+				"explanation": "Duden defines Blutplasma as the liquid component of Blut, directly separating the category Flüssigkeit from the containing whole Blut.",
+				"sources": [
+					{
+						"title": "Duden: Blutplasma",
+						"url": "https://www.duden.de/rechtschreibung/Blutplasma",
+						"supports": "Defines Blutplasma as the liquid component of Blut."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Separates broader-category Hypernym from part-to-whole Holonym."
+					}
+				],
+				"contaminationKeys": ["relation-de-blutplasma"]
+			}
+		}
+	]
+}

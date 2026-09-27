@@ -58,5 +58,51 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-noun-abbreviation",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Dipl.-Ing.</TARGET> Müller leitet das Projekt.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Diplom-Ingenieur",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": "Yes"
+						}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "graduate engineer",
+						"ru": "дипломированный инженер"
+					}
+				},
+				"explanation": "An abbreviation translates as the established equivalent of its expansion, a phrase where no single word exists.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["qualified engineer", "certified engineer"],
+						"ru": []
+					},
+					"rejected": {
+						"en": [],
+						"ru": ["инженер-дипломант"]
+					}
+				}
+			}
+		}
+	]
 }

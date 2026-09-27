@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Es gilt: Der Weg ist das Ziel.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gilt" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Weg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ziel" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"caseId": "relation-adv-34-aphorism-null",
+			"memberSegmentIndices": [5, 7, 9, 11, 13],
+			"case": {
+				"input": {
+					"markedContext": "Es gilt: <TARGET>Der Weg ist das Ziel</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Der Weg ist das Ziel",
+							"family": "Phraseme",
+							"kind": "Aphorism",
+							"coreFeatures": {},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🛤️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "No adjudicated expression preserves this aphorism's proposition and stance; the human-accepted null does not rely on dictionary silence, and thematic travel words are associations.",
+				"contaminationKeys": ["relation-de-weg-ist-ziel"]
+			}
+		}
+	]
+}

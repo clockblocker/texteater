@@ -1,0 +1,75 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Rose blüht im Garten.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rose" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blüht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Garten" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-44-rose-association",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Die <TARGET>Rose</TARGET> blüht im Garten.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Rose",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🌹",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Blütenpflanze", "kind": "NOUN" }
+						],
+						"holonym": null
+					}
+				},
+				"explanation": "Rose is a kind of Blütenpflanze; Garten is only a location and Dorn only a possible part, so fluent associations cannot fill upward slots.",
+				"contaminationKeys": ["relation-de-rose-flower"]
+			}
+		}
+	]
+}

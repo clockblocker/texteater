@@ -1,0 +1,90 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach fünf Bier war er völlig blau.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fünf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bier" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "völlig" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blau" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-blau-drunk",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"markedContext": "Nach fünf Bier war er völlig <TARGET>blau</TARGET>.",
+					"lemma": "blau",
+					"existingEmojiDescriptions": ["🟦"]
+				},
+				"idealOutput": { "emojiDescription": "🥴" },
+				"explanation": "Drunk, not blue-coloured. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-blau-drunk",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-blau-drunk",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Nach fünf Bier war er völlig "
+								},
+								{ "kind": "ResolvableText", "text": "blau" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "blau",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🟦"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🥴" },
+				"explanation": "Drunk, not blue-coloured. New."
+			}
+		}
+	]
+}

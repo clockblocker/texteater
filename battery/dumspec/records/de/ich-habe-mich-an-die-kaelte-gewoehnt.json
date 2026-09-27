@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ich habe mich an die Kälte gewöhnt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "habe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kälte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gewöhnt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0034"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/valency/source-data.json",
+			"caseId": "valency-gewoehnen-lexical-reflexive",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"markedContext": "Ich habe mich an die Kälte <TARGET>gewöhnt</TARGET>.",
+					"reading": {
+						"unitKind": "Reading",
+						"lemma": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "sich gewöhnen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": "Yes",
+								"verbType": null
+							}
+						},
+						"emojiDescription": "🔄"
+					}
+				},
+				"idealOutput": {
+					"valency": [
+						{
+							"status": "Required",
+							"complement": {
+								"kind": "Case",
+								"case": "Nom",
+								"referent": "Someone"
+							}
+						},
+						{
+							"status": "Required",
+							"complement": {
+								"kind": "Preposition",
+								"preposition": "an",
+								"case": "Acc",
+								"referent": "Either"
+							}
+						}
+					]
+				},
+				"explanation": "sich is the lexical reflexive, a fixed part from Lemma identity, so it has no slot. The an + Acc complement is Required.",
+				"sources": [
+					{
+						"title": "#599 acceptance case 3",
+						"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+						"supports": "sich gewöhnen an has a Required an slot."
+					}
+				]
+			}
+		}
+	]
+}

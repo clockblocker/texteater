@@ -1,0 +1,92 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir mieten die Wohnung von Frau Roth.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mieten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wohnung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "von" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frau" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Roth" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-demo-mieten-converse",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "mieten",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🔑",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": [
+							{ "canonicalForm": "vermieten", "kind": "VERB" }
+						],
+						"hypernym": null
+					}
+				},
+				"explanation": "Mieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
+				"sources": [
+					{
+						"title": "IDS Grammis: konvers",
+						"url": "https://grammis.ids-mannheim.de/terminologie/1005",
+						"supports": "Defines converses as the same relation viewed through exchanged arguments."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Defines Near Antonym as the project category for conventional lexical contrast that is not strict opposition."
+					}
+				],
+				"contaminationKeys": ["relation-de-mieten-rent"]
+			}
+		}
+	]
+}

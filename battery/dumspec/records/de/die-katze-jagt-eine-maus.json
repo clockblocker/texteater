@@ -1,0 +1,81 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Katze jagt eine Maus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Katze" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "jagt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Maus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-noun-maus-animal-new",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Die Katze jagt eine <TARGET>Maus</TARGET>.",
+					"lemma": "Maus",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🐭" },
+				"explanation": "Animal. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-noun-maus-animal-new",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-noun-maus-animal-new",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Die Katze jagt eine "
+								},
+								{ "kind": "ResolvableText", "text": "Maus" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Maus",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🐭" },
+				"explanation": "Animal. New."
+			}
+		}
+	]
+}

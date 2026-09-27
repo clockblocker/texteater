@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nora wird das Haus von ihrer Tante erben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nora" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "von" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihrer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tante" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-near-ant-01-erben",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"markedContext": "Nora wird das Haus von ihrer Tante <TARGET>erben</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "erben",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "📜",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "nearAntonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"nearAntonym": [
+							{ "canonicalForm": "vererben", "kind": "VERB" }
+						]
+					}
+				},
+				"explanation": "Erben and vererben profile the same inheritance event from exchanged participant perspectives.",
+				"sources": [
+					{
+						"title": "Duden: erben",
+						"url": "https://www.duden.de/rechtschreibung/erben",
+						"supports": "Defines erben from the recipient perspective of inheritance."
+					},
+					{
+						"title": "Duden: vererben",
+						"url": "https://www.duden.de/rechtschreibung/vererben",
+						"supports": "Defines vererben from the bequeather perspective of the same event."
+					},
+					{
+						"title": "Duden: Das Wunder des Verbs",
+						"url": "https://cdn.duden.de/public_files/2018-11/Konrad-Duden-Preis_Fabricius_Hansen_Das_Wunder_des_Verbs_2004.pdf",
+						"supports": "Analyzes the exchanged participant perspectives of erben and vererben."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-erben-house-2026"
+				]
+			}
+		}
+	]
+}

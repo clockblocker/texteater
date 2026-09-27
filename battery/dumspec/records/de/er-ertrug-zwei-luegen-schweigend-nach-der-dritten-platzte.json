@@ -1,0 +1,189 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er ertrug zwei Lügen schweigend. Nach der dritten platzte ihm der sprichwörtliche Kragen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ertrug" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zwei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lügen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schweigend" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dritten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "platzte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sprichwörtliche" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kragen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-kragen-click-platzte",
+			"memberSegmentIndices": [17, 21, 25],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 17,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ertrug" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zwei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Lügen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schweigend" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dritten" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "platzte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sprichwörtliche" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kragen" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [17, 21, 25]
+				},
+				"explanation": "The anger context makes der Kragen platzen figurative. Issue #82 includes platzte, der, and Kragen as fixed Idiom members while excluding the dative argument ihm and inserted modifier sprichwörtliche. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-der-kragen-platzen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-kragen-click-der",
+			"memberSegmentIndices": [17, 21, 25],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 21,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ertrug" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zwei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Lügen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schweigend" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dritten" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "platzte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sprichwörtliche" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kragen" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [17, 21, 25]
+				},
+				"explanation": "The anger context makes der Kragen platzen figurative. Issue #82 includes platzte, der, and Kragen as fixed Idiom members while excluding the dative argument ihm and inserted modifier sprichwörtliche. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-der-kragen-platzen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-kragen-click-kragen",
+			"memberSegmentIndices": [17, 21, 25],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 25,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Er" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ertrug" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zwei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Lügen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schweigend" },
+						{ "kind": "Punctuation", "text": "." },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dritten" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "platzte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sprichwörtliche" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kragen" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [17, 21, 25]
+				},
+				"explanation": "The anger context makes der Kragen platzen figurative. Issue #82 includes platzte, der, and Kragen as fixed Idiom members while excluding the dative argument ihm and inserted modifier sprichwörtliche. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-der-kragen-platzen"
+				]
+			}
+		}
+	]
+}

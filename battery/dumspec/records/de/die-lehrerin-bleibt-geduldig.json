@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Lehrerin bleibt geduldig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lehrerin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleibt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geduldig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-patient",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "demo-patient",
+				"kind": "ADJ",
+				"lemma": "geduldig",
+				"context": "Die Lehrerin bleibt <TARGET>geduldig</TARGET>.",
+				"meaning": "Calmly tolerating delay or difficulty",
+				"accepted": ["😌⏳"],
+				"demo": true
+			}
+		}
+	]
+}

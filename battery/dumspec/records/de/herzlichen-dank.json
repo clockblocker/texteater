@@ -1,0 +1,66 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Herzlichen Dank!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Herzlichen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dank" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-discourse-click-herzlichen",
+			"memberSegmentIndices": [0, 2],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Herzlichen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Dank" },
+						{ "kind": "Punctuation", "text": "!" }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "DiscourseFormula",
+					"memberSegmentIndices": [0, 2]
+				},
+				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not assign Dumgen's route to Herzlichen Dank; issue #82 product policy treats this conventional greeting response as Phraseme/DiscourseFormula and includes both fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-discourse-click-dank",
+			"memberSegmentIndices": [0, 2],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Herzlichen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Dank" },
+						{ "kind": "Punctuation", "text": "!" }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "DiscourseFormula",
+					"memberSegmentIndices": [0, 2]
+				},
+				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not assign Dumgen's route to Herzlichen Dank; issue #82 product policy treats this conventional greeting response as Phraseme/DiscourseFormula and includes both fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		}
+	]
+}

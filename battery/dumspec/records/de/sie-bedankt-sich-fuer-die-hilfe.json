@@ -1,0 +1,94 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie bedankt sich für die Hilfe.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bedankt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "für" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hilfe" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0030"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/valency/source-data.json",
+			"caseId": "valency-bedanken-two-prepositions",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Sie <TARGET>bedankt</TARGET> sich für die Hilfe.",
+					"reading": {
+						"unitKind": "Reading",
+						"lemma": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "sich bedanken",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": "Yes",
+								"verbType": null
+							}
+						},
+						"emojiDescription": "🙏"
+					}
+				},
+				"idealOutput": {
+					"valency": [
+						{
+							"status": "Required",
+							"complement": {
+								"kind": "Case",
+								"case": "Nom",
+								"referent": "Someone"
+							}
+						},
+						{
+							"status": "Optional",
+							"complement": {
+								"kind": "Preposition",
+								"preposition": "bei",
+								"case": "Dat",
+								"referent": "Someone"
+							}
+						},
+						{
+							"status": "Optional",
+							"complement": {
+								"kind": "Preposition",
+								"preposition": "für",
+								"case": "Acc",
+								"referent": "Something"
+							}
+						}
+					]
+				},
+				"explanation": "sich bei jemandem für etwas bedanken: both prepositional complements are governed and Optional, and the lexical reflexive is not a slot.",
+				"sources": [
+					{
+						"title": "ADR 0030",
+						"path": "docs/adr/0030-store-preposition-government-as-reading-knowledge.md",
+						"supports": "bedanken governs bei + Dat and für + Acc."
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,117 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wie geht's dir heute?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geht" },
+		{ "kind": "ResolvableText", "text": "'s" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-klitik",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Wie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "geht" },
+						{ "kind": "ResolvableText", "text": "'s" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "dir" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "heute" },
+						{ "kind": "Punctuation", "text": "?" }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "ADV",
+							"members": [{ "offset": 0 }]
+						},
+						{
+							"kind": "VERB",
+							"members": [
+								{ "offset": 4, "role": "Head" },
+								{ "offset": 8, "role": "Expletive" }
+							]
+						},
+						{
+							"kind": "PRON",
+							"members": [{ "offset": 11 }],
+							"identity": "PRON:dir"
+						},
+						{
+							"kind": "ADV",
+							"members": [{ "offset": 15 }]
+						}
+					],
+					"phrasemes": [
+						{
+							"kind": "DiscourseFormula",
+							"words": [0, 4, 11]
+						}
+					]
+				},
+				"explanation": "The apostrophe stays inside its Segment (ADR 0035): `'s` is one Fused piece of geht's standing for `es`, the expletive of `es geht`; the greeting Wie geht's dir is a DiscourseFormula over the words Wie, geht (holding `'s`) and dir."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-discourse-formula",
+			"memberSegmentIndices": [0, 2, 3, 5],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Wie</TARGET> <TARGET>geht</TARGET>'<TARGET>s</TARGET> <TARGET>dir</TARGET> heute?",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"canonicalForm": "wie geht's dir",
+						"coreFeatures": { "discourseFormulaRole": "Greeting" }
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "how are you", "ru": "как дела" }
+				},
+				"explanation": "A discourse formula is translated as it is said, not turned into an infinitive.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": [
+							"как ты",
+							"как поживаешь",
+							"как ты поживаешь",
+							"как у тебя дела"
+						]
+					},
+					"rejected": {
+						"en": [],
+						"ru": ["как поживать"]
+					}
+				}
+			}
+		}
+	]
+}

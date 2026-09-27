@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Niemand antwortete.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Niemand" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "antwortete" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-31-niemand",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Niemand</TARGET> antwortete.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "niemand",
+							"family": "Lexeme",
+							"kind": "PRON",
+							"coreFeatures": {
+								"extPos": null,
+								"foreign": null,
+								"person": null,
+								"polite": null,
+								"poss": null,
+								"pronType": "Neg",
+								"case": null,
+								"number": null,
+								"gender": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🚷",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": [
+							{ "canonicalForm": "jemand", "kind": "PRON" }
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "For the existential-person Reading, niemand and jemand form a conventional complementary opposition.",
+				"contaminationKeys": ["relation-de-niemand-nobody"]
+			}
+		}
+	]
+}

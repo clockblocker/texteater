@@ -1,0 +1,35 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "  אהה\t אני   הולך הביתה  ",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-he-core/he-noisy",
+			"case": {
+				"input": {
+					"id": "he-noisy",
+					"sourceText": "  אהה\t אני   הולך הביתה  "
+				},
+				"idealOutput": {
+					"id": "he-noisy",
+					"decision": "Accepted",
+					"language": "he",
+					"stitchedText": "אהה אני הולך הביתה"
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-he-core/3",
+			"case": {
+				"input": "  אהה\t אני   הולך הביתה  ",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "he",
+					"stitchedText": "אהה אני הולך הביתה"
+				}
+			}
+		}
+	]
+}

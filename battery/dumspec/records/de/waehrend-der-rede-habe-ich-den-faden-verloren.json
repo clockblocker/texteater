@@ -1,0 +1,48 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Während der Rede habe ich den Faden verloren.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Während" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rede" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "habe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Faden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verloren" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-idiom",
+			"memberSegmentIndices": [10, 12, 14],
+			"case": {
+				"id": "demo-idiom",
+				"kind": "VERB",
+				"lemma": "den Faden verlieren",
+				"context": "Während der Rede habe ich <TARGET>den Faden verloren</TARGET>.",
+				"meaning": "Lose the thread of one's thoughts, not literal sewing thread. The mnemonic depicts losing mental continuity.",
+				"accepted": ["🧠❓"],
+				"demo": true
+			}
+		}
+	]
+}

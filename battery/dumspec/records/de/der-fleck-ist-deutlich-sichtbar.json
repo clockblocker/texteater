@@ -1,0 +1,75 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Fleck ist deutlich sichtbar.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fleck" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "deutlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sichtbar" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-basic-02-sichtbar",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Der Fleck ist deutlich <TARGET>sichtbar</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "sichtbar",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "👁️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": [
+							{ "canonicalForm": "unsichtbar", "kind": "ADJ" }
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Sichtbar and unsichtbar form a conventional complementary opposition; shared morphology is not the evidence for the relation.",
+				"contaminationKeys": ["relation-de-sichtbar-visibility"]
+			}
+		}
+	]
+}

@@ -1,0 +1,91 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ich nehme diesen Stuhl.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nehme" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "diesen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stuhl" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-det-dieser-demonstrative-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Ich nehme <TARGET>diesen</TARGET> Stuhl.",
+					"lemma": "dieser",
+					"existingEmojiDescriptions": ["👉"]
+				},
+				"idealOutput": { "emojiDescription": "👉" },
+				"explanation": "Demonstrative selection of a particular referent. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-det-dieser-demonstrative-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-det-dieser-demonstrative-reuse",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Ich nehme " },
+								{ "kind": "ResolvableText", "text": "diesen" },
+								{ "kind": "OpaqueText", "text": " Stuhl." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "DET",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "dieser",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"foreign": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem"
+						}
+					},
+					"candidates": ["👉"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "👉"
+				},
+				"explanation": "Exact reviewed identity supplies its authored Reading. Demonstrative selection of a particular referent. Reuse."
+			}
+		}
+	]
+}

@@ -1,0 +1,72 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist eine sehr gebildete Frau.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gebildete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frau" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-08-gebildet",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Sie ist eine sehr <TARGET>gebildete</TARGET> Frau.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "gebildet",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🎓",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "bilden",
+						"meaning": "Verbal"
+					}
+				},
+				"explanation": "Gebildet 'educated' is the resulting state of bilden in its sense 'to educate, to cultivate', so the meaning is Verbal although the adjective is lexicalized.",
+				"sources": [
+					{
+						"title": "Duden: bilden",
+						"url": "https://www.duden.de/rechtschreibung/bilden",
+						"supports": "Lists 'jemanden geistig formen, erziehen' among the senses of bilden."
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,72 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir müssen jetzt gehen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müssen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "jetzt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gehen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-25-muessen",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Wir <TARGET>müssen</TARGET> jetzt gehen.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "müssen",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": "Mod"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "❗",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "sollen", "kind": "VERB" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Sollen overlaps in obligation contexts but introduces reported or normative modality instead of preserving necessity.",
+				"contaminationKeys": ["relation-de-muessen-obligation"]
+			}
+		}
+	]
+}

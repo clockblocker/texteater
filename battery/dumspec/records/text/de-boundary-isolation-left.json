@@ -1,0 +1,36 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Das H au",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-boundary-isolation/left",
+			"case": {
+				"input": {
+					"id": "left",
+					"sourceText": "Das H au"
+				},
+				"idealOutput": {
+					"id": "left",
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Das Hau"
+				},
+				"explanation": "Whitespace repair never joins material across caller-delimited item boundaries."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-boundary-isolation/0",
+			"case": {
+				"input": "Das H au",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "de",
+					"stitchedText": "Das Hau"
+				}
+			}
+		}
+	]
+}

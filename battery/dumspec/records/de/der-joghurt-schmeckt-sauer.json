@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Joghurt schmeckt sauer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Joghurt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schmeckt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sauer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-sour-taste",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "sour-taste",
+				"kind": "ADJ",
+				"lemma": "sauer",
+				"context": "Der Joghurt schmeckt <TARGET>sauer</TARGET>.",
+				"meaning": "Sour or acidic taste",
+				"accepted": ["🍋", "😖🍋", "🍋😖"],
+				"rejected": ["😠", "🥛"]
+			}
+		}
+	]
+}

@@ -1,0 +1,48 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nora bleibt ruhig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nora" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleibt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ruhig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0026"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-default-copula-bleibt",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Nora" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "bleibt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ruhig" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2]
+				},
+				"explanation": "IDS classifies bleibt as a copula combined with a predicative complement. The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			}
+		}
+	]
+}

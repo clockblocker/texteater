@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Unternehmen wächst weiter.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Unternehmen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wächst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "weiter" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-grow-business",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "grow-business",
+				"kind": "VERB",
+				"lemma": "wachsen",
+				"context": "Das Unternehmen <TARGET>wächst</TARGET> weiter.",
+				"meaning": "Increase in size or develop",
+				"accepted": ["📈", "🌱", "🌱⬆️"],
+				"rejected": ["🏢"]
+			}
+		}
+	]
+}

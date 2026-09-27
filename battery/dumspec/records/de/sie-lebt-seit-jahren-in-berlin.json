@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie lebt seit Jahren in Berlin.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lebt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "seit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jahren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Berlin" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-propn-berlin-city-reuse",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Sie lebt seit Jahren in <TARGET>Berlin</TARGET>.",
+					"lemma": "Berlin",
+					"existingEmojiDescriptions": ["🏙️"]
+				},
+				"idealOutput": { "emojiDescription": "🏙️" },
+				"explanation": "The city Berlin, independent of this residence scene. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-propn-berlin-city-reuse",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-propn-berlin-city-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Sie lebt seit Jahren in "
+								},
+								{ "kind": "ResolvableText", "text": "Berlin" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "PROPN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Berlin",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"foreign": null,
+							"gender": "Neut"
+						}
+					},
+					"candidates": ["🏙️"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "🏙️" },
+				"explanation": "The city Berlin, independent of this residence scene. Reuse."
+			}
+		}
+	]
+}

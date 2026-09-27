@@ -1,0 +1,48 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Worauf wartest du?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Worauf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wartest" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-pronominal-adverb-worauf-click-worauf",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Worauf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wartest" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "du" },
+						{ "kind": "Punctuation", "text": "?" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADV",
+					"memberSegmentIndices": [0]
+				},
+				"explanation": "Worauf is an interrogative pronominal adverb (wo + auf) asking for the whole auf-phrase of wartest. Singleton ADV; the verb stays separate."
+			}
+		}
+	]
+}

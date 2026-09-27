@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Solistin stimmte ihre Geige vor dem Konzert.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Solistin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stimmte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihre" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geige" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Konzert" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-near-syn-02-geige-null",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Die Solistin stimmte ihre <TARGET>Geige</TARGET> vor dem Konzert.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Geige",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🎻",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "nearSynonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": { "nearSynonym": null }
+				},
+				"explanation": "Bratsche denotes a distinct larger instrument tuned a fifth lower, not a usage variant of Geige.",
+				"sources": [
+					{
+						"title": "Duden: Geige",
+						"url": "https://www.duden.de/rechtschreibung/Geige",
+						"supports": "Defines Geige as the violin-family instrument selected by the context."
+					},
+					{
+						"title": "Duden: Bratsche",
+						"url": "https://www.duden.de/rechtschreibung/Bratsche",
+						"supports": "Defines Bratsche as a distinct larger instrument tuned a fifth lower."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-geige-concert-2026"
+				]
+			}
+		}
+	]
+}

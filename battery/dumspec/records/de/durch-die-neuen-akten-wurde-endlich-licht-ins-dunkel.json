@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Durch die neuen Akten wurde endlich Licht ins Dunkel gebracht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Durch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neuen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Akten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wurde" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "endlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Licht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dunkel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gebracht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-idiom-not-neighbouring-idiom",
+			"memberSegmentIndices": [8, 12, 14, 15, 17, 19],
+			"case": {
+				"input": {
+					"markedContext": "Durch die neuen Akten <TARGET>wurde</TARGET> endlich <TARGET>Licht</TARGET> <TARGET>in</TARGET><TARGET>s</TARGET> <TARGET>Dunkel</TARGET> <TARGET>gebracht</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "Licht ins Dunkel bringen",
+						"coreFeatures": {}
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "shed light on",
+						"ru": "пролить свет на"
+					}
+				},
+				"explanation": "Licht ins Dunkel bringen clarifies an obscure matter; bring to light is ans Licht bringen (reveal), a different idiom.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["shed light on something", "clarify"],
+						"ru": [
+							"пролить свет",
+							"прояснить ситуацию",
+							"внести ясность"
+						]
+					},
+					"rejected": {
+						"en": [
+							"bring to light",
+							"light",
+							"was brought to light"
+						],
+						"ru": ["null", "свет"]
+					}
+				}
+			}
+		}
+	]
+}

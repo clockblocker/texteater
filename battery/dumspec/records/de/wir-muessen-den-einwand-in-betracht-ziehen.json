@@ -1,0 +1,72 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir müssen den Einwand in Betracht ziehen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müssen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Einwand" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Betracht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ziehen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"caseId": "relation-adv-35-in-betracht-ziehen",
+			"memberSegmentIndices": [8, 10, 12],
+			"case": {
+				"input": {
+					"markedContext": "Wir müssen den Einwand <TARGET>in Betracht ziehen</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "in Betracht ziehen",
+							"family": "Phraseme",
+							"kind": "Collocation",
+							"coreFeatures": {},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🤔",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "The Lexeme paraphrases berücksichtigen and bedenken leave the Collocation Family inventory, so no same-Family target is adjudicated; the complete Collocation still owns the judgments and the Lexeme contrast pair is covered by the erwägen case.",
+				"contaminationKeys": ["relation-de-in-betracht-ziehen"]
+			}
+		}
+	]
+}

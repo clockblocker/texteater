@@ -1,0 +1,119 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Haus des Nachbarn ist alt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Haus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nachbarn" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-genitiv",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Haus" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "des" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Nachbarn" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "alt" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 0, "role": "Article" },
+								{ "offset": 4, "role": "Head" }
+							]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 9, "role": "Article" },
+								{ "offset": 13, "role": "Head" }
+							]
+						},
+						{
+							"kind": "VERB",
+							"members": [{ "offset": 22 }]
+						},
+						{
+							"kind": "ADJ",
+							"members": [{ "offset": 26 }]
+						}
+					],
+					"phrasemes": []
+				},
+				"explanation": "A genitive article; `des` is not an authored article spelling, so its identity comes from the noun."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-verb-present-copula",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Das Haus des Nachbarn <TARGET>ist</TARGET> alt.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "be", "ru": "быть" }
+				},
+				"explanation": "A present-tense copula translates as the infinitive; Russian есть would mirror the finite form.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": []
+					},
+					"rejected": {
+						"en": ["is"],
+						"ru": ["есть", "является"]
+					}
+				}
+			}
+		}
+	]
+}

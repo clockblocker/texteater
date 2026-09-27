@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Wohnung ist teuer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wohnung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "teuer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-expensive",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "demo-expensive",
+				"kind": "ADJ",
+				"lemma": "teuer",
+				"context": "Die Wohnung ist <TARGET>teuer</TARGET>.",
+				"meaning": "Costing a lot of money",
+				"accepted": ["💰⬆️", "💸"],
+				"demo": true
+			}
+		}
+	]
+}

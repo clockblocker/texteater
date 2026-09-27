@@ -1,0 +1,86 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Findet das Treffen morgen statt?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Findet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Treffen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "statt" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-question-stattfinden-click-findet",
+			"memberSegmentIndices": [0, 8],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Findet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Treffen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "morgen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "statt" },
+						{ "kind": "Punctuation", "text": "?" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [0, 8]
+				},
+				"explanation": "IDS establishes the detached-prefix category fact. Issue #82 groups findet and statt as one Lexeme/VERB in the question while excluding the question mark from membership. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
+				"contaminationKeys": ["target-lexical-unit:stattfinden"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-question-stattfinden-click-statt",
+			"memberSegmentIndices": [0, 8],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 8,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Findet" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Treffen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "morgen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "statt" },
+						{ "kind": "Punctuation", "text": "?" }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [0, 8]
+				},
+				"explanation": "IDS establishes the detached-prefix category fact. Issue #82 groups findet and statt as one Lexeme/VERB in the question while excluding the question mark from membership. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
+				"contaminationKeys": ["target-lexical-unit:stattfinden"]
+			}
+		}
+	]
+}

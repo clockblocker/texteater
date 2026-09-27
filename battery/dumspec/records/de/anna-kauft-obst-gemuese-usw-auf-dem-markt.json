@@ -61,5 +61,153 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-usw",
+			"case": {
+				"input": {
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Anna"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "kauft"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Obst"
+						},
+						{
+							"kind": "Punctuation",
+							"text": ","
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Gemüse"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "usw."
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "auf"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "dem"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "Markt"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "PROPN",
+							"members": [
+								{
+									"offset": 0
+								}
+							]
+						},
+						{
+							"kind": "VERB",
+							"members": [
+								{
+									"offset": 5
+								}
+							]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{
+									"offset": 11
+								}
+							]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{
+									"offset": 17
+								}
+							]
+						},
+						{
+							"kind": "ADV",
+							"members": [
+								{
+									"offset": 24
+								}
+							]
+						},
+						{
+							"kind": "ADP",
+							"members": [
+								{
+									"offset": 29
+								}
+							]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{
+									"offset": 33,
+									"role": "Article"
+								},
+								{
+									"offset": 37,
+									"role": "Head"
+								}
+							]
+						}
+					],
+					"phrasemes": [],
+					"slots": []
+				},
+				"explanation": "An abbreviation is one Segment whose surface is its expansion."
+			}
+		}
+	]
 }

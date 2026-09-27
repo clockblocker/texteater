@@ -1,0 +1,146 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Paket wird morgen geliefert.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Paket" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geliefert" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-passiv",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Das" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Paket" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "wird" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "morgen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "geliefert" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 0, "role": "Article" },
+								{ "offset": 4, "role": "Head" }
+							]
+						},
+						{
+							"kind": "VERB",
+							"members": [
+								{ "offset": 10, "role": "Auxiliary" },
+								{ "offset": 22, "role": "Head" }
+							]
+						},
+						{
+							"kind": "ADV",
+							"members": [{ "offset": 15 }]
+						}
+					],
+					"phrasemes": []
+				},
+				"explanation": "The process passive: `wird` is an Auxiliary member whose AUX Reading derives from the shape."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-verb-passive",
+			"memberSegmentIndices": [4, 8],
+			"case": {
+				"input": {
+					"markedContext": "Das Paket <TARGET>wird</TARGET> morgen <TARGET>geliefert</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "liefern",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "deliver", "ru": "доставлять" }
+				},
+				"explanation": "The passive belongs to the sentence; the Lemma translates as an active infinitive.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": ["доставить"]
+					},
+					"rejected": {
+						"en": ["delivered", "be delivered", "is delivered"],
+						"ru": ["доставляться", "будет доставлено"]
+					}
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-noun-false-friend",
+			"memberSegmentIndices": [0, 2],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Das</TARGET> <TARGET>Paket</TARGET> wird morgen geliefert.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Paket",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "parcel", "ru": "посылка" }
+				},
+				"explanation": "A delivered Paket is a parcel; Russian пакет is a bag, a false friend.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["package"],
+						"ru": []
+					},
+					"rejected": {
+						"en": [],
+						"ru": ["пакет"]
+					}
+				}
+			}
+		}
+	]
+}

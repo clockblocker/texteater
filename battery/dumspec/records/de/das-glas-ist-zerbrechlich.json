@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Glas ist zerbrechlich.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Glas" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zerbrechlich" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-fragile",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "fresh-fragile",
+				"kind": "ADJ",
+				"lemma": "zerbrechlich",
+				"context": "Das Glas ist <TARGET>zerbrechlich</TARGET>.",
+				"meaning": "Easily broken",
+				"accepted": ["🥚", "🥚⚠️", "🫧⚠️", "⚠️🫧"],
+				"rejected": ["💪", "💔", "⚠️💔"]
+			}
+		}
+	]
+}

@@ -1,0 +1,51 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Wasser im See bleibt den ganzen Sommer kalt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wasser" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "See" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleibt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganzen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sommer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kalt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-remain-cold",
+			"memberSegmentIndices": [9],
+			"case": {
+				"id": "remain-cold",
+				"kind": "VERB",
+				"lemma": "bleiben",
+				"context": "Das Wasser im See <TARGET>bleibt</TARGET> den ganzen Sommer kalt.",
+				"meaning": "Remain in a state",
+				"accepted": ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+				"rejected": ["🥶", "🧊", "❄️", "🥶⏳", "🧊⏳", "🏞️", "❄️⏳", "🌊"]
+			}
+		}
+	]
+}

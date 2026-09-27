@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Trotz der Hektik blieb sie ganz gelassen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Trotz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hektik" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blieb" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gelassen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-01-gelassen",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"markedContext": "Trotz der Hektik blieb sie ganz <TARGET>gelassen</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "gelassen",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "😌",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "lassen",
+						"meaning": "Drifted"
+					}
+				},
+				"explanation": "Gelassen is the Partizip II of lassen by form, but 'calm' is no sense of lassen.",
+				"sources": [
+					{
+						"title": "Duden: gelassen",
+						"url": "https://www.duden.de/rechtschreibung/gelassen",
+						"supports": "Lists gelassen 'calm, composed' as an adjective derived from the participle of lassen."
+					}
+				]
+			}
+		}
+	]
+}

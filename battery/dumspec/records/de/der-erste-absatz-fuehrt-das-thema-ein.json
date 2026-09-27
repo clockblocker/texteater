@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der erste Absatz führt das Thema ein.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erste" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Absatz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "führt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Thema" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-noun-absatz-paragraph-new",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Der erste <TARGET>Absatz</TARGET> führt das Thema ein.",
+					"lemma": "Absatz",
+					"existingEmojiDescriptions": ["👠", "🛒"]
+				},
+				"idealOutput": { "emojiDescription": "📄" },
+				"explanation": "Text paragraph, neither a shoe heel nor sales. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-noun-absatz-paragraph-new",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-noun-absatz-paragraph-new",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Der erste " },
+								{ "kind": "ResolvableText", "text": "Absatz" },
+								{
+									"kind": "OpaqueText",
+									"text": " führt das Thema ein."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Absatz",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"candidates": ["👠", "🛒"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "📄" },
+				"explanation": "Text paragraph, neither a shoe heel nor sales. New."
+			}
+		}
+	]
+}

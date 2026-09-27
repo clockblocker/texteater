@@ -1,0 +1,90 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Berlin ist Deutschlands größte Stadt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Berlin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Deutschlands" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "größte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stadt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-basic-04-berlin-city",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Berlin</TARGET> ist Deutschlands größte Stadt.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Berlin",
+							"family": "Lexeme",
+							"kind": "PROPN",
+							"coreFeatures": {
+								"abbr": null,
+								"article": null,
+								"foreign": null,
+								"gender": "Neut"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🏙️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Stadt", "kind": "NOUN" }
+						],
+						"holonym": null
+					}
+				},
+				"explanation": "The exact city Reading is conventionally an instance of Stadt. Berlin's Land Reading is kept separate rather than adding cross-Reading containment here.",
+				"sources": [
+					{
+						"title": "Constitution of Berlin, Article 1",
+						"url": "https://www.berlin.de/rbmskzl/politik/senat/verfassung/verfassung-von-berlin-abschnitt-i-die-grundlagen-41549.php",
+						"supports": "States that Berlin is both a German Land and a city."
+					},
+					{
+						"title": "Berlin economic location",
+						"url": "https://www.berlin.de/wirtschaft/wirtschaftsstandort/",
+						"supports": "Identifies Berlin as Germany's largest city."
+					},
+					{
+						"title": "Dumling generated docs source: Linguistics",
+						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+						"supports": "Allows one Lemma to participate in several Readings, keeping the city and Land meanings separate."
+					}
+				],
+				"contaminationKeys": ["relation-de-berlin"]
+			}
+		}
+	]
+}

@@ -1,0 +1,91 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Föhre ist immergrün.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Föhre" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "immergrün" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-08-foehre",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Die <TARGET>Föhre</TARGET> ist immergrün.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Föhre",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🌲",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "Kiefer", "kind": "NOUN" }
+						],
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Nadelbaum", "kind": "NOUN" }
+						],
+						"holonym": null
+					}
+				},
+				"explanation": "Duden defines regional Föhre through the pine Reading of Kiefer; the regional restriction makes it Near Synonym, while Nadelbaum is the broader category.",
+				"sources": [
+					{
+						"title": "Duden: Föhre",
+						"url": "https://www.duden.de/rechtschreibung/Foehre",
+						"supports": "Defines Föhre through Kiefer and marks it regional or Austrian."
+					},
+					{
+						"title": "IDS Grammis: Homonymie",
+						"url": "https://grammis.ids-mannheim.de/terminologie/510",
+						"supports": "Documents the pine and jaw homonymy of Kiefer."
+					},
+					{
+						"title": "Dumling generated docs source: Linguistics",
+						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+						"supports": "Keeps the pine Reading separate from the jaw Reading."
+					}
+				],
+				"contaminationKeys": ["relation-de-foehre-pine"]
+			}
+		}
+	]
+}

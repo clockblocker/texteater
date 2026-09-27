@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "  Je\t rentre  chez moi. ",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-unsupported/fr-noisy",
+			"case": {
+				"input": {
+					"id": "fr-noisy",
+					"sourceText": "  Je\t rentre  chez moi. "
+				},
+				"idealOutput": {
+					"id": "fr-noisy",
+					"decision": "UnsupportedLanguage",
+					"language": null,
+					"stitchedText": "Je rentre chez moi."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-unsupported/1",
+			"case": {
+				"input": "  Je\t rentre  chez moi. ",
+				"idealOutput": {
+					"decision": "UnsupportedLanguage"
+				}
+			}
+		}
+	]
+}

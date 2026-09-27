@@ -1,0 +1,170 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach der Zwischenfrage verlor sie völlig den Faden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zwischenfrage" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verlor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "völlig" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Faden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-faden-click-verlor",
+			"memberSegmentIndices": [6, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zwischenfrage" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "verlor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "völlig" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Faden" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [6, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. In the supplied context, issue #82 treats den Faden verlieren as a figurative Phraseme/Idiom and includes the fixed verb, determiner, and noun. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-faden-click-den",
+			"memberSegmentIndices": [6, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 12,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zwischenfrage" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "verlor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "völlig" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Faden" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [6, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. In the supplied context, issue #82 treats den Faden verlieren as a figurative Phraseme/Idiom and includes the fixed verb, determiner, and noun. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-faden-click-faden",
+			"memberSegmentIndices": [6, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 14,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zwischenfrage" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "verlor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "völlig" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Faden" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [6, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. In the supplied context, issue #82 treats den Faden verlieren as a figurative Phraseme/Idiom and includes the fixed verb, determiner, and noun. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-idiom-faden-click-voellig",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 10,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Nach" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zwischenfrage" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "verlor" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "völlig" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Faden" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADV",
+					"memberSegmentIndices": [10]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion and occurrence sensitivity. Issue #82 keeps the freely inserted adverb völlig outside the neighboring idiom and selects only the clicked Lexeme/ADV. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		}
+	]
+}

@@ -1,0 +1,53 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Hund wirkt heute müde.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hund" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wirkt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müde" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-seem-tired",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "seem-tired",
+				"kind": "VERB",
+				"lemma": "wirken",
+				"context": "Der Hund <TARGET>wirkt</TARGET> heute müde.",
+				"meaning": "Give an impression; seem",
+				"accepted": ["👀", "👀❓", "🤔👀", "👁️", "👀💭"],
+				"rejected": [
+					"😴",
+					"🥱",
+					"😪",
+					"🐶",
+					"🐕",
+					"🐶😴",
+					"👀💤",
+					"👀😴",
+					"👀🥱",
+					"💤"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Buch ist ein Geschenk.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Buch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geschenk" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-gift",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "demo-gift",
+				"kind": "NOUN",
+				"lemma": "Geschenk",
+				"gender": "Neut",
+				"context": "Das Buch ist ein <TARGET>Geschenk</TARGET>.",
+				"meaning": "Something given as a present. The conventional wrapped present is useful even when this present happens to be a book.",
+				"accepted": ["🎁"],
+				"demo": true
+			}
+		}
+	]
+}

@@ -1,0 +1,102 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie kauft das Fahrrad von ihm.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kauft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fahrrad" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "von" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihm" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-09-kaufen-converse",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Sie <TARGET>kauft</TARGET> das Fahrrad von ihm.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "kaufen",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🛒",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": [
+							{ "canonicalForm": "verkaufen", "kind": "VERB" }
+						],
+						"hypernym": [
+							{ "canonicalForm": "erwerben", "kind": "VERB" }
+						]
+					}
+				},
+				"explanation": "Primary definitions support reversed transaction viewpoints; Near Antonym is the project mapping, and erwerben is the broader acquisition action.",
+				"sources": [
+					{
+						"title": "Duden: kaufen",
+						"url": "https://www.duden.de/rechtschreibung/kaufen",
+						"supports": "Defines kaufen as acquiring something against payment."
+					},
+					{
+						"title": "Duden: verkaufen",
+						"url": "https://www.duden.de/rechtschreibung/verkaufen",
+						"supports": "Defines verkaufen as transferring property to someone for payment."
+					},
+					{
+						"title": "IDS Grammis: converse relations",
+						"url": "https://grammis.ids-mannheim.de/systematische-grammatik/2130",
+						"supports": "Supports analysis of one relation through reversed participant perspectives."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Supplies the human-accepted Near Antonym category for that converse structure."
+					}
+				],
+				"contaminationKeys": ["relation-de-kaufen-buy"]
+			}
+		}
+	]
+}

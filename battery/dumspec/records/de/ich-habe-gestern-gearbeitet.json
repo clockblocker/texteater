@@ -1,0 +1,104 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ich habe gestern gearbeitet.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "habe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gestern" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gearbeitet" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-perfect-arbeiten-click-habe",
+			"memberSegmentIndices": [2, 6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Ich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "habe" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gestern" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gearbeitet" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2, 6]
+				},
+				"explanation": "IDS analyzes haben/werden plus the infinite full-verb form as a perfect or passive verbal periphrasis. Issue #82 groups only the realized auxiliary and lexical verb, excluding intervening free context. Source: https://grammis.ids-mannheim.de/progr%40mm/1695"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-perfect-arbeiten-click-gearbeitet",
+			"memberSegmentIndices": [2, 6],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 6,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Ich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "habe" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gestern" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gearbeitet" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [2, 6]
+				},
+				"explanation": "IDS analyzes haben/werden plus the infinite full-verb form as a perfect or passive verbal periphrasis. Issue #82 groups only the realized auxiliary and lexical verb, excluding intervening free context. Source: https://grammis.ids-mannheim.de/progr%40mm/1695"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-perfect-arbeiten-click-gestern",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Ich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "habe" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gestern" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gearbeitet" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADV",
+					"memberSegmentIndices": [4]
+				},
+				"explanation": "IDS analyzes haben/werden plus the infinite full-verb form as a perfect or passive verbal periphrasis. Issue #82 groups only the realized auxiliary and lexical verb, excluding intervening free context. Source: https://grammis.ids-mannheim.de/progr%40mm/1695"
+			}
+		}
+	]
+}

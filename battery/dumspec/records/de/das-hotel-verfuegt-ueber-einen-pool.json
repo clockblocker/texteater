@@ -1,0 +1,89 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Hotel verfügt über einen Pool.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hotel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verfügt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "über" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Pool" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-ueber-connector",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Das Hotel verfügt <TARGET>über</TARGET> einen Pool.",
+					"lemma": "über",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🔗" },
+				"explanation": "verfügen über fixed. über only links. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-ueber-connector",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-ueber-connector",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Das Hotel verfügt "
+								},
+								{ "kind": "ResolvableText", "text": "über" },
+								{ "kind": "OpaqueText", "text": " einen Pool." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "über",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🔗" },
+				"explanation": "verfügen über fixed. über only links. New."
+			}
+		}
+	]
+}

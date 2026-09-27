@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir erwägen einen Umzug.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erwägen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Umzug" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-48-erwaegen",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Wir <TARGET>erwägen</TARGET> einen Umzug.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "erwägen",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⚖️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "abwägen", "kind": "VERB" }
+						],
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": null
+					}
+				},
+				"explanation": "Salvaged contrast pair with in Betracht ziehen: abwägen shares the deliberation proposition with a weighing nuance, so it is Near Synonym; the complete Collocation in Betracht ziehen is a Phraseme and therefore outside the Lexeme Family inventory.",
+				"contaminationKeys": ["relation-de-erwaegen-consider"]
+			}
+		}
+	]
+}

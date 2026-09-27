@@ -1,0 +1,101 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Tom beschloss, den Brief heute zu schreiben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Tom" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "beschloss" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schreiben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-lexeme-part-infinitive-zu-click-zu",
+			"memberSegmentIndices": [11],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 11,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Tom" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "beschloss" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Brief" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "heute" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schreiben" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "PART",
+					"memberSegmentIndices": [11]
+				},
+				"explanation": "A zu before an infinitive without um, ohne or statt is the infinitive marker: a singleton PART, not an SCONJ and not a member of the infinitive's verb.",
+				"contaminationKeys": ["target-lexeme:part:infinitive-zu"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-lexeme-part-infinitive-zu-click-schreiben",
+			"memberSegmentIndices": [13],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 13,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Tom" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "beschloss" },
+						{ "kind": "Punctuation", "text": "," },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Brief" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "heute" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "schreiben" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [13]
+				},
+				"explanation": "The infinitive is its own VERB; the infinitive marker zu before it stays a separate PART.",
+				"contaminationKeys": ["target-lexeme:part:infinitive-zu"]
+			}
+		}
+	]
+}

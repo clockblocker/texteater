@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Obwohl es regnete, gingen wir spazieren.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Obwohl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "regnete" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gingen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "spazieren" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-32-obwohl",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Obwohl</TARGET> es regnete, gingen wir spazieren.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "obwohl",
+							"family": "Lexeme",
+							"kind": "SCONJ",
+							"coreFeatures": { "conjType": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "☔",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "obgleich", "kind": "SCONJ" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Obgleich shares the concessive core but has a stable elevated register, so it is Near Synonym rather than exact Synonym.",
+				"contaminationKeys": ["relation-de-obwohl-although"]
+			}
+		}
+	]
+}

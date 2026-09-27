@@ -1,0 +1,77 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Tee duftet.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tee" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "duftet" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-tea",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Der <TARGET>Tee</TARGET> duftet.",
+					"lemma": "Tee",
+					"existingEmojiDescriptions": ["☕"]
+				},
+				"idealOutput": { "emojiDescription": "☕" },
+				"explanation": "The supplied cup already represents the stable tea concept. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-tea",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-tea",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Der " },
+								{ "kind": "ResolvableText", "text": "Tee" },
+								{ "kind": "OpaqueText", "text": " duftet." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Tee",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"candidates": ["☕"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "☕"
+				},
+				"explanation": "The supplied cup already represents the stable tea concept. Reuse."
+			}
+		}
+	]
+}

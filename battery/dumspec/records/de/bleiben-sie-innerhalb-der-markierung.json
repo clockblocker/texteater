@@ -1,0 +1,76 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Bleiben Sie innerhalb der Markierung.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Bleiben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "innerhalb" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Markierung" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-21-innerhalb",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Bleiben Sie <TARGET>innerhalb</TARGET> der Markierung.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "innerhalb",
+							"family": "Lexeme",
+							"kind": "ADP",
+							"coreFeatures": {
+								"abbr": null,
+								"adpType": null,
+								"extPos": null,
+								"foreign": null,
+								"partType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⭕",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": [
+							{ "canonicalForm": "außerhalb", "kind": "ADP" }
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Innerhalb and außerhalb form a conventional complementary spatial opposition; in is broader and syntactically different.",
+				"contaminationKeys": ["relation-de-innerhalb-inside"]
+			}
+		}
+	]
+}

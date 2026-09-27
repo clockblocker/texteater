@@ -1,0 +1,41 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie genießt ihre Freiheit.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "genießt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihre" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Freiheit" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-freedom",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "demo-freedom",
+				"kind": "NOUN",
+				"lemma": "Freiheit",
+				"gender": "Fem",
+				"context": "Sie genießt ihre <TARGET>Freiheit</TARGET>.",
+				"meaning": "Being free from constraint",
+				"accepted": ["🕊️"],
+				"demo": true
+			}
+		}
+	]
+}

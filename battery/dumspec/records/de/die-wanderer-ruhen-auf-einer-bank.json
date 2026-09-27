@@ -1,0 +1,45 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Wanderer ruhen auf einer Bank.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wanderer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ruhen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-bank-rest",
+			"memberSegmentIndices": [10],
+			"case": {
+				"id": "bank-rest",
+				"kind": "NOUN",
+				"lemma": "Bank",
+				"gender": "Fem",
+				"context": "Die Wanderer ruhen auf einer <TARGET>Bank</TARGET>.",
+				"meaning": "Bench for sitting",
+				"accepted": ["🪑", "🛋️"],
+				"rejected": ["🏦", "💰"]
+			}
+		}
+	]
+}

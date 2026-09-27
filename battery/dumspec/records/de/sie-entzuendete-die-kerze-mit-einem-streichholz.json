@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie entzündete die Kerze mit einem Streichholz.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entzündete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kerze" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Streichholz" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-syn-01-streichholz",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"markedContext": "Sie entzündete die Kerze mit einem <TARGET>Streichholz</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Streichholz",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Neut", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🔥",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "synonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": [
+							{ "canonicalForm": "Zündstäbchen", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "Reciprocal unlabeled Duden synonymy supports exact Streichholz–Zündstäbchen equivalence; labeled Zündholz is unsafe as unrestricted exact synonymy.",
+				"sources": [
+					{
+						"title": "Duden: Streichholz",
+						"url": "https://www.duden.de/rechtschreibung/Streichholz",
+						"supports": "Lists Zündstäbchen as a synonym of Streichholz."
+					},
+					{
+						"title": "Duden: Zündstäbchen",
+						"url": "https://www.duden.de/rechtschreibung/Zuendstaebchen",
+						"supports": "Reciprocally points to Streichholz without a usage label."
+					},
+					{
+						"title": "Duden: Zündholz",
+						"url": "https://www.duden.de/rechtschreibung/Zuendholz",
+						"supports": "Marks Zündholz as technical or regional, excluding unrestricted exact Synonymy."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-streichholz-candle-2026"
+				]
+			}
+		}
+	]
+}

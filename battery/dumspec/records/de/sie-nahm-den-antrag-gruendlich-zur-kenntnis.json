@@ -1,0 +1,132 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie nahm den Antrag gründlich zur Kenntnis.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nahm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Antrag" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gründlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "r", "surface": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kenntnis" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0006"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-collocation-kenntnis-click-nahm",
+			"memberSegmentIndices": [2, 10, 11, 13],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nahm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Antrag" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "r" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kenntnis" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Collocation",
+					"memberSegmentIndices": [2, 10, 11, 13]
+				},
+				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-collocation-kenntnis-click-zur",
+			"memberSegmentIndices": [2, 10, 11, 13],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 10,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nahm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Antrag" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "r" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kenntnis" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Collocation",
+					"memberSegmentIndices": [2, 10, 11, 13]
+				},
+				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-demo-collocation-kenntnis-click-kenntnis",
+			"memberSegmentIndices": [2, 10, 11, 13],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 13,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "nahm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Antrag" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "r" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Kenntnis" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Collocation",
+					"memberSegmentIndices": [2, 10, 11, 13]
+				},
+				"explanation": "Funktionsverbgefüge are Phraseme/Collocation (Dumgen ADR 0006, 2026-09-21): the support verb and the predicate noun are fixed lexical members of one expression, and each member word brings its own article, auxiliary or particle into the expression's span. This reverses the issue 82 reading that conventionality alone is not fixedness; IDS lists the expression as a support-verb predicate. Free arguments and adverbs stay outside. zur Kenntnis nehmen: IDS lists it as a conventional support-verb expression; den Antrag and gründlich are free."
+			}
+		}
+	]
+}

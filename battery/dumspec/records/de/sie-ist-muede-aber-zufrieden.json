@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie ist müde, aber zufrieden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müde" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aber" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zufrieden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-cconj-aber-contrast-reuse",
+			"memberSegmentIndices": [7],
+			"case": {
+				"input": {
+					"markedContext": "Sie ist müde, <TARGET>aber</TARGET> zufrieden.",
+					"lemma": "aber",
+					"existingEmojiDescriptions": ["↔️"]
+				},
+				"idealOutput": { "emojiDescription": "↔️" },
+				"explanation": "Contrast between coordinated statements. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-cconj-aber-contrast-reuse",
+			"memberSegmentIndices": [7],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-cconj-aber-contrast-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Sie ist müde, "
+								},
+								{ "kind": "ResolvableText", "text": "aber" },
+								{ "kind": "OpaqueText", "text": " zufrieden." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "CCONJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "aber",
+						"coreFeatures": { "conjType": null }
+					},
+					"candidates": ["↔️"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "↔️" },
+				"explanation": "Contrast between coordinated statements. Reuse."
+			}
+		}
+	]
+}

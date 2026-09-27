@@ -1,0 +1,219 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Reporterin fühlte ihm gründlich auf den Zahn.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Reporterin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fühlte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gründlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zahn" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-idiom-zahn-click-auf",
+			"memberSegmentIndices": [4, 10, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 10,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Reporterin" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fühlte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zahn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [4, 10, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 includes the idiom's fixed function words with its lexical core while excluding variable arguments and modifiers. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-idiom-zahn-click-fuehlte",
+			"memberSegmentIndices": [4, 10, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Reporterin" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fühlte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zahn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [4, 10, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 includes the idiom's fixed function words with its lexical core while excluding variable arguments and modifiers. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-idiom-zahn-click-den",
+			"memberSegmentIndices": [4, 10, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 12,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Reporterin" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fühlte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zahn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [4, 10, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 includes the idiom's fixed function words with its lexical core while excluding variable arguments and modifiers. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-idiom-zahn-near-gruendlich",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 8,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Reporterin" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fühlte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zahn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "ADV",
+					"memberSegmentIndices": [8]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 treats the surrounding idiom as one target but keeps the freely supplied manner adverb outside its membership. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
+				]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-adaptive-idiom-zahn-click-zahn",
+			"memberSegmentIndices": [4, 10, 12, 14],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 14,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Die" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Reporterin" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "fühlte" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ihm" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "gründlich" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "auf" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Zahn" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [4, 10, 12, 14]
+				},
+				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 includes the idiom's fixed function words with its lexical core while excluding variable arguments and modifiers. Source: https://grammis.ids-mannheim.de/terminologie/1175",
+				"contaminationKeys": [
+					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sei beim Öffnen bitte vorsichtig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bei", "surface": "bei" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Öffnen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bitte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vorsichtig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-careful",
+			"memberSegmentIndices": [9],
+			"case": {
+				"id": "fresh-careful",
+				"kind": "ADJ",
+				"lemma": "vorsichtig",
+				"context": "Sei beim Öffnen bitte <TARGET>vorsichtig</TARGET>.",
+				"meaning": "Acting carefully to avoid harm or mistakes",
+				"accepted": ["👀⚠️", "⚠️👀", "⚠️👐", "👐⚠️", "⚠️🐢", "🐢⚠️", "🧐"],
+				"rejected": ["🚪", "⚠️"]
+			}
+		}
+	]
+}

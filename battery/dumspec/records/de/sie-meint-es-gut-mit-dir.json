@@ -69,5 +69,74 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-object-es-4",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{
+							"kind": "ResolvableText",
+							"text": "Sie"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "meint"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "es"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "gut"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "mit"
+						},
+						{
+							"kind": "Whitespace",
+							"text": " "
+						},
+						{
+							"kind": "ResolvableText",
+							"text": "dir"
+						},
+						{
+							"kind": "Punctuation",
+							"text": "."
+						}
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "PRON",
+					"memberSegmentIndices": [4]
+				},
+				"explanation": "This es is outside lexically selected subject-expletive composition.",
+				"contaminationKeys": ["subject-es:object-es"]
+			}
+		}
+	]
 }

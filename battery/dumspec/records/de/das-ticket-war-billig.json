@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Ticket war billig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ticket" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "billig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-cheap",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "demo-cheap",
+				"kind": "ADJ",
+				"lemma": "billig",
+				"context": "Das Ticket war <TARGET>billig</TARGET>.",
+				"meaning": "Low in price in this context, not poor quality. Money plus downward direction preserves the property.",
+				"accepted": ["💰⬇️"],
+				"demo": true
+			}
+		}
+	]
+}

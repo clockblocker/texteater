@@ -1,0 +1,78 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Brief wird geschrieben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geschrieben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-ids-verbal-09-group-0-click-4",
+			"memberSegmentIndices": [4, 6],
+			"case": {
+				"input": {
+					"segments": [
+						{ "text": "Der", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "Brief", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "wird", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "geschrieben", "kind": "ResolvableText" },
+						{ "text": ".", "kind": "Punctuation" }
+					],
+					"clickedSegmentIndex": 4
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [4, 6]
+				},
+				"explanation": "Accepted scoped construction from #442. Injected orchestration coverage is not live model accuracy."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-ids-verbal-09-group-0-click-6",
+			"memberSegmentIndices": [4, 6],
+			"case": {
+				"input": {
+					"segments": [
+						{ "text": "Der", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "Brief", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "wird", "kind": "ResolvableText" },
+						{ "text": " ", "kind": "Whitespace" },
+						{ "text": "geschrieben", "kind": "ResolvableText" },
+						{ "text": ".", "kind": "Punctuation" }
+					],
+					"clickedSegmentIndex": 6
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "VERB",
+					"memberSegmentIndices": [4, 6]
+				},
+				"explanation": "Accepted scoped construction from #442. Injected orchestration coverage is not live model accuracy."
+			}
+		}
+	]
+}

@@ -1,0 +1,88 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Tyrann biss endlich ins Gras.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tyrann" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "biss" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "endlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gras" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0020"],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
+			"caseId": "relation-adv-07-ins-gras-beissen",
+			"memberSegmentIndices": [4, 6, 8, 9, 11],
+			"case": {
+				"input": {
+					"markedContext": "Der Tyrann <TARGET>biss endlich ins Gras</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "ins Gras beißen",
+							"family": "Phraseme",
+							"kind": "Idiom",
+							"coreFeatures": {},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "☠️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Primary lexicography explains the idiom through the Lexeme sterben, but ADR-0020 forbids that cross-Family target. Without a sourced same-Family equivalent, the relation stays null.",
+				"sources": [
+					{
+						"title": "Duden: Gras",
+						"url": "https://www.duden.de/rechtschreibung/Gras",
+						"supports": "Defines the complete phrase ins Gras beißen as sterben and marks it salopp."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Distinguishes exact Synonymy from non-substitutive Near Synonymy."
+					},
+					{
+						"title": "ADR-0020: Keep Semantic Relations inside one Family",
+						"path": "docs/adr/0020-keep-semantic-relations-inside-one-family.md",
+						"supports": "Keeps direct Semantic Relations inside the source Family."
+					}
+				],
+				"contaminationKeys": ["relation-de-ins-gras-beissen"]
+			}
+		}
+	]
+}

@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir reden über das Wetter.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "reden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "über" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wetter" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-ueber-topic-wetter",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Wir reden <TARGET>über</TARGET> das Wetter.",
+					"lemma": "über",
+					"existingEmojiDescriptions": ["⬆️", "💬", "🔗"]
+				},
+				"idealOutput": { "emojiDescription": "💬" },
+				"explanation": "Topic. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-ueber-topic-wetter",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-ueber-topic-wetter",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Wir reden " },
+								{ "kind": "ResolvableText", "text": "über" },
+								{ "kind": "OpaqueText", "text": " das Wetter." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "über",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": ["⬆️", "💬", "🔗"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "💬"
+				},
+				"explanation": "Topic. Reuse."
+			}
+		}
+	]
+}

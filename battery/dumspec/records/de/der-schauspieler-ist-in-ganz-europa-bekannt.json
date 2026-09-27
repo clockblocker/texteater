@@ -1,0 +1,74 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Schauspieler ist in ganz Europa bekannt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schauspieler" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ganz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Europa" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bekannt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "participle-source-04-bekannt",
+			"memberSegmentIndices": [12],
+			"case": {
+				"input": {
+					"markedContext": "Der Schauspieler ist in ganz Europa <TARGET>bekannt</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "bekannt",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🌟",
+						"unitKind": "Reading"
+					},
+					"request": { "participleSource": null }
+				},
+				"idealOutput": {
+					"participleSource": {
+						"verb": "bekennen",
+						"meaning": "Drifted"
+					}
+				},
+				"explanation": "Bekannt is the Partizip II of bekennen by form; 'well-known' is no sense of bekennen 'to confess'.",
+				"sources": [
+					{
+						"title": "Duden: bekannt",
+						"url": "https://www.duden.de/rechtschreibung/bekannt",
+						"supports": "Gives bekannt 'known, well-known' as an adjective."
+					}
+				]
+			}
+		}
+	]
+}

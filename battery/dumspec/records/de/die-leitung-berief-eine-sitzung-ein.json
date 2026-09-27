@@ -1,0 +1,86 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Leitung berief eine Sitzung ein.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Leitung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "berief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sitzung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-leitung-management",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
+					"lemma": "Leitung",
+					"existingEmojiDescriptions": ["🔌"]
+				},
+				"idealOutput": { "emojiDescription": "🧑‍💼" },
+				"explanation": "Management, not a conducting line. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-leitung-management",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-leitung-management",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Die " },
+								{ "kind": "ResolvableText", "text": "Leitung" },
+								{
+									"kind": "OpaqueText",
+									"text": " berief eine Sitzung ein."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Leitung",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": ["🔌"]
+				},
+				"idealOutput": {
+					"decision": "New",
+					"emojiDescription": "🧑‍💼"
+				},
+				"explanation": "Management, not a conducting line. New."
+			}
+		}
+	]
+}

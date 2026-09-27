@@ -1,0 +1,85 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie hebt Geld bei der Bank ab.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hebt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geld" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bank" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ab" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-bank-financial",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
+					"lemma": "Bank",
+					"existingEmojiDescriptions": ["🪑"]
+				},
+				"idealOutput": { "emojiDescription": "🏦" },
+				"explanation": "Financial institution, not seating. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-bank-financial",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-bank-financial",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Sie hebt Geld bei der "
+								},
+								{ "kind": "ResolvableText", "text": "Bank" },
+								{ "kind": "OpaqueText", "text": " ab." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bank",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": ["🪑"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🏦" },
+				"explanation": "Financial institution, not seating. New."
+			}
+		}
+	]
+}

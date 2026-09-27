@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Computer arbeitet langsam.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Computer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "arbeitet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "langsam" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-slow",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "fresh-slow",
+				"kind": "ADJ",
+				"lemma": "langsam",
+				"context": "Der Computer arbeitet <TARGET>langsam</TARGET>.",
+				"meaning": "Moving or progressing at low speed",
+				"accepted": ["🐢", "🐌"],
+				"rejected": ["💻", "⚡"]
+			}
+		}
+	]
+}

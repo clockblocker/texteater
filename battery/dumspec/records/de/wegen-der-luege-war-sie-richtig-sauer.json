@@ -1,0 +1,46 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wegen der Lüge war sie richtig sauer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wegen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lüge" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "richtig" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sauer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-sour-mood",
+			"memberSegmentIndices": [12],
+			"case": {
+				"id": "sour-mood",
+				"kind": "ADJ",
+				"lemma": "sauer",
+				"context": "Wegen der Lüge war sie richtig <TARGET>sauer</TARGET>.",
+				"meaning": "Angry or annoyed",
+				"accepted": ["😠", "😡", "😤"],
+				"rejected": ["🍋"]
+			}
+		}
+	]
+}

@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Großmutter wird dem Kind ein Buch geben.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Großmutter" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wird" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kind" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Buch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geben" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-near-ant-02-geben",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"markedContext": "Die Großmutter wird dem Kind ein Buch <TARGET>geben</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "geben",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null,
+								"verbType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🎁",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "nearAntonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"nearAntonym": [
+							{ "canonicalForm": "bekommen", "kind": "VERB" }
+						]
+					}
+				},
+				"explanation": "Geben and bekommen conventionally profile the same transfer from giver and recipient perspectives.",
+				"sources": [
+					{
+						"title": "Duden: geben",
+						"url": "https://www.duden.de/rechtschreibung/geben",
+						"supports": "Defines geben from the transferor perspective."
+					},
+					{
+						"title": "Duden: bekommen",
+						"url": "https://www.duden.de/rechtschreibung/bekommen",
+						"supports": "Defines bekommen from the recipient perspective."
+					},
+					{
+						"title": "IDS Grammis: konvers",
+						"url": "https://grammis.ids-mannheim.de/terminologie/1005",
+						"supports": "Defines converse predicates through exchanged argument assignment."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Supplies Near Antonym for the human-accepted converse mapping."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-geben-gift-2026"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,142 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Lehrer stellt den Schülern Material zur Verfügung.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Lehrer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stellt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schülern" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Material" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "r", "surface": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Verfügung" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
+			"caseId": "sentence-de-verfuegung",
+			"case": {
+				"input": {
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Der" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Lehrer" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "stellt" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "den" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Schülern" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Material" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "r" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Verfügung" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"targets": [
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 0, "role": "Article" },
+								{ "offset": 4, "role": "Head" }
+							]
+						},
+						{
+							"kind": "VERB",
+							"members": [{ "offset": 11 }]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 18, "role": "Article" },
+								{ "offset": 22, "role": "Head" }
+							]
+						},
+						{
+							"kind": "NOUN",
+							"members": [{ "offset": 31 }]
+						},
+						{
+							"kind": "ADP",
+							"members": [{ "offset": 40 }]
+						},
+						{
+							"kind": "NOUN",
+							"members": [
+								{ "offset": 42, "role": "Article" },
+								{ "offset": 44, "role": "Head" }
+							]
+						}
+					],
+					"phrasemes": [
+						{
+							"kind": "Collocation",
+							"words": [11, 40, 44]
+						}
+					],
+					"slots": []
+				},
+				"explanation": "A Funktionsverbgefüge: a Collocation over three words, with the fused article reaching the noun through its own word; `den Schülern` and `Material` are free arguments. Its fixed `zu` is wording, not a slot of `stellt`."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-noun-oblique-plural",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Der Lehrer stellt den <TARGET>Schülern</TARGET> Material zur Verfügung.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schüler",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"request": {
+						"translations": { "en": null, "ru": null }
+					}
+				},
+				"idealOutput": {
+					"translations": { "en": "pupil", "ru": "ученик" }
+				},
+				"explanation": "A dative plural noun translates in the nominative singular.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["student", "schoolchild"],
+						"ru": ["школьник"]
+					},
+					"rejected": {
+						"en": ["pupils", "students"],
+						"ru": ["ученикам", "ученики"]
+					}
+				}
+			}
+		}
+	]
+}

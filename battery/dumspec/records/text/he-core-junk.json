@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "asdf qwer zxcv",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-he-core/junk",
+			"case": {
+				"input": {
+					"id": "junk",
+					"sourceText": "asdf qwer zxcv"
+				},
+				"idealOutput": {
+					"id": "junk",
+					"decision": "Unintelligible",
+					"language": null,
+					"stitchedText": "asdf qwer zxcv"
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-he-core/7",
+			"case": {
+				"input": "asdf qwer zxcv",
+				"idealOutput": {
+					"decision": "Unintelligible"
+				}
+			}
+		}
+	]
+}

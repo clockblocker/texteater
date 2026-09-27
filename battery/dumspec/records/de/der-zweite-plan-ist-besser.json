@@ -63,5 +63,53 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-adj-comparative",
+			"memberSegmentIndices": [8],
+			"case": {
+				"input": {
+					"markedContext": "Der zweite Plan ist <TARGET>besser</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gut",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "good",
+						"ru": "хороший"
+					}
+				},
+				"explanation": "Degree is inflection of the Lemma gut, so the comparative translates as the positive.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": [],
+						"ru": []
+					},
+					"rejected": {
+						"en": ["better"],
+						"ru": ["лучше", "лучший"]
+					}
+				}
+			}
+		}
+	]
 }

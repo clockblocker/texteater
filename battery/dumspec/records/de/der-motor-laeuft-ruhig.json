@@ -1,0 +1,80 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Motor läuft ruhig.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Motor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "läuft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ruhig" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-verb-laufen-operate-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Der Motor <TARGET>läuft</TARGET> ruhig.",
+					"lemma": "laufen",
+					"existingEmojiDescriptions": ["🏃", "⚙️"]
+				},
+				"idealOutput": { "emojiDescription": "⚙️" },
+				"explanation": "A motor operating is the same broad machine-operation reading. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-verb-laufen-operate-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-verb-laufen-operate-reuse",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Der Motor " },
+								{ "kind": "ResolvableText", "text": "läuft" },
+								{ "kind": "OpaqueText", "text": " ruhig." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "VERB",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "laufen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"candidates": ["🏃", "⚙️"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "⚙️" },
+				"explanation": "A motor operating is the same broad machine-operation reading. Reuse."
+			}
+		}
+	]
+}

@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir trinken Kaffee in der Küche.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "trinken" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kaffee" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Küche" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-kitchen-room",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Wir trinken Kaffee in der <TARGET>Küche</TARGET>.",
+					"lemma": "Küche",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🍳" },
+				"explanation": "The kitchen room, independent of the coffee-drinking scene. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-kitchen-room",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-kitchen-room",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Wir trinken Kaffee in der "
+								},
+								{ "kind": "ResolvableText", "text": "Küche" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Küche",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🍳" },
+				"explanation": "The kitchen room, independent of the coffee-drinking scene. New."
+			}
+		}
+	]
+}

@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Bewege den Zeiger mit der Maus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Bewege" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zeiger" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Maus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-maus-computer",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"markedContext": "Bewege den Zeiger mit der <TARGET>Maus</TARGET>.",
+					"lemma": "Maus",
+					"existingEmojiDescriptions": ["🐭"]
+				},
+				"idealOutput": { "emojiDescription": "🖱️" },
+				"explanation": "Computer device, not animal. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-maus-computer",
+			"memberSegmentIndices": [10],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-maus-computer",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Bewege den Zeiger mit der "
+								},
+								{ "kind": "ResolvableText", "text": "Maus" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Maus",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"candidates": ["🐭"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🖱️" },
+				"explanation": "Computer device, not animal. New."
+			}
+		}
+	]
+}

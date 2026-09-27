@@ -1,0 +1,84 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wir kommen gegen acht Uhr.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kommen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gegen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "acht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Uhr" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adp-gegen-approximation",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
+					"lemma": "gegen",
+					"existingEmojiDescriptions": ["⚔️"]
+				},
+				"idealOutput": { "emojiDescription": "🤏" },
+				"explanation": "Rough time, not against. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adp-gegen-approximation",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adp-gegen-approximation",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Wir kommen " },
+								{ "kind": "ResolvableText", "text": "gegen" },
+								{ "kind": "OpaqueText", "text": " acht Uhr." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADP",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "gegen",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"candidates": ["⚔️"]
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🤏" },
+				"explanation": "Rough time, not against. New."
+			}
+		}
+	]
+}

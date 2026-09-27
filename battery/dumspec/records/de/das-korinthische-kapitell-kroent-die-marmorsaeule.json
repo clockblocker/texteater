@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das korinthische Kapitell krönt die Marmorsäule.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "korinthische" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kapitell" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "krönt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Marmorsäule" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-hol-02-kapitell",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Das korinthische <TARGET>Kapitell</TARGET> krönt die Marmorsäule.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Kapitell",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Neut", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🏛️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "holonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"holonym": [
+							{ "canonicalForm": "Säule", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "Säule is the immediate constitutive architectural whole for Kapitell.",
+				"sources": [
+					{
+						"title": "Duden: Kapitell",
+						"url": "https://www.duden.de/rechtschreibung/Kapitell",
+						"supports": "Defines Kapitell as the upper termination of a column or pillar."
+					},
+					{
+						"title": "Duden: Säule",
+						"url": "https://www.duden.de/rechtschreibung/Saeule_Pfeiler",
+						"supports": "Documents Säule as the immediate architectural whole."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Defines the direct part-to-whole direction as Holonym."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-kapitell-column-2026"
+				]
+			}
+		}
+	]
+}

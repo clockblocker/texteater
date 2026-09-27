@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie erledigt die Arbeit mühelos.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "erledigt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Arbeit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mühelos" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-effortless",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "demo-effortless",
+				"kind": "ADJ",
+				"lemma": "mühelos",
+				"context": "Sie erledigt die Arbeit <TARGET>mühelos</TARGET>.",
+				"meaning": "Without difficulty or effort. This is ease of doing something, not low physical weight; a feather would suggest the wrong sense.",
+				"accepted": ["😌👌"],
+				"demo": true
+			}
+		}
+	]
+}

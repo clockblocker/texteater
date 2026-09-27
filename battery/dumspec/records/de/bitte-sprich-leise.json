@@ -1,0 +1,38 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Bitte sprich leise.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Bitte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sprich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leise" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-fresh-quiet",
+			"memberSegmentIndices": [4],
+			"case": {
+				"id": "fresh-quiet",
+				"kind": "ADJ",
+				"lemma": "leise",
+				"context": "Bitte sprich <TARGET>leise</TARGET>.",
+				"meaning": "Making little sound",
+				"accepted": ["🤫", "🔈", "🔉"],
+				"rejected": ["🔊"]
+			}
+		}
+	]
+}

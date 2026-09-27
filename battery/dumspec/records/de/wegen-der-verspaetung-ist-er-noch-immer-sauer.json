@@ -1,0 +1,95 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wegen der Verspätung ist er noch immer sauer.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wegen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Verspätung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "immer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sauer" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-adj-sauer-angry-reuse",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"markedContext": "Wegen der Verspätung ist er noch immer <TARGET>sauer</TARGET>.",
+					"lemma": "sauer",
+					"existingEmojiDescriptions": ["🍋", "😠"]
+				},
+				"idealOutput": { "emojiDescription": "😠" },
+				"explanation": "Angry again. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-adj-sauer-angry-reuse",
+			"memberSegmentIndices": [14],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-adj-sauer-angry-reuse",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Wegen der Verspätung ist er noch immer "
+								},
+								{ "kind": "ResolvableText", "text": "sauer" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "sauer",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"candidates": ["🍋", "😠"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "😠"
+				},
+				"explanation": "Angry again. Reuse."
+			}
+		}
+	]
+}

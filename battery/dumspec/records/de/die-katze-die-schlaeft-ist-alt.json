@@ -1,0 +1,95 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Katze, die schläft, ist alt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Katze" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schläft" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+			"memberSegmentIndices": [5],
+			"case": {
+				"input": {
+					"markedContext": "Die Katze, <TARGET>die</TARGET> schläft, ist alt.",
+					"lemma": "der",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🔗" },
+				"explanation": "Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+			"memberSegmentIndices": [5],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Die Katze, " },
+								{ "kind": "ResolvableText", "text": "die" },
+								{
+									"kind": "OpaqueText",
+									"text": " schläft, ist alt."
+								}
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "PRON",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "die",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rel",
+							"gender": "Fem"
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🔗" },
+				"explanation": "Exact reviewed identity supplies its authored Reading. Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning."
+			}
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das Museum ist montags geschlossen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Museum" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "montags" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geschlossen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-closed",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "demo-closed",
+				"kind": "ADJ",
+				"lemma": "geschlossen",
+				"context": "Das Museum ist montags <TARGET>geschlossen</TARGET>.",
+				"meaning": "Closed, not open. The lock already says it; a negation sign would add nothing.",
+				"accepted": ["🔒", "🔐"],
+				"rejected": ["🔒🚫", "🚫🔒", "🔒❌", "🏛️🔒"],
+				"demo": true
+			}
+		}
+	]
+}

@@ -102,5 +102,52 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-verb-governed-preposition",
+			"memberSegmentIndices": [2, 4],
+			"case": {
+				"input": {
+					"markedContext": "Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "warten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "wait",
+						"ru": "ждать"
+					}
+				},
+				"explanation": "A governed preposition may stay in English, but the verb stays infinitive.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["wait for"],
+						"ru": ["подождать"]
+					},
+					"rejected": {
+						"en": ["waits", "waits for"],
+						"ru": ["ждёт"]
+					}
+				}
+			}
+		}
+	]
 }

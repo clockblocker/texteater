@@ -1,0 +1,46 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Aufstieg und Abstieg waren gestern anstrengend.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Aufstieg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Abstieg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "waren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gestern" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "anstrengend" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-strenuous-hike",
+			"memberSegmentIndices": [12],
+			"case": {
+				"id": "strenuous-hike",
+				"kind": "ADJ",
+				"lemma": "anstrengend",
+				"context": "Der Aufstieg und Abstieg waren gestern <TARGET>anstrengend</TARGET>.",
+				"meaning": "Requiring effort; tiring or demanding",
+				"accepted": ["😓", "🥵", "💪😓", "😮‍💨", "😩", "😓💪", "🥵💪"],
+				"rejected": ["💪", "🏋️", "🏔️"]
+			}
+		}
+	]
+}

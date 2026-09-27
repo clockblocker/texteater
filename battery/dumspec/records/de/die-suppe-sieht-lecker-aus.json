@@ -1,0 +1,52 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Suppe sieht lecker aus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Suppe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sieht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "lecker" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-look-delicious",
+			"memberSegmentIndices": [4, 8],
+			"case": {
+				"id": "look-delicious",
+				"kind": "VERB",
+				"lemma": "aussehen",
+				"context": "Die Suppe <TARGET>sieht</TARGET> lecker <TARGET>aus</TARGET>.",
+				"meaning": "Have a visual appearance",
+				"accepted": ["👀", "👁️", "👀✨", "👀💭"],
+				"rejected": [
+					"😋",
+					"🤤",
+					"🍲",
+					"🍜",
+					"😋🍲",
+					"🍲👀",
+					"👀😋",
+					"👀🤤",
+					"😋👀"
+				]
+			}
+		}
+	]
+}

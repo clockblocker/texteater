@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Während wir aßen, kam Ben an.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Während" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aßen" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kam" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-47-waehrend-subordinator",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Während</TARGET> wir aßen, kam Ben an.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "während",
+							"family": "Lexeme",
+							"kind": "SCONJ",
+							"coreFeatures": { "conjType": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⏳",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "solange", "kind": "SCONJ" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Salvaged homograph counterpart: the subordinator Reading links finite clauses, which solange shares; solange adds a duration-profile restriction, and the adpositional Reading of während must not leak into this judgment.",
+				"contaminationKeys": ["relation-de-waehrend-subordinator"]
+			}
+		}
+	]
+}

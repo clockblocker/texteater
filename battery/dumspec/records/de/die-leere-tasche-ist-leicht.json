@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die leere Tasche ist leicht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leere" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tasche" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "leicht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-light-bag",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "light-bag",
+				"kind": "ADJ",
+				"lemma": "leicht",
+				"context": "Die leere Tasche ist <TARGET>leicht</TARGET>.",
+				"meaning": "Having little weight",
+				"accepted": ["🪶", "🪶⚖️"],
+				"rejected": ["💡"]
+			}
+		}
+	]
+}

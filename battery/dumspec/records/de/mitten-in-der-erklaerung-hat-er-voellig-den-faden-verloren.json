@@ -84,5 +84,52 @@
 			}
 		}
 	],
-	"noTarget": []
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
+			"caseId": "draft-translation-idiom-past",
+			"memberSegmentIndices": [8, 14, 16, 18],
+			"case": {
+				"input": {
+					"markedContext": "Mitten in der Erklärung <TARGET>hat</TARGET> er völlig <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Phraseme",
+						"kind": "Idiom",
+						"canonicalForm": "den Faden verlieren",
+						"coreFeatures": {}
+					},
+					"request": {
+						"translations": {
+							"en": null,
+							"ru": null
+						}
+					}
+				},
+				"idealOutput": {
+					"translations": {
+						"en": "lose the thread",
+						"ru": "потерять нить"
+					}
+				},
+				"explanation": "A perfect-tense idiom translates as an infinitive phrase.",
+				"reviewedAlternatives": {
+					"accepted": {
+						"en": ["lose one's train of thought", "lose track"],
+						"ru": [
+							"потерять нить рассуждения",
+							"потерять нить разговора",
+							"сбиться"
+						]
+					},
+					"rejected": {
+						"en": ["lost the thread", "has lost the thread"],
+						"ru": ["потерял нить", "потерял нить разговора"]
+					}
+				}
+			}
+		}
+	]
 }

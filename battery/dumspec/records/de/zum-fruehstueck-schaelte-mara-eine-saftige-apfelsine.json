@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Zum Frühstück schälte Mara eine saftige Apfelsine.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frühstück" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schälte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mara" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "saftige" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Apfelsine" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-syn-02-apfelsine-null",
+			"memberSegmentIndices": [13],
+			"case": {
+				"input": {
+					"markedContext": "Zum Frühstück schälte Mara eine saftige <TARGET>Apfelsine</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Apfelsine",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🍊",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "synonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": { "synonym": null }
+				},
+				"explanation": "Regional and collocational restrictions prevent exact unrestricted equivalence with Orange.",
+				"sources": [
+					{
+						"title": "Duden: Apfelsine",
+						"url": "https://www.duden.de/rechtschreibung/Apfelsine",
+						"supports": "Equates the fruit sense with Orange."
+					},
+					{
+						"title": "Duden: Das Synonymwörterbuch, sample",
+						"url": "https://shop.duden.de/media/af/fa/e3/1687342120/Leseprobe_9783411912766_Duden_%E2%80%93_Das_Synonymw%C3%B6rterbuch.pdf",
+						"supports": "Documents regional and collocational restrictions between Apfelsine and Orange."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Requires exact semantic equivalence for Synonym."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-apfelsine-breakfast-2026"
+				]
+			}
+		}
+	]
+}

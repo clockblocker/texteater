@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "In München bestellte er zum Frühstück eine Semmel.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "In" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "München" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bestellte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Frühstück" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "eine" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Semmel" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-acceptance-near-syn-01-semmel",
+			"memberSegmentIndices": [15],
+			"case": {
+				"input": {
+					"markedContext": "In München bestellte er zum Frühstück eine <TARGET>Semmel</TARGET>.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Semmel",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Fem", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🥖",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": { "nearSynonym": null }
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{ "canonicalForm": "Brötchen", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "Semmel and Brötchen share central denotation while Semmel carries a material Austrian/Bavarian distribution restriction.",
+				"sources": [
+					{
+						"title": "Duden: Semmel",
+						"url": "https://www.duden.de/rechtschreibung/Semmel",
+						"supports": "Defines Semmel as Brötchen and marks Austrian or Bavarian distribution."
+					},
+					{
+						"title": "Duden: Brötchen",
+						"url": "https://www.duden.de/rechtschreibung/Broetchen",
+						"supports": "Provides the unrestricted counterpart for the shared bread-roll meaning."
+					}
+				],
+				"contaminationKeys": [
+					"acceptance-reservation-de-semmel-munich-2026"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,87 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Kreuzberg liegt südlich der Spree.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Kreuzberg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "liegt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "südlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Spree" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-17-kreuzberg",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Kreuzberg</TARGET> liegt südlich der Spree.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Kreuzberg",
+							"family": "Lexeme",
+							"kind": "PROPN",
+							"coreFeatures": {
+								"abbr": null,
+								"article": null,
+								"foreign": null,
+								"gender": "Masc"
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🏙️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Ortsteil", "kind": "NOUN" }
+						],
+						"holonym": [
+							{ "canonicalForm": "Berlin", "kind": "PROPN" }
+						]
+					}
+				},
+				"explanation": "Official Berlin sources identify Kreuzberg as an Ortsteil within Berlin, supporting both category and stable containment.",
+				"sources": [
+					{
+						"title": "Friedrichshain-Kreuzberg district data",
+						"url": "https://www.berlin.de/ba-friedrichshain-kreuzberg/politik-und-verwaltung/service-und-organisationseinheiten/bezirkliche-planung-und-koordinierung/sozialraumorientierte-planungskoordination/daten/",
+						"supports": "Identifies Kreuzberg as an Ortsteil in the Friedrichshain-Kreuzberg district."
+					},
+					{
+						"title": "Berlin.de: Kreuzberg",
+						"url": "https://www.berlin.de/special/stadtteile/kreuzberg/881280-5170818-wohnlagen-infrastruktur.html",
+						"supports": "Identifies Kreuzberg as a Berlin Stadtteil."
+					}
+				],
+				"contaminationKeys": ["relation-de-kreuzberg"]
+			}
+		}
+	]
+}

@@ -1,0 +1,93 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Manchmal fährt sie mit dem Zug.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Manchmal" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fährt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zug" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-24-manchmal",
+			"memberSegmentIndices": [0],
+			"case": {
+				"input": {
+					"markedContext": "<TARGET>Manchmal</TARGET> fährt sie mit dem Zug.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "manchmal",
+							"family": "Lexeme",
+							"kind": "ADV",
+							"coreFeatures": {
+								"foreign": null,
+								"numType": null,
+								"pronType": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🕰️",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": [
+							{ "canonicalForm": "bisweilen", "kind": "ADV" }
+						],
+						"antonym": null,
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Primary lexicography supports the shared occasional-frequency meaning; the elevated/literary distribution is reviewer-adjudicated as a Near-Synonym restriction.",
+				"sources": [
+					{
+						"title": "Duden: manchmal",
+						"url": "https://www.duden.de/rechtschreibung/manchmal",
+						"supports": "Lists bisweilen for the occasional-frequency meaning of manchmal."
+					},
+					{
+						"title": "Duden: bisweilen",
+						"url": "https://www.duden.de/rechtschreibung/bisweilen",
+						"supports": "Defines bisweilen through occasional-frequency expressions."
+					},
+					{
+						"title": "Dumrel settled Semantic Relation policy",
+						"path": "battery/dumrel/CONTEXT.md",
+						"supports": "Supplies Near Synonym for the human-accepted register restriction."
+					}
+				],
+				"contaminationKeys": ["relation-de-manchmal-sometimes"]
+			}
+		}
+	]
+}

@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die neue Erfahrung war aufregend.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "neue" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Erfahrung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "war" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aufregend" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-thrilling",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "demo-thrilling",
+				"kind": "ADJ",
+				"lemma": "aufregend",
+				"context": "Die neue Erfahrung war <TARGET>aufregend</TARGET>.",
+				"meaning": "Exciting or thrilling. Express aroused interest, not relief, fatigue, waiting, or the object that happens to be exciting.",
+				"accepted": ["🤩"],
+				"demo": true
+			}
+		}
+	]
+}

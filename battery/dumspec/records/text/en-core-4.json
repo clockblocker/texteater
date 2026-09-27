@@ -1,0 +1,19 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Mr. Jones owns a well-known shop.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-en-core/4",
+			"case": {
+				"input": "Mr. Jones owns a well-known shop.",
+				"idealOutput": {
+					"decision": "Accepted",
+					"language": "en",
+					"stitchedText": "Mr. Jones owns a well-known shop."
+				}
+			}
+		}
+	]
+}

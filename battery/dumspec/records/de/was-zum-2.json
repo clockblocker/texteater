@@ -1,0 +1,69 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Was zum…?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Was" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Punctuation", "text": "…?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-interrogative-partial-idiom-was-zum-click-was",
+			"memberSegmentIndices": [0, 2, 3],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Was" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Punctuation", "text": "…?" }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [0, 2, 3]
+				},
+				"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-interrogative-partial-idiom-was-zum-click-zum",
+			"memberSegmentIndices": [0, 2, 3],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Was" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "zu" },
+						{ "kind": "ResolvableText", "text": "m" },
+						{ "kind": "Punctuation", "text": "…?" }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Idiom",
+					"memberSegmentIndices": [0, 2, 3]
+				},
+				"contaminationKeys": ["target-phraseme:idiom:was-zum-teufel"]
+			}
+		}
+	]
+}

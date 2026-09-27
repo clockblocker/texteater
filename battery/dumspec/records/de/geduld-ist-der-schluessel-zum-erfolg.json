@@ -1,0 +1,90 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Geduld ist der Schlüssel zum Erfolg.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Geduld" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schlüssel" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Erfolg" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-key-metaphor",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
+					"lemma": "Schlüssel",
+					"existingEmojiDescriptions": ["🔑"]
+				},
+				"idealOutput": { "emojiDescription": "🔑" },
+				"explanation": "Same access concept. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-key-metaphor",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-key-metaphor",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Geduld ist der "
+								},
+								{
+									"kind": "ResolvableText",
+									"text": "Schlüssel"
+								},
+								{ "kind": "OpaqueText", "text": " zum Erfolg." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schlüssel",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"candidates": ["🔑"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "🔑"
+				},
+				"explanation": "Same access concept. Reuse."
+			}
+		}
+	]
+}

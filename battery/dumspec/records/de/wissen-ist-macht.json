@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wissen ist Macht.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wissen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Macht" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-aphorism-click-wissen",
+			"memberSegmentIndices": [0, 2, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 0,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Wissen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Macht" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Aphorism",
+					"memberSegmentIndices": [0, 2, 4]
+				},
+				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not classify Wissen ist Macht as Dumgen Phraseme/Aphorism; issue #82 product policy supplies that route and includes all three fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-aphorism-click-ist",
+			"memberSegmentIndices": [0, 2, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 2,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Wissen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Macht" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Aphorism",
+					"memberSegmentIndices": [0, 2, 4]
+				},
+				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not classify Wissen ist Macht as Dumgen Phraseme/Aphorism; issue #82 product policy supplies that route and includes all three fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-phraseme-aphorism-click-macht",
+			"memberSegmentIndices": [0, 2, 4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Wissen" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "ist" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Macht" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Phraseme",
+					"kind": "Aphorism",
+					"memberSegmentIndices": [0, 2, 4]
+				},
+				"explanation": "IDS establishes the category-level fixed multiword criterion. IDS does not classify Wissen ist Macht as Dumgen Phraseme/Aphorism; issue #82 product policy supplies that route and includes all three fixed words. Source: https://grammis.ids-mannheim.de/terminologie/1175"
+			}
+		}
+	]
+}

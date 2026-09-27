@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "%$#@  !!!",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-de-core/junk",
+			"case": {
+				"input": {
+					"id": "junk",
+					"sourceText": "%$#@  !!!"
+				},
+				"idealOutput": {
+					"id": "junk",
+					"decision": "Unintelligible",
+					"language": null,
+					"stitchedText": "%$#@ !!!"
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-de-core/7",
+			"case": {
+				"input": "%$#@  !!!",
+				"idealOutput": {
+					"decision": "Unintelligible"
+				}
+			}
+		}
+	]
+}

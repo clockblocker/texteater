@@ -1,0 +1,106 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Sie kauft drei Äpfel.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kauft" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "drei" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Äpfel" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
+			"caseId": "target-de-route-lexeme-num",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"clickedSegmentIndex": 4,
+					"segments": [
+						{ "kind": "ResolvableText", "text": "Sie" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "kauft" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "drei" },
+						{ "kind": "Whitespace", "text": " " },
+						{ "kind": "ResolvableText", "text": "Äpfel" },
+						{ "kind": "Punctuation", "text": "." }
+					]
+				},
+				"idealOutput": {
+					"family": "Lexeme",
+					"kind": "NUM",
+					"memberSegmentIndices": [4]
+				},
+				"explanation": "The complete sentence disambiguates the clicked occurrence as Lexeme/NUM in Dumling's UD-inspired product inventory. Source: https://universaldependencies.org/u/pos/NUM.html"
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-lexeme-num-drei-cardinal-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"markedContext": "Sie kauft <TARGET>drei</TARGET> Äpfel.",
+					"lemma": "drei",
+					"existingEmojiDescriptions": ["3️⃣"]
+				},
+				"idealOutput": { "emojiDescription": "3️⃣" },
+				"explanation": "Cardinal quantity three. Reuse."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-lexeme-num-drei-cardinal-reuse",
+			"memberSegmentIndices": [4],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-lexeme-num-drei-cardinal-reuse",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Sie kauft " },
+								{ "kind": "ResolvableText", "text": "drei" },
+								{ "kind": "OpaqueText", "text": " Äpfel." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "NUM",
+							"memberSegmentIndices": [1]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NUM",
+						"canonicalForm": "drei",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"numType": "Card"
+						}
+					},
+					"candidates": ["3️⃣"]
+				},
+				"idealOutput": { "decision": "Reuse", "emojiDescription": "3️⃣" },
+				"explanation": "Cardinal quantity three. Reuse."
+			}
+		}
+	]
+}

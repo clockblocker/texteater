@@ -1,0 +1,42 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Dieses Messer ist sehr scharf.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Dieses" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Messer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sehr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "scharf" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-sharp-knife",
+			"memberSegmentIndices": [8],
+			"case": {
+				"id": "sharp-knife",
+				"kind": "ADJ",
+				"lemma": "scharf",
+				"context": "Dieses Messer ist sehr <TARGET>scharf</TARGET>.",
+				"meaning": "Having a keen cutting edge",
+				"accepted": ["🔪", "🗡️", "🔪✨"],
+				"rejected": ["🌶️"]
+			}
+		}
+	]
+}

@@ -1,0 +1,40 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Diese Kreuzung ist gefährlich.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Diese" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kreuzung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gefährlich" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-demo-danger",
+			"memberSegmentIndices": [6],
+			"case": {
+				"id": "demo-danger",
+				"kind": "ADJ",
+				"lemma": "gefährlich",
+				"context": "Diese Kreuzung ist <TARGET>gefährlich</TARGET>.",
+				"meaning": "Likely to cause harm. Mark danger rather than a road or car; the adjective applies beyond traffic.",
+				"accepted": ["⚠️"],
+				"demo": true
+			}
+		}
+	]
+}

@@ -1,0 +1,55 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Geschichte bleibt bis zum Ende spannend.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geschichte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleibt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bis" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Ende" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "spannend" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-exciting-story",
+			"memberSegmentIndices": [13],
+			"case": {
+				"id": "exciting-story",
+				"kind": "ADJ",
+				"lemma": "spannend",
+				"context": "Die Geschichte bleibt bis zum Ende <TARGET>spannend</TARGET>.",
+				"meaning": "Holding interest through excitement or suspense",
+				"accepted": ["🤩", "😮", "😲"],
+				"rejected": [
+					"🥱",
+					"😮‍💨",
+					"😮‍💨⏳",
+					"😮‍💨❓",
+					"😮‍💨📖",
+					"🤩📖",
+					"😬📖"
+				]
+			}
+		}
+	]
+}

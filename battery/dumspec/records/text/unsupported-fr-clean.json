@@ -1,0 +1,33 @@
+{
+	"$schema": "../../schema/text-record.json",
+	"sourceText": "Je rentre à la maison.",
+	"status": "Draft",
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/source-data.json",
+			"caseId": "intake-unsupported/fr-clean",
+			"case": {
+				"input": {
+					"id": "fr-clean",
+					"sourceText": "Je rentre à la maison."
+				},
+				"idealOutput": {
+					"id": "fr-clean",
+					"decision": "UnsupportedLanguage",
+					"language": null,
+					"stitchedText": "Je rentre à la maison."
+				}
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/segmentation/operation-cases.json",
+			"caseId": "intake-unsupported/0",
+			"case": {
+				"input": "Je rentre à la maison.",
+				"idealOutput": {
+					"decision": "UnsupportedLanguage"
+				}
+			}
+		}
+	]
+}

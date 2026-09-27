@@ -1,0 +1,77 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er blieb aus Angst vor Hunden zu Hause.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "blieb" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Angst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hunden" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hause" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/valency/source-data.json",
+			"caseId": "valency-angst-noun",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Er blieb aus <TARGET>Angst</TARGET> vor Hunden zu Hause.",
+					"reading": {
+						"unitKind": "Reading",
+						"lemma": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"canonicalForm": "Angst",
+							"coreFeatures": { "gender": "Fem", "hyph": null }
+						},
+						"emojiDescription": "😨"
+					}
+				},
+				"idealOutput": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complement": {
+								"kind": "Preposition",
+								"preposition": "vor",
+								"case": "Dat",
+								"referent": "Either"
+							}
+						}
+					]
+				},
+				"explanation": "A German noun's frame holds only governed prepositions; its bare cases are attributes.",
+				"sources": [
+					{
+						"title": "Dumrel valency policy",
+						"path": "battery/dumrel/src/valency-policy.ts",
+						"supports": "German NOUN Readings allow only Preposition complements."
+					}
+				]
+			}
+		}
+	]
+}

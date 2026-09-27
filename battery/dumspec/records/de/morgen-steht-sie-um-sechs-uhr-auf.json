@@ -1,0 +1,91 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Morgen steht sie um sechs Uhr auf.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sechs" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Uhr" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-aufstehen-morning-six",
+			"memberSegmentIndices": [2, 12],
+			"case": {
+				"input": {
+					"markedContext": "Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
+					"lemma": "aufstehen",
+					"existingEmojiDescriptions": []
+				},
+				"idealOutput": { "emojiDescription": "🛏️⬆️" },
+				"explanation": "Get out of bed. Auf adds upward structure. New."
+			}
+		},
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-aufstehen-morning-six",
+			"memberSegmentIndices": [2, 12],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-aufstehen-morning-six",
+							"language": "de",
+							"segments": [
+								{ "kind": "OpaqueText", "text": "Morgen " },
+								{ "kind": "ResolvableText", "text": "steht" },
+								{
+									"kind": "OpaqueText",
+									"text": " sie um sechs Uhr "
+								},
+								{ "kind": "ResolvableText", "text": "auf" },
+								{ "kind": "OpaqueText", "text": "." }
+							]
+						},
+						"target": {
+							"family": "Lexeme",
+							"kind": "VERB",
+							"memberSegmentIndices": [1, 3]
+						}
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "aufstehen",
+						"coreFeatures": {
+							"hasSepPrefix": "auf",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"candidates": []
+				},
+				"idealOutput": { "decision": "New", "emojiDescription": "🛏️⬆️" },
+				"explanation": "Get out of bed. Auf adds upward structure. New."
+			}
+		}
+	]
+}

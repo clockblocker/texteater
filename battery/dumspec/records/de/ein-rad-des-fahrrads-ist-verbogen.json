@@ -1,0 +1,95 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Ein Rad des Fahrrads ist verbogen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Rad" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fahrrads" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verbogen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-14-rad-wheel",
+			"memberSegmentIndices": [2],
+			"case": {
+				"input": {
+					"markedContext": "Ein <TARGET>Rad</TARGET> des Fahrrads ist verbogen.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "Rad",
+							"family": "Lexeme",
+							"kind": "NOUN",
+							"coreFeatures": { "gender": "Neut", "hyph": null },
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "🛞",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null,
+							"hypernym": null,
+							"holonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": null,
+						"nearSynonym": null,
+						"antonym": null,
+						"nearAntonym": null,
+						"hypernym": [
+							{ "canonicalForm": "Bauteil", "kind": "NOUN" }
+						],
+						"holonym": [
+							{ "canonicalForm": "Fahrzeug", "kind": "NOUN" }
+						]
+					}
+				},
+				"explanation": "The wheel-part Reading is a Bauteil and an inherent part of a Fahrzeug; the encountered Fahrrad cannot narrow the general whole, and the bicycle Reading of Rad is excluded.",
+				"sources": [
+					{
+						"title": "Duden: Fahrrad",
+						"url": "https://www.duden.de/rechtschreibung/Fahrrad",
+						"supports": "Defines Fahrrad as a two-wheeled vehicle."
+					},
+					{
+						"title": "Duden: Rad",
+						"url": "https://www.duden.de/rechtschreibung/Rad_Fahrrad",
+						"supports": "Documents both the wheel-part and colloquial bicycle senses of Rad."
+					},
+					{
+						"title": "Dumling generated docs source: Linguistics",
+						"path": "app/dumling-docs/src/to-generate/docs/general/linguistics.doc.ts",
+						"supports": "Keeps those Rad meanings as distinct semantic Readings."
+					}
+				],
+				"contaminationKeys": ["relation-de-rad-wheel"]
+			}
+		}
+	]
+}

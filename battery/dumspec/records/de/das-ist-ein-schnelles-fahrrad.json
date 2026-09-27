@@ -1,0 +1,77 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Das ist ein schnelles Fahrrad.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schnelles" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fahrrad" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
+			"caseId": "relation-adv-41-schnell-kind",
+			"memberSegmentIndices": [6],
+			"case": {
+				"input": {
+					"markedContext": "Das ist ein <TARGET>schnelles</TARGET> Fahrrad.",
+					"reading": {
+						"lemma": {
+							"language": "de",
+							"canonicalForm": "schnell",
+							"family": "Lexeme",
+							"kind": "ADJ",
+							"coreFeatures": {
+								"abbr": null,
+								"foreign": null,
+								"numType": null,
+								"variant": null
+							},
+							"unitKind": "Lemma"
+						},
+						"emojiDescription": "⚡",
+						"unitKind": "Reading"
+					},
+					"request": {
+						"semanticRelations": {
+							"synonym": null,
+							"nearSynonym": null,
+							"antonym": null,
+							"nearAntonym": null
+						}
+					}
+				},
+				"idealOutput": {
+					"semanticRelations": {
+						"synonym": [
+							{ "canonicalForm": "rasch", "kind": "ADJ" }
+						],
+						"nearSynonym": null,
+						"antonym": [
+							{ "canonicalForm": "langsam", "kind": "ADJ" }
+						],
+						"nearAntonym": null
+					}
+				},
+				"explanation": "Rasch and langsam preserve the adjectival role; the associated noun Eile is grammatically incompatible and not semantic similarity.",
+				"contaminationKeys": ["relation-de-schnell-fast"]
+			}
+		}
+	]
+}

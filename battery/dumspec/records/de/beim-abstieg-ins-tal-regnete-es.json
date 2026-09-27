@@ -1,0 +1,47 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Beim Abstieg ins Tal regnete es.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Bei", "surface": "bei" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Abstieg" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "s", "surface": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tal" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "regnete" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
+		{
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/generate/cases.ts",
+			"caseId": "reading-generation-descent-mountain",
+			"memberSegmentIndices": [3],
+			"case": {
+				"id": "descent-mountain",
+				"kind": "NOUN",
+				"lemma": "Abstieg",
+				"gender": "Masc",
+				"context": "Beim <TARGET>Abstieg</TARGET> ins Tal regnete es.",
+				"meaning": "Downward movement or descent",
+				"accepted": ["⬇️", "🏔️⬇️", "⬇️⛰️", "⬇️🥾"],
+				"rejected": ["⬆️", "🌧️"]
+			}
+		}
+	]
+}
