@@ -162,11 +162,42 @@ describe("relations cleanup", () => {
 		source.knowledge = {
 			semanticRelations: { hypernym: [englishSwimLemma] },
 		};
-		const firstSwim = swimNote(englishSwimReading);
 		const { dict, storage } = getBootedUpDumdict("en", [
 			sourceWithEdge,
-			firstSwim,
+			{ ...swimNote(englishSwimReading), readingEntries: [] },
 		]);
+		const hyponyms = (
+			readingCounts: Parameters<typeof projections>[1] = [],
+		) => {
+			const readings = storage
+				.loadAll()
+				.flatMap(({ readingEntries }) => readingEntries);
+			for (const { reading, knowledge } of readings)
+				if (reading.lemma.canonicalForm === "swim")
+					expect(knowledge).toBeUndefined();
+			return projections(readings, readingCounts).filter(
+				(projection) => projection.relation === "hyponym",
+			);
+		};
+		expect(
+			(
+				await Effect.runPromise(
+					dict.addNewNote({ draft: englishSwimDraft }),
+				)
+			).status,
+		).toBe("applied");
+		expect(hyponyms()).toEqual([
+			expect.objectContaining({
+				source: englishSwimReading,
+				target: englishWalkLemma,
+				provenance: "inferred",
+			}),
+		]);
+		// Entries that hold only part of swim's Readings need its full count.
+		expect(
+			hyponyms([{ lemma: englishSwimLemma, readingCount: 2 }]),
+		).toEqual([]);
+		// A second Reading makes swim homonymous: its Lemma target stays direct.
 		const sibling = {
 			...englishSwimDraft,
 			reading: { ...englishSwimReading, emojiDescription: "🌊" },
@@ -175,29 +206,15 @@ describe("relations cleanup", () => {
 			(await Effect.runPromise(dict.addNewNote({ draft: sibling })))
 				.status,
 		).toBe("applied");
-		const notes = storage.loadAll();
-		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
-		expect(
-			readings.find(({ reading }) => reading.emojiDescription === "🌊")
-				?.knowledge,
-		).toBeUndefined();
-		expect(
-			projections(readings).filter(
-				(projection) =>
-					projection.source.emojiDescription === "🌊" &&
-					projection.relation === "hyponym",
-			),
-		).toEqual([
-			expect.objectContaining({
-				target: englishWalkLemma,
-				provenance: "inferred",
-			}),
-		]);
+		expect(hyponyms()).toEqual([]);
 	});
 });
 
-function projections(readings: import("../../../src").ReadingEntry<"en">[]) {
-	const result = projectSemanticRelations(readings);
+function projections(
+	readings: import("../../../src").ReadingEntry<"en">[],
+	readingCounts: Parameters<typeof projectSemanticRelations>[1] = [],
+) {
+	const result = projectSemanticRelations(readings, readingCounts);
 	if (!result.success) throw result.error;
 	return result.value;
 }

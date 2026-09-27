@@ -110,6 +110,8 @@ evidence, not linguistic identity or Visitor history.
 **Semantic Relation Edge**:
 A normalized direct Reading-owned claim targeting either a Lemma or exact
 Reading. Only direct claims persist; missing targets remain pending Unit Shadows.
+Inferred edges follow a claim only when it reaches exactly one Reading: an exact
+Reading, or a Lemma with one Reading.
 
 **Reviewed Grammatical Alternative**:
 A reviewed authored Reading selected by varying named Core Features of another

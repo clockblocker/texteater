@@ -1,4 +1,5 @@
 import { ParsingError } from "common-utils";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { conflict, contextualizeKnowledge } from "./context.js";
 import type {
@@ -53,6 +54,50 @@ function compare(left: string, right: string): number {
 	return left < right ? -1 : left > right ? 1 : 0;
 }
 
+type ReadingCount = {
+	readonly lemma: Dumling.Lemma;
+	readonly readingCount: number;
+};
+
+/** Caller-given Reading counts keyed by normalized Lemma. */
+function parseReadingCounts(
+	counts: readonly ReadingCount[],
+	supplied: (lemma: Dumling.Lemma) => number,
+	key: (value: unknown) => string,
+): Map<string, number> | ParsingError {
+	const byLemma = new Map<string, number>();
+	for (const [index, { lemma, readingCount }] of counts.entries()) {
+		const path = ["readingCounts", index];
+		const parsed = parseUnit(lemma);
+		if (!parsed.success)
+			return new ParsingError(
+				parsed.error.issues.map((issue) => ({
+					...issue,
+					path: [...path, "lemma", ...issue.path],
+				})),
+			);
+		if (parsed.chain.unitKind !== "Lemma")
+			return conflict([...path, "lemma", "unitKind"], "Expected a Lemma");
+		const normalized = parsed.chain.value as Dumling.Lemma;
+		const identity = key(normalized);
+		if (byLemma.has(identity))
+			return conflict(
+				[...path, "lemma"],
+				"Duplicate Lemma Reading count",
+			);
+		if (
+			!Number.isInteger(readingCount) ||
+			readingCount < supplied(normalized)
+		)
+			return conflict(
+				[...path, "readingCount"],
+				"Reading count must cover the Lemma's supplied Readings",
+			);
+		byLemma.set(identity, readingCount);
+	}
+	return byLemma;
+}
+
 /**
  * Projects direct claims, one-level inverses, and exact-Synonym closure and
  * substitution over a finite dictionary inventory. Near relations get inverses
@@ -72,17 +117,26 @@ function compare(left: string, right: string): number {
  * edges the whole projection holds for it, without inferring every other
  * source's. The source must be supplied in the inventory.
  *
+ * Closure (inverses, synonym components and substitution) follows only links
+ * that reach exactly one Reading: an exact target, or a Lemma target whose
+ * Lemma has exactly one Reading (ADR 0011). A Lemma target on a homonymous
+ * Lemma stays a direct edge and infers nothing. A Lemma counts its supplied
+ * Readings unless `options.readingCounts` gives its dictionary-wide count, so a
+ * caller holding only part of a Lemma's Readings must supply that count.
+ *
  * @remarks
- * Lemma targets temporarily allow every supplied Reading of that Lemma to
- * participate, including unrelated Readings. A Lemma without supplied Readings
- * remains a target but produces no inverse source. Exact targets do not themselves expand to other
- * Readings; inverses encoded in Lemma mode retain Lemma participation. Separate LLM disambiguation will replace
- * interim Lemma targeting; projection performs no model calls or persistence.
+ * Exact targets do not expand to other Readings; inverses encoded in Lemma mode
+ * close only over single-Reading Lemmas. Separate LLM disambiguation will
+ * resolve Lemma targets to Readings and widen closure; projection performs no
+ * model calls or persistence.
  * @see {@link https://github.com/clockblocker/texteater/issues/176 | Smart Shadow Pickup}
  */
 export function projectSemanticRelations(
 	entries: readonly ReadingWithKnowledge[],
-	options: { readonly source?: Dumling.Reading } = {},
+	options: {
+		readonly source?: Dumling.Reading;
+		readonly readingCounts?: readonly ReadingCount[];
+	} = {},
 ):
 	| { success: true; value: readonly SemanticRelationProjection[] }
 	| { success: false; error: ParsingError } {
@@ -116,6 +170,20 @@ export function projectSemanticRelations(
 		inventory.set(identity, { reading: entry.reading, knowledge });
 		const lemma = key(entry.reading.lemma);
 		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
+	}
+	const parsedCounts = parseReadingCounts(
+		options.readingCounts ?? [],
+		(lemma) => byLemma.get(key(lemma))?.length ?? 0,
+		key,
+	);
+	if (parsedCounts instanceof ParsingError)
+		return { success: false, error: parsedCounts };
+	const readingCounts = parsedCounts;
+	/** Whether closure may follow a link: it reaches exactly one Reading. */
+	function closes(target: Dumling.Lemma | Dumling.Reading) {
+		if (target.unitKind === "Reading") return true;
+		const lemma = key(target);
+		return (readingCounts.get(lemma) ?? byLemma.get(lemma)?.length) === 1;
 	}
 	/** The requested source's structural key, once it is in the inventory. */
 	function parseSource(source: Dumling.Reading): string | ParsingError {
@@ -197,7 +265,9 @@ export function projectSemanticRelations(
 			}
 		}
 	}
+	/** The supplied Readings a link reaches, if closure may follow it. */
 	function targetsFor(target: Dumling.Lemma | Dumling.Reading) {
+		if (!closes(target)) return [];
 		return target.unitKind === "Reading"
 			? [target]
 			: (byLemma.get(key(target)) ?? []);
@@ -260,7 +330,11 @@ export function projectSemanticRelations(
 		return source && components.get(only) === component ? [source] : [];
 	}
 	for (const edge of base) {
-		if (edge.relation === "nearSynonym" || edge.relation === "nearAntonym")
+		if (
+			edge.relation === "nearSynonym" ||
+			edge.relation === "nearAntonym" ||
+			!closes(edge.target)
+		)
 			continue;
 		const targets = targetsFor(edge.target);
 		for (const source of sourcesFor(edge)) {

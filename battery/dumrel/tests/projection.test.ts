@@ -19,8 +19,11 @@ const dog = reading("Hund");
 const animal = reading("Tier");
 const brute = reading("Tier", "😈");
 const hound = reading("Hündchen");
-function project(entries: readonly Dumrel.ReadingWithKnowledge[]) {
-	const result = projectSemanticRelations(entries);
+function project(
+	entries: readonly Dumrel.ReadingWithKnowledge[],
+	options: Parameters<typeof projectSemanticRelations>[1] = {},
+) {
+	const result = projectSemanticRelations(entries, options);
 	if (!result.success) throw result.error;
 	for (const edge of result.value)
 		expect(semanticRelationProjectionSchema.safeParse(edge).success).toBe(
@@ -29,7 +32,7 @@ function project(entries: readonly Dumrel.ReadingWithKnowledge[]) {
 	return result.value;
 }
 
-test("Lemma targets use only supplied Readings, including unrelated Readings", () => {
+test("a Lemma target closes only when its Lemma has exactly one Reading", () => {
 	const source = {
 		reading: dog,
 		knowledge: { semanticRelations: { hypernym: [animal.lemma] } },
@@ -40,24 +43,139 @@ test("Lemma targets use only supplied Readings, including unrelated Readings", (
 		target: animal.lemma,
 		provenance: "direct",
 	};
+	const inverse: Dumrel.SemanticRelationProjection = {
+		source: animal,
+		relation: "hyponym",
+		target: dog.lemma,
+		provenance: "inferred",
+	};
+	const single = [source, { reading: animal, knowledge: {} }];
+	expect(project(single)).toEqual([direct, inverse]);
+	// A homonymous Lemma adds no inverse to any of its Readings.
+	expect(project([...single, { reading: brute, knowledge: {} }])).toEqual([
+		direct,
+	]);
+	// The dictionary-wide count decides, not the Readings one call supplies.
+	expect(
+		project(single, {
+			readingCounts: [{ lemma: animal.lemma, readingCount: 2 }],
+		}),
+	).toEqual([direct]);
 	expect(project([source])).toEqual([direct]);
+});
+
+test("reading counts must be valid, unique, and cover the supplied Readings", () => {
 	const entries = [
-		source,
 		{ reading: animal, knowledge: {} },
 		{ reading: brute, knowledge: {} },
 	];
-	const edges = project(entries);
-	expect(edges).toHaveLength(3);
-	expect(edges).toContainEqual(direct);
-	for (const source of [animal, brute])
-		expect(edges).toContainEqual({
-			source,
-			relation: "hyponym",
-			target: dog.lemma,
-			provenance: "inferred",
+	for (const [readingCounts, path] of [
+		[[{ lemma: animal.lemma, readingCount: 1 }], "readingCount"],
+		[[{ lemma: animal.lemma, readingCount: 2.5 }], "readingCount"],
+		[
+			[
+				{ lemma: dog.lemma, readingCount: 1 },
+				{ lemma: dog.lemma, readingCount: 1 },
+			],
+			"lemma",
+		],
+		[[{ lemma: dog, readingCount: 1 }], "lemma"],
+	] as const) {
+		const result = projectSemanticRelations(entries, {
+			readingCounts: readingCounts as never,
 		});
-	expect(project(entries.toReversed())).toEqual(edges);
-	expect(entries[1]?.knowledge).toEqual({});
+		expect(result.success).toBe(false);
+		if (!result.success)
+			expect(result.error.issues[0]?.path.slice(0, 3)).toEqual([
+				"readingCounts",
+				readingCounts.length - 1,
+				path,
+			]);
+	}
+	const decomposed = reading(" Hu\u0308ndchen ").lemma;
+	expect(
+		project(
+			[
+				{
+					reading: dog,
+					knowledge: {
+						semanticRelations: { synonym: [hound.lemma] },
+					},
+				},
+				{ reading: hound, knowledge: {} },
+			],
+			{ readingCounts: [{ lemma: decomposed, readingCount: 2 }] },
+		),
+	).toHaveLength(1);
+});
+
+test("Burg gets nothing through the homonymous Lemma Schloss", () => {
+	const burg = reading("Burg", "🏰");
+	const castle = reading("Schloss", "🏰");
+	const lock = reading("Schloss", "🔒");
+	const building = reading("Gebäude", "🏢");
+	const device = reading("Vorrichtung", "⚙️");
+	const entries = [
+		{
+			reading: burg,
+			knowledge: { semanticRelations: { synonym: [castle.lemma] } },
+		},
+		{
+			reading: castle,
+			knowledge: { semanticRelations: { hypernym: [building.lemma] } },
+		},
+		{
+			reading: lock,
+			knowledge: { semanticRelations: { hypernym: [device.lemma] } },
+		},
+		{ reading: building, knowledge: {} },
+		{ reading: device, knowledge: {} },
+	];
+	const edges = project(entries);
+	expect(edges).not.toContainEqual(
+		expect.objectContaining({
+			source: burg,
+			relation: "hypernym",
+			target: device.lemma,
+		}),
+	);
+	expect(edges).not.toContainEqual(
+		expect.objectContaining({
+			source: lock,
+			relation: "hyponym",
+			target: burg.lemma,
+		}),
+	);
+	expect(
+		edges.filter((edge) => edge.source.lemma.canonicalForm === "Burg"),
+	).toEqual([
+		{
+			source: burg,
+			relation: "synonym",
+			target: castle.lemma,
+			provenance: "direct",
+		},
+	]);
+	// With Schloss a single-Reading Lemma, closure still runs through it.
+	const single = project(entries.filter((entry) => entry.reading !== lock));
+	expect(single).toContainEqual({
+		source: burg,
+		relation: "hypernym",
+		target: building.lemma,
+		provenance: "inferred",
+	});
+	expect(single).toContainEqual({
+		source: castle,
+		relation: "synonym",
+		target: burg.lemma,
+		provenance: "inferred",
+	});
+	expect(single).toContainEqual({
+		source: building,
+		relation: "hyponym",
+		target: burg.lemma,
+		provenance: "inferred",
+	});
 });
 
 test("exact targets never expand to unrelated Readings and inverse encoding follows source mode", () => {
@@ -104,7 +222,7 @@ test("exact targets never expand to unrelated Readings and inverse encoding foll
 	});
 });
 
-test("inverse Lemma mode retains interim participation even for same-Lemma Readings", () => {
+test("an inverse onto a homonymous Lemma joins no synonym component", () => {
 	const source = reading("Tier", "🐕");
 	const edges = project([
 		{
@@ -119,15 +237,16 @@ test("inverse Lemma mode retains interim participation even for same-Lemma Readi
 			knowledge: { semanticRelations: { targetKind: "reading" } },
 		},
 	]);
-	// The inverse from animal uses Lemma mode. Its same-Lemma edge is omitted
-	// from output but still joins supplied Readings during synonym closure.
-	expect(edges).toContainEqual({
-		source,
-		relation: "synonym",
-		target: brute,
-		provenance: "inferred",
-	});
-	expect(edges).toHaveLength(4);
+	// The inverse from animal targets the Lemma Tier, whose three Readings
+	// make it homonymous, so brute stays outside the component.
+	expect(edges).toEqual([
+		{
+			source,
+			relation: "synonym",
+			target: animal,
+			provenance: "direct",
+		},
+	]);
 });
 
 test("all inverse pairs, synonym substitution, and direct provenance", () => {
@@ -193,26 +312,32 @@ test("all inverse pairs, synonym substitution, and direct provenance", () => {
 	});
 });
 
-test("synonym substitution retains a Lemma target absent from the inventory", () => {
-	expect(
-		project([
-			{
-				reading: dog,
-				knowledge: {
-					semanticRelations: {
-						synonym: [hound.lemma],
-						hypernym: [animal.lemma],
-					},
+test("synonym substitution retains a single-Reading Lemma target absent from the inventory", () => {
+	const entries = [
+		{
+			reading: dog,
+			knowledge: {
+				semanticRelations: {
+					synonym: [hound.lemma],
+					hypernym: [animal.lemma],
 				},
 			},
-			{ reading: hound, knowledge: {} },
-		]),
-	).toContainEqual({
+		},
+		{ reading: hound, knowledge: {} },
+	];
+	const substituted = {
 		source: hound,
 		relation: "hypernym",
 		target: animal.lemma,
 		provenance: "inferred",
-	});
+	} as const;
+	expect(
+		project(entries, {
+			readingCounts: [{ lemma: animal.lemma, readingCount: 1 }],
+		}),
+	).toContainEqual(substituted);
+	// Without a count, a Lemma with no supplied Reading reaches no Reading.
+	expect(project(entries)).not.toContainEqual(substituted);
 });
 
 test("empty, self, and cyclic inventories terminate without inferred self edges", () => {
@@ -408,15 +533,16 @@ test("a requested source gets exactly its edges from the whole projection", () =
 // fifty Readings must project in a small share of it.
 function projectedWithinBudget(
 	entries: readonly Dumrel.ReadingWithKnowledge[],
+	options: Parameters<typeof projectSemanticRelations>[1] = {},
 ) {
 	const started = performance.now();
-	const result = projectSemanticRelations(entries);
+	const result = projectSemanticRelations(entries, options);
 	expect(performance.now() - started).toBeLessThan(200);
 	if (!result.success) throw result.error;
 	return result.value;
 }
 
-test("fifty Readings of one synonym Lemma project within budget", () => {
+test("fifty Readings of one homonymous synonym Lemma project within budget", () => {
 	const source = {
 		reading: dog,
 		knowledge: { semanticRelations: { synonym: [animal.lemma] } },
@@ -425,18 +551,22 @@ test("fifty Readings of one synonym Lemma project within budget", () => {
 		reading: reading("Tier", String.fromCodePoint(0x1f400 + index)),
 		knowledge: {},
 	}));
-	expect(projectedWithinBudget([source, ...senses])).toHaveLength(51);
+	expect(projectedWithinBudget([source, ...senses])).toHaveLength(1);
 });
 
 test("a synonym component with hundreds of edges projects within budget", () => {
 	const synonyms = Array.from({ length: 5 }, (_, index) =>
 		reading(`Hund${index}`),
 	);
-	const hypernyms = (prefix: string, count: number) =>
-		Array.from(
+	const outside: Dumling.Lemma[] = [];
+	const hypernyms = (prefix: string, count: number) => {
+		const lemmas = Array.from(
 			{ length: count },
 			(_, index) => reading(`${prefix}${index}`).lemma,
 		);
+		outside.push(...lemmas);
+		return lemmas;
+	};
 	const entries = [
 		{
 			reading: dog,
@@ -457,7 +587,9 @@ test("a synonym component with hundreds of edges projects within budget", () => 
 		})),
 	];
 	expect(
-		projectedWithinBudget(entries).filter(
+		projectedWithinBudget(entries, {
+			readingCounts: outside.map((lemma) => ({ lemma, readingCount: 1 })),
+		}).filter(
 			(edge) =>
 				edge.source.lemma.canonicalForm === "Hund" &&
 				edge.relation === "hypernym",
