@@ -24,3 +24,5 @@ Kind. Uncertainty produces no asserted relation.
 The cost is losing plausible cross-Family phrasing relations, such as an Idiom
 offered as a Noun's synonym; if a real need emerges, this ADR is revisited.
 ADR-0016 owns endpoint-kind homogeneity (Lemma versus exact Reading).
+
+Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): Phraseme is retired, and Lexeme and Locution share one relation space, so a relation may cross between them (`ins Gras beißen` ↔ `sterben`). Sayings relate only to Sayings. The rest of this ADR stands.

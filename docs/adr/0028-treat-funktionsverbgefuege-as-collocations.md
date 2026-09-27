@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0039
 ---
 
 # Treat Funktionsverbgefüge as Collocations
@@ -31,3 +31,5 @@ named them; only the gold and the production route inventory disagreed.
 Ruled on
 [Wayfinder: intake-owned Pieces and Units](https://github.com/clockblocker/texteater/issues/487),
 2026-09-21.
+
+Superseded by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): a Funktionsverbgefüge is a Locution/VERB whose Reading's Locution Type is Collocation, and a Collocation's predicate may be a noun or an adjective (`geltend machen`).

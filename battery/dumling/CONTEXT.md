@@ -13,8 +13,41 @@ Family, Kind, and Core Features.
 _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
-A lexical Lemma whose fixed realization may have one or more members. Lexeme is
-one Family, not a synonym for Lemma.
+A Lemma with exactly one Head. Its other members are satellites, which may be
+part of its Canonical Form (`sich erinnern`, `take off`, `die Schweiz`). A
+proper name is one Lexeme whatever its length (`Angela Merkel`, `Deutsche
+Bank`): its words are parts of the name, not Heads. Lexeme is one Family, not
+a synonym for Lemma.
+_Avoid_: multiword Lexeme, for a unit with several Heads
+
+**Locution**:
+A Lemma with two or more Heads: `den Faden verlieren`, `weißer Rabe`, `zum
+Teil`, `entweder … oder`, `von … an`, `Herzlichen Dank`. Its Kind is the part of
+speech the whole acts as, and it inflects like a Lexeme of that Kind, narrowed
+to what the Locution varies. Changes grammar makes to the articles, number and
+possessives of its other words keep the Lemma (`Die Entscheidung wurde
+getroffen`); a change of word breaks it.
+_Avoid_: Phraseme, multiword expression, fixed expression
+
+**Saying**:
+A complete saying, a Family with the one Kind `Saying`: a Proverb (`Morgenstund
+hat Gold im Mund`) or a Winged Word (`Sein oder Nichtsein`). Its Canonical Form
+is written as a sentence without final punctuation (`Wer rastet, der rostet`).
+_Avoid_: Phraseme, Aphorism, Quotation
+
+**Winged Word**:
+A line from a known source that speakers use apart from it, verbatim, shortened
+or varied: the *geflügeltes Wort*. A line nobody takes up is not a Saying.
+_Avoid_: Aphorism, Quotation, Cultural Quotation
+
+**Head**:
+A member of a unit that is a word of its own there, as opposed to a
+satellite. A Lexeme has one; a Locution has two or more.
+
+**Member Role**:
+What a member is inside its unit: Head, or one of the satellites
+SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article and
+Auxiliary.
 
 **Canonical Form**:
 The normalized form that names a Lemma and participates in its identity. It
@@ -23,14 +56,14 @@ is the Lemma `wegen`.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
-The broad grammatical class of a Lemma: Lexeme, Phraseme, or Morpheme.
-Every Kind belongs to exactly one Family, so a value that
-carries the Kind carries the Family by inference.
+The broad grammatical class of a Lemma: Lexeme, Locution, Saying, or Morpheme.
+A route is language, Family and Kind, and that triple is unique; the same Kind
+may appear in two Families (Lexeme VERB, Locution VERB).
 _Avoid_: Entry Family
 
 **Kind**:
 The concrete subtype of a Lemma within its Family, such as NOUN, VERB, Prefix,
-or Idiom.
+or Saying.
 _Avoid_: Entry Subkind
 
 **Core Features**:
@@ -85,17 +118,25 @@ evidence, not a member. A component with no letters of its own, such as the
 hidden article in Hebrew `בבית`, leaves its owner Partial, pointing at the
 Fusion component. German verbal Attestations retain
 subject-expletive source orthography as evidence for an owned member. Every
-German governor (verb, adjective, noun, Idiom, Collocation) records the
+German governor (verb, adjective, noun, Locution) records the
 valency slots the occurrence realizes as valency evidence, each naming by
 index the owned member that realizes it, such as the governed preposition. A
 governed preposition is an owned member but not a Fixed one, so the
 normalized Surface leaves it out: `wartet`, not `wartet auf`; `stolz`, not
-`stolz auf`. A Hebrew or English governor (verb, adjective, noun, Idiom) may
+`stolz auf`. A Hebrew or English governor (verb, adjective, noun, Locution) may
 record valency evidence the same way, with no realized case. A German ADP
 Attestation records the case its complement took
 as its realized case: `auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem
-Regen` Dat.
+Regen` Dat. A Modification is attested with Partial coverage.
 _Avoid_: Selection, click result, selected Surface
+
+**Modification**:
+A deliberate change to a Saying's or Locution's wording that still attests it:
+the kept words are members and the replacing words resolve on their own. A
+Saying accepts any (`Kaffee oder Tee, das ist hier die Frage`). A Locution
+accepts only a fixed word expanded into a compound it heads: `Er biss ins
+Kunstgras` attests `ins Gras beißen` over `[biss, in, s]`.
+_Avoid_: variant, for a changed word
 
 **Fusion**:
 A coordinate-free occurrence value for one source spelling that realizes more
@@ -139,7 +180,7 @@ The governed complements of one Reading, stored as an ordered list of Slots
 in its Knowledge: what a learner must memorize to use the word in that sense.
 A Reading has at most one. Free adjuncts are not in it, and neither are fixed
 parts, which come from Lemma identity: a separable prefix, a lexical
-reflexive, a Phraseme's wording. A frame never creates a Lemma or a Reading:
+reflexive, a Locution's wording. A frame never creates a Lemma or a Reading:
 `warten` with and without `auf` is one Reading whose `auf` Slot is Optional.
 _Avoid_: valency pattern, Satzbauplan, argument structure, governed
 prepositions
@@ -201,9 +242,16 @@ ist verliebt`). Its Canonical Form is the uninflected participle (`gekocht`,
 _Avoid_: productive participle and lexicalized participle, as a Kind contrast
 
 **Collocation**:
-A conventional multiword Phraseme with restricted lexical choices and a
-non-idiomatic overall meaning.
-_Avoid_: Idiom, free phrase
+A Locution whose verb only supports its noun or adjective predicate: `eine
+Entscheidung treffen`, `Angst haben`, `geltend machen`. A combination whose
+meaning is literal (`starker Raucher`, `Zähne putzen`) is ordinary Lexemes.
+_Avoid_: Idiom, Phraseme, weak collocation as a unit
+
+**Idiom**:
+A Locution whose meaning is not the sum of its words: `ins Gras beißen`,
+`weißer Rabe`, `unter vier Augen`. Idiom and Collocation are Reading Knowledge,
+not Kinds.
+_Avoid_: Phraseme
 
 **Free `sich`**:
 The independently resolvable personal or reflexive pronoun `sich`, distinct

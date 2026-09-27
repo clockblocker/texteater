@@ -85,3 +85,5 @@ layers") on 2026-09-21, 238 evaluation clicks, one run each:
 Decided on the map
 [Wayfinder: intake-owned Pieces and Units](https://github.com/clockblocker/texteater/issues/487),
 2026-09-21, after the lab and the playground at `/playground/lattice`.
+
+Amended by [system ADR 0039](../../../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md): the Phraseme layer produces Locutions and Sayings, and a group with two or more Heads is a Locution rather than a split. How intake assigns roles, counts Heads and picks a Locution's Kind is open in [#664](https://github.com/clockblocker/texteater/issues/664).

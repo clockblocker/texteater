@@ -120,7 +120,7 @@ reviewed member. The selected Reading can be opened before it has been
 encountered in a Text.
 
 **Unit Reading**:
-A Reading whose Lemma family is Lexeme, Phraseme, or Morpheme. The grouping
+A Reading whose Lemma family is Lexeme, Locution, Saying, or Morpheme. The grouping
 adds no identity.
 
 **Reading Note**:

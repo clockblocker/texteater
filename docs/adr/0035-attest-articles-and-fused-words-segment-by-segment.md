@@ -140,3 +140,5 @@ morph.
   wait for every piece of its word before joining a unit.
 - Decided on [#595](https://github.com/clockblocker/texteater/issues/595),
   area 2.
+
+Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): `zum Teil` is a Locution/ADV and `das Eis brechen` a Locution/VERB, both still owning every piece of their fused words. The rest of this ADR stands.

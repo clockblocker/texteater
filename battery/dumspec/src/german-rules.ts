@@ -287,7 +287,7 @@ const phrasemes: Rule[] = [
 		id: "de/funktionsverbgefuege-are-collocations",
 		statement:
 			"A Funktionsverbgefüge, a support verb with its predicate noun (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Angst haben, Bescheid wissen), is one Collocation. Its members are the verb, the noun, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs. Free arguments and adverbs stay outside: stellt den Schülern Material zur Verfügung gives [stellt, zu, r, Verfügung]. An ordinary verb with a free object (eine Cola bringen) is not a Collocation.",
-		adrs: ["ADR-0028", "ADR-0034", "dumgen/ADR-0006"],
+		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0006"],
 		routes: phraseme("Collocation"),
 		records: [],
 	},

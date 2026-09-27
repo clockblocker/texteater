@@ -38,7 +38,7 @@ _Avoid_: govPrep, prepositional object, valency note
 **Governor**:
 the Reading whose Valency Frame holds a Governed Preposition. The
 preposition's side of the link is projected, never stored.
-_Avoid_: governing verb (adjectives, nouns and Phrasemes govern too)
+_Avoid_: governing verb (adjectives, nouns and Locutions govern too)
 
 **Participle Source**:
 the VERB Lemma a Participial Adjective's Reading comes from, stored in that
@@ -54,3 +54,22 @@ NOUN Reading's Knowledge stores every pattern its plurals attest (`Pizza`:
 `-(e)n`, `-s`), or a NoPlural or PluralOnly marker. It never splits a Lemma:
 `Mutter` 👩 `Mütter` and 🔩 `Muttern` are two Readings of one Lemma.
 _Avoid_: plural class, declension class (declension covers the singular too)
+
+**Locution Type**:
+whether a Locution's Reading is an Idiom (its meaning is not the sum of its
+words: `ins Gras beißen`) or a Collocation (its verb only supports the
+predicate: `eine Entscheidung treffen`). Optional: `zum Teil` has none. It
+never splits a Lemma.
+_Avoid_: Phraseme Kind, idiomaticity
+
+**Saying Type**:
+whether a Saying's Reading is a Proverb or a Winged Word, with an optional
+attribution (`Sein oder Nichtsein`: Shakespeare). It never splits a Lemma.
+_Avoid_: Aphorism, provenance Kind
+
+**Formula Role**:
+what a routine formula does in conversation: greeting, farewell, thanks,
+apology, sympathy, request and the like. An INTJ Reading's Knowledge stores
+it, so `tut mir leid` is one Lemma with an apology Reading and a sympathy
+Reading.
+_Avoid_: discourseFormulaRole, DiscourseFormula

@@ -14,10 +14,10 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0028", "ADR-0035"],
+		"adrs": ["ADR-0035", "ADR-0039"],
 		"rules": [],
 		"references": []
 	},

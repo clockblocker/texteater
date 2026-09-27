@@ -195,3 +195,5 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   from direction, and a one-case slot cannot hold both cases when the judge
   merges them. Decided in
   [#604](https://github.com/clockblocker/texteater/issues/604).
+
+Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): where this ADR says Phraseme, Idiom or Collocation governor, read Locution. A Collocation's predicate may be a noun or an adjective, which widens the Collocation test above. The rest of this ADR stands.

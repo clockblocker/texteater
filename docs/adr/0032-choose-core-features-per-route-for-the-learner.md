@@ -92,3 +92,5 @@ and differ only in what the form refers to stay separate Lemmas. Personal
 case from `er` reaches `ihn` and the masculine `ihm` and `seiner`, never a
 neuter cell. Navigation compares Core values literally, and no Core value is
 a set.
+
+Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): a route is `language/Family/Kind`, unique as a triple, and a Kind name may repeat across Families. A Locution route borrows the inflection features and Grundform rule of the Lexeme route with its Kind. `discourseFormulaRole` leaves Core for the Formula Role in Reading Knowledge.
