@@ -38,15 +38,8 @@ function surface(
 		...("features" in options
 			? {
 					inflectionalFeatures:
-						["de/Lexeme/NOUN", "en/Lexeme/NOUN"].includes(key) &&
-						options.features
-							? {
-									article: "None",
-									...(key === "de/Lexeme/NOUN"
-										? { gender: null }
-										: {}),
-									...options.features,
-								}
+						key === "de/Lexeme/NOUN" && options.features
+							? { gender: null, ...options.features }
 							: options.features,
 				}
 			: {}),
@@ -337,29 +330,23 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: true });
 	});
-	test("a noun's article does not decide its Grundform", () => {
-		for (const article of ["Definite", "None", "Indefinite"])
-			expect(
-				checkIfGrundform(
-					surface("de/Lexeme/NOUN", {
-						canonical: "Tisch",
-						core: { gender: "Masc" },
-						features: { article, case: "Nom", number: "Sing" },
-					}),
-				),
-				article,
-			).toEqual({ success: true, value: true });
+	test("a noun's Grundform is its singular nominative, whatever article it takes", () => {
+		expect(
+			checkIfGrundform(
+				surface("de/Lexeme/NOUN", {
+					canonical: "Tisch",
+					core: { gender: "Masc" },
+					features: { case: "Nom", number: "Sing" },
+				}),
+			),
+		).toEqual({ success: true, value: true });
 		expect(
 			checkIfGrundform(
 				surface("de/Lexeme/NOUN", {
 					canonical: "Tisch",
 					form: "Tische",
 					core: { gender: "Masc" },
-					features: {
-						article: "Definite",
-						case: "Nom",
-						number: "Plur",
-					},
+					features: { case: "Nom", number: "Plur" },
 				}),
 			),
 		).toEqual({ success: true, value: false });
@@ -367,7 +354,7 @@ describe("Grundform assessment", () => {
 			checkIfGrundform(
 				surface("en/Lexeme/NOUN", {
 					canonical: "house",
-					features: { article: "Definite", number: "Sing" },
+					features: { number: "Sing" },
 				}),
 			),
 		).toEqual({ success: true, value: true });

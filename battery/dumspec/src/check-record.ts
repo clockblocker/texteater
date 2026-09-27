@@ -2,6 +2,7 @@ import { checkIfGrundform, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
+import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { recordFileSchema } from "./record-schema.js";
 import type {
@@ -54,7 +55,7 @@ export function uncitedIssue(
 /**
  * Runs every check that needs only the record itself: its id, shape, strict
  * Attestations and Readings, the Attestations' cases against the ADP Case
- * Table, Segments, member order, coverage, Grundform and a Reviewed record's
+ * Table, their articles against the der and ein cells, Segments, member order, coverage, Grundform and a Reviewed record's
  * Rule citation. A Reviewed target must name its Reading; a Draft target may
  * not yet.
  */
@@ -239,6 +240,12 @@ export function checkTargets(
 		for (const found of attestationAdpositionCaseIssues(attestation))
 			issue(
 				"AdpositionCase",
+				`${path}.attestation.${found.path}`,
+				found.message,
+			);
+		for (const found of attestationArticleAgreementIssues(attestation))
+			issue(
+				"ArticleAgreement",
 				`${path}.attestation.${found.path}`,
 				found.message,
 			);

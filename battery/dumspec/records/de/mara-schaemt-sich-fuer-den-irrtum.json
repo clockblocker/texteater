@@ -65,7 +65,8 @@
 					}
 				},
 				"members": [{ "attested": "sich", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

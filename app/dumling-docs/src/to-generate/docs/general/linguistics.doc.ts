@@ -66,21 +66,25 @@ learner can open the Fusion and see how the word breaks down.
 \`realizationCoverage\` is \`Full\` or \`Partial\`; for example, \`heulte mit\`
 can partially realize \`mit den Wölfen heulen\`.
 
-A noun owns its article: the article is a member of the noun's Attestation, and
-\`normalizedSurface\` is the noun's own letters. German and English record it
-with the inflectional feature \`article: Definite | Indefinite | None\`, Hebrew
-with \`definite: Def\`. \`articleEvidence\` says where the article is attested:
-an \`Owned\` member (Full coverage), a \`Shared\` article the noun does not own,
+The Head of a phrase owns its article: the article is a member of the Head's
+Attestation. The Head is usually the noun, or the word standing in for an
+elided noun (\`[den, roten]\`, \`[the, rich]\`). A German or English noun
+Surface is the noun's own letters and has no article feature, so \`books\` is
+one Surface with or without \`the\`. Hebrew marks the article with
+\`definite: Def\`. \`articleEvidence\` says where the article is attested: an
+\`Owned\` member (Full coverage), a \`Shared\` article the Head does not own,
 as in \`der Aufstieg und Abstieg\` (Partial), or a \`Hidden\` Fusion component
-with no letters, such as the article in Hebrew \`בבית\` (Partial). A noun without
-an article has \`articleEvidence: null\`.
+with no letters, such as the article in Hebrew \`בבית\` (Partial). A Head
+without an article has \`articleEvidence: null\`. Whether the article agrees
+with its Head (\`ein Häuser\` does not) is checked in \`dumspec\`, which also
+derives the article's \`DET\` cell.
 
-A proper noun owns its article only if it is canonically cited with one:
-\`die Schweiz\`, \`der Rhein\`, \`the Netherlands\`, Hebrew \`הירדן\`. Its Lemma
-has the Core Feature \`article: Definite\`, and its members, article evidence
-and display follow the common noun's (\`in [der Schweiz]\`). A proper noun cited
-bare (\`Berlin\`) has \`article: null\`; an article it takes in a sentence
-(\`das alte Berlin\`) is its own \`DET\`.
+A proper noun cited with its article has the Core Feature
+\`article: Definite\`: \`die Schweiz\`, \`der Rhein\`, \`the Netherlands\`,
+Hebrew \`הירדן\`. Its members, article evidence and display follow the common
+noun's (\`in [der Schweiz]\`). A proper noun cited bare (\`Berlin\`) has
+\`article: null\` and owns the article it takes in a sentence
+(\`[das, Berlin]\` in \`das alte Berlin\`).
 
 The full chain is:
 

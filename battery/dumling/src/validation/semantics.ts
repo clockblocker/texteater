@@ -110,53 +110,29 @@ export function germanClosedClassSurfaceError(): string {
 }
 
 /**
- * A German article feature names an article form that agrees with its noun.
- * A proper noun's article is its Core `article` (ADR 0035), and a name
- * without a marked case, such as one in direct address, shows no form. A
- * common noun whose Lemma has no gender, such as an adjectival noun for a
- * person, marks on a singular Surface the gender its form shows, and the
- * article agrees with that (der Reisende, ein Verletzter). No other Surface
- * marks gender.
+ * A German common noun Surface is the noun's own form and says nothing about
+ * its article (ADR 0040). A noun whose Lemma has no gender, such as an
+ * adjectival noun for a person, marks on a singular Surface the gender its
+ * form shows (der Reisende, ein Verletzter), so its article can agree. No
+ * other Surface marks gender, and a singular with neither fails.
  */
 export function isGermanNounSurface(input: unknown): boolean {
 	const value = input as {
 		inflectionalFeatures: {
-			article?: string;
-			case: string | null;
-			gender?: string | null;
+			gender: string | null;
 			number: string | null;
 		} | null;
-		lemma: {
-			kind: string;
-			coreFeatures: { article?: string | null; gender: string | null };
-		};
+		lemma: { coreFeatures: { gender: string | null } };
 	};
 	const bag = value.inflectionalFeatures;
-	const proper = value.lemma.kind === "PROPN";
+	if (!bag) return true;
 	const lemmaGender = value.lemma.coreFeatures.gender;
-	const surfaceGender = bag?.gender ?? null;
-	if (
-		surfaceGender !== null &&
-		(lemmaGender !== null || bag?.number !== "Sing")
-	)
-		return false;
-	const gender = lemmaGender ?? surfaceGender;
-	if (!proper && bag?.number === "Sing" && gender === null) return false;
-	const article = proper
-		? (value.lemma.coreFeatures.article ?? "None")
-		: (bag?.article ?? "None");
-	if (!bag || article === "None" || (proper && !bag.case)) return true;
-	return (
-		germanArticleForm({
-			article,
-			case: bag.case,
-			number: bag.number,
-			gender,
-		}) !== null
-	);
+	if (bag.gender !== null)
+		return lemmaGender === null && bag.number === "Sing";
+	return bag.number !== "Sing" || lemmaGender !== null;
 }
 export function germanNounSurfaceError(): string {
-	return "Noun article must have a form for its case, number and gender; a singular noun Surface marks gender only when its Lemma has none, and then must";
+	return "A singular noun Surface marks gender only when its Lemma has none, and then must; a plural marks none";
 }
 
 type Fusion = { spelling: string; components: { span: string }[] };
@@ -185,23 +161,22 @@ export function fusedMemberError(): string {
 }
 
 /**
- * A noun owns its article (ADR 0035). German and English mark it with
- * `article`, Hebrew with `definite: Def`. A noun without an article has no
- * article evidence and Full coverage; an owned article keeps Full coverage;
- * a shared article or a hidden Fusion component leaves the noun Partial.
- * A Hebrew `Def` form may name no evidence. A proper noun canonically cited
- * with its article has Core `article: Definite` and owns it the same way; an
- * occurrence may still show none (unsere Schweiz). A proper noun cited bare
- * has no article evidence: an article it takes in a sentence is its own DET.
+ * The Head of a phrase owns the article that opens it (ADR 0040): a noun, or
+ * the ADJ, NUM or PRON standing in for an elided noun (`[den, roten]`,
+ * `[the, rich]`), or a proper noun, cited bare or with its article
+ * (`[das, Berlin]`, `[die, Schweiz]`). A Head without an article has no
+ * article evidence and Full coverage; an owned article keeps Full coverage; a
+ * shared article or a hidden Fusion component leaves the Head Partial.
+ * Hebrew marks its article with `definite: Def` on the noun or adjective it
+ * prefixes, and only such a form, or a proper noun cited with its article,
+ * names evidence; a `Def` form may name none. Whether the article agrees with
+ * its Head is a fact about the language, checked in dumspec (ADR 0041).
  */
-export function isNounArticleAttestation(input: unknown): boolean {
+export function isArticleAttestation(input: unknown): boolean {
 	const value = input as {
 		surface: {
 			language: string;
-			inflectionalFeatures: {
-				article?: string;
-				definite?: string | null;
-			} | null;
+			inflectionalFeatures: { definite?: string | null } | null;
 			lemma: {
 				kind: string;
 				coreFeatures: { article?: string | null };
@@ -215,21 +190,16 @@ export function isNounArticleAttestation(input: unknown): boolean {
 		realizationCoverage: string;
 		members: unknown[];
 	};
-	const bag = value.surface.inflectionalFeatures;
-	const hebrew = value.surface.language === "he";
-	const proper = value.surface.lemma.kind === "PROPN";
-	const article = proper
-		? value.surface.lemma.coreFeatures.article === "Definite"
-		: hebrew
-			? bag?.definite === "Def"
-			: (bag?.article ?? "None") !== "None";
 	const evidence = value.articleEvidence;
-	if (!evidence)
-		return (
-			value.realizationCoverage === "Full" &&
-			(hebrew || proper || !article)
-		);
-	if (!article) return false;
+	if (!evidence) return value.realizationCoverage === "Full";
+	const { surface } = value;
+	if (
+		surface.language === "he" &&
+		!(surface.lemma.kind === "PROPN"
+			? surface.lemma.coreFeatures.article === "Definite"
+			: surface.inflectionalFeatures?.definite === "Def")
+	)
+		return false;
 	if (evidence.kind === "Owned")
 		return (
 			value.realizationCoverage === "Full" &&
@@ -242,46 +212,8 @@ export function isNounArticleAttestation(input: unknown): boolean {
 		);
 	return value.realizationCoverage === "Partial";
 }
-export function nounArticleAttestationError(): string {
-	return "A noun's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a noun without an article has no article evidence and Full coverage";
-}
-
-const definiteForms: Record<string, Record<string, string>> = {
-	Masc: { Nom: "der", Acc: "den", Dat: "dem", Gen: "des" },
-	Fem: { Nom: "die", Acc: "die", Dat: "der", Gen: "der" },
-	Neut: { Nom: "das", Acc: "das", Dat: "dem", Gen: "des" },
-	Plur: { Nom: "die", Acc: "die", Dat: "den", Gen: "der" },
-};
-const indefiniteForms: Record<string, Record<string, string>> = {
-	Masc: { Nom: "ein", Acc: "einen", Dat: "einem", Gen: "eines" },
-	Fem: { Nom: "eine", Acc: "eine", Dat: "einer", Gen: "einer" },
-	Neut: { Nom: "ein", Acc: "ein", Dat: "einem", Gen: "eines" },
-};
-
-/** Normalized German article morphology; null means absent or unsupported coordinates. */
-export function germanArticleForm(input: {
-	article: string | null;
-	case: string | null;
-	number: string | null;
-	gender: string | null;
-}): string | null {
-	if (
-		!input.case ||
-		!input.number ||
-		!["Sing", "Plur"].includes(input.number)
-	)
-		return null;
-	const forms =
-		input.article === "Definite"
-			? definiteForms
-			: input.article === "Indefinite"
-				? indefiniteForms
-				: null;
-	return (
-		forms?.[input.number === "Plur" ? "Plur" : (input.gender ?? "")]?.[
-			input.case
-		] ?? null
-	);
+export function articleAttestationError(): string {
+	return "A Head's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a Head without an article has no article evidence and Full coverage";
 }
 
 export function isGermanVerbalAttestation(input: unknown): boolean {

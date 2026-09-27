@@ -23,6 +23,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Wer", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",

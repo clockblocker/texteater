@@ -19,4 +19,3 @@ export type {
 	Unit,
 	UnitRoute,
 } from "./types.js";
-export { germanArticleForm } from "./validation/semantics.js";

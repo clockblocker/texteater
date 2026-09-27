@@ -25,6 +25,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Viele", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",

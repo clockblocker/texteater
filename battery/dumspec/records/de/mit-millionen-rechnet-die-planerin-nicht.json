@@ -58,7 +58,8 @@
 				"members": [
 					{ "attested": "Millionen", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

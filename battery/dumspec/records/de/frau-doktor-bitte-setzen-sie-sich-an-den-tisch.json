@@ -63,7 +63,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "sie", "orthography": "Typo" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

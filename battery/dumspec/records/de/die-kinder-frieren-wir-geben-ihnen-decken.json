@@ -58,7 +58,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "ihnen", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

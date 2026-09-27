@@ -166,7 +166,6 @@
 					"normalizedSurface": "Ufers",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "None",
 						"case": "Gen",
 						"gender": null,
 						"number": "Sing"
@@ -200,7 +199,6 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"article": "None",
 						"case": null,
 						"gender": null,
 						"number": "Sing"

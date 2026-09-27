@@ -130,6 +130,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -1237,7 +1290,6 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
-				article: "Definite" | "Indefinite" | "None";
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
@@ -1278,7 +1330,6 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
-					article: "Definite" | "Indefinite" | "None";
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
@@ -1529,6 +1580,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"de/Lexeme/X": {
@@ -1987,6 +2091,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"de/Lexeme/PROPN": {
@@ -5416,6 +5573,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 			valencyEvidence?:
 				| Array<{
 						member: number | null;
@@ -6463,7 +6673,6 @@ export interface UnitMap {
 			spelling: "Canonical" | "Variant";
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
-				article: "Definite" | "Indefinite" | "None";
 				number: ("Plur" | "Ptan" | "Sing") | null;
 			} | null;
 		};
@@ -6510,7 +6719,6 @@ export interface UnitMap {
 				spelling: "Canonical" | "Variant";
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
-					article: "Definite" | "Indefinite" | "None";
 					number: ("Plur" | "Ptan" | "Sing") | null;
 				} | null;
 			};
@@ -6771,6 +6979,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"en/Lexeme/X": {
@@ -7276,6 +7537,59 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence:
+				| (
+						| { kind: "Owned"; member: number }
+						| {
+								kind: "Shared";
+								article:
+									| {
+											attested: string;
+											orthography:
+												| "Standard"
+												| "Typo"
+												| "Shorthand";
+									  }
+									| {
+											attested: string;
+											orthography: "Fused";
+											fusion: {
+												spelling: string;
+												components: [
+													{
+														span: string;
+														surface: string;
+													},
+													{
+														span: string;
+														surface: string;
+													},
+													...Array<{
+														span: string;
+														surface: string;
+													}>,
+												];
+											};
+											component: number;
+									  };
+						  }
+						| {
+								kind: "Hidden";
+								fusion: {
+									spelling: string;
+									components: [
+										{ span: string; surface: string },
+										{ span: string; surface: string },
+										...Array<{
+											span: string;
+											surface: string;
+										}>,
+									];
+								};
+								component: number;
+						  }
+				  )
+				| null;
 		};
 	};
 	"en/Lexeme/PROPN": {

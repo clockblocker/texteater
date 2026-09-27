@@ -9,6 +9,7 @@ export type SpecCheck =
 	| "Attestation"
 	| "Reading"
 	| "AdpositionCase"
+	| "ArticleAgreement"
 	| "Segments"
 	| "Members"
 	| "Coverage"

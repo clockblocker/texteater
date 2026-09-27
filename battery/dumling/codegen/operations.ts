@@ -1,5 +1,6 @@
 import type { ZodValidationOperationRegistration } from "dumval/compiler";
 import {
+	articleAttestationError,
 	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
@@ -15,6 +16,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isArticleAttestation,
 	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
@@ -29,12 +31,10 @@ import {
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
-	isNounArticleAttestation,
 	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
-	nounArticleAttestationError,
 	sayingCanonicalFormError,
 } from "../src/validation/semantics.js";
 
@@ -93,13 +93,13 @@ export const registrations = [
 		implementation: isGermanNounSurface,
 		error: germanNounSurfaceError,
 		name: "dumling.de-noun.surface",
-		version: 4,
+		version: 5,
 	},
 	{
 		construct: "custom",
-		implementation: isNounArticleAttestation,
-		error: nounArticleAttestationError,
-		name: "dumling.noun-article.attestation",
+		implementation: isArticleAttestation,
+		error: articleAttestationError,
+		name: "dumling.article.attestation",
 		version: 1,
 	},
 	{

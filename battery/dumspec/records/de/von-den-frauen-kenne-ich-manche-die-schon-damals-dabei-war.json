@@ -78,7 +78,8 @@
 				"members": [
 					{ "attested": "manche", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

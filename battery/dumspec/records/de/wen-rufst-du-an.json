@@ -61,7 +61,8 @@
 					}
 				},
 				"members": [{ "attested": "Wen", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

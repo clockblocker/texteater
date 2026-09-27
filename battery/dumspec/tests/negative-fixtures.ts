@@ -195,7 +195,11 @@ export const negativeFixtures: {
 		seed: "de/ich-bin-im-wald",
 		check: "Grundform",
 		edit: (record) => {
+			// A bare Wald, so that no article has to agree with the plural.
 			const target = record.targets[1];
+			target.memberSegmentIndices = [7];
+			target.attestation.members = [target.attestation.members[1]];
+			target.attestation.articleEvidence = null;
 			Object.assign(target.attestation.surface.inflectionalFeatures, {
 				case: "Nom",
 				number: "Plur",
@@ -211,6 +215,15 @@ export const negativeFixtures: {
 			const [slot] = record.targets[0].attestation.valencyEvidence;
 			slot.complement.case = "Gen";
 			slot.realizedCase = "Gen";
+		},
+	},
+	{
+		name: "an owned article that names no der or ein cell for its Head",
+		seed: "de/ich-bin-im-wald",
+		check: "ArticleAgreement",
+		edit: (record) => {
+			record.targets[1].attestation.surface.inflectionalFeatures.case =
+				"Acc";
 		},
 	},
 	{

@@ -34,6 +34,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "linke", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",

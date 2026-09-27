@@ -61,7 +61,8 @@
 				"members": [
 					{ "attested": "jedermann", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

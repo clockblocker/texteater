@@ -52,6 +52,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Es", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -89,6 +90,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "ganze", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",

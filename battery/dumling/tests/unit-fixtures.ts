@@ -64,11 +64,6 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			"gender[psor]": null,
 			"number[psor]": null,
 		});
-	if (
-		["de/Lexeme/NOUN", "en/Lexeme/NOUN"].includes(route.key) &&
-		bag.inflectional
-	)
-		Object.assign(bag.inflectional, { article: "None" });
 	// Only a singular whose Lemma has no gender marks gender on the Surface.
 	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
 		Object.assign(bag.inflectional, { gender: null });
@@ -112,11 +107,12 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",
 		...([
-			"de/Lexeme/NOUN",
-			"en/Lexeme/NOUN",
+			...["de", "en"].flatMap((language) =>
+				["NOUN", "PROPN", "ADJ", "NUM", "PRON"].map(
+					(kind) => `${language}/Lexeme/${kind}`,
+				),
+			),
 			"he/Lexeme/NOUN",
-			"de/Lexeme/PROPN",
-			"en/Lexeme/PROPN",
 			"he/Lexeme/PROPN",
 			"he/Lexeme/ADJ",
 		].includes(route.key)

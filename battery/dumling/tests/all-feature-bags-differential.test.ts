@@ -7,12 +7,12 @@ import fixtures from "./fixtures/legacy-feature-acceptance.json";
 const retired = /^[a-z]+\/(morpheme\/clitic|phraseme\/[a-z-]+)\.ts$/;
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 	if (retired.test(route)) continue;
-	// A noun marks its article on every Surface and a proper noun in its Core
-	// (ADR 0035), and a German or English ADV or ADJ records comparability in
-	// Core (ADR 0042), so the legacy shapes, which leave them out, are all
-	// rejected.
+	// A proper noun marks its article in its Core (ADR 0035), a German noun
+	// Surface marks gender (ADR 0040), and a German or English ADV or ADJ
+	// records comparability in Core (ADR 0042), so the legacy shapes, which
+	// leave them out, are all rejected.
 	const supersededShape =
-		/^de\/lexeme\/(verb|auxiliary|noun)\.ts$|^en\/lexeme\/noun\.ts$|^(de|en|he)\/lexeme\/proper-noun\.ts$|^(de|en)\/lexeme\/(adjective|adverb)\.ts$/.test(
+		/^de\/lexeme\/(verb|auxiliary|noun)\.ts$|^(de|en|he)\/lexeme\/proper-noun\.ts$|^(de|en)\/lexeme\/(adjective|adverb)\.ts$/.test(
 			route,
 		);
 	test(`retained Feature Bag acceptance: ${route}`, async () => {

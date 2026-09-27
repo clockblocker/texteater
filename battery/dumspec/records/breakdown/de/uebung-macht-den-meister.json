@@ -42,7 +42,6 @@
 					"normalizedSurface": "Übung",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "None",
 						"case": "Nom",
 						"gender": null,
 						"number": "Sing"
@@ -119,7 +118,6 @@
 					"normalizedSurface": "Meister",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "Definite",
 						"case": "Acc",
 						"gender": null,
 						"number": "Sing"

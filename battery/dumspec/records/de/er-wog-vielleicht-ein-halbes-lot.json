@@ -104,7 +104,6 @@
 					"normalizedSurface": "Lot",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "Indefinite",
 						"case": "Acc",
 						"gender": null,
 						"number": "Sing"
@@ -172,6 +171,7 @@
 					{ "attested": "fünften", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
@@ -211,6 +211,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "tot", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",

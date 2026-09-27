@@ -32,7 +32,6 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"article": "None",
 						"case": "Nom",
 						"gender": null,
 						"number": "Sing"

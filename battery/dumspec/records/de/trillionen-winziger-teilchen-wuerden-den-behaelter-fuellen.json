@@ -60,7 +60,8 @@
 				"members": [
 					{ "attested": "Trillionen", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

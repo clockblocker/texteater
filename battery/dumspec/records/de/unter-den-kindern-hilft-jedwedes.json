@@ -65,7 +65,8 @@
 				"members": [
 					{ "attested": "jedwedes", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

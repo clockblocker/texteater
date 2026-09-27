@@ -52,7 +52,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "Der", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

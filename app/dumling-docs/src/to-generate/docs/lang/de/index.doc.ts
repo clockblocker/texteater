@@ -37,7 +37,7 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`gender\`, \`hyph\` | \`article\`, \`case\`, \`gender\`, \`number\` |
+| \`NOUN\` | \`gender\`, \`hyph\` | \`case\`, \`gender\`, \`number\` |
 | \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\`, \`verbType\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`foreign\`, \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
@@ -45,28 +45,30 @@ German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. An adjectival n
 
 ## Nouns and Their Articles
 
-A German noun owns its article. The article is a member of the noun's
-Attestation, even across an adjective (\`das rote Band\`), so clicking it opens
-the noun. Every noun Surface marks \`article\` as \`Definite\`, \`Indefinite\` or
-\`None\`; a bare noun or one after a possessive or numeral (\`meine Mutter\`,
-\`drei Seen\`) is \`None\`. \`normalizedSurface\` is the noun's own letters,
-without the article. A host adds the article when it displays the noun, from
-the Lemma's gender and the Surface's case, number and article.
+The Head of a noun phrase owns its article. The article is a member of the
+Head's Attestation, even across an adjective (\`das rote Band\`), so clicking it
+opens the Head. The Head is the noun, or the word standing in for an elided
+noun: \`Ich nehme den roten\` attests ADJ \`rot\` over \`[den, roten]\`. A noun
+Surface has no article feature: \`normalizedSurface\` is the noun's own
+letters, and \`Haus\` is the same Surface in \`das Haus\`, \`kein Haus\` and
+\`Haus\`. \`kein\`, \`mein\` and \`dieser\` are DETs of their own. A noun's header
+shows its article from the Lemma's gender; the article \`dumspec\` derives for an
+occurrence is the \`der\` or \`ein\` cell its spelling names for the Head's
+case, number and gender, and a spelling that names none (\`ein Häuser\`) fails
+there.
 
 \`articleEvidence\` says where the article is attested:
 
 - \`{ kind: "Owned", member }\`: the index of the article member, in \`[Die, Mutter]\` or \`[m, Wald]\`; coverage is Full
 - \`{ kind: "Shared", article }\`: an article the noun does not own, such as the shared \`der\` of \`der Aufstieg und Abstieg\`; coverage is Partial
-- \`null\`: the noun has no article, and \`article\` is \`None\`
+- \`null\`: the Head has no article
 
-A proper noun owns its article only if it is canonically cited with one
-(\`die Schweiz\`, \`der Rhein\`, \`der Struwwelpeter\`). Its Lemma then has the
-Core Feature \`article: Definite\`, and the article is an owned member like a
-common noun's: \`in die Schweiz\` attests \`[die, Schweiz]\`, \`im Rhein\`
-attests \`[m, Rhein]\`, and a host displays \`der Schweiz\` from the gender,
-the Surface's case and number, and the Core article. A name cited bare
-(\`Berlin\`) has \`article: null\` and no article evidence; an article it takes
-in a sentence (\`das alte Berlin\`) is its own \`DET\`.
+A proper noun canonically cited with its article (\`die Schweiz\`, \`der
+Rhein\`, \`der Struwwelpeter\`) has the Core Feature \`article: Definite\`, and
+the article is an owned member like a common noun's: \`in die Schweiz\` attests
+\`[die, Schweiz]\`, \`im Rhein\` attests \`[m, Rhein]\`. A name cited bare
+(\`Berlin\`) has \`article: null\` and owns the article it takes in a sentence:
+\`das alte Berlin\` attests \`[das, Berlin]\`.
 
 ## Example
 
@@ -93,7 +95,6 @@ const seenSurface = {
 \tnormalizedSurface: "Seen",
 \tspelling: "Canonical",
 \tinflectionalFeatures: {
-\t\tarticle: "None",
 \t\tcase: "Nom",
 \t\tgender: null,
 \t\tnumber: "Plur",

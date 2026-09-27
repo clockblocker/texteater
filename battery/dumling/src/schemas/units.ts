@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+	articleAttestationError,
 	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
@@ -13,6 +14,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isArticleAttestation,
 	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
@@ -25,12 +27,10 @@ import {
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
-	isNounArticleAttestation,
 	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
-	nounArticleAttestationError,
 	sayingCanonicalFormError,
 } from "../validation/semantics.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
@@ -95,9 +95,9 @@ const memberSchema = z.union([
 		.refine(isFusedMember, { error: fusedMemberError }),
 ]);
 /**
- * Where a noun's article is attested (ADR 0035): an owned member of the
- * noun's Attestation, a shared article the noun does not own (`der Aufstieg
- * und Abstieg`), or a Fusion component with no letters of its own (Hebrew
+ * Where a Head's article is attested (ADR 0035, ADR 0040): an owned member of
+ * the Head's Attestation, a shared article it does not own (`der Aufstieg und
+ * Abstieg`), or a Fusion component with no letters of its own (Hebrew
  * `בבית`).
  */
 const articleEvidenceSchema = z.union([
@@ -281,8 +281,9 @@ const englishValencyEvidenceSchema = z.array(
 
 /**
  * Composition stores grammatical features; source evidence belongs to the
- * Attestation. A German, English or Hebrew noun or proper noun, and a Hebrew
- * adjective, names where its article is attested (ADR 0035). A German verbal
+ * Attestation. A German or English Head that can open a phrase (NOUN, PROPN,
+ * ADJ, NUM, PRON) and a Hebrew noun, proper noun or adjective name where
+ * their article is attested (ADR 0035, ADR 0040). A German verbal
  * Attestation names its owned subject-expletive member as evidence (ADR
  * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
  * AUX) names the valency slots it realizes, such as its governed preposition
@@ -304,12 +305,13 @@ export function buildUnitSchemas<
 	const noun =
 		route.language === "de" &&
 		route.family === "Lexeme" &&
-		["NOUN", "PROPN"].includes(route.kind);
+		route.kind === "NOUN";
 	const articleOwner =
 		route.family === "Lexeme" &&
-		(["NOUN", "PROPN"].includes(route.kind)
-			? ["de", "en", "he"].includes(route.language)
-			: route.kind === "ADJ" && route.language === "he");
+		(route.language === "he"
+			? ["NOUN", "PROPN", "ADJ"].includes(route.kind)
+			: ["de", "en"].includes(route.language) &&
+				["NOUN", "PROPN", "ADJ", "NUM", "PRON"].includes(route.kind));
 	const lexemeOrLocution =
 		route.family === "Lexeme" || route.family === "Locution";
 	const verbal =
@@ -379,13 +381,8 @@ export function buildUnitSchemas<
 			surface: typeof Surface;
 		} & (F extends "Lexeme"
 				? `${L}/${K}` extends
-						| "de/NOUN"
-						| "en/NOUN"
-						| "he/NOUN"
-						| "de/PROPN"
-						| "en/PROPN"
-						| "he/PROPN"
-						| "he/ADJ"
+						| `${"de" | "en"}/${"NOUN" | "PROPN" | "ADJ" | "NUM" | "PRON"}`
+						| `he/${"NOUN" | "PROPN" | "ADJ"}`
 					? {
 							articleEvidence: z.ZodNullable<
 								typeof articleEvidenceSchema
@@ -448,8 +445,8 @@ export function buildUnitSchemas<
 				: Record<never, never>)
 	>;
 	if (articleOwner)
-		Attestation = Attestation.refine(isNounArticleAttestation, {
-			error: nounArticleAttestationError,
+		Attestation = Attestation.refine(isArticleAttestation, {
+			error: articleAttestationError,
 		});
 	if (adnominalGovernor)
 		Attestation = Attestation.refine(isGermanValencyAttestation, {

@@ -34,7 +34,6 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"article": "Definite",
 						"number": "Sing"
 					},
 					"language": "en",

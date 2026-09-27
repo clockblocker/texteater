@@ -15,12 +15,7 @@ const noun = {
 		canonicalForm: "Haus",
 		coreFeatures: { gender: "Neut", hyph: null },
 	},
-	inflectionalFeatures: {
-		article: "Definite",
-		case: "Dat",
-		gender: null,
-		number: "Sing",
-	},
+	inflectionalFeatures: { case: "Dat", gender: null, number: "Sing" },
 } as const;
 const verb = {
 	unitKind: "Surface",
@@ -53,7 +48,7 @@ const verb = {
 		voice: null,
 	},
 } as const;
-test("noun parsing validates article agreement and rejects obsolete embedded fields", () => {
+test("a noun Surface is its own form and marks no article", () => {
 	const result = parseUnit(noun);
 	expect(result.success).toBe(true);
 	if (!result.success || result.chain.unitKind !== "Surface")
@@ -69,19 +64,7 @@ test("noun parsing validates article agreement and rejects obsolete embedded fie
 			...noun,
 			inflectionalFeatures: {
 				...noun.inflectionalFeatures,
-				article: null,
-			},
-		},
-		{
-			...noun,
-			inflectionalFeatures: { ...noun.inflectionalFeatures, case: null },
-		},
-		{
-			...noun,
-			inflectionalFeatures: {
-				...noun.inflectionalFeatures,
-				article: "Indefinite",
-				number: "Plur",
+				article: "Definite",
 			},
 		},
 	])
@@ -97,21 +80,12 @@ test("a genderless noun marks the gender its singular form shows", () => {
 			canonicalForm: "Reisende",
 			coreFeatures: { gender: null, hyph: null },
 		},
-		inflectionalFeatures: {
-			article: "Definite",
-			case: "Nom",
-			gender: "Masc",
-			number: "Sing",
-		},
+		inflectionalFeatures: { case: "Nom", gender: "Masc", number: "Sing" },
 	} as const;
 	const verletzter = {
 		...reisende,
 		normalizedSurface: "Verletzter",
 		lemma: { ...reisende.lemma, canonicalForm: "Verletzte" },
-		inflectionalFeatures: {
-			...reisende.inflectionalFeatures,
-			article: "Indefinite",
-		},
 	} as const;
 	const angestellten = {
 		...reisende,
@@ -247,7 +221,6 @@ test("a fused article is an owned Fused member of its noun", () => {
 	expect(parseUnit(wald).success).toBe(true);
 	for (const invalid of [
 		{ ...wald, realizationCoverage: "Partial" },
-		{ ...wald, articleEvidence: null },
 		{ ...wald, articleEvidence: { kind: "Owned", member: 2 } },
 		{
 			...wald,
@@ -295,27 +268,27 @@ test("a fused article is an owned Fused member of its noun", () => {
 	expect(parseUnit({ ...feld, realizationCoverage: "Full" }).success).toBe(
 		false,
 	);
-	// Ich bin in Wald und Flur: a bare noun owns no article.
-	const bare = {
-		...wald,
-		surface: {
-			...wald.surface,
-			inflectionalFeatures: {
-				...wald.surface.inflectionalFeatures,
-				article: "None",
-			},
-		},
-		members: [wald.members[1]],
-		articleEvidence: null,
-	};
+	// Ich bin in Wald und Flur: a bare noun owns no article, and its Surface
+	// is the same as the one with an article.
+	const bare = { ...wald, members: [wald.members[1]], articleEvidence: null };
 	expect(parseUnit(bare).success).toBe(true);
-	expect(
-		parseUnit({ ...bare, articleEvidence: { kind: "Owned", member: 0 } })
-			.success,
-	).toBe(false);
 	expect(parseUnit({ ...bare, realizationCoverage: "Partial" }).success).toBe(
 		false,
 	);
+	// kein Haus: kein is a DET of its own, so Haus has no article evidence.
+	expect(
+		parseUnit({
+			...bare,
+			surface: {
+				...noun,
+				inflectionalFeatures: {
+					...noun.inflectionalFeatures,
+					case: "Nom",
+				},
+			},
+			members: [{ attested: "Haus", orthography: "Standard" }],
+		}).success,
+	).toBe(true);
 });
 test("a shortened article is a Shorthand member of its noun", () => {
 	// Hast du 'ne Frage?
@@ -331,7 +304,6 @@ test("a shortened article is a Shorthand member of its noun", () => {
 					coreFeatures: { gender: "Fem", hyph: null },
 				},
 				inflectionalFeatures: {
-					article: "Indefinite",
 					case: "Acc",
 					gender: null,
 					number: "Sing",
@@ -344,7 +316,7 @@ test("a shortened article is a Shorthand member of its noun", () => {
 		}).success,
 	).toBe(true);
 });
-test("an English noun owns its article across an adjective", () => {
+test("an English noun owns its article across an adjective, and its Surface stays one", () => {
 	// the big house
 	const house = {
 		unitKind: "Attestation",
@@ -369,7 +341,7 @@ test("an English noun owns its article across an adjective", () => {
 					style: null,
 				},
 			},
-			inflectionalFeatures: { article: "Definite", number: "Sing" },
+			inflectionalFeatures: { number: "Sing" },
 		},
 		realizationCoverage: "Full",
 		members: [
@@ -379,7 +351,127 @@ test("an English noun owns its article across an adjective", () => {
 		articleEvidence: { kind: "Owned", member: 0 },
 	};
 	expect(parseUnit(house).success).toBe(true);
-	expect(parseUnit({ ...house, articleEvidence: null }).success).toBe(false);
+	// the books, books and some books attest one Surface books.
+	const books = {
+		...house.surface,
+		normalizedSurface: "books",
+		lemma: { ...house.surface.lemma, canonicalForm: "book" },
+		inflectionalFeatures: { number: "Plur" },
+	};
+	const surfaces = [
+		{
+			...house,
+			surface: books,
+			members: [
+				house.members[0],
+				{ attested: "books", orthography: "Standard" },
+			],
+		},
+		{
+			...house,
+			surface: books,
+			members: [{ attested: "books", orthography: "Standard" }],
+			articleEvidence: null,
+		},
+	].map((attestation) => {
+		const parsed = parseUnit(attestation);
+		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+			throw Error("Expected an Attestation");
+		return parsed.chain.value.surface;
+	});
+	expect(surfaces[0]).toEqual(surfaces[1]);
+	expect(
+		parseUnit({
+			...books,
+			inflectionalFeatures: { article: "Definite", number: "Plur" },
+		}).success,
+	).toBe(false);
+});
+test("the Head standing in for an elided noun owns the article", () => {
+	// Ich nehme den roten.
+	const roten = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			normalizedSurface: "roten",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Lexeme",
+				kind: "ADJ",
+				canonicalForm: "rot",
+				coreFeatures: {
+					abbr: null,
+					comparable: "Yes",
+					foreign: null,
+					numType: null,
+					variant: null,
+				},
+			},
+			inflectionalFeatures: {
+				case: "Acc",
+				degree: "Pos",
+				gender: "Masc",
+				number: "Sing",
+			},
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "den", orthography: "Standard" },
+			{ attested: "roten", orthography: "Standard" },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+		valencyEvidence: [],
+	};
+	expect(parseUnit(roten).success).toBe(true);
+	expect(
+		parseUnit({ ...roten, realizationCoverage: "Partial" }).success,
+	).toBe(false);
+	// the rich
+	const rich = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "rich",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "en",
+				family: "Lexeme",
+				kind: "ADJ",
+				canonicalForm: "rich",
+				coreFeatures: {
+					abbr: null,
+					comparable: "Yes",
+					extPos: null,
+					numForm: null,
+					numType: null,
+					style: null,
+				},
+			},
+			inflectionalFeatures: { degree: "Pos" },
+		},
+		realizationCoverage: "Full",
+		members: [
+			{ attested: "the", orthography: "Standard" },
+			{ attested: "rich", orthography: "Standard" },
+		],
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(rich).success).toBe(true);
+	// An adjective without an article names none.
+	expect(
+		parseUnit({
+			...roten,
+			members: [roten.members[1]],
+			articleEvidence: null,
+		}).success,
+	).toBe(true);
 });
 test("a hidden Hebrew article is a Fusion component that leaves its noun Partial", () => {
 	// ישבנו בבית: ב is the ADP, the article ה has no letters of its own.
@@ -497,24 +589,10 @@ test("a proper noun cited with its article owns it like a common noun", () => {
 				},
 			},
 		},
-		// A singular name with an article needs a gender for its form.
-		{
-			...schweiz,
-			surface: {
-				...schweiz.surface,
-				lemma: {
-					...schweiz.surface.lemma,
-					coreFeatures: {
-						...schweiz.surface.lemma.coreFeatures,
-						gender: null,
-					},
-				},
-			},
-		},
 	])
 		expect(parseUnit(invalid).success).toBe(false);
 });
-test("a proper noun cited bare owns no article", () => {
+test("a proper noun cited bare owns the article it takes", () => {
 	// Ich wohne in Berlin.
 	const berlin = {
 		unitKind: "Attestation",
@@ -524,21 +602,21 @@ test("a proper noun cited bare owns no article", () => {
 		articleEvidence: null,
 	};
 	expect(parseUnit(berlin).success).toBe(true);
-	// das alte Berlin: das is its own DET, never Berlin's article.
+	// das alte Berlin: the name owns das without a Core article.
 	expect(
 		parseUnit({
 			...berlin,
+			surface: properNoun("Berlin", null, "Neut", "Nom"),
 			members: [
 				{ attested: "das", orthography: "Standard" },
 				{ attested: "Berlin", orthography: "Standard" },
 			],
 			articleEvidence: { kind: "Owned", member: 0 },
 		}).success,
-	).toBe(false);
+	).toBe(true);
 	expect(
 		parseUnit({
 			...berlin,
-			realizationCoverage: "Partial",
 			articleEvidence: {
 				kind: "Shared",
 				article: { attested: "das", orthography: "Standard" },
@@ -866,6 +944,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 			{ attested: "Auf", orthography: "Standard" },
 			{ attested: "stolz", orthography: "Standard" },
 		],
+		articleEvidence: null,
 		valencyEvidence: [slot],
 	};
 	expect(parseUnit(adjective).success).toBe(true);
@@ -891,12 +970,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				canonicalForm: "Angst",
 				coreFeatures: { gender: "Fem", hyph: null },
 			},
-			inflectionalFeatures: {
-				article: "Definite",
-				case: "Nom",
-				gender: null,
-				number: "Sing",
-			},
+			inflectionalFeatures: { case: "Nom", gender: null, number: "Sing" },
 		},
 		realizationCoverage: "Full",
 		members: [

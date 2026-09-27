@@ -46,6 +46,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Es", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -143,7 +144,6 @@
 					"normalizedSurface": "Jägersmann",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "Definite",
 						"case": "Nom",
 						"gender": null,
 						"number": "Sing"

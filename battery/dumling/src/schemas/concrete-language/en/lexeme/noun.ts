@@ -13,10 +13,9 @@ export const EnNounFeatureBagsSchema = z.strictObject({
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Card", "Frac", "Ord"]),
 		style: EN_FEATURE_SCHEMA.style.extract(["Expr", "Vrnc"]),
 	}),
-	// The noun owns its article, so every noun Surface says which it has
-	// (ADR 0035); normalizedSurface stays the noun's own letters.
+	// A noun Surface is the noun's own form, so `books` is one Surface; its
+	// article is an attested member, not a feature (ADR 0040).
 	[FeatureBagKind.Inflectional]: z.strictObject({
-		article: EN_FEATURE_SCHEMA.article,
 		number: EN_FEATURE_SCHEMA.number
 			.extract(["Plur", "Ptan", "Sing"])
 			.nullable(),

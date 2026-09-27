@@ -69,7 +69,8 @@
 				"members": [
 					{ "attested": "irgendjemandem", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

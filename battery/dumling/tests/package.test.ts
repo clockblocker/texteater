@@ -48,7 +48,6 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"ParsingError",
 		"UnitKind",
 		"checkIfGrundform",
-		"germanArticleForm",
 		"parseUnit",
 	]);
 	expect(module.parseUnit(null).success).toBe(false);

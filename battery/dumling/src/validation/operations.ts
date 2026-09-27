@@ -1,5 +1,6 @@
 import type { ValidationOperation, ValidationOperations } from "common-utils";
 import {
+	articleAttestationError,
 	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
@@ -15,6 +16,7 @@ import {
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
 	hebrewValencyAttestationError,
+	isArticleAttestation,
 	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
@@ -29,12 +31,10 @@ import {
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
-	isNounArticleAttestation,
 	isSayingCanonicalForm,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
-	nounArticleAttestationError,
 	sayingCanonicalFormError,
 } from "./semantics.js";
 
@@ -83,9 +83,9 @@ export const validationOperations: ValidationOperations = {
 		isGermanNounSurface,
 		germanNounSurfaceError,
 	),
-	"dumling.noun-article.attestation": check(
-		isNounArticleAttestation,
-		nounArticleAttestationError,
+	"dumling.article.attestation": check(
+		isArticleAttestation,
+		articleAttestationError,
 	),
 	"dumling.fusion": check(isFusion, fusionError),
 	"dumling.fused-member": check(isFusedMember, fusedMemberError),

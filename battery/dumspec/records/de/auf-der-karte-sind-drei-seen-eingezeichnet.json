@@ -39,7 +39,6 @@
 					"normalizedSurface": "Seen",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"article": "None",
 						"case": "Nom",
 						"gender": null,
 						"number": "Plur"
@@ -67,6 +66,7 @@
 					{ "attested": "eingezeichnet", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",

@@ -3,8 +3,14 @@ export {
 	attestationAdpositionCaseIssues,
 	frameAdpositionCaseIssues,
 } from "./check-adposition-cases.js";
+export {
+	type ArticleAgreementIssue,
+	attestationArticleAgreementIssues,
+} from "./check-article-agreement.js";
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
 export {
+	type ArticleAgreement,
+	type ArticleMember,
 	type AuthoredMember,
 	type AuthoredRealization,
 	type AuthoredSpelling,
@@ -15,6 +21,8 @@ export {
 	type GermanAdpositionCases,
 	germanAdpositionAllows,
 	germanAdpositionCases,
+	germanArticleCell,
+	germanArticleSpellings,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,

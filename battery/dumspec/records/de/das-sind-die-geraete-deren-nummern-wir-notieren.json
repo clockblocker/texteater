@@ -63,7 +63,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "deren", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

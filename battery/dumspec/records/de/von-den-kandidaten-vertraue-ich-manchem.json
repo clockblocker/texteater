@@ -67,7 +67,8 @@
 				"members": [
 					{ "attested": "manchem", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

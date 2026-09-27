@@ -64,7 +64,8 @@
 					}
 				},
 				"members": [{ "attested": "euch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

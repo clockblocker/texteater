@@ -60,7 +60,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "Etwas", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

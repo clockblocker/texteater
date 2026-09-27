@@ -64,7 +64,8 @@
 					}
 				},
 				"members": [{ "attested": "dich", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

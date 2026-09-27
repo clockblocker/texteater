@@ -50,7 +50,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "Fünf", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

@@ -45,7 +45,6 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"article": "Indefinite",
 						"case": "Nom",
 						"gender": "Masc",
 						"number": "Sing"

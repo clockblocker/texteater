@@ -68,7 +68,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "s", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

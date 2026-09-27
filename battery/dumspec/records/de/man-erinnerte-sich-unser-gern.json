@@ -53,7 +53,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "unser", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

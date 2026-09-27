@@ -9,12 +9,11 @@ export const DeNounFeatureBagsSchema = z.strictObject({
 		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 		hyph: DE_FEATURE_SCHEMA.hyph,
 	}),
-	// The noun owns its article, so every noun Surface says which it has
-	// (ADR 0035); normalizedSurface stays the noun's own letters. A noun
-	// whose Lemma has no gender, such as an adjectival noun for a person,
-	// marks on a singular Surface the gender its form shows (der Reisende).
+	// A noun Surface is the noun's own form; its article is an attested
+	// member, not a feature (ADR 0040). A noun whose Lemma has no gender,
+	// such as an adjectival noun for a person, marks on a singular Surface
+	// the gender its form shows (der Reisende).
 	[FeatureBagKind.Inflectional]: z.strictObject({
-		article: DE_FEATURE_SCHEMA.article,
 		case: DE_FEATURE_SCHEMA.case
 			.extract(["Acc", "Dat", "Gen", "Nom"])
 			.nullable(),

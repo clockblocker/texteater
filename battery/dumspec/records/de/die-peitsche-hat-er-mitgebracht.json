@@ -51,7 +51,6 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"article": "Definite",
 						"case": "Acc",
 						"gender": null,
 						"number": "Sing"
@@ -124,6 +123,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "er", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -228,6 +228,7 @@
 				"unitKind": "Attestation",
 				"members": [{ "attested": "sie", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",

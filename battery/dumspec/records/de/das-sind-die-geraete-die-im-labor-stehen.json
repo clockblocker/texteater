@@ -64,7 +64,8 @@
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "die", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

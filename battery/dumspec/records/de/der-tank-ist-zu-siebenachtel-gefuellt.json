@@ -51,7 +51,8 @@
 				"members": [
 					{ "attested": "siebenachtel", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

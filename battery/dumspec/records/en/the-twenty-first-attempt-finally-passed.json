@@ -29,6 +29,7 @@
 					{ "attested": "twenty-first", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": null,
