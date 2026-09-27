@@ -118,6 +118,12 @@ export const samples: Record<string, unknown[]> = {
 			target: wartenReading.lemma,
 			provenance: "direct",
 		},
+		{
+			source: wartenReading.lemma,
+			relation: "participialAdjective",
+			target: houseReading,
+			provenance: "inferred",
+		},
 	],
 	governedCase: ["Acc", "Gen"],
 	valencySlotStatus: ["Required", "Optional"],

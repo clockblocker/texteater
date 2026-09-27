@@ -373,11 +373,19 @@ export const participleRelationSchema = z.enum([
 /**
  * One edge of a Participle Source. `participleSource` runs from the ADJ
  * Reading to the VERB Lemma it stores; `participialAdjective` is the inferred
- * inverse from each supplied Reading of that VERB Lemma back to the ADJ Reading.
+ * inverse from that VERB Lemma back to the ADJ Reading.
  */
-export const participleProjectionSchema = z.strictObject({
-	source: readingSchema,
-	relation: participleRelationSchema,
-	target: z.union([lemmaSchema, readingSchema]),
-	provenance: z.enum(["direct", "inferred"]),
-});
+export const participleProjectionSchema = z.union([
+	z.strictObject({
+		source: readingSchema,
+		relation: z.literal("participleSource"),
+		target: lemmaSchema,
+		provenance: z.literal("direct"),
+	}),
+	z.strictObject({
+		source: lemmaSchema,
+		relation: z.literal("participialAdjective"),
+		target: readingSchema,
+		provenance: z.literal("inferred"),
+	}),
+]);

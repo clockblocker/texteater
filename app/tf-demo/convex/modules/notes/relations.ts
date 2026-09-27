@@ -543,19 +543,14 @@ export async function loadRelationProjections(
 }
 
 /**
- * One Participle Source edge on a Reading Note (ADR 0036): the ADJ Reading
- * names its source VERB Lemma, and the verb's Readings list the participial
- * adjectives that name it. The verb's side is projected, never stored.
+ * The Participle Source link on an ADJ Reading Note (ADR 0036): the source
+ * VERB Lemma it names, or that verb's Unit Shadow while it is not stored.
  */
 export const participleLinkValidator = v.object({
-	relation: v.union(
-		v.literal("participleSource"),
-		v.literal("participialAdjective"),
-	),
+	relation: v.literal("participleSource"),
 	targetCanonicalForm: v.string(),
 	target: v.union(
 		v.object({ kind: v.literal("Lemma"), lemmaId: v.id("lemmas") }),
-		v.object({ kind: v.literal("Reading"), readingId: v.id("readings") }),
 		v.object({ kind: v.literal("Shadow"), shadowId: v.id("shadows") }),
 	),
 });
@@ -606,9 +601,8 @@ async function participleSourceTarget(
 }
 
 /**
- * The Participle Source edges whose source is this Reading, projected by
- * Dumrel over the Reading and the participial adjectives stored against its
- * Lemma. A source verb missing from the dictionary links to its Unit Shadow.
+ * The Participle Source link this Reading stores, projected by Dumrel. The
+ * verb's side lives on its Lemma Note ({@link loadParticipialAdjectives}).
  */
 export async function loadParticipleLinks(
 	ctx: QueryCtx,
@@ -616,26 +610,71 @@ export async function loadParticipleLinks(
 	sourceLemma: Doc<"lemmas">,
 	participleSource: Dumrel.ParticipleSource | undefined,
 ): Promise<Infer<typeof participleLinkValidator>[]> {
-	const sourceReading = parseGermanReading({
-		unitKind: "Reading",
-		lemma: parseStoredGermanLemma(sourceLemma),
-		emojiDescription: source.emojiDescription,
-	});
-	const adjectiveRows = await ctx.db
+	if (!participleSource) return [];
+	const projected = projectParticipleSources([
+		{
+			reading: parseGermanReading({
+				unitKind: "Reading",
+				lemma: parseStoredGermanLemma(sourceLemma),
+				emojiDescription: source.emojiDescription,
+			}),
+			knowledge: { participleSource },
+		},
+	]);
+	if (!projected.success) throw projected.error;
+	const links: Infer<typeof participleLinkValidator>[] = [];
+	for (const edge of projected.value) {
+		if (edge.relation !== "participleSource") continue;
+		const target = await participleSourceTarget(
+			ctx,
+			source.readingKey,
+			edge.target,
+		);
+		if (target)
+			links.push({
+				relation: edge.relation,
+				targetCanonicalForm: edge.target.canonicalForm,
+				target,
+			});
+	}
+	return links;
+}
+
+/** One participial adjective on its source verb's Lemma Note. */
+export const participialAdjectiveValidator = v.object({
+	readingId: v.id("readings"),
+	canonicalForm: v.string(),
+	emojiDescription: v.string(),
+	target: v.object({
+		kind: v.literal("Reading"),
+		readingId: v.id("readings"),
+	}),
+});
+
+/**
+ * The ADJ Readings that name this VERB Lemma as their Participle Source,
+ * projected by Dumrel as inverse edges from the Lemma. The link targets the
+ * Lemma, so it is listed once here and on none of the verb's Readings.
+ */
+export async function loadParticipialAdjectives(
+	ctx: QueryCtx,
+	verb: Doc<"lemmas">,
+): Promise<Infer<typeof participialAdjectiveValidator>[]> {
+	if (
+		verb.language !== "de" ||
+		verb.family !== "Lexeme" ||
+		verb.kind !== "VERB"
+	)
+		return [];
+	const rows = await ctx.db
 		.query("accumulatedKnowledge")
 		.withIndex("by_participle_source_lemma_key", (q) =>
-			q.eq("participleSourceLemmaKey", sourceLemma.lemmaKey),
+			q.eq("participleSourceLemmaKey", verb.lemmaKey),
 		)
 		.take(MAX_PARTICIPIAL_ADJECTIVES_PER_NOTE);
-	const readingIds = new Map<string, Id<"readings">>();
-	const entries: Dumrel.ReadingWithKnowledge[] = [
-		{
-			reading: sourceReading,
-			knowledge: participleSource ? { participleSource } : {},
-		},
-	];
-	for (const row of adjectiveRows) {
-		if (row.ownerReadingKey === source.readingKey) continue;
+	const entries: Dumrel.ReadingWithKnowledge[] = [];
+	const readings = new Map<string, Doc<"readings">>();
+	for (const row of rows) {
 		const reading = await ctx.db
 			.query("readings")
 			.withIndex("by_reading_key", (q) =>
@@ -644,14 +683,13 @@ export async function loadParticipleLinks(
 			.unique();
 		const lemma = reading ? await ctx.db.get(reading.lemmaId) : null;
 		if (!reading || !lemma) continue;
-		const adjective = parseGermanReading({
-			unitKind: "Reading",
-			lemma: parseStoredGermanLemma(lemma),
-			emojiDescription: reading.emojiDescription,
-		});
-		readingIds.set(reading.readingKey, reading._id);
+		readings.set(reading.readingKey, reading);
 		entries.push({
-			reading: adjective,
+			reading: parseGermanReading({
+				unitKind: "Reading",
+				lemma: parseStoredGermanLemma(lemma),
+				emojiDescription: reading.emojiDescription,
+			}),
 			knowledge: {
 				participleSource: Reflect.get(
 					row.knowledge ?? {},
@@ -662,32 +700,27 @@ export async function loadParticipleLinks(
 	}
 	const projected = projectParticipleSources(entries);
 	if (!projected.success) throw projected.error;
-	const links: Infer<typeof participleLinkValidator>[] = [];
-	for (const edge of projected.value) {
-		if (readingFingerprint(edge.source) !== source.readingKey) continue;
-		if (edge.target.unitKind === "Lemma") {
-			const target = await participleSourceTarget(
-				ctx,
-				source.readingKey,
-				edge.target,
-			);
-			if (target)
-				links.push({
-					relation: edge.relation,
-					targetCanonicalForm: edge.target.canonicalForm,
-					target,
-				});
-			continue;
-		}
-		const readingId = readingIds.get(readingFingerprint(edge.target));
-		if (readingId)
-			links.push({
-				relation: edge.relation,
-				targetCanonicalForm: edge.target.lemma.canonicalForm,
-				target: { kind: "Reading", readingId },
-			});
-	}
-	return links;
+	return projected.value.flatMap((edge) => {
+		if (
+			edge.relation !== "participialAdjective" ||
+			lemmaIdentityKey(edge.source) !== verb.lemmaKey
+		)
+			return [];
+		const reading = readings.get(readingFingerprint(edge.target));
+		return reading
+			? [
+					{
+						readingId: reading._id,
+						canonicalForm: edge.target.lemma.canonicalForm,
+						emojiDescription: reading.emojiDescription,
+						target: {
+							kind: "Reading" as const,
+							readingId: reading._id,
+						},
+					},
+				]
+			: [];
+	});
 }
 
 export async function loadGrammaticalAlternatives(

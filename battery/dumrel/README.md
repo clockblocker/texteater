@@ -41,8 +41,8 @@ them.
 
 `participleSource` records the VERB Lemma an adjectival participle Reading
 comes from (`gekocht` stores `kochen`). `projectParticipleSources` derives
-the inverse `participialAdjective` edges, so a verb lists its participial
-adjectives without storing them.
+the inverse `participialAdjective` edges from the verb's Lemma, so a verb
+lists its participial adjectives without storing them.
 
 `pluralPattern` records how a German NOUN Reading forms its plural: the Plural
 Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds

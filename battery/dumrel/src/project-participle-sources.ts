@@ -26,13 +26,13 @@ const relationOrder = ["participleSource", "participialAdjective"];
  * Projects Participle Sources over a finite dictionary inventory. Each stored
  * Participle Source yields a direct `participleSource` edge from the ADJ
  * Reading to the VERB Lemma, and an inferred `participialAdjective` edge from
- * every supplied Reading of that VERB Lemma back to the ADJ Reading, so the
- * page of `sich verlieben` can list `verliebt` without storing anything on the
- * verb.
+ * that VERB Lemma back to the ADJ Reading, so the Lemma `sich verlieben` can
+ * list `verliebt` without storing anything on the verb. The inverse starts at
+ * the Lemma the claim names, never at one of its Readings: no Reading of the
+ * verb is chosen for the adjective, and the verb need not be stored at all.
  *
  * Inputs are validated like {@link projectSemanticRelations}: duplicate
- * source Readings or invalid Knowledge reject the whole projection. A VERB
- * Lemma without supplied Readings still receives its direct edges. Output is
+ * source Readings or invalid Knowledge reject the whole projection. Output is
  * sorted by structural source key, relation, then structural target key. No
  * inputs are mutated.
  */
@@ -45,7 +45,6 @@ export function projectParticipleSources(
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed };
 	const seen = new Set<string>();
-	const byLemma = new Map<string, Dumling.Reading[]>();
 	const participles: {
 		reading: Dumling.Reading;
 		source: Dumling.Lemma;
@@ -77,8 +76,6 @@ export function projectParticipleSources(
 				reading: entry.reading,
 				source: knowledge.participleSource,
 			});
-		const lemma = key(entry.reading.lemma);
-		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
 	}
 	const edges: ParticipleProjection[] = [];
 	for (const { reading, source } of participles) {
@@ -88,13 +85,12 @@ export function projectParticipleSources(
 			target: source,
 			provenance: "direct",
 		} as ParticipleProjection);
-		for (const verb of byLemma.get(key(source)) ?? [])
-			edges.push({
-				source: verb,
-				relation: "participialAdjective",
-				target: reading,
-				provenance: "inferred",
-			} as ParticipleProjection);
+		edges.push({
+			source,
+			relation: "participialAdjective",
+			target: reading,
+			provenance: "inferred",
+		} as ParticipleProjection);
 	}
 	return {
 		success: true,

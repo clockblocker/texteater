@@ -7,9 +7,9 @@ import { RouteAside } from "../../common/features";
 import { RouteMark } from "../../common/route-mark";
 
 /**
- * What this Lemma connects: the Readings it leads to, the written forms it
- * was reached from, and other Lemmas spelled the same. A Card keeps only the
- * Readings; the Sheet reveals the rest.
+ * What this Lemma connects: the Readings it leads to, a verb's participial
+ * adjectives, the written forms it was reached from, and other Lemmas spelled
+ * the same. A Card keeps only the Readings; the Sheet reveals the rest.
  */
 export const renderDefaultLemmaRoutes = (({
 	noteData,
@@ -38,6 +38,36 @@ export const renderDefaultLemmaRoutes = (({
 									{reading.emojiDescription}
 								</span>
 								{presented.canonicalForm}
+							</LinkButton>
+						</li>
+					))}
+				</ul>
+			</NoteSection>,
+		);
+	}
+
+	const { participialAdjectives } = noteData;
+	if (!isCard && participialAdjectives.length > 0) {
+		sections.push(
+			<NoteSection
+				key="participial"
+				aria-label="Participial adjectives"
+				label="Participial adjectives"
+			>
+				<ul className="grid gap-2">
+					{participialAdjectives.map((adjective) => (
+						<li key={adjective.readingId}>
+							<LinkButton
+								onClick={() =>
+									PresentationCapabilities.follow(
+										adjective.target,
+									)
+								}
+							>
+								<span className="me-[0.35em] text-ink">
+									{adjective.emojiDescription}
+								</span>
+								{adjective.canonicalForm}
 							</LinkButton>
 						</li>
 					))}

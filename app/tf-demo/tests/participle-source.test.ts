@@ -236,7 +236,7 @@ test("a missing source verb stays a Unit Shadow and no Reading is minted for it"
 	]);
 });
 
-test("the link reaches the source verb once it is stored, and each note shows its side", async () => {
+test("the link reaches the source verb once it is stored, and the verb's Lemma Note lists the adjective", async () => {
 	const t = createTestConvex();
 	const visitorId = "visitor-1";
 	const adjectiveId = await seedAdjective(t, visitorId);
@@ -254,14 +254,22 @@ test("the link reaches the source verb once it is stored, and each note shows it
 			target: { kind: "Lemma", lemmaId: verb.lemmaId },
 		},
 	]);
-	const verbNote = await t.query(api.readingNotes.get, {
+	// The inverse sits on the verb's Lemma Note, never on one of its Readings.
+	const verbReadingNote = await t.query(api.readingNotes.get, {
 		readingId: verb.readingId,
 		visitorId,
 	});
-	expect(verbNote?.participleLinks).toEqual([
+	expect(verbReadingNote?.participleLinks).toEqual([]);
+	const verbLemmaNote = await t.query(api.routeNotes.get, {
+		target: { kind: "Lemma", lemmaId: verb.lemmaId },
+	});
+	expect(
+		verbLemmaNote?.kind === "Lemma" && verbLemmaNote.participialAdjectives,
+	).toEqual([
 		{
-			relation: "participialAdjective",
-			targetCanonicalForm: "gekocht",
+			readingId: adjectiveId,
+			canonicalForm: "gekocht",
+			emojiDescription: "🥔",
 			target: { kind: "Reading", readingId: adjectiveId },
 		},
 	]);

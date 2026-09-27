@@ -20,6 +20,10 @@ import {
 } from "../../model/presentedDumling";
 import { familyValidator, kindValidator } from "../../model/validators";
 import {
+	loadParticipialAdjectives,
+	participialAdjectiveValidator,
+} from "./relations";
+import {
 	projectOccurrenceSource,
 	sourceOriginValidator,
 	sourceSegmentValidator,
@@ -122,6 +126,8 @@ const lemmaRouteNoteValidator = v.object({
 	kind: v.literal("Lemma"),
 	target: lemmaTargetValidator,
 	presented: presentedLemmaValidator,
+	/** A VERB's participial adjectives (ADR 0036); only the first page loads them. */
+	participialAdjectives: v.array(participialAdjectiveValidator),
 	connections: v.object({
 		surfaces: v.array(surfaceRouteConnectionValidator),
 		readings: v.array(
@@ -439,6 +445,10 @@ async function loadLemmaRouteNote(
 			lemmaId: lemma._id,
 		},
 		presented: presentLemma(lemmaValue(lemma)),
+		participialAdjectives:
+			contextCursor === undefined
+				? await loadParticipialAdjectives(ctx, lemma)
+				: [],
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
 				surface.language === "de" && lemma.language === "de"

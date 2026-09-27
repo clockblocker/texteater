@@ -129,7 +129,7 @@ test("only German ADJ Readings request a Participle Source", () => {
 	}
 });
 
-test("projection stores the adjective side and infers the verb side", () => {
+test("projection stores the adjective side and infers the verb Lemma side", () => {
 	const result = projectParticipleSources([
 		{ reading: verliebenReading, knowledge: {} },
 		{
@@ -142,34 +142,29 @@ test("projection stores the adjective side and infers the verb side", () => {
 	if (!result.success) return;
 	for (const edge of result.value)
 		expect(participleProjectionSchema.safeParse(edge).success).toBe(true);
-	expect(result.value).toEqual([
+	const edges = [
+		{
+			source: verlieben,
+			relation: "participialAdjective",
+			target: verliebtReading,
+			provenance: "inferred",
+		},
 		{
 			source: verliebtReading,
 			relation: "participleSource",
 			target: verlieben,
 			provenance: "direct",
 		},
-		{
-			source: verliebenReading,
-			relation: "participialAdjective",
-			target: verliebtReading,
-			provenance: "inferred",
-		},
-	]);
+	] as const;
+	expect(result.value).toEqual(edges);
+	// The inverse starts at the verb's Lemma, so it needs no stored verb.
 	const withoutVerb = projectParticipleSources([
 		{
 			reading: verliebtReading,
 			knowledge: { participleSource: verlieben },
 		},
 	]);
-	expect(withoutVerb.success && withoutVerb.value).toEqual([
-		{
-			source: verliebtReading,
-			relation: "participleSource",
-			target: verlieben,
-			provenance: "direct",
-		},
-	]);
+	expect(withoutVerb.success && withoutVerb.value).toEqual(edges);
 	expect(
 		projectParticipleSources([
 			{ reading: verliebtReading, knowledge: {} },
