@@ -228,6 +228,12 @@ export function PresentationView({
 		)
 			return;
 		if (covered) return;
+		/* a press on a scrollbar scrolls; it never picks the Note up */
+		if (
+			target.hasAttribute("data-scroller") &&
+			event.nativeEvent.offsetX >= target.clientWidth
+		)
+			return;
 		/* a Sheet is handled by its bar, never by its content: a Card is
 		   picked up from anywhere, a Sheet's body only scrolls. A Cover's
 		   bar is its Heading. */
@@ -236,6 +242,9 @@ export function PresentationView({
 
 	const sheet = form === "sheet";
 	const below = place === "below" && !sheet;
+	/* the open Card reads through its body as a Sheet does; the folded
+	   ones show only their Headings */
+	const scrolls = sheet || place === "open";
 	/**
 	 * Which transition the Heading and the Blocks ride when they swap ends.
 	 * A change of form is a morph on `MORPH`; a deck tap changes only which
@@ -419,7 +428,7 @@ export function PresentationView({
 					style={{ y: bodyOffset }}
 					layoutDependency={`${form}:${below.toString()}`}
 					transition={{ layout: positionSpec }}
-					className={`relative order-1 min-h-0 flex-1 ${sheet ? "overflow-y-auto" : "overflow-hidden"}`}
+					className={`relative order-1 min-h-0 flex-1 ${scrolls ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
 					{ported ? (
 						/* a Card's links are inert until it is a Sheet (#485).
