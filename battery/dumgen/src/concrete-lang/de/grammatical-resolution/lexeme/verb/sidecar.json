@@ -420,6 +420,38 @@
 		"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute#0": {
 			"id": "grammar-de-verb-modal-muss-directional",
 			"evaluation": true
+		},
+		"de/die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein#0": {
+			"id": "grammar-de-verb-shorthand-rein-hereinkommen",
+			"evaluation": true
+		},
+		"de/ihr-freund-wartet-draussen-aber-sie-geht-schon-rein#0": {
+			"id": "grammar-de-verb-shorthand-rein-hineingehen",
+			"evaluation": true
+		},
+		"de/ich-bin-schon-auf-der-anderen-strassenseite-kommst-du-auch#0": {
+			"id": "grammar-de-verb-shorthand-rueber-herueberkommen",
+			"evaluation": true
+		},
+		"de/ich-warte-unten-an-der-haustuer-kommst-du-runter#0": {
+			"id": "grammar-de-verb-shorthand-runter-herunterkommen",
+			"evaluation": true
+		},
+		"de/er-steht-oben-auf-dem-dach-und-schaut-runter-auf-die-strasse#0": {
+			"id": "grammar-de-verb-shorthand-runter-hinunterschauen",
+			"evaluation": true
+		},
+		"de/ich-bin-oben-in-der-dachwohnung-bring-den-koffer-bitte-rauf#0": {
+			"id": "grammar-de-verb-shorthand-rauf-heraufbringen",
+			"evaluation": true
+		},
+		"de/ich-stehe-hier-neben-dem-fenster-komm-naeher-ran-dann-siehst#0": {
+			"id": "grammar-de-verb-shorthand-ran-herankommen",
+			"evaluation": true
+		},
+		"de/unser-zelt-steht-auf-der-anderen-seite-des-flusses-wir#0": {
+			"id": "grammar-de-verb-modal-muessen-directional",
+			"evaluation": true
 		}
 	}
 }

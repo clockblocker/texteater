@@ -276,6 +276,14 @@
 		"de/die-kinder-sitzen-seit-stunden-drinnen-jetzt-wollen-sie#1": {
 			"id": "grammar-de-adv-dev-directional-hinaus",
 			"evaluation": true
+		},
+		"de/unser-zelt-steht-auf-der-anderen-seite-des-flusses-wir#1": {
+			"id": "grammar-de-adv-dev-shorthand-rueber-hinueber",
+			"evaluation": true
+		},
+		"de/wir-stehen-unten-an-der-talstation-und-wollen-heute-noch#1": {
+			"id": "grammar-de-adv-dev-shorthand-rauf-hinauf",
+			"evaluation": true
 		}
 	}
 }
