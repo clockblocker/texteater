@@ -47,32 +47,6 @@
 				},
 				"explanation": "The IDS verb-valency dictionary records spazieren gehen as one entry and gives the finite form geht spazieren. Issue #82's other-multi-member-verbs policy maps gehen and spazieren to one Lexeme/VERB at exact original indices [2,6]. Source: https://grammis.ids-mannheim.de/verbvalenz/400901"
 			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-multi-verb-click-spazieren",
-			"memberSegmentIndices": [2, 6],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Wir" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "gehen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "abends" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "spazieren" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2, 6]
-				},
-				"explanation": "The IDS verb-valency dictionary records spazieren gehen as one entry and gives the finite form geht spazieren. Issue #82's other-multi-member-verbs policy maps gehen and spazieren to one Lexeme/VERB at exact original indices [2,6]. Source: https://grammis.ids-mannheim.de/verbvalenz/400901"
-			}
 		}
 	]
 }

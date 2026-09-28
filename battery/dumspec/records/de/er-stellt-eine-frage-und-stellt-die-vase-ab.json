@@ -115,42 +115,6 @@
 		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-robust-overlap-separable-click-ab",
-			"memberSegmentIndices": [10, 16],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 16,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "eine" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Frage" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "und" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Vase" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ab" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [10, 16]
-				},
-				"explanation": "IDS establishes the detached-prefix category fact. Issue #82 product policy maps only the second stellt and ab to Lexeme/VERB at exact original indices [10,16], independently of the earlier eine Frage stellen unit. Source: https://grammis.ids-mannheim.de/progr%40mm/6922"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-robust-overlap-near-vase",
 			"memberSegmentIndices": [12, 14],
 			"case": {

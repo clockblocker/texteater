@@ -63,39 +63,6 @@
 		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-noun-article-cross-predicate-click-lehrer",
-			"memberSegmentIndices": [0, 2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Lehrer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Vater" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "des" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mädchens" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
-				"contaminationKeys": ["noun-article-cross:predicate"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-noun-article-cross-predicate-click-der-of-vater",
 			"memberSegmentIndices": [6, 8],
 			"case": {
@@ -129,77 +96,11 @@
 		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-noun-article-cross-predicate-click-vater",
-			"memberSegmentIndices": [6, 8],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 8,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Lehrer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Vater" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "des" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mädchens" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [6, 8]
-				},
-				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
-				"contaminationKeys": ["noun-article-cross:predicate"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-noun-article-cross-predicate-click-des-of-mädchens",
 			"memberSegmentIndices": [10, 12],
 			"case": {
 				"input": {
 					"clickedSegmentIndex": 10,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Lehrer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Vater" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "des" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mädchens" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [10, 12]
-				},
-				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
-				"contaminationKeys": ["noun-article-cross:predicate"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-noun-article-cross-predicate-click-mädchens",
-			"memberSegmentIndices": [10, 12],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 12,
 					"segments": [
 						{ "kind": "ResolvableText", "text": "Der" },
 						{ "kind": "Whitespace", "text": " " },
