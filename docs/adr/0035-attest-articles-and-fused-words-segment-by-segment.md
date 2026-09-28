@@ -18,7 +18,11 @@ and every host stores Segments at that granularity. `im` is the Segments `i`
   words. Examples: `m` in `im`, `s` in `aufs`, `'s` in `geht's`, `'ll` in
   `I'll`, `n't` and `wo` in `won't`, the Hebrew prefixes.
 - `Shorthand`: a standalone shortened spelling of one word. Examples: `'ne`,
-  `'nen`, `'s ist spät`, and abbreviations such as `z.B.` and `e.g.`.
+  `'nen`, `'s ist spät`, and abbreviations such as `z.B.` and `e.g.`. When
+  one spelling shortens several words, the sentence's meaning picks the word
+  and the target is that full word: colloquial `raus` is `heraus` or `hinaus`
+  by direction (`Komm raus!` is `herauskommen`), and a bare `wo` is
+  `irgendwo` (`Das liegt wo im Keller`).
 - A piece that is both shortened and attached is `Fused`.
 
 **Reaching the Fusion.** A `Fused` member carries its Fusion value and the
