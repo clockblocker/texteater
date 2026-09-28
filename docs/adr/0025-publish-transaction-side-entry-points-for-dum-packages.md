@@ -35,8 +35,10 @@ again.
 
 ## Consequences
 
-- The reviewed authored catalog remains the dominant weight behind
-  `dumgen/authored`; a compact projection for transaction-side selectors is a
+- The authored inventories now live in `dumspec/inventories`
+  ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)),
+  which `dumgen/authored` imports, so they remain the dominant weight behind
+  that entry point. A compact projection for transaction-side selectors is a
   separate decision.
 - `tooling/dum-entrypoint-rss` inventories, benchmarks, and gates the three
   entry points like the others.

@@ -10,7 +10,9 @@ operational entrypoints. The shared `dumval/compiler` compiler fails on unsuppor
 behavior rather than dropping semantics or falling back to Zod at runtime.
 
 Callers use typed package parsers that return the canonical value or the shared
-`ParsingError`. Generated rules stay with their domain owner. Dumling and Dumrel expose readonly
+`ParsingError`. For Dumling,
+[Dumling ADR 0001](../../battery/dumling/docs/adr/0001-compile-unit-validation-and-consumer-types.md)
+replaced that return with `parseUnit`'s correlated `chain`. Generated rules stay with their domain owner. Dumling and Dumrel expose readonly
 provider handles through `compiled-validation` subpaths. Dumrel links to Dumling;
 Dumdict and Dumgen link to both. The compiler emits each equivalent rule
 definition once across those dependencies, preserving field order, union order,

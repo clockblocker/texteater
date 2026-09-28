@@ -44,9 +44,7 @@ Every state now has exactly one encoding. Dumling rejects *hier* with
 dumspec fails a record that states `grundform` when Dumling's assessment
 returns an error. The verdict can no longer go unchecked.
 
-## Why this sits in Dumling
-
-[ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)
+**Why this sits in Dumling.** [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)
 lets a field into Dumling only if a click route or a Note's drill-down reads it,
 and sends facts about a language to dumspec. No click reads comparability.
 But ADR 0041 also makes Dumling the package that decides which feature values
