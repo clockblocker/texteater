@@ -350,6 +350,24 @@ const pronounsAndAdjectives: Rule[] = [
 		],
 	},
 	{
+		id: "de/bare-w-word-is-shorthand",
+		statement:
+			"A bare w-word that neither asks nor opens a relative clause, usually unstressed inside its clause, is the Shorthand of an indefinite: the target is that indefinite, and the w-word is its one member, in Shorthand orthography. wo is irgendwo (Das liegt wo im Keller), wann irgendwann, wie irgendwie, wohin irgendwohin, woher irgendwoher, and wer, wen and wem are irgendwer (Ist da wer?). Bare was is etwas, not irgendwas (Ich hab was gehört): was is et-was shortened, and it lacks the any-at-all sense that irgend- adds. An echo question stays interrogative: the stressed was of Du hast WAS gemacht? asks.",
+		adrs: ["ADR-0035"],
+		routes: lexeme("ADV", "PRON"),
+		records: [
+			"de/komm-wann-vorbei",
+			"de/das-liegt-wo-im-keller",
+			"de/das-muss-wie-gehen",
+			"de/ist-da-wer",
+			"de/hast-du-das-wem-erzaehlt",
+			"de/stell-das-einfach-wohin",
+			"de/den-kenn-ich-woher",
+			"de/ich-hab-was-gehoert",
+			"de/sag-doch-was",
+		],
+	},
+	{
 		id: "de/adjective-stays-adj",
 		statement:
 			"Comparative and adverbially used adjectives are ADJ, never ADV: sie singt laut gives [laut] ADJ. A word that can inflect as an attributive adjective (lauter, langsame) is an adjective.",
@@ -514,7 +532,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/member-orthography",
 		statement:
-			"Each member records how it is written. Standard covers licensed variants and sentence-initial capitals; Typo is a real spelling or casing error; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B.). Members stay aligned with the sentence: none is added, dropped or modernized.",
+			"Each member records how it is written. Standard covers licensed variants and sentence-initial capitals; Typo is a real spelling or casing error; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
 		records: [],
