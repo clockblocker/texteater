@@ -74,44 +74,5 @@
 			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-adaptive-idiom-zahn-near-gruendlich",
-			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 8,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Reporterin" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "fühlte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ihm" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "gründlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "auf" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Zahn" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [8]
-				},
-				"explanation": "IDS establishes the fixed multiword criterion. Issue #82 treats the surrounding idiom as one target but keeps the freely supplied manner adverb outside its membership. Source: https://grammis.ids-mannheim.de/terminologie/1175",
-				"contaminationKeys": [
-					"target-lexical-unit:jemandem-auf-den-zahn-fuehlen"
-				]
-			}
-		}
-	]
+	"noTarget": []
 }

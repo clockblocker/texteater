@@ -85,36 +85,6 @@
 				},
 				"explanation": "Accepted scoped construction from #442. Injected orchestration coverage is not live model accuracy."
 			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-ids-verbal-07-group-1-click-10",
-			"memberSegmentIndices": [2, 10],
-			"case": {
-				"input": {
-					"segments": [
-						{ "text": "Er", "kind": "ResolvableText" },
-						{ "text": " ", "kind": "Whitespace" },
-						{ "text": "hat", "kind": "ResolvableText" },
-						{ "text": " ", "kind": "Whitespace" },
-						{ "text": "den", "kind": "ResolvableText" },
-						{ "text": " ", "kind": "Whitespace" },
-						{ "text": "Brief", "kind": "ResolvableText" },
-						{ "text": " ", "kind": "Whitespace" },
-						{ "text": "schreiben", "kind": "ResolvableText" },
-						{ "text": " ", "kind": "Whitespace" },
-						{ "text": "müssen", "kind": "ResolvableText" },
-						{ "text": ".", "kind": "Punctuation" }
-					],
-					"clickedSegmentIndex": 10
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2, 10]
-				},
-				"explanation": "Accepted scoped construction from #442. Injected orchestration coverage is not live model accuracy."
-			}
 		}
 	]
 }

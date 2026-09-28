@@ -62,38 +62,6 @@
 		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-repeated-anfangen-click-final-an",
-			"memberSegmentIndices": [2, 12],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 12,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Mila" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "fängt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "an" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kreuzung" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "endlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "an" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2, 12]
-				},
-				"explanation": "IDS analyzes detached stressed particles with their finite stem as one separable verb. Issue #82 uses source position to group fängt with only the final particle an, while the earlier identical an remains a standalone Lexeme/ADP. Source: https://grammis.ids-mannheim.de/progr%40mm/6922"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-demo-repeated-anfangen-click-first-an",
 			"memberSegmentIndices": [4],
 			"case": {

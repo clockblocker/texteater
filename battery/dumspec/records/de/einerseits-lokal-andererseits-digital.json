@@ -85,36 +85,6 @@
 		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-paired-einerseits-click-andererseits",
-			"memberSegmentIndices": [0, 5],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 5,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Einerseits" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "lokal" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "andererseits" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "digital" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [0, 5]
-				},
-				"explanation": "Issue #82 pairs the second anchor andererseits with the earlier anchor einerseits, not with either adjacent adjective filler. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2118",
-				"contaminationKeys": [
-					"target-lexeme:adv:einerseits-andererseits"
-				]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-demo-paired-einerseits-click-digital",
 			"memberSegmentIndices": [7],
 			"case": {

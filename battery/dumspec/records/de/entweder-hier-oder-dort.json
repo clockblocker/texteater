@@ -102,33 +102,6 @@
 				"explanation": "IDS describes entweder ... oder as the correlated frame. Issue #82 keeps the freely supplied locative filler dort outside frame membership and routes the clicked occurrence as Lexeme/ADV. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2566",
 				"contaminationKeys": ["target-lexeme:cconj:entweder-oder"]
 			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-paired-entweder-click-oder",
-			"memberSegmentIndices": [0, 4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Entweder" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hier" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "oder" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dort" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "CCONJ",
-					"memberSegmentIndices": [0, 4]
-				},
-				"explanation": "The locative fillers hier and dort are free context; either fixed anchor selects the same Lexeme/CCONJ. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2566",
-				"contaminationKeys": ["target-lexeme:cconj:entweder-oder"]
-			}
 		}
 	]
 }

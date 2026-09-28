@@ -23,114 +23,60 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "da5ad8e285adbe66"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-antrag-click-stellte",
-			"memberSegmentIndices": [6],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Kurz" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "vor" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Fristende" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Nora" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "einen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Antrag" },
-						{ "kind": "Punctuation", "text": "." }
-					]
+			"memberSegmentIndices": [6, 12, 14],
+			"notes": {
+				"rationale": "einen Antrag stellen is a Funktionsverbgefüge: stellen only supports the noun Antrag, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun's own article einen is a member, as in eine Entscheidung treffen; the subject Nora and the adverb noch are free."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "einen Antrag stellen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "stellte einen Antrag",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [6]
-				},
-				"explanation": "IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/VERB. Source: https://grammis.ids-mannheim.de/vggf/2202"
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-antrag-click-einen",
-			"memberSegmentIndices": [12, 14],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 12,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Kurz" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "vor" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Fristende" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Nora" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "einen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Antrag" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [12, 14]
-				},
-				"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-phraseme-collocation-antrag-click-antrag",
-			"memberSegmentIndices": [12, 14],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 14,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Kurz" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "vor" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Fristende" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "stellte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Nora" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "einen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Antrag" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [12, 14]
-				},
-				"explanation": "The owned article and common noun are one NOUN target; other words stay separate."
+				"members": [
+					{ "attested": "stellte", "orthography": "Standard" },
+					{ "attested": "einen", "orthography": "Standard" },
+					{ "attested": "Antrag", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

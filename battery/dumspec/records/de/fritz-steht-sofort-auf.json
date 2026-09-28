@@ -48,33 +48,6 @@
 				"explanation": "IDS analyzes aufstehen's detached stressed prefix and finite stem as one separable verb occurrence. Issue #82 product policy maps steht and auf to one Lexeme/VERB at original indices [2,8], while heute remains the separate Lexeme/ADV at [4]. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
 				"contaminationKeys": ["target-lexical-unit:aufstehen"]
 			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-core-aufstehen-click-auf",
-			"memberSegmentIndices": [2, 6],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Fritz" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "steht" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sofort" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "auf" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2, 6]
-				},
-				"explanation": "IDS analyzes aufstehen's detached stressed prefix and finite stem as one separable verb occurrence. Issue #82 product policy maps steht and auf to one Lexeme/VERB at original indices [2,8], while heute remains the separate Lexeme/ADV at [4]. Source: https://grammis.ids-mannheim.de/progr%40mm/6922",
-				"contaminationKeys": ["target-lexical-unit:aufstehen"]
-			}
 		}
 	]
 }

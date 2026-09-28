@@ -35,44 +35,6 @@
 	"legacy": [
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-noun-article-cross-weather-click-der-of-weg",
-			"memberSegmentIndices": [0, 2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 0,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Weg" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "lang" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aber" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wetter" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bleibt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "gut" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
-				"contaminationKeys": ["noun-article-cross:weather"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
 			"caseId": "target-de-noun-article-cross-weather-click-weg",
 			"memberSegmentIndices": [0, 2],
 			"case": {
@@ -104,44 +66,6 @@
 					"family": "Lexeme",
 					"kind": "NOUN",
 					"memberSegmentIndices": [0, 2]
-				},
-				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
-				"contaminationKeys": ["noun-article-cross:weather"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-noun-article-cross-weather-click-das-of-wetter",
-			"memberSegmentIndices": [11, 13],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 11,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Weg" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "lang" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "aber" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wetter" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bleibt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "gut" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "NOUN",
-					"memberSegmentIndices": [11, 13]
 				},
 				"explanation": "A noun absorbs only the one article opening its own phrase; articles of other nouns across the clause never join.",
 				"contaminationKeys": ["noun-article-cross:weather"]
