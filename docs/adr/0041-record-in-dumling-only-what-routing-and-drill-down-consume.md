@@ -16,8 +16,8 @@ test.
 **Dumling holds types and schemas.** It states what a unit is and which
 feature values are well-formed. Facts about a language and the checks that
 need them live in dumspec, next to the gold and the Rules: the authored
-closed-class inventories ([ADR 0021](./0021-make-dumgen-own-authored-content-and-route-closure.md),
-amended), the ADP Case Table with its check of governors' frames, and the
+closed-class inventories ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)),
+the ADP Case Table with its check of governors' frames, and the
 `der`/`ein` paradigm with the article agreement check and the derivation of an
 article's DET cell. A hand-built `ein Häuser` passes Dumling and fails
 dumspec.

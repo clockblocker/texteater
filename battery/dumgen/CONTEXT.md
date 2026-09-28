@@ -145,8 +145,9 @@ the reviewed Authored Content that bounds a Closed Route. Its members are
 authored in Dumspec; Dumgen decides the closure.
 
 **Fixed Population**:
-reviewed Authored Content within an Open Route. A miss
-continues through generation.
+reviewed Authored Content within an Open Route. An occurrence that matches no
+member continues through generation; a matched member missing required
+content is a Catalog Miss.
 
 **Closed Route**:
 a production route that resolves only within its Fixed Catalog. The German

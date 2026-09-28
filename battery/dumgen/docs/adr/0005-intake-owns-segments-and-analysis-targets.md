@@ -79,7 +79,7 @@ The numbers, measured in `battery/dumgen/prototypes/intake/` (README) on
   language, validity and stitching per sentence as before, and now also
   produces the Segmented Sentence; deterministic Source Segmentation stays
   its first internal step (ADR 0004).
-- ADR 0015's Catalog Miss gains an observable intake form: a closed-class
+- System ADR 0021's Catalog Miss gains an observable intake form: a closed-class
   route with no candidate, reported per spelling.
 - Grammar features run at click for the clicked target only. The
   classification call leaves the click path for every target intake could
