@@ -370,6 +370,23 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", "Ind"]]);
 	});
 
+	test("authors dahin and daher as one Dem ADV with one Reading", () => {
+		for (const [text, emoji] of [
+			["dahin", "🛬"],
+			["daher", "🛫"],
+		] as const)
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "pronType"),
+						reading.emojiDescription,
+					]),
+				text,
+			).toEqual([["ADV", "Dem", emoji]]);
+	});
+
 	test("reaches the units a Note drills down to without generation", () => {
 		const realized = (spelled: string, kind: string) =>
 			authoredRealizations

@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
-type Use = "Int" | "Rel" | "Ind";
+type Use = "Int" | "Rel" | "Ind" | "Dem";
 
 /** One Reading of a w-adverb's use: its definition and glosses. */
 type Meaning = {
@@ -194,16 +194,18 @@ const adverbs: readonly WhAdverb[] = [
 	},
 ];
 
-// The irgend- adverbs are indefinite w-adverbs with one Reading each. Duden
-// defines irgendeinmal as irgendwann einmal, so it stores that one synonym.
-// https://www.duden.de/rechtschreibung/irgendwo
-type IndefiniteAdverb = Meaning & {
+/** An adverb with a single use and one Reading. */
+type OneReadingAdverb = Meaning & {
 	readonly text: string;
 	readonly ipa: string;
 	readonly emoji: string;
 	readonly synonymOf?: string;
 };
-const indefiniteAdverbs: readonly IndefiniteAdverb[] = [
+
+// The irgend- adverbs are indefinite w-adverbs with one Reading each. Duden
+// defines irgendeinmal as irgendwann einmal, so it stores that one synonym.
+// https://www.duden.de/rechtschreibung/irgendwo
+const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "irgendwo",
 		ipa: "ˈɪʁɡəntˌvoː",
@@ -261,10 +263,39 @@ const indefiniteAdverbs: readonly IndefiniteAdverb[] = [
 	},
 ];
 
+// dahin and daher answer wohin and woher and are split the same way (Da gehe
+// ich hin; Rule de/split-adverb-is-one-target). They are demonstrative ADVs,
+// not pronominal adverbs: hin and her are no prepositions. Each has its
+// directional Reading only; causal daher (deshalb) is not authored yet.
+// https://www.duden.de/rechtschreibung/dahin
+// https://www.duden.de/rechtschreibung/daher
+const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
+	{
+		text: "dahin",
+		ipa: "daˈhɪn",
+		emoji: "🛬",
+		definition:
+			"Bezeichnet als Ziel einer Bewegung einen genannten oder gezeigten Ort: Wir fahren dahin. Da gehe ich morgen hin.",
+		en: ["there (direction); to that place"],
+		ru: ["туда"],
+	},
+	{
+		text: "daher",
+		ipa: "daˈheːɐ̯",
+		emoji: "🛫",
+		definition:
+			"Bezeichnet als Herkunft oder Ausgangspunkt einen genannten oder gezeigten Ort: Daher kommt er. Da komme ich her.",
+		en: ["from there"],
+		ru: ["оттуда"],
+	},
+];
+
+// The da(r)- pronominal adverbs carry no marker either (pronominal-adverbs.ts).
 const marker: Readonly<Record<Use, string>> = {
 	Int: "❓",
 	Rel: "🧩",
 	Ind: "❔",
+	Dem: "",
 };
 
 /** A w-adverb has no comparison forms (ADR 0042); pronType is Core. */
@@ -336,12 +367,13 @@ function whAdverb(
  * wie, warum, wieso, weshalb, weswegen): one Int and one Rel Lemma each,
  * since pronType is Core. Each Lemma has one Reading, except relative wo,
  * which has a place and a time Reading. Then the indefinite irgend- adverbs,
- * one Ind Lemma each. The wo(r)- pronominal adverbs are in
- * pronominal-adverbs.ts.
+ * one Ind Lemma each, and the demonstrative dahin and daher, one Dem Lemma
+ * each. The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = [
 	...(["Int", "Rel"] as const).flatMap((use) =>
 		adverbs.flatMap((adverb) => whAdverbReadings(adverb, use)),
 	),
 	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
+	...demonstrativeAdverbs.map((adverb) => whAdverb(adverb, "Dem", adverb)),
 ];
