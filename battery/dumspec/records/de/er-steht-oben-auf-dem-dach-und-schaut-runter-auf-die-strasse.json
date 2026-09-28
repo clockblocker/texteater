@@ -1,32 +1,30 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Es schneit, und ich bleibe drinnen. Geh bitte nicht ohne Jacke raus.",
+	"sentence": "Er steht oben auf dem Dach und schaut runter auf die Straße.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
+		{ "kind": "ResolvableText", "text": "Er" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schneit" },
-		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "oben" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Dach" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "ResolvableText", "text": "schaut" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bleibe" },
+		{ "kind": "ResolvableText", "text": "runter" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "drinnen" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Geh" },
+		{ "kind": "ResolvableText", "text": "die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bitte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ohne" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Jacke" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "ResolvableText", "text": "Straße" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -48,9 +46,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [14, 24],
+			"memberSegmentIndices": [14, 16],
 			"notes": {
-				"rationale": "The speaker stays inside, so the addressee goes out, away from the speaker: raus in the right bracket is the particle of hinausgehen, not bare gehen. raus is its Shorthand member, and the Surface spells the full particle. The imperative is mood Imp with a finite verbForm."
+				"rationale": "He stands on the roof and looks down, away from himself, to the street: runter in the right bracket is the particle of hinunterschauen. runter is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -62,21 +60,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hinausgehen",
+						"canonicalForm": "hinunterschauen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
+							"hasSepPrefix": "hinunter",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geh hinaus",
+					"normalizedSurface": "schaut hinunter",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"mood": "Imp",
+						"mood": "Ind",
 						"number": "Sing",
-						"person": "2",
-						"tense": null,
+						"person": "3",
+						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -86,8 +84,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "Geh", "orthography": "Standard" },
-					{ "attested": "raus", "orthography": "Shorthand" }
+					{ "attested": "schaut", "orthography": "Standard" },
+					{ "attested": "runter", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

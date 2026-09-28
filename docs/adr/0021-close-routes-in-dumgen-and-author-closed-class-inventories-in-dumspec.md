@@ -15,8 +15,10 @@ Dumgen decides how production uses them.
 Readings, the PRON and DET pillar cells and stems, the unit that explains
 reflexivity, the pronominal adverbs, and the interrogative and relative
 w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
-`weshalb`, `weswegen`), the directional `dahin`, `daher`, `hierhin`, `hierher`, `heraus` and
-`hinaus` (colloquial `raus` is the Shorthand of either), and the `irgend-`
+`weshalb`, `weswegen`), the directional `dahin`, `daher`, `hierhin` and `hierher`, the her- and hin-
+adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
+`herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
+`rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), and the `irgend-`
 adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), with every spelling that realizes them and each
 Reading's Knowledge and semantic relation claims. `dumspec` checks them with
 Dumling and Dumrel. Dumling still owns linguistic values and their

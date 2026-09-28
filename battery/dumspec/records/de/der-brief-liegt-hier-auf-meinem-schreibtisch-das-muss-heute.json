@@ -35,8 +35,8 @@
 		"adrs": ["ADR-0026", "ADR-0035"],
 		"rules": [
 			{
-				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "cecf8de050fb11c7"
+				"rule": "de/r-adverb-is-her-or-hin-shorthand",
+				"hash": "0873ba0d0894f388"
 			},
 			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
 		],

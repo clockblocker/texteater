@@ -311,14 +311,21 @@ const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
-// heraus and hinaus are plain directional ADVs with no pronType: out towards
-// the speaker or viewpoint, and out away from it. Colloquial raus neutralizes
-// the two; it is no Lemma or spelling of its own but the Shorthand member of
-// whichever the direction picks (Rule de/raus-is-heraus-or-hinaus), so no
-// spelling table lists it. Each has its directional Reading only.
+// The her- and hin- adverbs are plain directional ADVs with no pronType:
+// her- moves towards the speaker or viewpoint, hin- away from it. Colloquial
+// raus, rein, rüber, runter and rauf neutralize each pair, and ran shortens
+// heran alone (hinan is an elevated word for hinauf). An r- word is no Lemma
+// or spelling of its own but the Shorthand member of the word the direction
+// picks (Rule de/r-adverb-is-her-or-hin-shorthand), so no spelling table
+// lists it. Each has its directional Reading only.
 // https://www.duden.de/rechtschreibung/heraus
 // https://www.duden.de/rechtschreibung/hinaus
 // https://www.duden.de/rechtschreibung/raus
+// https://www.duden.de/rechtschreibung/rueber
+// https://www.duden.de/rechtschreibung/runter
+// https://www.duden.de/rechtschreibung/rauf
+// https://www.duden.de/rechtschreibung/ran
+// https://www.duden.de/rechtschreibung/hinan
 const directionalAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "heraus",
@@ -337,6 +344,87 @@ const directionalAdverbs: readonly OneReadingAdverb[] = [
 			"Von hier drinnen nach dort draußen, vom Sprecher oder Betrachter weg: Hinaus mit dir! Die Kinder wollen hinaus. Umgangssprachlich kurz raus.",
 		en: ["out (away from the speaker)"],
 		ru: ["наружу (туда)"],
+	},
+	{
+		text: "herein",
+		ipa: "hɛˈʁaɪ̯n",
+		emoji: "🚪🤗",
+		definition:
+			"Von dort draußen hierher nach drinnen, auf den Sprecher oder Betrachter zu: Herein! Kommen Sie herein. Umgangssprachlich kurz rein.",
+		en: ["in (towards the speaker)"],
+		ru: ["внутрь (сюда)"],
+	},
+	{
+		text: "hinein",
+		ipa: "hɪˈnaɪ̯n",
+		emoji: "📥",
+		definition:
+			"Von hier draußen nach dort drinnen, vom Sprecher oder Betrachter weg: Sie ging ins Haus hinein. Umgangssprachlich kurz rein.",
+		en: ["in, into (away from the speaker)"],
+		ru: ["внутрь (туда)"],
+	},
+	{
+		text: "herüber",
+		ipa: "hɛˈʁyːbɐ",
+		emoji: "🌉👋",
+		definition:
+			"Von dort drüben hierher, auf diese Seite, auf den Sprecher oder Betrachter zu: Komm doch herüber! Umgangssprachlich kurz rüber.",
+		en: ["over here, across (towards the speaker)"],
+		ru: ["сюда (на эту сторону)"],
+	},
+	{
+		text: "hinüber",
+		ipa: "hɪˈnyːbɐ",
+		emoji: "🌉🚶",
+		definition:
+			"Von hier nach dort drüben, auf die andere Seite, vom Sprecher oder Betrachter weg: Wir schwimmen zur Insel hinüber. Umgangssprachlich kurz rüber.",
+		en: ["over there, across (away from the speaker)"],
+		ru: ["туда (на ту сторону)"],
+	},
+	{
+		text: "herunter",
+		ipa: "hɛˈʁʊntɐ",
+		emoji: "🪂",
+		definition:
+			"Von dort oben hierher nach unten, auf den Sprecher oder Betrachter zu: Komm vom Baum herunter! Umgangssprachlich kurz runter.",
+		en: ["down (towards the speaker)"],
+		ru: ["вниз (сюда)"],
+	},
+	{
+		text: "hinunter",
+		ipa: "hɪˈnʊntɐ",
+		emoji: "🏂",
+		definition:
+			"Von hier oben nach dort unten, vom Sprecher oder Betrachter weg: Sie fuhr den Hang hinunter. Umgangssprachlich kurz runter.",
+		en: ["down (away from the speaker)"],
+		ru: ["вниз (туда)"],
+	},
+	{
+		text: "herauf",
+		ipa: "hɛˈʁaʊ̯f",
+		emoji: "🧗",
+		definition:
+			"Von dort unten hierher nach oben, auf den Sprecher oder Betrachter zu: Komm zu uns herauf! Umgangssprachlich kurz rauf.",
+		en: ["up (towards the speaker)"],
+		ru: ["наверх (сюда)"],
+	},
+	{
+		text: "hinauf",
+		ipa: "hɪˈnaʊ̯f",
+		emoji: "🪜",
+		definition:
+			"Von hier unten nach dort oben, vom Sprecher oder Betrachter weg: Sie stiegen auf den Turm hinauf. Umgangssprachlich kurz rauf.",
+		en: ["up (away from the speaker)"],
+		ru: ["наверх (туда)"],
+	},
+	{
+		text: "heran",
+		ipa: "hɛˈʁan",
+		emoji: "🧲",
+		definition:
+			"Bezeichnet eine Bewegung auf einen Bezugspunkt, auf den Sprecher oder auf etwas zu, in dessen Nähe: Komm näher heran! Er fuhr dicht an die Mauer heran. Umgangssprachlich kurz ran.",
+		en: ["closer; up to"],
+		ru: ["ближе; вплотную (к)"],
 	},
 ];
 
@@ -421,8 +509,10 @@ function whAdverb(
  * since pronType is Core. Each Lemma has one Reading, except relative wo,
  * which has a place and a time Reading. Then the indefinite irgend- adverbs,
  * one Ind Lemma each, the demonstrative dahin, daher, hierhin and hierher,
- * one Dem Lemma each, and the directional heraus and hinaus, one Lemma each
- * with no pronType. The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
+ * one Dem Lemma each, and the directional her- and hin- adverbs (heraus,
+ * hinaus, herein, hinein, herüber, hinüber, herunter, hinunter, herauf, hinauf
+ * and heran), one Lemma each with no pronType. The wo(r)- pronominal adverbs
+ * are in pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = [
 	...(["Int", "Rel"] as const).flatMap((use) =>

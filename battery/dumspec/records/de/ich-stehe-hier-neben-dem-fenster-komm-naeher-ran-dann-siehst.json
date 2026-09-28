@@ -1,32 +1,36 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Es schneit, und ich bleibe drinnen. Geh bitte nicht ohne Jacke raus.",
+	"sentence": "Ich stehe hier neben dem Fenster. Komm näher ran, dann siehst du den Vogel.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
+		{ "kind": "ResolvableText", "text": "Ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schneit" },
-		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "ResolvableText", "text": "stehe" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "ResolvableText", "text": "hier" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "ResolvableText", "text": "neben" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bleibe" },
+		{ "kind": "ResolvableText", "text": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "drinnen" },
+		{ "kind": "ResolvableText", "text": "Fenster" },
 		{ "kind": "Punctuation", "text": "." },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Geh" },
+		{ "kind": "ResolvableText", "text": "Komm" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bitte" },
+		{ "kind": "ResolvableText", "text": "näher" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "ResolvableText", "text": "ran" },
+		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ohne" },
+		{ "kind": "ResolvableText", "text": "dann" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Jacke" },
+		{ "kind": "ResolvableText", "text": "siehst" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Vogel" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -48,9 +52,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [14, 24],
+			"memberSegmentIndices": [13, 17],
 			"notes": {
-				"rationale": "The speaker stays inside, so the addressee goes out, away from the speaker: raus in the right bracket is the particle of hinausgehen, not bare gehen. raus is its Shorthand member, and the Surface spells the full particle. The imperative is mood Imp with a finite verbForm."
+				"rationale": "The addressee comes closer to the speaker at the window: ran in the right bracket is the particle of herankommen. ran is only ever heran, since hinan is an elevated word for hinauf. ran is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -62,14 +66,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hinausgehen",
+						"canonicalForm": "herankommen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
+							"hasSepPrefix": "heran",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geh hinaus",
+					"normalizedSurface": "komm heran",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -86,8 +90,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "Geh", "orthography": "Standard" },
-					{ "attested": "raus", "orthography": "Shorthand" }
+					{ "attested": "Komm", "orthography": "Standard" },
+					{ "attested": "ran", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

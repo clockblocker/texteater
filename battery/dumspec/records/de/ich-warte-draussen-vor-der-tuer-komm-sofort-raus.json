@@ -29,8 +29,8 @@
 		"adrs": ["ADR-0022", "ADR-0035"],
 		"rules": [
 			{
-				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "cecf8de050fb11c7"
+				"rule": "de/r-adverb-is-her-or-hin-shorthand",
+				"hash": "0873ba0d0894f388"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",

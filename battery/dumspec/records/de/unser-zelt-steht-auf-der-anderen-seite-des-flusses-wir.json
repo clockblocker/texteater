@@ -1,32 +1,36 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“",
+	"sentence": "Unser Zelt steht auf der anderen Seite des Flusses. Wir müssen heute noch rüber.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "ResolvableText", "text": "Unser" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zahnärztin" },
+		{ "kind": "ResolvableText", "text": "Zelt" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sieht" },
+		{ "kind": "ResolvableText", "text": "steht" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Röntgenbild" },
+		{ "kind": "ResolvableText", "text": "anderen" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
-		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "ResolvableText", "text": "Seite" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "„" },
-		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "ResolvableText", "text": "des" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zahn" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "muss" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "ResolvableText", "text": "Flusses" },
 		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Punctuation", "text": "“" }
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "müssen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "rüber" },
+		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -44,7 +48,7 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [20],
+			"memberSegmentIndices": [21],
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
@@ -65,13 +69,13 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "muss",
+					"normalizedSurface": "müssen",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
+						"number": "Plur",
+						"person": "1",
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
@@ -81,17 +85,19 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "muss", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "müssen", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [22],
-			"reading": { "emojiDescription": "🐣" },
+			"memberSegmentIndices": [27],
+			"reading": { "emojiDescription": "🌉🚶" },
 			"notes": {
-				"rationale": "The dentist will pull the tooth out of the mouth towards herself, so raus is the Shorthand of heraus."
+				"rationale": "The speakers are on this side and have to cross to the tent on the other, away from where they are, so rüber is the Shorthand of hinüber. No motion verb stands in the bracket, and the modal takes no particle, so rüber is an ADV target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -103,7 +109,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "heraus",
+						"canonicalForm": "hinüber",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -111,12 +117,14 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "heraus",
+					"normalizedSurface": "hinüber",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "raus", "orthography": "Shorthand" }],
+				"members": [
+					{ "attested": "rüber", "orthography": "Shorthand" }
+				],
 				"realizationCoverage": "Full"
 			}
 		}

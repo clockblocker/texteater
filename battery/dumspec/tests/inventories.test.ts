@@ -389,10 +389,19 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", "Dem", emoji]]);
 	});
 
-	test("authors heraus and hinaus as one ADV with no pronType and one Reading", () => {
+	test("authors the her- and hin- adverbs as one ADV with no pronType and one Reading", () => {
 		for (const [text, emoji] of [
 			["heraus", "🐣"],
 			["hinaus", "🚪🏃"],
+			["herein", "🚪🤗"],
+			["hinein", "📥"],
+			["herüber", "🌉👋"],
+			["hinüber", "🌉🚶"],
+			["herunter", "🪂"],
+			["hinunter", "🏂"],
+			["herauf", "🧗"],
+			["hinauf", "🪜"],
+			["heran", "🧲"],
 		] as const)
 			expect(
 				authoredMembers
@@ -404,11 +413,24 @@ describe("the German authored inventory", () => {
 					]),
 				text,
 			).toEqual([["ADV", null, emoji]]);
-		expect(
-			authoredMembers.filter(
-				({ lemma }) => lemma.canonicalForm === "raus",
-			),
-		).toEqual([]);
+	});
+
+	test("authors no colloquial r- adverb and no hinan", () => {
+		for (const text of [
+			"raus",
+			"rein",
+			"rüber",
+			"runter",
+			"rauf",
+			"ran",
+			"hinan",
+		])
+			expect(
+				authoredMembers.filter(
+					({ lemma }) => lemma.canonicalForm === text,
+				),
+				text,
+			).toEqual([]);
 	});
 
 	test("reaches the units a Note drills down to without generation", () => {

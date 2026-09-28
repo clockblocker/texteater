@@ -1,33 +1,30 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Es schneit, und ich bleibe drinnen. Geh bitte nicht ohne Jacke raus.",
+	"sentence": "Ich bin oben in der Dachwohnung. Bring den Koffer bitte rauf!",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
+		{ "kind": "ResolvableText", "text": "Ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schneit" },
-		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "ResolvableText", "text": "bin" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "ResolvableText", "text": "oben" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "ResolvableText", "text": "in" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bleibe" },
+		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "drinnen" },
+		{ "kind": "ResolvableText", "text": "Dachwohnung" },
 		{ "kind": "Punctuation", "text": "." },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Geh" },
+		{ "kind": "ResolvableText", "text": "Bring" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Koffer" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "bitte" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ohne" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Jacke" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "raus" },
-		{ "kind": "Punctuation", "text": "." }
+		{ "kind": "ResolvableText", "text": "rauf" },
+		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -48,9 +45,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [14, 24],
+			"memberSegmentIndices": [13, 21],
 			"notes": {
-				"rationale": "The speaker stays inside, so the addressee goes out, away from the speaker: raus in the right bracket is the particle of hinausgehen, not bare gehen. raus is its Shorthand member, and the Surface spells the full particle. The imperative is mood Imp with a finite verbForm."
+				"rationale": "The speaker is upstairs, so the suitcase comes up towards the speaker: rauf in the right bracket is the particle of heraufbringen. rauf is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -62,14 +59,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hinausgehen",
+						"canonicalForm": "heraufbringen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
+							"hasSepPrefix": "herauf",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geh hinaus",
+					"normalizedSurface": "bring herauf",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -86,8 +83,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "Geh", "orthography": "Standard" },
-					{ "attested": "raus", "orthography": "Shorthand" }
+					{ "attested": "Bring", "orthography": "Standard" },
+					{ "attested": "rauf", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
