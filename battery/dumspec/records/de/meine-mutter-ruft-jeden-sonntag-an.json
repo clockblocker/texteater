@@ -16,13 +16,25 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0038"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
-			"notes": { "rationale": "This is the kinship noun Mutter." },
+			"reading": { "emojiDescription": "👩‍👧" },
+			"notes": {
+				"rationale": "This is the kinship noun Mutter. The mother use shares one feminine Mutter Lemma with the nut use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Mütter and Muttern, are Reading Knowledge, not identity (ADR 0038)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

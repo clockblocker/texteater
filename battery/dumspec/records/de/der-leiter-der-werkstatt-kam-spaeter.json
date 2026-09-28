@@ -16,12 +16,23 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🧑‍💼" },
 			"notes": {
 				"rationale": "The person-role use resolves to the masculine Leiter Lemma, distinct through its Core Features from the feminine ladder Lemma."
 			},

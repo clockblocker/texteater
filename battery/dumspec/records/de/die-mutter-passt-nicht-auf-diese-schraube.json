@@ -18,14 +18,25 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0038"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🔩" },
 			"notes": {
-				"rationale": "The hardware use and kinship use share the same feminine NOUN Lemma; their learner semantic distinction belongs to Reading above Dumling."
+				"rationale": "The nut use shares one feminine Mutter Lemma with the mother use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Muttern and Mütter, are Reading Knowledge, not identity (ADR 0038)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
