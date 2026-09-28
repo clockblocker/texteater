@@ -39,9 +39,11 @@ Kind. English PRON and the German pillars (personal pronouns, the \`der\` and
 \`ein\` articles, the \`der\`-series pronouns) put case, number and gender in
 Lemma identity, so each paradigm cell is its own Lemma: German \`mich\` and
 \`mir\`, \`dem\` and \`den\`, English \`me\` and \`my\`. A German word that puts
-another paradigm's endings on its own stem, such as \`dieser\`, \`mein\`,
-\`wer\` or \`jemand\`, is one Lemma whose Surfaces carry case, number and
-gender: \`diesem\` is a Surface of \`dieser\`, and \`wem\` of \`wer\`. German
+another paradigm's endings on its own stem, such as \`dieser\`, \`mein\` or
+\`jemand\`, is one Lemma whose Surfaces carry case, number and gender:
+\`diesem\` is a Surface of \`dieser\`. \`wer\` and \`was\` are stems too
+(\`wem\` is a Surface of \`wer\`), but their gender is inherent, as a noun's
+is: it sits in Core, Masc and Neut, and their Surfaces carry case only. German
 contextual reflexiveness belongs to the Surface's inflectional features; English
 \`myself\` is its own Lemma.
 

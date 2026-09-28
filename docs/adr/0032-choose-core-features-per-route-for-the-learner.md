@@ -112,3 +112,19 @@ Surface of `wer`, as `diesem` is of `dieser`, and genitive `wessen` is one
 Lemma with its gender on the Surface. This reverses the part of the pillar
 collisions amendment that split `wessen`.
 
+Amended on 2026-09-28 (#595): `wer` and `was` are two stem Lemmas, each for
+Int and for Rel. The amendment above was right that their case is on the
+Surface and wrong about their gender. The gender of `dieser`/`dieses` is
+agreement: the form copies its noun's gender, so it is inflection. Nothing
+controls the gender of `wer` or `was`. The speaker picks one by meaning,
+person or thing, and the word then controls agreement (*Wer hat seinen Schirm
+vergessen?*). That is inherent gender, like a noun's, and a noun's gender is
+Core. So gender is not a coordinate these paradigms vary. It is marked only in
+Core, Masc on `wer` and Neut on `was`, and their Surfaces mark case alone.
+`wen`, `wem` and `wessen` are Surfaces of `wer`, and `was` and `wessen` are
+Surfaces of `was`. Genitive `wessen` is a Surface of both, and the referent
+decides which. This replaces "genitive `wessen` is one Lemma with its gender
+on the Surface" above. One Lemma had given `wer`/`was` one Reading with two
+meanings, *who* and *what*, which ADR 0002 forbids. Attributive `wessen` is
+unchanged.
+

@@ -4,7 +4,8 @@ import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 
 /**
  * The case, number and agreement gender one Surface of a stem Lemma marks.
- * Number is null only for a paradigm that never marks it (wer/was).
+ * Number is null only for a paradigm that never marks it (wer, was), and
+ * gender is null where the Lemma fixes it in Core (wer, was) or has none.
  */
 export type SurfaceCell = {
 	readonly case: "Nom" | "Acc" | "Dat" | "Gen";

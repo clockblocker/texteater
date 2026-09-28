@@ -215,7 +215,7 @@ describe("the German authored inventory", () => {
 		expect(failures).toEqual([]);
 	});
 
-	test("jemand, niemand and wer/was are stems (system ADR 0032)", () => {
+	test("jemand, niemand, wer and was are stems (system ADR 0032)", () => {
 		const lemmasSpelled = (spelled: string) =>
 			authoredRealizations
 				.filter(
@@ -237,38 +237,41 @@ describe("the German authored inventory", () => {
 			["Int", "Rel"].map((pronType) => ({
 				canonicalForm: "wer",
 				pronType,
-				inflection: { case: "Dat", number: null, gender: "Masc" },
+				inflection: { case: "Dat", number: null, gender: null },
 			})),
 		);
-		const wer = authoredMembers.find(
-			({ lemma }) =>
-				lemma.canonicalForm === "wer" &&
-				field(lemma.coreFeatures, "pronType") === "Int",
+		const interrogative = (canonicalForm: string) => {
+			const found = authoredMembers.find(
+				({ lemma }) =>
+					lemma.canonicalForm === canonicalForm &&
+					field(lemma.coreFeatures, "pronType") === "Int" &&
+					field(lemma.coreFeatures, "extPos") === null,
+			);
+			if (!found) throw Error(`No interrogative ${canonicalForm}`);
+			return found;
+		};
+		// Gender is inherent, as a noun's is: Core, never on the Surface.
+		const wer = interrogative("wer");
+		expect(field(wer.lemma.coreFeatures, "gender")).toBe("Masc");
+		expect(field(interrogative("was").lemma.coreFeatures, "gender")).toBe(
+			"Neut",
 		);
-		if (!wer) throw Error("No interrogative wer");
+		expect(
+			parseUnit(pronounSurface(wer, "wem", { case: "Dat" })).success,
+		).toBe(true);
 		expect(
 			parseUnit(
-				pronounSurface(wer, "wem", {
-					case: "Dat",
-					number: null,
-					gender: "Masc",
-				}),
+				pronounSurface(wer, "wem", { case: "Dat", gender: "Masc" }),
 			).success,
-		).toBe(true);
-		// Genitive wessen is one spelling of wer for both genders.
+		).toBe(false);
+		// Genitive wessen is spelled under both Lemmas; the referent decides.
 		expect(
 			lemmasSpelled("wessen")
 				.filter(({ pronType }) => pronType === "Int")
-				.map(({ canonicalForm, inflection }) => [
-					canonicalForm,
-					inflection?.gender,
-				]),
-		).toEqual([
-			["wer", "Masc"],
-			["wer", "Neut"],
-		]);
+				.map(({ canonicalForm }) => canonicalForm),
+		).toEqual(["wer", "was"]);
 		for (const [spelled, cited] of [
-			["was", "wer"],
+			["was", "was"],
 			["jemandem", "jemand"],
 			["niemanden", "niemand"],
 			["jedermanns", "jedermann"],

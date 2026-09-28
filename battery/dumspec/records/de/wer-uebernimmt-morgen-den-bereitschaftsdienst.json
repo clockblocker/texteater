@@ -24,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓👤" },
 			"notes": { "rationale": "Question role. Scalar PronType Int." },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -45,7 +46,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "wer",
@@ -53,7 +54,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Masc",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,

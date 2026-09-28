@@ -22,8 +22,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓📦" },
 			"notes": {
-				"rationale": "Wessen asks for a thing here, so it is the neuter genitive Surface of wer (the was forms), not the masculine one."
+				"rationale": "Wessen asks for a thing here (es bedarf einer Sache), so it is the Gen Surface of was, not of wer, which asks for a person."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,7 +36,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "wer",
+						"canonicalForm": "was",
 						"coreFeatures": {
 							"case": null,
 							"number": null,
@@ -45,7 +46,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "wessen",
@@ -53,7 +54,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",
-						"gender": "Neut",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,

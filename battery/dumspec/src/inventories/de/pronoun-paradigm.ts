@@ -168,7 +168,7 @@ export function pronounStem(
 	]);
 }
 
-/** A stem pronoun whose spellings are listed with their cells, for a paradigm the agreement table does not fit (jemand, wer). */
+/** A stem pronoun whose spellings are listed with their cells, for a paradigm the agreement table does not fit (jemand, wer, was). */
 export function pronounStemOf(
 	citation: PronounForm,
 	description: PronounDescription,

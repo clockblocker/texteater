@@ -41,6 +41,10 @@ Masc and Neut. This is the agreement each form takes, not a guess about a
 person's sex, and it extends marked gender to these two paradigms only.
 Dumling's gender check still binds only personal pronouns.
 
+Amended by ADR 0032 on 2026-09-28: `wer` and `was` are two stem Lemmas whose
+gender is inherent, not agreement. It is Core, Masc and Neut, and their
+Surfaces mark case only. Genitive `wessen` is a Surface of both.
+
 Amended on 2026-09-25 (#595): possessor gender and Reference Number leave
 Core:
 
