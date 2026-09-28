@@ -4,7 +4,7 @@ status: accepted
 
 # Resolve Readings through the Emoji Description alone
 
-A Reading's semantic identity is its Emoji Description (ADR 0008), and
+A Reading's semantic identity is its Emoji Description (ADR 0002), and
 resolution uses nothing else to tell the Readings of one Lemma apart. The Emoji
 Description is an identity label. It is shown beside the Lemma, but that places
 no requirement on it: it is not a learner mnemonic.
