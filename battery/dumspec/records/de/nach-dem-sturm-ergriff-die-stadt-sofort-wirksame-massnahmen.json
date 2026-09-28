@@ -1,0 +1,83 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach dem Sturm ergriff die Stadt sofort wirksame Maßnahmen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Sturm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ergriff" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Stadt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sofort" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wirksame" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Maßnahmen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "da5ad8e285adbe66"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 16],
+			"notes": {
+				"rationale": "Maßnahmen ergreifen is a Funktionsverbgefüge: ergreifen only supports the noun Maßnahmen, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun has no article here; the adverb sofort and the attributive wirksame are free."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "Maßnahmen ergreifen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "ergriff Maßnahmen",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "ergriff", "orthography": "Standard" },
+					{ "attested": "Maßnahmen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

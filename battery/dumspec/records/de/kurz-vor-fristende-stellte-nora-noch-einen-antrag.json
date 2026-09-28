@@ -1,0 +1,82 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Kurz vor Fristende stellte Nora noch einen Antrag.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Kurz" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fristende" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stellte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Nora" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "noch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Antrag" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "da5ad8e285adbe66"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6, 12, 14],
+			"notes": {
+				"rationale": "einen Antrag stellen is a Funktionsverbgefüge: stellen only supports the noun Antrag, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun's own article einen is a member, as in eine Entscheidung treffen; the subject Nora and the adverb noch are free."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "einen Antrag stellen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "stellte einen Antrag",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "stellte", "orthography": "Standard" },
+					{ "attested": "einen", "orthography": "Standard" },
+					{ "attested": "Antrag", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}
