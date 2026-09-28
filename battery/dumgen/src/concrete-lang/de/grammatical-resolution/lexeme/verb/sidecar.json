@@ -452,6 +452,36 @@
 		"de/unser-zelt-steht-auf-der-anderen-seite-des-flusses-wir#0": {
 			"id": "grammar-de-verb-modal-muessen-directional",
 			"evaluation": true
+		},
+		"de/er-lief-erst-nach-links-und-dann-hinaus#0": {
+			"id": "grammar-de-verb-demo-coordinated-base-lief",
+			"demonstration": true,
+			"contaminationKeys": ["de-verb-lemma:laufen"]
+		},
+		"de/als-der-feueralarm-losging-lief-sie-sofort-hinaus#0": {
+			"id": "grammar-de-verb-demo-particle-hinauslaufen",
+			"demonstration": true,
+			"contaminationKeys": ["de-verb-lemma:hinauslaufen"]
+		},
+		"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0": {
+			"id": "grammar-de-verb-demo-governed-hinauslaufen-auf",
+			"demonstration": true,
+			"contaminationKeys": ["de-verb-lemma:hinauslaufen"]
+		},
+		"de/sie-ging-erst-in-die-kueche-und-dann-hinaus#0": {
+			"id": "grammar-de-verb-coordinated-base-ging",
+			"evaluation": true,
+			"contaminationKeys": ["de-verb-lemma:gehen"]
+		},
+		"de/nach-dem-essen-ging-er-kurz-hinaus#0": {
+			"id": "grammar-de-verb-particle-hinausgehen",
+			"evaluation": true,
+			"contaminationKeys": ["de-verb-lemma:hinausgehen"]
+		},
+		"de/das-geht-weit-ueber-meine-kraefte-hinaus#0": {
+			"id": "grammar-de-verb-governed-hinausgehen-ueber",
+			"evaluation": true,
+			"contaminationKeys": ["de-verb-lemma:hinausgehen"]
 		}
 	}
 }

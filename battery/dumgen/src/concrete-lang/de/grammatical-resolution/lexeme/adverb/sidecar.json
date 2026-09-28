@@ -284,6 +284,16 @@
 		"de/wir-stehen-unten-an-der-talstation-und-wollen-heute-noch#1": {
 			"id": "grammar-de-adv-dev-shorthand-rauf-hinauf",
 			"evaluation": true
+		},
+		"de/er-lief-erst-nach-links-und-dann-hinaus#1": {
+			"id": "grammar-de-adv-demo-coordinated-hinaus",
+			"demonstration": true,
+			"contaminationKeys": ["de-hinaus-coordination:laufen"]
+		},
+		"de/sie-ging-erst-in-die-kueche-und-dann-hinaus#1": {
+			"id": "grammar-de-adv-dev-coordinated-hinaus",
+			"evaluation": true,
+			"contaminationKeys": ["de-hinaus-coordination:gehen"]
 		}
 	}
 }
