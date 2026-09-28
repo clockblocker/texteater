@@ -283,6 +283,45 @@ describe("the German authored inventory", () => {
 			).toEqual(new Set([cited]));
 	});
 
+	test("authors each w-adverb as one Int and one Rel ADV", () => {
+		const whAdverbs = [
+			"wo",
+			"wohin",
+			"woher",
+			"wann",
+			"wie",
+			"warum",
+			"wieso",
+			"weshalb",
+			"weswegen",
+		];
+		for (const text of whAdverbs)
+			expect(
+				authoredMembers
+					.filter(
+						({ lemma }) =>
+							lemma.kind === "ADV" &&
+							lemma.canonicalForm === text,
+					)
+					.map(({ lemma }) => field(lemma.coreFeatures, "pronType")),
+				text,
+			).toEqual(["Int", "Rel"]);
+		// wieso, weshalb and weswegen claim warum as a synonym, one use to the same use.
+		const weshalb = authoredMembers.find(
+			({ lemma }) =>
+				lemma.canonicalForm === "weshalb" &&
+				field(lemma.coreFeatures, "pronType") === "Rel",
+		);
+		expect(weshalb?.knowledge.semanticRelations).toEqual({
+			synonym: [
+				expect.objectContaining({
+					canonicalForm: "warum",
+					coreFeatures: expect.objectContaining({ pronType: "Rel" }),
+				}),
+			],
+		});
+	});
+
 	test("reaches the units a Note drills down to without generation", () => {
 		const realized = (spelled: string, kind: string) =>
 			authoredRealizations

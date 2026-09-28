@@ -57,8 +57,9 @@ test("the inventories entry reads no files and loads no Zod", async () => {
 	const external: string[] = [];
 	for (const file of files) {
 		const text = await Bun.file(resolve(packageRoot, "dist", file)).text();
+		// Anchored to statements, so a string such as "where from" is no import.
 		for (const [, specifier = ""] of text.matchAll(
-			/(?:from|import)\s*"([^"]+)"/g,
+			/^(?:import|export)\b[^";]*?"([^"]+)"/gm,
 		))
 			if (!specifier.startsWith("./")) external.push(specifier);
 			else if (!files.includes(specifier)) files.push(specifier);

@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"reading": { "emojiDescription": "🧩🤔" },
 			"notes": {
 				"rationale": "The relative clause links weshalb to an antecedent and establishes PronType Rel."
 			},
@@ -48,6 +49,7 @@
 						"kind": "ADV",
 						"canonicalForm": "weshalb",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": "Rel"
