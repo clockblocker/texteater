@@ -18,12 +18,27 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
+			"reading": { "emojiDescription": "🎀" },
 			"notes": {
 				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features."
 			},
@@ -60,6 +75,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "Lag is the past finite form of liegen in a stative location reading, not a causative legen form."
 			},
@@ -104,6 +120,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"reading": { "emojiDescription": "🔝" },
 			"notes": {
 				"rationale": "`auf` heads the ordinary locative prepositional phrase `auf dem Geschenk`, so it is a plain preposition, not part of the verb `liegen`. The Lemma carries no case: `auf` is two-way in the ADP Case Table, and this occurrence records the dative of `dem Geschenk` (wo?) as its realized case."
 			},

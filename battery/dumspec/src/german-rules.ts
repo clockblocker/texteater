@@ -92,7 +92,10 @@ const verbs: Rule[] = [
 			...lexeme("VERB", "ADJ", "NOUN"),
 			...locution("VERB", "ADJ", "NOUN"),
 		],
-		records: ["de/pass-auf-dich-auf"],
+		records: [
+			"de/pass-auf-dich-auf",
+			"de/das-rote-band-lag-auf-dem-geschenk",
+		],
 	},
 	{
 		id: "de/bracket-particle-or-circumposition",
@@ -226,6 +229,9 @@ const nouns: Rule[] = [
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/das-kind-spielt-im-garten",
 			"de/er-zaehlt-eins-und-kauft-danach-einen-mantel",
+			"de/das-rote-band-lag-auf-dem-geschenk",
+			"de/der-dritte-band-ist-laengst-vergriffen",
+			"de/die-band-spielt-heute-im-kellerclub",
 		],
 	},
 	{
@@ -517,7 +523,11 @@ const attestations: Rule[] = [
 			"A Lemma's Core Features belong to its dictionary identity; features of one occurrence belong to its Surface. Each route chooses its Core Features for the learner: a pillar such as the der table or the personal pronouns has one Lemma per cell, and a stem word such as dieser or mein is one Lemma whose forms are Surfaces.",
 		adrs: ["ADR-0002", "ADR-0032", "ADR-0044"],
 		routes: [],
-		records: [],
+		records: [
+			"de/das-rote-band-lag-auf-dem-geschenk",
+			"de/der-dritte-band-ist-laengst-vergriffen",
+			"de/die-band-spielt-heute-im-kellerclub",
+		],
 	},
 	{
 		id: "de/canonical-form-is-the-headword",
