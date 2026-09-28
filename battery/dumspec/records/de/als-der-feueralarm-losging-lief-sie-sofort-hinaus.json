@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 15],
+			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
 				"rationale": "Nothing is coordinated with hinaus: it closes the bracket of lief as the particle of hinauslaufen, run outside. Foil to Er lief erst nach links und dann hinaus."
 			},

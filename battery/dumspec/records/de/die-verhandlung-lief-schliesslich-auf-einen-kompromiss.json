@@ -39,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8, 14],
+			"reading": { "emojiDescription": "➡🎯" },
 			"notes": {
 				"rationale": "hinauslaufen auf + Acc, to amount to or end in, is the same Lemma as run outside with a second Reading. hinaus is its particle and auf its governed preposition, though a prepositional phrase precedes hinaus. Foil to Er lief erst nach links und dann hinaus."
 			},

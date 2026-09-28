@@ -1,25 +1,24 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Ihr Freund wartet draußen, aber sie geht schon rein.",
+	"sentence": "Er steht oben auf dem Dach und schaut runter.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ihr" },
+		{ "kind": "ResolvableText", "text": "Er" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Freund" },
+		{ "kind": "ResolvableText", "text": "steht" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wartet" },
+		{ "kind": "ResolvableText", "text": "oben" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "draußen" },
-		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aber" },
+		{ "kind": "ResolvableText", "text": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "ResolvableText", "text": "Dach" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geht" },
+		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schon" },
+		{ "kind": "ResolvableText", "text": "schaut" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "rein" },
+		{ "kind": "ResolvableText", "text": "runter" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -30,7 +29,7 @@
 		"rules": [
 			{
 				"rule": "de/r-adverb-is-her-or-hin-shorthand",
-				"hash": "0873ba0d0894f388"
+				"hash": "548379312c9dc701"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
@@ -41,9 +40,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [13, 17],
+			"memberSegmentIndices": [14, 16],
 			"notes": {
-				"rationale": "The scene stays outside with her friend, so she goes in, away from that viewpoint: rein in the right bracket is the particle of hineingehen. rein is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "He stands up on the roof and looks down, away from himself: runter in the right bracket is the particle of hinunterschauen. runter is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -55,14 +54,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hineingehen",
+						"canonicalForm": "hinunterschauen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinein",
+							"hasSepPrefix": "hinunter",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geht hinein",
+					"normalizedSurface": "schaut hinunter",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -79,8 +78,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "geht", "orthography": "Standard" },
-					{ "attested": "rein", "orthography": "Shorthand" }
+					{ "attested": "schaut", "orthography": "Standard" },
+					{ "attested": "runter", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

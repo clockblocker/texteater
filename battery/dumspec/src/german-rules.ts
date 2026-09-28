@@ -132,7 +132,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/r-adverb-is-her-or-hin-shorthand",
 		statement:
-			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran) is the Shorthand of the her- or hin- adverb it shortens, never a Lemma or a Variant spelling of its own: the target is the full word, and the r- word is its member in Shorthand orthography. The direction relative to the speaker or the scene's viewpoint picks the word, and the context shows it: movement towards it gives the her- word, movement away from it the hin- word. raus is heraus or hinaus, rein herein or hinein, rüber herüber or hinüber, runter herunter or hinunter, and rauf herauf or hinauf. ran is only heran: Duden gives it for heran alone, and hinan is an elevated word for hinauf. So Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“ gives [raus] ADV heraus, and Der Brief liegt hier auf meinem Schreibtisch. Das muss heute noch raus. gives [raus] ADV hinaus. In the verbal bracket the r- word is the particle of the her- or hin- particle verb, picked the same way (de/bracket-particle-or-circumposition), and the Surface spells the full particle: Ich warte draußen vor der Tür. Komm sofort raus! gives [Komm, raus] VERB herauskommen, and Ihr Freund wartet draußen, aber sie geht schon rein. gives [geht, rein] VERB hineingehen. A modal with an r- word and no infinitive forms no particle verb, though dictionaries list herausmüssen and hinauswollen: the modal is a VERB of its own (de/modal-is-a-verb), and the r- word is an ADV target, so Unser Zelt steht auf der anderen Seite des Flusses. Wir müssen heute noch rüber. gives [müssen] VERB müssen and [rüber] ADV hinüber.",
+			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran) is the Shorthand of the her- or hin- adverb it shortens, never a Lemma or a Variant spelling of its own: the target is the full word, and the r- word is its member in Shorthand orthography. The direction relative to the speaker or the scene's viewpoint picks the word, and the context shows it: movement towards it gives the her- word, movement away from it the hin- word. raus is heraus or hinaus, rein herein or hinein, rüber herüber or hinüber, runter herunter or hinunter, and rauf herauf or hinauf. ran is only heran: Duden gives it for heran alone, and hinan is an elevated word for hinauf. So Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“ gives [raus] ADV heraus, and Der Brief liegt hier auf meinem Schreibtisch. Das muss heute noch raus. gives [raus] ADV hinaus. In the verbal bracket the r- word is the particle of the her- or hin- particle verb, picked the same way (de/bracket-particle-or-circumposition), and the Surface spells the full particle: Ich warte draußen vor der Tür. Komm sofort raus! gives [Komm, raus] VERB herauskommen, and Ich bleibe draußen auf der Terrasse, aber sie geht schon rein. gives [geht, rein] VERB hineingehen. A modal with an r- word and no infinitive forms no particle verb, though dictionaries list herausmüssen and hinauswollen: the modal is a VERB of its own (de/modal-is-a-verb), and the r- word is an ADV target, so Unser Zelt steht auf der anderen Seite des Flusses. Wir müssen heute noch rüber. gives [müssen] VERB müssen and [rüber] ADV hinüber.",
 		adrs: ["ADR-0022", "ADR-0026", "ADR-0035"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
@@ -144,11 +144,11 @@ const verbs: Rule[] = [
 			"de/sie-blieb-in-ihrer-wohnung-und-warf-ihn-raus",
 			"de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke",
 			"de/die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein",
-			"de/ihr-freund-wartet-draussen-aber-sie-geht-schon-rein",
+			"de/ich-bleibe-draussen-auf-der-terrasse-aber-sie-geht-schon",
 			"de/ich-bin-schon-auf-der-anderen-strassenseite-kommst-du-auch",
 			"de/unser-zelt-steht-auf-der-anderen-seite-des-flusses-wir",
 			"de/ich-warte-unten-an-der-haustuer-kommst-du-runter",
-			"de/er-steht-oben-auf-dem-dach-und-schaut-runter-auf-die-strasse",
+			"de/er-steht-oben-auf-dem-dach-und-schaut-runter",
 			"de/ich-bin-oben-in-der-dachwohnung-bring-den-koffer-bitte-rauf",
 			"de/wir-stehen-unten-an-der-talstation-und-wollen-heute-noch",
 			"de/ich-stehe-hier-neben-dem-fenster-komm-naeher-ran-dann-siehst",

@@ -425,7 +425,7 @@
 			"id": "grammar-de-verb-shorthand-rein-hereinkommen",
 			"evaluation": true
 		},
-		"de/ihr-freund-wartet-draussen-aber-sie-geht-schon-rein#0": {
+		"de/ich-bleibe-draussen-auf-der-terrasse-aber-sie-geht-schon#0": {
 			"id": "grammar-de-verb-shorthand-rein-hineingehen",
 			"evaluation": true
 		},
@@ -437,7 +437,7 @@
 			"id": "grammar-de-verb-shorthand-runter-herunterkommen",
 			"evaluation": true
 		},
-		"de/er-steht-oben-auf-dem-dach-und-schaut-runter-auf-die-strasse#0": {
+		"de/er-steht-oben-auf-dem-dach-und-schaut-runter#0": {
 			"id": "grammar-de-verb-shorthand-runter-hinunterschauen",
 			"evaluation": true
 		},

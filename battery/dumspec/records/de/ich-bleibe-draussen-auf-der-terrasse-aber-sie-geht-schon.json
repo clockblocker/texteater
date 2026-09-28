@@ -1,30 +1,29 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Er steht oben auf dem Dach und schaut runter auf die Straße.",
+	"sentence": "Ich bleibe draußen auf der Terrasse, aber sie geht schon rein.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "ResolvableText", "text": "Ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "steht" },
+		{ "kind": "ResolvableText", "text": "bleibe" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "oben" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Dach" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schaut" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "runter" },
+		{ "kind": "ResolvableText", "text": "draußen" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Straße" },
+		{ "kind": "ResolvableText", "text": "Terrasse" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "aber" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schon" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "rein" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -35,7 +34,7 @@
 		"rules": [
 			{
 				"rule": "de/r-adverb-is-her-or-hin-shorthand",
-				"hash": "0873ba0d0894f388"
+				"hash": "548379312c9dc701"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
@@ -46,9 +45,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [14, 16],
+			"memberSegmentIndices": [17, 21],
 			"notes": {
-				"rationale": "He stands on the roof and looks down, away from himself, to the street: runter in the right bracket is the particle of hinunterschauen. runter is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "The speaker stays outside on the terrace and she goes in, away from the speaker: rein in the right bracket is the particle of hineingehen. rein is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -60,14 +59,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hinunterschauen",
+						"canonicalForm": "hineingehen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinunter",
+							"hasSepPrefix": "hinein",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "schaut hinunter",
+					"normalizedSurface": "geht hinein",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -84,8 +83,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "schaut", "orthography": "Standard" },
-					{ "attested": "runter", "orthography": "Shorthand" }
+					{ "attested": "geht", "orthography": "Standard" },
+					{ "attested": "rein", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,

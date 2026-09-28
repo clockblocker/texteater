@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12],
+			"reading": { "emojiDescription": "🚶🚪" },
 			"notes": {
 				"rationale": "Nothing is coordinated with hinaus: it closes the bracket of ging as the particle of hinausgehen, go outside. Foil to Sie ging erst in die Küche und dann hinaus."
 			},

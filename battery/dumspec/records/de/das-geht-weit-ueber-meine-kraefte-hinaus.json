@@ -37,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6, 12],
+			"reading": { "emojiDescription": "🚧⤴" },
 			"notes": {
 				"rationale": "hinausgehen über + Acc, to exceed, is the same Lemma as go outside with a second Reading. hinaus is its particle and über its governed preposition, though a prepositional phrase precedes hinaus. Foil to Sie ging erst in die Küche und dann hinaus."
 			},
