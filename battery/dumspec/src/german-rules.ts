@@ -28,7 +28,7 @@ const units: Rule[] = [
 		id: "de/largest-fixed-unit",
 		statement:
 			"A click on a word selects the largest complete fixed unit that contains it. Every fixed member selects the same unit, and the unit is found by position in the sentence, never by spelling.",
-		adrs: ["ADR-0004", "ADR-0009", "dumgen/ADR-0007"],
+		adrs: ["ADR-0003", "ADR-0039", "dumgen/ADR-0007"],
 		routes: [],
 		records: [],
 	},
@@ -36,7 +36,7 @@ const units: Rule[] = [
 		id: "de/fixed-members-only",
 		statement:
 			"A unit's members are the words it fixes, function words included. Free arguments, modifiers, fillers, punctuation and opaque text stay outside. Words are not fixed just because they stand together, often occur together or form an ordinary compositional phrase.",
-		adrs: ["ADR-0004"],
+		adrs: ["ADR-0003"],
 		routes: [],
 		records: [],
 	},
@@ -52,7 +52,7 @@ const units: Rule[] = [
 		id: "de/unresolved-over-repair",
 		statement:
 			"A target is right only when its members are exactly the complete fixed unit the sentence realizes: no fixed member that is present is left out, and no free word is added. When membership is uncertain or contradictory, the answer is Unresolved; the group is never trimmed, extended or repaired.",
-		adrs: ["ADR-0004"],
+		adrs: ["ADR-0003", "dumgen/ADR-0007"],
 		routes: [],
 		records: [],
 	},
@@ -71,7 +71,7 @@ const verbs: Rule[] = [
 		id: "de/verb-owns-its-scattered-members",
 		statement:
 			"A verb's target includes its separable particle, its inherently required reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. An optional reflexive object is a PRON target of its own.",
-		adrs: ["ADR-0004", "ADR-0022"],
+		adrs: ["ADR-0003", "ADR-0022", "ADR-0039"],
 		routes: lexeme("VERB"),
 		records: ["de/es-zog-der-wilde-jaegersmann", "de/pass-auf-dich-auf"],
 	},
@@ -98,7 +98,7 @@ const verbs: Rule[] = [
 		id: "de/bracket-particle-or-circumposition",
 		statement:
 			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen).",
-		adrs: ["ADR-0004", "ADR-0022", "ADR-0034", "ADR-0039"],
+		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
 			"de/der-radweg-fuehrt-an-der-schule-vorbei",
@@ -193,7 +193,7 @@ const nouns: Rule[] = [
 		id: "de/noun-owns-its-article",
 		statement:
 			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head. The Head is the noun: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. When the noun is elided, the word standing in for it is the Head: Ich nehme den roten gives [den, roten] ADJ, and Der meine gives [Der, meine] PRON. An article cut off from its Head by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare Head stays bare. The article is a member, never a feature: a noun's Surface records no article, and in a sentence it marks case and number. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none. The article's spelling, read through its fused or shortened form, names a cell of der or ein for its Head's case, number and gender, and that cell is its DET: im Wald gives m, which is dem Dat.Masc.Sg.",
-		adrs: ["ADR-0004", "ADR-0009", "ADR-0035", "ADR-0040", "ADR-0041"],
+		adrs: ["ADR-0035", "ADR-0040", "ADR-0041"],
 		routes: lexeme("NOUN", "PROPN", "ADJ", "NUM", "PRON"),
 		records: [
 			"de/das-wetter-ist-xqzt",
@@ -212,7 +212,7 @@ const nouns: Rule[] = [
 		id: "de/only-der-and-ein-are-articles",
 		statement:
 			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN.",
-		adrs: ["ADR-0009", "ADR-0035"],
+		adrs: ["ADR-0035", "ADR-0040"],
 		routes: lexeme("NOUN", "DET"),
 		records: [
 			"de/ich-bin-im-wald",
@@ -224,7 +224,7 @@ const nouns: Rule[] = [
 		id: "de/shared-article-in-coordination",
 		statement:
 			"In coordinated nouns that agree, only the closest noun owns the article: der Aufstieg und Abstieg gives [der, Aufstieg] and [Abstieg], and Abstieg records der as a shared article with Partial coverage. Closest counts Segments within that noun phrase, nested phrases aside, and a tie is Unresolved. Nearness alone never licenses sharing, and another article or a clause boundary ends it.",
-		adrs: ["ADR-0003", "ADR-0004", "ADR-0035"],
+		adrs: ["ADR-0003", "ADR-0035", "ADR-0040"],
 		routes: lexeme("NOUN"),
 		records: [],
 	},
@@ -301,8 +301,8 @@ const pronounsAndAdjectives: Rule[] = [
 		id: "de/was-fuer",
 		statement:
 			"Standalone was für einer or was für welche is one PRON target. was für ein before a noun, and plural or mass was für, is one DET target. Either may be split across the sentence; the noun and other free words stay outside.",
-		adrs: ["ADR-0009"],
-		routes: lexeme("PRON", "DET"),
+		adrs: ["ADR-0039"],
+		routes: locution("PRON", "DET"),
 		records: [],
 	},
 	{
@@ -328,7 +328,7 @@ const pronounsAndAdjectives: Rule[] = [
 		id: "de/attributive-adjective-stands-alone",
 		statement:
 			"An attributive adjective or participle is a single-member target. The article before it and the noun after it belong to the noun: in ein alter Mann, alter gives [alter] ADJ, and in der wartende Kunde, der belongs to [der, Kunde].",
-		adrs: ["ADR-0004", "ADR-0036"],
+		adrs: ["ADR-0036", "ADR-0040"],
 		routes: lexeme("ADJ"),
 		records: [],
 	},
@@ -339,7 +339,7 @@ const conjunctionsAndParticles: Rule[] = [
 		id: "de/correlator-anchors",
 		statement:
 			"A fixed correlator is one Locution made of its anchors only, never the words they connect, and its Kind is the part of speech of the whole unit, not of the clicked anchor: entweder … oder, weder … noch, sowohl … als auch and nicht nur … sondern auch are CCONJ; je … desto, je … umso and je … je are SCONJ, since the je clause is verb-final, and so are um … zu, ohne … zu, statt … zu and so … dass; einerseits … andererseits and teils … teils are ADV. je … desto, je … umso (with its pre-1996 Variant je … um so) and je … je are three Lemmas, related as synonyms.",
-		adrs: ["ADR-0009", "ADR-0039"],
+		adrs: ["ADR-0039"],
 		routes: locution("CCONJ", "SCONJ", "ADV"),
 		records: [
 			"de/je-hoeher-der-druck-desdo-groesser-das-risiko",
@@ -495,7 +495,7 @@ const attestations: Rule[] = [
 		id: "de/suspended-compound-completion",
 		statement:
 			"A fragment with a trailing hyphen is completed only in a two-part und or oder coordination with a full compound that shares its literal ending: in Ein- und Ausgang, Ein- is completed to Eingang, with Full coverage.",
-		adrs: ["ADR-0004"],
+		adrs: ["ADR-0003"],
 		routes: lexeme("NOUN"),
 		records: [],
 	},
@@ -522,7 +522,7 @@ const attestations: Rule[] = [
 		id: "de/partial-coverage",
 		statement:
 			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). A split target, or one with free words between its members, is still Full.",
-		adrs: ["ADR-0003", "ADR-0004", "ADR-0039"],
+		adrs: ["ADR-0003", "ADR-0039"],
 		routes: [...lexeme("NOUN"), ...everyMultiword],
 		records: [],
 	},

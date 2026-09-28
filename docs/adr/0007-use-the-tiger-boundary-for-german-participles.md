@@ -1,5 +1,5 @@
 ---
-status: superseded by ADR-0033
+status: superseded by ADR-0036
 ---
 
 # Use the TIGER boundary for German participles
@@ -10,3 +10,5 @@ German adjectival Partizip I and attributive or adverbial participles are
 paraphrase keeps the occurrence verbal, while a lexicalized property remains
 adjectival. This preserves productive verbal identity without inventing a
 Participle Kind.
+
+ADR 0033 superseded this boundary, and [ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md) superseded ADR 0033. ADR 0036 is the current participle boundary.

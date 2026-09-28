@@ -1,32 +1,17 @@
 ---
-status: accepted
+status: superseded by ADR-0035
 ---
 
 # Align German high-level targets with fixed realized Attestation members
 
-A German High-Level Analysis Target is a click-invariant ordered group of
-`ResolvableText` Segments. Every fixed realized component becomes one
-positionally aligned Attestation member, and `normalizedSurface` is their
-one-space source-order projection. Free arguments, modifiers, and contextual
-reflexives remain separate targets. This alignment keeps clicks on any fixed
-member consistent without turning the Analysis Target into a Dumling entity.
+A German High-Level Analysis Target aligned each fixed realized component with
+one Attestation member. Its `normalizedSurface` prepended a noun's recovered
+article, and a governing Fusion such as `im` stayed a `Construction/Fusion`
+target that lent its article to the noun as evidence.
 
-German common nouns include their owned definite or indefinite article, even
-across separate adjectives. Compatible coordinated nouns may recover that
-article in their Surface while only the closest eligible noun owns its Segment.
-An explicit article or clause boundary ends sharing; proximity alone does not
-license it. For these Partial nouns, normalized Surface prepends the recovered
-article to the member projection. Positional source evidence remains unchanged.
-The existing Full-coverage suspended-compound completion remains valid.
-
-A separate governing Fusion may supply its DET component to a noun Surface.
-`im` remains Construction/Fusion while `Wald` resolves to Surface `dem Wald`,
-Partial coverage, and member `[Wald]`. The same rule applies through licensed
-coordination, as in `im Wald und Feld`. The Fusion keeps its own click target
-and exposes its components through lexical breakdown. Its source spelling is
-article evidence, while its expanded DET form enters the noun Surface.
-
-Amended on 2026-09-25 by [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md):
-`normalizedSurface` is the noun's own letters and never prepends an article.
-A Fusion's article piece is an owned `Fused` member of the noun: `im Wald`
-attests `[m, Wald]`, and `i` is the ADP `in`.
+[ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md)
+superseded the article and Fusion parts, and ADR 0040 made the article a
+satellite of its phrase's Head. The rules still in force (positional member
+alignment, free words as units of their own, article sharing in coordination,
+and Full-coverage suspended-compound completion) live in
+[ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md).

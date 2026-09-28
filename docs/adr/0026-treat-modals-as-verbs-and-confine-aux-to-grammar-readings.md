@@ -37,11 +37,12 @@ das Glas geöffnet`, manages to open it) keep `bekommen` as the
 VERB; only the sentence decides, so both carry gold. Verbs that add a meaning
 beside a construction (`sich lassen`, `gehören` with a participle, `brauchen`,
 `scheinen`, `drohen`, `versprechen`, `pflegen` with `zu`, copular `bleiben`)
-are VERB like the modals; Funktionsverbgefüge are Collocation Phrasemes.
+are VERB like the modals; Funktionsverbgefüge are Collocation Locutions
+(ADR 0039).
 
 This amends the AUX examples and the passive values in ADR 0022 and the "AUX copula" wording of the
 classification criteria; membership, occurrence alignment and coverage
-contracts in ADRs 0003 and 0004 are unchanged. The rulings are recorded on
+contracts in ADR 0003 are unchanged. The rulings are recorded on
 [the lab scope decision](https://github.com/clockblocker/texteater/issues/502),
 [the auxiliary schema decision](https://github.com/clockblocker/texteater/issues/504)
 and [the AUX Readings decision](https://github.com/clockblocker/texteater/issues/507).
