@@ -1127,6 +1127,22 @@
 			"id": "grammar-de-pron-referent-sie-nom-agreement",
 			"evaluation": true,
 			"slices": ["referent-context"]
+		},
+		"de/ich-hab-was-gehoert#0": {
+			"id": "grammar-de-pron-demo-shorthand-was",
+			"demonstration": true
+		},
+		"de/sag-doch-was#0": {
+			"id": "grammar-de-pron-dev-shorthand-was",
+			"evaluation": true
+		},
+		"de/ist-da-wer#0": {
+			"id": "grammar-de-pron-dev-shorthand-wer",
+			"evaluation": true
+		},
+		"de/hast-du-das-wem-erzaehlt#0": {
+			"id": "grammar-de-pron-dev-shorthand-wem",
+			"evaluation": true
 		}
 	}
 }
