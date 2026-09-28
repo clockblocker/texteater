@@ -263,12 +263,15 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
-// dahin and daher answer wohin and woher and are split the same way (Da gehe
-// ich hin; Rule de/split-adverb-is-one-target). They are demonstrative ADVs,
-// not pronominal adverbs: hin and her are no prepositions. Each has its
-// directional Reading only; causal daher (deshalb) is not authored yet.
+// dahin, daher, hierhin and hierher answer wohin and woher and are split the
+// same way (Da gehe ich hin, Hier kommst du her; Rule
+// de/split-adverb-is-one-target). They are demonstrative ADVs, not pronominal
+// adverbs: hin and her are no prepositions. Each has its directional Reading
+// only; causal daher (deshalb) is not authored yet.
 // https://www.duden.de/rechtschreibung/dahin
 // https://www.duden.de/rechtschreibung/daher
+// https://www.duden.de/rechtschreibung/hierhin
+// https://www.duden.de/rechtschreibung/hierher
 const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "dahin",
@@ -287,6 +290,24 @@ const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
 			"Bezeichnet als Herkunft oder Ausgangspunkt einen genannten oder gezeigten Ort: Daher kommt er. Da komme ich her.",
 		en: ["from there"],
 		ru: ["оттуда"],
+	},
+	{
+		text: "hierhin",
+		ipa: "ˈhiːɐ̯hɪn",
+		emoji: "🛬",
+		definition:
+			"Bezeichnet als Ziel einer Bewegung den Ort, an dem der Sprecher ist oder auf den er zeigt: Stell die Kiste hierhin. Hier kommt der Schrank hin.",
+		en: ["here (direction); to this place"],
+		ru: ["сюда"],
+	},
+	{
+		text: "hierher",
+		ipa: "ˈhiːɐ̯heːɐ̯",
+		emoji: "🛫",
+		definition:
+			"Bezeichnet eine Bewegung zum Sprecher hin, an den Ort, an dem er ist: Komm hierher. Hier kommst du her.",
+		en: ["here (towards the speaker); this way"],
+		ru: ["сюда (ко мне)"],
 	},
 ];
 

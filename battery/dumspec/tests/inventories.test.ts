@@ -370,10 +370,12 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", "Ind"]]);
 	});
 
-	test("authors dahin and daher as one Dem ADV with one Reading", () => {
+	test("authors dahin, daher, hierhin and hierher as one Dem ADV with one Reading", () => {
 		for (const [text, emoji] of [
 			["dahin", "🛬"],
 			["daher", "🛫"],
+			["hierhin", "🛬"],
+			["hierher", "🛫"],
 		] as const)
 			expect(
 				authoredMembers
