@@ -14,25 +14,44 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [2, 8],
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "The Konjunktiv-II form is mapped to supported mood Sub plus past tense."
+				"rationale": "wäre … gewesen is the Konjunktiv II perfect of copular sein. wäre is its auxiliary and never a target alone, and schief is the ADJ predicate outside it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "wäre", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "wäre", "orthography": "Standard" },
+					{ "attested": "gewesen", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "wäre",
+					"normalizedSurface": "wäre gewesen",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"mood": "Sub",
@@ -41,7 +60,7 @@
 						"tense": "Past",
 						"verbForm": "Fin",
 						"expletive": null,
-						"perfect": null,
+						"perfect": "Yes",
 						"future": null,
 						"voice": null,
 						"passive": null
@@ -51,8 +70,12 @@
 						"language": "de",
 						"canonicalForm": "sein",
 						"family": "Lexeme",
-						"kind": "AUX",
-						"coreFeatures": {}
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -60,6 +83,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "Fast is the approximative adverb here, modifying the predication schief gewesen rather than functioning as an adjective or particle."
 			},
@@ -80,53 +104,11 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"notes": {
-				"rationale": "Gewesen is treated as an AUX participle rather than a lexical verb."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "gewesen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "gewesen",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"participleForm": "Past",
-						"verbForm": "Part",
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "sein",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

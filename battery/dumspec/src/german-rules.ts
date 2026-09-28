@@ -73,7 +73,15 @@ const verbs: Rule[] = [
 			"A verb's target includes its separable particle, its inherently required reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. An optional reflexive object is a PRON target of its own.",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0039"],
 		routes: lexeme("VERB"),
-		records: ["de/es-zog-der-wilde-jaegersmann", "de/pass-auf-dich-auf"],
+		records: [
+			"de/es-zog-der-wilde-jaegersmann",
+			"de/pass-auf-dich-auf",
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/der-laster-fuhr-das-schild-um",
+			"de/er-versucht-hinauszulaufen",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/sie-erinnert-sich-an-den-geruch",
+		],
 	},
 	{
 		id: "de/expletive-es-joins-its-verb",
@@ -95,6 +103,9 @@ const verbs: Rule[] = [
 		records: [
 			"de/pass-auf-dich-auf",
 			"de/das-rote-band-lag-auf-dem-geschenk",
+			"de/er-wartet-auf-den-nachtbus",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/sie-erinnert-sich-an-den-geruch",
 		],
 	},
 	{
@@ -191,6 +202,9 @@ const verbs: Rule[] = [
 		records: [
 			"de/der-faehrmann-hat-uns-uebergesetzt",
 			"de/wir-haetten-gern-mehr-zeit",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/das-waere-schoen-gewesen",
+			"de/das-waere-fast-schief-gewesen",
 		],
 	},
 	{
@@ -203,6 +217,8 @@ const verbs: Rule[] = [
 			"de/das-wetter-ist-xqzt",
 			"de/er-wog-vielleicht-ein-halbes-lot",
 			"de/die-aufgabe-bleibt-ungeloest",
+			"de/das-waere-schoen-gewesen",
+			"de/das-waere-fast-schief-gewesen",
 		],
 	},
 	{
@@ -222,7 +238,12 @@ const participles: Rule[] = [
 			"A participle is verbal only in a perfect with haben or sein (hat gebacken, ist abgereist) or a passive with werden, bekommen, kriegen or erhalten (wird gebacken). There it joins its auxiliaries in one VERB target: ist … aufgefunden worden includes all three.",
 		adrs: ["ADR-0036", "ADR-0022"],
 		routes: lexeme("VERB"),
-		records: [],
+		records: [
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/das-waere-schoen-gewesen",
+			"de/das-waere-fast-schief-gewesen",
+		],
 	},
 	{
 		id: "de/sein-perfect-or-copula",
@@ -633,6 +654,10 @@ const attestations: Rule[] = [
 			"de/der-leiter-der-werkstatt-kam-spaeter",
 			"de/die-leiter-wackelte-auf-dem-nassen-boden",
 			"de/auf-der-karte-sind-drei-seen-eingezeichnet",
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/der-laster-fuhr-das-schild-um",
+			"de/sie-umfuhr-die-baustelle-weitraeumig",
 		],
 	},
 	{
@@ -691,7 +716,12 @@ const attestations: Rule[] = [
 			"A verbal Surface describes its whole target. Perfect, future and passive belong to the whole verbal unit and stay empty on an auxiliary's own Surface, and tense describes the finite verb only.",
 		adrs: ["ADR-0022", "ADR-0026"],
 		routes: lexeme("VERB", "AUX"),
-		records: ["de/der-faehrmann-hat-uns-uebergesetzt"],
+		records: [
+			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/das-waere-schoen-gewesen",
+			"de/das-waere-fast-schief-gewesen",
+		],
 	},
 	{
 		id: "de/verb-core-features",
@@ -702,6 +732,10 @@ const attestations: Rule[] = [
 		records: [
 			"de/der-faehrmann-hat-uns-uebergesetzt",
 			"de/er-muss-heute-arbeiten",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/der-laster-fuhr-das-schild-um",
+			"de/sie-umfuhr-die-baustelle-weitraeumig",
+			"de/er-versucht-hinauszulaufen",
 		],
 	},
 	{

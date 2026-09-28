@@ -44,13 +44,28 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+		],
 		"references": [
 			{
 				"title": "clockblocker/texteater#451",
@@ -62,8 +77,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 8],
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "wurde and um members. gebeten head. Head stays Part; voice null. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. Passive wurde is a Fixed member and governed um an occurrence member recorded in valencyEvidence, so the normalized Surface is wurde gebeten; the route-owning lexical head remains the ordinary participle gebeten with null tense and voice. The Nom Sie fills no preposition slot, so intake records none for it."
+				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

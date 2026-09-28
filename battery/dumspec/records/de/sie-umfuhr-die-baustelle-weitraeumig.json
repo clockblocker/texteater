@@ -14,12 +14,23 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "↪" },
 			"notes": {
 				"rationale": "This is inseparable umfahren in the past finite form, so there is no separable-prefix feature."
 			},

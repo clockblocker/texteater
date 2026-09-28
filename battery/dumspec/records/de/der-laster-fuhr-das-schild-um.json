@@ -16,14 +16,29 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10],
+			"reading": { "emojiDescription": "💥" },
 			"notes": {
-				"rationale": "This is discontinuous separable umfahren compressed into the full surface fuhr um; the selected spelling is only the finite verb token."
+				"rationale": "This is separable umfahren 'knock over', so fuhr … um is one target with both members. hasSepPrefix um keeps it apart from inseparable umfahren 'drive around' (umfuhr)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

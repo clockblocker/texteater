@@ -52,13 +52,22 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			}
+		],
 		"references": [
 			{
 				"title": "clockblocker/texteater#451",
@@ -70,8 +79,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
+			"reading": { "emojiDescription": "🧠💭" },
 			"notes": {
-				"rationale": "sich inherent. an governed. Both members. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The inherently reflexive sich is a Fixed member; governed an stays an occurrence member recorded in valencyEvidence and out of the normalized Surface erinnert sich. The Lemma identity remains sich erinnern with the same core features."
+				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

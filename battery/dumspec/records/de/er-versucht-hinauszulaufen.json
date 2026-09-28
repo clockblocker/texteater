@@ -32,13 +32,19 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+		],
 		"references": [
 			{
 				"title": "clockblocker/texteater#451",
@@ -50,8 +56,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
-				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape. The infinitive spelling `hinauszulaufen` directly exposes the separable verb lemma `hinauslaufen`, so this is an unambiguous verbal inflection rather than a standalone directional adverb."
+				"rationale": "hinauszulaufen is the zu-infinitive of separable hinauslaufen, with zu between the particle hinaus and the stem in one word. It is a single-member VERB target, not a directional adverb beside laufen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

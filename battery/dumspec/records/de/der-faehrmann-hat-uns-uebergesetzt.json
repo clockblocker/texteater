@@ -14,29 +14,33 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026"],
 		"rules": [
 			{
-				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{
-				"rule": "de/verbal-surface-is-whole",
-				"hash": "974139977fd040ca"
-			}
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
+			"reading": { "emojiDescription": "⛴" },
 			"notes": {
 				"rationale": "übergesetzt is the ferry-across verb with the separable prefix über (setzte über), not the inseparable übersetzen 'translate' (übersetzt). hat is its perfect auxiliary, so the target is the whole perfect [hat, übergesetzt], like [hat, mitgebracht]."
 			},
