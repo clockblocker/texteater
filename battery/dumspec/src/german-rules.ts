@@ -306,6 +306,38 @@ const pronounsAndAdjectives: Rule[] = [
 		records: [],
 	},
 	{
+		id: "de/relative-w-adverb-fills-a-slot",
+		statement:
+			"Outside a question, direct or indirect, a w-adverb is a relative ADV (pronType Rel) when it names a place, time, manner or reason inside its own clause: die Stadt, wo sie wohnt; jetzt, wo du da bist, where wo is the time of du da bist; Mach es, wie du willst, where wie is the way you want it done; der Grund, weshalb sie geht. It needs no antecedent: Komm, wann du willst is Rel. The same word is SCONJ when it only links the clauses and names nothing inside its own, as causal or concessive wo does in wo er doch krank ist. A causal overtone on a Rel use, as in jetzt, wo read as now that, is an inference and changes neither Kind nor Reading. Comparison wie fills no manner slot in its clause. It completes a comparison with so, ebenso, genauso or the like, and stays CCONJ (so groß wie sie) or SCONJ (so leise, wie er versprach).",
+		adrs: [],
+		routes: lexeme("ADV", "SCONJ", "CCONJ"),
+		records: [
+			"de/das-ist-die-stadt-wo-sie-wohnt",
+			"de/jetzt-wo-du-da-bist-koennen-wir-anfangen",
+			"de/er-will-mitkommen-wo-er-doch-krank-ist",
+			"de/mach-es-wie-du-willst",
+			"de/die-maschine-arbeitet-so-leise-wie-der-hersteller",
+			"de/mira-ist-genauso-gross-wie-ihre-schwester",
+			"de/die-zweite-loesung-ist-ebenso-robust-wie-die-erste",
+			"de/das-ist-der-grund-weshalb-die-faehre-heute-ausfaellt",
+			"de/in-dem-moment-wo-sie-ankam-begann-es-zu-regnen",
+			"de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
+		],
+	},
+	{
+		id: "de/relative-wo-place-or-time",
+		statement:
+			"Relative wo has two Readings, picked by what wo names inside its clause, not by the word it follows. It is the time Reading 🧩⏰ when wo names a time: in dem Moment, wo sie ankam; jetzt, wo du da bist; damals, wo; der Tag, wo. Otherwise it is the place Reading 🧩📍, abstract settings included, since English keeps where for them too: die Stadt, wo sie wohnt; in Fällen, wo; an dem Punkt, wo; eine Situation, wo.",
+		adrs: [],
+		routes: lexeme("ADV"),
+		records: [
+			"de/in-dem-moment-wo-sie-ankam-begann-es-zu-regnen",
+			"de/jetzt-wo-du-da-bist-koennen-wir-anfangen",
+			"de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
+			"de/das-ist-die-stadt-wo-sie-wohnt",
+		],
+	},
+	{
 		id: "de/adjective-stays-adj",
 		statement:
 			"Comparative and adverbially used adjectives are ADJ, never ADV: sie singt laut gives [laut] ADJ. A word that can inflect as an attributive adjective (lauter, langsame) is an adjective.",

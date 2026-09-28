@@ -284,6 +284,11 @@ describe("the German authored inventory", () => {
 	});
 
 	test("authors each w-adverb as one Int and one Rel ADV", () => {
+		const readingsOf = (text: string) =>
+			authoredMembers.filter(
+				({ lemma }) =>
+					lemma.kind === "ADV" && lemma.canonicalForm === text,
+			);
 		const whAdverbs = [
 			"wo",
 			"wohin",
@@ -297,15 +302,20 @@ describe("the German authored inventory", () => {
 		];
 		for (const text of whAdverbs)
 			expect(
-				authoredMembers
-					.filter(
-						({ lemma }) =>
-							lemma.kind === "ADV" &&
-							lemma.canonicalForm === text,
-					)
-					.map(({ lemma }) => field(lemma.coreFeatures, "pronType")),
+				new Set(
+					readingsOf(text).map(({ lemma }) =>
+						field(lemma.coreFeatures, "pronType"),
+					),
+				),
 				text,
-			).toEqual(["Int", "Rel"]);
+			).toEqual(new Set(["Int", "Rel"]));
+		// Relative wo has a place and a time Reading; every other use has one.
+		expect(
+			readingsOf("wo").map(({ reading }) => reading.emojiDescription),
+		).toEqual(["❓📍", "🧩📍", "🧩⏰"]);
+		expect(
+			whAdverbs.filter((text) => text !== "wo").flatMap(readingsOf),
+		).toHaveLength(2 * (whAdverbs.length - 1));
 		// wieso, weshalb and weswegen claim warum as a synonym, one use to the same use.
 		const weshalb = authoredMembers.find(
 			({ lemma }) =>

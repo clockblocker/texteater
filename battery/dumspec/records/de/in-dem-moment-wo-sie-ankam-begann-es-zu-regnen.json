@@ -1,25 +1,28 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Das ist der Grund, weshalb die Fähre heute ausfällt.",
+	"sentence": "In dem Moment, wo sie ankam, begann es zu regnen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "ResolvableText", "text": "In" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "ResolvableText", "text": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Grund" },
+		{ "kind": "ResolvableText", "text": "Moment" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "weshalb" },
+		{ "kind": "ResolvableText", "text": "wo" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "ResolvableText", "text": "sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fähre" },
+		{ "kind": "ResolvableText", "text": "ankam" },
+		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "ResolvableText", "text": "begann" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ausfällt" },
+		{ "kind": "ResolvableText", "text": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "regnen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -31,16 +34,20 @@
 			{
 				"rule": "de/relative-w-adverb-fills-a-slot",
 				"hash": "812ce7ad00775fef"
+			},
+			{
+				"rule": "de/relative-wo-place-or-time",
+				"hash": "3bfcfd18bb2a7df0"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9],
-			"reading": { "emojiDescription": "🧩🤔" },
+			"memberSegmentIndices": [7],
+			"reading": { "emojiDescription": "🧩⏰" },
 			"notes": {
-				"rationale": "The relative clause links weshalb to an antecedent and establishes PronType Rel."
+				"rationale": "wo names the time at which sie ankam holds, so it is Rel, and that time picks the time Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +59,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "weshalb",
+						"canonicalForm": "wo",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -60,14 +67,12 @@
 							"pronType": "Rel"
 						}
 					},
-					"normalizedSurface": "weshalb",
+					"normalizedSurface": "wo",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [
-					{ "attested": "weshalb", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "wo", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

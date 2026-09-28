@@ -4,30 +4,33 @@ import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
 type Use = "Int" | "Rel";
 
-/** One use of a w-adverb: its Reading's emoji, definition and glosses. */
+/** One Reading of a w-adverb's use: its definition and glosses. */
 type Meaning = {
 	readonly definition: string;
 	readonly en: readonly string[];
 	readonly ru: readonly string[];
 };
+/** A Reading of a use that has several, each with its own emoji. */
+type EmojiMeaning = Meaning & { readonly emoji: string };
 /**
- * One w-adverb with its interrogative and relative use. `synonymOf` names the
- * adverb this one is a synonym of in both uses; only that direct claim is
- * stored, and the rest is projected (ADR 0012).
+ * One w-adverb with its interrogative and relative use. A use is one Reading
+ * under the adverb's emoji, or several Readings with an emoji each.
+ * `synonymOf` names the adverb this one is a synonym of in both uses; only
+ * that direct claim is stored, and the rest is projected (ADR 0012).
  */
 type WhAdverb = {
 	readonly text: string;
 	readonly ipa: string;
 	readonly emoji: string;
 	readonly synonymOf?: string;
-	readonly Int: Meaning;
-	readonly Rel: Meaning;
+	readonly Int: Meaning | readonly EmojiMeaning[];
+	readonly Rel: Meaning | readonly EmojiMeaning[];
 };
 
-// Duden lists each of these as an interrogative and a relative adverb. Their
-// other uses are other Kinds and are not authored here: comparative wie is
-// CCONJ (so groß wie sie) or SCONJ (so leise, wie er versprach), and causal
-// or concessive wo (wo er doch krank ist) is SCONJ.
+// Duden lists each of these as an interrogative and a relative adverb. Uses
+// that name nothing inside their clause are other Kinds and are not authored
+// here: the Rule de/relative-w-adverb-fills-a-slot draws that line, and
+// de/relative-wo-place-or-time picks the Reading of relative wo.
 const adverbs: readonly WhAdverb[] = [
 	{
 		text: "wo",
@@ -39,12 +42,22 @@ const adverbs: readonly WhAdverb[] = [
 			en: ["where"],
 			ru: ["где"],
 		},
-		Rel: {
-			definition:
-				"Leitet einen Relativsatz ein und bezeichnet den Ort, an dem etwas ist oder geschieht: die Stadt, wo sie wohnt.",
-			en: ["where; in which"],
-			ru: ["где; в котором"],
-		},
+		Rel: [
+			{
+				emoji: "📍",
+				definition:
+					"Leitet einen Relativsatz ein und bezeichnet den Ort, auch einen übertragenen, an dem etwas ist oder geschieht: die Stadt, wo sie wohnt; in Fällen, wo das gilt.",
+				en: ["where; in which"],
+				ru: ["где; в котором"],
+			},
+			{
+				emoji: "⏰",
+				definition:
+					"Leitet einen Relativsatz ein und bezeichnet den Zeitpunkt, zu dem etwas geschieht, umgangssprachlich: in dem Moment, wo sie ankam.",
+				en: ["when; in which"],
+				ru: ["когда; в который"],
+			},
+		],
 	},
 	{
 		text: "wohin",
@@ -200,9 +213,19 @@ function lemmaOf(text: string, use: Use): Lemma {
 	};
 }
 
-function whAdverb(adverb: WhAdverb, use: Use): AuthoredMember {
+function whAdverbReadings(adverb: WhAdverb, use: Use): AuthoredMember[] {
+	const meanings = adverb[use];
+	return "definition" in meanings
+		? [whAdverb(adverb, use, { ...meanings, emoji: adverb.emoji })]
+		: meanings.map((meaning) => whAdverb(adverb, use, meaning));
+}
+
+function whAdverb(
+	adverb: WhAdverb,
+	use: Use,
+	meaning: EmojiMeaning,
+): AuthoredMember {
 	const lemma = lemmaOf(adverb.text, use);
-	const meaning = adverb[use];
 	const synonym = adverb.synonymOf
 		? [lemmaOf(adverb.synonymOf, use)]
 		: undefined;
@@ -210,7 +233,7 @@ function whAdverb(adverb: WhAdverb, use: Use): AuthoredMember {
 		lemma,
 		reading: {
 			unitKind: "Reading",
-			emojiDescription: `${marker[use]}${adverb.emoji}`,
+			emojiDescription: `${marker[use]}${meaning.emoji}`,
 			lemma,
 		},
 		knowledge: {
@@ -237,9 +260,10 @@ function whAdverb(adverb: WhAdverb, use: Use): AuthoredMember {
 /**
  * The German interrogative and relative w-adverbs (wo, wohin, woher, wann,
  * wie, warum, wieso, weshalb, weswegen): one Int and one Rel Lemma each,
- * since pronType is Core, with one Reading. The wo(r)- pronominal adverbs are
- * in pronominal-adverbs.ts.
+ * since pronType is Core. Each Lemma has one Reading, except relative wo,
+ * which has a place and a time Reading. The wo(r)- pronominal adverbs are in
+ * pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = (
 	["Int", "Rel"] as const
-).flatMap((use) => adverbs.map((adverb) => whAdverb(adverb, use)));
+).flatMap((use) => adverbs.flatMap((adverb) => whAdverbReadings(adverb, use)));

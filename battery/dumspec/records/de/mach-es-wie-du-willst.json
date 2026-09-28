@@ -1,25 +1,17 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Das ist der Grund, weshalb die Fähre heute ausfällt.",
+	"sentence": "Mach es, wie du willst.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "ResolvableText", "text": "Mach" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Grund" },
+		{ "kind": "ResolvableText", "text": "es" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "weshalb" },
+		{ "kind": "ResolvableText", "text": "wie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "ResolvableText", "text": "du" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fähre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heute" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ausfällt" },
+		{ "kind": "ResolvableText", "text": "willst" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -37,10 +29,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9],
-			"reading": { "emojiDescription": "🧩🤔" },
+			"memberSegmentIndices": [5],
+			"reading": { "emojiDescription": "🧩🔧" },
 			"notes": {
-				"rationale": "The relative clause links weshalb to an antecedent and establishes PronType Rel."
+				"rationale": "wie names the manner inside its own clause, the way du willst it done, with no degree word to compare against, so it is Rel ADV, not comparison SCONJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +44,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "weshalb",
+						"canonicalForm": "wie",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -60,14 +52,12 @@
 							"pronType": "Rel"
 						}
 					},
-					"normalizedSurface": "weshalb",
+					"normalizedSurface": "wie",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [
-					{ "attested": "weshalb", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "wie", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

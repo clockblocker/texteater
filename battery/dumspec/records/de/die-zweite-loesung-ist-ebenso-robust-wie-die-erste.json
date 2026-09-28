@@ -26,7 +26,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "812ce7ad00775fef"
+			}
+		],
 		"references": []
 	},
 	"targets": [

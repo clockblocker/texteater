@@ -1,25 +1,26 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Das ist der Grund, weshalb die Fähre heute ausfällt.",
+	"sentence": "In Fällen, wo das Gesetz schweigt, entscheidet das Gericht.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "ResolvableText", "text": "In" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Grund" },
+		{ "kind": "ResolvableText", "text": "Fällen" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "weshalb" },
+		{ "kind": "ResolvableText", "text": "wo" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "ResolvableText", "text": "das" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Fähre" },
+		{ "kind": "ResolvableText", "text": "Gesetz" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "ResolvableText", "text": "schweigt" },
+		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ausfällt" },
+		{ "kind": "ResolvableText", "text": "entscheidet" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gericht" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -31,16 +32,20 @@
 			{
 				"rule": "de/relative-w-adverb-fills-a-slot",
 				"hash": "812ce7ad00775fef"
+			},
+			{
+				"rule": "de/relative-wo-place-or-time",
+				"hash": "3bfcfd18bb2a7df0"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9],
-			"reading": { "emojiDescription": "🧩🤔" },
+			"memberSegmentIndices": [5],
+			"reading": { "emojiDescription": "🧩📍" },
 			"notes": {
-				"rationale": "The relative clause links weshalb to an antecedent and establishes PronType Rel."
+				"rationale": "wo names the setting in which das Gesetz schweigt. An abstract setting keeps the place Reading, as English keeps where."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +57,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "weshalb",
+						"canonicalForm": "wo",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -60,14 +65,12 @@
 							"pronType": "Rel"
 						}
 					},
-					"normalizedSurface": "weshalb",
+					"normalizedSurface": "wo",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [
-					{ "attested": "weshalb", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "wo", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

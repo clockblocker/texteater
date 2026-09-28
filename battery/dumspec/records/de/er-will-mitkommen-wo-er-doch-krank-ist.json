@@ -1,20 +1,23 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Mira ist genauso groß wie ihre Schwester.",
+	"sentence": "Er will mitkommen, wo er doch krank ist.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mira" },
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "will" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mitkommen" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wo" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "doch" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "krank" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "genauso" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "groß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Schwester" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -32,7 +35,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [7],
+			"notes": {
+				"rationale": "Concessive wo links the clauses and names no place or time inside er doch krank ist, so it is SCONJ, not Rel ADV."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -42,15 +48,15 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "CCONJ",
-						"canonicalForm": "wie",
-						"coreFeatures": { "conjType": "Comp" }
+						"kind": "SCONJ",
+						"canonicalForm": "wo",
+						"coreFeatures": { "conjType": null }
 					},
-					"normalizedSurface": "wie",
+					"normalizedSurface": "wo",
 					"spelling": "Canonical",
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "wie", "orthography": "Standard" }],
+				"members": [{ "attested": "wo", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}
