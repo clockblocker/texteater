@@ -40,7 +40,7 @@ The pinned Block listing where the Subject was met, most recent first.
 The Block showing a Reading's Lemma with its Valency Frame, such as
 `>passen (auf jN/etw) auf<`. It is computed from the frame at render time and
 never stored as text. A Reading without a frame has no Valency Block. A
-German ADP Reading has no frame; its block renders from Dumling's ADP Case
+German ADP Reading has no frame; its block renders from dumspec's ADP Case
 Table (`auf etw · Akk: wohin? · Dat: wo?`), and each of its Source Contexts
 shows the case it realized, marking a non-preferred one
 (`Dat · umgangssprachlich`).
@@ -85,15 +85,14 @@ that holds a whole fused word is broken, and tf-demo refuses it.
 _Avoid_: token, word
 
 **Sentence Analysis**:
-What intake produced for one German Sentence, stored with it and read at
-selection time. It holds two offset-keyed layers: Lexeme Targets, the analysed
-Segments that realize each word, and Phraseme Targets, the words that form an
-expression. Analysed Segments are the Stored Segments, one-to-one. A click
-selects the largest resolved unit at the clicked Segment, and its members are
-the Stored Segments at the unit's offsets. It is a hint for resolution, not
-linguistic identity. A Sentence without one, such as a Definition Text, and a
-Segment whose word has an Unresolved route or a Miss identity are classified
-at click time.
+What the legacy intake (Dumgen ADR 0006) produced for one German Sentence,
+stored with it and read at selection time: Lexeme Targets and Phraseme
+Targets over the Stored Segments. A click selects the largest resolved unit
+at the clicked Segment. It is a hint for resolution, not linguistic identity,
+and a Segment it leaves unresolved is classified at click time. Dumgen ADR
+0007 replaces it with biggest units whose route segmentation chose, so a
+click never classifies; tf-demo keeps the legacy form until it is rebuilt
+after the segmentation rewrite (#701).
 _Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:
@@ -107,12 +106,6 @@ Notes.
 **Catalog Growth Signal**:
 An application-owned aggregate of equivalent Catalog Misses. It is diagnostic
 evidence, not linguistic identity or Visitor history.
-
-**Semantic Relation Edge**:
-A normalized direct Reading-owned claim targeting either a Lemma or exact
-Reading. Only direct claims persist; missing targets remain pending Unit Shadows.
-Inferred edges follow a claim only when it reaches exactly one Reading: an exact
-Reading, or a Lemma with one Reading.
 
 **Reviewed Grammatical Alternative**:
 A reviewed authored Reading selected by varying named Core Features of another

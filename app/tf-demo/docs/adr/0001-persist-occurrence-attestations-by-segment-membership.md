@@ -17,8 +17,15 @@ proposal whose members are all unclaimed may commit; partial overlap is a
 Membership Conflict and commits nothing. Analysis Stripping and full reset are
 the only operations that remove occurrence records.
 
-Feature-derived noun articles and subject expletive es materialize dictionary
-Lemmas, Surfaces and exact reviewed Readings in the parent commit. Components receive no Occurrence Attestation or
-Visitor Encounter. Shared article evidence is persisted separately from
-membership; highlighting continues to mark owned members only. A source click
-on an owned article follows the noun route and contributes no DET Source Context.
+Derived components materialize dictionary Lemmas, Surfaces and exact reviewed
+Readings in the parent commit: an article's DET cell and a subject expletive
+`es`. Components receive no Occurrence Attestation or Visitor Encounter. Shared
+article evidence is persisted separately from membership; highlighting
+continues to mark owned members only. A source click on an owned article
+follows its Head's route and contributes no DET Source Context.
+
+The article's DET cell comes from the article's spelling and its Head's case,
+number and gender, derived in dumspec (system ADRs 0040 and 0041). Until
+ADR 0040 it came from a noun `article` feature, and tf-demo's code still reads
+that until it is rebuilt after the segmentation rewrite
+([#701](https://github.com/clockblocker/texteater/issues/701)).
