@@ -36,7 +36,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 				{ rule: "de/copula-stays-apart", hash: "eddf44f6760331c0" },
 				{
 					rule: "de/pronominal-adverb-stands-alone",
-					hash: "d7414c3685f6f729",
+					hash: "ed9c0c62153c7596",
 				},
 			],
 		},

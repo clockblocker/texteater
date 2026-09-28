@@ -244,6 +244,22 @@
 		"de/den-kenn-ich-woher#0": {
 			"id": "grammar-de-adv-dev-shorthand-woher",
 			"evaluation": true
+		},
+		"de/da-weiss-ich-nichts-von#0": {
+			"id": "grammar-de-adv-demo-split-davon",
+			"demonstration": true
+		},
+		"de/da-gehe-ich-morgen-hin#0": {
+			"id": "grammar-de-adv-dev-split-dahin",
+			"evaluation": true
+		},
+		"de/da-kann-ich-nichts-fuer#0": {
+			"id": "grammar-de-adv-dev-split-dafuer",
+			"evaluation": true
+		},
+		"de/wo-hast-du-das-mit-gemacht#0": {
+			"id": "grammar-de-adv-dev-split-womit",
+			"evaluation": true
 		}
 	}
 }

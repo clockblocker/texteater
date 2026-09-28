@@ -48,7 +48,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 		{
 			opens: "Standard orthography includes",
 			implements: [
-				{ rule: "de/member-orthography", hash: "aec53224e9d5497a" },
+				{ rule: "de/member-orthography", hash: "678811fa8882f8fd" },
 				{
 					rule: "de/abbreviation-is-one-segment",
 					hash: "83496aec178971f1",
