@@ -36,19 +36,13 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": [
-			{
-				"title": "clockblocker/texteater#451",
-				"url": "https://github.com/clockblocker/texteater/issues/451",
-				"supports": "Target 0, hütete das Bett"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 23, 25],
 			"notes": {
-				"rationale": "First phrase literal. Marked second phrase means staying in bed ill. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+				"rationale": "First phrase literal. Marked second phrase means staying in bed ill."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

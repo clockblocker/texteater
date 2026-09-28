@@ -40,20 +40,11 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": [
-			{
-				"title": "clockblocker/texteater#451",
-				"url": "https://github.com/clockblocker/texteater/issues/451",
-				"supports": "Target 0, wird sich an beteiligen"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5, 7, 13],
-			"notes": {
-				"rationale": "Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
-			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -51,19 +51,13 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": [
-			{
-				"title": "clockblocker/texteater#451",
-				"url": "https://github.com/clockblocker/texteater/issues/451",
-				"supports": "Target 0, hergestellt werden"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [38, 40],
 			"notes": {
-				"rationale": "soll modal. Not member. werden passive member. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+				"rationale": "soll modal. Not member. werden passive member."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

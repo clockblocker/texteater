@@ -27,19 +27,13 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": [
-			{
-				"title": "clockblocker/texteater#451",
-				"url": "https://github.com/clockblocker/texteater/issues/451",
-				"supports": "Target 0, tanzte auf der Nahse herum"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10, 12, 14, 16],
 			"notes": {
-				"rationale": "dem Chef is free argument. Do not add jemandem to canonicalForm. Whole-Surface expectation reviewed for #451; composition replaces the former head-only shape."
+				"rationale": "dem Chef is free argument. Do not add jemandem to canonicalForm."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
