@@ -115,17 +115,17 @@ const verbs: Rule[] = [
 	{
 		id: "de/raus-is-heraus-or-hinaus",
 		statement:
-			"Colloquial raus is the Shorthand of heraus or hinaus, never a Lemma or a Variant spelling of its own: the target is the full word, and raus is its member in Shorthand orthography. The direction relative to the speaker or the scene's viewpoint picks the word. Out towards it is heraus: Der Zahn muss raus gives [raus] ADV heraus, since the tooth comes out of the mouth to where the dentist is. Out away from it is hinaus: Das muss heute noch raus gives [raus] ADV hinaus, since the post leaves the office. In the verbal bracket raus is the particle of the her- or hin- particle verb, picked the same way (de/bracket-particle-or-circumposition), and the Surface spells the full particle: Komm raus! gives [Komm, raus] VERB herauskommen, and Sie warf ihn raus gives [warf, raus] VERB hinauswerfen. A modal with raus and no infinitive forms no particle verb, though dictionaries list herausmüssen and hinauswollen: the modal is a VERB of its own (de/modal-is-a-verb), and raus is an ADV target.",
+			"Colloquial raus is the Shorthand of heraus or hinaus, never a Lemma or a Variant spelling of its own: the target is the full word, and raus is its member in Shorthand orthography. The direction relative to the speaker or the scene's viewpoint picks the word, and the context shows it. Out towards it is heraus: Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“ gives [raus] ADV heraus. Out away from it is hinaus: Der Brief liegt hier auf meinem Schreibtisch. Das muss heute noch raus. gives [raus] ADV hinaus. In the verbal bracket raus is the particle of the her- or hin- particle verb, picked the same way (de/bracket-particle-or-circumposition), and the Surface spells the full particle: Ich warte draußen vor der Tür. Komm sofort raus! gives [Komm, raus] VERB herauskommen, and Sie blieb in ihrer Wohnung und warf ihn raus gives [warf, raus] VERB hinauswerfen. A modal with raus and no infinitive forms no particle verb, though dictionaries list herausmüssen and hinauswollen: the modal is a VERB of its own (de/modal-is-a-verb), and raus is an ADV target.",
 		adrs: ["ADR-0022", "ADR-0026", "ADR-0035"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
-			"de/der-zahn-muss-raus",
-			"de/das-muss-heute-noch-raus",
-			"de/der-splitter-muss-heraus",
-			"de/die-kinder-wollen-hinaus",
-			"de/komm-sofort-raus",
-			"de/sie-warf-ihn-raus",
-			"de/geh-bitte-nicht-ohne-jacke-raus",
+			"de/die-zahnaerztin-sieht-sich-das-roentgenbild-an-der-zahn-muss",
+			"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute",
+			"de/der-vater-holt-die-pinzette-der-splitter-muss-heraus",
+			"de/die-kinder-sitzen-seit-stunden-drinnen-jetzt-wollen-sie",
+			"de/ich-warte-draussen-vor-der-tuer-komm-sofort-raus",
+			"de/sie-blieb-in-ihrer-wohnung-und-warf-ihn-raus",
+			"de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke",
 		],
 	},
 	{
@@ -162,7 +162,10 @@ const verbs: Rule[] = [
 			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (sich lassen, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB"),
-		records: ["de/er-muss-heute-arbeiten", "de/das-muss-heute-noch-raus"],
+		records: [
+			"de/er-muss-heute-arbeiten",
+			"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute",
+		],
 	},
 	{
 		id: "de/auxiliary-joins-the-verb-it-serves",

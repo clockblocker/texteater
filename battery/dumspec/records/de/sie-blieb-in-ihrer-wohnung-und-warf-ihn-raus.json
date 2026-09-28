@@ -1,13 +1,25 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Komm sofort raus!",
+	"sentence": "Sie blieb in ihrer Wohnung und warf ihn raus.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Komm" },
+		{ "kind": "ResolvableText", "text": "Sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sofort" },
+		{ "kind": "ResolvableText", "text": "blieb" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihrer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Wohnung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "warf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ihn" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "raus" },
-		{ "kind": "Punctuation", "text": "!" }
+		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -17,7 +29,7 @@
 		"rules": [
 			{
 				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "a6b8cbc237ff43c7"
+				"hash": "cecf8de050fb11c7"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
@@ -28,9 +40,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 4],
+			"memberSegmentIndices": [12, 16],
 			"notes": {
-				"rationale": "raus in the right bracket is the particle of herauskommen: the addressee comes out towards the speaker, who waits outside. raus is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "She stays in her flat and throws him out, away from herself: raus in the right bracket is the particle of hinauswerfen. raus is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,21 +54,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "herauskommen",
+						"canonicalForm": "hinauswerfen",
 						"coreFeatures": {
-							"hasSepPrefix": "heraus",
+							"hasSepPrefix": "hinaus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "komm heraus",
+					"normalizedSurface": "warf hinaus",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"mood": "Imp",
+						"mood": "Ind",
 						"number": "Sing",
-						"person": "2",
-						"tense": null,
+						"person": "3",
+						"tense": "Past",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -66,7 +78,7 @@
 					}
 				},
 				"members": [
-					{ "attested": "Komm", "orthography": "Standard" },
+					{ "attested": "warf", "orthography": "Standard" },
 					{ "attested": "raus", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",

@@ -1,25 +1,42 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Der Splitter muss heraus.",
+	"sentence": "Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“",
 	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zahnärztin" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sieht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Röntgenbild" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "an" },
+		{ "kind": "Punctuation", "text": ":" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "„" },
 		{ "kind": "ResolvableText", "text": "Der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Splitter" },
+		{ "kind": "ResolvableText", "text": "Zahn" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "muss" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heraus" },
-		{ "kind": "Punctuation", "text": "." }
+		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0035"],
 		"rules": [
 			{
 				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "a6b8cbc237ff43c7"
+				"hash": "cecf8de050fb11c7"
 			},
 			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
 		],
@@ -27,9 +44,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
+			"memberSegmentIndices": [20],
 			"notes": {
-				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb, de/raus-is-heraus-or-hinaus)."
+				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -71,10 +88,10 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [22],
 			"reading": { "emojiDescription": "🐣" },
 			"notes": {
-				"rationale": "The full word that raus shortens in Der Zahn muss raus: the splinter comes out of the skin towards the one removing it."
+				"rationale": "The dentist will pull the tooth out of the mouth towards herself, so raus is the Shorthand of heraus."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -99,9 +116,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [
-					{ "attested": "heraus", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "raus", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"
 			}
 		}

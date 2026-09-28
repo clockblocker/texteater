@@ -1,0 +1,99 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Es schneit, und ich bleibe drinnen. Geh bitte nicht ohne Jacke raus.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schneit" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "und" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bleibe" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "drinnen" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geh" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bitte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ohne" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Jacke" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0022", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/raus-is-heraus-or-hinaus",
+				"hash": "cecf8de050fb11c7"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "2b990e341761c27b"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [14, 24],
+			"notes": {
+				"rationale": "The speaker stays inside, so the addressee goes out, away from the speaker: raus in the right bracket is the particle of hinausgehen, not bare gehen. raus is its Shorthand member, and the Surface spells the full particle. The imperative is mood Imp with a finite verbForm."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "hinausgehen",
+						"coreFeatures": {
+							"hasSepPrefix": "hinaus",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "geh hinaus",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "Geh", "orthography": "Standard" },
+					{ "attested": "raus", "orthography": "Shorthand" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

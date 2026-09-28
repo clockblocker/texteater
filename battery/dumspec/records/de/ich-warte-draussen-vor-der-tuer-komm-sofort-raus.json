@@ -1,15 +1,26 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Sie warf ihn raus.",
+	"sentence": "Ich warte draußen vor der Tür. Komm sofort raus!",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "ResolvableText", "text": "Ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "warf" },
+		{ "kind": "ResolvableText", "text": "warte" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihn" },
+		{ "kind": "ResolvableText", "text": "draußen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vor" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Tür" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Komm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sofort" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "raus" },
-		{ "kind": "Punctuation", "text": "." }
+		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -19,7 +30,7 @@
 		"rules": [
 			{
 				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "a6b8cbc237ff43c7"
+				"hash": "cecf8de050fb11c7"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
@@ -30,9 +41,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 6],
+			"memberSegmentIndices": [13, 17],
 			"notes": {
-				"rationale": "raus in the right bracket is the particle of hinauswerfen: she throws him out, away from where she stays. raus is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "The speaker waits outside, so the addressee comes out towards the speaker: raus in the right bracket is the particle of herauskommen. raus is its Shorthand member, and the Surface spells the full particle."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,21 +55,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hinauswerfen",
+						"canonicalForm": "herauskommen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinaus",
+							"hasSepPrefix": "heraus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "warf hinaus",
+					"normalizedSurface": "komm heraus",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"mood": "Ind",
+						"mood": "Imp",
 						"number": "Sing",
-						"person": "3",
-						"tense": "Past",
+						"person": "2",
+						"tense": null,
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -68,7 +79,7 @@
 					}
 				},
 				"members": [
-					{ "attested": "warf", "orthography": "Standard" },
+					{ "attested": "Komm", "orthography": "Standard" },
 					{ "attested": "raus", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full",

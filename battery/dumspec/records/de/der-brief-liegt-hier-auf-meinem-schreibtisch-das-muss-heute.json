@@ -1,7 +1,22 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Das muss heute noch raus.",
+	"sentence": "Der Brief liegt hier auf meinem Schreibtisch. Das muss heute noch raus.",
 	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Brief" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "liegt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hier" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "auf" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "meinem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Schreibtisch" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Das" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "muss" },
@@ -21,7 +36,7 @@
 		"rules": [
 			{
 				"rule": "de/raus-is-heraus-or-hinaus",
-				"hash": "a6b8cbc237ff43c7"
+				"hash": "cecf8de050fb11c7"
 			},
 			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
 		],
@@ -29,7 +44,7 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [17],
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, whether or not an infinitive follows (de/modal-is-a-verb). With raus and no infinitive it forms no particle verb such as hinausmüssen, so muss is a single-member VERB müssen.",
 				"knownMistakes": [
@@ -38,15 +53,24 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "muss", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "müssen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": "Mod"
+						}
+					},
 					"normalizedSurface": "muss",
 					"spelling": "Canonical",
+					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -58,44 +82,31 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "müssen",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"coreFeatures": {
-							"verbType": "Mod",
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
-						}
-					},
-					"surfaceFeatures": null
-				}
+					}
+				},
+				"members": [{ "attested": "muss", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [23],
+			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
-				"rationale": "Whatever has to go out today leaves the office, away from the speaker, so raus is the Shorthand of hinaus, not a Variant spelling of heraus (de/raus-is-heraus-or-hinaus). Der Zahn muss raus is the minimal pair, with heraus. No motion verb stands in the bracket, and the modal takes no particle, so raus is an ADV target of its own."
+				"rationale": "The letter on the speaker's desk has to go out, away from the speaker, so raus is the Shorthand of hinaus, not a Variant spelling of heraus. No motion verb stands in the bracket, and the modal takes no particle, so raus is an ADV target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "raus", "orthography": "Shorthand" }],
-				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "hinaus",
-					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "hinaus",
 						"family": "Lexeme",
 						"kind": "ADV",
+						"canonicalForm": "hinaus",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -103,8 +114,13 @@
 							"pronType": null
 						}
 					},
-					"surfaceFeatures": null
-				}
+					"normalizedSurface": "hinaus",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "raus", "orthography": "Shorthand" }],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

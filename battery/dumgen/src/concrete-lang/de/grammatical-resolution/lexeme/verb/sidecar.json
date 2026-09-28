@@ -405,19 +405,19 @@
 			"id": "grammar-de-verb-resultative-bekommt-geoeffnet",
 			"evaluation": true
 		},
-		"de/komm-sofort-raus#0": {
+		"de/ich-warte-draussen-vor-der-tuer-komm-sofort-raus#0": {
 			"id": "grammar-de-verb-demo-shorthand-raus-herauskommen",
 			"demonstration": true
 		},
-		"de/sie-warf-ihn-raus#0": {
+		"de/sie-blieb-in-ihrer-wohnung-und-warf-ihn-raus#0": {
 			"id": "grammar-de-verb-shorthand-raus-hinauswerfen",
 			"evaluation": true
 		},
-		"de/geh-bitte-nicht-ohne-jacke-raus#0": {
+		"de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke#0": {
 			"id": "grammar-de-verb-shorthand-raus-hinausgehen",
 			"evaluation": true
 		},
-		"de/das-muss-heute-noch-raus#0": {
+		"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute#0": {
 			"id": "grammar-de-verb-modal-muss-directional",
 			"evaluation": true
 		}
