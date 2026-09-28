@@ -97,7 +97,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen).",
+			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split wohin or woher (Wo gehst du hin?) belongs to the adverb instead (de/split-wohin-and-woher).",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
@@ -107,6 +107,18 @@ const verbs: Rule[] = [
 			"de/von-der-terrasse-aus-sieht-man-den-see",
 			"de/um-des-friedens-willen-schwiegen-beide-seiten",
 			"de/von-diesem-tag-an-fuehrte-sie-das-protokoll",
+		],
+	},
+	{
+		id: "de/split-wohin-and-woher",
+		statement:
+			"A split wo … hin or wo … her is one target of the ADV Lexeme wohin or woher, and the verb stays bare: Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen, and Wo kommst du her? gives [Wo, her] ADV woher and [kommst] VERB kommen. When hin or her is written as part of the verb (Wo willst du hinfahren?), it stays with the verb, and wo is interrogative wo on its own.",
+		adrs: [],
+		routes: lexeme("ADV", "VERB"),
+		records: [
+			"de/wo-gehst-du-hin",
+			"de/wo-kommst-du-her",
+			"de/wo-willst-du-hinfahren",
 		],
 	},
 	{

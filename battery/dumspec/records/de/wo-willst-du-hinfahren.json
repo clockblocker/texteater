@@ -1,0 +1,149 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wo willst du hinfahren?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wo" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "willst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hinfahren" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{ "rule": "de/split-wohin-and-woher", "hash": "6d697eb945cb1a9d" }
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓📍" },
+			"notes": {
+				"rationale": "hin is written as part of the verb, so it stays with hinfahren and wo is interrogative wo on its own."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "wo",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Int"
+						}
+					},
+					"normalizedSurface": "wo",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "Wo", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "wollen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": "Mod"
+						}
+					},
+					"normalizedSurface": "willst",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "willst", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "hin written inside the verb stays with the verb."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "hinfahren",
+						"coreFeatures": {
+							"hasSepPrefix": "hin",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "hinfahren",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "hinfahren", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

@@ -1,0 +1,109 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wo kommst du her?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wo" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kommst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "her" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{ "rule": "de/split-wohin-and-woher", "hash": "6d697eb945cb1a9d" }
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 6],
+			"reading": { "emojiDescription": "❓🛫" },
+			"notes": {
+				"rationale": "Split wo … her is one target of interrogative woher; her is not the particle of herkommen."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "woher",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Int"
+						}
+					},
+					"normalizedSurface": "wo her",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{ "attested": "Wo", "orthography": "Standard" },
+					{ "attested": "her", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "The verb stays bare kommen, since her belongs to woher."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "kommen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "kommst",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "kommst", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}
