@@ -1,40 +1,44 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Der Radweg führt an der Schule vorbei.",
+	"sentence": "Das geht weit über meine Kräfte hinaus.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "ResolvableText", "text": "Das" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Radweg" },
+		{ "kind": "ResolvableText", "text": "geht" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "führt" },
+		{ "kind": "ResolvableText", "text": "weit" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
+		{ "kind": "ResolvableText", "text": "über" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
+		{ "kind": "ResolvableText", "text": "meine" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Schule" },
+		{ "kind": "ResolvableText", "text": "Kräfte" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vorbei" },
+		{ "kind": "ResolvableText", "text": "hinaus" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0022", "ADR-0029", "ADR-0034"],
 		"rules": [
 			{
 				"rule": "de/bracket-particle-or-circumposition",
 				"hash": "01c41fadbcfbdc56"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6, 12],
+			"memberSegmentIndices": [2, 6, 12],
 			"notes": {
-				"rationale": "vorbei stands in the right bracket and vorbeiführen an + Dat is a dictionary particle verb in this sense, so vorbei is the separable particle and an the governed preposition, though a prepositional phrase precedes it. Out of the bracket, as in der Weg an der Kirche vorbei, an … vorbei is a circumposition."
+				"rationale": "hinausgehen über + Acc, to exceed, is the same Lemma as go outside with a second Reading. hinaus is its particle and über its governed preposition, though a prepositional phrase precedes hinaus. Foil to Sie ging erst in die Küche und dann hinaus."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,14 +50,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "vorbeiführen",
+						"canonicalForm": "hinausgehen",
 						"coreFeatures": {
-							"hasSepPrefix": "vorbei",
+							"hasSepPrefix": "hinaus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "führt vorbei",
+					"normalizedSurface": "geht hinaus",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -70,9 +74,9 @@
 					}
 				},
 				"members": [
-					{ "attested": "führt", "orthography": "Standard" },
-					{ "attested": "an", "orthography": "Standard" },
-					{ "attested": "vorbei", "orthography": "Standard" }
+					{ "attested": "geht", "orthography": "Standard" },
+					{ "attested": "über", "orthography": "Standard" },
+					{ "attested": "hinaus", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -86,7 +90,7 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"canonicalForm": "an",
+								"canonicalForm": "über",
 								"coreFeatures": {
 									"abbr": null,
 									"adpType": "Prep",
@@ -95,10 +99,10 @@
 									"partType": null
 								}
 							},
-							"case": "Dat",
-							"referent": "Either"
+							"case": "Acc",
+							"referent": "Something"
 						},
-						"realizedCase": "Dat"
+						"realizedCase": "Acc"
 					}
 				]
 			}

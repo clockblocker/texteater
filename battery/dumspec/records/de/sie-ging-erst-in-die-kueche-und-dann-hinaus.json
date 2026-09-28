@@ -1,16 +1,18 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Er lief erst nach links und dann hinaus.",
+	"sentence": "Sie ging erst in die Küche und dann hinaus.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "ResolvableText", "text": "Sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "lief" },
+		{ "kind": "ResolvableText", "text": "ging" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "erst" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nach" },
+		{ "kind": "ResolvableText", "text": "in" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "links" },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Küche" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
@@ -36,7 +38,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "One lief serves both conjuncts: the first is plain laufen with the free directional phrase nach links, and hinaus is coordinated with that phrase, so it is a free directional ADV, not the particle of hinauslaufen. One Segment belongs to one target, so lief cannot be both laufen and hinauslaufen."
+				"rationale": "One ging serves both conjuncts: the first is plain gehen with the free directional phrase in die Küche, and hinaus is coordinated with that phrase, so it is a free directional ADV, not the particle of hinausgehen. One Segment belongs to one target, so ging cannot be both gehen and hinausgehen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -48,14 +50,14 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "laufen",
+						"canonicalForm": "gehen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "lief",
+					"normalizedSurface": "ging",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -71,14 +73,14 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "lief", "orthography": "Standard" }],
+				"members": [{ "attested": "ging", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [14],
+			"memberSegmentIndices": [16],
 			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
 				"rationale": "hinaus is coordinated with a free directional phrase under the shared verb, so it is an ADV of its own, the authored hinaus, and not a particle."

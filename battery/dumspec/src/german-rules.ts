@@ -100,7 +100,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split dahin, wohin or woher (Wo gehst du hin?) and the preposition of a split pronominal adverb (Da weiß ich nichts von) belong to the adverb instead (de/split-adverb-is-one-target).",
+			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). A directional word coordinated with a free directional phrase under one shared verb is an ADV, and the shared verb is its base verb: lief erst nach links und dann hinaus gives [lief] VERB laufen and [hinaus] ADV hinaus. Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split dahin, wohin or woher (Wo gehst du hin?) and the preposition of a split pronominal adverb (Da weiß ich nichts von) belong to the adverb instead (de/split-adverb-is-one-target).",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
@@ -110,6 +110,12 @@ const verbs: Rule[] = [
 			"de/von-der-terrasse-aus-sieht-man-den-see",
 			"de/um-des-friedens-willen-schwiegen-beide-seiten",
 			"de/von-diesem-tag-an-fuehrte-sie-das-protokoll",
+			"de/er-lief-erst-nach-links-und-dann-hinaus",
+			"de/als-der-feueralarm-losging-lief-sie-sofort-hinaus",
+			"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss",
+			"de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
+			"de/nach-dem-essen-ging-er-kurz-hinaus",
+			"de/das-geht-weit-ueber-meine-kraefte-hinaus",
 		],
 	},
 	{

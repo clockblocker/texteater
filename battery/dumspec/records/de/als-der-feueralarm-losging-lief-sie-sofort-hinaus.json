@@ -1,37 +1,31 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Ihr Freund wartet draußen, aber sie geht schon rein.",
+	"sentence": "Als der Feueralarm losging, lief sie sofort hinaus.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ihr" },
+		{ "kind": "ResolvableText", "text": "Als" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Freund" },
+		{ "kind": "ResolvableText", "text": "der" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wartet" },
+		{ "kind": "ResolvableText", "text": "Feueralarm" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "draußen" },
+		{ "kind": "ResolvableText", "text": "losging" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aber" },
+		{ "kind": "ResolvableText", "text": "lief" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geht" },
+		{ "kind": "ResolvableText", "text": "sofort" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schon" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "rein" },
+		{ "kind": "ResolvableText", "text": "hinaus" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0035"],
+		"adrs": ["ADR-0022"],
 		"rules": [
-			{
-				"rule": "de/r-adverb-is-her-or-hin-shorthand",
-				"hash": "0873ba0d0894f388"
-			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
 				"hash": "01c41fadbcfbdc56"
@@ -41,9 +35,9 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [13, 17],
+			"memberSegmentIndices": [9, 15],
 			"notes": {
-				"rationale": "The scene stays outside with her friend, so she goes in, away from that viewpoint: rein in the right bracket is the particle of hineingehen. rein is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "Nothing is coordinated with hinaus: it closes the bracket of lief as the particle of hinauslaufen, run outside. Foil to Er lief erst nach links und dann hinaus."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -55,21 +49,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "hineingehen",
+						"canonicalForm": "hinauslaufen",
 						"coreFeatures": {
-							"hasSepPrefix": "hinein",
+							"hasSepPrefix": "hinaus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geht hinein",
+					"normalizedSurface": "lief hinaus",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
 						"person": "3",
-						"tense": "Pres",
+						"tense": "Past",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -79,8 +73,8 @@
 					}
 				},
 				"members": [
-					{ "attested": "geht", "orthography": "Standard" },
-					{ "attested": "rein", "orthography": "Shorthand" }
+					{ "attested": "lief", "orthography": "Standard" },
+					{ "attested": "hinaus", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
