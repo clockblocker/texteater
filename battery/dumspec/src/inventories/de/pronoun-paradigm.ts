@@ -4,6 +4,7 @@ import {
 	type AuthoredSpelling,
 	citationForm,
 	type ReviewedMember,
+	type StemDescription,
 	stemMember,
 	tableSpellings,
 } from "./stem-lemma.js";
@@ -15,13 +16,7 @@ export type PronounForm = {
 	readonly ipa: string;
 	readonly variants?: readonly string[];
 };
-export type PronounDescription = {
-	readonly core: Partial<Core>;
-	readonly emoji: string;
-	readonly definition: string;
-	readonly en: readonly string[];
-	readonly ru: readonly string[];
-};
+export type PronounDescription = StemDescription<Core>;
 export type ReviewedPronoun = ReviewedMember;
 export type AgreementColumn = "Masc" | "Neut" | "Fem" | "Plur";
 export type PronounTable = Readonly<

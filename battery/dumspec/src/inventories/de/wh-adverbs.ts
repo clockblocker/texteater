@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
-type Use = "Int" | "Rel";
+type Use = "Int" | "Rel" | "Ind";
 
 /** One Reading of a w-adverb's use: its definition and glosses. */
 type Meaning = {
@@ -194,7 +194,78 @@ const adverbs: readonly WhAdverb[] = [
 	},
 ];
 
-const marker: Readonly<Record<Use, string>> = { Int: "❓", Rel: "🧩" };
+// The irgend- adverbs are indefinite w-adverbs with one Reading each. Duden
+// defines irgendeinmal as irgendwann einmal, so it stores that one synonym.
+// https://www.duden.de/rechtschreibung/irgendwo
+type IndefiniteAdverb = Meaning & {
+	readonly text: string;
+	readonly ipa: string;
+	readonly emoji: string;
+	readonly synonymOf?: string;
+};
+const indefiniteAdverbs: readonly IndefiniteAdverb[] = [
+	{
+		text: "irgendwo",
+		ipa: "ˈɪʁɡəntˌvoː",
+		emoji: "📍",
+		definition:
+			"Bezeichnet einen beliebigen, nicht näher bestimmten Ort: Der Schlüssel liegt irgendwo im Keller.",
+		en: ["somewhere; anywhere"],
+		ru: ["где-нибудь; где-то"],
+	},
+	{
+		text: "irgendwohin",
+		ipa: "ˈɪʁɡəntvoˌhɪn",
+		emoji: "🛬",
+		definition:
+			"Bezeichnet ein beliebiges, nicht näher bestimmtes Ziel einer Bewegung: Sie wollen irgendwohin ans Meer.",
+		en: ["somewhere; anywhere (direction)"],
+		ru: ["куда-нибудь; куда-то"],
+	},
+	{
+		text: "irgendwoher",
+		ipa: "ˈɪʁɡəntvoˌheːɐ̯",
+		emoji: "🛫",
+		definition:
+			"Bezeichnet eine beliebige, nicht näher bestimmte Herkunft: Irgendwoher kenne ich ihn.",
+		en: ["from somewhere; from anywhere"],
+		ru: ["откуда-нибудь; откуда-то"],
+	},
+	{
+		text: "irgendwann",
+		ipa: "ˈɪʁɡəntˌvan",
+		emoji: "⏰",
+		definition:
+			"Bezeichnet einen beliebigen, nicht näher bestimmten Zeitpunkt: Irgendwann kommt er zurück.",
+		en: ["sometime; at some point"],
+		ru: ["когда-нибудь; когда-то"],
+	},
+	{
+		text: "irgendeinmal",
+		ipa: "ˈɪʁɡəntˌaɪ̯nmaːl",
+		emoji: "⏰",
+		synonymOf: "irgendwann",
+		definition:
+			"Bezeichnet einen beliebigen, nicht näher bestimmten Zeitpunkt, selten gebraucht: Besuchen Sie mich irgendeinmal.",
+		en: ["sometime; at some point"],
+		ru: ["когда-нибудь"],
+	},
+	{
+		text: "irgendwie",
+		ipa: "ˈɪʁɡəntˌviː",
+		emoji: "🔧",
+		definition:
+			"Bezeichnet eine beliebige, nicht näher bestimmte Art und Weise, umgangssprachlich auch „in gewisser Weise“: Irgendwie schaffen wir das. Das ist irgendwie seltsam.",
+		en: ["somehow; in some way"],
+		ru: ["как-нибудь; как-то"],
+	},
+];
+
+const marker: Readonly<Record<Use, string>> = {
+	Int: "❓",
+	Rel: "🧩",
+	Ind: "❔",
+};
 
 /** A w-adverb has no comparison forms (ADR 0042); pronType is Core. */
 function lemmaOf(text: string, use: Use): Lemma {
@@ -213,7 +284,10 @@ function lemmaOf(text: string, use: Use): Lemma {
 	};
 }
 
-function whAdverbReadings(adverb: WhAdverb, use: Use): AuthoredMember[] {
+function whAdverbReadings(
+	adverb: WhAdverb,
+	use: "Int" | "Rel",
+): AuthoredMember[] {
 	const meanings = adverb[use];
 	return "definition" in meanings
 		? [whAdverb(adverb, use, { ...meanings, emoji: adverb.emoji })]
@@ -221,7 +295,7 @@ function whAdverbReadings(adverb: WhAdverb, use: Use): AuthoredMember[] {
 }
 
 function whAdverb(
-	adverb: WhAdverb,
+	adverb: Pick<WhAdverb, "text" | "ipa" | "synonymOf">,
 	use: Use,
 	meaning: EmojiMeaning,
 ): AuthoredMember {
@@ -261,9 +335,13 @@ function whAdverb(
  * The German interrogative and relative w-adverbs (wo, wohin, woher, wann,
  * wie, warum, wieso, weshalb, weswegen): one Int and one Rel Lemma each,
  * since pronType is Core. Each Lemma has one Reading, except relative wo,
- * which has a place and a time Reading. The wo(r)- pronominal adverbs are in
+ * which has a place and a time Reading. Then the indefinite irgend- adverbs,
+ * one Ind Lemma each. The wo(r)- pronominal adverbs are in
  * pronominal-adverbs.ts.
  */
-export const whAdverbs: readonly AuthoredMember[] = (
-	["Int", "Rel"] as const
-).flatMap((use) => adverbs.flatMap((adverb) => whAdverbReadings(adverb, use)));
+export const whAdverbs: readonly AuthoredMember[] = [
+	...(["Int", "Rel"] as const).flatMap((use) =>
+		adverbs.flatMap((adverb) => whAdverbReadings(adverb, use)),
+	),
+	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
+];

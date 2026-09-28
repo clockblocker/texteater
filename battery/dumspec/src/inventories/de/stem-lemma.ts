@@ -28,6 +28,8 @@ export type StemDescription<Core> = {
 	readonly definition: string;
 	readonly en: readonly string[];
 	readonly ru: readonly string[];
+	/** Direct synonym claims only; the rest is projected (ADR 0012). */
+	readonly synonyms?: readonly Dumling.Lemma<"de">[];
 };
 
 const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
@@ -79,6 +81,9 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 		coreFeatures: input.coreFeatures,
 	} as Dumling.Lemma<"de">;
 	const seen = new Set<string>();
+	const synonym = input.description.synonyms?.length
+		? [...input.description.synonyms]
+		: undefined;
 	return {
 		member: defineAuthoredMember({
 			lemma,
@@ -94,6 +99,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 					en: [...input.description.en],
 					ru: [...input.description.ru],
 				},
+				...(synonym ? { semanticRelations: { synonym } } : {}),
 			},
 			coverage: {
 				definition: "Authored",
@@ -101,7 +107,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				translations: { en: "Authored", ru: "Authored" },
 				semanticRelationTargetKind: "lemma",
 				semanticRelations: {
-					synonym: "ReviewedEmpty",
+					synonym: synonym ? "Authored" : "ReviewedEmpty",
 					nearSynonym: "ReviewedEmpty",
 					antonym: "ReviewedEmpty",
 					nearAntonym: "ReviewedEmpty",

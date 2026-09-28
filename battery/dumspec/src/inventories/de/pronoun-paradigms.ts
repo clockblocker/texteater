@@ -665,6 +665,40 @@ for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 		),
 	);
 }
+// irgendwer puts the wer endings on irgend- and, like wer, is a stem with
+// inherent Masc gender whose Surfaces mark case. Duden marks it colloquial and
+// gives no genitive; irgendwas is its neuter counterpart, authored below.
+// https://www.duden.de/rechtschreibung/irgendwer
+{
+	const cell = (grammaticalCase: SurfaceCell["case"]): SurfaceCell => ({
+		case: grammaticalCase,
+		number: null,
+		gender: null,
+	});
+	const irgendjemand = reviewed.find(
+		({ member }) => member.lemma.canonicalForm === "irgendjemand",
+	)?.member.lemma;
+	if (!irgendjemand) throw Error("irgendwer needs irgendjemand first");
+	reviewed.push(
+		pronounStemOf(
+			form("irgendwer", "ˈɪʁɡəntˌveːɐ̯"),
+			{
+				core: { pronType: "Ind", gender: "Masc" },
+				emoji: "👤",
+				definition:
+					"Bezeichnet eine beliebige, nicht näher bestimmte Person, umgangssprachlich: Irgendwer hat angerufen.",
+				en: ["someone; anyone"],
+				ru: ["кто-нибудь; кто-то"],
+				synonyms: [irgendjemand],
+			},
+			[
+				{ spelled: "irgendwer", cell: cell("Nom") },
+				{ spelled: "irgendwen", cell: cell("Acc") },
+				{ spelled: "irgendwem", cell: cell("Dat") },
+			],
+		),
+	);
+}
 // man has one form of its own; its oblique cases are borrowed from einer
 // (einen, einem), so it is an invariant Lemma with case unmarked (ADR 0018).
 // It always takes singular agreement.

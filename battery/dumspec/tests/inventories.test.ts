@@ -270,6 +270,24 @@ describe("the German authored inventory", () => {
 				.filter(({ pronType }) => pronType === "Int")
 				.map(({ canonicalForm }) => canonicalForm),
 		).toEqual(["wer", "was"]);
+		// irgendwer is built like wer: Masc in Core, case on the Surface, and
+		// it claims irgendjemand as a synonym.
+		expect(lemmasSpelled("irgendwem")).toEqual([
+			{
+				canonicalForm: "irgendwer",
+				pronType: "Ind",
+				inflection: { case: "Dat", number: null, gender: null },
+			},
+		]);
+		const irgendwer = authoredMembers.find(
+			({ lemma }) => lemma.canonicalForm === "irgendwer",
+		);
+		expect(field(irgendwer?.lemma.coreFeatures, "gender")).toBe("Masc");
+		expect(irgendwer?.knowledge.semanticRelations).toEqual({
+			synonym: [
+				expect.objectContaining({ canonicalForm: "irgendjemand" }),
+			],
+		});
 		for (const [spelled, cited] of [
 			["was", "was"],
 			["jemandem", "jemand"],
@@ -330,6 +348,26 @@ describe("the German authored inventory", () => {
 				}),
 			],
 		});
+	});
+
+	test("authors each irgend- adverb as one Ind ADV with one Reading", () => {
+		for (const text of [
+			"irgendwo",
+			"irgendwohin",
+			"irgendwoher",
+			"irgendwann",
+			"irgendeinmal",
+			"irgendwie",
+		])
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "pronType"),
+					]),
+				text,
+			).toEqual([["ADV", "Ind"]]);
 	});
 
 	test("reaches the units a Note drills down to without generation", () => {
