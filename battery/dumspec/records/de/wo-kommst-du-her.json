@@ -17,7 +17,10 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/split-wohin-and-woher", "hash": "6d697eb945cb1a9d" }
+			{
+				"rule": "de/split-adverb-is-one-target",
+				"hash": "35c65b1f523c2b4f"
+			}
 		],
 		"references": []
 	},

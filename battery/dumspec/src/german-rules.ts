@@ -97,7 +97,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split wohin or woher (Wo gehst du hin?) belongs to the adverb instead (de/split-wohin-and-woher).",
+			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split dahin, wohin or woher (Wo gehst du hin?) and the preposition of a split pronominal adverb (Da weiß ich nichts von) belong to the adverb instead (de/split-adverb-is-one-target).",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
@@ -110,24 +110,32 @@ const verbs: Rule[] = [
 		],
 	},
 	{
-		id: "de/split-wohin-and-woher",
+		id: "de/split-adverb-is-one-target",
 		statement:
-			"A split wo … hin or wo … her is one target of the ADV Lexeme wohin or woher, and the verb stays bare: Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen, and Wo kommst du her? gives [Wo, her] ADV woher and [kommst] VERB kommen. When hin or her is written as part of the verb (Wo willst du hinfahren?), it stays with the verb, and wo is interrogative wo on its own.",
-		adrs: [],
+			"A da, wo or hier split from its hin, her or preposition is one target of the whole ADV Lexeme, and the verb stays bare. Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen; Wo kommst du her? gives [Wo, her] ADV woher; Da gehe ich morgen hin gives [Da, hin] ADV dahin and [gehe] VERB gehen. A split pronominal adverb is one target the same way: Da weiß ich nichts von gives [Da, von] ADV davon, Da kann ich nichts für gives [Da, für] ADV dafür, and Wo hast du das mit gemacht? gives [Wo, mit] ADV womit. When hin or her is written as part of the verb (Wo willst du hinfahren?), it stays with the verb, and wo or da is a target on its own.",
+		adrs: ["ADR-0029"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
 			"de/wo-gehst-du-hin",
 			"de/wo-kommst-du-her",
 			"de/wo-willst-du-hinfahren",
+			"de/da-gehe-ich-morgen-hin",
+			"de/da-weiss-ich-nichts-von",
+			"de/da-kann-ich-nichts-fuer",
+			"de/wo-hast-du-das-mit-gemacht",
 		],
 	},
 	{
 		id: "de/pronominal-adverb-stands-alone",
 		statement:
-			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase. It is always a single-member ADV and never joins a verb or adjective, even one that governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV.",
+			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase and is an ADV target of its own. Written as one word, it is a single-member ADV; split, it is one ADV target with two members: Da weiß ich nichts von gives [Da, von] ADV davon (de/split-adverb-is-one-target). Either way it never joins a verb or adjective, even one that governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV.",
 		adrs: ["ADR-0029", "ADR-0034"],
 		routes: lexeme("ADV"),
-		records: [],
+		records: [
+			"de/da-weiss-ich-nichts-von",
+			"de/da-kann-ich-nichts-fuer",
+			"de/wo-hast-du-das-mit-gemacht",
+		],
 	},
 	{
 		id: "de/modal-is-a-verb",

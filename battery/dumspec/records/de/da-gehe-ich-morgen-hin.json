@@ -1,15 +1,17 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Wo gehst du hin?",
+	"sentence": "Da gehe ich morgen hin.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wo" },
+		{ "kind": "ResolvableText", "text": "Da" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gehst" },
+		{ "kind": "ResolvableText", "text": "gehe" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "ResolvableText", "text": "ich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "morgen" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "hin" },
-		{ "kind": "Punctuation", "text": "?" }
+		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -26,10 +28,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 6],
-			"reading": { "emojiDescription": "❓🛬" },
+			"memberSegmentIndices": [0, 8],
+			"reading": { "emojiDescription": "🛬" },
 			"notes": {
-				"rationale": "Split wo … hin is one target of interrogative wohin; hin is not the particle of hingehen."
+				"rationale": "Split da … hin is one target of dahin; hin is not the particle of hingehen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,21 +43,21 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "wohin",
+						"canonicalForm": "dahin",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": "Int"
+							"pronType": "Dem"
 						}
 					},
-					"normalizedSurface": "wo hin",
+					"normalizedSurface": "da hin",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Wo", "orthography": "Standard" },
+					{ "attested": "Da", "orthography": "Standard" },
 					{ "attested": "hin", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
@@ -64,7 +66,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "The verb stays bare gehen, since hin belongs to wohin."
+				"rationale": "The verb stays bare gehen, since hin belongs to dahin."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -83,13 +85,13 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "gehst",
+					"normalizedSurface": "gehe",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
-						"person": "2",
+						"person": "1",
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
@@ -99,7 +101,7 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "gehst", "orthography": "Standard" }],
+				"members": [{ "attested": "gehe", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []

@@ -1,15 +1,17 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Wo gehst du hin?",
+	"sentence": "Da kann ich nichts für.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wo" },
+		{ "kind": "ResolvableText", "text": "Da" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gehst" },
+		{ "kind": "ResolvableText", "text": "kann" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "ResolvableText", "text": "ich" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hin" },
-		{ "kind": "Punctuation", "text": "?" }
+		{ "kind": "ResolvableText", "text": "nichts" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "für" },
+		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -20,16 +22,20 @@
 			{
 				"rule": "de/split-adverb-is-one-target",
 				"hash": "35c65b1f523c2b4f"
+			},
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "ed9c0c62153c7596"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 6],
-			"reading": { "emojiDescription": "❓🛬" },
+			"memberSegmentIndices": [0, 8],
+			"reading": { "emojiDescription": "🎁" },
 			"notes": {
-				"rationale": "Split wo … hin is one target of interrogative wohin; hin is not the particle of hingehen."
+				"rationale": "Split da … für is one target of the pronominal adverb dafür, as in Dafür kann ich nichts."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,22 +47,22 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "wohin",
+						"canonicalForm": "dafür",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": "Int"
+							"pronType": "Dem"
 						}
 					},
-					"normalizedSurface": "wo hin",
+					"normalizedSurface": "da für",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Wo", "orthography": "Standard" },
-					{ "attested": "hin", "orthography": "Standard" }
+					{ "attested": "Da", "orthography": "Standard" },
+					{ "attested": "für", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
 			}
@@ -64,7 +70,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "The verb stays bare gehen, since hin belongs to wohin."
+				"rationale": "können (für etwas können, be to blame) governs für, but dafür never joins the verb, split or not."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -76,20 +82,20 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "gehen",
+						"canonicalForm": "können",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
-							"verbType": null
+							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "gehst",
+					"normalizedSurface": "kann",
 					"spelling": "Canonical",
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
-						"person": "2",
+						"person": "1",
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
@@ -99,7 +105,7 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "gehst", "orthography": "Standard" }],
+				"members": [{ "attested": "kann", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
