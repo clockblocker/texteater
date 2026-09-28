@@ -404,6 +404,22 @@
 		"de/sie-bekommt-das-glas-endlich-geoeffnet#0": {
 			"id": "grammar-de-verb-resultative-bekommt-geoeffnet",
 			"evaluation": true
+		},
+		"de/komm-sofort-raus#0": {
+			"id": "grammar-de-verb-demo-shorthand-raus-herauskommen",
+			"demonstration": true
+		},
+		"de/sie-warf-ihn-raus#0": {
+			"id": "grammar-de-verb-shorthand-raus-hinauswerfen",
+			"evaluation": true
+		},
+		"de/geh-bitte-nicht-ohne-jacke-raus#0": {
+			"id": "grammar-de-verb-shorthand-raus-hinausgehen",
+			"evaluation": true
+		},
+		"de/das-muss-heute-noch-raus#0": {
+			"id": "grammar-de-verb-modal-muss-directional",
+			"evaluation": true
 		}
 	}
 }

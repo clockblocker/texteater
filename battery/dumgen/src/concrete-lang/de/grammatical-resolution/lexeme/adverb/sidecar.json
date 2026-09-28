@@ -260,6 +260,22 @@
 		"de/wo-hast-du-das-mit-gemacht#0": {
 			"id": "grammar-de-adv-dev-split-womit",
 			"evaluation": true
+		},
+		"de/der-zahn-muss-raus#1": {
+			"id": "grammar-de-adv-demo-shorthand-raus-heraus",
+			"demonstration": true
+		},
+		"de/das-muss-heute-noch-raus#1": {
+			"id": "grammar-de-adv-dev-shorthand-raus-hinaus",
+			"evaluation": true
+		},
+		"de/der-splitter-muss-heraus#1": {
+			"id": "grammar-de-adv-dev-directional-heraus",
+			"evaluation": true
+		},
+		"de/die-kinder-wollen-hinaus#1": {
+			"id": "grammar-de-adv-dev-directional-hinaus",
+			"evaluation": true
 		}
 	}
 }
