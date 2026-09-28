@@ -22,7 +22,8 @@ TypeSafe's `judge` executor name does not make every use a review judge.
 Classifying an assembled target, selecting an existing Reading, and assigning
 the first Kind and relation label to an unlabeled candidate are primary
 decisions. A second call that repeats an already answered question is review.
-This preserves the relation classification policy in [ADR 0020](0020-keep-semantic-relations-inside-one-family.md).
+This preserves the relation classification policy in
+[Dumgen ADR 0003](../../battery/dumgen/docs/adr/0003-split-german-knowledge-generation-by-family.md).
 
 Code still enforces schemas, source identity, request applicability, domain
 invariants and publication ownership. Knowledge generated alongside the Emoji

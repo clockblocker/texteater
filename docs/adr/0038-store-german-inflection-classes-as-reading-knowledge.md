@@ -11,8 +11,7 @@ Readings tell them apart, as the Emoji Description splits any two senses
 ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
 Each Reading stores its own inflection class as Knowledge, the way it stores
 its Valency Frame
-([ADR 0030](./0030-store-preposition-government-as-reading-knowledge.md),
-[ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)).
+([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)).
 Decided in [#597](https://github.com/clockblocker/texteater/issues/597).
 
 Two alternatives were rejected. A Core plural or conjugation class would make

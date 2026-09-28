@@ -26,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓🤔" },
 			"notes": {
 				"rationale": "The direct question establishes the interrogative pronominal identity."
 			},
@@ -41,6 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "warum",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": "Int"

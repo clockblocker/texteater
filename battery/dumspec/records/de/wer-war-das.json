@@ -16,6 +16,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓👤" },
 			"notes": {
 				"rationale": "Wer is an interrogative pronoun here because it asks for the identity of the referent rather than linking a clause back to an antecedent."
 			},
@@ -31,7 +32,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Masc",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,
@@ -52,7 +53,7 @@
 							"poss": null,
 							"case": null,
 							"number": null,
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null

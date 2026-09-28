@@ -215,7 +215,7 @@ describe("the German authored inventory", () => {
 		expect(failures).toEqual([]);
 	});
 
-	test("jemand, niemand and wer/was are stems (system ADR 0032)", () => {
+	test("jemand, niemand, wer and was are stems (system ADR 0032)", () => {
 		const lemmasSpelled = (spelled: string) =>
 			authoredRealizations
 				.filter(
@@ -237,38 +237,59 @@ describe("the German authored inventory", () => {
 			["Int", "Rel"].map((pronType) => ({
 				canonicalForm: "wer",
 				pronType,
-				inflection: { case: "Dat", number: null, gender: "Masc" },
+				inflection: { case: "Dat", number: null, gender: null },
 			})),
 		);
-		const wer = authoredMembers.find(
-			({ lemma }) =>
-				lemma.canonicalForm === "wer" &&
-				field(lemma.coreFeatures, "pronType") === "Int",
+		const interrogative = (canonicalForm: string) => {
+			const found = authoredMembers.find(
+				({ lemma }) =>
+					lemma.canonicalForm === canonicalForm &&
+					field(lemma.coreFeatures, "pronType") === "Int" &&
+					field(lemma.coreFeatures, "extPos") === null,
+			);
+			if (!found) throw Error(`No interrogative ${canonicalForm}`);
+			return found;
+		};
+		// Gender is inherent, as a noun's is: Core, never on the Surface.
+		const wer = interrogative("wer");
+		expect(field(wer.lemma.coreFeatures, "gender")).toBe("Masc");
+		expect(field(interrogative("was").lemma.coreFeatures, "gender")).toBe(
+			"Neut",
 		);
-		if (!wer) throw Error("No interrogative wer");
+		expect(
+			parseUnit(pronounSurface(wer, "wem", { case: "Dat" })).success,
+		).toBe(true);
 		expect(
 			parseUnit(
-				pronounSurface(wer, "wem", {
-					case: "Dat",
-					number: null,
-					gender: "Masc",
-				}),
+				pronounSurface(wer, "wem", { case: "Dat", gender: "Masc" }),
 			).success,
-		).toBe(true);
-		// Genitive wessen is one spelling of wer for both genders.
+		).toBe(false);
+		// Genitive wessen is spelled under both Lemmas; the referent decides.
 		expect(
 			lemmasSpelled("wessen")
 				.filter(({ pronType }) => pronType === "Int")
-				.map(({ canonicalForm, inflection }) => [
-					canonicalForm,
-					inflection?.gender,
-				]),
-		).toEqual([
-			["wer", "Masc"],
-			["wer", "Neut"],
+				.map(({ canonicalForm }) => canonicalForm),
+		).toEqual(["wer", "was"]);
+		// irgendwer is built like wer: Masc in Core, case on the Surface, and
+		// it claims irgendjemand as a synonym.
+		expect(lemmasSpelled("irgendwem")).toEqual([
+			{
+				canonicalForm: "irgendwer",
+				pronType: "Ind",
+				inflection: { case: "Dat", number: null, gender: null },
+			},
 		]);
+		const irgendwer = authoredMembers.find(
+			({ lemma }) => lemma.canonicalForm === "irgendwer",
+		);
+		expect(field(irgendwer?.lemma.coreFeatures, "gender")).toBe("Masc");
+		expect(irgendwer?.knowledge.semanticRelations).toEqual({
+			synonym: [
+				expect.objectContaining({ canonicalForm: "irgendjemand" }),
+			],
+		});
 		for (const [spelled, cited] of [
-			["was", "wer"],
+			["was", "was"],
 			["jemandem", "jemand"],
 			["niemanden", "niemand"],
 			["jedermanns", "jedermann"],
@@ -278,6 +299,92 @@ describe("the German authored inventory", () => {
 					lemmasSpelled(spelled).map((lemma) => lemma.canonicalForm),
 				),
 			).toEqual(new Set([cited]));
+	});
+
+	test("authors each w-adverb as one Int and one Rel ADV", () => {
+		const readingsOf = (text: string) =>
+			authoredMembers.filter(
+				({ lemma }) =>
+					lemma.kind === "ADV" && lemma.canonicalForm === text,
+			);
+		const whAdverbs = [
+			"wo",
+			"wohin",
+			"woher",
+			"wann",
+			"wie",
+			"warum",
+			"wieso",
+			"weshalb",
+			"weswegen",
+		];
+		for (const text of whAdverbs)
+			expect(
+				new Set(
+					readingsOf(text).map(({ lemma }) =>
+						field(lemma.coreFeatures, "pronType"),
+					),
+				),
+				text,
+			).toEqual(new Set(["Int", "Rel"]));
+		// Relative wo has a place and a time Reading; every other use has one.
+		expect(
+			readingsOf("wo").map(({ reading }) => reading.emojiDescription),
+		).toEqual(["❓📍", "🧩📍", "🧩⏰"]);
+		expect(
+			whAdverbs.filter((text) => text !== "wo").flatMap(readingsOf),
+		).toHaveLength(2 * (whAdverbs.length - 1));
+		// wieso, weshalb and weswegen claim warum as a synonym, one use to the same use.
+		const weshalb = authoredMembers.find(
+			({ lemma }) =>
+				lemma.canonicalForm === "weshalb" &&
+				field(lemma.coreFeatures, "pronType") === "Rel",
+		);
+		expect(weshalb?.knowledge.semanticRelations).toEqual({
+			synonym: [
+				expect.objectContaining({
+					canonicalForm: "warum",
+					coreFeatures: expect.objectContaining({ pronType: "Rel" }),
+				}),
+			],
+		});
+	});
+
+	test("authors each irgend- adverb as one Ind ADV with one Reading", () => {
+		for (const text of [
+			"irgendwo",
+			"irgendwohin",
+			"irgendwoher",
+			"irgendwann",
+			"irgendeinmal",
+			"irgendwie",
+		])
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "pronType"),
+					]),
+				text,
+			).toEqual([["ADV", "Ind"]]);
+	});
+
+	test("authors dahin and daher as one Dem ADV with one Reading", () => {
+		for (const [text, emoji] of [
+			["dahin", "🛬"],
+			["daher", "🛫"],
+		] as const)
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "pronType"),
+						reading.emojiDescription,
+					]),
+				text,
+			).toEqual([["ADV", "Dem", emoji]]);
 	});
 
 	test("reaches the units a Note drills down to without generation", () => {

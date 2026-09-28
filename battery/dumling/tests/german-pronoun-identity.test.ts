@@ -73,7 +73,11 @@ test("ihm and seiner keep er's and es's gender apart, never a set", () => {
 	] as const) {
 		for (const gender of ["Masc", "Neut"])
 			accepts(
-				lemma(form, { ...thirdSingular, gender, case: grammaticalCase }),
+				lemma(form, {
+					...thirdSingular,
+					gender,
+					case: grammaticalCase,
+				}),
 				true,
 			);
 		accepts(
@@ -151,10 +155,16 @@ test("unmarked and inapplicable features have explicit behavior", () => {
 	);
 	accepts(lemma("jemand", { pronType: "Ind", case: "Nom" }), true);
 });
-test("wer and was mark the gender they agree with (ADR 0018, 0032)", () => {
+test("wer and was fix their inherent gender in Core (ADR 0018, 0032)", () => {
 	for (const pronType of ["Int", "Rel"]) {
-		accepts(lemma("wer", { pronType, case: "Nom", gender: "Masc" }), true);
-		accepts(lemma("was", { pronType, case: "Nom", gender: "Neut" }), true);
+		const wer = lemma("wer", { pronType, gender: "Masc" });
+		accepts(wer, true);
+		accepts(lemma("was", { pronType, gender: "Neut" }), true);
+		acceptsSurface(
+			{ ...surface(wer, { case: "Dat" }), normalizedSurface: "wem" },
+			true,
+		);
+		acceptsSurface(surface(wer, { case: "Nom", gender: "Masc" }), false);
 		accepts(
 			lemma("wessen", {
 				pronType,

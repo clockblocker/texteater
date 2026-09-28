@@ -29,6 +29,7 @@ new Reading.
 
 **Semantic Relation Edge**:
 A direct Reading-owned claim with either a Lemma or exact Reading target. One
-Reading Knowledge value uses a single target mode. Inferred edges follow it only
-when it reaches exactly one Reading: an exact Reading, or a Lemma with one
+Reading Knowledge value uses a single target mode. Only direct claims persist,
+and a missing target stays a pending Unit Shadow. Inferred edges follow a claim
+only when it reaches exactly one Reading: an exact Reading, or a Lemma with one
 Reading.

@@ -19,7 +19,7 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0030"],
+		"adrs": ["ADR-0034"],
 		"rules": [],
 		"references": []
 	},

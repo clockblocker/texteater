@@ -79,7 +79,9 @@ const cellCoordinates = ["case", "number", "gender"] as const;
 /**
  * A pillar Lemma marks its Paradigm Cell in Core; a stem Lemma marks it on
  * each Surface. A coordinate is never marked in both, and plural agreement
- * marks no gender on either.
+ * marks no gender on either. A stem whose gender is inherent rather than
+ * agreement (`wer` Masc, `was` Neut) marks it in Core and its case on the
+ * Surface.
  */
 export function isGermanClosedClassSurface(input: unknown): boolean {
 	const value = input as {

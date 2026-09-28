@@ -15,7 +15,7 @@ export type {
 export type SpecRecordId = string;
 
 /**
- * An ADR: `ADR-0035` for a system ADR in `docs/adr/`, `dumgen/ADR-0002` for
+ * An ADR: `ADR-0035` for a system ADR in `docs/adr/`, `dumgen/ADR-0007` for
  * one scoped to an app or battery.
  */
 export type AdrId = string;

@@ -1,8 +1,10 @@
 # Determiners: what the learner needs
 
 This is the learner's problem with DETs. Any model for DETs has to solve it.
-The current decisions are in [ADR 0032](../../../../docs/adr/0032-choose-core-features-per-route-for-the-learner.md)
-and [ADR 0035](../../../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md).
+The current decisions are in
+[ADR 0032](../../../../docs/adr/0032-choose-core-features-per-route-for-the-learner.md),
+[ADR 0035](../../../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md)
+and [ADR 0040](../../../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md).
 
 ## The problem
 

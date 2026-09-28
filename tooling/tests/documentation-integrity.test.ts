@@ -75,6 +75,11 @@ test("uses role-specific #307 census exclusions", () => {
 			"battery/dumgen/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
 		),
 	).toBeFalse();
+	expect(
+		isDeveloperDocumentationPath(
+			"battery/dumgen/evidence/target-attestation-drafts/review-sheet.md",
+		),
+	).toBeFalse();
 });
 
 test("enforces canonical developer-documentation paths", () => {

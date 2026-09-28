@@ -7,7 +7,7 @@ status: accepted
 A German verbal Surface describes its complete target. Finite tense belongs
 to that construction; perfect and future composition are independent
 coordinates. Passive voice names the process or recipient construction.
-The same dimensions apply to VERB, AUX and verbal Phrasemes.
+The same dimensions apply to VERB, AUX and VERB Locutions.
 
 For `ist ... geschrieben worden`, the Surface is finite present, perfect,
 process passive, indicative third singular. Under a separate modal,
@@ -28,7 +28,7 @@ construction. Universal Aspect retains its existing meaning for other routes.
 
 This replaces head-only verbal extraction, which could not represent compound
 tense and voice together. It preserves Lemma identity and the occurrence
-alignment and Full coverage contracts in ADRs 0003 and 0004. Member roles are
+alignment and Full coverage contracts in ADR 0003. Member roles are
 analysis evidence; they do not require a public grammatical tree.
 
 The accepted amendment is recorded in

@@ -25,7 +25,16 @@ Readings ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone
 are two Readings because their senses differ, and each has its own frame.
 
 Fixed parts are not slots. A separable prefix, a lexical reflexive and a
-Phraseme's wording come from Lemma identity.
+Locution's wording come from Lemma identity.
+
+The frame sits on the Reading because government varies by sense, and it is
+Knowledge, not a Semantic Relation. Its edges carry a case, cross Families
+(the Collocation `Bescheid wissen` governs the Lexeme `über`, which ADR 0020
+keeps out of relations) and have no algebra beyond one inverse. A separate
+Grammatical Relation store was rejected because it would duplicate the
+Contribute, Correct and Retract operations Knowledge already has. The
+preposition stores nothing: its governors are projected, following ADR 0012's
+rule that only direct claims are stored.
 
 The frame skeleton is universal. Each language defines its complement
 vocabulary. German follows E-VALBU and marks complements by case:
@@ -121,12 +130,12 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
 
 ## Consequences
 
-- This supersedes the Attestation's `governedPrepositionEvidence` from ADR
-  0029, and from [ADR 0030](./0030-store-preposition-government-as-reading-knowledge.md)
-  the `governedPrepositions` aspect and its rule that no valency comes from
-  the sense alone. The rest of both stands: government stays out of Lemma
-  identity, lives on the Reading as Knowledge rather than as a Relation, and
-  pronominal adverbs stay ADV Lexemes.
+- This supersedes [ADR 0030](./0030-store-preposition-government-as-reading-knowledge.md),
+  its `governedPrepositions` aspect and its rule that no valency comes from
+  the sense alone, and the Attestation's `governedPrepositionEvidence` from
+  [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md).
+  What stands of ADR 0030 is stated above. ADR 0029 still keeps government
+  out of Lemma identity and pronominal adverbs as ADV Lexemes.
 - ADR 0030 rejected a per-Reading call that guessed valency from the sense.
   That call ran in every sentence. The frame is proposed once, by the
   Knowledge call that creates the Reading, so a guess can be wrong and is
@@ -136,12 +145,12 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   so docs examples such as `Er [wartet] auf den Nachtbus` change.
 - ADR 0022's expletive `es` is unchanged.
 - Every governor Kind takes in its governed preposition as an Attestation
-  member: VERB, ADJ, NOUN and Phrasemes. Clicking `auf` in `Er ist stolz auf
+  member: VERB, ADJ, NOUN and Locutions. Clicking `auf` in `Er ist stolz auf
   seinen Sohn` opens `stolz`, and clicking `über` in `Er weiß Bescheid über
   die Pläne` opens the Collocation `Bescheid wissen`. ADJ and NOUN get the
-  `GovernedPreposition` member role verbs already have. A Phraseme Target
-  gets a governed-preposition member whose role does not count toward
-  fixedness. `normalizedSurface` stays Fixed-only, so `stolz auf` projects
+  `GovernedPreposition` member role verbs already have in the legacy intake,
+  where a Phraseme Target gets a governed-preposition member whose role does
+  not count toward fixedness. `normalizedSurface` stays Fixed-only, so `stolz auf` projects
   `stolz`. Separated cases (`Auf ihn bin ich stolz`, `der auf seinen Sohn
   stolze Vater`) work the way separable verbs already do. This supersedes
   ADR 0029's rule that only verbs absorb a governed preposition, under which
@@ -162,7 +171,7 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   resolves the click to it: `Sie hat Angst vor Hunden` and `Hast du Angst?`
   open `Angst haben`, while `aus Angst vor Hunden` opens `Angst`. The
   Collocation Note reaches the governor's frame and the verb through its
-  `lexicalBreakdown`. The Collocation stores its own frame, not a projection
+  Breakdown ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)). The Collocation stores its own frame, not a projection
   of its members' frames, because slots like the Dat of `jemandem auf den
   Keks gehen` come from no member.
 - A copula (`sein`, `werden`, `bleiben`, `scheinen`, `wirken`, `sich zeigen`)
@@ -178,13 +187,15 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   the adjective's `cop`.
 - `governedCase` leaves German ADP Core. Identity does not change, since no
   two German ADPs differ by case alone. An authored, closed table per
-  language in Dumling records each preposition's allowed cases, a preferred
+  language, the ADP Case Table, records each preposition's allowed cases, a preferred
   case where there is a norm, and whether it is two-way, keyed by `adpType`
   where that matters: `für` {Acc}, `mit` {Dat}, `auf` and `in` {Acc, Dat}
   two-way, `wegen` and `trotz` {Gen, Dat} preferring Gen, `entlang` Post
   {Acc} and Prep {Gen, Dat}. It replaces Dumgen's `governablePrepositions`,
   and a governor's Preposition slot is validated against it: `warten` `auf`
-  + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails.
+  + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails. ADR 0041 moved
+  the table and its check from Dumling to dumspec, since which cases a
+  preposition takes is a fact about the language.
 - A free ADP occurrence records the case it took as `realizedCase` in its
   `valencyEvidence`, from the judgement Grammatical Resolution already makes
   for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
@@ -199,4 +210,4 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   merges them. Decided in
   [#604](https://github.com/clockblocker/texteater/issues/604).
 
-Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): where this ADR says Phraseme, Idiom or Collocation governor, read Locution. A Collocation's predicate may be a noun or an adjective, which widens the Collocation test above. The rest of this ADR stands.
+Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): Idiom and Collocation governors are Locutions, and a Collocation's predicate may be a noun or an adjective, which widens the Collocation test above.

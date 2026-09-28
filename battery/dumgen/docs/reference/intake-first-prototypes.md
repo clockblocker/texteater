@@ -224,8 +224,8 @@ DET), 14-16 pick the DET twin of a standalone form (`keiner`, `mancher`,
 `jeglicher`), 6 are genitive paradigm holes where gold is Unresolved and the
 judge picks the DET, 2-3 subjunctive auxiliaries (`sei`, `wären`, `hätte`)
 answer NoMatch, and 3 are Misses: two typos (`ihc`, `disem`) and `des`, because
-only `der`, `die`, `das` are authored article spellings (articles are Derived
-under ADR 0024). Run-to-run spread is 5 cases.
+only `der`, `die`, `das` are authored article spellings (articles were
+Derived by the agreement-based headword choice that ADR 0032 later replaced). Run-to-run spread is 5 cases.
 
 Identity implies route better than the route vote does. On the 190 DET and
 PRON gold clicks the selected identity's Kind matches gold 165 times; the route

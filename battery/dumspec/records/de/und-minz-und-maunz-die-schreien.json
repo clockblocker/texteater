@@ -32,7 +32,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0032", "ADR-0033"],
+		"adrs": ["ADR-0032", "ADR-0033", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/pron-or-det-by-use",

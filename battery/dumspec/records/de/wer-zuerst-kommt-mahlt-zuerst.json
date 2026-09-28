@@ -21,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "🔗👤" },
 			"notes": {
 				"rationale": "Wer heads a free relative clause here, so it is classified as a relative pronoun rather than an interrogative one."
 			},
@@ -36,7 +37,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Masc",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,
@@ -57,7 +58,7 @@
 							"poss": null,
 							"case": null,
 							"number": null,
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null

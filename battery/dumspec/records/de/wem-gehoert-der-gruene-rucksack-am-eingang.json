@@ -29,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓👤" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -49,7 +50,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "wem",
@@ -57,7 +58,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"gender": "Masc",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,

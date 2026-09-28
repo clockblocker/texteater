@@ -139,6 +139,8 @@ function isProducedArtifact(path: string): boolean {
 		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
+		// Written by codegen/migrate-{target,sentence}-cases.ts beside their drafts.
+		/^battery\/dumgen\/evidence\/[^/]+\/review-sheet\.md$/u.test(path) ||
 		/^battery\/dumgen\/src\/promptsmith\/.*\/corpus\//u.test(path)
 	);
 }

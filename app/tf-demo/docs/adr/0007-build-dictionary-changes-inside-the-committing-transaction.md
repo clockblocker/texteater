@@ -39,14 +39,13 @@ weight those hops paid for.
 
 ## Consequences
 
-- `persistence.persistResolvedClick` receives the Reading decision, not a
-  plan; `dumdictTransaction` exposes `addNewNote`, `ensureOwnedSurface`, and
-  `applyGeneratedKnowledge` as plan-and-commit operations. The action keeps
-  one dictionary read, the stored Readings a click compares against.
-- Whether Resolution Inspector capture is on travels in the scheduled
-  action's arguments and captured steps are saved in one mutation, so tracing
-  adds no hop to the path it observes.
-- Reviewed navigation and Shadow cleanup now plan and commit in their own
-  mutations through `ensureReadingEntry` and `cleanupRelations`. No dictionary
-  write crosses an action hop, so the global dictionary revision is retired
-  and Convex's conflict handling protects every plan.
+- The persisting mutation receives the Reading decision, not a plan. The
+  action keeps one dictionary read, the stored Readings a click compares
+  against.
+- Resolution Inspector capture travels in the scheduled action's arguments
+  and is saved in one mutation, so tracing adds no hop to the path it
+  observes.
+- Reviewed navigation and Shadow cleanup plan and commit in their own
+  mutations. No dictionary write crosses an action hop, so the global
+  dictionary revision is retired and Convex's conflict handling protects
+  every plan.

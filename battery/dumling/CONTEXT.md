@@ -95,11 +95,12 @@ _Avoid_: Gradability
 
 **Paradigm Cell**:
 One combination of case, number, gender or reflexivity in a closed, authored
-paradigm. In a pillar, a paradigm whose forms a learner memorizes one by one,
-each cell is its own Lemma with one Reading: German `mich` and `mir`,
-accusative and dative `uns`, `dem` and `den`; English `me` and `my`. A word
-made of a stem and article endings, such as `dieser` or `mein`, is one Lemma,
-and its cells are Surfaces. Open classes keep these features on the Surface.
+paradigm. In a pillar, a paradigm whose forms cannot be derived from another
+paradigm, each cell is its own Lemma with one Reading: German `mich` and
+`mir`, accusative and dative `uns`, `dem` and `den`; English `me` and `my`. A
+word made of a stem and another paradigm's endings, such as `dieser`, `mein`
+or `jemand`, is one Lemma, and its cells are Surfaces. Open classes keep these
+features on the Surface.
 _Avoid_: Paradigm form, inflected closed-class Surface
 
 **Spelling Crossroad**:

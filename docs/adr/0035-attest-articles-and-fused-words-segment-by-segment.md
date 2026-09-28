@@ -30,7 +30,7 @@ learner can open the Fusion and see how the word breaks down.
 
 **A noun owns its article.** The article is a member of the noun's
 Attestation, so clicking it opens the noun, and its DET identity is derived
-([ADR 0019](./0019-separate-grammatical-relations-from-semantic-relations.md),
+([ADR 0019](./0019-select-grammatical-alternatives-from-reviewed-members.md),
 [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)). German
 and English record it as the inflectional feature
 `article: Definite | Indefinite | None`. Hebrew records it through its
@@ -144,3 +144,5 @@ morph.
 Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): `zum Teil` is a Locution/ADV and `das Eis brechen` a Locution/VERB, both still owning every piece of their fused words. The rest of this ADR stands.
 
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): German and English common nouns have no `article` feature. The article is an Article satellite of the Head of its phrase, which is the noun or, when the noun is elided, the word standing in for it (`[den, roten]`, `[the, rich]`), and a bare-cited proper noun owns the article it takes (`[das, Berlin]`). Agreement is checked on the Attestation. The rest of this ADR stands.
+
+Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): `articleEvidence` names every article of a Head, not only a shared one: `Owned` points at the article member, `Shared` holds an article the Head does not own, and `Hidden` points at a Fusion component with no letters of its own.

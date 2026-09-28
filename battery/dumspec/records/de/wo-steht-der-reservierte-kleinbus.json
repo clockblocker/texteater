@@ -24,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓📍" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -36,6 +37,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wo",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": "Int"

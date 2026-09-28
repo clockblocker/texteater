@@ -53,8 +53,8 @@ not by shared wording.
    or the record is wrong.
 
 **Projections.** Dumgen's target-classification, grammatical-resolution and
-sentence-analysis cases are projected from records, as ADR 0002 in Dumgen
-projected prompt representations from its Canonical Classification Corpus.
+sentence-analysis cases are projected from records, as Dumgen once projected
+its prompt representations from one Canonical Classification Corpus.
 Classification cases come from every Segment of a Full record and from each
 target of a Partial one; `noTarget` entries project to `Unresolved`. Dumgen
 keeps a sidecar keyed by record id for its demo/eval split, slices and
@@ -79,10 +79,9 @@ evaluation slice first. The remaining cases each get a keep-or-retire
 decision. Until the last batch lands, a check fails for any case id found in
 neither the old corpus nor the spec.
 
-This supersedes [Dumgen ADR 0002](../../battery/dumgen/docs/adr/0002-use-one-canonical-classification-corpus-across-prompt-representations.md)
-and amends [ADR 0021](./0021-make-dumgen-own-authored-content-and-route-closure.md):
-the Fixed Catalog and its authored Knowledge stay in Dumgen; evaluation gold
-moves to `dumspec`.
+This replaced Dumgen's Canonical Classification Corpus (its former ADR 0002)
+and moves evaluation gold out of Dumgen. The Fixed Catalog stayed in Dumgen
+until the amendment below.
 
 Amended on 2026-09-27: `dumspec` owns all gold, and a Draft may fail the
 current model.
@@ -122,7 +121,7 @@ the same way, with every other remaining case in Dumgen, so drafting and
 reviewing their Attestations moves into that pass. Their Dumgen projections
 wait for the pipeline rewrite against `dumspec`.
 
-Amended on 2026-09-27 with [ADR 0021](./0021-make-dumgen-own-authored-content-and-route-closure.md):
+Amended on 2026-09-27 with [ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md):
 `dumspec` also owns the Authored Inventories, the closed-class units authored
 instead of generated, with their Reading Knowledge. They live apart from
 `records/`, because they are the model's content, not gold a run is scored

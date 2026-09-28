@@ -11,15 +11,17 @@ owns it.
 
 **Authored Inventory**:
 The closed-class units of a language that are authored instead of generated,
-each Reading with its reviewed Knowledge: in German the AUX Readings, the
-PRON and DET pillar cells and stems, the reflexivity unit and the pronominal
-adverbs, with every spelling that realizes them. They are the model's
-content, not gold: a run is not scored against them. A Note's drill-down
-reaches an article, auxiliary or reflexive here without generation; a
-reflexive reaches the reflexivity unit, never a case cell of `sich`. An
-attested article reaches the `der` or `ein` cell its spelling names for its
-Head's case, number and gender (`m` before `Wald` is `dem` Dat.Masc.Sg), and
-Dumspec fails an article that names none (`ein Häuser`, ADR 0041).
+each Reading with its reviewed Knowledge: in German the AUX Readings, the PRON
+and DET pillar cells and stems, the reflexivity unit, the pronominal adverbs,
+the interrogative and relative w-adverbs (`wo`, `wann`, `wie`, `warum`), the
+indefinite `irgend-` adverbs and the demonstrative `dahin` and `daher`, with
+every spelling that realizes them. They are the model's content, not gold: a
+run is not scored against them. A Note's drill-down reaches an article,
+auxiliary or reflexive here without generation; a reflexive reaches the
+reflexivity unit, never a case cell of `sich`. An attested article reaches the
+`der` or `ein` cell its spelling names for its Head's case, number and gender
+(`m` before `Wald` is `dem` Dat.Masc.Sg), and Dumspec fails an article that
+names none (`ein Häuser`, ADR 0041).
 _Avoid_: Fixed Catalog (Dumgen's term for the members that bound a Closed
 Route), closed set, catalog member
 

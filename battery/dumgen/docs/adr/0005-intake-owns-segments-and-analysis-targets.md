@@ -1,8 +1,16 @@
 ---
-status: accepted
+status: superseded by ADR-0007
 ---
 
 # Intake owns Segments and Analysis Targets; closed-class identity is selected at intake
+
+Superseded by [ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md):
+intake returns pieces and biggest units with their route, not masses, roles
+and a Resolution Selector. ADR 0007 keeps this ADR's rule that closed-class
+identity is chosen from the authored candidates a spelling lists. The
+shipped intake still implements this ADR and ADR 0006 until the segmentation
+rewrite ([#701](https://github.com/clockblocker/texteater/issues/701)); the
+measurements below describe it.
 
 Intake produces, for every accepted sentence, the Segments a learner can
 click and the Analysis Targets they belong to: one jev call per sentence
@@ -79,7 +87,7 @@ The numbers, measured in `battery/dumgen/prototypes/intake/` (README) on
   language, validity and stitching per sentence as before, and now also
   produces the Segmented Sentence; deterministic Source Segmentation stays
   its first internal step (ADR 0004).
-- ADR 0015's Catalog Miss gains an observable intake form: a closed-class
+- System ADR 0021's Catalog Miss gains an observable intake form: a closed-class
   route with no candidate, reported per spelling.
 - Grammar features run at click for the clicked target only. The
   classification call leaves the click path for every target intake could
@@ -103,7 +111,5 @@ roles, the identity selection and the click-time fallback stand.
 
 Amended on 2026-09-25 to match the code: non-head occurrences are asked the
 identity Choice too, and only the head's answer is used. The article's
-Derived identity now cites system ADRs 0035 and 0032, which replaced system
-ADR 0024 for DET cells.
-
-Amended by [ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md): intake returns pieces and biggest units with their route, not a lattice.
+Derived identity now cites system ADRs 0035 and 0032, which replaced the
+agreement-based headword choice for DET cells.

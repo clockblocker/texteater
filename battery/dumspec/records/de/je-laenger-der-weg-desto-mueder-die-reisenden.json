@@ -24,7 +24,7 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0009"],
+		"adrs": ["ADR-0039"],
 		"rules": [],
 		"references": []
 	},

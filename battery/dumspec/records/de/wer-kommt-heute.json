@@ -20,8 +20,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓👤" },
 			"notes": {
-				"rationale": "wer is the Nom Surface of the stem Lemma wer; the interrogative marks its case and gender on the Surface."
+				"rationale": "wer is the Nom Surface of the stem Lemma wer. The Surface marks case; wer's masculine gender is inherent and sits in Core."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -43,7 +44,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Int",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "wer",
@@ -51,7 +52,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Masc",
+						"gender": null,
 						"number": null,
 						"gender[psor]": null,
 						"number[psor]": null,

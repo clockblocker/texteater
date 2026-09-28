@@ -12,6 +12,11 @@ An empty value contains no authored aspects.
 a Contribute, Correct, or Retract operation on one atomic
 aspect or bucket. Omission does not delete an aspect.
 
+**Knowledge Policy**:
+the mapping from a source route (language, Family, Kind) to the Knowledge
+aspects that apply to it.
+_Avoid_: applicability table, request schema
+
 **Knowledge Settings**:
 enabled or disabled preferences applied to the aspects
 applicable to a source route. Omitted preferences are enabled.

@@ -2,7 +2,8 @@
  * The Authored Inventories: closed-class units authored instead of generated,
  * each with its Reading and reviewed Reading Knowledge. German holds the AUX
  * Readings, the PRON and DET pillar cells and stems, the reflexivity unit a
- * reflexive drills down to, and the pronominal adverbs. It also holds the
+ * reflexive drills down to, the pronominal adverbs, and the interrogative and
+ * relative w-adverbs (wo, wann, wie, warum). It also holds the
  * German ADP Case Table, the cases each adposition takes, and derives an
  * article's der or ein cell from its spelling and its Head's agreement.
  *

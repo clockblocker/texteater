@@ -18,6 +18,8 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // ADR 0018 chooses Core identity coordinates; LEO does not prescribe Lemma granularity.
 // System ADR 0032: a pillar (personal, der-series) sets case, number and
 // gender in Core; a stem word (dieser, keiner, meiner, wer) marks them on its Surfaces.
+// wer and was fix their inherent gender in Core, Masc and Neut, and mark case
+// on the Surface.
 // A personal cell whose form er and es share (ihm, seiner) stays split by
 // gender, and the referent decides between them (ADR 0018, #606). Possessor
 // features describe a possessive's Surface: sein- serves Masc and Neut.

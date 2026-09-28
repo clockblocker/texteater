@@ -27,12 +27,18 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "812ce7ad00775fef"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"reading": { "emojiDescription": "🧩🤔" },
 			"notes": {
 				"rationale": "The relative clause links weshalb to an antecedent and establishes PronType Rel."
 			},
@@ -48,6 +54,7 @@
 						"kind": "ADV",
 						"canonicalForm": "weshalb",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": "Rel"

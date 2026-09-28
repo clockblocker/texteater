@@ -4,25 +4,21 @@ status: accepted
 
 # Keep Semantic Relations inside one Family
 
-A direct Semantic Relation's target shares its source Reading's Family:
-Lexeme relations target Lexemes, Phraseme relations target Phrasemes. The
-rule binds model-proposed Pending Semantic Relations and hand-authored
-closed inventories alike, in generation, review, and propagation.
+A direct Semantic Relation's target stays in its source Reading's relation
+space. Lexeme and Locution share one space, so a relation may cross between
+them (`ins Gras beißen` ↔ `sterben`, `zum Teil` ↔ `teilweise`). Every other
+Family is a space of its own: a Saying relates only to Sayings. The rule binds
+model-proposed Pending Semantic Relations and hand-authored closed inventories
+alike, in generation, review and propagation. A target's Kind may differ from
+the source Kind.
 
-Luna proposes candidate Canonical Forms. TypeSafe subsequently judges each
-candidate's Kind and relation over the permitted options, including no relation,
-other Family and uncertainty. Dumgen supplies the source Language and Family
-and validates the resulting Pending Semantic Relation. A target's Kind may
-differ from the source Kind. This replaces the earlier requirement to generate
-Kind alongside text and avoid later classification.
+A proposal that leaves the space is rejected rather than forced into a Kind of
+the source's space, and uncertainty produces no asserted relation. How Dumgen
+proposes and judges candidates is Dumgen ADR 0003.
 
-For a German Lexeme/Noun Reading of `Bank`, Luna may propose `Geldinstitut`.
-TypeSafe judges its Kind and relation; code adds `de` and `Lexeme` to the Unit
-Shadow. A cross-Family proposal is rejected rather than forced into a Lexeme
-Kind. Uncertainty produces no asserted relation.
+The cost is losing plausible relations across spaces, such as a proverb
+offered as a word's paraphrase. If a real need emerges, this ADR is revisited.
+ADR 0011 owns endpoint-kind homogeneity (Lemma versus exact Reading).
 
-The cost is losing plausible cross-Family phrasing relations, such as an Idiom
-offered as a Noun's synonym; if a real need emerges, this ADR is revisited.
-ADR-0016 owns endpoint-kind homogeneity (Lemma versus exact Reading).
-
-Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): Phraseme is retired, and Lexeme and Locution share one relation space, so a relation may cross between them (`ins Gras beißen` ↔ `sterben`). Sayings relate only to Sayings. The rest of this ADR stands.
+Until ADR 0039 split the Phraseme Family, the space was the Family itself, and
+an Idiom could not be a Noun's synonym.
