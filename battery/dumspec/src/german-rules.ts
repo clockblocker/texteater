@@ -445,7 +445,7 @@ const attestations: Rule[] = [
 		id: "de/core-features-are-identity",
 		statement:
 			"A Lemma's Core Features belong to its dictionary identity; features of one occurrence belong to its Surface. Each route chooses its Core Features for the learner: a pillar such as the der table or the personal pronouns has one Lemma per cell, and a stem word such as dieser or mein is one Lemma whose forms are Surfaces.",
-		adrs: ["ADR-0002", "ADR-0018", "ADR-0032"],
+		adrs: ["ADR-0002", "ADR-0032", "ADR-0044"],
 		routes: [],
 		records: [],
 	},

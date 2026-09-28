@@ -55,9 +55,9 @@ refuses and resolution runs the judge again over the current candidates.
 - A description that depicts the sentence's scene instead of the target, such
   as `öffnen` 🪟, stays the key, and later occurrences without that scene
   likely get a second Reading. The generation eval guards against this.
-- A Fixed Catalog description names the Reading's function and repeats
-  nothing its Lemma already carries. Person, number, gender and case stay Core
-  Features, so every possessive is 🔐 and every personal pronoun is 👈; `sein`
-  is not 👨🔐, because a picture standing in for grammatical gender claims sex.
+- An authored description names the Reading's function and repeats no
+  grammar the Lemma or its Surfaces carry (ADR 0044), so every personal
+  pronoun is 👈 and every possessive is 🔐. `sein` is not 👨🔐, because a
+  picture standing in for grammatical gender claims sex.
 
 Amended by [ADR 0043](./0043-correct-identity-by-moving-occurrences.md): a wrong Reuse or NoMatch is corrected by moving occurrences, so judge errors no longer persist.

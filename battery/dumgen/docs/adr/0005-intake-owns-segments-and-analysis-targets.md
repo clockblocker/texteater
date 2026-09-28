@@ -103,7 +103,7 @@ roles, the identity selection and the click-time fallback stand.
 
 Amended on 2026-09-25 to match the code: non-head occurrences are asked the
 identity Choice too, and only the head's answer is used. The article's
-Derived identity now cites system ADRs 0035 and 0032, which replaced system
-ADR 0024 for DET cells.
+Derived identity now cites system ADRs 0035 and 0032, which replaced the
+agreement-based headword choice for DET cells.
 
 Amended by [ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md): intake returns pieces and biggest units with their route, not a lattice.
