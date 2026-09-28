@@ -16,14 +16,24 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0026", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/raus-is-heraus-or-hinaus",
+				"hash": "a6b8cbc237ff43c7"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "Muss is treated as a lexical modal VERB with verbType Mod here, because it is the clause's main predicate and there is no overt infinitive for it to auxiliary-mark.",
+				"rationale": "A modal is a VERB of its own with verbType Mod, whether or not an infinitive follows (de/modal-is-a-verb). With raus and no infinitive it forms no particle verb such as hinausmüssen, so muss is a single-member VERB müssen.",
 				"knownMistakes": [
-					"Do not default finite müssen to AUX just because it is modal. In this attestation the earlier mistake was classifying muss as kind AUX even though the clause is elliptical and the selected word functions as the main predicate rather than as an auxiliary to an overt infinitive."
+					"Do not tag müssen AUX: a modal is never an auxiliary, with or without an infinitive."
 				]
 			},
 			"attestation": {
@@ -68,25 +78,26 @@
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "Raus is treated as the directional adverb with canonical lemma heraus. I did not fold it into a separable-verb analysis here, because the clause is elliptical and there is no overt finite verb like geht or muss-embedded infinitive host for a particle split."
+				"rationale": "Whatever has to go out today leaves the office, away from the speaker, so raus is the Shorthand of hinaus, not a Variant spelling of heraus (de/raus-is-heraus-or-hinaus). Der Zahn muss raus is the minimal pair, with heraus. No motion verb stands in the bracket, and the modal takes no particle, so raus is an ADV target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "raus", "orthography": "Standard" }],
+				"members": [{ "attested": "raus", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "raus",
-					"spelling": "Variant",
+					"normalizedSurface": "hinaus",
+					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "heraus",
+						"canonicalForm": "hinaus",
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null

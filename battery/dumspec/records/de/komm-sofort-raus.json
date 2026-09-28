@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Komm sofort raus!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Komm" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sofort" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "raus" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0022", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/raus-is-heraus-or-hinaus",
+				"hash": "a6b8cbc237ff43c7"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "2b990e341761c27b"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 4],
+			"notes": {
+				"rationale": "raus in the right bracket is the particle of herauskommen: the addressee comes out towards the speaker, who waits outside. raus is its Shorthand member, and the Surface spells the full particle."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "herauskommen",
+						"coreFeatures": {
+							"hasSepPrefix": "heraus",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "komm heraus",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Imp",
+						"number": "Sing",
+						"person": "2",
+						"tense": null,
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "Komm", "orthography": "Standard" },
+					{ "attested": "raus", "orthography": "Shorthand" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

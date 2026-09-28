@@ -18,23 +18,39 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0022", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/raus-is-heraus-or-hinaus",
+				"hash": "a6b8cbc237ff43c7"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "2b990e341761c27b"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [0, 10],
 			"notes": {
-				"rationale": "Imperative forms use mood Imp together with finite verbForm in the schema."
+				"rationale": "raus in the right bracket is the particle of hinausgehen: the addressee goes out, away from the speaker inside, so it is not bare gehen. raus is its Shorthand member, and the Surface spells the full particle (de/raus-is-heraus-or-hinaus). The imperative is mood Imp with a finite verbForm."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Geh", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "Geh", "orthography": "Standard" },
+					{ "attested": "raus", "orthography": "Shorthand" }
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "geh",
+					"normalizedSurface": "geh hinaus",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"mood": "Imp",
@@ -51,11 +67,11 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "gehen",
+						"canonicalForm": "hinausgehen",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
-							"hasSepPrefix": null,
+							"hasSepPrefix": "hinaus",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}

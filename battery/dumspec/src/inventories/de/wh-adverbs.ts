@@ -311,6 +311,35 @@ const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
+// heraus and hinaus are plain directional ADVs with no pronType: out towards
+// the speaker or viewpoint, and out away from it. Colloquial raus neutralizes
+// the two; it is no Lemma or spelling of its own but the Shorthand member of
+// whichever the direction picks (Rule de/raus-is-heraus-or-hinaus), so no
+// spelling table lists it. Each has its directional Reading only.
+// https://www.duden.de/rechtschreibung/heraus
+// https://www.duden.de/rechtschreibung/hinaus
+// https://www.duden.de/rechtschreibung/raus
+const directionalAdverbs: readonly OneReadingAdverb[] = [
+	{
+		text: "heraus",
+		ipa: "hɛˈʁaʊ̯s",
+		emoji: "🐣",
+		definition:
+			"Von dort drinnen hierher nach draußen, auf den Sprecher oder Betrachter zu: Heraus aus dem Bett! Der Splitter muss heraus. Umgangssprachlich kurz raus.",
+		en: ["out (towards the speaker)"],
+		ru: ["наружу (сюда)"],
+	},
+	{
+		text: "hinaus",
+		ipa: "hɪˈnaʊ̯s",
+		emoji: "🚪🏃",
+		definition:
+			"Von hier drinnen nach dort draußen, vom Sprecher oder Betrachter weg: Hinaus mit dir! Die Kinder wollen hinaus. Umgangssprachlich kurz raus.",
+		en: ["out (away from the speaker)"],
+		ru: ["наружу (туда)"],
+	},
+];
+
 // The da(r)- pronominal adverbs carry no marker either (pronominal-adverbs.ts).
 const marker: Readonly<Record<Use, string>> = {
 	Int: "❓",
@@ -319,8 +348,11 @@ const marker: Readonly<Record<Use, string>> = {
 	Dem: "",
 };
 
-/** A w-adverb has no comparison forms (ADR 0042); pronType is Core. */
-function lemmaOf(text: string, use: Use): Lemma {
+/**
+ * A w-adverb has no comparison forms (ADR 0042); pronType is Core, and null
+ * for a directional adverb.
+ */
+function lemmaOf(text: string, use: Use | null): Lemma {
 	return {
 		unitKind: "Lemma",
 		language: "de",
@@ -348,7 +380,7 @@ function whAdverbReadings(
 
 function whAdverb(
 	adverb: Pick<WhAdverb, "text" | "ipa" | "synonymOf">,
-	use: Use,
+	use: Use | null,
 	meaning: EmojiMeaning,
 ): AuthoredMember {
 	const lemma = lemmaOf(adverb.text, use);
@@ -359,7 +391,7 @@ function whAdverb(
 		lemma,
 		reading: {
 			unitKind: "Reading",
-			emojiDescription: `${marker[use]}${meaning.emoji}`,
+			emojiDescription: `${use ? marker[use] : ""}${meaning.emoji}`,
 			lemma,
 		},
 		knowledge: {
@@ -388,8 +420,9 @@ function whAdverb(
  * wie, warum, wieso, weshalb, weswegen): one Int and one Rel Lemma each,
  * since pronType is Core. Each Lemma has one Reading, except relative wo,
  * which has a place and a time Reading. Then the indefinite irgend- adverbs,
- * one Ind Lemma each, and the demonstrative dahin and daher, one Dem Lemma
- * each. The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
+ * one Ind Lemma each, the demonstrative dahin, daher, hierhin and hierher,
+ * one Dem Lemma each, and the directional heraus and hinaus, one Lemma each
+ * with no pronType. The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = [
 	...(["Int", "Rel"] as const).flatMap((use) =>
@@ -397,4 +430,5 @@ export const whAdverbs: readonly AuthoredMember[] = [
 	),
 	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
 	...demonstrativeAdverbs.map((adverb) => whAdverb(adverb, "Dem", adverb)),
+	...directionalAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
 ];

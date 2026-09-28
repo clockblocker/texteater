@@ -14,9 +14,10 @@ The closed-class units of a language that are authored instead of generated,
 each Reading with its reviewed Knowledge: in German the AUX Readings, the PRON
 and DET pillar cells and stems, the reflexivity unit, the pronominal adverbs,
 the interrogative and relative w-adverbs (`wo`, `wann`, `wie`, `warum`), the
-indefinite `irgend-` adverbs and the demonstrative `dahin`, `daher`, `hierhin` and `hierher`, with
-every spelling that realizes them. They are the model's content, not gold: a
-run is not scored against them. A Note's drill-down reaches an article,
+indefinite `irgend-` adverbs, the demonstrative `dahin`, `daher`, `hierhin` and
+`hierher`, and the directional `heraus` and `hinaus`, with every spelling that
+realizes them (colloquial `raus` is the Shorthand of either). They are the
+model's content, not gold: a run is not scored against them. A Note's drill-down reaches an article,
 auxiliary or reflexive here without generation; a reflexive reaches the
 reflexivity unit, never a case cell of `sich`. An attested article reaches the
 `der` or `ein` cell its spelling names for its Head's case, number and gender

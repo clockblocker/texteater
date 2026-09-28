@@ -389,6 +389,28 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", "Dem", emoji]]);
 	});
 
+	test("authors heraus and hinaus as one ADV with no pronType and one Reading", () => {
+		for (const [text, emoji] of [
+			["heraus", "🐣"],
+			["hinaus", "🚪🏃"],
+		] as const)
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "pronType"),
+						reading.emojiDescription,
+					]),
+				text,
+			).toEqual([["ADV", null, emoji]]);
+		expect(
+			authoredMembers.filter(
+				({ lemma }) => lemma.canonicalForm === "raus",
+			),
+		).toEqual([]);
+	});
+
 	test("reaches the units a Note drills down to without generation", () => {
 		const realized = (spelled: string, kind: string) =>
 			authoredRealizations
