@@ -55,7 +55,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 			opens: "Perfect and passive complexes",
 			implements: [
 				{ rule: "de/verbal-participle", hash: "8783a18791f95718" },
-				{ rule: "de/participial-adjective", hash: "f377db2db8edceec" },
+				{ rule: "de/participial-adjective", hash: "64019b2928263509" },
 				{ rule: "de/sein-perfect-or-copula", hash: "507adc4e3e41031f" },
 				{
 					rule: "de/attributive-adjective-stands-alone",
@@ -65,31 +65,31 @@ export const targetCriteriaCitations: CitingPrompt = {
 				{ rule: "de/modal-is-a-verb", hash: "0f3e63e6bfa51754" },
 				{
 					rule: "de/funktionsverbgefuege-are-collocations",
-					hash: "b8fe4c62585a561d",
+					hash: "da5ad8e285adbe66",
 				},
 			],
 		},
 		{
 			opens: "Fixed correlators include only anchors",
 			implements: [
-				{ rule: "de/correlator-anchors", hash: "b3fee30a7e3febd8" },
+				{ rule: "de/correlator-anchors", hash: "677fbf6666284e28" },
 				{ rule: "de/bare-infinitive-zu", hash: "7462675604e5cc7f" },
 			],
 		},
 		{
 			opens: "An established noncompositional expression",
 			implements: [
-				{ rule: "de/idiom", hash: "b36fd03df7d7fca0" },
-				{ rule: "de/fused-word-pieces", hash: "ea4da5398c35d674" },
+				{ rule: "de/idiom", hash: "c05df428b3a42079" },
+				{ rule: "de/fused-word-pieces", hash: "324792c72053f63b" },
 				{
 					rule: "de/abbreviation-is-one-segment",
 					hash: "83496aec178971f1",
 				},
 				{ rule: "de/title-before-a-name", hash: "dd531115e2c8a2ef" },
-				{ rule: "de/proper-noun-article", hash: "cf90f857f2b1b648" },
+				{ rule: "de/proper-noun-article", hash: "8f0c5d0f9338a32b" },
 				{
 					rule: "de/funktionsverbgefuege-are-collocations",
-					hash: "b8fe4c62585a561d",
+					hash: "da5ad8e285adbe66",
 				},
 			],
 		},
@@ -99,7 +99,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 				{ rule: "de/pron-or-det-by-use", hash: "bc1096b61ad7294d" },
 				{
 					rule: "de/possessive-after-article",
-					hash: "1e331286845f819c",
+					hash: "be071df99f2242e6",
 				},
 				{ rule: "de/was-fuer", hash: "2f7aa9826f2670de" },
 				{ rule: "de/adjective-stays-adj", hash: "9b5fe154ed54d6dc" },
@@ -112,7 +112,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 		{
 			opens: "German common nouns include",
 			implements: [
-				{ rule: "de/noun-owns-its-article", hash: "59844f5069e822af" },
+				{ rule: "de/noun-owns-its-article", hash: "d7ab8e0ed8c0a5f4" },
 				{
 					rule: "de/only-der-and-ein-are-articles",
 					hash: "7651166ee526ad94",
@@ -121,7 +121,7 @@ export const targetCriteriaCitations: CitingPrompt = {
 					rule: "de/shared-article-in-coordination",
 					hash: "d21d49079359e0b8",
 				},
-				{ rule: "de/proper-noun-article", hash: "cf90f857f2b1b648" },
+				{ rule: "de/proper-noun-article", hash: "8f0c5d0f9338a32b" },
 			],
 		},
 		{

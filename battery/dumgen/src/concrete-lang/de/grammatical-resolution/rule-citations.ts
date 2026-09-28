@@ -25,7 +25,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 			{ rule: "de/core-features-are-identity", hash: "240b45072e01295e" },
 			{
 				rule: "de/canonical-form-is-the-headword",
-				hash: "1c65ae47bc4fdc44",
+				hash: "e12dcd22d33a76aa",
 			},
 		],
 	}),
@@ -37,7 +37,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 			implements: [
 				{
 					rule: "de/canonical-form-is-the-headword",
-					hash: "1c65ae47bc4fdc44",
+					hash: "e12dcd22d33a76aa",
 				},
 			],
 		},
@@ -83,20 +83,19 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 		],
 	}),
 	policy("nounPolicy.articles", grammarPolicies.nounPolicy.articles, {
-		opens: "German NOUN article features",
+		opens: "A German noun's article",
 		implements: [
-			{ rule: "de/noun-article-feature", hash: "1238c072e266ea82" },
-			{ rule: "de/noun-owns-its-article", hash: "59844f5069e822af" },
-			{ rule: "de/fused-word-pieces", hash: "ea4da5398c35d674" },
+			{ rule: "de/noun-owns-its-article", hash: "d7ab8e0ed8c0a5f4" },
+			{ rule: "de/fused-word-pieces", hash: "324792c72053f63b" },
 			{
 				rule: "de/canonical-form-is-the-headword",
-				hash: "1c65ae47bc4fdc44",
+				hash: "e12dcd22d33a76aa",
 			},
 			{
 				rule: "de/shared-article-in-coordination",
 				hash: "d21d49079359e0b8",
 			},
-			{ rule: "de/partial-coverage", hash: "d7bb958508182059" },
+			{ rule: "de/partial-coverage", hash: "7d8f01fb7470e204" },
 		],
 	}),
 	policy("verbalIdentityPolicy", grammarPolicies.verbalIdentityPolicy, {
@@ -125,6 +124,6 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 	}),
 	policy("partialCoveragePolicy", grammarPolicies.partialCoveragePolicy, {
 		opens: "Partial coverage is allowed",
-		implements: [{ rule: "de/partial-coverage", hash: "d7bb958508182059" }],
+		implements: [{ rule: "de/partial-coverage", hash: "7d8f01fb7470e204" }],
 	}),
 ];

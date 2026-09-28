@@ -33,7 +33,7 @@ export const realizationEdits: readonly (readonly [string | RegExp, string])[] =
 		],
 		[
 			/An established noncompositional expression is an Idiom;[^\n]*?only a support-verb predicate is a Collocation\.\n/u,
-			"A fused preposition and article (im, zum, ins, zur) is one ADP unit whose article part belongs to the following noun.\n",
+			"A fused preposition and article (im, zum, ins, zur) holds two words: its preposition part is one ADP unit, and its article part belongs to the following noun.\n",
 		],
 		// The judgment reads a fused word whole (`im`), so the click-time
 		// wording about its pieces gives way to the measured intake wording.

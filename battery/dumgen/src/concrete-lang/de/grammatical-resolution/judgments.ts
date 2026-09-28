@@ -165,7 +165,7 @@ const nounPolicy = {
 	suspension:
 		"For noun suspension, completion is allowed only for one selected trailing-hyphen member in binary und/oder coordination with a full right compound sharing the literal suffix; retain Full coverage. Ordinary uninflected noun forms and dictionary citations remain distinct.",
 	articles:
-		"German NOUN article features describe the article the noun owns or shares: Definite, Indefinite, or None for bare nouns and nouns with a non-article determiner. The noun owns an overt article as its first member, whether standalone (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or shortened ('ne Frage); the fused word's other piece belongs to its own unit. Noun Lemma is always the bare dictionary headword. Contextual nouns have a marked case/number/article bag even when article is None. Partial nouns are allowed only for a licensed shared article in compatible coordination; membership stays fixed.",
+		"A German noun's article is a member, never a feature: the Surface marks case and number, not the article. The noun owns an overt article as its first member, whether standalone (der Aufstieg), the article piece of a fused word (m in im Wald, s in aufs Ende) or shortened ('ne Frage); the fused word's other piece belongs to its own unit. Noun Lemma is always the bare dictionary headword. Partial nouns are allowed only for a licensed shared article in compatible coordination; membership stays fixed.",
 };
 
 const verbalIdentityPolicy =
@@ -194,7 +194,7 @@ const reflexivePronouns: ReadonlySet<string> = new Set([
 ]);
 
 const partialCoveragePolicy =
-	"Partial coverage is allowed for Idiom, DiscourseFormula, Proverb and Aphorism only when fixed lexical material is genuinely unrealized and the full identity remains recoverable. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
+	"Partial coverage is allowed only when fixed material is genuinely missing from the sentence and the whole identity stays recoverable: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed. Discontinuous or multi-member targets are not Partial merely due to excluded contextual material.";
 
 /** The policy paragraphs, for the Rules each one cites in `rule-citations.ts`. */
 export const grammarPolicies = {
