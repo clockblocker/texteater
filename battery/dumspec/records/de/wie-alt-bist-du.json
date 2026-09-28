@@ -1,0 +1,58 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wie alt bist du?",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Punctuation", "text": "?" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓🔧" },
+			"notes": {
+				"rationale": "wie asks for the degree of alt: interrogative wie, the same Reading as in Wie schön!"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "wie",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Int"
+						}
+					},
+					"normalizedSurface": "wie",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "Wie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

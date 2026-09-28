@@ -1,0 +1,54 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wie schön!",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "schön" },
+		{ "kind": "Punctuation", "text": "!" }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "❓🔧" },
+			"notes": {
+				"rationale": "Exclamative wie is the degree use of interrogative wie; the exclamation comes from the sentence, not from a Reading or Lemma of its own, and a German ADV has no pronType Exc."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "wie",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Int"
+						}
+					},
+					"normalizedSurface": "wie",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "Wie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

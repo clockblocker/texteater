@@ -113,7 +113,7 @@ const adverbs: readonly WhAdverb[] = [
 		emoji: "🔧",
 		Int: {
 			definition:
-				"Fragt nach der Art und Weise, dem Grad oder der Beschaffenheit: Wie geht das? Wie alt bist du?",
+				"Fragt nach der Art und Weise, dem Grad oder der Beschaffenheit, und hebt im Ausruf einen hohen Grad hervor: Wie geht das? Wie alt bist du? Wie schön!",
 			en: ["how"],
 			ru: ["как"],
 		},
