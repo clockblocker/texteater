@@ -10,14 +10,26 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0007"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "💍" },
 			"notes": {
-				"rationale": "Verheiratet expresses an established personal property rather than a productive passive event. Under the TIGER boundary in ADR 0007, it is the participial adjective verheiratet/ADJ and the copula stays separate."
+				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source verheiraten (ADR 0036)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -32,12 +44,7 @@
 					"language": "de",
 					"normalizedSurface": "verheiratet",
 					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -46,6 +53,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

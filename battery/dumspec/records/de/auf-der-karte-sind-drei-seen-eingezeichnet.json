@@ -18,14 +18,30 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0036"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"reading": { "emojiDescription": "🏞" },
 			"notes": {
-				"rationale": "Plural noun with masculine lemma See; the capitalized surface is normalized by the encoder."
+				"rationale": "Seen is the plural of the Masc NOUN See, the lake. It is distinct from the Fem die See, the sea."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -57,6 +73,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"reading": { "emojiDescription": "🗺✏" },
 			"notes": {
 				"rationale": "sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036)."
 			},
@@ -73,12 +90,7 @@
 					"language": "de",
 					"normalizedSurface": "eingezeichnet",
 					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -87,6 +99,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

@@ -15,12 +15,24 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0036"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "🤐" },
 			"notes": {
 				"rationale": "Schweigend is an adverbially used Partizip I, so it is the ADJ schweigend with Participle Source schweigen (ADR 0036)."
 			},
@@ -37,12 +49,7 @@
 					"language": "de",
 					"normalizedSurface": "schweigend",
 					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -51,6 +58,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

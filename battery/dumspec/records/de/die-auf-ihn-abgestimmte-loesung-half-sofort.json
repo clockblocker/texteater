@@ -18,12 +18,27 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0036"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). The dependent auf ihn stays outside."
 			},
@@ -42,7 +57,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Fem",
 						"number": "Sing"
 					},
@@ -54,6 +69,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

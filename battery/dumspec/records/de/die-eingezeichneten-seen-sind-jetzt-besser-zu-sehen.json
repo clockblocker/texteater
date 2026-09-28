@@ -20,12 +20,27 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0036"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🗺✏" },
 			"notes": {
 				"rationale": "Eingezeichneten is an attributive participle modifying Seen, so it is the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036), like predicative eingezeichnet after sein."
 			},
@@ -44,7 +59,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"number": "Plur",
 						"gender": null
 					},
@@ -56,6 +71,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

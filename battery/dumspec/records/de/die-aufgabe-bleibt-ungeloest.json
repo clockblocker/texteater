@@ -12,14 +12,26 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0007"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🧩❓" },
 			"notes": {
-				"rationale": "Bleibt plus un- formation supplies adjective diagnostics. Under the TIGER boundary in ADR 0007, ungelöst is a participial adjective and bleibt remains a separate copula."
+				"rationale": "bleibt is the copula VERB and ungelöst the ADJ ungelöst. As an un- form, it has no Participle Source (ADR 0036)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -34,12 +46,7 @@
 					"language": "de",
 					"normalizedSurface": "ungelöst",
 					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -48,6 +55,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null

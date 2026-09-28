@@ -76,18 +76,29 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
 		"adrs": ["ADR-0036"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🤩" },
 			"notes": {
 				"rationale": "An attributive participle with a von-agent is still an ADJ (ADR 0036): Canonical Form bewundert; Nom Sing Masc. Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0036). The von-agent stays outside."
 			},
@@ -104,6 +115,7 @@
 						"canonicalForm": "bewundert",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -114,7 +126,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Masc",
 						"number": "Sing"
 					}

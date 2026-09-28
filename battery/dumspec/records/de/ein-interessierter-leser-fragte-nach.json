@@ -14,14 +14,29 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🧐" },
 			"notes": {
-				"rationale": "Interessierter is an attributive adjective inflection modifying Leser, with nominative masculine singular agreement. Because the head noun is overt, this is neither a substantivized NOUN analysis nor a verbal-participle Lemma."
+				"rationale": "Interessierter is an attributive participle modifying Leser with nominative masculine singular agreement, so it is the ADJ interessiert with Participle Source interessieren (ADR 0036). interessiert compares (interessierter, am interessiertesten), so this Surface marks Degree Pos. Because the head noun is overt, it is not a substantivized NOUN."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,6 +65,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null

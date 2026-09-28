@@ -52,18 +52,29 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
 		"adrs": ["ADR-0036"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "♨" },
 			"notes": {
 				"rationale": "An attributive Partizip II is an ADJ (ADR 0036): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked. Gekochten is an attributive participle modifying Kartoffeln, so it is the ADJ gekocht with Participle Source kochen (ADR 0036)."
 			},
@@ -80,6 +91,7 @@
 						"canonicalForm": "gekocht",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -90,7 +102,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": null,
 						"number": "Plur"
 					}
