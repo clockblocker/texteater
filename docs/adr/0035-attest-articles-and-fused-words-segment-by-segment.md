@@ -30,7 +30,7 @@ learner can open the Fusion and see how the word breaks down.
 
 **A noun owns its article.** The article is a member of the noun's
 Attestation, so clicking it opens the noun, and its DET identity is derived
-([ADR 0019](./0019-separate-grammatical-relations-from-semantic-relations.md),
+([ADR 0019](./0019-select-grammatical-alternatives-from-reviewed-members.md),
 [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)). German
 and English record it as the inflectional feature
 `article: Definite | Indefinite | None`. Hebrew records it through its

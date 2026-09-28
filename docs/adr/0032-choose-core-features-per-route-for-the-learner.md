@@ -61,7 +61,7 @@ Lemma `der` Dat.Fem.Sg.
 
 **Forms of one word are not synonyms.** Cells are reached through grammatical
 navigation over Core Features
-([ADR 0019](./0019-separate-grammatical-relations-from-semantic-relations.md)),
+([ADR 0019](./0019-select-grammatical-alternatives-from-reviewed-members.md)),
 never through semantic relation claims. Navigation stays among pillars: a
 stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
