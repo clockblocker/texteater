@@ -38,14 +38,14 @@ describe("the stale-citation guard", () => {
 	test("reads ADR statuses from the repository", () => {
 		expect(adrStatuses.get("ADR-0035")).toBe("accepted");
 		expect(adrStatuses.get("ADR-0033")).toBe("superseded by ADR-0036");
-		expect(adrStatuses.get("dumgen/ADR-0002")).toStartWith("superseded");
+		expect(adrStatuses.get("dumgen/ADR-0005")).toStartWith("superseded");
 	});
 
 	test("fails a Reviewed record citing a superseded ADR", () => {
 		expect(checks(citing({ adrs: ["ADR-0035", "ADR-0033"] }))).toEqual([
 			["sources.adrs.1", "StaleCitation"],
 		]);
-		expect(checks(citing({ adrs: ["dumgen/ADR-0002"] }))).toEqual([
+		expect(checks(citing({ adrs: ["dumgen/ADR-0005"] }))).toEqual([
 			["sources.adrs.0", "StaleCitation"],
 		]);
 	});

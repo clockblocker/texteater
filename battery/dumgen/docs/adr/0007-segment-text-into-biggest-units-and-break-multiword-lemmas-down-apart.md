@@ -22,6 +22,13 @@ own. Only the biggest units are returned. An inner layer may travel with them
 as an optional hint when a lab run shows it improves resolution; nothing may
 depend on it.
 
+**Closed-class identity comes from the authored candidates.** When a piece's
+spelling realizes authored DET, PRON or AUX members, its identity is chosen
+among those candidates, never classified first and located by features
+afterwards. A spelling that lists no candidate on a Closed Route is an
+observable Catalog Miss (system ADR 0021). This rule comes from ADR 0005,
+where the candidate choice beat the route vote on closed-class Kinds.
+
 **A click does not classify.** It resolves the Surface features, the Canonical
 Form, the Reading and Knowledge of a unit whose route segmentation already
 chose, and propagates them.
@@ -53,9 +60,10 @@ implementation and out of the output.
 
 ## Consequences
 
-- Supersedes [ADR 0006](./0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md)
-  and amends [ADR 0005](./0005-intake-owns-segments-and-analysis-targets.md):
-  intake owns pieces and biggest units, not a lattice.
+- Supersedes [ADR 0005](./0005-intake-owns-segments-and-analysis-targets.md)
+  and [ADR 0006](./0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md):
+  intake owns pieces and biggest units, not two layers of targets with
+  masses, and keeps ADR 0005's closed-class identity rule.
 - dumspec sentence records are `Segment.Text` gold, their No Target entries
   `Unresolved`; Breakdown Records are `Segment.Unit` gold.
 - Implemented by the segmentation rewrite, which also decides the role and

@@ -53,8 +53,8 @@ not by shared wording.
    or the record is wrong.
 
 **Projections.** Dumgen's target-classification, grammatical-resolution and
-sentence-analysis cases are projected from records, as ADR 0002 in Dumgen
-projected prompt representations from its Canonical Classification Corpus.
+sentence-analysis cases are projected from records, as Dumgen once projected
+its prompt representations from one Canonical Classification Corpus.
 Classification cases come from every Segment of a Full record and from each
 target of a Partial one; `noTarget` entries project to `Unresolved`. Dumgen
 keeps a sidecar keyed by record id for its demo/eval split, slices and
@@ -79,7 +79,7 @@ evaluation slice first. The remaining cases each get a keep-or-retire
 decision. Until the last batch lands, a check fails for any case id found in
 neither the old corpus nor the spec.
 
-This supersedes [Dumgen ADR 0002](../../battery/dumgen/docs/adr/0002-use-one-canonical-classification-corpus-across-prompt-representations.md)
+This replaced Dumgen's Canonical Classification Corpus (its former ADR 0002)
 and moves evaluation gold out of Dumgen. The Fixed Catalog stayed in Dumgen
 until the amendment below.
 

@@ -14,117 +14,47 @@ back. The offset is the persisted occurrence coordinate.
 _Avoid_: Piece, token, Segment index as identity
 
 **Segmented Sentence**:
-one Sentence as intake leaves it: language, Stitched Text and Segments. Its
-Sentence Analysis carries what intake decided about them.
+one Sentence as intake leaves it: language, Stitched Text and Segments.
 _Avoid_: Sentence DTO
 
-**Sentence Analysis**:
-the intake-owned value beside one German Segmented Sentence: its offset-keyed
-Segments with surfaces, its Lexeme Targets, its Phraseme Targets, and its
-Fusions with each component pointing at a Segment. Produced by
-`analyzeSentence`, stored by the host, read at selection time.
-_Avoid_: lattice, precomputed resolution
+**`Segment.Text`**:
+the segmenter that routes clicks. It takes a text and returns its Segments and
+its biggest units, each the Segments that route to one unit with its route
+(language, Family, Kind) or `Unresolved`. Every Segment belongs to exactly one
+unit.
+_Avoid_: lattice, Sentence Analysis, for the current design
+
+**`Segment.Unit`**:
+the segmenter that breaks one Locution or Saying down into its Lexemes, once
+per Lemma. It returns the same shape as `Segment.Text` one level down and
+never the whole Lemma as one unit.
+_Avoid_: Lexical Breakdown, inner layer
 
 **Encounter**:
 a Segmented Sentence together with one Analysis Target supplied
 for linguistic resolution or Knowledge production.
 
 **Analysis Target**:
-the unit an Encounter resolves: a Family, a Kind and the ordered Segment
-members. At intake it is a Lexeme Target or a Phraseme Target; at click time
-it is the largest unit containing the clicked Segment, or what
-classification assembled when no analysis resolves it.
+the unit an Encounter resolves: its route and ordered Segment members, as
+segmentation chose them. A click resolves it and never classifies it.
 _Avoid_: Unit, group, lattice node
 
-**Lexeme Target**:
-the Segments that realize one Lexeme occurrence, produced at intake: its
-Members with roles, exactly one Head, one Route Mass over Lexeme Kinds, and,
-when the head is closed-class, its Identity Candidates. Every ResolvableText
-Segment belongs to exactly one Lexeme Target. A word intake cannot place is a
-singleton whose Route Mass favours Unresolved. `zur` is two: the ADP `zu`
-and the Article `r` of the noun that follows.
-_Avoid_: word, token group
-
-**Phraseme Target**:
-the Lexeme Targets that are fixed lexical members of one expression,
-produced at intake: its member words, one Kind Mass over Phraseme Kinds with
-`None`, and its fixedness. It also lists the prepositions the expression
-governs when no one of its words governs them alone (`über` in `weiß
-Bescheid über`); they are in its span but are not fixed, so they never count
-toward its fixedness. It never lists a Segment; its span is its members'
-Segments. A word belongs to at most one Phraseme Target.
-_Avoid_: expression, nested target, idiom group
-
-**Kind Mass**:
-a Phraseme Target's distribution over Phraseme Kinds, `None` and
-Unresolved. The fixedness Score establishes the expression; the Kind Mass
-names it.
-_Avoid_: phraseme route
-
-**Fixedness**:
-the fixedness Score of a word inside the wording around it: free
-combination, preferred combination, collocation, fixed expression. Only a
-word at or above the floor is a member of a Phraseme Target; the target's
-fixedness is the mean over its words.
-_Avoid_: confidence, idiomaticity
-
-**Member**:
-one Segment inside a Lexeme Target with its Member Role: Head,
-SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
-Auxiliary, DegreeMarker, or Unresolved. Roles say what a member is inside its target; they
-do not move membership. A GovernedPreposition member belongs to a verb, an
-adjective or a noun, wherever it stands (`stolz` with `auf` in `Auf ihn bin
-ich stolz`).
-_Avoid_: role mass, Free member
-
 **Realized Slot**:
-a preposition slot the sentence realizes, linked to the Lexeme or Phraseme
-Target that lexically selects the preposition. Its marker is the Segment
-realizing the preposition (a preposition or a fused word's adposition); a
-pronominal adverb realizes the preposition and its filler at once, so it
-stays its own unit and is the slot's filler instead. The complement names
-the preposition's Lemma, its case and its referent. The governor takes the
-marker in, and the governor is the smallest unit the government survives
+a preposition slot the sentence realizes, linked to the unit that lexically
+selects the preposition. Its marker is the Segment realizing the preposition
+(a preposition or a fused word's adposition); a pronominal adverb realizes
+the preposition and its filler at once, so it stays its own unit and is the
+slot's filler instead. The complement names the preposition's Lemma, its case
+and its referent. The governor is the smallest unit the government survives
 with in the same sense: `Angst vor` belongs to `Angst`, also inside `Angst
-haben`, while `Bescheid wissen über` belongs to the Phraseme, since
-`Bescheid` alone is an official notice. Intake records only
-preposition slots; bare-case slots come from the Knowledge call's frame.
-Each preposition and case gives the governor's Valency Frame an Optional
-Preposition Slot if the frame lacks it. The rest of the frame comes from the
-Knowledge call that creates the Reading (ADR 0034).
+haben`, while `Bescheid wissen über` belongs to the Locution, since
+`Bescheid` alone is an official notice. Intake records only preposition
+slots; bare-case slots come from the Knowledge call's frame.
 _Avoid_: government list, valency guess, governed-preposition prompt
 
-**Route Mass**:
-the Lexeme Target's distribution over Lexeme Kinds, including Unresolved.
-Family is derived from Kind. No route, confidence or Family is stored beside
-it.
-_Avoid_: route, classification
-
-**Identity Candidates**:
-the Lexeme Target's distribution over the authored members its closed-class
-head can realize, plus NoMatch and Unresolved. The winning candidate implies
-the route.
-_Avoid_: headword, per-member identity
-
-**Identity State**:
-what the Resolution Selector says about a Member: Selected (the head has a
-winning candidate), Derived (a non-head role whose identity follows from the
-target's shape and grammar, such as an Auxiliary's AUX Reading or an
-Article's surface), Open (no candidates; generation continues), or Miss (a
-DET or PRON route whose head's spelling enumerates no candidate). The Miss
-Kinds are not the Closed Routes: PRON can be a Miss, and AUX cannot.
-
-**Resolution Selector**:
-the one pure function that turns a Sentence Analysis's masses into resolved
-values under the current policy: the Unresolved floor, identity implies
-route, Family from Kind, Identity State from role and candidates, the
-named Kind of a Phraseme, and the largest unit at an offset. It ships with the package and is what the sentence corpus scores.
-_Avoid_: stored resolution, threshold migration
-
 **Grammatical Resolution**:
-production of a click-independent Attestation for
-an already classified Analysis Target, whether the Sentence Analysis or
-classification supplied it.
+production of a click-independent Attestation for an Analysis Target whose
+route is already chosen.
 
 **Referent Context**:
 the Sentences just before and after an Encounter's Sentence in its Text.
@@ -168,3 +98,71 @@ Relations for a caller-supplied Reading in an Encounter.
 **Evaluation Run**:
 one recorded execution of a linguistic experiment, with
 its effective model settings, case outputs, failures and evaluation results.
+
+### Legacy intake
+
+These terms name the intake Dumgen still ships, from Dumgen ADRs 0005 and 0006.
+Dumgen ADR 0007 supersedes both, and the segmentation rewrite (#701) removes
+these terms with the code. The legacy intake still names Phraseme Kinds, which
+ADR 0039 replaced with Locution and Saying.
+
+**Sentence Analysis**:
+what the legacy intake stores beside one German Segmented Sentence: its
+offset-keyed Segments with surfaces, its Lexeme Targets, its Phraseme Targets,
+and its Fusions. Produced by `analyzeSentence` and read at selection time.
+_Avoid_: precomputed resolution
+
+**Lexeme Target**:
+the Segments that realize one Lexeme occurrence: its Members with roles,
+exactly one Head, one Route Mass over Lexeme Kinds, and, when the head is
+closed-class, its Identity Candidates. `zur` is two: the ADP `zu` and the
+Article `r` of the noun that follows.
+_Avoid_: word, token group
+
+**Phraseme Target**:
+the Lexeme Targets that are fixed lexical members of one expression, with a
+Kind Mass and a fixedness. It also lists a preposition the expression governs
+when no one of its words governs it alone (`über` in `weiß Bescheid über`),
+which never counts toward its fixedness.
+_Avoid_: nested target, idiom group
+
+**Kind Mass**:
+a Phraseme Target's distribution over Phraseme Kinds, `None` and Unresolved.
+The fixedness score establishes the expression; the Kind Mass names it.
+
+**Fixedness**:
+the score of a word inside the wording around it: free combination, preferred
+combination, collocation, fixed expression. Only a word at or above the floor
+is a member of a Phraseme Target.
+_Avoid_: confidence, idiomaticity
+
+**Member**:
+one Segment inside a Lexeme Target with its Member Role: Head,
+SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
+Auxiliary, DegreeMarker, or Unresolved. Roles stay inside the legacy intake;
+no Attestation records them (ADR 0041).
+_Avoid_: role mass, Free member
+
+**Route Mass**:
+a Lexeme Target's distribution over Lexeme Kinds, including Unresolved. The
+legacy intake derives the Family from the Kind, which ADR 0039 no longer
+allows: a Kind name may repeat across Families.
+_Avoid_: route, classification
+
+**Identity Candidates**:
+a Lexeme Target's distribution over the authored members its closed-class
+head can realize, plus NoMatch and Unresolved. The winning candidate implies
+the route.
+_Avoid_: headword, per-member identity
+
+**Identity State**:
+what the Resolution Selector says about a Member: Selected (the head has a
+winning candidate), Derived (a non-head role whose identity follows from the
+target's shape and grammar), Open (no candidates; generation continues), or
+Miss (a DET or PRON route whose head's spelling enumerates no candidate).
+
+**Resolution Selector**:
+the pure function that turns a Sentence Analysis's masses into resolved
+values: the Unresolved floor, identity implies route, Identity State from
+role and candidates, and the largest unit at an offset.
+_Avoid_: stored resolution, threshold migration
