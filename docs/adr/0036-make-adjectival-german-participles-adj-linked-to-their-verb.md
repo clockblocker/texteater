@@ -36,7 +36,7 @@ have no Participle Source. Substantivized participles stay NOUN.
 The Participle Source is stored in the ADJ Reading's Knowledge as
 `participleSource` and targets a VERB Lemma in the same Language, the way a
 Governed Preposition is stored on its Governor ([ADR
-0030](./0030-store-preposition-government-as-reading-knowledge.md)). The verb
+0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)). The verb
 stores nothing; its list of participial adjectives is a Dumrel projection. It
 is a grammatical link, not a Semantic Relation ([ADR
 0019](./0019-separate-grammatical-relations-from-semantic-relations.md)), and

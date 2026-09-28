@@ -12,37 +12,25 @@ gives the same word without its complement, unlike `hasSepPrefix` and
 `lexicallyReflexive`, which pick a different headword (`aufpassen` is not
 `passen`, `sich erinnern` is not `erinnern`).
 
-Government lives in two places, neither of them the Lemma:
-
-- On the Attestation, as `governedPrepositionEvidence`: the owned member the
-  verb lexically selects, aligned like `expletiveEvidence` (ADR 0022). Intake
-  or click-time classification still assembles the preposition into the
-  verbal target as a member, so clicking `auf` in `wartet auf den Zug`
-  resolves the whole unit to `warten`. Grammar answers which member, if any,
-  is governed and may still refuse a unit whose glued preposition is an
-  adjunct.
-- On the Reading, as the structured Knowledge aspect `governedPrepositions`
-  (ADR 0030): the ADP Lemma and the case it assigns, such as `auf` + Acc for
-  `warten`. It applies to adjectives like `stolz auf` without any schema
-  difference between Kinds, and the learner-facing `warten auf + Akkusativ`
-  is rendered from it.
+Government lives in two places, neither of them the Lemma
+([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)): the
+Reading's Valency Frame holds the type-level claim, and the Attestation's
+`valencyEvidence` names the member that realizes a slot in one occurrence.
+The governed preposition stays an Attestation member of its governor, a VERB,
+ADJ, NOUN or Locution, so clicking `auf` in `wartet auf den Zug` or `stolz auf
+seinen Sohn` opens the governor.
 
 A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
 `hier-` compounds) is its own single-member ADV Lexeme (`pronType: Dem` for
 `da(r)-` and `hier-` forms, `Int` or `Rel` for `wo(r)-` forms by use), never a
-governed member of the governing verb or adjective and never a fixed Phraseme
-member with its governor outside a genuine idiom. The government relation
-stays on the governor.
+governed member of the governing word and never a fixed Locution member with
+its governor outside a genuine idiom. The government relation stays on the
+governor.
 
 Consequences: stored VERB Lemmas that differed only by `hasGovPrep` collapse
 into one Lemma, so their Readings merge under the Emoji Description that
-already separates senses such as `es geht um` from `gehen`. Only verbs
-absorb a governed preposition as a member. Intake never assembles one into an
-ADJ, NOUN or Phraseme target, so clicking `auf` in `stolz auf` opens the
-preposition, and adjective and noun government has no Attestation evidence.
-Intake's Sentence Analysis still links such a preposition to its governor,
-the Reading's Knowledge carries the claim, and the preposition reaches its
-Governors through the projection in ADR 0030. ADR 0030 records the governor-to-preposition link as Knowledge
-rather than as a separate Grammatical Relation.
+already separates senses such as `es geht um` from `gehen`.
 
-Amended by [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md): the Attestation's `governedPrepositionEvidence` is replaced by `valencyEvidence`, and the Reading's `governedPrepositions` by its Valency Frame. ADJ, NOUN and Phraseme governors now take in their governed preposition as an Attestation member like verbs, which replaces "Only verbs absorb a governed preposition as a member. Intake never assembles one into an ADJ, NOUN or Phraseme target, so clicking `auf` in `stolz auf` opens the preposition, and adjective and noun government has no Attestation evidence." The rest of this ADR stands.
+Until ADR 0034, only verbs took in their governed preposition as a member,
+and government was stored as the Attestation's `governedPrepositionEvidence`
+and the Reading's `governedPrepositions` aspect (ADR 0030).
