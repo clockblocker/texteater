@@ -37,3 +37,10 @@ export function grundformLabel(surface: Dumling.Surface): string {
 			: "Not Grundform"
 		: "Undetermined";
 }
+
+/** A Surface's spelling as one label: `Canonical`, or `Variant (Historical)`. */
+export function spellingLabel(spelling: Dumling.Surface["spelling"]): string {
+	return spelling.kind === "Variant"
+		? `Variant (${spelling.variantType})`
+		: spelling.kind;
+}

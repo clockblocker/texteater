@@ -34,8 +34,8 @@ This is a Lemma-level orthographic property, not an inflectional one. Use it for
 
 Do not use \`hyph\` merely because noisy input omits or adds a hyphen relative
 to the Lemma. A typo on the clicked Segment belongs to
-[\`member.orthography\`](/u/feature/attestation/member-orthography/); licensed
-variation belongs to [\`Surface.spelling\`](/u/feature/surface/spelling/), and
+[\`member.orthography\`](/u/feature/attestation/member-orthography/); any
+other spelling variation belongs to [\`Surface.spelling\`](/u/feature/surface/spelling/), and
 partial realization belongs to
 [\`Attestation.realizationCoverage\`](/u/feature/attestation/realization-coverage/).
 \`hyph\` records the Lemma's canonical grammatical form itself.

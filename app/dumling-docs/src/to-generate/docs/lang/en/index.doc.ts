@@ -70,7 +70,7 @@ const ranSurface = {
 \tlanguage: "en",
 \tlemma: runLemma,
 \tnormalizedSurface: "ran",
-\tspelling: "Canonical",
+\tspelling: { kind: "Canonical" },
 \tinflectionalFeatures: {
 \t\tmood: null,
 \t\tnumber: "Sing",

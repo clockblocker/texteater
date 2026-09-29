@@ -16,7 +16,7 @@ export const surface: Dumling.Surface<"en", "Lexeme", "VERB"> = {
 	language: "en",
 	lemma,
 	normalizedSurface: "walk",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 	surfaceFeatures: null,
 	inflectionalFeatures: {
 		mood: null,

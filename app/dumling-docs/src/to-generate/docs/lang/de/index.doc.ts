@@ -93,7 +93,7 @@ const seenSurface = {
 \tlanguage: "de",
 \tlemma: seeLemma,
 \tnormalizedSurface: "Seen",
-\tspelling: "Canonical",
+\tspelling: { kind: "Canonical" },
 \tinflectionalFeatures: {
 \t\tcase: "Nom",
 \t\tgender: null,
@@ -133,7 +133,7 @@ const umZuAttestation = {
 \t	{ attested: "zu", orthography: "Standard" },
 \t],
 \trealizationCoverage: "Full",
-\tsurface: { unitKind: "Surface", language: "de", lemma: umZuLemma, normalizedSurface: umZuLemma.canonicalForm, spelling: "Canonical", surfaceFeatures: null },
+\tsurface: { unitKind: "Surface", language: "de", lemma: umZuLemma, normalizedSurface: umZuLemma.canonicalForm, spelling: { kind: "Canonical" }, surfaceFeatures: null },
 } satisfies Dumling.Attestation<"de">;
 \`\`\`
 

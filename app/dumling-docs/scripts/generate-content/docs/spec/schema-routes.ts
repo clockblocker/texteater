@@ -105,6 +105,21 @@ function acceptedValues(schemas: readonly JsonSchema[]): AcceptedValues {
 	return { freeText, nullable, sets, values: [...values] };
 }
 
+/**
+ * The spellings a Surface accepts, one label per Variant type:
+ * `Canonical`, `Variant (Licensed)`, and so on.
+ */
+function spellingValues(schemas: readonly JsonSchema[]): AcceptedValues {
+	const values = schemas.flatMap(alternatives).flatMap((schema) => {
+		const kind = String(schema.properties?.kind?.const);
+		const types = schema.properties?.variantType?.enum;
+		return types === undefined
+			? [kind]
+			: types.map((type) => `${kind} (${String(type)})`);
+	});
+	return { freeText: false, nullable: false, sets: false, values };
+}
+
 function bagFeatures(
 	bag: JsonSchema | undefined,
 	layer: FeatureLayer,
@@ -169,7 +184,7 @@ function routeFromModule(
 			realizationCoverage: acceptedValues(
 				propertyAlternatives(attestation, "realizationCoverage"),
 			),
-			spelling: acceptedValues(propertyAlternatives(surface, "spelling")),
+			spelling: spellingValues(propertyAlternatives(surface, "spelling")),
 		},
 		family: constant("family") as Dumling.Family,
 		features: [

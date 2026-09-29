@@ -36,7 +36,11 @@ A \`Surface\` is the normalized linguistic realization resolved from noisy text.
 The Surface always contains a \`Lemma\`. It owns:
 
 - \`normalizedSurface\`: the normalized form, such as \`gave up\`
-- \`spelling\`: \`Canonical\` or a licensed \`Variant\`, such as \`armor\` / \`armour\`
+- \`spelling\`: \`{ kind: "Canonical" }\`, or a \`Variant\` of the Lemma's
+  spelling that is no mistake, with its \`variantType\`: \`Licensed\` by a
+  current standard (British \`armour\` for \`armor\`), \`Historical\` under an
+  earlier one (German \`daß\`), \`Regional\` (\`nit\`) or \`Expressive\`, letters
+  stretched for effect (\`ohhh\`)
 - inflectional features and Lemma identity
 
 Routes with represented inflection carry nullable \`inflectionalFeatures\`,

@@ -73,7 +73,7 @@ const katavSurface = {
 \tlanguage: "he",
 \tlemma: katavLemma,
 \tnormalizedSurface: "כתב",
-\tspelling: "Canonical",
+\tspelling: { kind: "Canonical" },
 \tinflectionalFeatures: {
 \t\tdefinite: null,
 \t\tgender: "Masc",

@@ -29,7 +29,9 @@ export function isSurface(
 		isRecord(value) &&
 		isSupportedLanguage(value.language) &&
 		typeof value.normalizedSurface === "string" &&
-		(value.spelling === "Canonical" || value.spelling === "Variant") &&
+		isRecord(value.spelling) &&
+		(value.spelling.kind === "Canonical" ||
+			value.spelling.kind === "Variant") &&
 		value.unitKind === "Surface" &&
 		isLemma(value.lemma)
 	);

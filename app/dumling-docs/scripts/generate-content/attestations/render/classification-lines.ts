@@ -1,5 +1,8 @@
 import type * as Dumling from "dumling/types";
-import { grundformLabel } from "../../../../src/lib/unit-presentation";
+import {
+	grundformLabel,
+	spellingLabel,
+} from "../../../../src/lib/unit-presentation";
 
 import { isAttestation, isSurface } from "../entity/guards";
 import { lemmaForEntity } from "../entity/helpers";
@@ -19,7 +22,7 @@ export function classificationLinesForEntity(
 							: ""
 					}`,
 			),
-			`- \`${entity.surface.spelling}\` **Surface**`,
+			`- \`${spellingLabel(entity.surface.spelling)}\` **Surface**`,
 			`- \`${lemma.kind}\` **${lemma.family}**`,
 			`- **Lemma** _"${lemma.canonicalForm}"_`,
 		];

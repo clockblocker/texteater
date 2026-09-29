@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumspec from "dumspec/types";
+import { spellingLabel } from "../../../../src/lib/unit-presentation";
 import { publicHrefForRouteId } from "../routes";
 import {
 	inPageOrder,
@@ -164,7 +165,7 @@ function targetEvidenceValues(
 	const attestation = entry.target.attestation;
 	switch (field) {
 		case "spelling":
-			return [attestation.surface.spelling];
+			return [spellingLabel(attestation.surface.spelling)];
 		case "historicalStatus": {
 			const features = attestation.surface.surfaceFeatures as {
 				historicalStatus?: string | null;
