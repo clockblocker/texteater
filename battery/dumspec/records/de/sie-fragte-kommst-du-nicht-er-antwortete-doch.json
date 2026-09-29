@@ -1,6 +1,6 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Sie fragte: „Kommst du nicht?“ Er antwortete doch.",
+	"sentence": "Sie fragte: „Kommst du nicht?“ Er antwortete: „Doch.“",
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Sie" },
 		{ "kind": "Whitespace", "text": " " },
@@ -19,9 +19,12 @@
 		{ "kind": "ResolvableText", "text": "Er" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "antwortete" },
+		{ "kind": "Punctuation", "text": ":" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "doch" },
-		{ "kind": "Punctuation", "text": "." }
+		{ "kind": "Punctuation", "text": "„" },
+		{ "kind": "ResolvableText", "text": "Doch" },
+		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
@@ -33,7 +36,7 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [18],
+			"memberSegmentIndices": [20],
 			"notes": {
 				"rationale": "doch answers the negated question Kommst du nicht? by contradicting it: a response particle, partType Res."
 			},
@@ -54,7 +57,7 @@
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "doch", "orthography": "Standard" }],
+				"members": [{ "attested": "Doch", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}
