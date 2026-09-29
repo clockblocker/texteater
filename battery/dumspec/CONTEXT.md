@@ -17,8 +17,9 @@ the interrogative and relative w-adverbs (`wo`, `wann`, `wie`, `warum`), the
 indefinite `irgend-` adverbs, the demonstrative `dahin`, `daher`, `hierhin` and
 `hierher`, and the directional her- and hin- adverbs (`heraus`, `hinaus`,
 `herein`, `hinein`, `herüber`, `hinüber`, `herunter`, `hinunter`, `herauf`,
-`hinauf`, `heran`), with every spelling that realizes them (colloquial `raus`,
-`rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands). They are the
+`hinauf`, `heran`; colloquial `raus`, `rein`, `rüber`, `runter`, `rauf` and
+`ran` are their Shorthands), and the negation particle `nicht`, with every
+spelling that realizes them. They are the
 model's content, not gold: a run is not scored against them. A Note's
 drill-down reaches an article, auxiliary or reflexive here without generation;
 a reflexive reaches the reflexivity unit, never a case cell of `sich`. An attested article reaches the

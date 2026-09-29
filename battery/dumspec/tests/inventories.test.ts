@@ -433,6 +433,18 @@ describe("the German authored inventory", () => {
 			).toEqual([]);
 	});
 
+	test("authors nicht as one PART with polarity Neg and one Reading, never an ADV", () => {
+		expect(
+			authoredMembers
+				.filter(({ lemma }) => lemma.canonicalForm === "nicht")
+				.map(({ lemma, reading }) => [
+					lemma.kind,
+					field(lemma.coreFeatures, "polarity"),
+					reading.emojiDescription,
+				]),
+		).toEqual([["PART", "Neg", "🚫"]]);
+	});
+
 	test("reaches the units a Note drills down to without generation", () => {
 		const realized = (spelled: string, kind: string) =>
 			authoredRealizations
