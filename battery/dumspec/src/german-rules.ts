@@ -292,6 +292,14 @@ const participles: Rule[] = [
 
 const nouns: Rule[] = [
 	{
+		id: "de/substantivized-infinitive-is-a-noun",
+		statement:
+			"A capitalized infinitive used as a noun is a NOUN of its own with gender Neut, never the VERB: das Schwimmen, sein ständiges Meckern.",
+		adrs: ["ADR-0002", "ADR-0040"],
+		routes: lexeme("NOUN", "VERB"),
+		records: [],
+	},
+	{
 		id: "de/noun-owns-its-article",
 		statement:
 			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head. The Head is the noun: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. When the noun is elided, the word standing in for it is the Head: Ich nehme den roten gives [den, roten] ADJ, and Der meine gives [Der, meine] PRON. An article cut off from its Head by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare Head stays bare. The article is a member, never a feature: a noun's Surface records no article, and in a sentence it marks case and number. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none. The article's spelling, read through its fused or shortened form, names a cell of der or ein for its Head's case, number and gender, and that cell is its DET: im Wald gives m, which is dem Dat.Masc.Sg.",
@@ -385,7 +393,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/abbreviation-is-one-segment",
 		statement:
-			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel.",
+			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe.",
 		adrs: ["ADR-0035", "dumgen/ADR-0004"],
 		routes: [],
 		records: [],
