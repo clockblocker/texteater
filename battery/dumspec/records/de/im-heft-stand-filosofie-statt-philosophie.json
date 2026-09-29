@@ -22,10 +22,10 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [
-			{ "rule": "de/member-orthography", "hash": "678811fa8882f8fd" },
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
 			{
 				"rule": "de/variant-and-historical-status",
-				"hash": "9c2cdbb5c2f38ef4"
+				"hash": "4813f1cbb1b7828a"
 			}
 		],
 		"references": []
@@ -35,7 +35,7 @@
 			"memberSegmentIndices": [7],
 			"reading": { "emojiDescription": "🤔" },
 			"notes": {
-				"rationale": "Filosofie is a misspelling of Philosophie reported by the sentence: no dictionary licenses an f spelling of Philosophie (the reform's f variants cover stems like -fon and -graf, not philo-). The member is Typo and points to Philosophie. A Surface is Variant only for a licensed spelling, never a repaired typo, so it is Canonical."
+				"rationale": "Filosofie is a misspelling of Philosophie reported by the sentence: no dictionary licenses an f spelling of Philosophie (the reform's f variants cover stems like -fon and -graf, not philo-). The member is Typo and points to Philosophie. No standard, current or earlier, accepts it, and it is neither regional nor expressive, so it is a mistake, not a Variant, and the Surface is Canonical."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

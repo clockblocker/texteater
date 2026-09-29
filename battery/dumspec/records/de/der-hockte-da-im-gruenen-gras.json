@@ -39,13 +39,13 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/member-orthography","hash":"678811fa8882f8fd"}], "references": [] },
+	"sources": { "adrs": [], "rules": [{"rule":"de/variant-and-historical-status","hash":"4813f1cbb1b7828a"},{"rule":"de/member-orthography","hash":"972266d21119b126"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
 			"reading": { "emojiDescription": "🌊" },
 			"notes": {
-				"rationale": "floß is the 3sg past of fließen: the coffee ran onto his nose, with dem as the dative experiencer and der Kaffee as the subject, so it is not the noun Floß. floß is the spelling before the 1996 reform (today floss), so the Surface is Variant and the member Standard (de/member-orthography). Old spelling is no historical status (de/variant-and-historical-status)."
+				"rationale": "floß is the 3sg past of fließen: the coffee ran onto his nose, with dem as the dative experiencer and der Kaffee as the subject, so it is not the noun Floß. floß is the spelling before the 1996 reform (today floss), so the Surface is a Historical Variant and the member Standard (de/member-orthography). Old spelling is no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

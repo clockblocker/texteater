@@ -831,7 +831,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/member-orthography",
 		statement:
-			"Each member records how it is written. Standard covers licensed variants and sentence-initial capitals; Typo is a real spelling or casing error; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
+			"Each member records how it is written. Standard covers sentence-initial capitals and the spelling of a Variant Surface, whatever its type; Typo is a real spelling or casing error, a spelling no Variant type covers; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
 		records: [
@@ -842,8 +842,8 @@ const attestations: Rule[] = [
 	{
 		id: "de/variant-and-historical-status",
 		statement:
-			"A Surface is spelled Variant only when it uses a licensed spelling of the same Lemma, never for an inflected form or a repaired typo. Historical status marks archaic grammar, not old spelling or an old text around it.",
-		adrs: [],
+			"A Surface is spelled Canonical when it has the dictionary's main spelling of its form, and Variant when it has any other spelling of the same form of the same Lemma that is not a mistake. A mistake is a Typo member on a Canonical Surface. Spelling is judged against the same form, never against the citation: gingen is Canonical for gehen, and muß is a Variant of muss. A Variant names its type. Licensed: a current standard accepts it, a national one included (zwo, auf Grund, o je for oje, wehe, hmm, British colour). Historical: it was valid under an earlier standard (daß, muß, floß, bißchen, in acht, Photographie). Regional: a dialect or regional form outside the standard (nit, nich, nedd). Expressive: letters stretched for effect (ohhh, boahhh, aaach). Historical status marks archaic grammar, not old spelling or an old text around it: an archaic inflected form (ward, zween) is spelled Canonical and marked Archaic, and daß is a Historical Variant with no historical status.",
+		adrs: ["ADR-0041"],
 		routes: [],
 		records: [
 			"de/im-heft-stand-filosofie-statt-philosophie",
@@ -851,6 +851,9 @@ const attestations: Rule[] = [
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/einst-ging-er-an-ufers-rand",
 			"de/jetzt-schien-die-sonne-gar-zu-sehr",
+			"de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte",
+			"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
+			"de/beim-blick-ins-tal-rief-er-boahhh",
 		],
 	},
 	{

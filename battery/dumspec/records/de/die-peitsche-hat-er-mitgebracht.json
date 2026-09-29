@@ -37,7 +37,7 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0042"],
-		"rules": [{"rule":"de/noun-owns-its-article","hash":"d7ab8e0ed8c0a5f4"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/verbal-participle","hash":"8783a18791f95718"},{"rule":"de/verbal-surface-is-whole","hash":"974139977fd040ca"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/funktionsverbgefuege-are-collocations","hash":"da5ad8e285adbe66"},{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
+		"rules": [{"rule":"de/noun-owns-its-article","hash":"d7ab8e0ed8c0a5f4"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/verbal-participle","hash":"8783a18791f95718"},{"rule":"de/verbal-surface-is-whole","hash":"974139977fd040ca"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/funktionsverbgefuege-are-collocations","hash":"da5ad8e285adbe66"},{"rule":"de/variant-and-historical-status","hash":"4813f1cbb1b7828a"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
 		"references": []
 	},
 	"targets": [
@@ -187,7 +187,7 @@
 			"memberSegmentIndices": [12, 20, 22],
 			"reading": { "emojiDescription": "🛡" },
 			"notes": {
-				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is Variant. Acht is not the numeral."
+				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is a Historical Variant. Acht is not the numeral."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
