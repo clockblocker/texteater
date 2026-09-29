@@ -30,7 +30,7 @@
 			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "e12dcd22d33a76aa"
+				"hash": "976cc1cfacecf685"
 			}
 		],
 		"references": []

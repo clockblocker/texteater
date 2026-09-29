@@ -24,7 +24,7 @@
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "e12dcd22d33a76aa"
+				"hash": "976cc1cfacecf685"
 			},
 			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
 			{
