@@ -1,0 +1,317 @@
+{
+	"texts": {
+		"kafka-die-verwandlung": {
+			"sourceText": "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Er lag auf seinem panzerartig harten Rücken und sah, wenn er den Kopf ein wenig hob, seinen gewölbten, braunen, von bogenförmigen Versteifungen geteilten Bauch, auf dessen Höhe sich die Bettdecke, zum gänzlichen Niedergleiten bereit, kaum noch erhalten konnte. Seine vielen, im Vergleich zu seinem sonstigen Umfang kläglich dünnen Beine flimmerten ihm hilflos vor den Augen.",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+						"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+						"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #22367: Franz Kafka, Die Verwandlung",
+						"url": "https://www.gutenberg.org/ebooks/22367",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #22367 (released 2007-08-21), transcribed from Kurt Wolff Verlag, Leipzig 1917 (Der jüngste Tag 22/23). Chapter I, paragraph 1."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Die Verwandlung",
+				"author": "Franz Kafka",
+				"year": 1915
+			}
+		},
+		"kafka-der-prozess": {
+			"sourceText": "Jemand mußte Josef K. verleumdet haben, denn ohne daß er etwas Böses getan hätte, wurde er eines Morgens verhaftet. Die Köchin der Frau Grubach, seiner Zimmervermieterin, die ihm jeden Tag gegen acht Uhr früh das Frühstück brachte, kam diesmal nicht. Das war noch niemals geschehen. K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er. Sofort klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
+						"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
+						"de/das-war-noch-niemals-geschehen",
+						"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+						"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
+						"url": "https://www.gutenberg.org/ebooks/69327",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Der Prozess",
+				"author": "Franz Kafka",
+				"year": 1925
+			}
+		},
+		"kafka-die-sorge-des-hausvaters": {
+			"sourceText": "Vergeblich frage ich mich, was mit ihm geschehen wird. Kann er denn sterben? Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu. Sollte er also einstmals etwa noch vor den Füßen meiner Kinder und Kindeskinder mit nachschleifendem Zwirnsfaden die Treppe hinunterkollern? Er schadet ja offenbar niemandem; aber die Vorstellung, daß er mich auch noch überleben sollte, ist mir eine fast schmerzliche.",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+						"de/kann-er-denn-sterben",
+						"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+						"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner",
+						"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
+						"url": "https://www.gutenberg.org/ebooks/21989",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Die Sorge des Hausvaters",
+				"author": "Franz Kafka",
+				"year": 1919
+			}
+		},
+		"zweig-brennendes-geheimnis": {
+			"sourceText": "»Ich lese, und dann, wir gehen viel spazieren. Manchmal fahren wir auch im Wagen, die Mama und ich. Ich soll mich hier erholen, ich war krank. Ich muß darum auch viel in der Sonne sitzen, hat der Arzt gesagt.«",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/ich-lese-und-dann-wir-gehen-viel-spazieren",
+						"de/manchmal-fahren-wir-auch-im-wagen-die-mama-und-ich",
+						"de/ich-soll-mich-hier-erholen-ich-war-krank",
+						"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #24173: Stefan Zweig, Brennendes Geheimnis",
+						"url": "https://www.gutenberg.org/ebooks/24173",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #24173 (released 2008-01-05), transcribed from Insel-Verlag, Leipzig, 16.-25. Tausend. Chapter Der Partner, Edgar's answer to the Baron."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Brennendes Geheimnis",
+				"author": "Stefan Zweig",
+				"year": 1911
+			}
+		},
+		"schnitzler-der-moerder": {
+			"sourceText": "Alfred neigte das Haupt, leer lächelnd wie zum Einverständnis, ergriff ihre Hände nicht mehr, die sie entfremdet hängen ließ, wandte sich und ging. Die Tür hinter ihm blieb offen, und er fühlte einen kalten Hauch im Nacken. Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als ein Ende zu machen. So über alle Zweifel war das entschieden, daß er gemächlich schlendernd durch den schmeichelnden Frühlingstag nach Hause spazierte, wie zum ersehnten Schlummer nach einer wüsten Nacht.",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+						"de/die-tuer-hinter-ihm-blieb-offen-und-er-fuehlte-einen-kalten",
+						"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+						"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #25204: Arthur Schnitzler, Der Mörder",
+						"url": "https://www.gutenberg.org/ebooks/25204",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #25204 (released 2008-04-27), transcribed from Verlag Paul Knepler (Wallishaussersche Buchhandlung), Wien, with woodcuts by Ernst Huber. The paragraph after Adele's refusal."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Der Mörder",
+				"author": "Arthur Schnitzler",
+				"year": 1911
+			}
+		},
+		"mann-buddenbrooks-strand": {
+			"sourceText": "Sie hatte ihren großen Strohhut aufgesetzt und ihren Sonnenschirm aufgespannt, denn es herrschte, obgleich ein kleiner Seewind ging, heftige Hitze. Der junge Schwarzkopf schritt, in seinem grauen Filzhut, sein Buch in der Hand, neben ihr her und betrachtete sie manchmal von der Seite. Sie gingen die »Vorderreihe« entlang und spazierten durch den Kurgarten, der stumm und schattenlos mit seinen Kieswegen und Rosenanlagen dalag. Der Musiktempel, zwischen Nadelbäumen versteckt, stand schweigend dem Kurhaus, der Konditorei und den beiden, durch ein langes Zwischengebäude miteinander verbundenen Schweizerhäusern gegenüber. Es war gegen halb 12 Uhr; die Badegäste mußten sich noch am Strande befinden.",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+						"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+						"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+						"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+						"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
+						"url": "https://www.gutenberg.org/ebooks/34811",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 3, Travemünde: Tony and Morten on the promenade."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Buddenbrooks",
+				"author": "Thomas Mann",
+				"year": 1901
+			}
+		},
+		"mann-buddenbrooks-schule": {
+			"sourceText": "Es war klar, daß Doktor Mantelsack heute außerhalb jeder Ordnung fragte und sich gar nicht darum kümmerte, wer am längsten nicht examiniert worden war. Es war jetzt nicht mehr so drohend wahrscheinlich, daß Hanno aufgerufen wurde, es konnte nur noch durch einen unseligen Zufall geschehen. Er wechselte einen glücklichen Blick mit Kai und fing an, seine Glieder ein wenig abzuspannen und auszuruhen ...",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+						"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+						"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
+						"url": "https://www.gutenberg.org/ebooks/34811",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 11, Hanno's school day in Doktor Mantelsack's lesson."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Buddenbrooks",
+				"author": "Thomas Mann",
+				"year": 1901
+			}
+		},
+		"musil-toerless": {
+			"sourceText": "Bald aber lernte er es richtiger schätzen. Eine Unruhe trieb ihn von da an rastlos umher. Er legte jedes Ding, das er berührte, kaum ergriffen wieder weg. Er konnte kein Gespräch mit Kameraden führen, ohne grundlos zu verstummen oder zerstreut mehrmals den Gegenstand zu wechseln. Es kam auch vor, daß ihn mitten im Sprechen eine Welle der Scham überflutete, so daß er rot wurde, zu stottern begann, sich abwenden mußte ...",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/bald-aber-lernte-er-es-richtiger-schaetzen",
+						"de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
+						"de/er-legte-jedes-ding-das-er-beruehrte-kaum-ergriffen-wieder",
+						"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos",
+						"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #34717: Robert Musil, Die Verwirrungen des Zöglings Törleß",
+						"url": "https://www.gutenberg.org/ebooks/34717",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #34717 (released 2010-12-21), transcribed from Wiener Verlag, Wien und Leipzig 1906. Paragraph beginning Bald aber lernte er."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Die Verwirrungen des Zöglings Törleß",
+				"author": "Robert Musil",
+				"year": 1906
+			}
+		},
+		"fontane-jenny-treibel-spoetter": {
+			"sourceText": "»Ach, Treibel, Sie sind ewig ein Spötter. Ihnen kann es keiner recht machen und am wenigsten die Kinder. Glücklicherweise sagen Sie das so hin, ohne recht dran zu glauben. Mit einer Dame, die so gut erzogen wurde, kann man sich überhaupt nicht zanken.«",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/ach-treibel-sie-sind-ewig-ein-spoetter",
+						"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die",
+						"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
+						"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
+						"url": "https://www.gutenberg.org/ebooks/46184",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Ach, Treibel, Sie sind ewig ein Spötter."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Frau Jenny Treibel",
+				"author": "Theodor Fontane",
+				"year": 1892
+			}
+		},
+		"fontane-jenny-treibel-marcell": {
+			"sourceText": "»Vielleicht ist es so. Aber wie es auch liegen mag, Marcell, wir müssen uns nun darüber schlüssig machen, wie du zu dieser ganzen Tragikomödie dich stellen willst, so oder so. Ist dir Korinna, die du vorhin so großmütig verteidigen wolltest, verleidet oder nicht? Findest du, daß sie wirklich eine gefährliche Person ist, voll Oberflächlichkeit und Eitelkeit, oder meinst du, daß alles nicht so schlimm und ernsthaft war, eigentlich nur bloße Marotte, die verziehen werden kann? Darauf kommt es an.«",
+			"paragraphs": [
+				{
+					"sentences": [
+						"de/vielleicht-ist-es-so",
+						"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+						"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen",
+						"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist",
+						"de/darauf-kommt-es-an"
+					]
+				}
+			],
+			"status": "Draft",
+			"sources": {
+				"adrs": [],
+				"rules": [],
+				"references": [
+					{
+						"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
+						"url": "https://www.gutenberg.org/ebooks/46184",
+						"supports": "The paragraph, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Vielleicht ist es so."
+					}
+				]
+			},
+			"provenance": {
+				"kind": "Quoted",
+				"work": "Frau Jenny Treibel",
+				"author": "Theodor Fontane",
+				"year": 1892
+			}
+		}
+	}
+}
