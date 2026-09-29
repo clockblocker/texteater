@@ -39,75 +39,70 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [],
+	"legacy": [
 		{
-			"memberSegmentIndices": [19],
-			"notes": {
-				"rationale": "Das replaces the fixed es of es tut mir leid, which only fills the subject slot, and resolves on its own: the demonstrative pronoun, nominative neuter singular, pointing at the news of his illness."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "Das", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "das",
-					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": null,
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "das",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"coreFeatures": {
-							"pronType": "Dem",
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"case": "Nom",
-							"number": "Sing",
-							"gender": "Neut"
-						}
-					},
-					"surfaceFeatures": null
-				}
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
+			"caseId": "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+			"memberSegmentIndices": [19, 21, 23, 25],
+			"case": {
+				"input": {
+					"markedContext": "Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+					"lemma": "Das tut mir leid",
+					"existingEmojiDescriptions": ["😔"]
+				},
+				"idealOutput": { "emojiDescription": "😔" },
+				"explanation": "A conventional expression of sympathy, not literal regret about an action. Reuse."
 			}
 		},
 		{
-			"memberSegmentIndices": [21, 23, 25],
-			"notes": {
-				"rationale": "tut mir leid is the formula es tut mir leid with das in place of its fixed es, so the Attestation is Partial and its members are tut, mir and leid. Hearing of an illness, the speaker expresses sympathy, not an apology."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "tut", "orthography": "Standard" },
-					{ "attested": "mir", "orthography": "Standard" },
-					{ "attested": "leid", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Partial",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "tut mir leid",
-					"spelling": { "kind": "Canonical" },
+			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
+			"caseId": "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+			"memberSegmentIndices": [19, 21, 23, 25],
+			"case": {
+				"input": {
+					"encounter": {
+						"sentence": {
+							"id": "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+							"language": "de",
+							"segments": [
+								{
+									"kind": "OpaqueText",
+									"text": "Als sie von seiner Krankheit hörte, sagte sie: „"
+								},
+								{ "kind": "ResolvableText", "text": "Das" },
+								{ "kind": "OpaqueText", "text": " " },
+								{ "kind": "ResolvableText", "text": "tut" },
+								{ "kind": "OpaqueText", "text": " " },
+								{ "kind": "ResolvableText", "text": "mir" },
+								{ "kind": "OpaqueText", "text": " " },
+								{ "kind": "ResolvableText", "text": "leid" },
+								{ "kind": "OpaqueText", "text": ".“" }
+							]
+						},
+						"target": {
+							"family": "Phraseme",
+							"kind": "DiscourseFormula",
+							"memberSegmentIndices": [1, 3, 5, 7]
+						}
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "es tut mir leid",
-						"family": "Locution",
-						"kind": "INTJ",
-						"coreFeatures": {}
+						"family": "Phraseme",
+						"kind": "DiscourseFormula",
+						"canonicalForm": "das tut mir leid",
+						"coreFeatures": { "discourseFormulaRole": null }
 					},
-					"surfaceFeatures": null
-				}
+					"candidates": ["😔"]
+				},
+				"idealOutput": {
+					"decision": "Reuse",
+					"emojiDescription": "😔"
+				},
+				"explanation": "A conventional expression of sympathy, not literal regret about an action. Reuse."
 			}
 		}
-	],
-	"noTarget": []
+	]
 }

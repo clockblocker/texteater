@@ -51,7 +51,7 @@
 			},
 			{
 				"rule": "de/modification-attests-partially",
-				"hash": "7624a9d20aa26356"
+				"hash": "c9ac73bf18af63c6"
 			},
 			{ "rule": "de/partial-coverage", "hash": "7d8f01fb7470e204" },
 			{

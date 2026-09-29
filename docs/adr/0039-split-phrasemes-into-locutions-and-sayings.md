@@ -195,10 +195,7 @@ amended by #638), so the INTJ examples above are cited `herzlichen Dank`,
 `guten Morgen`, `wie geht's` and `danke`.
 
 Amended on 2026-09-29 (#662): the apology and sympathy formula is the Lemma
-`es tut mir leid`, as Duden cites it under *leidtun*. A routine formula's
-conventional clipped form attests it Partially, so *Tut mir leid* is
-`[tut, mir, leid]`. A Locution whose fixed `es` only fills the subject slot
-also takes a pronoun in its place, beside the compound expansion above:
-*Das tut mir leid* gives `[das]` PRON `das` and `[tut, mir, leid]`, Partial.
-DWDS, which gives many proverbs an entry of their own, joins the reference
-collections a Reviewed Saying record may cite.
+`es tut mir leid`, as Duden cites it under *leidtun*, and *Tut mir leid*
+without `es` attests it Partially over `[tut, mir, leid]`. DWDS, which gives
+many proverbs an entry of their own, joins the reference collections a
+Reviewed Saying record may cite.
