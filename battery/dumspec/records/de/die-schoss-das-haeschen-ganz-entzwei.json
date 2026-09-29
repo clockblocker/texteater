@@ -85,7 +85,7 @@
 		{
 			"memberSegmentIndices": [23, 25],
 			"notes": {
-				"rationale": "The Full Attestation records both members O and wei of the reaction formula; the docs review span on wei does not make it an independent Lexeme. I linked the selected O to the whole exclamation o wei as a Locution/INTJ, not to a standalone interjection token: a click on any member selects the multiword formula."
+				"rationale": "O wei is one interjection of dismay written in two pieces, like oy vey. wei is no German word of its own, so the pieces are not two Heads and there is no Breakdown into Lexemes: it is one INTJ Lexeme, not a Locution. Its Canonical Form is the attested o wei, a Lemma of its own beside o weh."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -103,9 +103,9 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "o wei",
-						"family": "Locution",
+						"family": "Lexeme",
 						"kind": "INTJ",
-						"coreFeatures": {}
+						"coreFeatures": { "partType": null }
 					},
 					"surfaceFeatures": null
 				}
