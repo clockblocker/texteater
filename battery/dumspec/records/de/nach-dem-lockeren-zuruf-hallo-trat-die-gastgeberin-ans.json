@@ -49,16 +49,12 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [36],
 			"notes": {
-				"rationale": "A valid single-member formula is resolved on this authoritative route; the nearby unmarked Interjection does not alter membership."
+				"rationale": "Willkommen in Dresden! greets the guests: a one-word greeting formula, so it is a Lexeme INTJ."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

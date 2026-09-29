@@ -27,7 +27,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
 		"rules": [
-			{ "rule": "de/saying-needs-uptake", "hash": "900bbd9999f2b34b" },
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
 			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{

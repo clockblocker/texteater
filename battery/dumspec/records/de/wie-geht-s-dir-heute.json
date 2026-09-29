@@ -18,7 +18,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
 		"rules": [
-			{ "rule": "de/routine-formula-is-intj", "hash": "183ce2fe684b1a37" }
+			{ "rule": "de/routine-formula-is-intj", "hash": "2440098b8e65fd89" }
 		],
 		"references": []
 	},

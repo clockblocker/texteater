@@ -20,7 +20,7 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [
-			{ "rule": "de/saying-needs-uptake", "hash": "900bbd9999f2b34b" },
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",

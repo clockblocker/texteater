@@ -764,7 +764,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/routine-formula-is-intj",
 		statement:
-			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen, herzlichen Dank, tut mir leid, wie geht's), is an INTJ: a Lexeme when it is one word (danke, willkommen, Entschuldigung!), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge: tut mir leid is one Lemma with an apology Reading and a sympathy Reading. Entschuldigung! and the noun die Entschuldigung are two Lemmas. A fixed adverbial keeps Kind ADV even as a standalone reply: auf keinen Fall (Gibst du es ihm? – Auf keinen Fall.) and wie dem auch sei are Locution ADV, never INTJ. Words that only stand together are no formula, and each resolves on its own: a merely preferred combination (starker Regen), a repeated formula (Danke, danke! gives two danke targets) and an answer before a formula (nein danke gives [nein] and [danke]).",
+			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen, tut mir leid), is an INTJ: a Lexeme when it is one word (danke), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge, so one Lemma may carry several Readings. An expression that also serves as an adverbial inside a clause, with the same meaning, keeps Kind ADV even standing alone (Gott sei Dank). Words that only stand together are no formula, and each resolves on its own.",
 		adrs: ["ADR-0039"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
 		records: [
@@ -780,14 +780,18 @@ const locutionsAndSayings: Rule[] = [
 			"de/guten-tag-ich-habe-einen-termin",
 			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
 			"de/wie-geht-s-dir-heute",
+			"de/gott-sei-dank-ist-niemand-verletzt-worden",
+			"de/sie-besteht-auf-einer-entschuldigung",
+			"de/entschuldigung-ist-hier-noch-frei",
+			"de/draussen-faellt-starker-regen",
 		],
 	},
 	{
 		id: "de/interjection-counts-its-words",
 		statement:
-			"An interjection stands outside the clause to exclaim, answer or imitate a sound (au, pfui, igitt, hurra, aha, tja, hm, peng, miau) and is an INTJ Lexeme. A response particle that answers a question (ja, nein, doch, jawohl) has partType Res; every other interjection has none. Punctuation separates calls. Interjection pieces with no punctuation between them are one call and one target, whose Canonical Form is the pieces as written, in lexical casing: ha ha, igitt igitt, o weh, o je. Each written shape is a Lemma of its own, so haha, oje and auweia are Lemmas apart from ha ha, o je and au weia; spacing is never a Variant or a Typo. The target is a Lexeme when a piece is no German word of its own (o wei, au weia, oh là là) and a Locution INTJ when every piece is one (ha ha, o weh). Calls separated by punctuation are one target each, of one Lemma: O wei! O wei! and Pfui, pfui! give two targets. An answer keeps its own target before a formula: nein danke gives [nein] and [danke]. An established exclamation of several words whose meaning is not their sum is a Locution INTJ (pfui Teufel, ach du liebe Zeit). An expression that also serves as an adverbial inside a clause, with the same meaning, is ADV even standing alone: Gott sei Dank ist niemand verletzt worden makes Gott sei Dank a Locution ADV. A dative after an interjection is free and resolves on its own: weh mir gives [weh] and [mir].",
+			"An interjection stands outside the clause to exclaim, answer or imitate a sound (au, pfui, igitt, hurra, aha, tja, hm, peng, miau) and is an INTJ Lexeme. A response particle that answers a question (ja, nein, doch, jawohl) has partType Res; every other interjection has none. Punctuation separates calls. Interjection pieces with no punctuation between them are one call and one target, whose Canonical Form is the pieces as written, in lexical casing: ha ha, igitt igitt, o weh, o je. Each written shape is a Lemma of its own, so haha, oje and auweia are Lemmas apart from ha ha, o je and au weia; spacing is never a Variant or a Typo. The target is a Lexeme when a piece is no German word of its own (o wei, au weia, oh là là) and a Locution INTJ when every piece is one (ha ha, o weh). Calls separated by punctuation are one target each, of one Lemma: O wei! O wei! and Pfui, pfui! give two targets. An answer keeps its own target before a formula: nein danke gives [nein] and [danke]. An established exclamation of several words whose meaning is not their sum is a Locution INTJ (pfui Teufel, ach du liebe Zeit). A dative after an interjection is free and resolves on its own: weh mir gives [weh] and [mir].",
 		adrs: ["ADR-0039", "ADR-0041"],
-		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
+		routes: [...lexeme("INTJ"), ...locution("INTJ")],
 		records: [
 			"de/igitt-da-krabbelt-eine-spinne-ueber-den-tisch",
 			"de/au-weia-das-gibt-aerger",
@@ -807,7 +811,6 @@ const locutionsAndSayings: Rule[] = [
 			"de/peng-da-war-der-reifen-geplatzt",
 			"de/pfui-teufel-wie-das-hier-stinkt",
 			"de/ach-du-liebe-zeit-ist-es-schon-so-spaet",
-			"de/gott-sei-dank-ist-niemand-verletzt-worden",
 			"de/weh-mir-was-habe-ich-getan",
 			"de/wehe-dir-wenn-du-das-verraetst",
 			"de/die-schoss-das-haeschen-ganz-entzwei",
@@ -818,7 +821,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/saying-needs-uptake",
 		statement:
-			"A Saying is a complete saying that speakers have taken up, one target over all its words: a Proverb (Morgenstund hat Gold im Mund) or a Winged Word, a line from a known source that speakers use apart from it (Sein oder Nichtsein). A line is taken up when a reference collection lists it: Büchmann's Geflügelte Worte, Duden's Zitate und Aussprüche, OWID's Sprichwörterbuch or DWDS, which gives many proverbs an entry of their own. A Reviewed record of a Saying cites that collection in its references. A maxim nobody quotes, a famous author's included, resolves word by word. The Canonical Form is written as a sentence, with internal punctuation and no final punctuation (Wer rastet, der rostet). Proverb or Winged Word is the Reading's Saying Type, never part of the Lemma.",
+			"A Saying is a complete saying that speakers have taken up, one target over all its words: a Proverb (Morgenstund hat Gold im Mund) or a Winged Word, a line from a known source used apart from it. A line is taken up when a reference collection lists it (Büchmann, Duden's Zitate und Aussprüche, OWID, DWDS), and a Reviewed Saying record cites that collection. A maxim nobody quotes resolves word by word. The Canonical Form is written as a sentence that keeps its internal punctuation and drops the final one. Proverb or Winged Word is the Reading's Saying Type, never part of the Lemma.",
 		adrs: ["ADR-0039"],
 		routes: saying,
 		records: [
