@@ -35,14 +35,19 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 19],
 			"notes": {
-				"rationale": "The historical daß spelling is licensed; both discontinuous SCONJ anchors remain ordered members."
+				"rationale": "daß is the spelling of dass valid only before 1996, so the Surface is a Historical Variant; old spelling gives the form no historical status. so and daß stay the ordered members of so … dass."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

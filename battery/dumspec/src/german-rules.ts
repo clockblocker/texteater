@@ -940,9 +940,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/variant-and-historical-status",
 		statement:
-			"A Surface is spelled Canonical when it has the dictionary's main spelling of its form, and Variant when it has any other spelling of the same form of the same Lemma that is not a mistake; a mistake is a Typo member. Spelling is judged against the same form, never the citation: gingen is Canonical for gehen, and muß is a Variant of muss. A Variant names every tag that applies, in this order: Licensed when a current standard accepts it (zwo), Historical when only an earlier standard did (daß), Regional for a dialect or regional form (nit), Expressive for letters stretched for effect (ohhh). Tags combine: Swiss Strasse is Licensed and Regional, nit in a 17th-century text Historical and Regional, neeee in a Swabian chat Regional and Expressive. Licensed never combines with Historical. Historical status marks archaic grammar, not old spelling: an archaic inflected form (ward) is spelled Canonical and marked Archaic, and daß has no historical status.",
-		longStatement:
-			"It defines four tags and shows each combination that occurs, so an annotator weighs every tag instead of stopping at the first (#595).",
+			"A Surface is spelled Canonical when it has the dictionary's main spelling of its form, and Variant when it has any other spelling of that form that is no mistake; a mistake is a Typo member. Spelling is judged against the same form, never the citation: gingen is Canonical for gehen. A Variant names every tag that applies: Licensed when a current standard accepts it, Historical when only an earlier one did, Regional for a dialect or regional form, Expressive for letters stretched for effect. Historical status marks an archaic form, not old spelling or syntax: ward is Canonical and Archaic.",
 		adrs: ["ADR-0041"],
 		routes: [],
 		records: [
@@ -954,6 +952,11 @@ const attestations: Rule[] = [
 			"de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte",
 			"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
 			"de/beim-blick-ins-tal-rief-er-boahhh",
+			"de/im-alten-brief-steht-er-muss-morgen-abreisen",
+			"de/im-alten-druck-stand-er-sprach-so-leise-dass-ihn-niemand",
+			"de/die-stadtpolizei-zuerich-meldet-die-strasse-zum-hauptbahnhof",
+			"de/neeee-des-mach-i-ned",
+			"de/es-sol-ein-jeglicher-des-auffgelegten-brots-vnnd-speise-zu",
 		],
 	},
 	{

@@ -1,0 +1,97 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Neeee, des mach i ned.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Neeee" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ned" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "nee",
+						"coreFeatures": { "partType": "Res" }
+					},
+					"normalizedSurface": "neeee",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Expressive"]
+					},
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "Neeee", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"reading": { "emojiDescription": "🚫" },
+			"notes": {
+				"rationale": "ned is a dialect form of nicht, so it is a Variant tagged Regional."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "nicht",
+						"coreFeatures": {
+							"abbr": null,
+							"foreign": null,
+							"partType": null,
+							"polarity": "Neg"
+						}
+					},
+					"normalizedSurface": "ned",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Regional"]
+					},
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "ned", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

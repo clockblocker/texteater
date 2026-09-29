@@ -44,7 +44,7 @@
 		"rules": [
 			{
 				"rule": "de/variant-and-historical-status",
-				"hash": "cd88b4b0f864fa34"
+				"hash": "9e2c6c25c942a570"
 			},
 			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" }
 		],

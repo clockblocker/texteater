@@ -26,13 +26,22 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }],
+		"rules": [
+			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"reading": { "emojiDescription": "🚫" },
+			"notes": {
+				"rationale": "nedd is a dialect form of nicht, as the regional dictionary says, so it is a Variant tagged Regional."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
