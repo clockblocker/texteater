@@ -5,12 +5,12 @@ import {
 } from "../../src/evaluation/spec-corpus/coverage.js";
 import { loadGold } from "../../src/evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../src/evaluation/spec-corpus/projection.js";
-import { segmentText } from "../../src/evaluation/spec-corpus/segment-text.js";
+import { segmentInUnits } from "../../src/evaluation/spec-corpus/segment-in-units.js";
 
 const gold = loadGold();
 
-test("every loaded German record is a Segment.Text case or a reported skip", () => {
-	const projected = projectCorpus(segmentText, gold);
+test("every loaded German record is a segment.inUnits case or a reported skip", () => {
+	const projected = projectCorpus(segmentInUnits, gold);
 	const german = gold.records.filter(({ language }) => language === "de");
 	const cases = new Set(
 		Object.values(projected.origins).map(({ record }) => record),
@@ -29,13 +29,13 @@ test("every loaded German record is a Segment.Text case or a reported skip", () 
 
 test("the coverage printout splits the German records by Review Status", () => {
 	const coverage = coverageOf(
-		projectCorpus(segmentText, gold),
+		projectCorpus(segmentInUnits, gold),
 		gold,
-		segmentText.language,
+		segmentInUnits.language,
 	);
 	const { Reviewed, Draft } = coverage.byStatus;
 	expect(Reviewed.cases + Draft.cases).toBeGreaterThan(0);
 	expect(formatCoverage(coverage)).toStartWith(
-		"segment-text/de: Spec Records in de\n",
+		"segment-in-units/de: Spec Records in de\n",
 	);
 });

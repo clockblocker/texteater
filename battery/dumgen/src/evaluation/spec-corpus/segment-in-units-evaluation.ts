@@ -1,20 +1,20 @@
 /**
- * Scores a `Segment.Text` answer against its Spec Record. Only ResolvableText
+ * Scores a `segment.inUnits` answer against its Spec Record. Only ResolvableText
  * Segments are scored; whether a unit also lists whitespace or punctuation
  * does not count.
  */
 import type * as Dumspec from "dumspec/types";
 import type {
 	GoldUnitSource,
-	SegmentTextFacts,
-	SegmentTextInput,
-	SegmentTextOutput,
+	SegmentInUnitsFacts,
+	SegmentInUnitsInput,
+	SegmentInUnitsOutput,
 	Unit,
-} from "./segment-text.js";
+} from "./segment-in-units.js";
 
 /**
  * `Stub`: the gold unit is `Unresolved` or foreign material, which is not
- * scored until German `Segment.Text` routes foreign words (#730) and its
+ * scored until German `segment.inUnits` routes foreign words (#730) and its
  * confidence line for `Unresolved` is set (#701).
  */
 export type UnitVerdict =
@@ -50,7 +50,7 @@ export type SentenceCheck = {
 	readonly repeated: readonly number[];
 };
 
-export type SegmentTextEvaluation = {
+export type SegmentInUnitsEvaluation = {
 	/**
 	 * A Partial record passes when every scored gold unit matches; a Full
 	 * record also needs its Sentence check. Absent when nothing is scored,
@@ -96,20 +96,21 @@ const sameSegments = (left: readonly number[], right: readonly number[]) =>
 		[...right].sort((a, b) => a - b).join();
 
 /**
- * The evaluator for a projected `Segment.Text` corpus, reading each case's
+ * The evaluator for a projected `segment.inUnits` corpus, reading each case's
  * Coverage and unit sources from `facts`.
  */
-export function evaluateSegmentText(
-	facts: Readonly<Record<string, SegmentTextFacts>>,
+export function evaluateSegmentInUnits(
+	facts: Readonly<Record<string, SegmentInUnitsFacts>>,
 ) {
 	return (args: {
 		readonly caseId: string;
-		readonly input: SegmentTextInput;
-		readonly idealOutput: SegmentTextOutput;
-		readonly output: SegmentTextOutput;
-	}): SegmentTextEvaluation => {
+		readonly input: SegmentInUnitsInput;
+		readonly idealOutput: SegmentInUnitsOutput;
+		readonly output: SegmentInUnitsOutput;
+	}): SegmentInUnitsEvaluation => {
 		const caseFacts = facts[args.caseId];
-		if (!caseFacts) throw Error(`No Segment.Text facts for ${args.caseId}`);
+		if (!caseFacts)
+			throw Error(`No segment.inUnits facts for ${args.caseId}`);
 		const { segments } = args.input;
 		const unscored = (index: number) =>
 			segments[index] !== undefined &&
@@ -174,7 +175,7 @@ export function evaluateSegmentText(
 }
 
 function sentenceCheck(
-	segments: SegmentTextInput["segments"],
+	segments: SegmentInUnitsInput["segments"],
 	ideal: readonly Unit[],
 	scored: readonly (readonly number[])[],
 	returned: readonly Unit[],

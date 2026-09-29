@@ -145,7 +145,7 @@ export interface SpecRecord {
 export type BreakdownRecordId = string;
 
 /**
- * One multiword Lemma's Breakdown (ADR 0041), the gold for `Segment.Unit`
+ * One multiword Lemma's Breakdown (ADR 0041), the gold for `segment.inLexemes`
  * (Dumgen ADR 0007): the Lemma's wording as its sentence, segmented, and
  * the Lexeme targets it breaks down into. No target covers the whole
  * wording, and every ResolvableText Segment is in exactly one target.

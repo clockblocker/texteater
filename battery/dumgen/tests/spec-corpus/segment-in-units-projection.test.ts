@@ -6,9 +6,9 @@ import {
 	sameInputReason,
 } from "../../src/evaluation/spec-corpus/projection.js";
 import {
-	segmentText,
-	segmentTextRoute,
-} from "../../src/evaluation/spec-corpus/segment-text.js";
+	segmentInUnits,
+	segmentInUnitsRoute,
+} from "../../src/evaluation/spec-corpus/segment-in-units.js";
 import { emptySidecar, specRecord } from "./fixtures.js";
 
 // "Nora hat bereits gegessen." → Nora 0, hat 2, bereits 4, gegessen 6, "." 7
@@ -69,7 +69,7 @@ const sidecar: Sidecar = {
 		},
 	},
 	explanations: {
-		[segmentTextRoute]: {
+		[segmentInUnitsRoute]: {
 			[nora.id]: "The auxiliary joins the verb it serves.",
 		},
 	},
@@ -83,15 +83,15 @@ function project(
 	withSidecar = sidecar,
 ) {
 	return projectCorpus(
-		segmentText,
+		segmentInUnits,
 		goldOf({ records, sidecar: withSidecar }),
 	);
 }
 
-describe("the Segment.Text projection", () => {
+describe("the segment.inUnits projection", () => {
 	test("makes one case per record: its Segments in, its units out", () => {
 		const { corpus, origins, facts } = project();
-		expect(corpus.route).toBe("segment-text/de");
+		expect(corpus.route).toBe("segment-in-units/de");
 		const nora_ = corpus.cases[nora.id];
 		expect(nora_?.input.segments.map(({ text }) => text).join("")).toBe(
 			nora.sentence,
@@ -209,13 +209,13 @@ describe("the Segment.Text projection", () => {
 	test("rejects a sidecar that explains a case the corpus lacks", () => {
 		expect(() =>
 			projectCorpus(
-				segmentText,
+				segmentInUnits,
 				goldOf({
 					records: [nora],
 					sidecar: {
 						...emptySidecar,
 						explanations: {
-							[segmentTextRoute]: { [other.id]: "Why" },
+							[segmentInUnitsRoute]: { [other.id]: "Why" },
 						},
 					},
 				}),

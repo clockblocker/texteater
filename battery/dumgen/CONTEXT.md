@@ -17,18 +17,24 @@ _Avoid_: Piece, token, Segment index as identity
 one Sentence as intake leaves it: language, Stitched Text and Segments.
 _Avoid_: Sentence DTO
 
-**`Segment.Text`**:
-the segmenter that routes clicks. It takes a text and returns its Segments and
-its biggest units, each the Segments that route to one unit with its route
-(language, Family, Kind) or `Unresolved`. Every Segment belongs to exactly one
-unit.
-_Avoid_: lattice, Sentence Analysis, for the current design
+**`segment.inUnits`**:
+the segmenter that routes clicks. It takes a text already split into
+paragraphs and Sentences, and returns each Sentence's Segments and its biggest
+units, each the Segments that route to one unit with its route (language,
+Family, Kind) or `Unresolved`. Every Segment belongs to exactly one unit.
+Splitting the text is done above it. Its jev-based judges see one Sentence at
+a time.
+_Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
-**`Segment.Unit`**:
+**`segment.inLexemes`**:
 the segmenter that breaks one Locution or Saying down into its Lexemes, once
-per Lemma. It returns the same shape as `Segment.Text` one level down and
+per Lemma. It returns the same shape as `segment.inUnits` one level down and
 never the whole Lemma as one unit.
-_Avoid_: Lexical Breakdown, inner layer
+_Avoid_: Segment.Unit, Lexical Breakdown, inner layer
+
+**`segment.inMorphemes`**:
+the segmenter that would break a Lexeme down into its Morphemes. Named to
+complete the set; out of scope for now.
 
 **Encounter**:
 a Segmented Sentence together with one Analysis Target supplied

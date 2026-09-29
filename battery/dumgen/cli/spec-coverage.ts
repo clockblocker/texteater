@@ -10,14 +10,14 @@ import {
 } from "../src/evaluation/spec-corpus/coverage.js";
 import { loadGold } from "../src/evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../src/evaluation/spec-corpus/projection.js";
-import { segmentText } from "../src/evaluation/spec-corpus/segment-text.js";
+import { segmentInUnits } from "../src/evaluation/spec-corpus/segment-in-units.js";
 
 const { values } = parseArgs({
 	args: Bun.argv.slice(2),
 	options: { list: { type: "string", default: "8" } },
 });
 const gold = loadGold();
-for (const projection of [segmentText])
+for (const projection of [segmentInUnits])
 	process.stdout.write(
 		formatCoverage(
 			coverageOf(

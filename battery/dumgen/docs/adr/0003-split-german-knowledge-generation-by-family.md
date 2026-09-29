@@ -26,7 +26,7 @@ The relation-space rule in system ADR 0020 remains. A combined Family route
 was rejected because it obscures applicability; model-selected Family was
 rejected because the source Reading already fixes it. Morphological Tree
 generation remains deferred. Lexical Breakdown generation is dropped: a
-multiword Lemma's Breakdown comes from `Segment.Unit` (Dumgen ADR 0007), and
+multiword Lemma's Breakdown comes from `segment.inLexemes` (Dumgen ADR 0007), and
 [#720](https://github.com/clockblocker/texteater/issues/720) removes the
 leftover prompts.
 

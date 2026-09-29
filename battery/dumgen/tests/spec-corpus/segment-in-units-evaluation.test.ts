@@ -2,11 +2,11 @@ import { describe, expect, test } from "bun:test";
 import { goldOf } from "../../src/evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../src/evaluation/spec-corpus/projection.js";
 import {
-	type SegmentTextOutput,
-	segmentText,
+	type SegmentInUnitsOutput,
+	segmentInUnits,
 	type Unit,
-} from "../../src/evaluation/spec-corpus/segment-text.js";
-import { evaluateSegmentText } from "../../src/evaluation/spec-corpus/segment-text-evaluation.js";
+} from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import { evaluateSegmentInUnits } from "../../src/evaluation/spec-corpus/segment-in-units-evaluation.js";
 import { emptySidecar, specRecord } from "./fixtures.js";
 
 // "Nora hat bereits gegessen." → Nora 0, hat 2, bereits 4, gegessen 6, "." 7
@@ -33,10 +33,10 @@ const foreign = specRecord({
 });
 
 const projected = projectCorpus(
-	segmentText,
+	segmentInUnits,
 	goldOf({ records: [partial, full, foreign], sidecar: emptySidecar }),
 );
-const evaluate = evaluateSegmentText(projected.facts);
+const evaluate = evaluateSegmentInUnits(projected.facts);
 function score(id: string, units: Unit[]) {
 	const golden = projected.corpus.cases[id];
 	if (!golden) throw Error(`No case ${id}`);
@@ -44,7 +44,7 @@ function score(id: string, units: Unit[]) {
 		caseId: id,
 		input: golden.input,
 		idealOutput: golden.idealOutput,
-		output: { units } satisfies SegmentTextOutput,
+		output: { units } satisfies SegmentInUnitsOutput,
 	});
 }
 const route = (kind: string, family = "Lexeme") => ({
@@ -53,7 +53,7 @@ const route = (kind: string, family = "Lexeme") => ({
 	kind,
 });
 
-describe("Segment.Text on a Partial record", () => {
+describe("segment.inUnits on a Partial record", () => {
 	test("passes when the unit covering the target matches its Segments and route", () => {
 		const result = score(partial.id, [
 			{ segments: [0], route: route("PROPN") },
@@ -103,7 +103,7 @@ describe("Segment.Text on a Partial record", () => {
 	});
 });
 
-describe("Segment.Text on a Full record", () => {
+describe("segment.inUnits on a Full record", () => {
 	const targets: Unit[] = [
 		{ segments: [0], route: route("PRON") },
 		{ segments: [2], route: route("VERB") },

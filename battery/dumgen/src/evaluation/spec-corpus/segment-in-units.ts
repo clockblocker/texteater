@@ -1,5 +1,5 @@
 /**
- * The German `Segment.Text` projection (Dumgen ADR 0007): a Spec Record's
+ * The German `segment.inUnits` projection (Dumgen ADR 0007): a Spec Record's
  * Sentence becomes one case whose ideal output is the units its targets and
  * No Target entries assert.
  */
@@ -15,12 +15,12 @@ const segmentSchema = z.strictObject({
 });
 
 /**
- * What the sentence judge reads: one Sentence as its Segments. `Segment.Text`
- * receives the whole text, but its jev-based sentence segmenters see one
- * Sentence each (#701), so the case is the Sentence. A text-level case over a
- * paragraph is separate and comes with paragraph records.
+ * What the sentence judge reads: one Sentence as its Segments.
+ * `segment.inUnits` receives a text already split into paragraphs and
+ * Sentences; splitting is not its concern (#701). Its jev-based sentence
+ * segmenters see one Sentence each, so the case is the Sentence.
  */
-export const segmentTextInputSchema = z.strictObject({
+export const segmentInUnitsInputSchema = z.strictObject({
 	language: z.literal("de"),
 	segments: z.array(segmentSchema).min(1),
 });
@@ -45,15 +45,15 @@ const unitSchema = z.strictObject({
 export type Unit = z.infer<typeof unitSchema>;
 
 /**
- * What `Segment.Text` returns: its units. An ideal output lists only the units
+ * What `segment.inUnits` returns: its units. An ideal output lists only the units
  * its record asserts, so a Partial record's leaves Segments out.
  */
-export const segmentTextOutputSchema = z.strictObject({
+export const segmentInUnitsOutputSchema = z.strictObject({
 	units: z.array(unitSchema),
 });
 
-export type SegmentTextInput = z.infer<typeof segmentTextInputSchema>;
-export type SegmentTextOutput = z.infer<typeof segmentTextOutputSchema>;
+export type SegmentInUnitsInput = z.infer<typeof segmentInUnitsInputSchema>;
+export type SegmentInUnitsOutput = z.infer<typeof segmentInUnitsOutputSchema>;
 
 /** Where an ideal unit comes from in its record. */
 export type GoldUnitSource =
@@ -64,14 +64,14 @@ export type GoldUnitSource =
  * What the evaluator reads beside a case: the record's Coverage, and the
  * source of each ideal unit, in the ideal output's order.
  */
-export type SegmentTextFacts = {
+export type SegmentInUnitsFacts = {
 	readonly coverage: Dumspec.Coverage;
 	readonly sources: readonly GoldUnitSource[];
 };
 
-export const segmentTextRoute = "segment-text/de";
+export const segmentInUnitsRoute = "segment-in-units/de";
 
-function segmentTextInput(record: Dumspec.SpecRecord): SegmentTextInput {
+function segmentInUnitsInput(record: Dumspec.SpecRecord): SegmentInUnitsInput {
 	return {
 		language: "de",
 		segments: record.segments.map(({ kind, text, surface }) => ({
@@ -87,15 +87,15 @@ function segmentTextInput(record: Dumspec.SpecRecord): SegmentTextInput {
  * Segments and its Lemma's route, and each No Target entry an `Unresolved`
  * unit of its one Segment, ordered by first Segment.
  */
-export const segmentText: Projection<
-	typeof segmentTextInputSchema,
-	typeof segmentTextOutputSchema,
-	SegmentTextFacts
+export const segmentInUnits: Projection<
+	typeof segmentInUnitsInputSchema,
+	typeof segmentInUnitsOutputSchema,
+	SegmentInUnitsFacts
 > = {
-	route: segmentTextRoute,
+	route: segmentInUnitsRoute,
 	language: "de",
-	inputSchema: segmentTextInputSchema,
-	outputSchema: segmentTextOutputSchema,
+	inputSchema: segmentInUnitsInputSchema,
+	outputSchema: segmentInUnitsOutputSchema,
 	project(record) {
 		if (record.targets.length === 0 && record.noTarget.length === 0)
 			return { skip: "Annotates no Segment" };
@@ -122,7 +122,7 @@ export const segmentText: Projection<
 		);
 		return [
 			{
-				input: segmentTextInput(record),
+				input: segmentInUnitsInput(record),
 				idealOutput: { units: units.map(({ unit }) => unit) },
 				facts: {
 					coverage: record.coverage,

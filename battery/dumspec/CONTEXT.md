@@ -54,7 +54,7 @@ identity.
 _Avoid_: case, example, gold case, fixture
 
 **Breakdown Record**:
-One Locution's or Saying's Breakdown, the gold for `Segment.Unit`: the
+One Locution's or Saying's Breakdown, the gold for `segment.inLexemes`: the
 Lemma, its Canonical Form as the sentence with its Segments, and the Lexeme
 targets the wording breaks down into, each naming its Reading. Every
 ResolvableText Segment is in exactly one target, and no target returns the

@@ -8,11 +8,11 @@ import { compareRuns, loadRun, saveRun } from "promptsmith/storage";
 import { goldOf } from "../../src/evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../src/evaluation/spec-corpus/projection.js";
 import {
-	type SegmentTextInput,
-	type SegmentTextOutput,
-	segmentText,
-} from "../../src/evaluation/spec-corpus/segment-text.js";
-import { evaluateSegmentText } from "../../src/evaluation/spec-corpus/segment-text-evaluation.js";
+	type SegmentInUnitsInput,
+	type SegmentInUnitsOutput,
+	segmentInUnits,
+} from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import { evaluateSegmentInUnits } from "../../src/evaluation/spec-corpus/segment-in-units-evaluation.js";
 import { emptySidecar, specRecord } from "./fixtures.js";
 
 const records = [
@@ -37,7 +37,7 @@ const records = [
 	}),
 ];
 const projected = projectCorpus(
-	segmentText,
+	segmentInUnits,
 	goldOf({ records, sidecar: emptySidecar }),
 );
 const demonstrations = projected.corpus.select(["de/wir-lachen"]);
@@ -54,7 +54,9 @@ const ideal = new Map(
  */
 function fakeSegmenter(flaky: boolean) {
 	let calls = 0;
-	return async (input: SegmentTextInput): Promise<SegmentTextOutput> => {
+	return async (
+		input: SegmentInUnitsInput,
+	): Promise<SegmentInUnitsOutput> => {
 		calls++;
 		const gold = ideal.get(stableJson(input));
 		if (!gold) throw Error("Unknown input");
@@ -76,7 +78,7 @@ function fakeSegmenter(flaky: boolean) {
 	};
 }
 
-const directory = await mkdtemp(join(tmpdir(), "segment-text-run-"));
+const directory = await mkdtemp(join(tmpdir(), "segment-in-units-run-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
 
 async function run(runId: string, flaky: boolean) {
@@ -87,9 +89,9 @@ async function run(runId: string, flaky: boolean) {
 			evaluation: projected.testSet(demonstrations),
 			demonstrations,
 			run: (input) => segment(input),
-			evaluator: evaluateSegmentText(projected.facts),
+			evaluator: evaluateSegmentInUnits(projected.facts),
 		},
-		experimentId: "segment-text-de",
+		experimentId: "segment-in-units-de",
 		operationVersion: "fake",
 		evaluatorVersion: "1",
 		sourceRevision: "test",
