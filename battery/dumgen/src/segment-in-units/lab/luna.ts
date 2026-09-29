@@ -61,9 +61,18 @@ export class Luna {
 		readonly outputSchema: Readonly<Record<string, unknown>>;
 		readonly repetition: number;
 		readonly calls: CallRecord[];
+		/** Reasoning effort; Dumgen's default is none. */
+		readonly effort?: string;
 	}): Promise<unknown> {
+		const settings = {
+			...lunaConfiguration.settings,
+			reasoning: { effort: args.effort ?? "none" },
+		};
 		const key = hashOf({
-			configuration: lunaConfiguration,
+			configuration:
+				args.effort === undefined || args.effort === "none"
+					? lunaConfiguration
+					: { model: lunaConfiguration.model, settings },
 			systemPrompt: args.systemPrompt,
 			input: args.input,
 			outputSchema: args.outputSchema,
@@ -105,7 +114,7 @@ export class Luna {
 						cachePrompt: true,
 						configuration: {
 							model: lunaConfiguration.model,
-							settings: lunaConfiguration.settings,
+							settings,
 						},
 					});
 					const usage = ((

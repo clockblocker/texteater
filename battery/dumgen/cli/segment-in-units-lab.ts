@@ -43,6 +43,8 @@ import {
 	byRule,
 	byShape,
 	calibration,
+	confusions,
+	pairedUnits,
 	policiesOf,
 	primaryOf,
 	summarizeCost,
@@ -149,7 +151,7 @@ async function run() {
 		.map(([key, value]) => `${key}-${value}`)
 		.join("_")
 		.replace(/[^a-zA-Z0-9_-]/gu, "-");
-	const stamp = new Date().toISOString().replace(/[-:]/gu, "").slice(0, 13);
+	const stamp = new Date().toISOString().replace(/[-:]/gu, "").slice(0, 15);
 	const runId = [stamp, arm.id, slug, set.name, subsetName, values.tag]
 		.filter(Boolean)
 		.join("--");
@@ -272,6 +274,15 @@ async function report(runId: string) {
 	show("by gold route", routeBreakdown);
 	show("by unit shape", shapeBreakdown);
 	show("by cited Rule", ruleBreakdown, 9);
+	const confused = [...confusions(labRun, cases, primary, only)].sort(
+		(a, b) => b[1] - a[1],
+	);
+	console.log(
+		`route confusions (${primary}, summed over reps): ${confused
+			.slice(0, 18)
+			.map(([key, count]) => `${key} ${count}`)
+			.join("; ")}`,
+	);
 	const calibrated = calibration(labRun, cases, only);
 	const bins = (title: string, table: typeof calibrated.routes) =>
 		console.log(
@@ -356,6 +367,31 @@ async function compare() {
 	}
 	const [left, right] = exported;
 	if (!left || !right) return;
+	const leftRun = await loadLabRun(labRoot, leftId);
+	const rightRun = await loadLabRun(labRoot, rightId);
+	const pairedSet = await loadSet(labRoot, leftRun.set as SetName);
+	const pairedOnly = values.subset
+		? new Set(subset(pairedSet, values.subset).map(({ id }) => id))
+		: undefined;
+	const paired = pairedUnits(
+		{ run: leftRun, policy: leftPolicy ?? primaryOf(leftRun) },
+		{ run: rightRun, policy: rightPolicy ?? primaryOf(rightRun) },
+		casesOf(pairedSet.cases),
+		pairedOnly,
+	);
+	console.log(
+		`gold units by majority verdict: both match ${paired.both}, neither ${paired.neither}, left only ${paired.leftOnly.length}, right only ${paired.rightOnly.length}`,
+	);
+	for (const [side, list] of [
+		["left only", paired.leftOnly],
+		["right only", paired.rightOnly],
+	] as const)
+		console.log(
+			`  ${side}: ${list
+				.slice(0, Number(values.limit ?? 25))
+				.map((entry) => entry.text)
+				.join(" | ")}`,
+		);
 	const comparison = compareRuns(left, right);
 	const verdicts = comparison.cases.filter((entry) => entry.verdictChanged);
 	const count = (side: "left" | "right", verdict: string) =>

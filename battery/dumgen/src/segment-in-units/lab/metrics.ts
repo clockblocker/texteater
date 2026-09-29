@@ -554,3 +554,95 @@ export function unitVerdicts(
 	}
 	return result;
 }
+
+/** Route confusions over units whose segments matched: gold → returned. */
+export function confusions(
+	run: LabRun,
+	cases: ReadonlyMap<string, LabCase>,
+	policy: string,
+	only?: ReadonlySet<string>,
+): Map<string, number> {
+	const counts = new Map<string, number>();
+	for (const caseRun of run.cases) {
+		if (only && !only.has(caseRun.id)) continue;
+		const labCase = cases.get(caseRun.id);
+		if (!labCase) continue;
+		for (const repetition of caseRun.repetitions) {
+			const { evaluation } = scoreCase(labCase, repetition, policy);
+			for (const check of evaluation?.units ?? []) {
+				if (check.verdict !== "WrongRoute") continue;
+				const [returned] = check.returned;
+				if (!returned) continue;
+				const key = `${keyOf(check.expected.route)} → ${keyOf(returned.route)}`;
+				counts.set(key, (counts.get(key) ?? 0) + 1);
+			}
+		}
+	}
+	return counts;
+}
+
+/**
+ * Paired comparison per gold unit: its majority verdict over repetitions on
+ * each side. Counts units only one side matches, for a McNemar-style read.
+ */
+export function pairedUnits(
+	left: { run: LabRun; policy: string },
+	right: { run: LabRun; policy: string },
+	cases: ReadonlyMap<string, LabCase>,
+	only?: ReadonlySet<string>,
+): {
+	both: number;
+	neither: number;
+	leftOnly: { id: string; text: string }[];
+	rightOnly: { id: string; text: string }[];
+} {
+	const majority = (run: LabRun, policy: string) => {
+		const result = new Map<string, boolean>();
+		for (const caseRun of run.cases) {
+			if (only && !only.has(caseRun.id)) continue;
+			const labCase = cases.get(caseRun.id);
+			if (!labCase) continue;
+			const votes = new Map<number, number>();
+			for (const repetition of caseRun.repetitions) {
+				const { evaluation } = scoreCase(labCase, repetition, policy);
+				labCase.idealOutput.units.forEach((_, index) => {
+					if (evaluation?.units[index]?.verdict === "Match")
+						votes.set(index, (votes.get(index) ?? 0) + 1);
+				});
+			}
+			labCase.idealOutput.units.forEach((unit, index) => {
+				if (
+					unit.route === "Unresolved" ||
+					unit.route.family === "Foreign"
+				)
+					return;
+				result.set(
+					`${caseRun.id}#${index}`,
+					(votes.get(index) ?? 0) * 2 > caseRun.repetitions.length,
+				);
+			});
+		}
+		return result;
+	};
+	const a = majority(left.run, left.policy);
+	const b = majority(right.run, right.policy);
+	const summary = {
+		both: 0,
+		neither: 0,
+		leftOnly: [] as { id: string; text: string }[],
+		rightOnly: [] as { id: string; text: string }[],
+	};
+	for (const [key, leftMatch] of a) {
+		const rightMatch = b.get(key);
+		if (rightMatch === undefined) continue;
+		const [id = "", index = "0"] = key.split("#");
+		const labCase = cases.get(id);
+		const unit = labCase?.idealOutput.units[Number(index)];
+		const text = `${unit?.segments.map((segment) => labCase?.input.segments[segment]?.text).join(" ")} ${unit ? keyOf(unit.route) : ""}`;
+		if (leftMatch && rightMatch) summary.both++;
+		else if (!leftMatch && !rightMatch) summary.neither++;
+		else if (leftMatch) summary.leftOnly.push({ id, text });
+		else summary.rightOnly.push({ id, text });
+	}
+	return summary;
+}
