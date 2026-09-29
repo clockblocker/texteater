@@ -26,8 +26,30 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"reading": {
+				"emojiDescription": "🏙🇸🇰",
+				"knowledge": {
+					"semanticRelations": {
+						"endonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PROPN",
+								"canonicalForm": "Bratislava",
+								"coreFeatures": {
+									"abbr": null,
+									"article": null,
+									"foreign": null,
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Pressburg is the German name of the city officially called Bratislava. It is a different name, not another spelling of Bratislava, so it is a PROPN Lemma of its own and its spelling is Canonical. Like Berlin it is cited bare and is neuter (das alte Pressburg), and erreichte takes it as its accusative object. Being a historical name makes it neither a Variant nor archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
+				"rationale": "Pressburg is the German exonym of the city whose own name is Bratislava. It is a different name, not another spelling of Bratislava, so it is a PROPN Lemma of its own and its spelling is Canonical. Its Reading stores the local name as its endonym, the PROPN Lemma Bratislava; Bratislava's exonym Pressburg is projected from it, never stored. Like Berlin it is cited bare and is neuter (das alte Pressburg), and erreichte takes it as its accusative object. Being a historical name makes it neither a Variant nor archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
