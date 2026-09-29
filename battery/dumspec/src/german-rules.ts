@@ -657,7 +657,6 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/nicht-jeder-vorschlag-wurde-angenommen",
 			"de/die-datei-wurde-nciht-rechtzeitig-gespeichert",
 			"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale",
-			"de/das-historische-woerterbuch-kennzeichnet-nit-ausdruecklich",
 			"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
 		],
 	},
