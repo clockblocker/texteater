@@ -8,8 +8,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "beträgt" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "inkl" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "inkl." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Versand" },
 		{ "kind": "Whitespace", "text": " " },
@@ -22,15 +21,21 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"notes": {
-				"rationale": "Segment supplies letters only; following period remains unmarked punctuation."
+				"rationale": "inkl. is the abbreviation of the preposition inklusive. Its period belongs to it, so inkl. is one Segment and a Shorthand member whose Surface is the expansion (de/abbreviation-is-one-segment). The old analysis made it a Variant only because the period fell outside the member. The bare noun Versand shows no case; the Gen is the case inklusive governs."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,20 +47,22 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"canonicalForm": "inkl.",
+						"canonicalForm": "inklusive",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
 							"foreign": null,
 							"partType": null
 						}
 					},
-					"normalizedSurface": "inkl",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "inklusive",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "inkl", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "inkl.", "orthography": "Shorthand" }
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{

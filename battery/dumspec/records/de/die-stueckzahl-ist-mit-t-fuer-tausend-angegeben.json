@@ -23,15 +23,21 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "German GSD licenses T as an abbreviated Surface of Tausend; the occurrence remains Standard."
+				"rationale": "T abbreviates Tausend, as the sentence itself says, so it is a Shorthand member whose Surface is the expansion, not a Variant spelling of the numeral and not an abbreviation Lemma: abbr Yes is kept for names whose initialism is their usual form (de/abbreviation-is-one-segment). T takes no period."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -45,17 +51,17 @@
 						"kind": "NUM",
 						"canonicalForm": "Tausend",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
 							"foreign": null,
 							"numType": "Card"
 						}
 					},
-					"normalizedSurface": "T",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "Tausend",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "T", "orthography": "Standard" }],
+				"members": [{ "attested": "T", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}

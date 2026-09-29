@@ -18,8 +18,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "mit" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "pos" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "pos." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "abgekürzt" },
 		{ "kind": "Punctuation", "text": "." }
@@ -28,13 +27,26 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"notes": {
+				"rationale": "pos. is the label's abbreviation of the adjective positiv, the word the sentence glosses it with. An abbreviation is one Segment with its period and stands for its expansion, so pos. is a Shorthand member of positiv, never an abbreviation Lemma of its own (de/abbreviation-is-one-segment). The label is cited, not declined; positiv has comparison forms, so the citation marks Pos (de/comparability-is-lexical)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -44,21 +56,30 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
-						"canonicalForm": "pos.",
+						"kind": "ADJ",
+						"canonicalForm": "positiv",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
-							"partType": null,
-							"polarity": "Pos"
+							"numType": null,
+							"variant": null
 						}
 					},
-					"normalizedSurface": "pos",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
-					"surfaceFeatures": null
+					"normalizedSurface": "positiv",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
-				"members": [{ "attested": "pos", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"members": [{ "attested": "pos.", "orthography": "Shorthand" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

@@ -12,8 +12,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Brot" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "u" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "u." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Käse" },
 		{ "kind": "Punctuation", "text": "." }
@@ -22,13 +21,22 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"notes": {
+				"rationale": "u. is the usual abbreviation of und, not a spelling of it, so it is one Segment with its period and a Shorthand member whose Surface is the expansion und, as with bzw. and z.B. (de/abbreviation-is-one-segment, de/member-orthography)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -42,11 +50,11 @@
 						"canonicalForm": "und",
 						"coreFeatures": { "conjType": null }
 					},
-					"normalizedSurface": "u",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "und",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "u", "orthography": "Standard" }],
+				"members": [{ "attested": "u.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"
 			}
 		}

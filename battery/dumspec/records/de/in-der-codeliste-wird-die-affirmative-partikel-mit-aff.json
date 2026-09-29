@@ -18,8 +18,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "mit" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aff" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "aff." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "abgekürzt" },
 		{ "kind": "Punctuation", "text": "." }
@@ -28,15 +27,25 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
 			"notes": {
-				"rationale": "The supplied letters plus the punctuation outside TARGET identify the established abbreviation Lemma aff.; never expand its canonicalForm to the full word affirmativ."
+				"rationale": "aff. is the code list's abbreviation of the adjective affirmativ, the word the sentence glosses it with. An abbreviation is one Segment with its period and stands for its expansion, so aff. is a Shorthand member of affirmativ, not an abbreviation Lemma aff. (de/abbreviation-is-one-segment). Duden gives affirmativ no comparison forms, so the cited label marks no Degree (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -47,21 +56,25 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
-						"canonicalForm": "aff.",
+						"kind": "ADJ",
+						"canonicalForm": "affirmativ",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
+							"comparable": null,
 							"foreign": null,
-							"partType": null,
-							"polarity": "Pos"
+							"numType": null,
+							"variant": null
 						}
 					},
-					"normalizedSurface": "aff",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
-					"surfaceFeatures": null
+					"normalizedSurface": "affirmativ",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "aff", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"members": [{ "attested": "aff.", "orthography": "Shorthand" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

@@ -4,8 +4,7 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Ein" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sog" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "sog." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Experte" },
 		{ "kind": "Whitespace", "text": " " },
@@ -22,15 +21,25 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "Licensed abbreviation. Period outside member. Variant Surface."
+				"rationale": "sog. is Duden's abbreviation of sogenannt. It is one Segment with its period and a Shorthand member whose Surface is the expansion as the phrase needs it: ein sogenannter Experte, nominative masculine singular (de/abbreviation-is-one-segment). Duden gives sogenannt no comparison forms, so the attributive Surface marks case, gender and number only (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,23 +53,24 @@
 						"kind": "ADJ",
 						"canonicalForm": "sogenannt",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
-					"normalizedSurface": "sog",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "sogenannter",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Masc",
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "sog", "orthography": "Standard" }],
+				"members": [{ "attested": "sog.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []

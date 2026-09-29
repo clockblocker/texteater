@@ -8,8 +8,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "dauert" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ca" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "ca." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "drei" },
 		{ "kind": "Whitespace", "text": " " },
@@ -20,15 +19,25 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"notes": {
-				"rationale": "The licensed abbreviation is a full Variant Surface; punctuation remains outside the member."
+				"rationale": "ca. is Duden's abbreviation of circa, so it is one Segment with its period and a Shorthand member whose Surface is the expansion (de/abbreviation-is-one-segment). circa has no comparison forms (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,17 +51,18 @@
 						"kind": "ADV",
 						"canonicalForm": "circa",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": "Yes",
 							"numType": null,
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "ca",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "circa",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "ca", "orthography": "Standard" }],
+				"members": [{ "attested": "ca.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"
 			}
 		}

@@ -17,8 +17,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "als" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "n" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "n." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "abgekürzt" },
 		{ "kind": "Punctuation", "text": "." }
@@ -27,15 +26,23 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
-				"rationale": "The period is outside the supplied member; the conventional abbreviated Lemma retains it."
+				"rationale": "n. is the transcript's abbreviation of the particle nicht that the sentence names. An abbreviation is one Segment with its period and stands for its expansion, so the target is the authored PART nicht and n. is its Shorthand member (de/abbreviation-is-one-segment). The sentence mentions the form instead of using it; a mentioned form still resolves to the word it spells, as nedd does in the regional-dictionary record."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -47,19 +54,19 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PART",
-						"canonicalForm": "n.",
+						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": "Yes",
+							"abbr": null,
 							"foreign": null,
 							"partType": null,
 							"polarity": "Neg"
 						}
 					},
-					"normalizedSurface": "n",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "nicht",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "n", "orthography": "Standard" }],
+				"members": [{ "attested": "n.", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"
 			}
 		}
