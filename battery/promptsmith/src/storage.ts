@@ -1,8 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { StoredRun } from "./evaluation.js";
+import { diffJson, type JsonChange } from "./json-diff.js";
 import { summarizeQuality } from "./quality.js";
 import { runManifestSchema, storedRunSchema } from "./schemas.js";
+import {
+	type ComparedVerdict,
+	comparedVerdict,
+	modalOutput,
+	repetitionsMismatch,
+} from "./stability.js";
 
 /** Creates a new run directory; existing evidence is never overwritten. */
 export async function saveRun(
@@ -75,6 +82,8 @@ export async function loadRun(
 			(interrupted ? "Interrupted" : failed ? "Failed" : "Completed")
 	)
 		throw Error("Run summary does not match its cases");
+	if (repetitionsMismatch(parsed))
+		throw Error("Run repetitions do not match their summaries");
 	return parsed;
 }
 
@@ -111,29 +120,77 @@ export async function listRuns(outputDirectory: string) {
 			}),
 	);
 }
+type StoredCaseRecord = StoredRun["cases"][number];
+export type CaseComparison = {
+	readonly caseId: string;
+	readonly left: StoredCaseRecord | null;
+	readonly right: StoredCaseRecord | null;
+	/** Null on the side where the case is absent. */
+	readonly verdict: {
+		readonly left: ComparedVerdict | null;
+		readonly right: ComparedVerdict | null;
+	};
+	readonly verdictChanged: boolean;
+	/** Field-level differences between the compared outputs; empty unless both runs have the case. */
+	readonly outputChanges: readonly JsonChange[];
+};
+
+/**
+ * Pairs cases by caseId. Outputs compare as JSON; a repeated case contributes
+ * its most frequent output, and its verdict is Mixed when repetitions disagree.
+ */
 export function compareRuns(left: StoredRun, right: StoredRun) {
 	const a = storedRunSchema.parse(left),
 		b = storedRunSchema.parse(right);
-	const bCases = new Map(b.cases.map((record) => [record.caseId, record]));
+	const aCases = new Map<string, StoredCaseRecord>(
+		a.cases.map((record) => [record.caseId, record]),
+	);
+	const bCases = new Map<string, StoredCaseRecord>(
+		b.cases.map((record) => [record.caseId, record]),
+	);
 	const ids = [
 		...a.cases.map((record) => record.caseId),
 		...b.cases
-			.filter(
-				(record) => !a.manifest.corpus.caseIds.includes(record.caseId),
-			)
+			.filter((record) => !aCases.has(record.caseId))
 			.map((record) => record.caseId),
 	];
-	const aCases = new Map(a.cases.map((record) => [record.caseId, record]));
+	const cases = ids.map((caseId): CaseComparison => {
+		const leftRecord = aCases.get(caseId) ?? null;
+		const rightRecord = bCases.get(caseId) ?? null;
+		const verdict = {
+			left: leftRecord && comparedVerdict(leftRecord),
+			right: rightRecord && comparedVerdict(rightRecord),
+		};
+		const both = leftRecord !== null && rightRecord !== null;
+		return {
+			caseId,
+			left: leftRecord,
+			right: rightRecord,
+			verdict,
+			verdictChanged: both && verdict.left !== verdict.right,
+			outputChanges: both
+				? diffJson(modalOutput(leftRecord), modalOutput(rightRecord))
+				: [],
+		};
+	});
 	return {
 		left: a.manifest,
 		right: b.manifest,
 		sameExperiment: a.manifest.experimentId === b.manifest.experimentId,
 		sameCorpus:
 			a.manifest.corpus.fingerprint === b.manifest.corpus.fingerprint,
-		cases: ids.map((caseId) => ({
-			caseId,
-			left: aCases.get(caseId) ?? null,
-			right: bCases.get(caseId) ?? null,
-		})),
+		cases,
+		onlyLeft: cases
+			.filter((pair) => pair.right === null)
+			.map((pair) => pair.caseId),
+		onlyRight: cases
+			.filter((pair) => pair.left === null)
+			.map((pair) => pair.caseId),
+		changedVerdicts: cases
+			.filter((pair) => pair.verdictChanged)
+			.map((pair) => pair.caseId),
+		changedOutputs: cases
+			.filter((pair) => pair.outputChanges.length > 0)
+			.map((pair) => pair.caseId),
 	};
 }

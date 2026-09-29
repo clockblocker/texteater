@@ -13,10 +13,16 @@ import { summarizeQuality } from "./quality.js";
 import {
 	type configurationSchema,
 	operationCaseRecordSchema,
+	operationCaseRepetitionSchema,
 	operationEvaluationRunSchema,
 	operationManifestSchema,
 	type storedRunSchema,
 } from "./schemas.js";
+import {
+	repeatedCaseRecord,
+	repetitionCount,
+	summarizeRunStability,
+} from "./stability.js";
 import { fingerprint } from "./stable-json.js";
 
 type ModelConfiguration = z.infer<typeof configurationSchema>;
@@ -25,6 +31,8 @@ export type OperationEvaluationRun = z.infer<
 	typeof operationEvaluationRunSchema
 >;
 export type StoredRun = z.infer<typeof storedRunSchema>;
+type OperationCaseRecord = z.infer<typeof operationCaseRecordSchema>;
+type OperationCaseRepetition = z.infer<typeof operationCaseRepetitionSchema>;
 export type OperationEvidence = {
 	readonly outcome?: string;
 	readonly calls: readonly {
@@ -84,7 +92,11 @@ function usage(traces: readonly OperationEvidence[]) {
 	};
 }
 
-/** One attempt per selected case, using production orchestration and immutable v2 evidence. */
+/**
+ * Runs each selected case `repetitions` times (default 1) through production
+ * orchestration and returns immutable v2 evidence. Repetitions of one case run
+ * back to back; every repetition is recorded.
+ */
 export async function runOperationExperiment<
 	I extends z.ZodType,
 	O extends z.ZodType,
@@ -101,8 +113,11 @@ export async function runOperationExperiment<
 	};
 	readonly signal?: AbortSignal;
 	readonly runId?: string;
+	/** Attempts per selected case. Defaults to 1. */
+	readonly repetitions?: number;
 }): Promise<OperationEvaluationRun> {
 	const { experiment } = args;
+	const repetitions = repetitionCount(args.repetitions);
 	const canonical = getGoldenCorpusState(experiment.corpus);
 	for (const selection of [
 		experiment.evaluation,
@@ -131,16 +146,17 @@ export async function runOperationExperiment<
 			fingerprint: await fingerprint(experiment.evaluation.cases),
 			caseIds: experiment.evaluation.ids,
 		},
+		...(repetitions > 1 ? { repetitions } : {}),
 	});
-	const records: z.infer<typeof operationCaseRecordSchema>[] = [];
+	const records: OperationCaseRecord[] = [];
 	const signal = args.signal ?? new AbortController().signal;
-	for (const [index, caseId] of experiment.evaluation.ids.entries()) {
-		const golden = experiment.evaluation.cases[index];
-		if (!golden) throw Error(`Missing selected case ${caseId}`);
+	async function attempt(
+		caseId: string,
+		golden: (typeof experiment.evaluation.cases)[number],
+	): Promise<OperationCaseRepetition> {
 		const start = performance.now();
 		const traces: OperationEvidence[] = [];
-		let status: z.infer<typeof operationCaseRecordSchema>["status"] =
-			"Success";
+		let status: OperationCaseRepetition["status"] = "Success";
 		let output: unknown;
 		let evaluation: unknown;
 		let errorMessage: string | undefined;
@@ -185,21 +201,37 @@ export async function runOperationExperiment<
 				status = tag;
 			else if (status === "Success") status = "EvaluationFailure";
 		}
+		return operationCaseRepetitionSchema.parse(
+			JSON.parse(
+				JSON.stringify({
+					output,
+					evaluation,
+					status,
+					error: errorMessage,
+					traces,
+					...usage(traces),
+					durationMs: performance.now() - start,
+				}),
+			),
+		);
+	}
+	for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+		const golden = experiment.evaluation.cases[index];
+		if (!golden) throw Error(`Missing selected case ${caseId}`);
+		const attempts: OperationCaseRepetition[] = [];
+		for (let repetition = 0; repetition < repetitions; repetition++)
+			attempts.push(await attempt(caseId, golden));
 		records.push(
 			operationCaseRecordSchema.parse(
-				JSON.parse(
-					JSON.stringify({
-						caseId,
-						input: golden.input,
-						idealOutput: golden.idealOutput,
-						output,
-						evaluation,
-						status,
-						error: errorMessage,
-						traces,
-						...usage(traces),
-						durationMs: performance.now() - start,
-					}),
+				repeatedCaseRecord(
+					JSON.parse(
+						JSON.stringify({
+							caseId,
+							input: golden.input,
+							idealOutput: golden.idealOutput,
+						}),
+					),
+					attempts,
 				),
 			),
 		);
@@ -226,6 +258,9 @@ export async function runOperationExperiment<
 			succeeded,
 			interrupted,
 			failed,
+			...(repetitions > 1
+				? { stability: summarizeRunStability(records, repetitions) }
+				: {}),
 		},
 	});
 }

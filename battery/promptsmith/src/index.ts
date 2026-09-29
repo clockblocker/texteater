@@ -9,4 +9,5 @@ export {
 } from "./authoring/golden-corpus.js";
 export { defineLocalDemonstrations } from "./authoring/local-demonstrations.js";
 export { assertCaseSelectionsUncontaminated } from "./authoring/selection-contamination.js";
+export { diffJson, type JsonChange } from "./json-diff.js";
 export { stableJson } from "./stable-json.js";

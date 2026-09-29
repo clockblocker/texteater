@@ -9,10 +9,18 @@ import { defineExperiment } from "./authoring/define-experiment.js";
 import { summarizeQuality } from "./quality.js";
 import {
 	caseRecordSchema,
+	caseRepetitionSchema,
+	type caseStabilitySchema,
 	configurationSchema,
 	evaluationRunSchema,
 	runManifestSchema,
+	type runStabilitySchema,
 } from "./schemas.js";
+import {
+	repeatedCaseRecord,
+	repetitionCount,
+	summarizeRunStability,
+} from "./stability.js";
 import { fingerprint } from "./stable-json.js";
 
 export type {
@@ -22,12 +30,24 @@ export type {
 	StoredRun,
 } from "./operation-evaluation.js";
 export { runOperationExperiment } from "./operation-evaluation.js";
-export { summarizeQuality } from "./quality.js";
+export {
+	type EvaluationVerdict,
+	evaluationVerdict,
+	summarizeQuality,
+} from "./quality.js";
+export {
+	type ComparedVerdict,
+	summarizeCaseStability,
+	summarizeRunStability,
+} from "./stability.js";
 export { fingerprint } from "./stable-json.js";
 
 export type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type EvaluationRun = z.infer<typeof evaluationRunSchema>;
 export type CaseRecord = z.infer<typeof caseRecordSchema>;
+export type CaseRepetition = z.infer<typeof caseRepetitionSchema>;
+export type CaseStability = z.infer<typeof caseStabilitySchema>;
+export type RunStability = z.infer<typeof runStabilitySchema>;
 /** Text generation keeps validation local; structured callers supply a provider schema. */
 export type OutputContract =
 	| { readonly outputFormat: "text"; readonly outputSchema?: never }
@@ -49,7 +69,11 @@ function message(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }
 
-/** Revalidates selections before execution. Each selected case produces one ordered record, including interrupted work. */
+/**
+ * Revalidates selections before execution. Each selected case runs
+ * `repetitions` times (default 1) and produces one ordered record, including
+ * interrupted work.
+ */
 export async function runExperiment<
 	I extends PromptInputSchema,
 	O extends PromptOutputSchema,
@@ -63,8 +87,11 @@ export async function runExperiment<
 	readonly execute: EvaluationExecutor;
 	readonly runId?: string;
 	readonly signal?: AbortSignal;
+	/** Attempts per selected case. Defaults to 1. */
+	readonly repetitions?: number;
 }): Promise<EvaluationRun> {
 	const experiment = defineExperiment(args.experiment);
+	const repetitions = repetitionCount(args.repetitions);
 	const configuration = configurationSchema.parse(args.configuration);
 	const systemPrompt = assembleSystemPrompt(experiment.promptSource);
 	const outputSchema = z.toJSONSchema(experiment.promptSource.outputSchema);
@@ -89,29 +116,20 @@ export async function runExperiment<
 			caseIds: experiment.evaluation.ids,
 		},
 		configuration,
+		...(repetitions > 1 ? { repetitions } : {}),
 	});
-	const records: CaseRecord[] = [];
-	for (const [index, caseId] of experiment.evaluation.ids.entries()) {
-		const golden = experiment.evaluation.cases[index];
-		if (!golden) throw Error(`Missing selected case ${caseId}`);
-		const base = {
-			caseId,
-			input: golden.input,
-			idealOutput: golden.idealOutput,
-		};
+	async function attempt(
+		caseId: string,
+		golden: (typeof experiment.evaluation.cases)[number],
+	): Promise<CaseRepetition> {
 		const started = performance.now();
 		let result: Awaited<ReturnType<EvaluationExecutor>>;
-		if (args.signal?.aborted) {
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					status: "Interrupted",
-					durationMs: 0,
-					error: "Run interrupted",
-				}),
-			);
-			continue;
-		}
+		if (args.signal?.aborted)
+			return caseRepetitionSchema.parse({
+				status: "Interrupted",
+				durationMs: 0,
+				error: "Run interrupted",
+			});
 		try {
 			result = await args.execute({
 				systemPrompt,
@@ -123,29 +141,20 @@ export async function runExperiment<
 				signal: args.signal,
 			});
 		} catch (error) {
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					status: args.signal?.aborted
-						? "Interrupted"
-						: "ProviderFailure",
-					durationMs: performance.now() - started,
-					error: message(error),
-				}),
-			);
-			continue;
+			return caseRepetitionSchema.parse({
+				status: args.signal?.aborted
+					? "Interrupted"
+					: "ProviderFailure",
+				durationMs: performance.now() - started,
+				error: message(error),
+			});
 		}
-		if (args.signal?.aborted) {
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					status: "Interrupted",
-					durationMs: performance.now() - started,
-					error: "Run interrupted",
-				}),
-			);
-			continue;
-		}
+		if (args.signal?.aborted)
+			return caseRepetitionSchema.parse({
+				status: "Interrupted",
+				durationMs: performance.now() - started,
+				error: "Run interrupted",
+			});
 		const parsed = experiment.promptSource.outputSchema.safeParse(
 			result.output,
 		);
@@ -161,18 +170,13 @@ export async function runExperiment<
 							: String(result.metadata),
 					}),
 		};
-		if (!parsed.success) {
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					...exchange,
-					status: "InvalidOutput",
-					durationMs: performance.now() - started,
-					error: parsed.error.message,
-				}),
-			);
-			continue;
-		}
+		if (!parsed.success)
+			return caseRepetitionSchema.parse({
+				...exchange,
+				status: "InvalidOutput",
+				durationMs: performance.now() - started,
+				error: parsed.error.message,
+			});
 		try {
 			const evaluation = experiment.evaluator({
 				caseId,
@@ -180,26 +184,40 @@ export async function runExperiment<
 				idealOutput: golden.idealOutput,
 				output: parsed.data,
 			});
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					...exchange,
-					status: "Success",
-					evaluation,
-					durationMs: performance.now() - started,
-				}),
-			);
+			return caseRepetitionSchema.parse({
+				...exchange,
+				status: "Success",
+				evaluation,
+				durationMs: performance.now() - started,
+			});
 		} catch (error) {
-			records.push(
-				caseRecordSchema.parse({
-					...base,
-					...exchange,
-					status: "EvaluationFailure",
-					durationMs: performance.now() - started,
-					error: message(error),
-				}),
-			);
+			return caseRepetitionSchema.parse({
+				...exchange,
+				status: "EvaluationFailure",
+				durationMs: performance.now() - started,
+				error: message(error),
+			});
 		}
+	}
+	const records: CaseRecord[] = [];
+	for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+		const golden = experiment.evaluation.cases[index];
+		if (!golden) throw Error(`Missing selected case ${caseId}`);
+		const attempts: CaseRepetition[] = [];
+		for (let repetition = 0; repetition < repetitions; repetition++)
+			attempts.push(await attempt(caseId, golden));
+		records.push(
+			caseRecordSchema.parse(
+				repeatedCaseRecord(
+					{
+						caseId,
+						input: golden.input,
+						idealOutput: golden.idealOutput,
+					},
+					attempts,
+				),
+			),
+		);
 	}
 	const succeeded = records.filter(
 		(record) => record.status === "Success",
@@ -223,6 +241,9 @@ export async function runExperiment<
 			succeeded,
 			failed,
 			interrupted,
+			...(repetitions > 1
+				? { stability: summarizeRunStability(records, repetitions) }
+				: {}),
 		},
 	});
 }

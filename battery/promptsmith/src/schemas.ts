@@ -21,9 +21,35 @@ export const runManifestSchema = z.strictObject({
 		caseIds: z.array(z.string()),
 	}),
 	configuration: configurationSchema,
+	/** How many times each case ran. Absent means once, as in every earlier run. */
+	repetitions: z.number().int().min(2).optional(),
 });
-export const caseRecordSchema = z.strictObject({
+const qualitySchema = z.strictObject({
+	passed: z.number().int().nonnegative(),
+	failed: z.number().int().nonnegative(),
+	needsReview: z.number().int().nonnegative(),
+	unscored: z.number().int().nonnegative(),
+});
+/** One case's agreement across its repetitions. */
+export const caseStabilitySchema = z.strictObject({
+	repetitions: z.number().int().min(2),
+	...qualitySchema.shape,
+	flipped: z.boolean(),
+	distinctOutputs: z.number().int().nonnegative(),
+});
+/** Agreement across every repeated case in a run. */
+export const runStabilitySchema = z.strictObject({
+	repetitions: z.number().int().min(2),
+	flipped: z.number().int().nonnegative(),
+	varyingOutputs: z.number().int().nonnegative(),
+	quality: qualitySchema,
+});
+const caseIdentityShape = {
 	caseId: z.string(),
+	input: z.json(),
+	idealOutput: z.json(),
+};
+export const caseRepetitionSchema = z.strictObject({
 	status: z.enum([
 		"Success",
 		"InvalidOutput",
@@ -31,29 +57,28 @@ export const caseRecordSchema = z.strictObject({
 		"EvaluationFailure",
 		"Interrupted",
 	]),
-	input: z.json(),
-	idealOutput: z.json(),
 	output: z.json().optional(),
 	evaluation: z.json().optional(),
 	error: z.string().optional(),
 	durationMs: z.number().nonnegative(),
 	metadata: z.json().optional(),
 });
+/** Top-level attempt fields mirror the case's representative repetition. */
+export const caseRecordSchema = z.strictObject({
+	...caseIdentityShape,
+	...caseRepetitionSchema.shape,
+	repetitions: z.array(caseRepetitionSchema).min(2).optional(),
+	stability: caseStabilitySchema.optional(),
+});
 export const runSummarySchema = z.strictObject({
-	quality: z
-		.strictObject({
-			passed: z.number().int().nonnegative(),
-			failed: z.number().int().nonnegative(),
-			needsReview: z.number().int().nonnegative(),
-			unscored: z.number().int().nonnegative(),
-		})
-		.optional(),
+	quality: qualitySchema.optional(),
 	status: z.enum(["Completed", "Failed", "Interrupted"]),
 	finishedAt: z.string().datetime(),
 	total: z.number().int().nonnegative(),
 	succeeded: z.number().int().nonnegative(),
 	failed: z.number().int().nonnegative(),
 	interrupted: z.number().int().nonnegative(),
+	stability: runStabilitySchema.optional(),
 });
 export const evaluationRunSchema = z.strictObject({
 	manifest: runManifestSchema,
@@ -71,7 +96,7 @@ export const operationManifestSchema = runManifestSchema
 			judgment: configurationSchema,
 		}),
 	});
-export const operationCaseRecordSchema = caseRecordSchema.extend({
+export const operationCaseRepetitionSchema = caseRepetitionSchema.extend({
 	status: z.enum([
 		"Success",
 		"Partial",
@@ -90,6 +115,12 @@ export const operationCaseRecordSchema = caseRecordSchema.extend({
 		inputTokens: z.number().nonnegative().nullable(),
 		outputTokens: z.number().nonnegative().nullable(),
 	}),
+});
+export const operationCaseRecordSchema = z.strictObject({
+	...caseIdentityShape,
+	...operationCaseRepetitionSchema.shape,
+	repetitions: z.array(operationCaseRepetitionSchema).min(2).optional(),
+	stability: caseStabilitySchema.optional(),
 });
 export const operationEvaluationRunSchema = z.strictObject({
 	manifest: operationManifestSchema,
