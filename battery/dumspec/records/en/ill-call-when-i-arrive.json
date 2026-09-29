@@ -59,7 +59,7 @@
 						"canonicalForm": "will",
 						"family": "Lexeme",
 						"kind": "AUX",
-						"coreFeatures": { "abbr": null, "style": null }
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}

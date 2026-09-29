@@ -52,8 +52,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"extPos": null,
-							"phrasal": "Yes",
-							"style": null
+							"phrasal": "Yes"
 						}
 					},
 					"surfaceFeatures": null

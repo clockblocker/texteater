@@ -266,7 +266,6 @@ test("English a or an takes no plural Head, the takes any", () => {
 				foreign: null,
 				numForm: null,
 				numType: null,
-				style: null,
 			},
 		},
 		inflectionalFeatures: { number: "Plur" },

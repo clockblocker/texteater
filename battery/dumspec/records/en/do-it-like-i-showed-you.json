@@ -23,7 +23,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "Like as a subordinator is marked SCONJ with vernacular style because many registers prefer as."
+				"rationale": "Like as a subordinator is marked SCONJ. Many registers prefer as here, but Dumling records no register: that question is parked on #727."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,7 +41,6 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"coreFeatures": {
-							"style": "Vrnc",
 							"abbr": null,
 							"extPos": null
 						}
