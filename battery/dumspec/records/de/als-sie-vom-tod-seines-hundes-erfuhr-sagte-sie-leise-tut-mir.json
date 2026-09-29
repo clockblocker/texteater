@@ -46,31 +46,31 @@
 		{
 			"memberSegmentIndices": [24, 26, 28],
 			"notes": {
-				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma es tut mir leid as the apology, clipped without the fixed es, so the Attestation is Partial; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
+				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma tut mir leid as the apology, with all three words here, so the Attestation is Full; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "es tut mir leid",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "tut mir leid",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
 				"members": [
 					{ "attested": "Tut", "orthography": "Standard" },
 					{ "attested": "mir", "orthography": "Standard" },
 					{ "attested": "leid", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Partial"
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "tut mir leid",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "tut mir leid",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

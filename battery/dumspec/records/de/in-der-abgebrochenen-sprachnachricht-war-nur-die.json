@@ -43,33 +43,70 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [17, 19, 21],
+			"memberSegmentIndices": [17],
 			"notes": {
-				"rationale": "The ellipsis signals genuinely unrealized fixed material; every realized member is selected."
+				"rationale": "Es is the subject of tut mir leid and stands for the regretted matter: das or dein Verlust could take its place. So it is the referential PRON es, a target of its own, and no member of the formula (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "Es", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "es",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "es tut mir leid",
-						"coreFeatures": {}
+						"canonicalForm": "es",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "3",
+							"pronType": "Prs",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Sing",
+							"gender": "Neut"
+						}
 					},
-					"normalizedSurface": "es tut mir",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [19, 21],
+			"notes": {
+				"rationale": "The ellipsis breaks the apology off before leid, so tut mir leid is attested Partially over tut and mir; the missing leid is really absent."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Es", "orthography": "Standard" },
 					{ "attested": "tut", "orthography": "Standard" },
 					{ "attested": "mir", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Partial"
+				"realizationCoverage": "Partial",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "tut mir",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "tut mir leid",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

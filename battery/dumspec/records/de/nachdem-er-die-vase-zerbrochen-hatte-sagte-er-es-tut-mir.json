@@ -54,34 +54,71 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [19, 21, 23, 29],
+			"memberSegmentIndices": [19],
 			"notes": {
-				"rationale": "The parenthetical intensifier and following complement do not become fixed formula members."
+				"rationale": "Es is the subject of tut mir leid and stands for the regretted matter, which the dass clause spells out. So it is the referential PRON es, a target of its own, and no member of the formula (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "Es", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "es",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "es tut mir leid",
-						"coreFeatures": {}
+						"canonicalForm": "es",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "3",
+							"pronType": "Prs",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Sing",
+							"gender": "Neut"
+						}
 					},
-					"normalizedSurface": "es tut mir leid",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [21, 23, 29],
+			"notes": {
+				"rationale": "The parenthetical wirklich and the dass clause stay outside the formula, so tut mir leid is Full over tut, mir and leid with a free word between its members."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Es", "orthography": "Standard" },
 					{ "attested": "tut", "orthography": "Standard" },
 					{ "attested": "mir", "orthography": "Standard" },
 					{ "attested": "leid", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "tut mir leid",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "tut mir leid",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

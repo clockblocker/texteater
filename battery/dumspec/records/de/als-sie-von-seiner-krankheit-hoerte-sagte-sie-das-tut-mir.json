@@ -39,7 +39,76 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [19],
+			"notes": {
+				"rationale": "Das is the subject of tut mir leid and points back to his illness. It is the demonstrative PRON das, a target of its own, and no member of the formula (ADR 0039)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Das", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "das",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "das",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": null,
+							"pronType": "Dem",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Sing",
+							"gender": "Neut"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [21, 23, 25],
+			"notes": {
+				"rationale": "Tut mir leid expresses sympathy with his illness, not an apology. The formula tut mir leid has all three words here, so the Attestation is Full; sympathy and apology are two Readings of the one Lemma, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "tut", "orthography": "Standard" },
+					{ "attested": "mir", "orthography": "Standard" },
+					{ "attested": "leid", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "tut mir leid",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "tut mir leid",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
