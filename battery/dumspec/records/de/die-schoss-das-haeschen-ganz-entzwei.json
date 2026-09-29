@@ -48,8 +48,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"reading": { "emojiDescription": "✂" },
 			"notes": {
-				"rationale": "I treated entzwei as a lexical adjective, following dictionary treatment, even though in this resultative use it feels adverb-like on the surface. Because there is no overt inflection here, the surface is stored as a citation-shaped ADJ rather than as an inflected form."
+				"rationale": "entzwei is an ADJ used only predicatively, here the result of schoß: the hare is shot to pieces. It has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -72,6 +73,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": null,
 							"abbr": null,
 							"foreign": null,
 							"numType": null,
@@ -84,6 +86,7 @@
 		},
 		{
 			"memberSegmentIndices": [23, 25],
+			"reading": { "emojiDescription": "😩" },
 			"notes": {
 				"rationale": "O wei is one interjection of dismay written in two pieces, like oy vey. wei is no German word of its own, so the pieces are not two Heads and there is no Breakdown into Lexemes: it is one INTJ Lexeme, not a Locution. Its Canonical Form is the attested o wei, a Lemma of its own beside o weh."
 			},
