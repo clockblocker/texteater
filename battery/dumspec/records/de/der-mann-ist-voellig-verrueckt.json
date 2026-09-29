@@ -17,7 +17,7 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0033"],
+		"adrs": ["ADR-0036", "ADR-0042"],
 		"rules": [],
 		"references": []
 	},
@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "Lexicalized 'crazy' comes from no sense of verrücken (ADR 0033). Predicative ADJ, not a state passive VERB."
+				"rationale": "verrückt is used as a predicative adjective, so it is an ADJ (ADR 0036), not a state passive of verrücken. It compares (verrückter), so it is comparable and marks Pos (ADR 0042)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,6 +39,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verrückt",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"abbr": null,
 							"foreign": null,
 							"numType": null,
