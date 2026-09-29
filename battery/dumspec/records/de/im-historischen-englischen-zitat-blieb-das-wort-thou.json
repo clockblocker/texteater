@@ -33,6 +33,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"notes": {
+				"rationale": "thou is an English word used here as a foreign X. In English it is a pronoun paradigm cell and so a Lemma of its own, and every use of it is archaic. That is true of the word, not of a form that stands beside a current form of the same Lemma, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -53,7 +56,7 @@
 					},
 					"normalizedSurface": "thou",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "thou", "orthography": "Standard" }],

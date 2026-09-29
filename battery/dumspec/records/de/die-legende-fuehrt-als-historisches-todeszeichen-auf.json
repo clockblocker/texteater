@@ -30,6 +30,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "† is a symbol for a death, still in use. Neither its age nor the sentence calling it historical makes it archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -45,7 +48,7 @@
 					},
 					"normalizedSurface": "†",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "†", "orthography": "Standard" }],

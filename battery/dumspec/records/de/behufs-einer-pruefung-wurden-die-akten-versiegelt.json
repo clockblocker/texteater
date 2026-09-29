@@ -28,6 +28,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "behufs (the preposition for the purpose of, with the genitive) is an archaic word, not an archaic form. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -49,7 +52,7 @@
 					},
 					"normalizedSurface": "behufs",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "Behufs", "orthography": "Standard" }

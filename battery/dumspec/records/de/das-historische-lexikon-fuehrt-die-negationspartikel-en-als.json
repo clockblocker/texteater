@@ -34,6 +34,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
+			"notes": {
+				"rationale": "The sentence names en as a headword of its own, so en is its own Lemma and its form is Canonical. It is an archaic word, not an archaic form of a live Lemma. That is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -54,7 +57,7 @@
 					},
 					"normalizedSurface": "en",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "en", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

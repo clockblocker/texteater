@@ -38,7 +38,7 @@
 		{
 			"memberSegmentIndices": [18, 20],
 			"notes": {
-				"rationale": "The formula's discourse use is archaic, while its attested spelling is canonical."
+				"rationale": "Gott befohlen is an old farewell formula built from ordinary forms: befohlen is the regular participle of befehlen. The formula is dated in every use, which is true of its Lemma, not of this Surface, and its spelling is Canonical. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -55,7 +55,7 @@
 					},
 					"normalizedSurface": "Gott befohlen",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "Gott", "orthography": "Standard" },

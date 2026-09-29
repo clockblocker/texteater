@@ -35,6 +35,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"notes": {
+				"rationale": "hither is an English word used here as a foreign X. It is archaic in every use, which is true of the word, not of this form, and the archaic dialogue around it does not change that. So the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -55,7 +58,7 @@
 					},
 					"normalizedSurface": "hither",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [

@@ -37,7 +37,7 @@
 		{
 			"memberSegmentIndices": [12],
 			"notes": {
-				"rationale": "An explicit own-headword cue establishes a distinct archaic Lemma, so the attested form is Canonical rather than a Variant of nicht."
+				"rationale": "An explicit own-headword cue establishes a distinct archaic Lemma, so the attested form is Canonical rather than a Variant of nicht. ni is an archaic word, which is true of that Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -59,7 +59,7 @@
 					},
 					"normalizedSurface": "ni",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "ni", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

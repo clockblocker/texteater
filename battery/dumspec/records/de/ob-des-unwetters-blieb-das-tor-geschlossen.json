@@ -28,6 +28,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"notes": {
+				"rationale": "ob here is the archaic preposition because of, with the genitive, a Lemma apart from the conjunction ob. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -49,7 +52,7 @@
 					},
 					"normalizedSurface": "ob",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Ob", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "Old poetic adjective. Mark Surface Archaic."
+				"rationale": "holdes is the regular strong neuter nominative singular of hold. hold is a dated, poetic word, which is true of its Lemma, not of this form, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,7 +49,7 @@
 					},
 					"normalizedSurface": "holdes",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": "Pos",

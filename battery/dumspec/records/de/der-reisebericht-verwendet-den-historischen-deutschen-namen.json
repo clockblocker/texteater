@@ -34,6 +34,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"notes": {
+				"rationale": "Pressburg is the historical German name of Bratislava. A historical name is not archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -54,7 +57,7 @@
 					},
 					"normalizedSurface": "Pressburg",
 					"spelling": "Variant",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
 				},
 				"members": [
