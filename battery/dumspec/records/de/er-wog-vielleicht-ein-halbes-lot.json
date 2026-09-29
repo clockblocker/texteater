@@ -41,7 +41,7 @@
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
 			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
 			{
 				"rule": "de/comparability-is-lexical",

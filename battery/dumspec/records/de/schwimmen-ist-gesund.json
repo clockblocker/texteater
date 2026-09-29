@@ -19,10 +19,10 @@
 				"rule": "de/substantivized-infinitive-is-a-noun",
 				"hash": "24bb91c7f80c0f5f"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "976cc1cfacecf685"
+				"hash": "b86703d3f7281f0a"
 			}
 		],
 		"references": []

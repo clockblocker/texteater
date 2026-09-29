@@ -1,41 +1,37 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Wir danken den Angestellten für ihre Hilfe.",
+	"sentence": "Die Angestellte öffnete uns die Tür.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Wir" },
+		{ "kind": "ResolvableText", "text": "Die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "danken" },
+		{ "kind": "ResolvableText", "text": "Angestellte" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "ResolvableText", "text": "öffnete" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Angestellten" },
+		{ "kind": "ResolvableText", "text": "uns" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "für" },
+		{ "kind": "ResolvableText", "text": "die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Hilfe" },
+		{ "kind": "ResolvableText", "text": "Tür" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0002", "ADR-0040"],
 		"rules": [
-			{
-				"rule": "de/canonical-form-is-the-headword",
-				"hash": "b86703d3f7281f0a"
-			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
 			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "💼" },
 			"notes": {
-				"rationale": "Angestellten is an adjectival noun for a person: one Lemma, Angestellte, with gender null. It is plural, so its Surface marks no gender."
+				"rationale": "Angestellte is an adjectival noun for a person: one Lemma for both sexes, with gender null. Its singular Surface marks the gender its form and article show, Fem, and Die agrees."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,18 +46,18 @@
 						"canonicalForm": "Angestellte",
 						"coreFeatures": { "gender": null, "hyph": null }
 					},
-					"normalizedSurface": "Angestellten",
+					"normalizedSurface": "Angestellte",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Plur"
+						"case": "Nom",
+						"gender": "Fem",
+						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Angestellten", "orthography": "Standard" }
+					{ "attested": "Die", "orthography": "Standard" },
+					{ "attested": "Angestellte", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },

@@ -19,10 +19,11 @@
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "976cc1cfacecf685"
+				"hash": "b86703d3f7281f0a"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
-			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
 		],
 		"references": []
 	},

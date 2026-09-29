@@ -19,14 +19,13 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 11],
+			"notes": {
+				"rationale": "die Schweiz is cited with its definite article, so Schweiz has Core article Definite and owns die."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

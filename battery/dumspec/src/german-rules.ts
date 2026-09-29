@@ -360,7 +360,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/noun-owns-its-article",
 		statement:
-			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head. The Head is the noun: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ, and Die drei Mädchen gives [Die, Mädchen]. When the noun is elided, the word standing in for it is the Head: Ich nehme den roten gives [den, roten] ADJ, and Der meine gives [Der, meine] PRON. An article cut off from its Head by a verb, a clause boundary or another noun is not its article: in Der Weg ist das Ziel, Weg gives [Der, Weg]. A bare Head stays bare. The article is a member, never a feature: a noun's Surface records no article, and in a sentence it marks case and number. A noun whose Lemma has gender null, such as an adjectival noun for a person, marks on a singular Surface the gender its form shows, and the article agrees with that: der Reisende and ein Verletzter mark Masc, die Angestellte Fem. A plural marks none. The article's spelling, read through its fused or shortened form, names a cell of der or ein for its Head's case, number and gender, and that cell is its DET: im Wald gives m, which is dem Dat.Masc.Sg.",
+			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ. When the noun is elided, the word standing in for it is the Head. An article cut off from its Head by a verb, a clause boundary or another noun is not its article. The article is a member, never a feature: its spelling, read through a fused or shortened form, names the cell of der or ein for its Head's case, number and gender, and that cell is its DET.",
 		adrs: ["ADR-0035", "ADR-0040", "ADR-0041"],
 		routes: lexeme("NOUN", "PROPN", "ADJ", "NUM", "PRON"),
 		records: [
@@ -394,6 +394,26 @@ const nouns: Rule[] = [
 			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/er-wog-vielleicht-ein-halbes-lot",
+			"de/das-problem-ist-der-preis",
+			"de/dein-garten-ist-gross-der-meine-ist-klein",
+		],
+	},
+	{
+		id: "de/adjectival-noun-lemma",
+		statement:
+			"An adjective or participle used as a noun for a person (der Reisende, ein Verletzter) is one Lemma for both sexes, cited in its weak form after the definite article (Reisende, Verletzte), with gender null. Its singular Surface marks the gender its form shows, and the article agrees: der Reisende is Masc, die Angestellte Fem. A plural marks none. A neuter with a meaning of its own is a separate Lemma with gender Neut: ins Deutsche übersetzen gives Deutsche.",
+		adrs: ["ADR-0040", "ADR-0002"],
+		routes: lexeme("NOUN"),
+		records: [
+			"de/der-reisende-wartete-draussen",
+			"de/ein-verletzter-lag-am-strassenrand",
+			"de/die-angestellte-oeffnete-uns-die-tuer",
+			"de/die-angestellten-streikten-gestern",
+			"de/wir-danken-den-angestellten-fuer-ihre-hilfe",
+			"de/die-reisenden-steigen-am-bahnhof-aus",
+			"de/auf-dem-bahnsteig-warten-dreizehn-reisende",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/der-reisende-haendler-wartete-draussen",
 		],
 	},
 	{
@@ -424,7 +444,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz, der Rhein, die NATO, der Struwwelpeter) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, however unfamiliar the name: im Fliederweg gives [m, Fliederweg] PROPN. A title cited with its article is one of them, because the article inflects: Die Zauberflöte is Zauberflöte with Core article Definite (in der Zauberflöte). A name cited bare (Berlin, Anna) has no Core article and still owns the article that opens its phrase, as the Head: das alte Berlin gives [das, Berlin] PROPN, and im alten Berlin gives [i] ADP and [m, Berlin] PROPN.",
+			"A proper noun cited with its definite article (die Schweiz, der Rhein) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Every name of a street, square, river, mountain or building is cited with it, and so is a title whose article inflects. A name cited bare (Berlin, Anna) has no Core article and still owns the article that opens its phrase, as the Head.",
 		adrs: ["ADR-0035", "ADR-0040"],
 		routes: lexeme("PROPN"),
 		records: [
@@ -435,6 +455,8 @@ const nouns: Rule[] = [
 			"de/viele-vermissen-das-alte-berlin",
 			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
 			"de/sieh-einmal-hier-steht-er",
+			"de/die-nato-beraet-heute-ueber-den-antrag",
+			"de/im-sommer-besucht-sie-die-schweiz",
 		],
 	},
 	{
@@ -501,7 +523,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"In der meine, der meinige and der eine, the pronoun stands in for an elided noun, so it is the Head of its phrase and owns the article the way a noun does: Der meine ist rot gives [Der, meine] PRON. The article is no DET target of its own.",
 		adrs: ["ADR-0040"],
 		routes: lexeme("PRON", "DET"),
-		records: [],
+		records: ["de/dein-garten-ist-gross-der-meine-ist-klein"],
 	},
 	{
 		id: "de/was-fuer",
@@ -860,7 +882,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen, and a noun keeps its capital. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen, je … desto), never ASCII .... An adjective used only attributively cites the dictionary's adjective headword, never an adverb of the same stem: die linke Hand gives ADJ linke (Duden: linke, linker, linkes), not ADV links, and so do rechte, obere and innere. An adjectival noun for a person is one Lemma cited in its weak form after the definite article, with gender null, because its gender is the referent's sex: der Angestellte, die Angestellte, ein Angestellter and zwei Angestellte all give Angestellte, and ein Verletzter gives Verletzte. A neuter with a meaning of its own is a separate Lemma with gender Neut: ins Deutsche übersetzen gives Deutsche. A Surface spelled Canonical need not be the Grundform: a finite or declined form can be Canonical.",
+			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
 		records: [

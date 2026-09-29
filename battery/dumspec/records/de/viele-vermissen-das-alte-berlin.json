@@ -19,8 +19,8 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/proper-noun-article", "hash": "8f0c5d0f9338a32b" },
-			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
+			{ "rule": "de/proper-noun-article", "hash": "467218f77ed6cd15" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" }
 		],
 		"references": []
 	},
