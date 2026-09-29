@@ -26,28 +26,28 @@
 		{
 			"memberSegmentIndices": [2],
 			"notes": {
-				"rationale": "I treated mal as the colloquial reduced variant of adverb einmal. Even in the semi-formulaic frame sieh mal an, the learner-facing selected unit is still the standalone adverb rather than a larger multiword formula."
+				"rationale": "mal softens the request and is the Shorthand of the particle einmal (de/member-orthography). Duden classes both einmal and mal in this use as a Partikel."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "mal", "orthography": "Standard" }],
+				"members": [{ "attested": "mal", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "mal",
-					"spelling": "Variant",
+					"normalizedSurface": "einmal",
+					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "einmal",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"coreFeatures": {
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
 					"surfaceFeatures": null

@@ -27,6 +27,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"notes": {
+				"rationale": "mal softens the request and is the Shorthand of the particle einmal (de/member-orthography). Duden classes both einmal and mal in this use as a Partikel."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -37,7 +40,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PART",
-						"canonicalForm": "mal",
+						"canonicalForm": "einmal",
 						"coreFeatures": {
 							"abbr": null,
 							"foreign": null,
@@ -45,11 +48,11 @@
 							"polarity": null
 						}
 					},
-					"normalizedSurface": "mal",
+					"normalizedSurface": "einmal",
 					"spelling": "Canonical",
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "mal", "orthography": "Standard" }],
+				"members": [{ "attested": "mal", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full"
 			}
 		}
