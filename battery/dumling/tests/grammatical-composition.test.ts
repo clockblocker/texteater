@@ -190,6 +190,61 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 		).toBe(false);
 	}
 });
+// A clitic 's is a way of writing es: Fused in Mir geht's gut, Shorthand in
+// Wenn 's morgen regnet.
+const fusedEs = (attested: string, spelling: string, surface = "es") => ({
+	attested,
+	orthography: "Fused",
+	fusion: {
+		spelling,
+		components: [
+			{ span: "geht", surface: "geht" },
+			{ span: attested, surface },
+		],
+	},
+	component: 1,
+});
+const gehtEs = {
+	...verb,
+	normalizedSurface: "geht es",
+	lemma: { ...verb.lemma, canonicalForm: "gehen" },
+} as const;
+const expletiveAttestation = (evidence: object) => ({
+	unitKind: "Attestation",
+	surface: gehtEs,
+	realizationCoverage: "Full",
+	members: [{ attested: "geht", orthography: "Standard" }, evidence],
+	expletiveEvidence: evidence,
+	valencyEvidence: [],
+});
+test("subject evidence accepts a Fused or Shorthand clitic 's", () => {
+	for (const evidence of [
+		fusedEs("'s", "geht's"),
+		fusedEs("’s", "geht’s"),
+		fusedEs("s", "gehts"),
+		{ attested: "'s", orthography: "Shorthand" },
+		{ attested: "’s", orthography: "Shorthand" },
+		{ attested: "'S", orthography: "Shorthand" },
+	])
+		expect(parseUnit(expletiveAttestation(evidence)).success).toBe(true);
+});
+test("subject evidence rejects any other spelling of a Fused or Shorthand member", () => {
+	for (const evidence of [
+		// A full es is Standard, never Fused or Shorthand.
+		{ attested: "es", orthography: "Shorthand" },
+		fusedEs("es", "gehtes"),
+		// A clitic that is not es.
+		{ attested: "'n", orthography: "Shorthand" },
+		{ attested: "'ne", orthography: "Shorthand" },
+		{ attested: "`s", orthography: "Shorthand" },
+		fusedEs("'m", "geht'm"),
+		// A Fused s that realizes another word, as in ins.
+		fusedEs("s", "gehts", "das"),
+		// A clitic spelling is no Standard es.
+		{ attested: "'s", orthography: "Standard" },
+	])
+		expect(parseUnit(expletiveAttestation(evidence)).success).toBe(false);
+});
 // Ich bin im Wald: i is the ADP in, m the article the noun owns (ADR 0035).
 const im = {
 	spelling: "im",
