@@ -1,0 +1,71 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Morgen fahren wir nach Hamburg.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "fahren" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nach" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Hamburg" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0002", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "📅➡" },
+			"notes": {
+				"rationale": "Sentence-initial Morgen is the ADV morgen, 'tomorrow', not the NOUN Morgen. A Canonical Form takes the word's lexical casing, never its place in the sentence, so the Lemma is morgen and the capitalized member is Standard. In Am nächsten Morgen, Morgen is the NOUN. morgen has no comparison forms, so its Surface has no inflection."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Morgen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "morgen",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "morgen",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

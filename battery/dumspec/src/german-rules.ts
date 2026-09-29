@@ -542,6 +542,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/viele-deutschsprachigen-quellen-fehlen-noch",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/morgen-fahren-wir-nach-hamburg",
 		],
 	},
 	{
@@ -724,6 +725,7 @@ const attestations: Rule[] = [
 			"de/das-rennen-hat-spass-gemacht",
 			"de/schwimmen-ist-gesund",
 			"de/sein-staendiges-meckern-nervt",
+			"de/morgen-fahren-wir-nach-hamburg",
 		],
 	},
 	{
