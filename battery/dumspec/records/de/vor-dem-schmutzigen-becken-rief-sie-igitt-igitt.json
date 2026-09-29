@@ -23,13 +23,22 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "5ffe0189ecd8ae5a"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [12, 14],
+			"memberSegmentIndices": [12],
+			"reading": { "emojiDescription": "🤢" },
+			"notes": {
+				"rationale": "Each igitt is a word of its own, so the repetition gives one INTJ target per occurrence, each spelled Canonical (de/interjection-counts-its-words). Doubling a word stretches no letters, so it is no Expressive Variant. Duden and DWDS give the doubled interjection only joined, as igittigitt, and no spaced spelling of it, so igitt igitt is no Variant of igittigitt either."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -43,14 +52,35 @@
 						"canonicalForm": "igitt",
 						"coreFeatures": { "partType": null }
 					},
-					"normalizedSurface": "igitt igitt",
-					"spelling": { "kind": "Variant", "variantType": "Expressive" },
+					"normalizedSurface": "igitt",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [
-					{ "attested": "igitt", "orthography": "Standard" },
-					{ "attested": "igitt", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "igitt", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [14],
+			"reading": { "emojiDescription": "🤢" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "igitt",
+						"coreFeatures": { "partType": null }
+					},
+					"normalizedSurface": "igitt",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "igitt", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

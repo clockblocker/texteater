@@ -23,15 +23,21 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "5ffe0189ecd8ae5a"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 8],
+			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "😂" },
 			"notes": {
-				"rationale": "The two authoritative members are one licensed reduplicated realization; preserve both members and use the base Lemma ha."
+				"rationale": "Each ha is a word of its own, so the repetition gives one INTJ target per occurrence, each spelled Canonical; the Rule names ha ha as its example (de/interjection-counts-its-words). Doubling a word stretches no letters, so it is no Expressive Variant. The one written word haha would be a Lemma of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,14 +52,35 @@
 						"canonicalForm": "ha",
 						"coreFeatures": { "partType": null }
 					},
-					"normalizedSurface": "ha ha",
-					"spelling": { "kind": "Variant", "variantType": "Expressive" },
+					"normalizedSurface": "ha",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [
-					{ "attested": "ha", "orthography": "Standard" },
-					{ "attested": "ha", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "ha", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"reading": { "emojiDescription": "😂" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"canonicalForm": "ha",
+						"coreFeatures": { "partType": null }
+					},
+					"normalizedSurface": "ha",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "ha", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}
