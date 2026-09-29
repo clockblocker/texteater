@@ -54,6 +54,10 @@ import {
 	summarizePolicy,
 } from "../src/segment-in-units/lab/metrics.js";
 import {
+	conformTo734,
+	rerouted,
+} from "../src/segment-in-units/lab/ruling734.js";
+import {
 	loadLabRun,
 	runArm,
 	saveLabRun,
@@ -90,6 +94,7 @@ const { positionals, values } = parseArgs({
 		qpc: { type: "string" },
 		tag: { type: "string" },
 		sizes: { type: "string", default: "25,100,400,2000" },
+		relabel: { type: "string" },
 	},
 });
 
@@ -99,8 +104,11 @@ const git = (args: readonly string[]) =>
 const percent = (value: number) =>
 	Number.isNaN(value) ? "–" : `${(100 * value).toFixed(1)}`;
 
+/** The cases by id, read against the #734 ruling when `--relabel 734`. */
 function casesOf(cases: readonly LabCase[]): Map<string, LabCase> {
-	return new Map(cases.map((labCase) => [labCase.id, labCase]));
+	const read =
+		values.relabel === "734" ? conformTo734 : (labCase: LabCase) => labCase;
+	return new Map(cases.map((labCase) => [labCase.id, read(labCase)]));
 }
 
 async function freeze() {
@@ -219,6 +227,10 @@ async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
 	const set = await loadSet(labRoot, labRun.set as SetName);
 	const cases = casesOf(set.cases);
+	if (values.relabel === "734")
+		console.log(
+			`read against the #734 ruling: ${rerouted(set.cases)} one-piece gold units re-routed`,
+		);
 	const only =
 		values.subset && values.run
 			? new Set(subset(set, values.subset).map(({ id }) => id))
@@ -323,7 +335,7 @@ async function report(runId: string) {
 		join(
 			evidenceRoot,
 			"summaries",
-			`${runId}${values.subset && values.run ? `--${values.subset}` : ""}.json`,
+			`${runId}${values.subset && values.run ? `--${values.subset}` : ""}${values.relabel ? `--relabel-${values.relabel}` : ""}.json`,
 		),
 		`${JSON.stringify(
 			{

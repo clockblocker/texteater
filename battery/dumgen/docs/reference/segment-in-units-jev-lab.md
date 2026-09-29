@@ -1,5 +1,9 @@
 # German `segment.inUnits` with jev: lab results (2026-09-29)
 
+Round 1 compared grouping and routing designs. Round 2 kept the round-1
+finalist (candidates v3) and changed only structured prompts and the DTOs
+sent to jev; see [Round 2](#round-2-structured-prompts-and-dtos).
+
 This lab tests what jev (`jev-latest` = `jev-1.13.0`) can do for German
 `segment.inUnits` (Dumgen ADR 0007): grouping a Sentence's pieces into
 biggest units and routing each unit. It also measures cost and stability.
@@ -24,6 +28,8 @@ bun run segment-in-units-lab run --arm candidates2 --subset slice300 --reps 3 \
   --opt routes=question --opt tests=1 --opt gen=3
 bun run segment-in-units-lab report --run <runId> [--policy <p>] [--subset <s>]
 bun run segment-in-units-lab compare --left <runId>:<policy> --right <runId>:<policy>
+bun run segment-in-units-lab run --arm candidates4 --subset multiword400 --reps 3 \
+  --opt step0=1 --opt polish=1       # round-2 levers; --opt final=1 runs the finalist only
 bun run segment-in-units-lab limit-qpc --limit 12 --sizes 25,100,400,1000
 bun run segment-in-units-lab ledger
 ```
@@ -212,6 +218,131 @@ ADV → ADJ errors. *Does it modify a following noun* (Rule
 `de/pron-or-det-by-use`) fixes standalone *jeglicher* and *ihr*. The net
 gain is +0.3 points with gold grouping.
 
+## Round 2: structured prompts and DTOs
+
+Round 2 had about $7 of jev and allowed only structured prompts and DTOs:
+state, question wording and criteria, option shapes, and the candidates
+code sends. It allowed no word lists or corpora, no inventories mined from
+gold, no reasoning models and no new Luna arms. Bug fixes and three
+assembly rules were allowed; their gain is reported apart as step 0.
+
+- The arm is `candidates4`. It sends v3's three requests unchanged, so
+  they stay cache hits, and asks each lever in its own request over the
+  same state. Its `v3` policy reproduces the cached v3 output on all 3621
+  dev repetitions.
+- Groups no earlier request routed go into their own route request. In
+  production those requests would merge, saving one request of latency
+  and one copy of the state.
+- `multiword400` holds the 265 dev cases with a multi-piece Locution or
+  Saying gold unit, 45 other Full cases and 90 others: 968 scored gold
+  units.
+- Buckets are compared per gold unit by the majority verdict over 3
+  repetitions, with an exact McNemar test. `+a −b` means a units gained
+  and b lost.
+
+### Levers and verdicts (multiword400, 3 repetitions)
+
+| policy | unit% | seg% | multi seg% | verdict |
+| --- | --- | --- | --- | --- |
+| v3 (cached) | 79.9 | 84.3 | 68.8 | baseline |
+| **step 0** (assembly rules and bug fixes) | 81.9 | 86.1 | 72.5 | +21 −2 against v3; contiguous Locution 50.0 → 63.3 |
+| step 0 + span Choice at 0.5, cut | 81.0 | 85.4 | 71.1 | **killed**: contiguous Locution +3.4 points (win needs +15, kill below 5); discontinuous −9 |
+| step 0 + span Choice at 0.7, cut | 82.0 | 86.3 | 72.9 | **killed**: +3 −2 |
+| step 0 + **Saying Choice** | 83.3 | 87.2 | 75.5 | kept: Saying 55.6 → 76.4, +15 −2 |
+| step 0 + Saying Choice + **maxim at 0.7** | **84.2** | 88.2 | 77.5 | **finalist**: Saying → 88.9, +24 −2 against step 0 |
+| … + polished fixedness and pair criteria | 82.9 | 86.8 | 73.9 | **killed**: +6 −10 against the Saying Choice alone |
+| … + maxim at 0.5 | 83.0 | 86.9 | 76.7 | worse than at 0.7: one-piece units −9 |
+| step 0 + slot Choices with named false cases | 81.9 | 86.4 | 74.5 | **killed**: +9 −9 |
+| finalist + support-verb Choice (paraphrase test) | 84.4 | 88.4 | 78.5 | **killed**: +4 −3 |
+| finalist + trim Noul per block of a Locution | 83.1 | 87.1 | 74.8 | **killed**: +4 −14 |
+| step 0 + span + polish + alternatives Choice at 0.7 (0.5) | 81.6 (76.8) | 86.0 | 72.2 | **killed**: repair precision 10% (8%), −9 (−56) |
+
+- **Step 0.** Symbols take no article (*des %*): one-piece units +19 −5
+  on full dev, most of them symbols. Number `Komma`/`bis` number is one Locution/NUM. Adjacent
+  one-piece units routed INTJ merge (*ha ha*, *O je*, *igitt igitt*), but
+  this wrongly merges *Nein danke*, which the gold splits. Abbreviation-shaped
+  pieces also see Locution routes (*z.B.* right, *Bzw.* now wrong).
+  Clause-initial pieces may host an idiom. `so … daß` is proposed, and one
+  Draft record splits it.
+- **Saying Choice.** The Saying Noul became a Choice over one
+  candidate span: whole saying, fragment or altered wording, saying plus
+  other words, general maxim, a sentence that only uses an idiom, none.
+  Naming the idiom case as an option stopped idioms in a clause
+  (*ließ die Katze aus dem Sack*) from being read as Sayings. The maxim
+  option catches literary aphorisms jev does not know as quotations
+  (*Die Güte, die nicht grenzenlos ist, …*). Counted only when
+  whole + fragment + maxim ≥ 0.7, it costs one one-piece unit on dev and
+  one on held-out.
+- **Span Choice.** One Choice per clause-internal run of 2–4 written
+  words: exactly one dictionary expression, expression plus free words,
+  part of a longer one, or free. It finds *und so weiter*, *zum Beispiel*
+  and *im Allgemeinen*, but at 0.5 it also joins correlator anchors to
+  their neighbours, and at 0.7 it gains only 3 units.
+- **Alternatives Choice.** Code rendered 3–6 bracketed variants of each
+  multi-piece unit (as built, minus the first or last block, plus a
+  neighbour group, split). jev prefers a variant over the unit as built
+  mostly when the unit was right.
+- **Named false cases** (slot options, fixedness criteria, trim) and the
+  support-verb paraphrase move individual answers without improving the
+  total.
+
+### Finalist: v3 + step 0 + Saying Choice (maxim at 0.7) + closed-class identity
+
+| set | policy | unit% | seg% | multi seg% | Full | flips | jev tokens/sentence | p50 / p95 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| dev, 1207 ×3 | v3 | 81.8 | 88.5 | 73.4 | 35% | 29/1166 | 9.8k | 0.60 / 0.96 s |
+| dev, 1207 ×3 | step 0 | 83.4 | 89.9 | 76.4 | 33% | 28/1166 | | |
+| dev, 1207 ×3 | + Saying Choice | 84.6 | 91.0 | 80.2 | 33% | 27/1166 | 11.6k | 0.89 / 1.28 s |
+| dev, 1207 ×3 | **+ closed-class identity (finalist)** | **85.1** | 91.0 | 80.2 | 33% | 27/1166 | 11.8k | 0.92 / 1.47 s |
+| dev, #734 reading | v3 / finalist | 82.4 / **86.0** | | | | | | |
+| multiword400 ×3 | finalist | 84.3 | 88.2 | 77.7 | 33% | 17/395 | 15.2k | 1.12 / 1.43 s |
+| held-out, 98 ×3 | v3 | 87.8 | 92.1 | 85.5 | 1/3 | 1/98 | 8.4k | |
+| held-out, 98 ×3 | step 0 | 88.5 | 94.1 | 91.2 | 1/3 | 1/98 | | |
+| held-out, 98 ×3 | + Saying Choice | 87.8 | 93.5 | 91.2 | 1/3 | 1/98 | 9.8k | 0.87 / 1.22 s |
+| held-out, 98 ×3 | **+ closed-class identity (finalist)** | **88.5** | 93.5 | 91.2 | 2/3 | 1/98 | | |
+| held-out, #734 reading | v3 / finalist | 88.5 / **89.2** | | | | | | |
+
+Full dev, paired against v3 (majority over repetitions):
+
+| bucket | units | v3 | finalist | +/− |
+| --- | --- | --- | --- | --- |
+| one piece | 1242 | 87.9 | 89.7 | +31 −9 |
+| Lexeme multi-piece | 264 | 79.9 | 79.9 | 0 |
+| Locution contiguous | 90 | 50.0 | 63.3 | +12 −0 |
+| Locution discontinuous | 105 | 64.8 | 65.7 | +2 −1 |
+| Saying | 72 | 55.6 | 88.9 | +24 −0 |
+| all | 1773 | | | +69 −10, p 6e-12 |
+
+Step 0 accounts for +33 −5 of this, the Saying Choice for +24 −2 and
+closed-class identity for +12 −3.
+Held-out cannot show either: it has 2 Sayings, 6 contiguous and 4
+discontinuous Locutions, and the finalist is +1 −1 there. The finalist
+costs 18% more tokens than v3. Its extra latency is the lab's separate
+route request.
+
+**Arm 4: closed-class identity.** The #734 ruling (posted 2026-09-29,
+issuecomment-5897200578) closes PART: *nicht*, infinitive *zu* and 18
+modal particles. Focus and degree words and sentence adverbs are ADV,
+answers INTJ and *aber* CCONJ; CCONJ and SCONJ stay open.
+
+- `closed-class.ts` encodes the ruling's uses per spelling in lab code, not
+  in dumspec (#747 authors them there). Ten one-use spellings (*nicht*,
+  *nein*, *sehr*, *allzu*, *gar*, *sogar*, *lediglich*, *selbst*, *noch*,
+  *erst*) take their route outright. Every other covered spelling gets a
+  Choice among its uses (*doch*: modal particle, answer, conjunction,
+  stressed 'after all'), and the chosen use implies the route of a
+  one-piece unit.
+- Against the Draft gold it gains +12 −3 (p 0.035). The Draft gold still
+  holds the targets #748 will re-route, so the lab also scores a
+  #734-conform reading (`--relabel 734`, `lab/ruling734.ts`). It re-routes
+  the 15 dev units and 1 held-out unit #748 lists. Against that reading arm
+  4 gains +14 −1 (p 0.001): full dev 85.3 → 86.0 and held-out 88.5 → 89.2.
+- The remaining route errors are PART → ADV (30; the Draft gold still has
+  focus PART), CCONJ → ADV (21), ADJ → ADV (20) and ADJ → PART (14).
+
+Round 2 spent $1.29 of jev (219.4M fresh input tokens in all, $9.22) and
+no Luna.
+
 ## Gold and Rule findings (not changed here)
 
 - The Draft records disagree on focus and answer particles, which #734
@@ -222,17 +353,24 @@ gain is +0.3 points with gold grouping.
   (routed to #734).
 - Superlative `am` + adjective is ADV in *wer am längsten nicht examiniert
   worden war* but ADJ in *am frühesten*, *am sorgfältigsten*.
+- Round 2: one record splits *so … daß* and one *Nein danke*, while the
+  Rules make the first a correlator and the second two units; the INTJ
+  merge rule follows `de/interjection-counts-its-words` and catches
+  *Nein danke* too.
 - Worth a look: *was mit ihm geschehen wird* gives `mit` to *geschehen* as
   a governed preposition, and *Es war gegen halb 12 Uhr* makes *Es war*
   one VERB with expletive es.
 
 ## Next
 
-- Keep code proposing and jev picking. The weakest phenomena are
-  multiword ADV, ADP and INTJ, where code proposes no span. They need
-  candidate spans like the Saying spans (adjacent pairs and triples of
-  function words for fixed adverbials; noun phrase + verb for idioms)
-  instead of open fixedness pairs.
+- Keep the finalist: v3 + step 0 + the Saying Choice + closed-class
+  identity. Contiguous span
+  Choices, alternative markings, trimming and named false cases did not
+  pay; the weak buckets are now discontinuous Locutions (66%) and
+  Lexeme multi-piece units (80%), where jev's answers do not move with
+  wording.
+- Move the closed-class uses into dumspec once #747 authors the PART
+  inventory, and re-score after #748 re-routes the gold.
 - Let code decide the Family everywhere, and give the Rule statements only
   to the route request.
 - Set the `Unresolved` line from route confidence, somewhere in 0.5–0.8.

@@ -44,7 +44,11 @@ import {
 	oldSpellingCorrelators,
 	sayingSpans,
 } from "../candidates.js";
-import { closedClassQuestion, closedClassRoute } from "../closed-class.js";
+import {
+	closedClassQuestion,
+	closedClassRoute,
+	hasFixedRoute,
+} from "../closed-class.js";
 import {
 	argmax,
 	groupKey,
@@ -728,7 +732,6 @@ function supportVerbQuestions(core: CandidatesCore): Questions {
 }
 
 function supportVerbLinks(
-	core: CandidatesCore,
 	answers: Answers,
 	floor: number,
 ): (readonly [number, number])[] {
@@ -1199,7 +1202,7 @@ export const candidates4Arm: Arm = {
 			let fvgInput = input3;
 			if (lever("fvg")) {
 				const fvg = await ask("fvg", supportVerbQuestions(core));
-				const links = supportVerbLinks(core, fvg, 0.6);
+				const links = supportVerbLinks(fvg, 0.6);
 				fvgInput = {
 					...input3,
 					expression: [...input3.expression, ...links],
@@ -1315,9 +1318,11 @@ export const candidates4Arm: Arm = {
 		): RouteKey | undefined => {
 			const [only] = group;
 			if (group.length !== 1 || only === undefined) return undefined;
-			const answer = closedAnswers[`cc_${only}`];
 			const piece = sentence.pieces[only - 1];
-			return answer?.type === "choice" && piece
+			if (!piece) return undefined;
+			if (hasFixedRoute(piece)) return closedClassRoute(piece, undefined);
+			const answer = closedAnswers[`cc_${only}`];
+			return answer?.type === "choice"
 				? closedClassRoute(piece, answer.choice)
 				: undefined;
 		};
