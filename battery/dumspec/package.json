@@ -57,6 +57,7 @@
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"demote-broken-reviewed": "bun scripts/demote-broken-reviewed.ts",
+		"draft-from-ud": "bun scripts/draft-from-ud.ts",
 		"fix": "bun run --silent biome check --write .",
 		"generate": "bun codegen/generate-record-schemas.ts",
 		"generate:check": "bun codegen/generate-record-schemas.ts --check",
