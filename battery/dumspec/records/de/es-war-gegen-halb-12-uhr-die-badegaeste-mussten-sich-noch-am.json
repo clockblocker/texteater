@@ -2,36 +2,128 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Es war gegen halb 12 Uhr; die Badegäste mußten sich noch am Strande befinden.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gegen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "halb" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "12" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Uhr" },
-		{ "kind": "Punctuation", "text": ";" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Badegäste" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mußten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Strande" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "befinden" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gegen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "halb"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "12"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Uhr"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Badegäste"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mußten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "a",
+			"surface": "an"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Strande"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "befinden"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -41,14 +133,48 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0035", "ADR-0040", "ADR-0041"],
 		"rules": [
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/proper-noun-article", "hash": "467218f77ed6cd15" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "81f5ca84af1bc0ca"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "4e09a3e722ab1c82"
@@ -64,49 +190,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from Es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+			"memberSegmentIndices": [0, 2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "es",
-						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": "Neut"
-						}
-					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Es", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from war (AUX root)."
+				"rationale": "The es of a clock time refers to nothing and stays in every word order (Jetzt war es halb zwölf), so it is not positional; it joins the verb as its expletive subject (de/expletive-es-joins-its-verb), and war stays apart from the time predicate (de/copula-stays-apart). open: finding B5."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -125,8 +215,10 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "war",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "es war",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -134,24 +226,39 @@
 						"person": "3",
 						"tense": "Past",
 						"verbForm": "Fin",
-						"expletive": null,
+						"expletive": "Subject",
 						"perfect": null,
 						"future": null,
 						"voice": null,
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "war", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Es",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
+				"expletiveEvidence": {
+					"attested": "Es",
+					"orthography": "Standard"
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP gegen from gegen (ADP case)."
+				"rationale": "gegen with a clock time means 'around'; the ADP takes only the accusative, which the numeral phrase does not show."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -173,10 +280,17 @@
 						}
 					},
 					"normalizedSurface": "gegen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "gegen", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "gegen",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -193,9 +307,12 @@
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV halb from halb (ADV advmod)."
+				"rationale": "halb before an hour means thirty minutes before it (DWDS halb 1c: es ist halb zwölf Uhr, = 11:30). Duden and DWDS class halb as an adjective, and it inflects (ein halbes Brot), so ADJ (de/adjective-stays-adj); it has no comparison forms and is uninflected here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -206,29 +323,42 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "halb",
 						"coreFeatures": {
+							"abbr": null,
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"variant": null
 						}
 					},
 					"normalizedSurface": "halb",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "halb", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"members": [
+					{
+						"attested": "halb",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "NUM" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NUM"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NUM 12 from 12 (NUM nummod)."
+				"rationale": "12 is the numeral zwölf written in digits. The Canonical Form is the headword zwölf (de/canonical-form-is-the-headword), and the digit spelling, which the standard accepts, is taken as a Licensed Variant. open: finding A8."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -240,7 +370,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NUM",
-						"canonicalForm": "12",
+						"canonicalForm": "zwölf",
 						"coreFeatures": {
 							"abbr": null,
 							"foreign": null,
@@ -248,20 +378,31 @@
 						}
 					},
 					"normalizedSurface": "12",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "12", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "12",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Uhr from Uhr (NOUN obl)."
+				"rationale": "Uhr after a numeral names the hour of the clock; the form stays singular, and gegen makes it accusative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -274,10 +415,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Uhr",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Uhr",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -285,7 +431,12 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Uhr", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Uhr",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -293,9 +444,9 @@
 		},
 		{
 			"memberSegmentIndices": [13, 15],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Badegast from Badegäste (NOUN nsubj) with die (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -308,10 +459,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Badegast",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Badegäste",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -320,19 +476,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Badegäste", "orthography": "Standard" }
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Badegäste",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB müssen from mußten (AUX aux). Spelling drafted Canonical: check whether mußten is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "Epistemic müssen ('must have been') is a modal VERB of its own, and befinden a separate target (de/modal-is-a-verb). mußten is the pre-1996 spelling of mussten: a Historical Variant (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -352,7 +520,10 @@
 						}
 					},
 					"normalizedSurface": "mußten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -368,7 +539,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "mußten", "orthography": "Standard" }
+					{
+						"attested": "mußten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -377,9 +551,12 @@
 		},
 		{
 			"memberSegmentIndices": [19, 28],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sich befinden from befinden (VERB conj) with sich (expl:pv). UD marks sich as the inherent reflexive (expl:pv), so it joins the verb; check that the verb requires it."
+				"rationale": "sich befinden 'be located' needs its reflexive: befinden without it is another verb ('judge'). So sich is a member (de/verb-owns-its-scattered-members); noch and am Strande stay outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -399,7 +576,9 @@
 						}
 					},
 					"normalizedSurface": "sich befinden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -415,8 +594,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "sich", "orthography": "Standard" },
-					{ "attested": "befinden", "orthography": "Standard" }
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "befinden",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -425,9 +610,9 @@
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -448,19 +633,29 @@
 						}
 					},
 					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [23],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP an from an (ADP case)."
+				"rationale": "am before a noun phrase splits into a (an) and m (dem); a is a free ADP with a dative complement (de/fused-word-pieces)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -482,7 +677,9 @@
 						}
 					},
 					"normalizedSurface": "an",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -492,8 +689,14 @@
 						"fusion": {
 							"spelling": "am",
 							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "a",
+									"surface": "an"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 0
@@ -515,9 +718,12 @@
 		},
 		{
 			"memberSegmentIndices": [24, 26],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Strande from Strande (PROPN obl) with dem (det)."
+				"rationale": "m (dem) is the owned Fused article, so Strande is Dat.Sg; am rules out the rare plural Strande. The old dative -e is an inflected form, not a spelling, so the Surface is spelled Canonical and marked Archaic like ward: Duden's current table gives only dem Strand (de/variant-and-historical-status). open: finding B6."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -528,19 +734,25 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PROPN",
-						"canonicalForm": "Strande",
+						"kind": "NOUN",
+						"canonicalForm": "Strand",
 						"coreFeatures": {
-							"abbr": null,
-							"article": null,
-							"foreign": null,
-							"gender": "Masc"
+							"gender": "Masc",
+							"hyph": null
 						}
 					},
 					"normalizedSurface": "Strande",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": {
+						"historicalStatus": "Archaic"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{
@@ -549,16 +761,29 @@
 						"fusion": {
 							"spelling": "am",
 							"components": [
-								{ "span": "a", "surface": "an" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "a",
+									"surface": "an"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Strande", "orthography": "Standard" }
+					{
+						"attested": "Strande",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 }
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
 			}
 		}
 	],

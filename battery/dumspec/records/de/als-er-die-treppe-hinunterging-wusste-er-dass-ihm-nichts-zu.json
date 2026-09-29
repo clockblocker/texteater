@@ -2,47 +2,170 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als ein Ende zu machen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Als" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Treppe" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hinunterging" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wußte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "daß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nichts" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "tun" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "übrig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "blieb" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "als" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Ende" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "machen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Als"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Treppe"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hinunterging"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wußte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "daß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nichts"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "tun"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "übrig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "blieb"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "als"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ende"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "machen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -52,16 +175,48 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0039", "ADR-0041", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
-			{ "rule": "de/bare-infinitive-zu", "hash": "7462675604e5cc7f" },
 			{
-				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"rule": "de/bare-infinitive-zu",
+				"hash": "7462675604e5cc7f"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "c2ddde608e957137"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "81f5ca84af1bc0ca"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "07b2a8943c6e5919"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			}
 		],
 		"references": [
 			{
@@ -74,9 +229,12 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ als from Als (SCONJ mark)."
+				"rationale": "Temporal als opens a verb-final clause: SCONJ als, cited lowercase."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -89,21 +247,30 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "als",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "als",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "Als", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Als",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -129,20 +296,30 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Treppe from Treppe (NOUN obj) with die (det)."
+				"rationale": "die Treppe is the accusative path object of hinuntergehen and owns its article."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -155,10 +332,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Treppe",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Treppe",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -167,19 +349,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Treppe", "orthography": "Standard" }
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Treppe",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinuntergehen from hinunterging (VERB advcl). hasSepPrefix is left null: check whether hinuntergehen has the separable prefix hinunter."
+				"rationale": "In the verb-final clause the particle verb hinuntergehen is written whole; hasSepPrefix names hinunter (de/verb-core-features)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -193,13 +387,15 @@
 						"kind": "VERB",
 						"canonicalForm": "hinuntergehen",
 						"coreFeatures": {
-							"hasSepPrefix": null,
+							"hasSepPrefix": "hinunter",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
 					"normalizedSurface": "hinunterging",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -215,7 +411,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "hinunterging", "orthography": "Standard" }
+					{
+						"attested": "hinunterging",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -224,9 +423,12 @@
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wußen from wußte (VERB root). Spelling drafted Canonical: check whether wußte is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "wußte is wusste in the spelling before 1996: the form is current, only the ß is old, so the Surface is a Historical Variant with no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -238,7 +440,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "wußen",
+						"canonicalForm": "wissen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
@@ -246,7 +448,10 @@
 						}
 					},
 					"normalizedSurface": "wußte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -261,7 +466,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "wußte", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wußte",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -269,9 +479,9 @@
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -297,20 +507,30 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "daß is dass in the spelling before 1996, a Historical Variant (de/variant-and-historical-status). Nothing before it is a correlator, so it is the single-member SCONJ dass."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -322,22 +542,35 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"canonicalForm": "daß",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "dass",
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "daß",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "daß", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "daß",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
+				"rationale": "Dat 3sg; Masc over Neut only by its referent Alfred (ADR 0044). open: finding A1."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -363,20 +596,30 @@
 						}
 					},
 					"normalizedSurface": "ihm",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "ihm", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ihm",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON nichts from nichts (PRON nsubj)."
+				"rationale": "nichts is the subject of übrig blieb, modified by the infinitive zu tun; the negative PRON nichts. open: finding B2."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -402,12 +645,17 @@
 						}
 					},
 					"normalizedSurface": "nichts",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "nichts", "orthography": "Standard" }
+					{
+						"attested": "nichts",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
@@ -415,9 +663,12 @@
 		},
 		{
 			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
+				"rationale": "zu before a bare infinitive is a single-member PART (de/bare-infinitive-zu)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -438,18 +689,28 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB tun from tun (VERB xcomp)."
+				"rationale": "tun is the infinitive of nichts zu tun, a VERB of its own; zu is a separate PART (de/bare-infinitive-zu)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -469,7 +730,9 @@
 						}
 					},
 					"normalizedSurface": "tun",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -484,53 +747,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "tun", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "tun",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ übrig from übrig (ADJ xcomp). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"memberSegmentIndices": [26, 28],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"canonicalForm": "übrig",
-						"coreFeatures": {
-							"abbr": null,
-							"comparable": null,
-							"foreign": null,
-							"numType": null,
-							"variant": null
-						}
-					},
-					"normalizedSurface": "übrig",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "übrig", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB bleiben from blieb (VERB ccomp)."
+				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. open: finding B2."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -542,15 +777,17 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "bleiben",
+						"canonicalForm": "übrigbleiben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
+							"hasSepPrefix": "übrig",
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "blieb",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "übrig blieb",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -565,7 +802,16 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "blieb", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "übrig",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "blieb",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -573,9 +819,12 @@
 		},
 		{
 			"memberSegmentIndices": [31],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ als from als (ADP case). UD tags als ADP; STTS KOKOM makes it CCONJ. Comparison als is CCONJ before a phrase and SCONJ before a clause (de/relative-w-adverb-fills-a-slot)."
+				"rationale": "als after nichts … übrig introduces the exception, here an infinitive clause, and fills no slot in it: by the principle the Rules state for comparison wie, SCONJ before a clause. open: findings A4 and B2."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -586,23 +835,35 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "CCONJ",
+						"kind": "SCONJ",
 						"canonicalForm": "als",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": "Comp"
+						}
 					},
 					"normalizedSurface": "als",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "als", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "als",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [33, 35],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [33, 35, 39],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ende from Ende (NOUN obl) with ein (det)."
+				"rationale": "ein Ende machen (Duden: einer Sache ein Ende machen, bereiten, setzen; mit sich ein Ende machen) is a Collocation: machen only supports Ende, and the verb comes from a narrow set. Its members are the verb, the noun and the noun's own article (de/funktionsverbgefuege-are-collocations); zu stays a PART (de/bare-infinitive-zu). Whether it ends the affair or a life is a Reading question, open in the sentence itself."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -612,34 +873,56 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Ende",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "ein Ende machen",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "Ende",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "ein Ende machen",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
 					}
 				},
 				"members": [
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Ende", "orthography": "Standard" }
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Ende",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "machen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"expletiveEvidence": null,
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [37],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
+				"rationale": "zu before a bare infinitive is a single-member PART (de/bare-infinitive-zu)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -660,58 +943,18 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB machen from machen (VERB advcl)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "machen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "machen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
 				"members": [
-					{ "attested": "machen", "orthography": "Standard" }
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
 				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
 			}
 		}
 	],

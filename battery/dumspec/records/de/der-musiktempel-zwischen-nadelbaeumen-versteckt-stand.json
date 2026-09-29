@@ -2,54 +2,198 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Der Musiktempel, zwischen Nadelbäumen versteckt, stand schweigend dem Kurhaus, der Konditorei und den beiden, durch ein langes Zwischengebäude miteinander verbundenen Schweizerhäusern gegenüber.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Musiktempel" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zwischen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Nadelbäumen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "versteckt" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stand" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schweigend" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kurhaus" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Konditorei" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "beiden" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "durch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "langes" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zwischengebäude" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "miteinander" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verbundenen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Schweizerhäusern" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gegenüber" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Musiktempel"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zwischen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Nadelbäumen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "versteckt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schweigend"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kurhaus"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Konditorei"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "beiden"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "durch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "langes"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zwischengebäude"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "miteinander"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "verbundenen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Schweizerhäusern"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gegenüber"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -59,17 +203,36 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "9d116db0de61b6dd"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "4e09a3e722ab1c82"
@@ -86,9 +249,12 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Musiktempel from Musiktempel (NOUN nsubj) with Der (det)."
+				"rationale": "Musiktempel is a common noun here (the bandstand), not a name."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -101,10 +267,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Musiktempel",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Musiktempel",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -113,19 +284,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "Der", "orthography": "Standard" },
-					{ "attested": "Musiktempel", "orthography": "Standard" }
+					{
+						"attested": "Der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Musiktempel",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [5],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zwischen from zwischen (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -147,11 +327,16 @@
 						}
 					},
 					"normalizedSurface": "zwischen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
-					{ "attested": "zwischen", "orthography": "Standard" }
+					{
+						"attested": "zwischen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
@@ -169,9 +354,9 @@
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Nadelbaum from Nadelbäumen (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -184,10 +369,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Nadelbaum",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Nadelbäumen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -196,7 +386,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Nadelbäumen", "orthography": "Standard" }
+					{
+						"attested": "Nadelbäumen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -205,9 +398,12 @@
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ versteckt from versteckt (VERB acl). UD tags versteckt VERB, but a participle outside a perfect or passive is an ADJ (de/participial-adjective)."
+				"rationale": "A postposed Partizip II with no auxiliary: ADJ versteckt, Participle Source verstecken (de/participial-adjective). Taken as non-comparable."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -229,12 +425,17 @@
 						}
 					},
 					"normalizedSurface": "versteckt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "versteckt", "orthography": "Standard" }
+					{
+						"attested": "versteckt",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -243,9 +444,12 @@
 		},
 		{
 			"memberSegmentIndices": [12, 46],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB gegenüberstehen from stand (VERB root) with gegenüber (compound:prt)."
+				"rationale": "gegenüber in the right bracket is the particle of the dictionary verb gegenüberstehen (Duden 1: jemandem zugewandt stehen), and the three coordinated datives are its object; read as a postposition, it would have to govern the whole coordination from the bracket. The Rule names only directional words. open: finding A7."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -265,7 +469,9 @@
 						}
 					},
 					"normalizedSurface": "stand gegenüber",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -281,8 +487,14 @@
 					}
 				},
 				"members": [
-					{ "attested": "stand", "orthography": "Standard" },
-					{ "attested": "gegenüber", "orthography": "Standard" }
+					{
+						"attested": "stand",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gegenüber",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -291,9 +503,12 @@
 		},
 		{
 			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ schweigend from schweigend (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+				"rationale": "Adverbial Partizip I: ADJ schweigend (de/participial-adjective)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -315,12 +530,17 @@
 						}
 					},
 					"normalizedSurface": "schweigend",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "schweigend", "orthography": "Standard" }
+					{
+						"attested": "schweigend",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -329,9 +549,9 @@
 		},
 		{
 			"memberSegmentIndices": [16, 18],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kurhaus from Kurhaus (NOUN obl:arg) with dem (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -344,10 +564,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Kurhaus",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Kurhaus",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -356,19 +581,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "dem", "orthography": "Standard" },
-					{ "attested": "Kurhaus", "orthography": "Standard" }
+					{
+						"attested": "dem",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kurhaus",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [21, 23],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Konditorei from Konditorei (NOUN conj) with der (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -381,10 +615,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Konditorei",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Konditorei",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -393,19 +632,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Konditorei", "orthography": "Standard" }
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Konditorei",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -418,21 +666,33 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [27, 44],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Schweizerhaus from Schweizerhäusern (NOUN conj) with den (det)."
+				"rationale": "den (Dat.Plur) opens the phrase whose Head is Schweizerhäusern, across beiden and the extended attribute (ADR 0035). The Rule's cut-off by another noun would deny it the article, because Zwischengebäude stands between them, but that noun sits inside the attribute with its own article. open: finding A2."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -445,10 +705,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Schweizerhaus",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Schweizerhäusern",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -457,22 +722,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "den", "orthography": "Standard" },
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
 					{
 						"attested": "Schweizerhäusern",
 						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [29],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON beide from beiden (DET det). UD tags beiden DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
+				"rationale": "beiden directly modifies Schweizerhäusern after the article, so it is the DET beide, Dat.Plur (de/pron-or-det-by-use)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -483,44 +757,53 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
+						"kind": "DET",
 						"canonicalForm": "beide",
 						"coreFeatures": {
 							"case": null,
-							"number": null,
+							"definite": null,
 							"extPos": null,
 							"foreign": null,
+							"gender": null,
+							"number": null,
+							"numType": "Card",
 							"person": null,
 							"polite": null,
 							"poss": null,
-							"pronType": "Tot",
-							"gender": null
+							"pronType": "Tot"
 						}
 					},
 					"normalizedSurface": "beiden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
+						"degree": null,
 						"gender": null,
-						"number": "Plur",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number": "Plur",
+						"number[psor]": null
 					}
 				},
 				"members": [
-					{ "attested": "beiden", "orthography": "Standard" }
+					{
+						"attested": "beiden",
+						"orthography": "Standard"
+					}
 				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [32],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP durch from durch (ADP case)."
+				"rationale": "durch names the means inside the extended attribute; it is a free ADP, not governed by verbunden."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -542,10 +825,17 @@
 						}
 					},
 					"normalizedSurface": "durch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "durch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "durch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -562,9 +852,9 @@
 		},
 		{
 			"memberSegmentIndices": [34, 38],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zwischengebäude from Zwischengebäude (NOUN nmod) with ein (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -577,10 +867,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Zwischengebäude",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Zwischengebäude",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -589,19 +884,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Zwischengebäude", "orthography": "Standard" }
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Zwischengebäude",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ lang from langes (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -616,24 +920,29 @@
 						"canonicalForm": "lang",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "langes",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
-						"degree": null,
+						"degree": "Pos",
 						"gender": "Neut",
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "langes", "orthography": "Standard" }
+					{
+						"attested": "langes",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -642,9 +951,12 @@
 		},
 		{
 			"memberSegmentIndices": [40],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV miteinander from miteinander (ADV advmod)."
+				"rationale": "miteinander is a Reciprocal Pronominal Adverb, an ADV Lexeme of its own; it does not join verbunden."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -665,21 +977,29 @@
 						}
 					},
 					"normalizedSurface": "miteinander",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "miteinander", "orthography": "Standard" }
+					{
+						"attested": "miteinander",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [42],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ verbunden from verbundenen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+				"rationale": "Attributive Partizip II: ADJ verbunden from verbinden (de/participial-adjective, de/attributive-adjective-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -701,7 +1021,9 @@
 						}
 					},
 					"normalizedSurface": "verbundenen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -711,7 +1033,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "verbundenen", "orthography": "Standard" }
+					{
+						"attested": "verbundenen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
