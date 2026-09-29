@@ -37,14 +37,27 @@
 		{ "kind": "Punctuation", "text": "«" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "5ffe0189ecd8ae5a"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
@@ -89,6 +102,36 @@
 			"reading": { "emojiDescription": "😩" },
 			"notes": {
 				"rationale": "O wei is one interjection of dismay written in two pieces, like oy vey. wei is no German word of its own, so the pieces are not two Heads and there is no Breakdown into Lexemes: it is one INTJ Lexeme, not a Locution. Its Canonical Form is the attested o wei, a Lemma of its own beside o weh."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "O", "orthography": "Standard" },
+					{ "attested": "wei", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "o wei",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "o wei",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": { "partType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [28, 30],
+			"reading": { "emojiDescription": "😩" },
+			"notes": {
+				"rationale": "The second O wei repeats the first for emphasis. A repeated interjection gives one target per occurrence, so it is the same INTJ Lexeme o wei again."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

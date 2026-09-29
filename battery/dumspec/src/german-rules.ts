@@ -550,6 +550,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/einst-ging-er-an-ufers-rand",
 			"de/er-wog-vielleicht-ein-halbes-lot",
 			"de/es-brennt-die-hand-es-brennt-das-haar",
+			"de/die-schoss-das-haeschen-ganz-entzwei",
 		],
 	},
 	{
@@ -687,6 +688,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/gott-sei-dank-ist-niemand-verletzt-worden",
 			"de/weh-mir-was-habe-ich-getan",
 			"de/wehe-dir-wenn-du-das-verraetst",
+			"de/die-schoss-das-haeschen-ganz-entzwei",
 		],
 	},
 	{
