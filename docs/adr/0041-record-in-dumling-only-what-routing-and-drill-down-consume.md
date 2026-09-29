@@ -114,13 +114,16 @@ The other decisions stand: Dumling holds types and schemas, members carry no
 Member Role, a shared or elided fixed word leaves the other unit Partial, and
 a Locution or Saying has a Breakdown.
 
-The first field admitted under this test is the subtype of a Variant
-spelling. A Surface's `spelling` is `{ kind: "Canonical" }` or
-`{ kind: "Variant", variantType }`, and `variantType` is Licensed (*zwo*,
-*auf Grund*), Historical (*daß*, *Photographie*), Regional (*nit*, *nedd*)
-or Expressive (*ohhh*, *boahhh*). No click or drill-down reads it. A learner
-who meets *daß* is told it is the spelling before the 1996 reform, and a
-classifier names why a spelling is not Canonical instead of stretching
+The first field admitted under this test is a Variant spelling's tags. A
+Surface's `spelling` is `{ kind: "Canonical" }` or
+`{ kind: "Variant", variantTags }`, a non-empty list in the order Licensed
+(*zwo*, *auf Grund*), Historical (*daß*, *Photographie*), Regional (*nit*,
+*nedd*) and Expressive (*ohhh*, *boahhh*), never Licensed with Historical.
+The tags answer different questions, so they combine: Swiss *Strasse* is
+Licensed and Regional, and a single type would need a priority rule that
+drops what the learner could be told. No click or drill-down reads them.
+A learner who meets *daß* is told it is the spelling before the 1996 reform,
+and a classifier names why a spelling is not Canonical instead of stretching
 "licensed" over dialect and drawn-out letters. Variant now covers every
 non-canonical spelling of the Lemma that is not a mistake; a mistake stays a
 Typo member. Decided on

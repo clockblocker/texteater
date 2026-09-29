@@ -37,10 +37,12 @@ The Surface always contains a \`Lemma\`. It owns:
 
 - \`normalizedSurface\`: the normalized form, such as \`gave up\`
 - \`spelling\`: \`{ kind: "Canonical" }\`, or a \`Variant\` of the Lemma's
-  spelling that is no mistake, with its \`variantType\`: \`Licensed\` by a
+  spelling that is no mistake, with its \`variantTags\`: \`Licensed\` by a
   current standard (British \`armour\` for \`armor\`), \`Historical\` under an
-  earlier one (German \`daß\`), \`Regional\` (\`nit\`) or \`Expressive\`, letters
-  stretched for effect (\`ohhh\`)
+  earlier one (German \`daß\`), \`Regional\` (\`nit\`) and \`Expressive\`,
+  letters stretched for effect (\`ohhh\`). A Variant lists every tag that
+  applies, in that order: Swiss \`Strasse\` is \`["Licensed", "Regional"]\`.
+  Licensed and Historical never combine
 - inflectional features and Lemma identity
 
 Routes with represented inflection carry nullable \`inflectionalFeatures\`,

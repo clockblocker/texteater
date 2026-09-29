@@ -117,7 +117,7 @@ export const evidenceFieldDefinitions: Readonly<
 	},
 	spelling: {
 		definition:
-			"`spelling` says whether a Surface uses its Lemma's standard spelling (Canonical) or another spelling of it that is no mistake (Variant). A Variant names its type: Licensed by a current standard (zwo, British colour), Historical under an earlier standard (daß), Regional (nit), or Expressive, with letters stretched for effect (ohhh).",
+			"`spelling` says whether a Surface uses its Lemma's standard spelling (Canonical) or another spelling of it that is no mistake (Variant). A Variant names every tag that applies: Licensed by a current standard (zwo, British colour), Historical under an earlier standard (daß), Regional (nit), and Expressive, with letters stretched for effect (ohhh). Tags combine, as in Swiss Strasse, Licensed and Regional, but never Licensed with Historical.",
 		path: "surface/spelling",
 		title: "spelling",
 	},

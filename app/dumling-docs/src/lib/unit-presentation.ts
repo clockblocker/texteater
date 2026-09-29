@@ -38,9 +38,24 @@ export function grundformLabel(surface: Dumling.Surface): string {
 		: "Undetermined";
 }
 
-/** A Surface's spelling as one label: `Canonical`, or `Variant (Historical)`. */
+/**
+ * A Surface's spelling as one label: `Canonical`, or a Variant with its tags,
+ * `Variant (Licensed, Regional)`.
+ */
 export function spellingLabel(spelling: Dumling.Surface["spelling"]): string {
 	return spelling.kind === "Variant"
-		? `Variant (${spelling.variantType})`
+		? `Variant (${spelling.variantTags.join(", ")})`
 		: spelling.kind;
+}
+
+/**
+ * A Surface's spelling as one label per tag, so a Variant tagged Licensed and
+ * Regional counts as `Variant (Licensed)` and as `Variant (Regional)`.
+ */
+export function spellingTagLabels(
+	spelling: Dumling.Surface["spelling"],
+): string[] {
+	return spelling.kind === "Variant"
+		? spelling.variantTags.map((tag) => `Variant (${tag})`)
+		: [spelling.kind];
 }

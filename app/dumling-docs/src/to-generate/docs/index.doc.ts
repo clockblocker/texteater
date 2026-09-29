@@ -59,7 +59,7 @@ Dumling focuses on lexical classification for learning tools:
 - **Reading**: foundational semantic value formed by one Lemma and one emoji description
 - Lemma family: \`Lexeme\`, \`Locution\`, \`Saying\`, or \`Morpheme\`
 - member orthography: whether each attested member is standard text or a typo
-- Surface spelling and Attestation realization coverage: Variant spellings with their type, and genuinely partial realizations
+- Surface spelling and Attestation realization coverage: Variant spellings with their tags, and genuinely partial realizations
 - learner-relevant Surface features, such as archaic status
 - language-specific lexical inventories built on a shared cross-language model
 

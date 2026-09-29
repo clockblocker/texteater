@@ -106,16 +106,18 @@ function acceptedValues(schemas: readonly JsonSchema[]): AcceptedValues {
 }
 
 /**
- * The spellings a Surface accepts, one label per Variant type:
- * `Canonical`, `Variant (Licensed)`, and so on.
+ * The spellings a Surface accepts, one label per Variant tag:
+ * `Canonical`, `Variant (Licensed)`, and so on. A Variant names one or more
+ * tags, so a record can fall under several labels.
  */
 function spellingValues(schemas: readonly JsonSchema[]): AcceptedValues {
 	const values = schemas.flatMap(alternatives).flatMap((schema) => {
 		const kind = String(schema.properties?.kind?.const);
-		const types = schema.properties?.variantType?.enum;
-		return types === undefined
+		const tags = schema.properties?.variantTags;
+		const items = Array.isArray(tags?.items) ? undefined : tags?.items;
+		return items?.enum === undefined
 			? [kind]
-			: types.map((type) => `${kind} (${String(type)})`);
+			: items.enum.map((tag) => `${kind} (${String(tag)})`);
 	});
 	return { freeText: false, nullable: false, sets: false, values };
 }
