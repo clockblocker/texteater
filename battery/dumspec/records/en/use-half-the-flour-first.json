@@ -14,12 +14,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Half before a noun phrase is DET with fractional number features, not NUM."
 			},

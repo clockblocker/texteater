@@ -42,7 +42,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -52,6 +51,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22, 24, 26, 29, 31, 33, 35],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The Saying's wording holds the old genitives wes and des, but the Saying has no other wording: it is archaic in every use. That is true of its Lemma, not of this Surface, and a Surface is Archaic only when its form is archaic beside the Lemma's current forms. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},

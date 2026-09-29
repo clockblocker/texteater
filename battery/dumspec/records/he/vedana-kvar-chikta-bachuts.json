@@ -14,12 +14,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "ו is the CCONJ and, its own Lexeme. It is written fused to דנה, so its member is the Fused first piece of ודנה."
 			},

@@ -51,7 +51,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -61,6 +60,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [40, 42, 44],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The unmarked Idiom mention is route-contrast context; the marked reaction formula is authoritative."
 			},

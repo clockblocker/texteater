@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Sorge des Hausvaters",
@@ -58,6 +57,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ vergeblich from Vergeblich (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -95,6 +95,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB fragen from frage (VERB root)."
 			},
@@ -139,6 +140,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from ich (PRON nsubj)."
 			},
@@ -177,6 +179,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mich from mich (PRON obj). UD makes mich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
 			},
@@ -222,6 +225,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON was from was (PRON nsubj:pass)."
 			},
@@ -267,6 +271,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
 			},
@@ -310,6 +315,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl)."
 			},
@@ -348,6 +354,7 @@
 		},
 		{
 			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB geschehen from geschehen (VERB ccomp) with wird (aux:pass). geschehen spells both the infinitive and the participle, so wird may mark the future or the passive."
 			},

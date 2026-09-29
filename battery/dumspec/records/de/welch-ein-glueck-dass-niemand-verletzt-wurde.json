@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "The exclamative DET is invariant here, so the exact codec uses Citation."
 			},

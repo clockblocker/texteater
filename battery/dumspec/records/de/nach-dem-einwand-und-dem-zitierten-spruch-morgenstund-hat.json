@@ -59,7 +59,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -69,6 +68,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [37, 39, 41, 43],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "wie dem auch sei (however that may be) is a fixed adverbial that closes the digression, a Locution ADV with no comparison forms, never an INTJ. The unmarked Proverb is contextual route contrast."
 			},

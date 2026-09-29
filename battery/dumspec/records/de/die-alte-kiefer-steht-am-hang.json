@@ -17,7 +17,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🌲" },
 			"notes": {
 				"rationale": "The pine-tree use resolves to the feminine Kiefer Lemma, distinct through its Core Features from the masculine jaw Lemma."

@@ -13,12 +13,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "n't is the negative PART not, the same Lemma as a written-out not. It is the Fused second piece of don't; do is the AUX piece."
 			},

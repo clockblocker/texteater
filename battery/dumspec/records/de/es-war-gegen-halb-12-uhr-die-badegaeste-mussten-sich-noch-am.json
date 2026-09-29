@@ -34,7 +34,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Buddenbrooks",
@@ -66,6 +65,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from Es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
 			},
@@ -104,6 +104,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from war (AUX root)."
 			},
@@ -148,6 +149,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP gegen from gegen (ADP case)."
 			},
@@ -191,6 +193,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV halb from halb (ADV advmod)."
 			},
@@ -223,6 +226,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NUM 12 from 12 (NUM nummod)."
 			},
@@ -255,6 +259,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Uhr from Uhr (NOUN obl)."
 			},
@@ -288,6 +293,7 @@
 		},
 		{
 			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Badegast from Badegäste (NOUN nsubj) with die (det)."
 			},
@@ -324,6 +330,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB müssen from mußten (AUX aux). Spelling drafted Canonical: check whether mußten is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -370,6 +377,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 28],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sich befinden from befinden (VERB conj) with sich (expl:pv). UD marks sich as the inherent reflexive (expl:pv), so it joins the verb; check that the verb requires it."
 			},
@@ -417,6 +425,7 @@
 		},
 		{
 			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
 			},
@@ -449,6 +458,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP an from an (ADP case)."
 			},
@@ -505,6 +515,7 @@
 		},
 		{
 			"memberSegmentIndices": [24, 26],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Strande from Strande (PROPN obl) with dem (det)."
 			},

@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😖" },
 			"notes": {
 				"rationale": "weh laments, and mir names who suffers. DWDS lists weh mir! as an example, but the dative is free (weh dir, weh uns), so it is no fixed member: weh is an INTJ Lexeme and mir the Dat cell of the personal pronoun, each its own target."
@@ -54,6 +54,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",

@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
@@ -43,6 +42,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "MfG abbreviates the closing formula mit freundlichen Grüßen, a routine formula and so a Locution INTJ (de/routine-formula-is-intj). It is no name whose initialism is its usual form, so the target is the formula and MfG is its Shorthand member, as z.B. is of zum Beispiel (de/abbreviation-is-one-segment)."
 			},

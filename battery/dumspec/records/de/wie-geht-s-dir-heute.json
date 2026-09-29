@@ -13,7 +13,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 3],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Wie geht's is the greeting formula, a Locution INTJ (de/routine-formula-is-intj). Its three words are members, the Fused 's included; the formula's wording has no dative, and Wie geht's Ihnen? swaps the word, so dir is free.",
 				"knownMistakes": [
@@ -81,6 +81,7 @@
 		},
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "dir is the free dative of the person asked and resolves on its own."
 			},
@@ -119,6 +120,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

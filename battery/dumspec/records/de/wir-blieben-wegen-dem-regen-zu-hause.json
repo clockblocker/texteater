@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -28,6 +27,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "The complement is colloquially dative, so the occurrence records Dat; the ADP Case Table keeps Gen as the preferred case of the same Lemma."
 			},

@@ -42,7 +42,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Sorge des Hausvaters",
@@ -73,6 +72,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sollen from Sollte (AUX aux)."
 			},
@@ -119,6 +119,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -157,6 +158,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV also from also (ADV advmod)."
 			},
@@ -189,6 +191,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV einstmals from einstmals (ADV advmod)."
 			},
@@ -223,6 +226,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV etwa from etwa (ADV advmod)."
 			},
@@ -255,6 +259,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
 			},
@@ -287,6 +292,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP vor from vor (ADP case)."
 			},
@@ -330,6 +336,7 @@
 		},
 		{
 			"memberSegmentIndices": [14, 16],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Fuß from Füßen (NOUN obl) with den (det)."
 			},
@@ -366,6 +373,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET mein from meiner (DET det:poss)."
 			},
@@ -414,6 +422,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kind from Kinder (NOUN nmod)."
 			},
@@ -449,6 +458,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -475,6 +485,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kindeskind from Kindeskinder (NOUN conj)."
 			},
@@ -510,6 +521,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
 			},
@@ -553,6 +565,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ nachschleifend from nachschleifendem (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -598,6 +611,7 @@
 		},
 		{
 			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zwirnsfaden from Zwirnsfaden (NOUN obl)."
 			},
@@ -633,6 +647,7 @@
 		},
 		{
 			"memberSegmentIndices": [32, 34],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Treppe from Treppe (NOUN obj) with die (det)."
 			},
@@ -669,6 +684,7 @@
 		},
 		{
 			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinunterkollern from hinunterkollern (VERB root). hasSepPrefix is left null: check whether hinunterkollern has the separable prefix hinunter."
 			},

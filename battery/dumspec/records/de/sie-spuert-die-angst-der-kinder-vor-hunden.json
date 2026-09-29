@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 12],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "The noun owns its article and its governed preposition across a genitive attribute; the Surface is die Angst."
 			},

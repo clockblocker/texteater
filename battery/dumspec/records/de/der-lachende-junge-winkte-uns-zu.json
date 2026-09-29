@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "😄" },
 			"notes": {
 				"rationale": "Lachende is an attributive Partizip I modifying Junge with nominative masculine singular agreement, so it is the ADJ lachend with Participle Source lachen (ADR 0036)."

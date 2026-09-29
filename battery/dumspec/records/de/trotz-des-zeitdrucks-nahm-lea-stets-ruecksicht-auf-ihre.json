@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0039"],
@@ -39,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12, 14],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "Rücksicht nehmen is a Funktionsverbgefüge: nehmen only supports the noun Rücksicht, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. Rücksicht governs auf with the accusative inside the expression, so auf is a member but stays out of the Surface (ADR 0034). The adverb stets and the object ihre Kollegen are free."
 			},

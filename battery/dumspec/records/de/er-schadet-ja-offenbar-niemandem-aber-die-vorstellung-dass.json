@@ -47,7 +47,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Sorge des Hausvaters",
@@ -75,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from Er (PRON nsubj)."
 			},
@@ -113,6 +113,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB schaden from schadet (VERB root)."
 			},
@@ -159,6 +160,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV ja from ja (ADV advmod)."
 			},
@@ -191,6 +193,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV offenbar from offenbar (ADV advmod)."
 			},
@@ -225,6 +228,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON niemand from niemandem (DET obl:arg). UD tags niemandem DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
 			},
@@ -272,6 +276,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ aber from aber (CCONJ cc)."
 			},
@@ -298,6 +303,7 @@
 		},
 		{
 			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Vorstellung from Vorstellung (NOUN nsubj) with die (det)."
 			},
@@ -334,6 +340,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -360,6 +367,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -398,6 +406,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mich from mich (PRON obj)."
 			},
@@ -436,6 +445,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
 			},
@@ -468,6 +478,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
 			},
@@ -500,6 +511,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB überleben from überleben (VERB ccomp)."
 			},
@@ -546,6 +558,7 @@
 		},
 		{
 			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sollen from sollte (AUX aux)."
 			},
@@ -592,6 +605,7 @@
 		},
 		{
 			"memberSegmentIndices": [33],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from ist (AUX cop)."
 			},
@@ -636,6 +650,7 @@
 		},
 		{
 			"memberSegmentIndices": [35],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mir from mir (PRON nmod)."
 			},
@@ -674,6 +689,7 @@
 		},
 		{
 			"memberSegmentIndices": [37, 41],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN schmerzlich from schmerzliche (NOUN conj) with eine (det)."
 			},
@@ -710,6 +726,7 @@
 		},
 		{
 			"memberSegmentIndices": [39],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV fast from fast (ADV advmod)."
 			},

@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "am selben is an demselben with the article fused into am: the piece realizes derselbe with Partial coverage, the article half lives in the fusion. selber is the invariant emphatic and never declines (ticket 503)."
 			},

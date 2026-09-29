@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Expressive sound lengthening is a licensed Variant and remains Standard occurrence evidence."
 			},

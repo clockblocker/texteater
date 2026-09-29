@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "The dated or emphatic form remains a singular Surface of Lemma jedweder; synonymy with jeder never changes its lexical identity."
 			},

@@ -16,12 +16,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Tool saw is a noun citation surface; the model can keep it distinct from the verb surface saw."
 			},

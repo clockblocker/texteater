@@ -15,7 +15,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🤕" },
 			"notes": {
 				"rationale": "Verletzter is a substantivized participle used as a noun, so it classifies as NOUN rather than ADJ or VERB. An adjectival noun for a person is one Lemma cited in its weak form after the definite article, Verletzte, with no gender. The singular Surface marks the gender its strong form shows, Masc, and ein agrees with it."

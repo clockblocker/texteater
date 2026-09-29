@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -74,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🦚" },
 			"notes": {
 				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz, but not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is stolz."
@@ -148,6 +149,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "ist is the copula VERB sein, a single-member target; it never joins the predicative adjective stolz (de/copula-stays-apart)."

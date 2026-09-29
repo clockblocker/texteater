@@ -31,7 +31,7 @@
 		{ "kind": "Punctuation", "text": ";" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -63,6 +63,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔥" },
 			"notes": {
 				"rationale": "Verbrannt ist is the sein-perfect of intransitive verbrennen. de/sein-perfect-or-copula counts it as a perfect because Alles verbrannte ganz und gar reports the same event, which the verse has just narrated. A result-state reading (everything is in a burnt state) is also possible; this record takes the completed event. The fronted participle and ist are one VERB target (de/verbal-participle, de/verb-owns-its-scattered-members), and the Surface records the whole perfect, with tense from ist (de/verbal-surface-is-whole)."
@@ -111,6 +112,7 @@
 		},
 		{
 			"memberSegmentIndices": [6, 8, 10],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "💯" },
 			"notes": {
 				"rationale": "ganz und gar is an Idiom meaning completely, one Locution ADV over all three words (de/idiom). und has no target of its own."
@@ -143,6 +145,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 21, 23, 25],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "💯" },
 			"notes": {
 				"rationale": "Duden lists mit Haut und Haar[en] as an idiom meaning completely (ganz und gar, völlig), and the stanza supports that reading: the line continues Verbrannt ist alles ganz und gar. That the child also burns literally, skin and hair, does not exclude it. With the idiomatic reading established, the four words are one Locution ADV (de/idiom), and a click on any of them selects it (de/largest-fixed-unit); Haut and Haar stay reachable through its Breakdown. The Canonical Form keeps the attested Haar, because Haaren is another inflected form, not a Variant."

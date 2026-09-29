@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -73,6 +73,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🧠💭" },
 			"notes": {
 				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface."

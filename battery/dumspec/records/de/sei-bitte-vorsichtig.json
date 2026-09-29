@@ -10,7 +10,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -20,6 +19,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
 			},

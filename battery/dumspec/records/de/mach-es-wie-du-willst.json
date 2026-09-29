@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🧩🔧" },
 			"notes": {
 				"rationale": "wie names the manner inside its own clause, the way du willst it done, with no degree word to compare against, so it is Rel ADV, not comparison SCONJ."

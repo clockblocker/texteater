@@ -11,12 +11,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "ב is the ADP in, its own Lexeme and the Fused first piece of בבית (ba-bayit). The Fusion lists the hidden article ה between ב and בית; that component belongs to the noun בית."
 			},

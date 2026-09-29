@@ -16,12 +16,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Saw is the past finite surface of see, not the citation noun saw."
 			},

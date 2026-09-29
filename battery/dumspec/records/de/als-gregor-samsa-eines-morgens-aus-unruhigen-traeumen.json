@@ -45,7 +45,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Verwandlung",
@@ -75,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ als from Als (SCONJ mark)."
 			},
@@ -101,6 +101,7 @@
 		},
 		{
 			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Gregor Samsa from Gregor (PROPN nsubj) with Samsa (flat). UD joins Samsa to Gregor as flat: drafted as one PROPN name, the Lexeme a name of several words is. Check that it is one name."
 			},
@@ -137,6 +138,7 @@
 		},
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Morgen from Morgens (NOUN obl) with eines (det)."
 			},
@@ -173,6 +175,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP aus from aus (ADP case)."
 			},
@@ -216,6 +219,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ unruhig from unruhigen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -258,6 +262,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Traum from Träumen (NOUN obl)."
 			},
@@ -293,6 +298,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erwachen from erwachte (VERB advcl)."
 			},
@@ -339,6 +345,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB finden from fand (VERB root)."
 			},
@@ -383,6 +390,7 @@
 		},
 		{
 			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -421,6 +429,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
 			},
@@ -466,6 +475,7 @@
 		},
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
 			},
@@ -509,6 +519,7 @@
 		},
 		{
 			"memberSegmentIndices": [27],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinem (DET det:poss)."
 			},
@@ -557,6 +568,7 @@
 		},
 		{
 			"memberSegmentIndices": [29],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Bett from Bett (NOUN obl)."
 			},
@@ -590,6 +602,7 @@
 		},
 		{
 			"memberSegmentIndices": [31],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zu from zu (ADP case)."
 			},
@@ -633,6 +646,7 @@
 		},
 		{
 			"memberSegmentIndices": [33, 37],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ungeziefer from Ungeziefer (NOUN obl) with einem (det)."
 			},
@@ -669,6 +683,7 @@
 		},
 		{
 			"memberSegmentIndices": [35],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ungeheu from ungeheueren (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -711,6 +726,7 @@
 		},
 		{
 			"memberSegmentIndices": [39],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ verwandelt from verwandelt (VERB xcomp). UD tags verwandelt VERB, but a participle outside a perfect or passive is an ADJ (de/participial-adjective)."
 			},

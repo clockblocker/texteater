@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "💥" },
 			"notes": {
 				"rationale": "This is separable umfahren 'knock over', so fuhr … um is one target with both members. hasSepPrefix um keeps it apart from inseparable umfahren 'drive around' (umfuhr)."

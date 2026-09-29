@@ -12,12 +12,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Them is its own Lemma: English pronoun case and number are Core Features, so them is not a form of they. Singular-they readings are not separately encoded."
 			},

@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🧩🤔" },
 			"notes": {
 				"rationale": "weshalb names the reason inside its own clause, why die Fähre ausfällt, so it is a relative ADV (pronType Rel), antecedent or not."

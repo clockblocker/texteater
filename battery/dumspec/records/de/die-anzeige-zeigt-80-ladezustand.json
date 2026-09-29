@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "SYM" },
 			"notes": {
 				"rationale": "The neighboring number is not a member and does not make the percent sign a NUM Lemma."
 			},

@@ -13,7 +13,6 @@
 		{ "kind": "ResolvableText", "text": "Abstieg" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -23,6 +22,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

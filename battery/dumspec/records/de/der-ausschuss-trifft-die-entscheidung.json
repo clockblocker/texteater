@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "The noun's own article comes with the noun (ADR 0028), and its article is a feature of the noun's Surface (ADR 0035): die instead of eine is not a lexical substitution, so the occurrence realizes eine Entscheidung treffen in Full."
 			},

@@ -9,12 +9,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "לבית is la-bayit: ל, a hidden article ה with no letters of its own, and בית. The noun owns that hidden component, so it records Def and its coverage is Partial, pointing at component 1 of the Fusion."
 			},

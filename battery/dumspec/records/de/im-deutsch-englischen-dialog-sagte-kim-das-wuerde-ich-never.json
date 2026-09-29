@@ -28,7 +28,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -43,6 +42,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "Duden does not list never, and it takes no German grammar: Foreign en."
 			},

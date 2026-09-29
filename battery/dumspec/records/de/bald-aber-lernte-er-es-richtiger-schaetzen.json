@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Verwirrungen des Zöglings Törleß",
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV bald from Bald (ADV advmod)."
 			},
@@ -74,6 +74,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV aber from aber (ADV advmod)."
 			},
@@ -106,6 +107,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB lernen from lernte (VERB root)."
 			},
@@ -152,6 +154,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -190,6 +193,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON obj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
 			},
@@ -228,6 +232,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ richtig from richtiger (ADJ advmod)."
 			},
@@ -270,6 +275,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB schätzen from schätzen (VERB xcomp)."
 			},

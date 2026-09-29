@@ -48,7 +48,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Buddenbrooks",
@@ -89,6 +88,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from Es (PRON expl). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
 			},
@@ -127,6 +127,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from war (AUX cop)."
 			},
@@ -171,6 +172,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV jetzt from jetzt (ADV advmod)."
 			},
@@ -203,6 +205,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
 			},
@@ -234,6 +237,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV mehr from mehr (ADV advmod)."
 			},
@@ -266,6 +270,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
 			},
@@ -298,6 +303,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ drohend from drohend (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -335,6 +341,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ wahrscheinlich from wahrscheinlich (ADJ root). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -372,6 +379,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -398,6 +406,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Hanno from Hanno (PROPN nsubj:pass)."
 			},
@@ -431,6 +440,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 23],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB aufrufen from aufgerufen (VERB ccomp) with wurde (aux:pass)."
 			},
@@ -478,6 +488,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
 			},
@@ -516,6 +527,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from konnte (AUX aux)."
 			},
@@ -562,6 +574,7 @@
 		},
 		{
 			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV nur from nur (ADV advmod)."
 			},
@@ -594,6 +607,7 @@
 		},
 		{
 			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
 			},
@@ -626,6 +640,7 @@
 		},
 		{
 			"memberSegmentIndices": [34],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP durch from durch (ADP case)."
 			},
@@ -669,6 +684,7 @@
 		},
 		{
 			"memberSegmentIndices": [36, 40],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zufall from Zufall (NOUN obl) with einen (det)."
 			},
@@ -705,6 +721,7 @@
 		},
 		{
 			"memberSegmentIndices": [38],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ unselig from unseligen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -747,6 +764,7 @@
 		},
 		{
 			"memberSegmentIndices": [42],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB geschehen from geschehen (VERB conj)."
 			},

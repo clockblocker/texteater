@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Infinitival zu is PART with partType Inf, distinct from prepositional zu."

@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 6],
+			"route": { "family": "Locution", "kind": "ADP" },
 			"notes": {
 				"rationale": "Über die Zusicherung hinaus is one constituent before the finite verb, outside the bracket, so über … hinaus is a circumposition, a Locution ADP, and hinaus no particle."
 			},
@@ -64,6 +64,7 @@
 		},
 		{
 			"memberSegmentIndices": [8, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "nach in the right bracket is the separable particle of nachgeben."
 			},

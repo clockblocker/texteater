@@ -52,7 +52,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Buddenbrooks",
@@ -87,6 +86,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Musiktempel from Musiktempel (NOUN nsubj) with Der (det)."
 			},
@@ -123,6 +123,7 @@
 		},
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zwischen from zwischen (ADP case)."
 			},
@@ -168,6 +169,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Nadelbaum from Nadelbäumen (NOUN obl)."
 			},
@@ -203,6 +205,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ versteckt from versteckt (VERB acl). UD tags versteckt VERB, but a participle outside a perfect or passive is an ADJ (de/participial-adjective)."
 			},
@@ -240,6 +243,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 46],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB gegenüberstehen from stand (VERB root) with gegenüber (compound:prt)."
 			},
@@ -287,6 +291,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ schweigend from schweigend (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -324,6 +329,7 @@
 		},
 		{
 			"memberSegmentIndices": [16, 18],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kurhaus from Kurhaus (NOUN obl:arg) with dem (det)."
 			},
@@ -360,6 +366,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 23],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Konditorei from Konditorei (NOUN conj) with der (det)."
 			},
@@ -396,6 +403,7 @@
 		},
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -422,6 +430,7 @@
 		},
 		{
 			"memberSegmentIndices": [27, 44],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Schweizerhaus from Schweizerhäusern (NOUN conj) with den (det)."
 			},
@@ -461,6 +470,7 @@
 		},
 		{
 			"memberSegmentIndices": [29],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON beide from beiden (DET det). UD tags beiden DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
 			},
@@ -508,6 +518,7 @@
 		},
 		{
 			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP durch from durch (ADP case)."
 			},
@@ -551,6 +562,7 @@
 		},
 		{
 			"memberSegmentIndices": [34, 38],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zwischengebäude from Zwischengebäude (NOUN nmod) with ein (det)."
 			},
@@ -587,6 +599,7 @@
 		},
 		{
 			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ lang from langes (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -629,6 +642,7 @@
 		},
 		{
 			"memberSegmentIndices": [40],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV miteinander from miteinander (ADV advmod)."
 			},
@@ -663,6 +677,7 @@
 		},
 		{
 			"memberSegmentIndices": [42],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ verbunden from verbundenen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},

@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0040", "ADR-0042"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "am before a superlative marks the degree and stands for no other words, so it is one Segment and a member of the ADV it marks: [am, liebsten] is gern (Sup), the suppletive superlative of a comparable Lemma. In im Frühling, im still splits into i and m.",
 				"knownMistakes": [

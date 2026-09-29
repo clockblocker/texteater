@@ -30,7 +30,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -49,6 +48,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 24],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "The speaker stays inside, so the addressee goes out, away from the speaker: raus in the right bracket is the particle of hinausgehen, not bare gehen. raus is its Shorthand member, and the Surface spells the full particle. The imperative is mood Imp with a finite verbForm."
 			},

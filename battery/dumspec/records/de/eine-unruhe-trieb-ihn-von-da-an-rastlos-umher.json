@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Verwirrungen des Zöglings Törleß",
@@ -55,6 +54,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Unruhe from Unruhe (NOUN nsubj) with Eine (det)."
 			},
@@ -91,6 +91,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB umhertreiben from trieb (VERB root) with umher (compound:prt)."
 			},
@@ -138,6 +139,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihn from ihn (PRON obj)."
 			},
@@ -176,6 +178,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP von from von (ADP case). The case von governs is left out: UD gives da no case."
 			},
@@ -209,6 +212,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV da from da (ADV advmod)."
 			},
@@ -241,6 +245,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP an from an (ADP case). UD tags an APZR: it may close a circumposition with a preposition before it (de/bracket-particle-or-circumposition). The case an governs is left out: UD gives da no case."
 			},
@@ -274,6 +279,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ rastlos from rastlos (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},

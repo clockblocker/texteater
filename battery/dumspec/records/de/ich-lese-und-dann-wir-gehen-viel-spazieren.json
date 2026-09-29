@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Brennendes Geheimnis",
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [1],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from Ich (PRON nsubj)."
 			},
@@ -84,6 +84,7 @@
 		},
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB lesen from lese (VERB root)."
 			},
@@ -128,6 +129,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -154,6 +156,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV dann from dann (ADV advmod)."
 			},
@@ -186,6 +189,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wir from wir (PRON nsubj)."
 			},
@@ -224,6 +228,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB gehen from gehen (VERB conj)."
 			},
@@ -268,6 +273,7 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON viele from viel (DET obj). UD tags viel DET; STTS PIS makes it PRON (de/pron-or-det-by-use). viel fits 3 authored PRON cells equally (Ind Nom Sing Neut; Ind Acc Sing Neut; Ind Dat Sing Neut); the first is drafted. Check the referent (ADR 0044)."
 			},
@@ -313,6 +319,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB spazieren from spazieren (VERB xcomp)."
 			},

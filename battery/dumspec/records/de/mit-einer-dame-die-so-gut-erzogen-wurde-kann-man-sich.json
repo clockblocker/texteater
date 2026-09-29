@@ -35,7 +35,6 @@
 		{ "kind": "Punctuation", "text": "«" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Frau Jenny Treibel",
@@ -74,6 +73,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from Mit (ADP case)."
 			},
@@ -117,6 +117,7 @@
 		},
 		{
 			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Dame from Dame (NOUN obl) with einer (det)."
 			},
@@ -153,6 +154,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj:pass)."
 			},
@@ -191,6 +193,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
 			},
@@ -223,6 +226,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ gut from gut (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -258,6 +262,7 @@
 		},
 		{
 			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erziehen from erzogen (VERB acl) with wurde (aux:pass)."
 			},
@@ -305,6 +310,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from kann (AUX aux)."
 			},
@@ -349,6 +355,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON man from man (PRON nsubj)."
 			},
@@ -387,6 +394,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
 			},
@@ -432,6 +440,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV überhaupt from überhaupt (ADV advmod)."
 			},
@@ -466,6 +475,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
 			},
@@ -497,6 +507,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zanken from zanken (VERB root)."
 			},

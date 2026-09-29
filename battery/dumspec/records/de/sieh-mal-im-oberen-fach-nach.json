@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "mal softens the request. It is Duden's own particle mal, which lends an utterance a certain casualness (hör mal zu), not a shortened einmal, so the target is PART mal and its member is Standard."
 			},

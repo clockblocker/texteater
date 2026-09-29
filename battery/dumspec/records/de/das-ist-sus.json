@@ -10,7 +10,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "Duden does not list sus, and predicative sus takes no German ending. Filling the slot after ist is not grammar: Foreign en."
 			},

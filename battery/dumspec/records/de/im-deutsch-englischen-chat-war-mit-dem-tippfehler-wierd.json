@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Duden lists weird as an indeclinable adjective, so the typo wierd is a Typo member of ADJ weird. The chat mixes German and English, so it is marked foreign. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

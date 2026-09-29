@@ -16,12 +16,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Voice=Pass is context-sensitive for English participles; it is included to test whether the model accepts contextual morphology."
 			},

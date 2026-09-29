@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
@@ -28,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "❤" },
 			"notes": {
 				"rationale": "Herzen is dative singular here, not plural, despite its weak-looking ending on a neuter noun."

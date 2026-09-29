@@ -24,7 +24,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -44,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "✍" },
 			"notes": {
 				"rationale": "Geschriebene is an attributive participle modifying Notiz with nominative feminine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0036). The mit Bleistift phrase stays outside."

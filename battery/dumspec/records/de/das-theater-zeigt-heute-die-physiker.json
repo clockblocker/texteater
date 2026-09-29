@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in den Physikern): Canonical Form Physiker with Core article Definite (ADR 0035). The title is a plural-only name, so it agrees as a plural and has no gender. It is contextual Inflection, not a Citation mention."
 			},

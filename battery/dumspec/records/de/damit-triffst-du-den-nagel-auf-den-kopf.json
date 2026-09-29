@@ -20,7 +20,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -39,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6, 8, 10, 12, 14],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "triffst is the Locution's verb and joins its fixed words; damit and du stay outside."

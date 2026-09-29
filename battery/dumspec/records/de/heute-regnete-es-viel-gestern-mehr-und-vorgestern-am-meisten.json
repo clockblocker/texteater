@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "The explicit degree contrast establishes Degree Pos; the indefinite ADV identity carries PronType Ind without adding NumType from quantity meaning alone."
 			},

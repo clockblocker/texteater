@@ -28,7 +28,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "A congratulation formula, one Locution/INTJ. What it does in conversation is its Formula Role, Reading Knowledge, not part of the Lemma (ADR 0039)."
 			},

@@ -49,7 +49,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Prozess",
@@ -80,6 +79,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Köchin from Köchin (NOUN nsubj) with Die (det)."
 			},
@@ -116,6 +116,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Frau from Frau (NOUN nmod) with der (det)."
 			},
@@ -152,6 +153,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Grubach from Grubach (PROPN appos)."
 			},
@@ -187,6 +189,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seiner (DET det:poss)."
 			},
@@ -235,6 +238,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zimmervermieterin from Zimmervermieterin (NOUN appos)."
 			},
@@ -273,6 +277,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj)."
 			},
@@ -311,6 +316,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
 			},
@@ -349,6 +355,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET jeder from jeden (DET det)."
 			},
@@ -395,6 +402,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Tag from Tag (NOUN obl)."
 			},
@@ -428,6 +436,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP gegen from gegen (ADP case)."
 			},
@@ -471,6 +480,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NUM acht from acht (NUM nummod)."
 			},
@@ -503,6 +513,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Uhr from Uhr (NOUN obl)."
 			},
@@ -536,6 +547,7 @@
 		},
 		{
 			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ früh from früh (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -571,6 +583,7 @@
 		},
 		{
 			"memberSegmentIndices": [32, 34],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Frühstück from Frühstück (NOUN obj) with das (det)."
 			},
@@ -607,6 +620,7 @@
 		},
 		{
 			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB bringen from brachte (VERB acl)."
 			},
@@ -653,6 +667,7 @@
 		},
 		{
 			"memberSegmentIndices": [39],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB kommen from kam (VERB root)."
 			},
@@ -697,6 +712,7 @@
 		},
 		{
 			"memberSegmentIndices": [41],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV diesmal from diesmal (ADV advmod)."
 			},
@@ -731,6 +747,7 @@
 		},
 		{
 			"memberSegmentIndices": [43],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
 			},

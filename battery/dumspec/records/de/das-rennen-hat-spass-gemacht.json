@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0002", "ADR-0035", "ADR-0040"],
@@ -34,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏁" },
 			"notes": {
 				"rationale": "Rennen is the race, the neuter noun Rennen, and it owns its article Das. Running as an activity is the same Lemma under another Reading."

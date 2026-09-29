@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Duden lists cringe as an indeclinable adjective, so it is ADJ cringe though it takes no ending. ziemlich grades it without a comparison form. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

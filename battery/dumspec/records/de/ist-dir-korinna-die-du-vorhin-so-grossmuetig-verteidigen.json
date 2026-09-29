@@ -32,7 +32,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Frau Jenny Treibel",
@@ -68,6 +67,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 22],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB verleiden from verleidet (VERB root) with Ist (aux). UD tags both Ist and verleidet finite; check the verb's form and whether Ist is an auxiliary here."
 			},
@@ -115,6 +115,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON dir from dir (PRON obl:arg)."
 			},
@@ -153,6 +154,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Korinna from Korinna (PROPN nsubj)."
 			},
@@ -188,6 +190,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON obj)."
 			},
@@ -226,6 +229,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON du from du (PRON nsubj)."
 			},
@@ -264,6 +268,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV vorhin from vorhin (ADV advmod)."
 			},
@@ -298,6 +303,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
 			},
@@ -330,6 +336,7 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ großmütig from großmütig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos. Spelling drafted Canonical: check whether großmütig is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -367,6 +374,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB verteidigen from verteidigen (VERB acl)."
 			},
@@ -413,6 +421,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wollen from wolltest (AUX aux)."
 			},
@@ -459,6 +468,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ oder from oder (CCONJ cc)."
 			},
@@ -485,6 +495,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
 			},

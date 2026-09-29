@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Concessive wo links the clauses and names no place or time inside er doch krank ist, so it is SCONJ, not Rel ADV."
 			},

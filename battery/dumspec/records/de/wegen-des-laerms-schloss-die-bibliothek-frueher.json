@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Lärm. Its DET cell is derived: des is des Gen.Masc.Sg.",
 				"knownMistakes": [

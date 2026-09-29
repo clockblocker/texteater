@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "starker Raucher is a weak collocation with a literal meaning, someone who smokes a lot, so starker is an ADJ of its own and no member of a Locution."
 			},
@@ -71,6 +71,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Raucher is a NOUN of its own that owns its article ein across the adjective."
 			},

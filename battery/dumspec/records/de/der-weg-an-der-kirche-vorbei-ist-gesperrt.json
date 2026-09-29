@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10],
+			"route": { "family": "Locution", "kind": "ADP" },
 			"notes": {
 				"rationale": "an der Kirche vorbei is one constituent inside the noun phrase, outside any verbal bracket, so an … vorbei is a circumposition, a Locution ADP, taking Dat. In der Radweg führt an der Schule vorbei the same words in the bracket give vorbeiführen."
 			},

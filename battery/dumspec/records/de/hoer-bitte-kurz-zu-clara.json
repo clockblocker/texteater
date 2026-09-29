@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "A direct-address occurrence is contextual Inflection with singular Number and null Case, never Citation."
 			},

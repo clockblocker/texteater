@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Antlitz (an elevated word for face) is an archaic word, not an archaic form. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

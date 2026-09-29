@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -28,6 +27,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "😌" },
 			"notes": {
 				"rationale": "Gott sei Dank opens the clause as its adverbial, with the verb second after it, and means what zum Glück means. A fixed adverbial keeps Kind ADV, so it is a Locution ADV with no comparison forms, also when it stands alone as Gott sei Dank!."

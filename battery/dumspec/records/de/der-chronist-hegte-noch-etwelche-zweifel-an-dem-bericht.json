@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -32,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "etwelche (some, a few) is an archaic word, not a typo, so its spelling stays as attested. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status). Its cell comes from the noun it modifies: plural accusative Zweifel."
 			},

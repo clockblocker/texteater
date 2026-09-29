@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 24],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039)."
 			},

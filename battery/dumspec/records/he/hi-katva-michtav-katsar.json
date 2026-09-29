@@ -12,12 +12,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "כתבה is the past feminine-singular verb from כתב despite the homographic noun article."
 			},

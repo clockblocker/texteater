@@ -45,7 +45,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -55,6 +54,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Es is the subject of tut mir leid and stands for the regretted matter, which the dass clause spells out. So it is the referential PRON es, a target of its own, and no member of the formula (ADR 0039)."
 			},
@@ -93,6 +93,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 23, 29],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The parenthetical wirklich and the dass clause stay outside the formula, so tut mir leid is Full over tut, mir and leid with a free word between its members."
 			},

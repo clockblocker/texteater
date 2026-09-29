@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -25,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "❗" },
 			"notes": {
 				"rationale": "A modal is a VERB with verbType Mod, one Lemma whether it governs an infinitive or an object (ADR 0026). The infinitive it governs is a target of its own."
@@ -70,6 +71,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "💼" },
 			"notes": {
 				"rationale": "arbeiten is the infinitive that muss governs. It is a VERB target of its own, not a member of the modal's target."

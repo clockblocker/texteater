@@ -34,7 +34,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -44,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Es is the subject of tut mir leid and stands for the regretted matter: das or dein Verlust could take its place. So it is the referential PRON es, a target of its own, and no member of the formula (ADR 0039)."
 			},
@@ -82,6 +82,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 21],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The ellipsis breaks the apology off before leid, so tut mir leid is attested Partially over tut and mir; the missing leid is really absent."
 			},

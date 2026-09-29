@@ -56,7 +56,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Sorge des Hausvaters",
@@ -96,6 +95,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON alle from Alles (DET nsubj). UD tags Alles DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
 			},
@@ -141,6 +141,7 @@
 		},
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON was from was (PRON nsubj)."
 			},
@@ -186,6 +187,7 @@
 		},
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sterben from stirbt (VERB acl)."
 			},
@@ -232,6 +234,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "AUX" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme AUX haben from hat (AUX aux). Auxiliary with no verb found: UD attaches hat to Ziel (NOUN), so it is drafted alone, though an auxiliary is never a target of its own (de/auxiliary-joins-the-verb-it-serves)."
 			},
@@ -272,6 +275,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV vorher from vorher (ADV advmod)."
 			},
@@ -306,6 +310,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Art from Art (NOUN obj) with eine (det)."
 			},
@@ -342,6 +347,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ziel from Ziel (NOUN root)."
 			},
@@ -375,6 +381,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 21],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Art from Art (NOUN obj) with eine (det)."
 			},
@@ -411,6 +418,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Tätigkeit from Tätigkeit (NOUN appos)."
 			},
@@ -446,6 +454,7 @@
 		},
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB haben from gehabt (VERB conj). gehabt shares the auxiliary of its conjunct Ziel, which the converter gives to that conjunct alone."
 			},
@@ -493,6 +502,7 @@
 		},
 		{
 			"memberSegmentIndices": [27],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -519,6 +529,7 @@
 		},
 		{
 			"memberSegmentIndices": [29],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV daran from daran (ADV advmod)."
 			},
@@ -551,6 +562,7 @@
 		},
 		{
 			"memberSegmentIndices": [31, 37],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zerreiben from zerrieben (VERB conj) with hat (aux)."
 			},
@@ -598,6 +610,7 @@
 		},
 		{
 			"memberSegmentIndices": [33],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
 			},
@@ -636,6 +649,7 @@
 		},
 		{
 			"memberSegmentIndices": [35],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
 			},
@@ -681,6 +695,7 @@
 		},
 		{
 			"memberSegmentIndices": [40],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON das from das (PRON nsubj)."
 			},
@@ -719,6 +734,7 @@
 		},
 		{
 			"memberSegmentIndices": [42, 50],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zutreffen from trifft (VERB parataxis) with zu (compound:prt)."
 			},
@@ -766,6 +782,7 @@
 		},
 		{
 			"memberSegmentIndices": [44],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP bei from bei (ADP case)."
 			},
@@ -809,6 +826,7 @@
 		},
 		{
 			"memberSegmentIndices": [46],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Odradek from Odradek (PROPN obl)."
 			},
@@ -844,6 +862,7 @@
 		},
 		{
 			"memberSegmentIndices": [48],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
 			},

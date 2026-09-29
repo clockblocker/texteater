@@ -76,7 +76,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -98,6 +98,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🤩" },
 			"notes": {
 				"rationale": "An attributive participle with a von-agent is still an ADJ (ADR 0036): Canonical Form bewundert; Nom Sing Masc. Bewunderte is an attributive participle modifying Lehrer with nominative masculine singular agreement, so it is the ADJ bewundert with Participle Source bewundern (ADR 0036). The von-agent stays outside."

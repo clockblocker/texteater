@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "A title abbreviation is one Shorthand member whose Surface is its expansion, Diplom-Ingenieur; the name stays outside (ADR 0035)."
 			},

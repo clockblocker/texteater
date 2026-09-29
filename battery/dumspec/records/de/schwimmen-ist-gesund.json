@@ -10,7 +10,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0002", "ADR-0040"],
@@ -30,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏊" },
 			"notes": {
 				"rationale": "Schwimmen is a substantivized infinitive, a neuter NOUN of its own, not the verb schwimmen. It stands bare, with no article."

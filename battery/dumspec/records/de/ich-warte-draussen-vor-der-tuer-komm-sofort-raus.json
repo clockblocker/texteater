@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "The speaker waits outside, so the addressee comes out towards the speaker: raus in the right bracket is the particle of herauskommen. raus is its Shorthand member, and the Surface spells the full particle."
 			},

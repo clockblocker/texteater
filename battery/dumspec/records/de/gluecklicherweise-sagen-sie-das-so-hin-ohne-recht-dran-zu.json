@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Frau Jenny Treibel",
@@ -59,6 +58,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV glücklicherweise from Glücklicherweise (ADV advmod)."
 			},
@@ -96,6 +96,7 @@
 		},
 		{
 			"memberSegmentIndices": [2, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinsagen from sagen (VERB root) with hin (compound:prt)."
 			},
@@ -143,6 +144,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON Sie from Sie (PRON nsubj)."
 			},
@@ -181,6 +183,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON das from das (PRON obj)."
 			},
@@ -219,6 +222,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
 			},
@@ -251,6 +255,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ ohne from ohne (ADP case). UD tags ohne ADP; STTS KOUI makes it SCONJ."
 			},
@@ -277,6 +282,7 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV recht from recht (ADV advmod)."
 			},
@@ -309,6 +315,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV daran from dran (ADV advmod). dran is drafted as the Shorthand of daran (de/member-orthography)."
 			},
@@ -341,6 +348,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
 			},
@@ -372,6 +380,7 @@
 		},
 		{
 			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB glauben from glauben (VERB xcomp)."
 			},

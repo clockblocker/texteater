@@ -28,7 +28,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17, 19, 21],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The real spelling error is repaired only in its selected member."
 			},

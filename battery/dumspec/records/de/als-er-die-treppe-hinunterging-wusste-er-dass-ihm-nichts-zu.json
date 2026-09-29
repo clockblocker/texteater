@@ -45,7 +45,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Mörder",
@@ -75,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ als from Als (SCONJ mark)."
 			},
@@ -101,6 +101,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -139,6 +140,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Treppe from Treppe (NOUN obj) with die (det)."
 			},
@@ -175,6 +177,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinuntergehen from hinunterging (VERB advcl). hasSepPrefix is left null: check whether hinuntergehen has the separable prefix hinunter."
 			},
@@ -221,6 +224,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wußen from wußte (VERB root). Spelling drafted Canonical: check whether wußte is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -265,6 +269,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},
@@ -303,6 +308,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -329,6 +335,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
 			},
@@ -367,6 +374,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON nichts from nichts (PRON nsubj)."
 			},
@@ -407,6 +415,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
 			},
@@ -438,6 +447,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB tun from tun (VERB xcomp)."
 			},
@@ -482,6 +492,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ übrig from übrig (ADJ xcomp). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -517,6 +528,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB bleiben from blieb (VERB ccomp)."
 			},
@@ -561,6 +573,7 @@
 		},
 		{
 			"memberSegmentIndices": [31],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ als from als (ADP case). UD tags als ADP; STTS KOKOM makes it CCONJ. Comparison als is CCONJ before a phrase and SCONJ before a clause (de/relative-w-adverb-fills-a-slot)."
 			},
@@ -587,6 +600,7 @@
 		},
 		{
 			"memberSegmentIndices": [33, 35],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ende from Ende (NOUN obl) with ein (det)."
 			},
@@ -623,6 +637,7 @@
 		},
 		{
 			"memberSegmentIndices": [37],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
 			},
@@ -654,6 +669,7 @@
 		},
 		{
 			"memberSegmentIndices": [39],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB machen from machen (VERB advcl)."
 			},

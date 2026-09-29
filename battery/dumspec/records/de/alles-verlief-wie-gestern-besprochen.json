@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "The established reduced comparing clause remains SCONJ without an overt finite verb."
 			},

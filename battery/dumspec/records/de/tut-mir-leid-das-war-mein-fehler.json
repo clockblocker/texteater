@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -39,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🙇" },
 			"notes": {
 				"rationale": "Tut mir leid is the apology formula tut mir leid, a Locution INTJ, not a finite verb. All three of its words are here, so the Attestation is Full over Tut, mir and leid, and a click on any of them selects the formula. Its apology role is Reading Knowledge, not part of the Lemma."

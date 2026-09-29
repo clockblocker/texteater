@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Comparison wie before a phrase, die erste, completes ebenso robust and fills no slot in a clause: CCONJ."
 			},

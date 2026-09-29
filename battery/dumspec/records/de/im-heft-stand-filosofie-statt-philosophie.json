@@ -17,7 +17,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🤔" },
 			"notes": {
 				"rationale": "Filosofie is a misspelling of Philosophie reported by the sentence: no dictionary licenses an f spelling of Philosophie (the reform's f variants cover stems like -fon and -graf, not philo-). The member is Typo and points to Philosophie. No standard, current or earlier, accepts it, and it is neither regional nor expressive, so it is a mistake, not a Variant, and the Surface is Canonical."

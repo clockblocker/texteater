@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0042", "ADR-0045"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "COVID-ish is English, the language of the text, made with the productive suffix -ish, so it is an ADJ Lexeme, not Foreign. It has no comparison forms of its own."
 			},

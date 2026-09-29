@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Comparison wie before a clause, der Hersteller versprochen hatte, completes so leise and names nothing inside that clause: SCONJ."
 			},

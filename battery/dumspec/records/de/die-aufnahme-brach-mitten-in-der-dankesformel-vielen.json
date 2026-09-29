@@ -28,7 +28,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The recording contains only the recoverable beginning, so missing Dank is genuinely unrealized."
 			},

@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 14, 16],
+			"route": { "family": "Locution", "kind": "NUM" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

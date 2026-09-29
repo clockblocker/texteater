@@ -23,7 +23,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -44,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 15],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "um … zu is a correlator, a Locution SCONJ made of its anchors um and zu. einen Salat and machen belong to the clause it introduces and stay outside."

@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "doch answers the negated question Kommst du nicht? by contradicting it: a response particle, partType Res."
 			},

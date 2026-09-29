@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0042"],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "ca. is Duden's abbreviation of circa, so it is one Segment with its period and a Shorthand member whose Surface is the expansion (de/abbreviation-is-one-segment). circa has no comparison forms (de/comparability-is-lexical)."
 			},

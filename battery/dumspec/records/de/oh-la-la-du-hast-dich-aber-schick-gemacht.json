@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😍" },
 			"notes": {
 				"rationale": "là is no German word, so Oh là là is one interjection written in three pieces, borrowed from French: one INTJ Lexeme with no Breakdown, like o wei. DWDS lists it as oh, là, là with the variant oh là là; the Canonical Form takes the variant without internal commas. Here it voices appreciation of how someone looks."

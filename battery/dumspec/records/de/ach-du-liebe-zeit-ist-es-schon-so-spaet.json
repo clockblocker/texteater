@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😧" },
 			"notes": {
 				"rationale": "Ach du liebe Zeit is a fixed exclamation of dismay, a Locution INTJ: its words are words of their own and its meaning is not their sum. Duden cites it as [ach] du liebe Zeit!, so ach is a fixed word the dictionary marks optional, a member here, and Du liebe Zeit! alone would attest the same Lemma, Partial (de/modification-attests-partially). It stands outside the clause and cannot serve as an adverbial in one, so it is INTJ, not ADV."

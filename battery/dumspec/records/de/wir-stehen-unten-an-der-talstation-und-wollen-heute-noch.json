@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
@@ -88,6 +88,7 @@
 		},
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🪜" },
 			"notes": {
 				"rationale": "The speakers stand at the bottom and want to go up the mountain, away from where they are, so rauf is the Shorthand of hinauf. The modal takes no particle, so rauf is an ADV target of its own."

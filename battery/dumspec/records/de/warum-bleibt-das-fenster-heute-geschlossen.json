@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❓🤔" },
 			"notes": {
 				"rationale": "The direct question establishes the interrogative pronominal identity."

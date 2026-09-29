@@ -53,7 +53,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -68,6 +67,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [47],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet)."
 			},

@@ -32,7 +32,6 @@
 		{ "kind": "Punctuation", "text": "«" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Brennendes Geheimnis",
@@ -69,6 +68,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from Ich (PRON nsubj)."
 			},
@@ -107,6 +107,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB müssen from muß (AUX aux). Spelling drafted Canonical: check whether muß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
 			},
@@ -151,6 +152,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV darum from darum (ADV advmod)."
 			},
@@ -183,6 +185,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
 			},
@@ -215,6 +218,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON viele from viel (DET obj). UD tags viel DET; STTS PIS makes it PRON (de/pron-or-det-by-use). viel fits 3 authored PRON cells equally (Ind Nom Sing Neut; Ind Acc Sing Neut; Ind Dat Sing Neut); the first is drafted. Check the referent (ADR 0044)."
 			},
@@ -260,6 +264,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
 			},
@@ -303,6 +308,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Sonne from Sonne (NOUN obl) with der (det)."
 			},
@@ -339,6 +345,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sitzen from sitzen (VERB root)."
 			},
@@ -385,6 +392,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 25],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sagen from gesagt (VERB conj) with hat (aux)."
 			},
@@ -432,6 +440,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 23],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Arzt from Arzt (NOUN nsubj) with der (det)."
 			},

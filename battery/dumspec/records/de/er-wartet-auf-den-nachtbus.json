@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -29,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "⏳" },
 			"notes": {
 				"rationale": "The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature."

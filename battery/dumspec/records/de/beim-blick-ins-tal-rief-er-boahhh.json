@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "boahhh stretches the letters of boah for effect, so it is a Variant tagged Expressive."
 			},

@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040", "ADR-0045"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Duden lists Meeting as a neuter noun, so it is a German NOUN, and das agrees with it as well."
 			},
@@ -65,6 +65,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "sein linking a subject to a predicate is the copula VERB."
 			},
@@ -109,6 +110,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "very good is free English syntax, not a fixed phrase, so it splits. Duden does not list very: one Foreign unit."
 			},
@@ -136,6 +138,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "very good is free English syntax, not a fixed phrase, so it splits. Duden lists good only in phrases such as good for day: one Foreign unit."
 			},

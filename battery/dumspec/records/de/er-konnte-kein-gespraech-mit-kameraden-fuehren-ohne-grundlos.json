@@ -41,7 +41,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Die Verwirrungen des Zöglings Törleß",
@@ -75,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from Er (PRON nsubj)."
 			},
@@ -113,6 +113,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from konnte (AUX aux)."
 			},
@@ -159,6 +160,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET kein from kein (DET det)."
 			},
@@ -205,6 +207,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Gespräch from Gespräch (NOUN obj)."
 			},
@@ -240,6 +243,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
 			},
@@ -283,6 +287,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kamerad from Kameraden (NOUN nmod)."
 			},
@@ -318,6 +323,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB führen from führen (VERB root)."
 			},
@@ -364,6 +370,7 @@
 		},
 		{
 			"memberSegmentIndices": [15, 19],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Locution SCONJ ohne … zu from ohne (ADP mark) with zu (mark). ohne … zu is coordinated: the zu of the later conjunct is drafted as a PART of its own."
 			},
@@ -393,6 +400,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ grundlos from grundlos (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -430,6 +438,7 @@
 		},
 		{
 			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB verstummen from verstummen (VERB advcl)."
 			},
@@ -476,6 +485,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ oder from oder (CCONJ cc)."
 			},
@@ -502,6 +512,7 @@
 		},
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ zerstreut from zerstreut (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -539,6 +550,7 @@
 		},
 		{
 			"memberSegmentIndices": [27],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV mehrmals from mehrmals (ADV advmod)."
 			},
@@ -573,6 +585,7 @@
 		},
 		{
 			"memberSegmentIndices": [29, 31],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Gegenstand from Gegenstand (NOUN obj) with den (det)."
 			},
@@ -609,6 +622,7 @@
 		},
 		{
 			"memberSegmentIndices": [33],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
 			},
@@ -640,6 +654,7 @@
 		},
 		{
 			"memberSegmentIndices": [35],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wechseln from wechseln (VERB conj)."
 			},

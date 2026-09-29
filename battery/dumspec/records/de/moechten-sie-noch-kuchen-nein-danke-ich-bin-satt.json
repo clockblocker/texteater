@@ -30,7 +30,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own."
 			},
@@ -66,6 +66,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

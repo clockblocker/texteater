@@ -81,7 +81,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Prozess",
@@ -111,6 +110,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN K. from K. (PROPN nsubj)."
 			},
@@ -144,6 +144,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB warten from wartete (VERB root)."
 			},
@@ -190,6 +191,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
 			},
@@ -222,6 +224,7 @@
 		},
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Weilchen from Weilchen (NOUN obj) with ein (det)."
 			},
@@ -258,6 +261,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sehen from sah (VERB conj)."
 			},
@@ -302,6 +306,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP von from von (ADP case)."
 			},
@@ -345,6 +350,7 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinem (DET det:poss)."
 			},
@@ -393,6 +399,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kopfkissen from Kopfkissen (NOUN obl)."
 			},
@@ -428,6 +435,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP aus from aus (ADP case)."
 			},
@@ -471,6 +479,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 25],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Frau from Frau (NOUN obl) with die (det)."
 			},
@@ -507,6 +516,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ alt from alte (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -547,6 +557,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj)."
 			},
@@ -585,6 +596,7 @@
 		},
 		{
 			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
 			},
@@ -623,6 +635,7 @@
 		},
 		{
 			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV gegenüber from gegenüber (ADV advmod)."
 			},
@@ -657,6 +670,7 @@
 		},
 		{
 			"memberSegmentIndices": [34],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wohnen from wohnte (VERB acl)."
 			},
@@ -703,6 +717,7 @@
 		},
 		{
 			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -729,6 +744,7 @@
 		},
 		{
 			"memberSegmentIndices": [38],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj)."
 			},
@@ -767,6 +783,7 @@
 		},
 		{
 			"memberSegmentIndices": [40],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihn from ihn (PRON obj)."
 			},
@@ -805,6 +822,7 @@
 		},
 		{
 			"memberSegmentIndices": [42],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
 			},
@@ -848,6 +866,7 @@
 		},
 		{
 			"memberSegmentIndices": [44, 54],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Neugierde from Neugierde (NOUN obl) with einer (det)."
 			},
@@ -884,6 +903,7 @@
 		},
 		{
 			"memberSegmentIndices": [46],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP an from an (ADP case)."
 			},
@@ -927,6 +947,7 @@
 		},
 		{
 			"memberSegmentIndices": [48],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihr from ihr (PRON nmod)."
 			},
@@ -965,6 +986,7 @@
 		},
 		{
 			"memberSegmentIndices": [50],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ganz from ganz (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -1000,6 +1022,7 @@
 		},
 		{
 			"memberSegmentIndices": [52],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ungewöhnlich from ungewöhnlichen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -1042,6 +1065,7 @@
 		},
 		{
 			"memberSegmentIndices": [56],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB beobachten from beobachtete (VERB conj)."
 			},
@@ -1088,6 +1112,7 @@
 		},
 		{
 			"memberSegmentIndices": [59],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV dann from dann (ADV advmod)."
 			},
@@ -1120,6 +1145,7 @@
 		},
 		{
 			"memberSegmentIndices": [61],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV aber from aber (ADV advmod)."
 			},
@@ -1152,6 +1178,7 @@
 		},
 		{
 			"memberSegmentIndices": [64],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ gleichzeitig from gleichzeitig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -1189,6 +1216,7 @@
 		},
 		{
 			"memberSegmentIndices": [66],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ befremdet from befremdet (ADJ conj). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -1226,6 +1254,7 @@
 		},
 		{
 			"memberSegmentIndices": [68],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
 			},
@@ -1252,6 +1281,7 @@
 		},
 		{
 			"memberSegmentIndices": [70],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ hungrig from hungrig (ADJ conj). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
@@ -1289,6 +1319,7 @@
 		},
 		{
 			"memberSegmentIndices": [73],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB läuten from läutete (VERB conj)."
 			},
@@ -1335,6 +1366,7 @@
 		},
 		{
 			"memberSegmentIndices": [75],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
 			},

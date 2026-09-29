@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "She stays in her flat and throws him out, away from herself: raus in the right bracket is the particle of hinauswerfen. raus is its Shorthand member, and the Surface spells the full particle."
 			},

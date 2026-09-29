@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -32,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "The unmarked zweiten is an ordinal ADJ, but the classified cardinal label drei remains NUM."
 			},

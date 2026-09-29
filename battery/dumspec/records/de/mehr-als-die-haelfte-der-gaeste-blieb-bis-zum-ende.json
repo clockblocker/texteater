@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "A comparative quantifier without a noun of its own is a substantive use and routes to PRON: mehr is an invariant authored pronoun identity; the attributive comparative stays DET (ticket 503)."
 			},

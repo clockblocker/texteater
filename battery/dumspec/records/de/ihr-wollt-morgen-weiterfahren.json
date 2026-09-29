@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
 			},

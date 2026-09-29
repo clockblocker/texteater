@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "💥" },
 			"notes": {
 				"rationale": "Peng imitates a bang. An onomatopoeic word standing outside the clause is an INTJ Lexeme with no partType (DWDS: peng, Interjektion)."

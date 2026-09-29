@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "Unmarked im is a Fusion and does not change the supplied ADP target."
 			},

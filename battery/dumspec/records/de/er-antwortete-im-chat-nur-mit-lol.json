@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Duden lists lol (drückt große Heiterkeit aus, from English laughing out loud), so it is a German INTJ, though it never inflects. mit lol quotes a reply the way mit ach does, and UD EWT tags lol INTJ. It answers no question, so partType is null. The Emoji Description comes from the dropped imported case."
 			},

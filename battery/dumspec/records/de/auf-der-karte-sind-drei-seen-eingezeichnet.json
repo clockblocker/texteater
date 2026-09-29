@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -39,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏞" },
 			"notes": {
 				"rationale": "Seen is the plural of the Masc NOUN See, the lake. It is distinct from the Fem die See, the sea."
@@ -73,6 +74,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🗺✏" },
 			"notes": {
 				"rationale": "sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036)."

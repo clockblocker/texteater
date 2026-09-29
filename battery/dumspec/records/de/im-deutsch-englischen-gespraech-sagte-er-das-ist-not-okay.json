@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "Duden's not is another word, the archaic adjective meaning nötig, so English not is unlisted in this meaning. It takes no German grammar: Foreign en."
 			},

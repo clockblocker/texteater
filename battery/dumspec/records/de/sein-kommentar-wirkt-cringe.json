@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Duden lists cringe as an indeclinable adjective: predicative ADJ cringe after wirkt. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

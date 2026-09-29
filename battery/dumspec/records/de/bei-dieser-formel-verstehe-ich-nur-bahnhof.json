@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -43,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 10, 12],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "😵‍💫" },
 			"notes": {
 				"rationale": "nur Bahnhof verstehen is an Idiom, a Locution VERB (Duden: [immer] nur Bahnhof verstehen, 'überhaupt nichts verstehen'). nur is a fixed member, since Duden cites it inside the idiom. The subject ich stands between the members and stays outside."

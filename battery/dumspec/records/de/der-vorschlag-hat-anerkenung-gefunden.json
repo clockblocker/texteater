@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II."
 			},

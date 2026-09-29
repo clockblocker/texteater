@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Here Entschuldigung is the noun, the object bestehen auf asks for, and it owns its article einer. The apology formula Entschuldigung! is an INTJ, another Kind and so another Lemma."
 			},

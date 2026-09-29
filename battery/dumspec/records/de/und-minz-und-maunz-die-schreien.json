@@ -24,7 +24,7 @@
 		{ "kind": "ResolvableText", "text": "zweien" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -46,6 +46,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👉" },
 			"notes": {
 				"rationale": "schreien stands second, so die opens a main clause rather than a verb-final relative clause: it is the demonstrative pronoun, nominative plural, resuming Minz und Maunz."
@@ -85,6 +86,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "gar before jämmerlich is Duden's Adverb gar meaning sehr (süddeutsch, österreichisch, schweizerisch: gar gut), not the Partikel gar of gar zu or gar nicht. It has no comparison forms (de/comparability-is-lexical)."
@@ -118,6 +120,7 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "😭" },
 			"notes": {
 				"rationale": "jämmerlich modifies schreien adverbially and stays ADJ (de/adjective-stays-adj). It is comparable, so it marks Pos (de/comparability-is-lexical)."
@@ -161,6 +164,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "👥" },
 			"notes": {
 				"rationale": "zu is an ordinary dative preposition heading zu zweien, in pairs. zu dreien and zu vieren show the pattern is productive, so the phrase is not fixed."
@@ -205,6 +209,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
 				"rationale": "zweien is the dative of zwei standing without a noun, which Duden still gives (zu zweien), so it carries no historical status."

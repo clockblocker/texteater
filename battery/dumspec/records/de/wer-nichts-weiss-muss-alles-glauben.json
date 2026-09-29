@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 7, 9, 11],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The attested 1893 muß is a licensed historical spelling, not a typo; the Canonical Form uses current muss. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},

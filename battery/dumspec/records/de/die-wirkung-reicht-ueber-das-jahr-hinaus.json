@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "hinaus stands in the right bracket and hinausreichen über + Acc is a dictionary particle verb in this sense, so hinaus is the separable particle and über the governed preposition, though a prepositional phrase precedes it."
 			},

@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -43,6 +42,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🧩📍" },
 			"notes": {
 				"rationale": "wo names the setting in which das Gesetz schweigt. An abstract setting keeps the place Reading, as English keeps where."

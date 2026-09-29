@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0032"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔐" },
 			"notes": {
 				"rationale": "The capitalized polite possessive is encoded as DET with person 2, polite Form, and poss Yes.",

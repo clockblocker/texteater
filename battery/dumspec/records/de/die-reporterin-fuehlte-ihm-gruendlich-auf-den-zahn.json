@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10, 12, 14],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "ihm fills the dative slot of the Valency Frame and gründlich is a free adverb; neither is a member."
 			},

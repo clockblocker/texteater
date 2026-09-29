@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

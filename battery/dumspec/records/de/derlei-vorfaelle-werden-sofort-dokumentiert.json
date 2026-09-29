@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"notes": {
 				"rationale": "The codec has no invariant contextual Surface; use Citation for this uninflected DET while preserving its demonstrative identity."
 			},

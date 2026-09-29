@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❓🔗" },
 			"notes": {
 				"rationale": "Colloquial split wo … mit is one target of interrogative womit; it asks for the instrument."

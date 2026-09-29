@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein). The hyphenated low-key is the English spelling, not a mistake, so it is its own ADJ Lemma low-key, used adverbially, next to low key. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

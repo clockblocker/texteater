@@ -10,7 +10,7 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -26,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "❓👤" },
 			"notes": {
 				"rationale": "Wer is an interrogative pronoun here because it asks for the identity of the referent rather than linking a clause back to an antecedent."

@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "The unmarked jeweils supplies distributive meaning, but the exact German NUM codec has no Dist value; the numeral identity remains Card."
 			},

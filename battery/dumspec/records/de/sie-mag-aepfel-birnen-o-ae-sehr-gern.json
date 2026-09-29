@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "An abbreviation is one Shorthand member whose Surface is its expansion, oder Ähnliches (ADR 0035)."
 			},

@@ -67,7 +67,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -77,6 +76,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [47, 49, 51, 53, 56, 58, 60],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The unmarked Idiom mention does not affect the fixed Proverb target."
 			},

@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0042"],
@@ -44,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "pos. is the label's abbreviation of the adjective positiv, the word the sentence glosses it with. An abbreviation is one Segment with its period and stands for its expansion, so pos. is a Shorthand member of positiv, never an abbreviation Lemma of its own (de/abbreviation-is-one-segment). The label is cited, not declined; positiv has comparison forms, so the citation marks Pos (de/comparability-is-lexical)."
 			},

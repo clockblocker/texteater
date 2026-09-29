@@ -10,7 +10,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "📦" },
 			"notes": {
 				"rationale": "was asks nothing here: say something. It is the Shorthand of etwas."

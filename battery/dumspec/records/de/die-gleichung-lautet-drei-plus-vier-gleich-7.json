@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "Mathematical context does not turn the classified digit into SYM; only the numeric target is resolved."
 			},

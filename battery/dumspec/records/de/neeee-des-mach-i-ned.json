@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0041"],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag."
 			},
@@ -59,6 +59,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "ned is a dialect form of nicht, so it is a Variant tagged Regional."

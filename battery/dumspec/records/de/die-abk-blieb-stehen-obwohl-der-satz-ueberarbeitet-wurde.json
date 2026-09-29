@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "The codec has no abbreviation feature; an unmarked abbreviation does not alter the supplied conjunction."
 			},

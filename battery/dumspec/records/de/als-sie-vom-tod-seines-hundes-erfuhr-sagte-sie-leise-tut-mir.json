@@ -35,7 +35,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -45,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [24, 26, 28],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma tut mir leid as the apology, with all three words here, so the Attestation is Full; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
 			},

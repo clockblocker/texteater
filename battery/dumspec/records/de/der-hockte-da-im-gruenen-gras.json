@@ -32,7 +32,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -53,6 +53,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🌊" },
 			"notes": {
 				"rationale": "floß is the 3sg past of fließen: the coffee ran onto his nose, with dem as the dative experiencer and der Kaffee as the subject, so it is not the noun Floß. floß is the spelling before the 1996 reform (today floss), so the Surface is a Historical Variant and the member Standard (de/member-orthography). Old spelling is no historical status (de/variant-and-historical-status)."
@@ -101,6 +102,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "🔝" },
 			"notes": {
 				"rationale": "`auf` heads the directional phrase `auf die Nas`, so I treated it as an ordinary preposition, not as a verbal particle. The two-way Lemma carries no case; this occurrence records the accusative of `die Nas` (wohin?) as its realized case."

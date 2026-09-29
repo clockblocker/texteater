@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
@@ -85,6 +85,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🐣" },
 			"notes": {
 				"rationale": "The full word that raus shortens: the father will pull the splinter out towards himself with the tweezers."

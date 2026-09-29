@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0039"],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 7, 9, 11, 13, 15],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "Kaffee and Tee replace Sein and Nichtsein, yet speakers still hear Hamlet's line, and a Saying survives any change: the kept words attest it, Partial. Kaffee and Tee resolve on their own."
 			},

@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022"],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "One ging serves both conjuncts: the first is plain gehen with the free directional phrase in die Küche, and hinaus is coordinated with that phrase, so it is a free directional ADV, not the particle of hinausgehen. One Segment belongs to one target, so ging cannot be both gehen and hinausgehen."
 			},
@@ -81,6 +81,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
 				"rationale": "hinaus is coordinated with a free directional phrase under the shared verb, so it is an ADV of its own, the authored hinaus, and not a particle."

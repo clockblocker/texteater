@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -29,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🤲" },
 			"notes": {
 				"rationale": "hätten is possessive haben (to have, here wish to have) in Konjunktiv II, with mood Sub and tense Past. No participle or infinitive follows, so it serves no verb and is VERB haben, not AUX."

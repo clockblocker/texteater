@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 11],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "Je and desto are the anchors of one Locution/SCONJ; the comparatives they connect stay outside (Rule de/correlator-anchors)."
 			},

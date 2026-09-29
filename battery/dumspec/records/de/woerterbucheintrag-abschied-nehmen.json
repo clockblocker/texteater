@@ -10,7 +10,6 @@
 		{ "kind": "ResolvableText", "text": "nehmen" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -20,6 +19,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

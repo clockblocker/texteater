@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 9],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "The repeated anchors are separate ordered members of one proportional Locution/SCONJ, je … je, a synonym of je … desto."
 			},

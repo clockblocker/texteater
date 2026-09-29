@@ -22,7 +22,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
@@ -46,6 +46,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🌅💰" },
 			"notes": {
 				"rationale": "Morgenstund hat Gold im Mund is a Proverb, one Saying target over all its words, both pieces of im included. The attribution sagte sie verschlafen stays outside."

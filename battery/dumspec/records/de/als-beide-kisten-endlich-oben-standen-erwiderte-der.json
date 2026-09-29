@@ -39,7 +39,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -49,6 +48,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Danke, danke is the one-word formula danke said twice for emphasis. Repetition fixes no new unit, so each danke is its own INTJ target."
 			},
@@ -75,6 +75,7 @@
 		},
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

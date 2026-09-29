@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"grundform": true,
 			"notes": {
 				"rationale": "The noun owns its article: Das is the first member of the Wetter Attestation, and the Surface is the noun's own letters with article Definite."
@@ -59,6 +59,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"grundform": false,
 			"notes": {
 				"rationale": "sein linking a subject to a predicate is the copula VERB, not AUX.",

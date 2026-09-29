@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "u. is the usual abbreviation of und, not a spelling of it, so it is one Segment with its period and a Shorthand member whose Surface is the expansion und, as with bzw. and z.B. (de/abbreviation-is-one-segment, de/member-orthography)."
 			},

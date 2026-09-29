@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0034"],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"grundform": false,
 			"notes": {
 				"rationale": "Pass, the governed auf and the detached prefix auf are one aufpassen occurrence. valencyEvidence names the first auf by index, which tells it apart from the prefix; the normalized Surface pass auf leaves the governed preposition out.",
@@ -99,6 +99,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"grundform": true,
 			"notes": {
 				"rationale": "dich is a free reflexive object, not a member of aufpassen, so it is its own PRON target.",

@@ -44,7 +44,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -71,6 +71,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🙏" },
 			"notes": {
 				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten."

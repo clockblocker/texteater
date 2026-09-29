@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "aha marks sudden understanding. It reacts, but it is no response particle answering a question, so its partType is null."
 			},

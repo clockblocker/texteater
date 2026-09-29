@@ -50,7 +50,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -62,6 +61,7 @@
 			"memberSegmentIndices": [
 				22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 43
 			],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

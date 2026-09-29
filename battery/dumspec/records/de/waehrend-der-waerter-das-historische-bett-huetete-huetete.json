@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 23, 25],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "First phrase literal. Marked second phrase means staying in bed ill."
 			},

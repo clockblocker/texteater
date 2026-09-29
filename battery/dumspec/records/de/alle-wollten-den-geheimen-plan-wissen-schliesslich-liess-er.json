@@ -35,7 +35,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -45,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "verdammte modifies Katze and stays outside; every fixed word is present, so the Locution is Full."
 			},

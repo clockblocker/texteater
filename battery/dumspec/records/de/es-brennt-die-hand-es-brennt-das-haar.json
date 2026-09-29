@@ -34,7 +34,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -58,6 +58,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "⚪" },
 			"notes": {
 				"rationale": "Es only fills the first position before the postponed subject die Hand: with anything else in front it disappears (Die Hand brennt). So it is positional es, which refers to nothing and is a PRON target of its own (de/expletive-es-joins-its-verb)."
@@ -97,6 +98,7 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🌕" },
 			"notes": {
 				"rationale": "ganze is attributive to das ganze Kind, the postponed subject, so it is nominative neuter singular. ganz has no comparison forms, so it marks case, gender and number only (de/comparability-is-lexical)."
@@ -138,6 +140,7 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "😮" },
 			"notes": {
 				"rationale": "sogar is a scalar focus particle on das ganze Kind: even the whole child burns. Duden classes it as a Partikel, so it is PART, like the modal particles."

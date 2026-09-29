@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤮" },
 			"notes": {
 				"rationale": "pfui Teufel is an established exclamation of disgust (DWDS lists it with pfui Deibel and pfui Spinne), and Teufel here names no devil. Both words are words of their own, so it is a Locution INTJ with two Heads, not a Lexeme and not two targets."

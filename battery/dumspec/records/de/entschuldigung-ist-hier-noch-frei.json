@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung)."
 			},

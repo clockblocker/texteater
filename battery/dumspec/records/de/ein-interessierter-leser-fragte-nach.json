@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -34,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🧐" },
 			"notes": {
 				"rationale": "Interessierter is an attributive participle modifying Leser with nominative masculine singular agreement, so it is the ADJ interessiert with Participle Source interessieren (ADR 0036). interessiert compares (interessierter, am interessiertesten), so this Surface marks Degree Pos. Because the head noun is overt, it is not a substantivized NOUN."

@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "nedd is a dialect form of nicht, as the regional dictionary says, so it is a Variant tagged Regional."

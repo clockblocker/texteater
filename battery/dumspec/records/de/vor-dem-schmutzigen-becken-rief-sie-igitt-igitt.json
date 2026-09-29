@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0041"],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤢" },
 			"notes": {
 				"rationale": "No punctuation stands between the two igitt, so igitt igitt is one call and one target (de/interjection-counts-its-words). Each igitt is a word of its own, so the target is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written: Duden and DWDS list only the joined igittigitt, which is a Lemma of its own, and spacing is never a Variant."

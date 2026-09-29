@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "The English programmers' placeholder word, not in Duden and uninflected: Foreign en. The unreadable ???? stays OpaqueText."
 			},

@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "❓📦" },
 			"notes": {
 				"rationale": "Wessen asks for a thing here (es bedarf einer Sache), so it is the Gen Surface of was, not of wer, which asks for a person."

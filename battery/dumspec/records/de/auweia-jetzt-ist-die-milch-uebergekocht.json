@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😬" },
 			"notes": {
 				"rationale": "Auweia is one written word, the headword in Duden and DWDS: one INTJ Lexeme. The spaced au weia is a Lemma of its own (de/interjection-counts-its-words)."

@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026"],
@@ -40,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "⛴" },
 			"notes": {
 				"rationale": "übergesetzt is the ferry-across verb with the separable prefix über (setzte über), not the inseparable übersetzen 'translate' (übersetzt). hat is its perfect auxiliary, so the target is the whole perfect [hat, übergesetzt], like [hat, mitgebracht]."

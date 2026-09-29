@@ -18,7 +18,6 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Meister" }
 	],
-	"status": "Draft",
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041"],
 		"rules": [],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "A bare noun: Übung has no article in the Saying, so its Surface marks article None."
 			},
@@ -61,6 +61,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "macht", "orthography": "Standard" }],
@@ -103,6 +104,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -28,7 +28,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

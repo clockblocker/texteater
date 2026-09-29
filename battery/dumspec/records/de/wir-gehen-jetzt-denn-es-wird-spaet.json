@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Second clause stays V2. Causal coordinator. Not particle or subordinator."
 			},

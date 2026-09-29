@@ -31,7 +31,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -53,6 +53,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "⚖" },
 			"notes": {
 				"rationale": "Here wog is the past finite form of wiegen in the 'have a weight of' use, not the rocking or swaying use."
@@ -98,6 +99,7 @@
 		},
 		{
 			"memberSegmentIndices": [6, 10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "⚖" },
 			"notes": {
 				"rationale": "Lot is the old weight unit, a neuter noun that owns its article ein across halbes (de/noun-owns-its-article). It is the accusative measure complement of wog."
@@ -135,6 +137,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "war is the copula before the predicative tot, so it is a single-member VERB sein, and tot is an ADJ of its own. sein is AUX only as the auxiliary of a perfect or passive."
@@ -180,6 +183,7 @@
 		},
 		{
 			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "5⃣" },
 			"notes": {
 				"rationale": "fünften is the ordinal fünfte, dative masculine singular after the fused article in am fünften Tage."
@@ -223,6 +227,7 @@
 		},
 		{
 			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "💀" },
 			"notes": {
 				"rationale": "Predicative tot has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical)."

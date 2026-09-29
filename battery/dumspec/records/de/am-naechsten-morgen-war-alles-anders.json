@@ -17,7 +17,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040", "ADR-0042"],
@@ -43,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "📅" },
 			"notes": {
 				"rationale": "Before a noun phrase, Am splits into A (an) and m (dem): A is the ADP an, whose complement took the dative. Before a superlative, am would be one Segment instead (Wer steht am nächsten?)."
@@ -100,6 +101,7 @@
 		},
 		{
 			"memberSegmentIndices": [1, 5],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🌅" },
 			"notes": {
 				"rationale": "m stands for dem and is the article of Morgen, owned across the adjective nächsten. It derives the DET cell dem Dat.Masc.Sg."
@@ -148,6 +150,7 @@
 		},
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "⏭" },
 			"notes": {
 				"rationale": "nächsten is the temporal adjective nächste, 'following'. Like linke, it is attributive only and cites its -e headword. It has no comparison forms, so it marks case, gender and number only. Spatial am nächsten without a noun is nah in the superlative (Wer steht am nächsten?).",
@@ -194,6 +197,7 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🔀" },
 			"notes": {
 				"rationale": "anders is the adverb anders (Duden: Adverb), the predicative after war. It has no attributive form (andere is another word), so it is not an ADJ (Rule de/adjective-stays-adj). It has no comparison forms, so its Surface has no inflection."

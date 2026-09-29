@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
 			},

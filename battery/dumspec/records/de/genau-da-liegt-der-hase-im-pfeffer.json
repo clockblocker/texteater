@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
@@ -49,6 +49,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6, 8, 10, 11, 13],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔑" },
 			"notes": {
 				"rationale": "da liegt der Hase im Pfeffer (Duden: 'das ist der entscheidende Punkt, die eigentliche Ursache') is an Idiom, a Locution VERB cited by Duden's sentence headword. da is fixed, with hier or dort as its only alternatives, and genau modifies it from outside. Both pieces of im are members."

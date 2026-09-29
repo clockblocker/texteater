@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0038"],
@@ -31,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "👩‍👧" },
 			"notes": {
 				"rationale": "This is the kinship noun Mutter. The mother use shares one feminine Mutter Lemma with the nut use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Mütter and Muttern, are Reading Knowledge, not identity (ADR 0038)."

@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -28,6 +27,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "euer is the standard genitive of ihr, governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of euer. So the Surface carries no historical status (de/variant-and-historical-status). The capital is sentence-initial, so the member is Standard."
 			},

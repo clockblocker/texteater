@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗👤" },
 			"notes": {
 				"rationale": "Wer heads a free relative clause with no antecedent and stands for a noun phrase, so it is the relative PRON wer, not the interrogative (de/pron-or-det-by-use). Its Core is pronType Rel with gender Masc, and its Surface marks Nom, its case as subject of mitkommen will (de/core-features-are-identity)."

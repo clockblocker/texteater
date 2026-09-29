@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "Zween is the archaic masculine nominative of zwei, from the old gendered forms zween, zwo and zwei that modern German levels to zwei. It is an old inflected form, not another spelling of zwei, so the spelling is Canonical; the form itself is archaic beside the current zwei of the same Lemma, so the Surface is Archaic (de/variant-and-historical-status). The capital is sentence-initial, so the member is Standard."
 			},

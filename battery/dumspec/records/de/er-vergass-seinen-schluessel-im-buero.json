@@ -17,7 +17,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0032", "ADR-0044"],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔐" },
 			"notes": {
 				"rationale": "`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Its possessor features record what the form shows: sein- serves a masculine or neuter singular possessor, so gender[psor] is the set Masc, Neut even though the subject `Er` is masculine."

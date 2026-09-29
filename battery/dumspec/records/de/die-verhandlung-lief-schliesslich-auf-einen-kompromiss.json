@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0029", "ADR-0034"],
@@ -39,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "➡🎯" },
 			"notes": {
 				"rationale": "hinauslaufen auf + Acc, to amount to or end in, is the same Lemma as run outside with a second Reading. hinaus is its particle and auf its governed preposition, though a prepositional phrase precedes hinaus. Foil to Er lief erst nach links und dann hinaus."

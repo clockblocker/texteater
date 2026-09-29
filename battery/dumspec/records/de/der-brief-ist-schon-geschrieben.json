@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -31,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "✍" },
 			"notes": {
 				"rationale": "sein plus geschrieben is a state passive: ist is the copula VERB and geschrieben the ADJ geschrieben with Participle Source schreiben (ADR 0036)."

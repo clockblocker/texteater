@@ -20,7 +20,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Attributive dessen is the relative pillar cell Gen.Masc.Sg with extPos DET (de/pron-or-det-by-use). Its gender is its antecedent's, Autor, and Buch is a separate target."

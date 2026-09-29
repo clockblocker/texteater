@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 21],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "The speaker stays outside on the terrace and she goes in, away from the speaker: rein in the right bracket is the particle of hineingehen. rein is its Shorthand member, and the Surface spells the full particle."
 			},

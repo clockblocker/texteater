@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22, 24],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "auf keinen Fall is a fixed adverbial, a Locution ADV with no comparison forms. Standing alone as a reply, it still modifies the elided answer (Nein, auf keinen Fall gebe ich es ihm), so it keeps Kind ADV and is no INTJ."
 			},
