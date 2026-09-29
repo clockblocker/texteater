@@ -5,7 +5,12 @@ import {
 	loadSpecRecords,
 	ruleStatementHash,
 } from "../src/index.js";
-import type { CitingPrompt, Rule, SpecRecord } from "../src/types.js";
+import type {
+	AnnotationLayer,
+	CitingPrompt,
+	Rule,
+	SpecRecord,
+} from "../src/types.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 
 const adrStatuses = readRepositoryAdrStatuses();
@@ -20,16 +25,20 @@ const rule: Rule = {
 	routes: [{ language: "de", family: "Lexeme", kind: "NOUN" }],
 	records: [],
 };
+/** The seed citing `sources`, reviewed through `reviewDepth` or a Draft. */
 const citing = (
 	sources: Partial<SpecRecord["sources"]>,
-	status: SpecRecord["status"] = "Reviewed",
-): SpecRecord => ({
-	...seed,
-	status,
-	// The seed's own Rule citations are cleared: each test passes the Rules
-	// it checks against.
-	sources: { ...seed.sources, rules: [], ...sources },
-});
+	reviewDepth: AnnotationLayer | "Draft" = "Segmentation",
+): SpecRecord => {
+	const { reviewDepth: _, ...draft } = seed;
+	return {
+		...draft,
+		...(reviewDepth === "Draft" ? {} : { reviewDepth }),
+		// The seed's own Rule citations are cleared: each test passes the
+		// Rules it checks against.
+		sources: { ...seed.sources, rules: [], ...sources },
+	};
+};
 const checks = (record: SpecRecord, rules: readonly Rule[] = []) =>
 	checkCitations([record], { adrStatuses, rules }).map((issue) => [
 		issue.path,
@@ -43,7 +52,7 @@ describe("the stale-citation guard", () => {
 		expect(adrStatuses.get("dumgen/ADR-0005")).toStartWith("superseded");
 	});
 
-	test("fails a Reviewed record citing a superseded ADR", () => {
+	test("fails a record reviewed through any layer citing a superseded ADR", () => {
 		expect(checks(citing({ adrs: ["ADR-0035", "ADR-0033"] }))).toEqual([
 			["sources.adrs.1", "StaleCitation"],
 		]);
@@ -84,7 +93,8 @@ describe("the stale-citation guard", () => {
 		expect(checks(record, [changed])).toEqual([
 			["sources.rules.0.hash", "StaleCitation"],
 		]);
-		expect(checks({ ...record, status: "Draft" }, [changed])).toEqual([]);
+		const { reviewDepth: _, ...draft } = record;
+		expect(checks(draft, [changed])).toEqual([]);
 	});
 
 	test("keeps a Rule's hash when its statement is only reflowed", () => {

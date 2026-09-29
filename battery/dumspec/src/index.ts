@@ -32,20 +32,24 @@ export {
 	subjectExpletiveEs,
 } from "./inventories.js";
 export { type SpecCheck, type SpecIssue, SpecRecordError } from "./issues.js";
+export { annotationLayers, isReviewed } from "./layers.js";
 export {
 	findSpecRecord,
 	loadBreakdownRecords,
 	loadSpecRecords,
+	loadSpecSegmentations,
 	loadSpecWorklist,
 	type WorklistEntry,
 } from "./load.js";
 export { ruleStatementHash, rules } from "./rules.js";
 export type {
 	AdrId,
+	AnnotationLayer,
 	BreakdownRecord,
 	BreakdownRecordId,
 	CitingPrompt,
 	Coverage,
+	LayeredReview,
 	LegacyCase,
 	NoTarget,
 	ParagraphCitation,
@@ -57,10 +61,13 @@ export type {
 	RuleId,
 	RuleRoute,
 	Segment,
+	SegmentationTarget,
 	SegmentKind,
 	Sources,
 	SpecRecord,
 	SpecRecordId,
+	SpecRoute,
+	SpecSegmentation,
 	SpecTarget,
 	TextRecord,
 } from "./types.js";

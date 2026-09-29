@@ -2,12 +2,14 @@ import type { SpecIssue } from "./issues.js";
 import { ruleStatementHash } from "./rules.js";
 import type {
 	AdrId,
+	AnnotationLayer,
 	CitingPrompt,
+	ReviewStatus,
 	Rule,
 	RuleCitation,
 	RuleId,
 	Sources,
-	SpecRecord,
+	SpecRecordId,
 } from "./types.js";
 
 /**
@@ -46,13 +48,22 @@ function checkRuleCitation(
 const byId = (rules: readonly Rule[]) =>
 	new Map(rules.map((rule) => [rule.id, rule]));
 
-/** A record that cites sources: a Spec Record, or a Text Record that does. */
-type CitingRecord = Pick<SpecRecord, "id" | "status"> & { sources?: Sources };
+/**
+ * A record that cites sources: a Spec or Breakdown Record, reviewed through
+ * `reviewDepth`, or a Text Record, reviewed whole.
+ */
+type CitingRecord = {
+	id: SpecRecordId;
+	reviewDepth?: AnnotationLayer;
+	status?: ReviewStatus;
+	sources?: Sources;
+};
 
 /**
  * The stale-citation guard (ADR 0037, guard 1). Every record must cite ADRs
- * and Rules that exist. A Reviewed record must not cite a superseded or
- * deprecated ADR, or a Rule whose statement changed since its review.
+ * and Rules that exist. A record reviewed through any layer must not cite a
+ * superseded or deprecated ADR, or a Rule whose statement changed since its
+ * review: Rules are not assigned to layers, so either reopens the record.
  */
 export function checkCitations(
 	records: readonly CitingRecord[],
@@ -60,14 +71,15 @@ export function checkCitations(
 ): SpecIssue[] {
 	const rulesById = byId(context.rules);
 	const issues: SpecIssue[] = [];
-	for (const { id, status: recordStatus, sources } of records) {
+	for (const { id, reviewDepth, status: recordStatus, sources } of records) {
 		if (sources === undefined) continue;
 		const issue = (
 			check: SpecIssue["check"],
 			path: string,
 			message: string,
 		) => issues.push({ record: id, check, path, message });
-		const reviewed = recordStatus === "Reviewed";
+		const reviewed =
+			reviewDepth !== undefined || recordStatus === "Reviewed";
 		for (const [index, adr] of sources.adrs.entries()) {
 			const path = `sources.adrs.${index}`;
 			const status = context.adrStatuses.get(adr);

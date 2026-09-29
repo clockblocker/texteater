@@ -2,7 +2,10 @@ import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { checkBreakdownRecord } from "../src/check-breakdown.js";
+import {
+	type BreakdownRecordCheck,
+	checkBreakdownRecord,
+} from "../src/check-breakdown.js";
 import { loadBreakdownRecords } from "../src/index.js";
 import type { SpecCheck } from "../src/issues.js";
 import { readRecords } from "../src/load.js";
@@ -90,8 +93,8 @@ const fixtures: {
 			verlieren.attestation.surface.normalizedSurface =
 				"den Faden verlieren";
 			verlieren.attestation.surface.lemma = record.lemma;
+			verlieren.route = { family: "Locution", kind: "VERB" };
 			delete verlieren.grundform;
-			delete verlieren.reading;
 			record.targets = [verlieren];
 		},
 	},
@@ -106,34 +109,51 @@ const fixtures: {
 		name: "a Reviewed target without its Reading",
 		check: "Reading",
 		edit: (record) => {
-			record.status = "Reviewed";
+			record.reviewDepth = "Reading";
 			record.sources.rules = [ruleCitation];
 			delete record.targets[1].reading;
 		},
 	},
 	{
-		name: "a Reviewed Breakdown citing no Rule",
+		name: "a reviewed Breakdown citing no Rule",
 		check: "Uncited",
 		edit: (record) => {
-			record.status = "Reviewed";
+			record.reviewDepth = "Segmentation";
 		},
 	},
 ];
+
+/** Each issue's check, keyed with whether it fails the record. */
+const issueKeys = (checked: BreakdownRecordCheck) =>
+	new Map<string, SpecCheck>([
+		...checked.errors.map((issue): [string, SpecCheck] => [
+			`error ${issue.check} ${issue.path}`,
+			issue.check,
+		]),
+		...checked.issues.map((issue): [string, SpecCheck] => [
+			`work ${issue.check} ${issue.path}`,
+			issue.check,
+		]),
+	]);
 
 describe("Breakdown Record negative fixtures", () => {
 	for (const fixture of fixtures)
 		test(`fail ${fixture.check}: ${fixture.name}`, () => {
 			const json = seedJson(seed);
-			expect(checkBreakdownRecord(seed, json).success).toBe(true);
+			const checkedSeed = checkBreakdownRecord(seed, json);
+			expect(checkedSeed.errors).toEqual([]);
+			expect(checkedSeed.record).toBeDefined();
+			const before = issueKeys(checkedSeed);
 			fixture.edit(json);
-			const checked = checkBreakdownRecord(fixture.id ?? seed, json);
-			if (checked.success) throw Error("Expected the fixture to fail");
-			expect(new Set(checked.issues.map((issue) => issue.check))).toEqual(
+			const added = [
+				...issueKeys(checkBreakdownRecord(fixture.id ?? seed, json)),
+			].filter(([key]) => !before.has(key));
+			expect(new Set(added.map(([, check]) => check))).toEqual(
 				new Set([fixture.check]),
 			);
 		});
 
-	test("the loader lists a failing Draft Breakdown and fails a Reviewed one", () => {
+	test("the loader lists a failing Draft Breakdown and fails a reviewed one", () => {
 		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
 		const write = (id: string, record: unknown) =>
 			writeFileSync(
@@ -148,7 +168,7 @@ describe("Breakdown Record negative fixtures", () => {
 			delete draft.targets[0].reading;
 			write("breakdown/de/draft", draft);
 			const reviewed = seedJson(seed);
-			reviewed.status = "Reviewed";
+			reviewed.reviewDepth = "Segmentation";
 			reviewed.sources.rules = [ruleCitation];
 			reviewed.targets.pop();
 			write("breakdown/de/reviewed", reviewed);
@@ -163,10 +183,14 @@ describe("Breakdown Record negative fixtures", () => {
 			expect(
 				worklist.map((entry) => [
 					entry.record,
-					entry.issues.map((issue) => issue.check),
-					entry.targetsWithoutReading,
+					entry.issues.map((issue) => `${issue.check} ${issue.path}`),
 				]),
-			).toEqual([["breakdown/de/draft", ["Coverage"], [0]]]);
+			).toEqual([
+				[
+					"breakdown/de/draft",
+					["Reading targets.0.reading", "Coverage segments.4"],
+				],
+			]);
 		} finally {
 			rmSync(directory, { recursive: true });
 		}
