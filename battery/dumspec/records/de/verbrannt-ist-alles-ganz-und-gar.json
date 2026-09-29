@@ -31,17 +31,18 @@
 		{ "kind": "Punctuation", "text": ";" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": [], "rules": [{"rule":"de/sein-perfect-or-copula","hash":"507adc4e3e41031f"},{"rule":"de/verbal-participle","hash":"8783a18791f95718"},{"rule":"de/verbal-surface-is-whole","hash":"974139977fd040ca"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/idiom","hash":"c05df428b3a42079"},{"rule":"de/largest-fixed-unit","hash":"9a404db30f2b7c82"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🔥" },
 			"notes": {
 				"rationale": "Verbrannt ist is the sein-perfect of intransitive verbrennen. de/sein-perfect-or-copula counts it as a perfect because Alles verbrannte ganz und gar reports the same event, which the verse has just narrated. A result-state reading (everything is in a burnt state) is also possible; this record takes the completed event. The fronted participle and ist are one VERB target (de/verbal-participle, de/verb-owns-its-scattered-members), and the Surface records the whole perfect, with tense from ist (de/verbal-surface-is-whole)."
 			},
@@ -89,8 +90,9 @@
 		},
 		{
 			"memberSegmentIndices": [6, 8, 10],
+			"reading": { "emojiDescription": "💯" },
 			"notes": {
-				"rationale": "The Full Attestation records ganz, und, and gar as the fixed intensifying idiom rather than a standalone adjective or adverb Lexeme. The learner-relevant unit is the whole phrase meaning completely. The Full Attestation records ganz, und, and gar as the frozen intensifier; the docs review span on und does not make it a standalone CCONJ Lemma. Gar can often be a standalone intensifying adverb, and another Attestation in the repo uses that analysis. Here the Full Attestation records ganz, und, and gar because the fixed phrase as a whole carries the intended meaning."
+				"rationale": "ganz und gar is an Idiom meaning completely, one Locution ADV over all three words (de/idiom). und has no target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -120,6 +122,7 @@
 		},
 		{
 			"memberSegmentIndices": [19, 21, 23, 25],
+			"reading": { "emojiDescription": "💯" },
 			"notes": {
 				"rationale": "Duden lists mit Haut und Haar[en] as an idiom meaning completely (ganz und gar, völlig), and the stanza supports that reading: the line continues Verbrannt ist alles ganz und gar. That the child also burns literally, skin and hair, does not exclude it. With the idiomatic reading established, the four words are one Locution ADV (de/idiom), and a click on any of them selects it (de/largest-fixed-unit); Haut and Haar stay reachable through its Breakdown. The Canonical Form keeps the attested Haar, because Haaren is another inflected form, not a Variant."
 			},

@@ -121,7 +121,7 @@
 			"memberSegmentIndices": [0, 2],
 			"reading": { "emojiDescription": "👋🚶" },
 			"notes": {
-				"rationale": "Fort is fronted, outside the verbal bracket, and fortgehen is a dictionary particle verb in this sense. A verb owns its separable particle wherever it stands, so Fort and geht are one VERB unless a reviewer finds Fort a free adverb here."
+				"rationale": "Fort is the fronted separable particle of fortgehen, the dictionary particle verb in this sense, so Fort and geht are one VERB target (de/verb-owns-its-scattered-members)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

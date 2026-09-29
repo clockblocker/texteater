@@ -30,7 +30,7 @@ const units: Rule[] = [
 			"A click on a word selects the largest complete fixed unit that contains it. Every fixed member selects the same unit, and the unit is found by position in the sentence, never by spelling.",
 		adrs: ["ADR-0003", "ADR-0039", "dumgen/ADR-0007"],
 		routes: [],
-		records: [],
+		records: ["de/verbrannt-ist-alles-ganz-und-gar"],
 	},
 	{
 		id: "de/fixed-members-only",
@@ -84,6 +84,7 @@ const verbs: Rule[] = [
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/nahm-ranzen-pulverhorn-und-flint",
 			"de/fort-geht-nun-die-mutter-und",
+			"de/verbrannt-ist-alles-ganz-und-gar",
 		],
 	},
 	{
@@ -214,6 +215,7 @@ const verbs: Rule[] = [
 			"de/das-waere-fast-schief-gewesen",
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/jetzt-schien-die-sonne-gar-zu-sehr",
+			"de/verbrannt-ist-alles-ganz-und-gar",
 		],
 	},
 	{
@@ -254,6 +256,7 @@ const participles: Rule[] = [
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/verbrannt-ist-alles-ganz-und-gar",
 		],
 	},
 	{
@@ -268,6 +271,7 @@ const participles: Rule[] = [
 			"de/die-tuer-ist-geschlossen",
 			"de/auf-der-karte-sind-drei-seen-eingezeichnet",
 			"de/sie-ist-verheiratet",
+			"de/verbrannt-ist-alles-ganz-und-gar",
 		],
 	},
 	{
@@ -519,6 +523,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/nahm-ranzen-pulverhorn-und-flint",
+			"de/und-minz-und-maunz-die-schreien",
 		],
 	},
 	{
@@ -561,6 +566,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/jetzt-schien-die-sonne-gar-zu-sehr",
 			"de/nahm-ranzen-pulverhorn-und-flint",
 			"de/sieh-einmal-hier-steht-er",
+			"de/und-minz-und-maunz-die-schreien",
 		],
 	},
 	{
@@ -830,6 +836,7 @@ const attestations: Rule[] = [
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/verbrannt-ist-alles-ganz-und-gar",
 		],
 	},
 	{

@@ -24,7 +24,7 @@
 		{ "kind": "ResolvableText", "text": "zweien" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -33,12 +33,7 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0032", "ADR-0042", "ADR-0044"],
-		"rules": [
-			{
-				"rule": "de/pron-or-det-by-use",
-				"hash": "bc1096b61ad7294d"
-			}
-		],
+		"rules": [{"rule":"de/pron-or-det-by-use","hash":"bc1096b61ad7294d"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
 		"references": []
 	},
 	"targets": [
@@ -85,7 +80,7 @@
 			"memberSegmentIndices": [13],
 			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "Gar functions as an intensifier here. Dumling does not currently split German focus or degree particles into a separate subtype, so I classified it as ADV rather than PART."
+				"rationale": "gar before jämmerlich is Duden's Adverb gar meaning sehr (süddeutsch, österreichisch, schweizerisch: gar gut), not the Partikel gar of gar zu or gar nicht. It has no comparison forms (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -116,8 +111,9 @@
 		},
 		{
 			"memberSegmentIndices": [15],
+			"reading": { "emojiDescription": "😭" },
 			"notes": {
-				"rationale": "Jämmerlich modifies schreien adverbially, but an adverbially used plain adjective stays ADJ (ADR 0033), with positive degree and no agreement."
+				"rationale": "jämmerlich modifies schreien adverbially and stays ADJ (de/adjective-stays-adj). It is comparable, so it marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -158,8 +154,9 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"reading": { "emojiDescription": "👥" },
 			"notes": {
-				"rationale": "Here zu is the preposition heading the fixed adverbial phrase zu zweien, so I kept it as ADP rather than reading it as infinitival or separable-particle zu."
+				"rationale": "zu is an ordinary dative preposition heading zu zweien, in pairs. zu dreien and zu vieren show the pattern is productive, so the phrase is not fixed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -201,8 +198,9 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
-				"rationale": "I treated zweien as the dative inflected form of the cardinal numeral zwei inside the fixed phrase zu zweien, rather than as a pronoun-like item."
+				"rationale": "zweien is the dative of zwei standing without a noun, which Duden still gives (zu zweien), so it carries no historical status."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

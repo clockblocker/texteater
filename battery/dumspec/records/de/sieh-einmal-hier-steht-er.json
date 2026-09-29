@@ -305,7 +305,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
-			"reading": { "emojiDescription": "🤢" },
+			"reading": { "emojiDescription": "👎" },
 			"notes": {
 				"rationale": "pfui is a one-word INTJ of disgust (de/interjection-counts-its-words). It is no routine formula and no response particle, so partType stays null."
 			},
