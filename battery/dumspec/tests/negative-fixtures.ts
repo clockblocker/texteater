@@ -20,11 +20,11 @@ export const ruleCitation = {
 };
 
 /**
- * Marks a seed record Reviewed and gives it what a Reviewed record needs
+ * Marks a seed record reviewed through Reading and gives it what that needs
  * beyond a Draft: a Reading on every target and a Rule citation.
  */
 export function review(record: RecordJson): RecordJson {
-	record.status = "Reviewed";
+	record.reviewDepth = "Reading";
 	// A Foreign Reading is its Lemma alone (ADR 0045).
 	for (const target of record.targets)
 		target.reading =
@@ -148,6 +148,45 @@ export const negativeFixtures: {
 		},
 	},
 	{
+		name: "a route Dumling does not have",
+		seed: "de/pass-auf-dich-auf",
+		check: "Route",
+		edit: (record) => {
+			record.targets[1].route = { family: "Lexeme", kind: "PRONOUN" };
+		},
+	},
+	{
+		name: "an Attestation whose Lemma is not the target's route",
+		seed: "de/pass-auf-dich-auf",
+		check: "Route",
+		edit: (record) => {
+			record.targets[1].route = { family: "Lexeme", kind: "NOUN" };
+		},
+	},
+	{
+		name: "a target without its Attestation in a record reviewed through Attestation",
+		seed: "de/pass-auf-dich-auf",
+		check: "Attestation",
+		edit: (record) => {
+			record.reviewDepth = "Attestation";
+			record.sources.rules = [ruleCitation];
+			delete record.targets[1].attestation;
+		},
+	},
+	{
+		name: "a target without its Knowledge in a record reviewed through Knowledge",
+		seed: "de/pass-auf-dich-auf",
+		check: "Knowledge",
+		edit: (record) => {
+			review(record);
+			record.reviewDepth = "Knowledge";
+			record.targets[0].reading.knowledge = {
+				definition: "to watch out",
+				conjugationClass: ["Weak"],
+			};
+		},
+	},
+	{
 		name: "a Reviewed target without its Reading",
 		seed: "de/pass-auf-dich-auf",
 		check: "Reading",
@@ -194,7 +233,7 @@ export const negativeFixtures: {
 	{
 		name: "a Foreign Reading with a Semantic Relation",
 		seed: "de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr",
-		check: "Reading",
+		check: "Knowledge",
 		edit: (record) => {
 			record.targets[0].reading = {
 				knowledge: {
@@ -208,7 +247,7 @@ export const negativeFixtures: {
 	{
 		name: "Reading Knowledge with an aspect its route cannot hold",
 		seed: "de/pass-auf-dich-auf",
-		check: "Reading",
+		check: "Knowledge",
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
@@ -219,7 +258,7 @@ export const negativeFixtures: {
 	{
 		name: "Reading Knowledge with an endonym outside PROPN",
 		seed: "de/pass-auf-dich-auf",
-		check: "Reading",
+		check: "Knowledge",
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
@@ -234,7 +273,7 @@ export const negativeFixtures: {
 	{
 		name: "Reading Knowledge with a relation its route's policy does not request",
 		seed: "de/pass-auf-dich-auf",
-		check: "Reading",
+		check: "Knowledge",
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",
@@ -249,7 +288,7 @@ export const negativeFixtures: {
 	{
 		name: "Reading Knowledge dumrel would normalize",
 		seed: "de/pass-auf-dich-auf",
-		check: "Reading",
+		check: "Knowledge",
 		edit: (record) => {
 			record.targets[0].reading = {
 				emojiDescription: "👀",

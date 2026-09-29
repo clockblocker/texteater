@@ -41,18 +41,34 @@ export interface Segment {
 	surface?: string;
 }
 
+/** A target's route: its language, Family and Kind. */
+export type SpecRoute = Pick<Dumling.UnitRoute, "language" | "family" | "kind">;
+
 /**
- * One target: a full Dumling Attestation and the Segment each of its members
- * is. `memberSegmentIndices[i]` is the Segment of `attestation.members[i]`,
- * in sentence order.
+ * One target's Segmentation: the Segment each of its members is, in sentence
+ * order, and its route. This is what `segment.inUnits` is scored on.
  */
-export interface SpecTarget {
-	attestation: Dumling.Attestation;
+export interface SegmentationTarget {
 	memberSegmentIndices: readonly number[];
+	route: SpecRoute;
+	notes?: {
+		rationale?: string;
+		/** Analyses people or models get wrong here. */
+		knownMistakes?: readonly string[];
+	};
+}
+
+/**
+ * One target with its Attestation: a full Dumling Attestation whose Lemma has
+ * the target's route. `memberSegmentIndices[i]` is the Segment of
+ * `attestation.members[i]`.
+ */
+export interface SpecTarget extends SegmentationTarget {
+	attestation: Dumling.Attestation;
 	/**
 	 * The Reading the target attests: the Attestation's Lemma with the
-	 * authored Emoji Description, its identity (ADR 0031). A Reviewed target
-	 * names it; a Draft may not yet.
+	 * authored Emoji Description, its identity (ADR 0031). Present when it
+	 * passes its checks; a record reviewed through Reading names every one.
 	 */
 	reading?: Dumling.Reading;
 	/**
@@ -63,11 +79,6 @@ export interface SpecTarget {
 	knowledge?: Dumrel.ReadingKnowledge;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */
 	grundform?: boolean;
-	notes?: {
-		rationale?: string;
-		/** Analyses people or models get wrong here. */
-		knownMistakes?: readonly string[];
-	};
 }
 
 /** A ResolvableText Segment with no defensible route, and why. */
@@ -79,6 +90,17 @@ export interface NoTarget {
 /** Full: every ResolvableText Segment is in exactly one target or No Target entry. */
 export type Coverage = "Full" | "Partial";
 
+/**
+ * The parts of a sentence record's annotation a person reviews one at a
+ * time, in order: each rests on the ones before it.
+ */
+export type AnnotationLayer =
+	| "Segmentation"
+	| "Attestation"
+	| "Reading"
+	| "Knowledge";
+
+/** A Text Record is reviewed whole. */
 export type ReviewStatus = "Draft" | "Reviewed";
 
 /**
@@ -101,7 +123,10 @@ export interface Reference {
 /** What a record's annotation rests on. */
 export interface Sources {
 	adrs: readonly AdrId[];
-	/** A Reviewed record cites at least one Rule; a Draft may cite none. */
+	/**
+	 * A record reviewed through any layer, or a Reviewed Text Record, cites at
+	 * least one Rule; a Draft may cite none.
+	 */
 	rules: readonly RuleCitation[];
 	references: readonly Reference[];
 }
@@ -123,19 +148,47 @@ export interface LegacyCase {
 	case: unknown;
 }
 
-/** One sentence of the golden corpus (ADR 0037). */
-export interface SpecRecord {
+/**
+ * The review and validity of a sentence record's Annotation Layers. A layer
+ * past `validThrough` fails a check or is missing; a layer past `reviewDepth`
+ * is Draft.
+ */
+export interface LayeredReview {
+	/**
+	 * The deepest Annotation Layer a person has reviewed, every layer before
+	 * it included. Absent for a Draft.
+	 */
+	reviewDepth?: AnnotationLayer;
+	/**
+	 * The deepest Annotation Layer that passes its checks, every layer before
+	 * it included. Never shallower than `reviewDepth`.
+	 */
+	validThrough: AnnotationLayer;
+}
+
+/**
+ * One sentence of the golden corpus at its Segmentation layer (ADR 0037):
+ * every record whose Segmentation passes, whatever its deeper layers hold.
+ */
+export interface SpecSegmentation extends LayeredReview {
 	id: SpecRecordId;
 	language: Dumling.Language;
 	sentence: string;
 	segments: readonly Segment[];
-	targets: readonly SpecTarget[];
+	targets: readonly SegmentationTarget[];
 	noTarget: readonly NoTarget[];
 	coverage: Coverage;
-	status: ReviewStatus;
 	sources: Sources;
 	provenance: Provenance;
 	legacy?: readonly LegacyCase[];
+}
+
+/**
+ * One sentence of the golden corpus with its Attestations (ADR 0037): a
+ * record whose Attestation layer passes as well.
+ */
+export interface SpecRecord extends Omit<SpecSegmentation, "targets"> {
+	targets: readonly SpecTarget[];
 }
 
 /**
@@ -150,7 +203,7 @@ export type BreakdownRecordId = string;
  * the Lexeme targets it breaks down into. No target covers the whole
  * wording, and every ResolvableText Segment is in exactly one target.
  */
-export interface BreakdownRecord {
+export interface BreakdownRecord extends LayeredReview {
 	id: BreakdownRecordId;
 	language: Dumling.Language;
 	/** The Locution or Saying broken down. */
@@ -159,7 +212,6 @@ export interface BreakdownRecord {
 	sentence: string;
 	segments: readonly Segment[];
 	targets: readonly SpecTarget[];
-	status: ReviewStatus;
 	sources: Sources;
 }
 
@@ -176,7 +228,7 @@ export interface TextRecord {
 	legacy?: readonly LegacyCase[];
 }
 
-export type RuleRoute = Pick<Dumling.UnitRoute, "language" | "family" | "kind">;
+export type RuleRoute = SpecRoute;
 
 /** A classification Rule (ADR 0037). */
 export interface Rule {

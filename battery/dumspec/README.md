@@ -5,14 +5,23 @@ spec: Spec Records of attested sentences, the classification Rules they
 follow, and the Authored Inventories of closed-class units.
 
 Each record is one JSON file under `records/<language>/`, and its path without
-`.json` is its id. It holds the sentence and its Segments, and its targets,
-each a full Dumling Attestation with the Segment of every member. A target
-names its Reading as `reading: { "emojiDescription": "🧵" }`; the loaded
-target carries the Dumling Reading built from its Attestation's Lemma. The
-Reading may hold its Reading Knowledge as `reading.knowledge`, in dumrel's
-schema; the loader checks it with dumrel against the Reading, and the loaded
-target carries it as `knowledge`. Point a record's `$schema` at
+`.json` is its id. It holds the sentence and its Segments, and its targets.
+A target states its members' Segments and its route,
+`"route": { "family": "Lexeme", "kind": "NOUN" }`, then a full Dumling
+Attestation whose Lemma has that route. A target names its Reading as
+`reading: { "emojiDescription": "🧵" }`; the loaded target carries the
+Dumling Reading built from its Attestation's Lemma. The Reading may hold its
+Reading Knowledge as `reading.knowledge`, in dumrel's schema; the loader
+checks it with dumrel against the Reading, and the loaded target carries it
+as `knowledge`. Point a record's `$schema` at
 `schema/spec-record.<language>.json` for completion.
+
+A record is reviewed one Annotation Layer at a time: Segmentation (members,
+routes, No Target entries, coverage), Attestation, Reading, then Knowledge.
+`"reviewDepth": "Segmentation"` says a person has reviewed the first layer;
+a record without one is a Draft. A reviewed layer must pass its checks, and a
+layer past the depth may fail or be missing, so a target may hold only its
+members and route while its record is reviewed no deeper than Segmentation.
 
 ```ts
 import { findSpecRecord, loadSpecRecords, rules } from "dumspec";
@@ -23,15 +32,19 @@ const record = findSpecRecord(records, "de/ich-bin-im-wald");
 ```
 
 `loadSpecRecords` reads the files with `node:fs`, so call it in build-time
-code. It throws a `SpecRecordError` that lists every failing check of a
-Reviewed record, and of any record whose file is malformed.
+code. It returns every record whose Segmentation and Attestation layers pass,
+each target with the Reading and Knowledge that pass.
+`loadSpecSegmentations` returns every record whose Segmentation passes, with
+each target's members and route only: the gold `segment.inUnits` is scored on.
+`isReviewed(record, "Segmentation")` tells whether a person has reviewed a
+layer. Both loaders throw a `SpecRecordError` that lists every failing check
+of a reviewed layer, and of any record whose file is malformed.
 
-A Draft record may fail the current Dumling model. `loadSpecRecords` leaves
-it out, and `loadSpecWorklist` lists it with its failing checks, beside every
-record whose `legacy` list still holds a case imported verbatim from Dumgen
-and every Draft with a target that names no Reading. A Reviewed target must
-name its Reading, and a Reviewed record, Text Records included, must cite at
-least one Rule in `sources.rules`.
+`loadSpecWorklist` lists each record whose Draft layers fail a check against
+the current Dumling model or lack a target's Attestation or Reading, with its
+failing checks, beside every record whose `legacy` list still holds a case
+imported verbatim from Dumgen. A reviewed record, Text Records included,
+must cite at least one Rule in `sources.rules`.
 A Breakdown Record, under `records/breakdown/<language>/`, holds one
 Locution's or Saying's Breakdown: the Lemma, its Canonical Form as the
 sentence with Segments, and the Lexeme targets it breaks down into, which
@@ -40,8 +53,8 @@ them on the same terms, and `schema/breakdown-record.<language>.json`
 completes them.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
-model change, `bun run demote-broken-reviewed` demotes each Reviewed record
-the change broke to Draft.
+model change, `bun run demote-broken-reviewed` lowers the Review Depth of
+each record the change broke to the deepest layer that still passes.
 
 `rules` holds the classification Rules, each with an id such as
 `de/noun-owns-its-article`, a statement, the ADRs it rests on, its routes and

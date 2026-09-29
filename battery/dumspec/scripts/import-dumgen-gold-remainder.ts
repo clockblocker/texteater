@@ -5,9 +5,9 @@
  * cases (the future morphemic breakdown, ADR 0041), and the three Reading
  * Emoji Description generation cases. Each case enters verbatim as a
  * `legacy` entry of the record for its sentence, in the language of the
- * Lemma it describes; an existing record keeps its status and targets. A
- * source file's demonstration ids stay in Dumgen, in a `sidecar.json` beside
- * it, and the generation prompt stays in its `source-data.json`.
+ * Lemma it describes; an existing record keeps its Review Depth and targets.
+ * A source file's demonstration ids stay in Dumgen, in a `sidecar.json`
+ * beside it, and the generation prompt stays in its `source-data.json`.
  *
  * It ran once, before the sources were deleted from Dumgen; rerunning needs
  * the commit before the import and a built promptsmith:
@@ -37,7 +37,7 @@ type RecordFile = {
 	sentence: string;
 	segments: CaseSegment[];
 	coverage: "Partial";
-	status: "Draft" | "Reviewed";
+	reviewDepth?: string;
 	provenance: { kind: "Authored" };
 	sources: { adrs: string[]; rules: unknown[]; references: unknown[] };
 	targets: unknown[];
@@ -164,7 +164,6 @@ function importCase(source: string, caseId: string, golden: Golden) {
 				sentence,
 				segments: segmenters[language](sentence).segments,
 				coverage: "Partial",
-				status: "Draft",
 				provenance: { kind: "Authored" },
 				sources: { adrs: [], rules: [], references: [] },
 				targets: [],

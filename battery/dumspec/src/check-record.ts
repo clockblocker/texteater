@@ -5,73 +5,147 @@ import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
+import { unitRoutes } from "./generated/routes.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
-import { recordFileSchema } from "./record-schema.js";
+import { annotationLayers, layerRank } from "./layers.js";
+import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
 import type {
+	AnnotationLayer,
 	LegacyCase,
-	ReviewStatus,
 	Segment,
+	SegmentationTarget,
 	Sources,
 	SpecRecord,
 	SpecRecordId,
+	SpecRoute,
+	SpecSegmentation,
 	SpecTarget,
 } from "./types.js";
 
 const idPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
 const fileSchema = recordFileSchema({
+	route: looseRouteSchema,
 	attestation: z.unknown(),
 	knowledge: z.unknown(),
 });
 
 /**
- * A failed record names its status, its imported cases and the targets that
- * name no Reading once its shape parses.
+ * Records one failed check. `layer` is the Annotation Layer it belongs to,
+ * undefined for a check of the whole record.
  */
-export type RecordCheck =
-	| { success: true; record: SpecRecord }
-	| {
-			success: false;
-			issues: SpecIssue[];
-			status?: ReviewStatus;
-			legacy?: readonly LegacyCase[];
-			targetsWithoutReading?: readonly number[];
-	  };
+export type IssueSink = (
+	layer: AnnotationLayer | undefined,
+	check: SpecCheck,
+	path: string,
+	message: string,
+) => void;
 
-/**
- * A Reviewed record of any kind cites at least one Rule; a Draft may cite
- * none. The stale-citation guard checks what a record cites, this that it
- * cites something.
- */
-export function uncitedIssue(
-	record: SpecRecordId,
-	status: ReviewStatus,
-	sources: Pick<Sources, "rules"> | undefined,
-): SpecIssue | undefined {
-	if (status !== "Reviewed" || (sources?.rules.length ?? 0) > 0)
-		return undefined;
+/** Collects a record's issues through an `IssueSink`. */
+export function issueCollector(record: string): {
+	found: SpecIssue[];
+	issue: IssueSink;
+} {
+	const found: SpecIssue[] = [];
 	return {
-		record,
-		check: "Uncited",
-		path: "sources.rules",
-		message: "A Reviewed record cites at least one Rule",
+		found,
+		issue: (layer, check, path, message) =>
+			found.push({
+				record,
+				check,
+				path,
+				message,
+				...(layer === undefined ? {} : { layer }),
+			}),
 	};
 }
 
 /**
- * Runs every check that needs only the record itself: its id, shape, strict
- * Attestations and Readings, the Attestations' cases against the ADP Case
- * Table, their articles against the der and ein cells, Segments, member order, coverage, Grundform and a Reviewed record's
- * Rule citation. A Reviewed target must name its Reading; a Draft target may
- * not yet.
+ * The review and validity of a checked record. `errors` fail it: a bad id or
+ * shape, a review citing no Rule, or a failing layer it is reviewed through.
+ * `issues` are its work: what its Draft layers fail or lack.
+ */
+export interface LayerVerdict {
+	errors: SpecIssue[];
+	issues: SpecIssue[];
+	reviewDepth?: AnnotationLayer;
+	/** The deepest layer that passes, every layer before it included. */
+	validThrough?: AnnotationLayer;
+}
+
+/**
+ * Splits a record's issues by its Review Depth and finds the deepest layer
+ * that passes. A layer with an issue fails; so does Knowledge while a target
+ * holds none, which is work only once the record is reviewed through
+ * Knowledge.
+ */
+export function settleLayers(
+	found: readonly SpecIssue[],
+	reviewDepth: AnnotationLayer | undefined,
+	knowledgeComplete: boolean,
+): LayerVerdict {
+	const failing = found.flatMap((issue) =>
+		issue.layer === undefined ? [] : [layerRank(issue.layer)],
+	);
+	if (!knowledgeComplete) failing.push(layerRank("Knowledge"));
+	const firstFailing = Math.min(annotationLayers.length, ...failing);
+	const validThrough = annotationLayers[firstFailing - 1];
+	const reviewed = layerRank(reviewDepth);
+	const isError = (issue: SpecIssue) =>
+		issue.layer === undefined || layerRank(issue.layer) <= reviewed;
+	return {
+		errors: found.filter(isError),
+		issues: found.filter((issue) => !isError(issue)),
+		...(reviewDepth === undefined ? {} : { reviewDepth }),
+		...(validThrough === undefined ? {} : { validThrough }),
+	};
+}
+
+/**
+ * A checked sentence record. Without errors, its Segmentation loads when that
+ * layer passes, and the whole record when its Attestation layer passes too.
+ */
+export interface RecordCheck extends LayerVerdict {
+	segmentation?: SpecSegmentation;
+	record?: SpecRecord;
+	legacy?: readonly LegacyCase[];
+}
+
+/**
+ * A record reviewed through any layer cites at least one Rule; a Draft may
+ * cite none. The stale-citation guard checks what a record cites, this that
+ * it cites something.
+ */
+export function uncitedIssue(
+	record: SpecRecordId,
+	reviewed: boolean,
+	sources: Pick<Sources, "rules"> | undefined,
+): SpecIssue | undefined {
+	if (!reviewed || (sources?.rules.length ?? 0) > 0) return undefined;
+	return {
+		record,
+		check: "Uncited",
+		path: "sources.rules",
+		message: "A reviewed record cites at least one Rule",
+	};
+}
+
+/**
+ * Runs every check that needs only the record itself, each in its Annotation
+ * Layer. Segmentation: the Segments spell the sentence, members are
+ * ResolvableText Segments in sentence order, routes are Dumling's, and
+ * coverage and No Target entries hold. Attestation: strict, normalized
+ * Attestations whose Lemma has the target's route and whose members are
+ * their Segments, cases against the ADP Case Table, articles against the der
+ * and ein cells, and Grundform. Reading: every target names a valid Reading.
+ * Knowledge: every Reading Knowledge passes dumrel. A reviewed layer must
+ * pass; a Draft layer may fail or be missing.
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
-	const issues: SpecIssue[] = [];
-	const issue = (check: SpecCheck, path: string, message: string) =>
-		issues.push({ record: id, check, path, message });
-
+	const { found, issue } = issueCollector(id);
 	const language = idPattern.exec(id)?.[1] as Dumling.Language | undefined;
 	if (!language)
 		issue(
+			undefined,
 			"Id",
 			"",
 			"A record path is <language>/<kebab-case name>, in ASCII",
@@ -79,20 +153,31 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const file = fileSchema.safeParse(input);
 	if (!file.success) {
 		for (const error of file.error.issues)
-			issue("Shape", error.path.join("."), error.message);
-		return { success: false, issues };
+			issue(undefined, "Shape", error.path.join("."), error.message);
+		return { errors: found, issues: [] };
 	}
-	const { sentence, segments, targets, noTarget, coverage, status, legacy } =
-		file.data;
+	const {
+		sentence,
+		segments,
+		targets,
+		noTarget,
+		coverage,
+		reviewDepth,
+		sources,
+		provenance,
+		legacy,
+	} = file.data;
 
-	const { parsedTargets, claims, resolvable } = checkTargets(
-		{ sentence, segments, targets, status },
+	const checked = checkTargets(
+		{ sentence, segments, targets, reviewDepth },
 		language,
 		issue,
 	);
+	const { claims, resolvable } = checked;
 	for (const [n, entry] of noTarget.entries()) {
 		if (!resolvable(entry.segment)) {
 			issue(
+				"Segmentation",
 				"Coverage",
 				`noTarget.${n}.segment`,
 				"No Target names a ResolvableText Segment",
@@ -104,12 +189,14 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	for (const [index, count] of claims.entries()) {
 		if (count > 1)
 			issue(
+				"Segmentation",
 				"Coverage",
 				`segments.${index}`,
 				"A Segment belongs to at most one target or No Target entry",
 			);
 		else if (count === 0 && coverage === "Full" && resolvable(index))
 			issue(
+				"Segmentation",
 				"Coverage",
 				`segments.${index}`,
 				`Full coverage leaves ${JSON.stringify(segments[index]?.text)} in no target or No Target entry`,
@@ -117,73 +204,75 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	}
 	if (targets.length === 0 && noTarget.length === 0)
 		issue(
+			"Segmentation",
 			"Coverage",
 			"targets",
 			"A record has a target or No Target entry",
 		);
-	const uncited = uncitedIssue(id, status, file.data.sources);
-	if (uncited) issues.push(uncited);
+	const uncited = uncitedIssue(id, reviewDepth !== undefined, sources);
+	if (uncited) found.push(uncited);
 
-	if (issues.length > 0 || !language)
-		return {
-			success: false,
-			issues,
-			status,
-			...(legacy === undefined ? {} : { legacy }),
-			targetsWithoutReading: targetsWithoutReading(targets),
-		};
-	return {
-		success: true,
-		record: {
-			id,
-			language,
-			sentence,
-			segments,
-			targets: parsedTargets,
-			noTarget,
-			coverage,
-			status,
-			sources: file.data.sources,
-			provenance: file.data.provenance,
-			...(legacy === undefined ? {} : { legacy }),
-		},
+	const verdict = settleLayers(found, reviewDepth, checked.knowledgeComplete);
+	const result: RecordCheck = {
+		...verdict,
+		...(legacy === undefined ? {} : { legacy }),
 	};
-}
-
-/** The indices of the targets that name no Reading. */
-export function targetsWithoutReading(
-	targets: readonly { reading?: unknown }[],
-): number[] {
-	return targets.flatMap((target, t) =>
-		target.reading === undefined ? [t] : [],
+	const { validThrough } = verdict;
+	if (verdict.errors.length > 0 || !language || validThrough === undefined)
+		return result;
+	const base = {
+		id,
+		language,
+		sentence,
+		segments,
+		noTarget,
+		coverage,
+		...(reviewDepth === undefined ? {} : { reviewDepth }),
+		validThrough,
+		sources,
+		provenance,
+		...(legacy === undefined ? {} : { legacy }),
+	};
+	result.segmentation = { ...base, targets: checked.segmentation };
+	const attested = checked.attested.filter(
+		(target): target is SpecTarget => target !== undefined,
 	);
+	if (attested.length === targets.length)
+		result.record = { ...base, targets: attested };
+	return result;
 }
 
 type TargetFile = z.infer<typeof fileSchema>["targets"][number];
 
 /**
  * The checks a sentence record and a Breakdown Record share: the Segments
- * spell the sentence, and each target's members, strict Attestation, ADP
- * cases, Reading and Grundform. Returns the parsed targets and how many
- * targets claim each Segment.
+ * spell the sentence, and each target's members and route (Segmentation),
+ * its strict Attestation, ADP cases, articles and Grundform (Attestation),
+ * its Reading (Reading) and its Reading Knowledge (Knowledge). Returns each
+ * target's Segmentation, each target whose Attestation passes, with the
+ * Reading and Knowledge that pass, how many targets claim each Segment, and
+ * whether every target holds Knowledge.
  */
 export function checkTargets(
 	record: {
 		sentence: string;
 		segments: readonly Segment[];
 		targets: readonly TargetFile[];
-		status: ReviewStatus;
+		reviewDepth: AnnotationLayer | undefined;
 	},
 	language: Dumling.Language | undefined,
-	issue: (check: SpecCheck, path: string, message: string) => void,
+	issue: IssueSink,
 ): {
-	parsedTargets: SpecTarget[];
+	segmentation: SegmentationTarget[];
+	attested: (SpecTarget | undefined)[];
 	claims: number[];
 	resolvable: (index: number) => boolean;
+	knowledgeComplete: boolean;
 } {
-	const { sentence, segments, targets, status } = record;
+	const { sentence, segments, targets, reviewDepth } = record;
 	if (segments.map((segment) => segment.text).join("") !== sentence)
 		issue(
+			"Segmentation",
 			"Segments",
 			"segments",
 			"Segment texts must concatenate to the sentence",
@@ -191,152 +280,248 @@ export function checkTargets(
 	const resolvable = (index: number) =>
 		segments[index]?.kind === "ResolvableText";
 	const claims = segments.map(() => 0);
+	let knowledgeComplete = true;
 
-	const parsedTargets: SpecTarget[] = [];
+	const segmentation: SegmentationTarget[] = [];
+	const attested: (SpecTarget | undefined)[] = [];
 	for (const [t, target] of targets.entries()) {
 		const path = `targets.${t}`;
 		const indices = target.memberSegmentIndices;
 		for (const [m, index] of indices.entries()) {
 			const at = `${path}.memberSegmentIndices.${m}`;
 			if (!resolvable(index)) {
-				issue("Members", at, "A member is a ResolvableText Segment");
+				issue(
+					"Segmentation",
+					"Members",
+					at,
+					"A member is a ResolvableText Segment",
+				);
 				continue;
 			}
 			claims[index] = (claims[index] ?? 0) + 1;
 			if (m > 0 && index <= (indices[m - 1] ?? -1))
 				issue(
+					"Segmentation",
 					"Members",
 					at,
 					"Members occur in sentence order, each in its own Segment",
 				);
 		}
-
-		const parsed = parseUnit(target.attestation);
-		if (!parsed.success) {
-			for (const error of parsed.error.issues)
-				issue(
-					"Attestation",
-					[path, "attestation", ...error.path].join("."),
-					error.message,
-				);
-			continue;
-		}
-		if (parsed.chain.unitKind !== "Attestation") {
+		const { family, kind } = target.route;
+		if (language && !unitRoutes[language]?.includes(`${family}/${kind}`))
 			issue(
-				"Attestation",
-				`${path}.attestation`,
-				"Expected an Attestation",
+				"Segmentation",
+				"Route",
+				`${path}.route`,
+				`Dumling has no ${language} ${family} ${kind} route`,
 			);
-			continue;
-		}
-		const attestation = parsed.chain.value;
-		if (!sameValue(attestation, target.attestation))
-			issue(
-				"Attestation",
-				`${path}.attestation`,
-				"Store the Attestation exactly as parseUnit normalizes it",
-			);
-		if (language && attestation.surface.language !== language)
-			issue(
-				"Attestation",
-				`${path}.attestation.surface.language`,
-				`A ${language} record holds ${language} Attestations`,
-			);
-		for (const found of attestationAdpositionCaseIssues(attestation))
-			issue(
-				"AdpositionCase",
-				`${path}.attestation.${found.path}`,
-				found.message,
-			);
-		for (const found of attestationArticleAgreementIssues(attestation))
-			issue(
-				"ArticleAgreement",
-				`${path}.attestation.${found.path}`,
-				found.message,
-			);
-
-		if (indices.length !== attestation.members.length)
-			issue(
-				"Members",
-				`${path}.memberSegmentIndices`,
-				"Name one Segment per Attestation member",
-			);
-		for (const [m, member] of attestation.members.entries()) {
-			const index = indices[m];
-			if (index === undefined || !resolvable(index)) continue;
-			const text = segments[index]?.text;
-			if (member.attested !== text)
-				issue(
-					"Members",
-					`${path}.memberSegmentIndices.${m}`,
-					`Member ${JSON.stringify(member.attested)} is not Segment ${index} ${JSON.stringify(text)}`,
-				);
-		}
-
-		const reading = checkReading(target.reading, attestation, status);
-		for (const failure of reading.issues)
-			issue("Reading", `${path}.${failure.path}`, failure.message);
-
-		if (target.grundform !== undefined) {
-			const verdict = checkIfGrundform(attestation.surface);
-			// A stated verdict Dumling cannot assess is not checked, so it fails
-			// (ADR 0042).
-			if (!verdict.success)
-				issue(
-					"Grundform",
-					`${path}.grundform`,
-					`Dumling cannot assess this Surface's Grundform: ${verdict.error.message}`,
-				);
-			else if (verdict.value !== target.grundform)
-				issue(
-					"Grundform",
-					`${path}.grundform`,
-					`Dumling assesses this Surface as ${verdict.value ? "" : "not "}Grundform`,
-				);
-		}
-		parsedTargets.push({
-			attestation,
+		const segmented: SegmentationTarget = {
 			memberSegmentIndices: indices,
+			// Checked against Dumling's routes above.
+			route: { language, family, kind } as SpecRoute,
+			...(target.notes === undefined ? {} : { notes: target.notes }),
+		};
+		segmentation.push(segmented);
+
+		const layers = checkTargetLayers(target, segmented, {
+			path,
+			language,
+			segments,
+			resolvable,
+			reviewDepth,
+			issue,
+		});
+		attested.push(layers.target);
+		if (!layers.knowledge) knowledgeComplete = false;
+	}
+	return { segmentation, attested, claims, resolvable, knowledgeComplete };
+}
+
+/**
+ * Checks one target's Attestation, Reading and Knowledge layers. Returns the
+ * target when its Attestation passes, carrying its Reading and Knowledge when
+ * they pass, and whether it holds valid Knowledge.
+ */
+function checkTargetLayers(
+	target: TargetFile,
+	segmented: SegmentationTarget,
+	context: {
+		path: string;
+		language: Dumling.Language | undefined;
+		segments: readonly Segment[];
+		resolvable: (index: number) => boolean;
+		reviewDepth: AnnotationLayer | undefined;
+		issue: IssueSink;
+	},
+): { target?: SpecTarget; knowledge: boolean } {
+	const { path, language, segments, resolvable, reviewDepth } = context;
+	let failed = false;
+	const issue = (
+		layer: AnnotationLayer,
+		...rest: [SpecCheck, string, string]
+	) => {
+		if (layer === "Attestation") failed = true;
+		context.issue(layer, ...rest);
+	};
+	const attestationIssue = (check: SpecCheck, at: string, message: string) =>
+		issue("Attestation", check, at, message);
+
+	if (target.attestation === undefined) {
+		attestationIssue(
+			"Attestation",
+			`${path}.attestation`,
+			"A target holds its Attestation",
+		);
+		return { knowledge: false };
+	}
+	const parsed = parseUnit(target.attestation);
+	if (!parsed.success) {
+		for (const error of parsed.error.issues)
+			attestationIssue(
+				"Attestation",
+				[path, "attestation", ...error.path].join("."),
+				error.message,
+			);
+		return { knowledge: false };
+	}
+	if (parsed.chain.unitKind !== "Attestation") {
+		attestationIssue(
+			"Attestation",
+			`${path}.attestation`,
+			"Expected an Attestation",
+		);
+		return { knowledge: false };
+	}
+	const attestation = parsed.chain.value;
+	if (!sameValue(attestation, target.attestation))
+		attestationIssue(
+			"Attestation",
+			`${path}.attestation`,
+			"Store the Attestation exactly as parseUnit normalizes it",
+		);
+	const { lemma } = attestation.surface;
+	if (language && lemma.language !== language)
+		attestationIssue(
+			"Attestation",
+			`${path}.attestation.surface.language`,
+			`A ${language} record holds ${language} Attestations`,
+		);
+	if (
+		lemma.family !== segmented.route.family ||
+		lemma.kind !== segmented.route.kind
+	)
+		attestationIssue(
+			"Route",
+			`${path}.attestation.surface.lemma`,
+			`The Attestation's Lemma is ${lemma.family} ${lemma.kind}, not the target's route ${segmented.route.family} ${segmented.route.kind}`,
+		);
+	for (const found of attestationAdpositionCaseIssues(attestation))
+		attestationIssue(
+			"AdpositionCase",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
+	for (const found of attestationArticleAgreementIssues(attestation))
+		attestationIssue(
+			"ArticleAgreement",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
+
+	const indices = segmented.memberSegmentIndices;
+	if (indices.length !== attestation.members.length)
+		attestationIssue(
+			"Members",
+			`${path}.memberSegmentIndices`,
+			"Name one Segment per Attestation member",
+		);
+	for (const [m, member] of attestation.members.entries()) {
+		const index = indices[m];
+		if (index === undefined || !resolvable(index)) continue;
+		const text = segments[index]?.text;
+		if (member.attested !== text)
+			attestationIssue(
+				"Members",
+				`${path}.memberSegmentIndices.${m}`,
+				`Member ${JSON.stringify(member.attested)} is not Segment ${index} ${JSON.stringify(text)}`,
+			);
+	}
+	if (target.grundform !== undefined) {
+		const verdict = checkIfGrundform(attestation.surface);
+		// A stated verdict Dumling cannot assess is not checked, so it fails
+		// (ADR 0042).
+		if (!verdict.success)
+			attestationIssue(
+				"Grundform",
+				`${path}.grundform`,
+				`Dumling cannot assess this Surface's Grundform: ${verdict.error.message}`,
+			);
+		else if (verdict.value !== target.grundform)
+			attestationIssue(
+				"Grundform",
+				`${path}.grundform`,
+				`Dumling assesses this Surface as ${verdict.value ? "" : "not "}Grundform`,
+			);
+	}
+
+	const reading = checkReading(target.reading, attestation);
+	for (const failure of reading.issues)
+		issue("Reading", "Reading", `${path}.${failure.path}`, failure.message);
+	let knowledge: Dumrel.ReadingKnowledge | undefined;
+	if (
+		reading.value !== undefined &&
+		target.reading?.knowledge !== undefined
+	) {
+		const checked = checkKnowledge(target.reading.knowledge, reading.value);
+		for (const failure of checked.issues)
+			issue(
+				"Knowledge",
+				"Knowledge",
+				`${path}.${failure.path}`,
+				failure.message,
+			);
+		if (checked.issues.length === 0) knowledge = checked.knowledge;
+	} else if (reviewDepth === "Knowledge")
+		issue(
+			"Knowledge",
+			"Knowledge",
+			`${path}.reading.knowledge`,
+			"A record reviewed through Knowledge holds each target's Reading Knowledge",
+		);
+	if (failed) return { knowledge: false };
+	return {
+		target: {
+			...segmented,
+			attestation,
 			...(reading.value === undefined ? {} : { reading: reading.value }),
-			...(reading.knowledge === undefined
-				? {}
-				: { knowledge: reading.knowledge }),
+			...(knowledge === undefined ? {} : { knowledge }),
 			...(target.grundform === undefined
 				? {}
 				: { grundform: target.grundform }),
-			...(target.notes === undefined ? {} : { notes: target.notes }),
-		});
-	}
-	return { parsedTargets, claims, resolvable };
+		},
+		knowledge: knowledge !== undefined,
+	};
 }
 
 /**
  * Builds the target's Reading from its Attestation's Lemma and authored Emoji
- * Description, checks it with Dumling's Reading schema, and checks its
- * Knowledge against it. A Reviewed target must name one. A Foreign Reading is
- * its Lemma alone, so its target names it with no Emoji Description (ADR
- * 0045); Dumling rejects a missing one on any other route.
+ * Description and checks it with Dumling's Reading schema. A target that
+ * names none fails the Reading layer. A Foreign Reading is its Lemma alone,
+ * so its target names it with no Emoji Description (ADR 0045); Dumling
+ * rejects a missing one on any other route.
  */
 function checkReading(
-	authored: { emojiDescription?: string; knowledge?: unknown } | undefined,
+	authored: { emojiDescription?: string } | undefined,
 	attestation: Dumling.Attestation,
-	status: ReviewStatus,
 ): {
 	value?: Dumling.Reading;
-	knowledge?: Dumrel.ReadingKnowledge;
 	issues: { path: string; message: string }[];
 } {
 	if (authored === undefined)
 		return {
-			issues:
-				status === "Reviewed"
-					? [
-							{
-								path: "reading",
-								message: "A Reviewed target names its Reading",
-							},
-						]
-					: [],
+			issues: [
+				{ path: "reading", message: "A target names its Reading" },
+			],
 		};
 	const parsed = parseUnit({
 		unitKind: "Reading",
@@ -367,9 +552,7 @@ function checkReading(
 				},
 			],
 		};
-	if (authored.knowledge === undefined) return { value: reading, issues: [] };
-	const knowledge = checkKnowledge(authored.knowledge, reading);
-	return { value: reading, ...knowledge };
+	return { value: reading, issues: [] };
 }
 
 /**

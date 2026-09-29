@@ -8,6 +8,17 @@ const ruleHashPattern = /^[0-9a-f]{16}$/u;
 const reviewStatusSchema = z.enum(["Draft", "Reviewed"]);
 
 /**
+ * A sentence record's Review Depth: the deepest Annotation Layer a person has
+ * reviewed, every layer before it included. A record without one is a Draft.
+ */
+const reviewDepthSchema = z
+	.enum(["Segmentation", "Attestation", "Reading", "Knowledge"])
+	.describe(
+		"The deepest Annotation Layer a person has reviewed, every layer before it included: Segmentation (members, routes, No Target entries, coverage), Attestation, Reading, Knowledge. Leave it out for a Draft.",
+	)
+	.optional();
+
+/**
  * A case imported from Dumgen as it was, until it is reshaped into typed
  * fields. `memberSegmentIndices` places its marked words in the record.
  */
@@ -57,6 +68,15 @@ function readingSchema<K extends z.ZodType>(knowledge: K) {
 	});
 }
 
+/**
+ * A target's route as the loader reads it: any Family and Kind, which it
+ * checks against Dumling's routes for the record's language.
+ */
+export const looseRouteSchema = z.strictObject({
+	family: textSchema,
+	kind: textSchema,
+});
+
 const segmentsSchema = z
 	.array(
 		z.strictObject({
@@ -73,23 +93,37 @@ const segmentsSchema = z
 	.min(1);
 
 /**
- * What a target holds that another package types: its Attestation (Dumling)
- * and its Reading Knowledge (dumrel). The loader passes `z.unknown()` and
- * checks both itself; the JSON Schema emitter passes the owners' schemas.
+ * What a target holds that another package types: its route (Dumling's
+ * Families and Kinds), its Attestation (Dumling) and its Reading Knowledge
+ * (dumrel). The loader passes loose schemas and checks all three itself; the
+ * JSON Schema emitter passes the owners' schemas.
  */
-export interface TargetSchemas<A extends z.ZodType, K extends z.ZodType> {
+export interface TargetSchemas<
+	R extends z.ZodType,
+	A extends z.ZodType,
+	K extends z.ZodType,
+> {
+	route: R;
 	attestation: A;
 	knowledge: K;
 }
 
-/** One target: an Attestation, its members' Segments and its Reading. */
-function targetSchema<A extends z.ZodType, K extends z.ZodType>({
-	attestation,
-	knowledge,
-}: TargetSchemas<A, K>) {
+/**
+ * One target: its members' Segments and route, which are its Segmentation,
+ * then its Attestation and its Reading. A target may lack its Attestation
+ * while its record is reviewed no deeper than Segmentation.
+ */
+function targetSchema<
+	R extends z.ZodType,
+	A extends z.ZodType,
+	K extends z.ZodType,
+>({ route, attestation, knowledge }: TargetSchemas<R, A, K>) {
 	return z.strictObject({
 		memberSegmentIndices: z.array(indexSchema).min(1),
-		attestation,
+		route: route.describe(
+			"The target's Family and Kind in the record's language; its Attestation's Lemma has the same.",
+		),
+		attestation: attestation.optional(),
 		reading: readingSchema(knowledge).optional(),
 		grundform: z.boolean().optional(),
 		notes: z
@@ -107,15 +141,17 @@ function targetSchema<A extends z.ZodType, K extends z.ZodType>({
  * emitter passes Dumling's Attestation schemas and dumrel's Reading Knowledge
  * schema so editors can complete them.
  */
-export function recordFileSchema<A extends z.ZodType, K extends z.ZodType>(
-	target: TargetSchemas<A, K>,
-) {
+export function recordFileSchema<
+	R extends z.ZodType,
+	A extends z.ZodType,
+	K extends z.ZodType,
+>(target: TargetSchemas<R, A, K>) {
 	return z.strictObject({
 		$schema: z.string().optional(),
 		sentence: textSchema,
 		segments: segmentsSchema,
 		coverage: z.enum(["Full", "Partial"]),
-		status: reviewStatusSchema,
+		reviewDepth: reviewDepthSchema,
 		provenance: z.discriminatedUnion("kind", [
 			z.strictObject({ kind: z.literal("Authored") }),
 			z.strictObject({
@@ -144,15 +180,16 @@ export function recordFileSchema<A extends z.ZodType, K extends z.ZodType>(
  */
 export function breakdownRecordFileSchema<
 	L extends z.ZodType,
+	R extends z.ZodType,
 	A extends z.ZodType,
 	K extends z.ZodType,
->(lemma: L, target: TargetSchemas<A, K>) {
+>(lemma: L, target: TargetSchemas<R, A, K>) {
 	return z.strictObject({
 		$schema: z.string().optional(),
 		lemma,
 		sentence: textSchema,
 		segments: segmentsSchema,
-		status: reviewStatusSchema,
+		reviewDepth: reviewDepthSchema,
 		sources: sourcesSchema,
 		targets: z.array(targetSchema(target)),
 	});

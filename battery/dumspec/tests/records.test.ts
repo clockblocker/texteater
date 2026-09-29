@@ -12,13 +12,17 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { demoteBrokenReviewed } from "../scripts/demote-broken-reviewed.js";
 import { checkCitations } from "../src/check-citations.js";
-import { checkRecord } from "../src/check-record.js";
+import { checkRecord, type RecordCheck } from "../src/check-record.js";
 import {
 	findSpecRecord,
+	isReviewed,
 	loadSpecRecords,
+	loadSpecSegmentations,
 	loadSpecWorklist,
 	rules,
 } from "../src/index.js";
+import type { SpecIssue } from "../src/issues.js";
+import { layerRank } from "../src/layers.js";
 import { readRecords } from "../src/load.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 import {
@@ -29,6 +33,7 @@ import {
 } from "./negative-fixtures.js";
 
 const records = loadSpecRecords();
+const segmentations = loadSpecSegmentations();
 
 describe("the corpus", () => {
 	test("loads every record, sorted by id", () => {
@@ -56,31 +61,39 @@ describe("the corpus", () => {
 		).toEqual([]);
 	});
 
-	test("reports the worklist of failing Drafts and imported cases", () => {
+	test("loads the Segmentation of every record whose Attestations load", () => {
+		const ids = new Set(segmentations.map((record) => record.id));
+		expect(records.every((record) => ids.has(record.id))).toBe(true);
+		for (const record of records)
+			for (const target of record.targets) {
+				const { language, family, kind } =
+					target.attestation.surface.lemma;
+				expect(target.route).toEqual({ language, family, kind });
+			}
+	});
+
+	test("reports the worklist of failing Draft layers and imported cases", () => {
 		const worklist = loadSpecWorklist();
 		const imported = worklist.flatMap((entry) =>
 			entry.legacy.map((legacy) => `${legacy.source} ${legacy.caseId}`),
 		);
 		for (const entry of worklist) {
-			expect(
-				entry.issues.length +
-					entry.legacy.length +
-					entry.targetsWithoutReading.length,
-			).toBeGreaterThan(0);
-			if (entry.status === "Reviewed") {
-				expect(entry.issues).toEqual([]);
-				expect(entry.targetsWithoutReading).toEqual([]);
-			}
+			expect(entry.issues.length + entry.legacy.length).toBeGreaterThan(
+				0,
+			);
+			// A reviewed layer never fails: its issues would throw.
+			for (const issue of entry.issues)
+				expect(layerRank(issue.layer)).toBeGreaterThan(
+					layerRank(entry.reviewDepth),
+				);
 		}
 		expect(imported.length).toBe(new Set(imported).size);
+		const failingAt = (layer: string) =>
+			worklist.filter((entry) =>
+				entry.issues.some((issue) => issue.layer === layer),
+			).length;
 		console.log(
-			`${worklist.length} records on the worklist (bun run worklist): ${
-				worklist.filter((entry) => entry.issues.length > 0).length
-			} Drafts failing a check, ${
-				worklist.filter(
-					(entry) => entry.targetsWithoutReading.length > 0,
-				).length
-			} with a target naming no Reading, ${imported.length} imported cases`,
+			`${worklist.length} records on the worklist (bun run worklist): ${failingAt("Segmentation")} failing Segmentation, ${failingAt("Attestation")} Attestation, ${failingAt("Reading")} Reading, ${imported.length} imported cases`,
 		);
 	});
 
@@ -125,8 +138,9 @@ describe("the corpus", () => {
 		) => expect(records.some(predicate)).toBe(true);
 		has((record) => record.coverage === "Full");
 		has((record) => record.coverage === "Partial");
-		// Seeds stay Draft until a person reviews them; the guards set Reviewed on copies.
-		has((record) => record.status === "Draft");
+		// Seeds stay Draft until a person reviews them; the guards review copies.
+		has((record) => record.reviewDepth === undefined);
+		has((record) => isReviewed(record, "Reading"));
 		has((record) => record.noTarget.length > 0);
 		has((record) => record.provenance.kind === "Quoted");
 		has((record) =>
@@ -179,15 +193,36 @@ function sameStrings(left: readonly string[], right: readonly string[]) {
 	);
 }
 
+/**
+ * Each issue a check reports, keyed with whether it fails the record, so an
+ * issue that was a Draft's work and becomes an error counts as new.
+ */
+function issueKeys(checked: RecordCheck): Map<string, SpecIssue> {
+	return new Map([
+		...checked.errors.map((issue): [string, SpecIssue] => [
+			`error ${issue.check} ${issue.path}`,
+			issue,
+		]),
+		...checked.issues.map((issue): [string, SpecIssue] => [
+			`work ${issue.check} ${issue.path}`,
+			issue,
+		]),
+	]);
+}
+
 describe("negative fixtures", () => {
 	for (const fixture of negativeFixtures)
 		test(`fail ${fixture.check}: ${fixture.name}`, () => {
 			const json = seedJson(fixture.seed);
-			expect(checkRecord(fixture.seed, json).success).toBe(true);
+			const seed = checkRecord(fixture.seed, json);
+			expect(seed.errors).toEqual([]);
+			expect(seed.record).toBeDefined();
+			const before = issueKeys(seed);
 			fixture.edit(json);
-			const checked = checkRecord(fixture.id ?? fixture.seed, json);
-			if (checked.success) throw Error("Expected the fixture to fail");
-			expect(new Set(checked.issues.map((issue) => issue.check))).toEqual(
+			const added = [
+				...issueKeys(checkRecord(fixture.id ?? fixture.seed, json)),
+			].filter(([key]) => !before.has(key));
+			expect(new Set(added.map(([, issue]) => issue.check))).toEqual(
 				new Set([fixture.check]),
 			);
 		});
@@ -200,9 +235,42 @@ describe("negative fixtures", () => {
 		};
 		json.targets[0].reading = { emojiDescription: "👀", knowledge };
 		const checked = checkRecord("de/pass-auf-dich-auf", json);
-		if (!checked.success) throw Error("Expected the record to pass");
-		expect(checked.record.targets[0]?.knowledge).toEqual(knowledge);
-		expect(checked.record.targets[1]).not.toHaveProperty("knowledge");
+		expect(checked.errors).toEqual([]);
+		expect(checked.record?.targets[0]?.knowledge).toEqual(knowledge);
+		expect(checked.record?.targets[1]).not.toHaveProperty("knowledge");
+	});
+
+	test("a record reviewed through Segmentation loads it while its Attestations are Draft", () => {
+		const json = seedJson("de/pass-auf-dich-auf");
+		json.reviewDepth = "Segmentation";
+		json.sources.rules = [ruleCitation];
+		delete json.targets[1].attestation;
+		json.targets[0].attestation.surface.lemma.coreFeatures = {};
+		const checked = checkRecord("de/pass-auf-dich-auf", json);
+		expect(checked.errors).toEqual([]);
+		expect(checked.validThrough).toBe("Segmentation");
+		expect(checked.record).toBeUndefined();
+		expect(
+			checked.segmentation?.targets.map(
+				({ memberSegmentIndices, route }) => [
+					memberSegmentIndices,
+					route.kind,
+				],
+			),
+		).toEqual([
+			[[0, 2, 6], "VERB"],
+			[[4], "PRON"],
+		]);
+		expect(new Set(checked.issues.map((issue) => issue.layer))).toEqual(
+			new Set(["Attestation"]),
+		);
+
+		json.targets[0].memberSegmentIndices = [0, 6, 2];
+		expect(
+			checkRecord("de/pass-auf-dich-auf", json).errors.map(
+				({ check, layer }) => `${check} ${layer}`,
+			),
+		).toEqual(["Members Segmentation"]);
 	});
 
 	test("the loader reports invalid JSON and every failing Reviewed record at once", () => {
@@ -299,16 +367,38 @@ describe("negative fixtures", () => {
 			expect(
 				worklist.map((entry) => [
 					entry.record,
-					entry.status,
-					[...new Set(entry.issues.map((issue) => issue.check))],
+					entry.reviewDepth,
+					entry.validThrough,
+					[
+						...new Set(
+							entry.issues.map(
+								(issue) => `${issue.check} ${issue.layer}`,
+							),
+						),
+					],
 					entry.legacy.length,
-					entry.targetsWithoutReading,
 				]),
 			).toEqual([
-				["de/imported", "Reviewed", [], 1, []],
-				["de/out-of-order", "Draft", ["Members"], 0, [0, 1]],
-				["de/unnamed", "Draft", [], 0, [1]],
-				["text/raw", "Draft", [], 1, []],
+				["de/imported", "Reading", "Reading", [], 1],
+				[
+					"de/out-of-order",
+					undefined,
+					undefined,
+					[
+						"Members Segmentation",
+						"Members Attestation",
+						"Reading Reading",
+					],
+					0,
+				],
+				[
+					"de/unnamed",
+					undefined,
+					"Attestation",
+					["Reading Reading"],
+					0,
+				],
+				["text/raw", undefined, undefined, [], 1],
 			]);
 		} finally {
 			rmSync(directory, { recursive: true });
@@ -354,7 +444,7 @@ describe("negative fixtures", () => {
 		}
 	});
 
-	test("the demotion script demotes Reviewed records failing their checks", () => {
+	test("the demotion script demotes a reviewed record to its deepest passing layer", () => {
 		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
 		const write = (id: string, record: unknown) =>
 			writeFileSync(
@@ -370,24 +460,32 @@ describe("negative fixtures", () => {
 			const draft = seedJson("de/pass-auf-dich-auf");
 			draft.targets[0].memberSegmentIndices = [2, 0, 6];
 			write("de/draft", draft);
-			const unnamed = seedJson("de/ich-bin-im-wald");
-			unnamed.status = "Reviewed";
+			const unnamed = review(seedJson("de/ich-bin-im-wald"));
+			delete unnamed.targets[0].reading;
 			write("de/unnamed", unnamed);
+			const uncited = seedJson("de/ich-bin-im-wald");
+			uncited.reviewDepth = "Segmentation";
+			write("de/uncited", uncited);
 
 			expect(demoteBrokenReviewed(directory)).toEqual([
-				"de/broken",
-				"de/unnamed",
+				{ record: "de/broken", from: "Reading", to: "Segmentation" },
+				{ record: "de/uncited", from: "Segmentation" },
+				{ record: "de/unnamed", from: "Reading", to: "Attestation" },
 			]);
 			expect(seedFile(directory, "de/broken")).toEqual({
 				...broken,
-				status: "Draft",
+				reviewDepth: "Segmentation",
 			});
-			expect(seedFile(directory, "de/valid").status).toBe("Reviewed");
+			expect(seedFile(directory, "de/uncited")).not.toHaveProperty(
+				"reviewDepth",
+			);
+			expect(seedFile(directory, "de/valid").reviewDepth).toBe("Reading");
 			const { issues, worklist } = readRecords(directory);
 			expect(issues).toEqual([]);
 			expect(worklist.map((entry) => entry.record)).toEqual([
 				"de/broken",
 				"de/draft",
+				"de/uncited",
 				"de/unnamed",
 			]);
 		} finally {

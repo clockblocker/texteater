@@ -2,19 +2,16 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { checkBreakdownRecord } from "./check-breakdown.js";
-import {
-	checkRecord,
-	targetsWithoutReading,
-	uncitedIssue,
-} from "./check-record.js";
+import { checkRecord, uncitedIssue } from "./check-record.js";
 import { type SpecIssue, SpecRecordError } from "./issues.js";
 import { textRecordFileSchema } from "./record-schema.js";
 import type {
+	AnnotationLayer,
 	BreakdownRecord,
 	LegacyCase,
-	ReviewStatus,
 	SpecRecord,
 	SpecRecordId,
+	SpecSegmentation,
 	TextRecord,
 } from "./types.js";
 
@@ -23,16 +20,18 @@ const textPrefix = "text/";
 const breakdownPrefix = "breakdown/";
 
 /**
- * A record that needs work: the checks a Draft fails against the current
- * model, the imported cases it still holds verbatim, and the indices of its
- * targets that name no Reading yet.
+ * A record that needs work: the checks its Draft layers fail or lack, and
+ * the imported cases it still holds verbatim. A Text Record's entry names no
+ * layers; it is on the worklist for its imported cases.
  */
 export interface WorklistEntry {
 	record: SpecRecordId;
-	status: ReviewStatus;
+	/** The deepest layer a person has reviewed; absent for a Draft. */
+	reviewDepth?: AnnotationLayer;
+	/** The deepest layer that passes; absent when Segmentation fails. */
+	validThrough?: AnnotationLayer;
 	issues: readonly SpecIssue[];
 	legacy: readonly LegacyCase[];
-	targetsWithoutReading: readonly number[];
 }
 
 function readJsonFiles(directory: string, issues: SpecIssue[]) {
@@ -61,21 +60,25 @@ function readJsonFiles(directory: string, issues: SpecIssue[]) {
 }
 
 /**
- * Reads and checks every record file under a directory, sorted by id. A Draft
- * that parses but fails a check against the current model goes on the
- * worklist instead of failing; so does every record holding imported cases,
- * and every Draft with a target that names no Reading. A Reviewed record must
- * pass. Breakdown Records, under `breakdown/`, are handled alike. Text
- * Records, under `text/`, are checked for shape and a Reviewed one's Rule
- * citation, and join the worklist while they hold imported cases.
+ * Reads and checks every record file under a directory, sorted by id. A
+ * record fails when its id or shape is bad, when it is reviewed without citing
+ * a Rule, or when a layer it is reviewed through fails. Otherwise the issues
+ * of its Draft layers put it on the worklist, as its imported cases do. Its
+ * Segmentation loads when that layer passes, and the whole record when its
+ * Attestation layer passes too. Breakdown Records, under `breakdown/`, load
+ * alike from their Attestation layer. Text Records, under `text/`, are
+ * checked for shape and a Reviewed one's Rule citation, and join the worklist
+ * while they hold imported cases.
  */
 export function readRecords(directory: string): {
+	segmentations: SpecSegmentation[];
 	records: SpecRecord[];
 	breakdownRecords: BreakdownRecord[];
 	textRecords: TextRecord[];
 	issues: SpecIssue[];
 	worklist: WorklistEntry[];
 } {
+	const segmentations: SpecSegmentation[] = [];
 	const records: SpecRecord[] = [];
 	const breakdownRecords: BreakdownRecord[] = [];
 	const textRecords: TextRecord[] = [];
@@ -95,7 +98,7 @@ export function readRecords(directory: string): {
 				continue;
 			}
 			const { sourceText, status, sources, legacy } = file.data;
-			const uncited = uncitedIssue(id, status, sources);
+			const uncited = uncitedIssue(id, status === "Reviewed", sources);
 			if (uncited) {
 				issues.push(uncited);
 				continue;
@@ -108,59 +111,69 @@ export function readRecords(directory: string): {
 				...(legacy === undefined ? {} : { legacy }),
 			});
 			if (legacy?.length)
-				worklist.push({
-					record: id,
-					status,
-					issues: [],
-					legacy,
-					targetsWithoutReading: [],
-				});
+				worklist.push({ record: id, issues: [], legacy });
 			continue;
 		}
 		const checked = id.startsWith(breakdownPrefix)
 			? checkBreakdownRecord(id, input)
 			: checkRecord(id, input);
-		if (checked.success) {
+		if (checked.errors.length > 0) {
+			issues.push(...checked.errors);
+			continue;
+		}
+		if ("segmentation" in checked && checked.segmentation)
+			segmentations.push(checked.segmentation);
+		if (checked.record) {
 			if ("lemma" in checked.record)
 				breakdownRecords.push(checked.record);
 			else records.push(checked.record);
-			const { status, targets } = checked.record;
-			const legacy =
-				"legacy" in checked.record ? (checked.record.legacy ?? []) : [];
-			const unnamed = targetsWithoutReading(targets);
-			if (legacy.length > 0 || unnamed.length > 0)
-				worklist.push({
-					record: id,
-					status,
-					issues: [],
-					legacy,
-					targetsWithoutReading: unnamed,
-				});
-		} else if (
-			checked.status === "Draft" &&
-			checked.issues.every(
-				(issue) => issue.check !== "Id" && issue.check !== "Shape",
-			)
-		)
+		}
+		const legacy = "legacy" in checked ? (checked.legacy ?? []) : [];
+		if (checked.issues.length > 0 || legacy.length > 0)
 			worklist.push({
 				record: id,
-				status: "Draft",
+				...(checked.reviewDepth === undefined
+					? {}
+					: { reviewDepth: checked.reviewDepth }),
+				...(checked.validThrough === undefined
+					? {}
+					: { validThrough: checked.validThrough }),
 				issues: checked.issues,
-				legacy: checked.legacy ?? [],
-				targetsWithoutReading: checked.targetsWithoutReading ?? [],
+				legacy,
 			});
-		else issues.push(...checked.issues);
 	}
-	return { records, breakdownRecords, textRecords, issues, worklist };
+	return {
+		segmentations,
+		records,
+		breakdownRecords,
+		textRecords,
+		issues,
+		worklist,
+	};
 }
 
 /**
- * Loads every Spec Record from the package's `records/` directory, sorted by
- * id. Each record has passed its strict Attestation, Segment, member-order,
- * coverage and Grundform checks; a Draft that fails them is left out and
- * listed by `loadSpecWorklist`. Throws `SpecRecordError` listing every issue
- * when a Reviewed record fails, or any record has a bad id or shape. Reads
- * the file system, so call it at build time.
+ * Loads the Segmentation of every Spec Record whose Segmentation layer
+ * passes, sorted by id: each target's members and route, the No Target
+ * entries and the coverage, whatever the record's deeper layers hold. This is
+ * the gold `segment.inUnits` is scored on. Throws `SpecRecordError` as
+ * `loadSpecRecords` does. Reads the file system, so call it at build time.
+ */
+export function loadSpecSegmentations(): readonly SpecSegmentation[] {
+	const { segmentations, issues } = readRecords(recordsDirectory);
+	if (issues.length > 0) throw new SpecRecordError(issues);
+	return segmentations;
+}
+
+/**
+ * Loads every Spec Record whose Segmentation and Attestation layers pass,
+ * from the package's `records/` directory, sorted by id: its Segment,
+ * member-order, route and coverage checks, and its strict Attestation,
+ * member and Grundform checks. Each target carries its Reading and Knowledge
+ * where they pass. A record whose Draft layers fail is listed by
+ * `loadSpecWorklist`. Throws `SpecRecordError` listing every issue when a
+ * layer a record is reviewed through fails, or any record has a bad id or
+ * shape. Reads the file system, so call it at build time.
  */
 export function loadSpecRecords(): readonly SpecRecord[] {
 	const { records, issues } = readRecords(recordsDirectory);
@@ -170,9 +183,9 @@ export function loadSpecRecords(): readonly SpecRecord[] {
 
 /**
  * Loads every Breakdown Record from the package's `records/breakdown/`
- * directory, sorted by id, under the same terms as `loadSpecRecords`: a Draft
- * that fails a check is left out and listed by `loadSpecWorklist`, and a
- * failing Reviewed record throws `SpecRecordError`.
+ * directory, sorted by id, under the same terms as `loadSpecRecords`: one
+ * whose Segmentation or Attestation fails is left out and listed by
+ * `loadSpecWorklist`, and a failing reviewed layer throws `SpecRecordError`.
  */
 export function loadBreakdownRecords(): readonly BreakdownRecord[] {
 	const { breakdownRecords, issues } = readRecords(recordsDirectory);
@@ -181,9 +194,10 @@ export function loadBreakdownRecords(): readonly BreakdownRecord[] {
 }
 
 /**
- * The records that still need work, sorted by id: Drafts failing a check
- * against the current model, records holding imported cases verbatim, and
- * Drafts with a target that names no Reading. Breakdown Records included.
+ * The records that still need work, sorted by id: each whose Draft layers
+ * fail a check against the current model or lack a target's Attestation or
+ * Reading, and each holding imported cases verbatim. Breakdown and Text
+ * Records included.
  */
 export function loadSpecWorklist(): readonly WorklistEntry[] {
 	return readRecords(recordsDirectory).worklist;

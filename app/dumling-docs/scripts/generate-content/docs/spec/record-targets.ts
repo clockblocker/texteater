@@ -1,3 +1,4 @@
+import { isReviewed } from "dumspec";
 import type * as Dumspec from "dumspec/types";
 import type { AttestedAttestation } from "../../../../src/lib/docs/document-shapes.ts";
 import { exampleFor } from "../../../../src/lib/docs/spec-examples.ts";
@@ -26,6 +27,14 @@ export function recordTargets(
 	);
 }
 
+/**
+ * A page shows a target's Attestation, so it counts the record as Reviewed
+ * when a person has reviewed its Attestation layer.
+ */
+function reviewLabel(record: Dumspec.SpecRecord): "Reviewed" | "Draft" {
+	return isReviewed(record, "Attestation") ? "Reviewed" : "Draft";
+}
+
 export function isArchaic(entry: RecordTarget): boolean {
 	const features = entry.target.attestation.surface.surfaceFeatures as {
 		historicalStatus?: string | null;
@@ -40,7 +49,7 @@ export function isArchaic(entry: RecordTarget): boolean {
 export function inPageOrder(entries: readonly RecordTarget[]): RecordTarget[] {
 	const rank = (entry: RecordTarget) =>
 		(isArchaic(entry) ? 2 : 0) +
-		(entry.record.status === "Reviewed" ? 0 : 1);
+		(reviewLabel(entry.record) === "Reviewed" ? 0 : 1);
 	return entries.toSorted(
 		(left, right) =>
 			rank(left) - rank(right) ||
@@ -55,8 +64,8 @@ function oneLine(text: string): string {
 
 /**
  * One compact list item: the sentence with the target's members linked to its
- * attestation page, the Lemma's Canonical Form, the record's Review Status,
- * `Archaic` where it applies, and the record id.
+ * attestation page, the Lemma's Canonical Form, whether its Attestation is
+ * reviewed, `Archaic` where it applies, and the record id.
  */
 export function renderTargetLine(
 	entry: RecordTarget,
@@ -65,7 +74,7 @@ export function renderTargetLine(
 	const lemma = entry.target.attestation.surface.lemma;
 	const tags = [
 		`\`${lemma.canonicalForm}\``,
-		entry.record.status,
+		reviewLabel(entry.record),
 		...(isArchaic(entry) ? ["Archaic"] : []),
 		`\`${entry.record.id}\``,
 	];
@@ -98,7 +107,9 @@ export function renderRecordLine(record: Dumspec.SpecRecord): string {
 /** How many distinct records the targets come from, and how many are Draft or Partial. */
 export function renderRecordCounts(entries: readonly RecordTarget[]): string {
 	const records = [...new Set(entries.map((entry) => entry.record))];
-	const draft = records.filter((record) => record.status === "Draft").length;
+	const draft = records.filter(
+		(record) => reviewLabel(record) === "Draft",
+	).length;
 	const partial = records.filter(
 		(record) => record.coverage === "Partial",
 	).length;

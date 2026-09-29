@@ -1,8 +1,8 @@
 /**
  * One-off import of Dumgen's remaining German gold into dumspec as Draft
  * records (ADR 0037, amended). Each case enters verbatim as a `legacy` entry
- * of the record for its sentence: an existing record keeps its status and
- * targets, and a sentence without one gets a new Draft, Partial, Authored
+ * of the record for its sentence: an existing record keeps its Review Depth
+ * and targets, and a sentence without one gets a new Draft, Partial, Authored
  * record citing the ADRs the case names. A classification or sentence
  * analysis case a record already holds is skipped. Intake items become Text
  * Records keyed by their raw text. Nothing is reshaped; the model has moved,
@@ -40,6 +40,7 @@ type SourceFile = Record<string, unknown> & {
 };
 type RecordTarget = {
 	memberSegmentIndices: number[];
+	route: { family: string; kind: string };
 	notes?: { rationale?: string };
 	attestation: {
 		surface: { lemma: { family: string; kind: string } };
@@ -51,7 +52,7 @@ type RecordFile = {
 	sentence: string;
 	segments: CaseSegment[];
 	coverage: "Full" | "Partial";
-	status: "Draft" | "Reviewed";
+	reviewDepth?: string;
 	provenance: { kind: "Authored" };
 	sources: { adrs: string[]; rules: unknown[]; references: unknown[] };
 	targets: RecordTarget[];
@@ -202,7 +203,6 @@ function importCase(options: {
 					? recordSegments(options.segments)
 					: segmentGerman(sentence).segments,
 				coverage: "Partial",
-				status: "Draft",
 				provenance: { kind: "Authored" },
 				sources: { adrs: [], rules: [], references: [] },
 				targets: [],
@@ -326,6 +326,7 @@ for (const [caseId, golden] of Object.entries(
 	if (attestation && record && !record.text && !("decision" in ideal))
 		record.file.targets.push({
 			memberSegmentIndices: ideal.memberSegmentIndices,
+			route: { family: ideal.family, kind: ideal.kind },
 			...(golden.explanation
 				? { notes: { rationale: golden.explanation } }
 				: {}),

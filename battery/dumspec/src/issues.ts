@@ -1,4 +1,4 @@
-import type { SpecRecordId } from "./types.js";
+import type { AnnotationLayer, SpecRecordId } from "./types.js";
 
 export type SpecCheck =
 	| "Id"
@@ -6,8 +6,10 @@ export type SpecCheck =
 	| "Lemma"
 	| "Wording"
 	| "Breakdown"
+	| "Route"
 	| "Attestation"
 	| "Reading"
+	| "Knowledge"
 	| "AdpositionCase"
 	| "ArticleAgreement"
 	| "Segments"
@@ -18,12 +20,17 @@ export type SpecCheck =
 	| "UnknownCitation"
 	| "StaleCitation";
 
-/** One failed check on one record. `path` points into the record file. */
+/**
+ * One failed check on one record. `path` points into the record file, and
+ * `layer` names the Annotation Layer the check belongs to; a check of the
+ * whole record, such as its id, shape or Rule citation, has none.
+ */
 export interface SpecIssue {
 	record: SpecRecordId;
 	check: SpecCheck;
 	path: string;
 	message: string;
+	layer?: AnnotationLayer;
 }
 
 /** Thrown by the loader when any record fails a check. */
@@ -35,7 +42,7 @@ export class SpecRecordError extends Error {
 			`${issues.length} Spec Record issue(s):\n${issues
 				.map(
 					(issue) =>
-						`- ${issue.record} ${issue.path} [${issue.check}]: ${issue.message}`,
+						`- ${issue.record} ${issue.path} [${issue.check}${issue.layer ? `, ${issue.layer}` : ""}]: ${issue.message}`,
 				)
 				.join("\n")}`,
 		);
