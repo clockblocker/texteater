@@ -2,11 +2,13 @@
  * Prints the worklist: each record that fails a check against the current
  * model, holds imported cases or has a target naming no Reading, with its
  * issues, imported case ids and those targets, then the imported cases per
- * source file.
+ * source file, and last the Rules whose statement is too long.
  *
  *   bun run worklist
  */
+import { longStatements } from "../src/check-rules.js";
 import { loadSpecWorklist } from "../src/load.js";
+import { rules } from "../src/rules.js";
 
 const worklist = loadSpecWorklist();
 const perSource = new Map<string, number>();
@@ -28,3 +30,10 @@ console.log(
 );
 for (const [source, cases] of [...perSource].toSorted())
 	console.log(`${cases}\t${source}`);
+const long = longStatements(rules);
+if (long.length > 0) {
+	console.log(
+		`\n${long.length} Rules over 600 characters state more than a principle (ADR 0037):`,
+	);
+	for (const { rule, length } of long) console.log(`${length}\t${rule}`);
+}

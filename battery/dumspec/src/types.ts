@@ -186,6 +186,12 @@ export interface Rule {
 	 * paragraph citing it.
 	 */
 	statement: string;
+	/**
+	 * Why the statement needs more than 600 characters, such as a table whose
+	 * cells need listing. A longer statement without one draws a warning,
+	 * since boundary cases belong in the Rule's records (ADR 0037).
+	 */
+	longStatement?: string;
 	adrs: readonly AdrId[];
 	/** Empty when the Rule applies to every route of its language. */
 	routes: readonly RuleRoute[];

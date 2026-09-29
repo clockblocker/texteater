@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { checkRules, rulesNeedingRecords } from "../src/check-rules.js";
+import {
+	checkRules,
+	longStatements,
+	rulesNeedingRecords,
+} from "../src/check-rules.js";
 import { loadSpecRecords, rules } from "../src/index.js";
 import type { Rule } from "../src/types.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
@@ -24,6 +28,16 @@ describe("the Rules", () => {
 				`${needing.length} of ${rules.length} Rules need a showing record:\n${needing.join("\n")}`,
 			);
 	});
+
+	test("warn about statements past 600 characters, without failing", () => {
+		const long = longStatements(rules);
+		if (long.length > 0)
+			console.warn(
+				`${long.length} Rules state more than a principle (ADR 0037):\n${long
+					.map(({ rule, length }) => `${rule} (${length})`)
+					.join("\n")}`,
+			);
+	});
 });
 
 describe("the Rule checks", () => {
@@ -38,6 +52,26 @@ describe("the Rule checks", () => {
 	test("name a Rule without records as needing one", () => {
 		const waiting = { ...rule, id: "de/waiting", records: [] };
 		expect(rulesNeedingRecords([rule, waiting])).toEqual(["de/waiting"]);
+	});
+
+	test("warn about a long statement unless it gives a reason", () => {
+		const long = { ...rule, id: "de/long", statement: "x".repeat(601) };
+		const excused = { ...long, id: "de/excused", longStatement: "A table" };
+		expect(longStatements([rule, long, excused])).toEqual([
+			{ rule: "de/long", length: 601 },
+		]);
+	});
+
+	test("fail a long-statement reason that is empty or not needed", () => {
+		expect(
+			checks([
+				{ ...rule, statement: "x".repeat(601), longStatement: " " },
+				{ ...rule, id: "de/short", longStatement: "A table" },
+			]),
+		).toEqual([
+			"longStatement gives no reason",
+			"longStatement is set, but the statement is within 600 characters",
+		]);
 	});
 
 	test("fail a bad id, a foreign route, a superseded ADR or a missing record", () => {
