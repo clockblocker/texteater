@@ -660,6 +660,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat",
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 			"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
 		],
 	},
 	{
@@ -676,10 +677,10 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/modification-attests-partially",
 		statement:
-			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen).",
+			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen). A Locution whose dictionary entry marks a fixed word as optional still attests it, Partial, when that word is left out: Duden cites guten Morgen as [guten] Morgen!, so Morgen, Frau Schulz! gives [Morgen] Locution INTJ guten Morgen.",
 		adrs: ["ADR-0039", "ADR-0003"],
 		routes: everyMultiword,
-		records: [],
+		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
 	},
 ];
 
@@ -733,6 +734,7 @@ const attestations: Rule[] = [
 			"de/schwimmen-ist-gesund",
 			"de/sein-staendiges-meckern-nervt",
 			"de/morgen-fahren-wir-nach-hamburg",
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
 		],
 	},
 	{
@@ -810,7 +812,7 @@ const attestations: Rule[] = [
 			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). A split target, or one with free words between its members, is still Full.",
 		adrs: ["ADR-0003", "ADR-0039"],
 		routes: [...lexeme("NOUN"), ...everyMultiword],
-		records: [],
+		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
 	},
 ];
 
