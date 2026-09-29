@@ -14,14 +14,28 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🇩🇪🗣" },
 			"notes": {
-				"rationale": "Deutschsprachigen looks noun-like in isolation but is annotated as an adjective inflection here."
+				"rationale": "deutschsprachigen is an attributive ADJ before Quellen, nominative plural. After viele the standard ending is strong (deutschsprachige); the weak ending is a common deviation, recorded in the Surface's letters. deutschsprachig has no comparison forms, so no Degree."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

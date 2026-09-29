@@ -18,12 +18,19 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
+			"reading": { "emojiDescription": "🧒" },
 			"notes": {
 				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number."
 			},

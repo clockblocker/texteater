@@ -12,14 +12,32 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0002", "ADR-0035", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/substantivized-infinitive-is-a-noun",
+				"hash": "24bb91c7f80c0f5f"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "😤" },
 			"notes": {
-				"rationale": "Meckern is treated here as a substantivized infinitive, so the learner-facing unit is a neuter noun rather than the verb `meckern`. The selected form is citation-shaped for this nominal reading, so it stays `Surface/Citation`."
+				"rationale": "Meckern is a substantivized infinitive, a neuter NOUN of its own, not the verb meckern. Sein is a possessive DET, not an article, so Meckern is a bare Head."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

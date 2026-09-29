@@ -17,19 +17,33 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0035", "ADR-0040", "ADR-0042"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
-			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "📅" },
 			"notes": {
 				"rationale": "Before a noun phrase, Am splits into A (an) and m (dem): A is the ADP an, whose complement took the dative. Before a superlative, am would be one Segment instead (Wer steht am nächsten?)."
 			},
@@ -86,6 +100,7 @@
 		},
 		{
 			"memberSegmentIndices": [1, 5],
+			"reading": { "emojiDescription": "🌅" },
 			"notes": {
 				"rationale": "m stands for dem and is the article of Morgen, owned across the adjective nächsten. It derives the DET cell dem Dat.Masc.Sg."
 			},
@@ -133,10 +148,11 @@
 		},
 		{
 			"memberSegmentIndices": [3],
+			"reading": { "emojiDescription": "⏭" },
 			"notes": {
-				"rationale": "Nächsten is treated here as an inflected form of the lexical adjective nächst in its temporal 'next/upcoming' use, not as the superlative of nah.",
+				"rationale": "nächsten is the temporal adjective nächste, 'following'. Like linke, it is attributive only and cites its -e headword. It has no comparison forms, so it marks case, gender and number only. Spatial am nächsten without a noun is nah in the superlative (Wer steht am nächsten?).",
 				"knownMistakes": [
-					"Do not force this row under lemma nah with degree Sup just because nächsten is historically related to nah. In this attestation the learner-facing meaning is temporal 'next', so the earlier mistakes were using canonicalLemma nah, degree Sup, and a proximity-style emoji instead of modeling lexical nächst directly."
+					"Citing nächsten as nah with Degree Sup: temporal nächste means 'following', not 'nearest'."
 				]
 			},
 			"attestation": {
@@ -161,7 +177,7 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "nächst",
+						"canonicalForm": "nächste",
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
@@ -178,8 +194,9 @@
 		},
 		{
 			"memberSegmentIndices": [11],
+			"reading": { "emojiDescription": "🔀" },
 			"notes": {
-				"rationale": "Anders is treated as a citation-shaped adjective in predicative use because it is the complement of sein and predicates over alles, not over the event. Even though it can feel adverb-like in English glossing, dumling's German patterns classify comparable predicative forms like tot and entzwei as ADJ rather than ADV."
+				"rationale": "anders is the adverb anders (Duden: Adverb), the predicative after war. It has no attributive form (andere is another word), so it is not an ADJ (Rule de/adjective-stays-adj). It has no comparison forms, so its Surface has no inflection."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -187,8 +204,6 @@
 					{ "attested": "anders", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": null,
@@ -200,13 +215,12 @@
 						"language": "de",
 						"canonicalForm": "anders",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"surfaceFeatures": null

@@ -286,6 +286,8 @@ const participles: Rule[] = [
 			"de/die-aufgabe-bleibt-ungeloest",
 			"de/sie-ist-verheiratet",
 			"de/ein-interessierter-leser-fragte-nach",
+			"de/die-angestellten-streikten-gestern",
+			"de/ein-verletzter-lag-am-strassenrand",
 		],
 	},
 ];
@@ -297,7 +299,11 @@ const nouns: Rule[] = [
 			"A capitalized infinitive used as a noun is a NOUN of its own with gender Neut, never the VERB: das Schwimmen, sein ständiges Meckern.",
 		adrs: ["ADR-0002", "ADR-0040"],
 		routes: lexeme("NOUN", "VERB"),
-		records: [],
+		records: [
+			"de/das-rennen-hat-spass-gemacht",
+			"de/schwimmen-ist-gesund",
+			"de/sein-staendiges-meckern-nervt",
+		],
 	},
 	{
 		id: "de/noun-owns-its-article",
@@ -326,6 +332,14 @@ const nouns: Rule[] = [
 			"de/die-alte-kiefer-steht-am-hang",
 			"de/der-leiter-der-werkstatt-kam-spaeter",
 			"de/die-leiter-wackelte-auf-dem-nassen-boden",
+			"de/die-angestellten-streikten-gestern",
+			"de/mit-den-kindern-ist-es-nie-langweilig",
+			"de/sie-folgte-ihrem-herzen",
+			"de/unter-falschem-namen-mietete-er-das-zimmer",
+			"de/viele-vermissen-das-alte-berlin",
+			"de/das-rennen-hat-spass-gemacht",
+			"de/schwimmen-ist-gesund",
+			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
 		],
 	},
 	{
@@ -338,6 +352,8 @@ const nouns: Rule[] = [
 			"de/ich-bin-im-wald",
 			"de/da-steht-ne-kiste-auf-dem-flur",
 			"de/wir-brauchen-fuer-den-transport-noch-n-auto",
+			"de/sie-folgte-ihrem-herzen",
+			"de/sein-staendiges-meckern-nervt",
 		],
 	},
 	{
@@ -360,6 +376,7 @@ const nouns: Rule[] = [
 			"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7",
 			"de/ich-wohne-im-alten-berlin",
 			"de/viele-vermissen-das-alte-berlin",
+			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
 		],
 	},
 	{
@@ -396,7 +413,7 @@ const fusedWords: Rule[] = [
 			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe.",
 		adrs: ["ADR-0035", "dumgen/ADR-0004"],
 		routes: [],
-		records: [],
+		records: ["de/in-berlin-betreibt-die-bvg-die-u-bahn"],
 	},
 ];
 
@@ -484,6 +501,8 @@ const pronounsAndAdjectives: Rule[] = [
 		records: [
 			"de/sie-kam-lachend-herein",
 			"de/er-sass-schweigend-am-fenster",
+			"de/ich-suche-einen-besseren-ansatz",
+			"de/am-naechsten-morgen-war-alles-anders",
 		],
 	},
 	{
@@ -513,6 +532,10 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/die-aufgabe-bleibt-ungeloest",
 			"de/sie-ist-verheiratet",
 			"de/ein-interessierter-leser-fragte-nach",
+			"de/die-linke-hand-zitterte",
+			"de/ich-suche-einen-besseren-ansatz",
+			"de/am-naechsten-morgen-war-alles-anders",
+			"de/viele-deutschsprachigen-quellen-fehlen-noch",
 		],
 	},
 	{
@@ -532,6 +555,10 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand",
 			"de/die-auf-ihn-abgestimmte-loesung-half-sofort",
 			"de/ein-interessierter-leser-fragte-nach",
+			"de/die-linke-hand-zitterte",
+			"de/ich-suche-einen-besseren-ansatz",
+			"de/am-naechsten-morgen-war-alles-anders",
+			"de/viele-deutschsprachigen-quellen-fehlen-noch",
 		],
 	},
 ];
@@ -684,6 +711,12 @@ const attestations: Rule[] = [
 			"de/der-reisende-haendler-wartete-draussen",
 			"de/ein-verletzter-lag-am-strassenrand",
 			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/ich-suche-einen-besseren-ansatz",
+			"de/unter-falschem-namen-mietete-er-das-zimmer",
+			"de/am-naechsten-morgen-war-alles-anders",
+			"de/das-rennen-hat-spass-gemacht",
+			"de/schwimmen-ist-gesund",
+			"de/sein-staendiges-meckern-nervt",
 		],
 	},
 	{
@@ -692,7 +725,7 @@ const attestations: Rule[] = [
 			"Each member records how it is written. Standard covers licensed variants and sentence-initial capitals; Typo is a real spelling or casing error; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
-		records: [],
+		records: ["de/im-heft-stand-filosofie-statt-philosophie"],
 	},
 	{
 		id: "de/variant-and-historical-status",
@@ -700,7 +733,7 @@ const attestations: Rule[] = [
 			"A Surface is spelled Variant only when it uses a licensed spelling of the same Lemma, never for an inflected form or a repaired typo. Historical status marks archaic grammar, not old spelling or an old text around it.",
 		adrs: [],
 		routes: [],
-		records: [],
+		records: ["de/im-heft-stand-filosofie-statt-philosophie"],
 	},
 	{
 		id: "de/empty-inflection-is-structural",

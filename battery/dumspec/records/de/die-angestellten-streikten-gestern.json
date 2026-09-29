@@ -12,23 +12,26 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "e12dcd22d33a76aa"
-			}
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "💼" },
 			"notes": {
-				"rationale": "Angestellten is a substantivized participial form used here as a plural noun. Under the German rule for nominalized verb forms, it classifies as NOUN rather than ADJ or VERB; subject position and verb agreement support nominative plural. An adjectival noun for a person is one Lemma cited in its weak form, Angestellte, with no gender, since its gender is the referent's."
+				"rationale": "Angestellten is a substantivized participle, so it is a NOUN that owns its article Die (Rule de/participial-adjective). An adjectival noun for a person is one Lemma cited in its weak form, Angestellte, with gender null, since its gender is the referent's. Subject position and streikten make it nominative plural, and a plural Surface marks no gender."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

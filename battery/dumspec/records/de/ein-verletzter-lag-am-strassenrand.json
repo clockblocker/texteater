@@ -15,21 +15,24 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "e12dcd22d33a76aa"
-			}
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🤕" },
 			"notes": {
 				"rationale": "Verletzter is a substantivized participle used as a noun, so it classifies as NOUN rather than ADJ or VERB. An adjectival noun for a person is one Lemma cited in its weak form after the definite article, Verletzte, with no gender. The singular Surface marks the gender its strong form shows, Masc, and ein agrees with it."
 			},

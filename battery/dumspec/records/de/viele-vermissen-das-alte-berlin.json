@@ -14,18 +14,20 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/proper-noun-article", "hash": "8f0c5d0f9338a32b" }
+			{ "rule": "de/proper-noun-article", "hash": "8f0c5d0f9338a32b" },
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
+			"reading": { "emojiDescription": "🏙🐻" },
 			"notes": {
 				"rationale": "Berlin is a name cited bare, so its Lemma has no Core article, and it owns the article its phrase takes here, across the adjective alte: [das, Berlin]. das derives the DET cell das Acc.Neut.Sg.",
 				"knownMistakes": [

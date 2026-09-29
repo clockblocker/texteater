@@ -12,21 +12,24 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "e12dcd22d33a76aa"
-			}
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🧳" },
 			"notes": {
 				"rationale": "Reisende is a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. An adjectival noun for a person is one Lemma, Reisende, with no gender. The singular Surface marks the gender its form shows, Masc, and der agrees with it. Minimal pair: der reisende Händler, where reisende is an attributive ADJ."
 			},

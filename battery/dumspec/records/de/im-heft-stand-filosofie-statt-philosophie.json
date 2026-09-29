@@ -17,14 +17,25 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "678811fa8882f8fd" },
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9c2cdbb5c2f38ef4"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
+			"reading": { "emojiDescription": "🤔" },
 			"notes": {
-				"rationale": "This is a typo attestation whose noncanonical spelling still points to the canonical lemma Philosophie."
+				"rationale": "Filosofie is a misspelling of Philosophie reported by the sentence: no dictionary licenses an f spelling of Philosophie (the reform's f variants cover stems like -fon and -graf, not philo-). The member is Typo and points to Philosophie. A Surface is Variant only for a licensed spelling, never a repaired typo, so it is Canonical."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -36,7 +47,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Philosophie",
-					"spelling": "Variant",
+					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

@@ -12,14 +12,22 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0035", "ADR-0036", "ADR-0042"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "e12dcd22d33a76aa"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
 			}
 		],
 		"references": []
@@ -27,8 +35,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "⬅" },
 			"notes": {
-				"rationale": "This is ordinary adjective agreement, included to contrast the directional adjective with political and proper-noun readings. linke is used only attributively, so it cites the dictionary's adjective headword linke, never the ADV links."
+				"rationale": "linke is used only attributively, so it cites the dictionary's adjective headword linke (Duden: linke, linker, linkes), never the ADV links. It has no comparison forms, so its Surface marks case, gender and number and no Degree. Die belongs to Hand."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

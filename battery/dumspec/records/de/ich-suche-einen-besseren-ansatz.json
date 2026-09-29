@@ -14,14 +14,33 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0036", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Besseren is a comparative adjective with accusative masculine singular agreement."
+				"rationale": "besseren is the suppletive comparative of gut (gut, besser, am besten), attributive before Ansatz with accusative masculine singular agreement; einen belongs to Ansatz. gut is comparable, so the Surface marks Degree Cmp. A declined comparative is still spelled Canonical."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

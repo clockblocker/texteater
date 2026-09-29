@@ -10,14 +10,29 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0002", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/substantivized-infinitive-is-a-noun",
+				"hash": "24bb91c7f80c0f5f"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "🏊" },
 			"notes": {
-				"rationale": "Schwimmen is classified as a substantivized infinitive here, so the selected learner-facing unit is a neuter noun rather than the verb schwimmen. The attested form is already citation-shaped for that nominal reading."
+				"rationale": "Schwimmen is a substantivized infinitive, a neuter NOUN of its own, not the verb schwimmen. It stands bare, with no article."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

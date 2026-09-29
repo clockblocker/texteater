@@ -18,23 +18,38 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "8f0c5d0f9338a32b" },
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" },
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "686c9815ab8717d8"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [6, 8],
+			"reading": { "emojiDescription": "🚇" },
 			"notes": {
-				"rationale": "`BVG` is a proper-noun abbreviation, so `abbr: \"Yes\"` belongs on the Lemma's inherent feature bag."
+				"rationale": "BVG is a name cited with its article, like die NATO, so its Lemma has Core article Definite and gender Fem, and it owns die (Rule de/proper-noun-article). It is an initialism used as the name itself, so abbr is Yes and the Surface keeps its letters. betreibt makes it nominative singular."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "BVG", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "die", "orthography": "Standard" },
+					{ "attested": "BVG", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
+				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": { "case": "Nom", "number": "Sing" },
 					"language": "de",
 					"normalizedSurface": "BVG",
 					"spelling": "Canonical",
@@ -46,9 +61,9 @@
 						"kind": "PROPN",
 						"coreFeatures": {
 							"abbr": "Yes",
-							"article": null,
+							"article": "Definite",
 							"foreign": null,
-							"gender": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
