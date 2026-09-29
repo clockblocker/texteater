@@ -196,7 +196,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "The es of a clock time refers to nothing and stays in every word order (Jetzt war es halb zwölf), so it is not positional; it joins the verb as its expletive subject (de/expletive-es-joins-its-verb), and war stays apart from the time predicate (de/copula-stays-apart). open: finding B5."
+				"rationale": "The es of a clock time refers to nothing and stays in every word order (Jetzt war es halb zwölf), so it is not positional; it joins the verb as its expletive subject (de/expletive-es-joins-its-verb), and war stays apart from the time predicate (de/copula-stays-apart). Ruled on #743 (MB-B5, A5)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -723,7 +723,7 @@
 				"kind": "NOUN"
 			},
 			"notes": {
-				"rationale": "m (dem) is the owned Fused article, so Strande is Dat.Sg; am rules out the rare plural Strande. The old dative -e is an inflected form, not a spelling, so the Surface is spelled Canonical and marked Archaic like ward: Duden's current table gives only dem Strand (de/variant-and-historical-status). open: finding B6."
+				"rationale": "m (dem) is the owned Fused article, so Strande is Dat.Sg; am rules out the rare plural Strande. The old dative -e is an inflected form, not a spelling, so the Surface is spelled Canonical and marked Archaic like ward: Duden's current table gives only dem Strand (de/variant-and-historical-status). Ruled on #743 (MB-B6, A8)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

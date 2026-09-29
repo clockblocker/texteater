@@ -1210,7 +1210,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). open: finding B1."
+				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). Ruled on #743 (MB-B1, A4)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1265,7 +1265,7 @@
 				"kind": "PRON"
 			},
 			"notes": {
-				"rationale": "sich is the reflexive accusative object of wenden, Acc like den Kopf in den Kopf wenden. open: finding B1."
+				"rationale": "sich is the reflexive accusative object of wenden, Acc like den Kopf in den Kopf wenden. Ruled on #743 (MB-B1, A4)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
