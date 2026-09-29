@@ -29,7 +29,7 @@
 			"memberSegmentIndices": [0],
 			"reading": { "emojiDescription": "😬" },
 			"notes": {
-				"rationale": "Auweia is the headword spelling of the interjection that is often written au weia: one INTJ Lexeme."
+				"rationale": "Auweia is one written word, the headword in Duden and DWDS: one INTJ Lexeme. The spaced au weia is a Lemma of its own (de/interjection-counts-its-words)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

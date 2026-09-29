@@ -27,17 +27,17 @@
 		"rules": [
 			{
 				"rule": "de/interjection-counts-its-words",
-				"hash": "5ffe0189ecd8ae5a"
+				"hash": "6a84e85a0bd77ee6"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [6, 8],
 			"reading": { "emojiDescription": "😂" },
 			"notes": {
-				"rationale": "Each ha is a word of its own, so the repetition gives one INTJ target per occurrence, each spelled Canonical; the Rule names ha ha as its example (de/interjection-counts-its-words). Doubling a word stretches no letters, so it is no Expressive Variant. The one written word haha would be a Lemma of its own."
+				"rationale": "No punctuation stands between the two ha, so ha ha is one call and one target (de/interjection-counts-its-words). Each ha is a word of its own, which gives the target two Heads: a Locution INTJ, spelled Canonical. Repeating a word stretches no letters, so it is no Expressive Variant, and the one written word haha is a Lemma of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -47,40 +47,19 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "INTJ",
-						"canonicalForm": "ha",
-						"coreFeatures": { "partType": null }
+						"canonicalForm": "ha ha",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "ha",
+					"normalizedSurface": "ha ha",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "ha", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"reading": { "emojiDescription": "😂" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "INTJ",
-						"canonicalForm": "ha",
-						"coreFeatures": { "partType": null }
-					},
-					"normalizedSurface": "ha",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "ha", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "ha", "orthography": "Standard" },
+					{ "attested": "ha", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full"
 			}
 		}

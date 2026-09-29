@@ -37,7 +37,7 @@
 			"memberSegmentIndices": [0, 2],
 			"reading": { "emojiDescription": "😟" },
 			"notes": {
-				"rationale": "Duden gives o je as a spelling of the headword oje, so O je is one INTJ Lexeme oje whose Surface is the licensed spaced Variant. Spelling never changes the Lemma. Compare ach je, which no dictionary joins into one word, and which gives two targets."
+				"rationale": "No punctuation stands between O and je, so they are one call and one target (de/interjection-counts-its-words). o and je are each an interjection of their own (DWDS: je, drückt Erschrecken aus), so o je is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written, a Lemma apart from oje: Duden gives o je as a spelling of oje, but spacing is never a Variant."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,17 +50,14 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o je",
-					"spelling": {
-						"kind": "Variant",
-						"variantTags": ["Licensed"]
-					},
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "oje",
-						"family": "Lexeme",
+						"canonicalForm": "o je",
+						"family": "Locution",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

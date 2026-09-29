@@ -27,24 +27,24 @@
 			"memberSegmentIndices": [0, 2],
 			"reading": { "emojiDescription": "😬" },
 			"notes": {
-				"rationale": "weia is no German word of its own, so Au weia is one interjection written in two pieces: one INTJ Lexeme, not a Locution, with no Breakdown. Its Canonical Form is the headword auweia (Duden, DWDS). DWDS marks the spaced au weia as an invalid spelling, so both members are Typo and the Surface is the headword's own spelling."
+				"rationale": "weia is no German word of its own, so Au weia is one interjection in two pieces with no punctuation between them: one target, an INTJ Lexeme with no Breakdown (de/interjection-counts-its-words). Its Canonical Form is the pieces as written, au weia, a Lemma apart from the joined headword auweia (Duden, DWDS). DWDS calls the spaced spelling invalid, but spacing is never a Typo or a Variant, so both members are Standard."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Au", "orthography": "Typo" },
-					{ "attested": "weia", "orthography": "Typo" }
+					{ "attested": "Au", "orthography": "Standard" },
+					{ "attested": "weia", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "auweia",
+					"normalizedSurface": "au weia",
 					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "auweia",
+						"canonicalForm": "au weia",
 						"family": "Lexeme",
 						"kind": "INTJ",
 						"coreFeatures": { "partType": null }

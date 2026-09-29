@@ -31,7 +31,7 @@
 			"memberSegmentIndices": [0],
 			"reading": { "emojiDescription": "😟" },
 			"notes": {
-				"rationale": "Oje is a one-word interjection of dismay, an INTJ Lexeme. Duden recommends oje and also gives oh je and o je."
+				"rationale": "Oje is a one-word interjection of dismay, an INTJ Lexeme. Duden also gives oh je and o je, but each written shape is a Lemma of its own, so the spaced o je is a Lemma apart from oje (de/interjection-counts-its-words)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

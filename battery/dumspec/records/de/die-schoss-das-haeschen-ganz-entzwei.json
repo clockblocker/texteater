@@ -53,7 +53,7 @@
 			},
 			{
 				"rule": "de/interjection-counts-its-words",
-				"hash": "5ffe0189ecd8ae5a"
+				"hash": "6a84e85a0bd77ee6"
 			}
 		],
 		"references": []
@@ -131,7 +131,7 @@
 			"memberSegmentIndices": [28, 30],
 			"reading": { "emojiDescription": "😩" },
 			"notes": {
-				"rationale": "The second O wei repeats the first for emphasis. A repeated interjection gives one target per occurrence, so it is the same INTJ Lexeme o wei again."
+				"rationale": "The second O wei repeats the first for emphasis. An exclamation mark separates the two calls, so each is its own target, and this one is the same INTJ Lexeme o wei again."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -27,17 +27,17 @@
 		"rules": [
 			{
 				"rule": "de/interjection-counts-its-words",
-				"hash": "5ffe0189ecd8ae5a"
+				"hash": "6a84e85a0bd77ee6"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [12],
+			"memberSegmentIndices": [12, 14],
 			"reading": { "emojiDescription": "🤢" },
 			"notes": {
-				"rationale": "Each igitt is a word of its own, so the repetition gives one INTJ target per occurrence, each spelled Canonical (de/interjection-counts-its-words). Doubling a word stretches no letters, so it is no Expressive Variant. Duden and DWDS give the doubled interjection only joined, as igittigitt, and no spaced spelling of it, so igitt igitt is no Variant of igittigitt either."
+				"rationale": "No punctuation stands between the two igitt, so igitt igitt is one call and one target (de/interjection-counts-its-words). Each igitt is a word of its own, so the target is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written: Duden and DWDS list only the joined igittigitt, which is a Lemma of its own, and spacing is never a Variant."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -47,40 +47,19 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "INTJ",
-						"canonicalForm": "igitt",
-						"coreFeatures": { "partType": null }
+						"canonicalForm": "igitt igitt",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "igitt",
+					"normalizedSurface": "igitt igitt",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "igitt", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [14],
-			"reading": { "emojiDescription": "🤢" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "INTJ",
-						"canonicalForm": "igitt",
-						"coreFeatures": { "partType": null }
-					},
-					"normalizedSurface": "igitt",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "igitt", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "igitt", "orthography": "Standard" },
+					{ "attested": "igitt", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full"
 			}
 		}

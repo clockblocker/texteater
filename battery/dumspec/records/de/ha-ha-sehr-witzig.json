@@ -22,51 +22,30 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [0, 2],
 			"reading": { "emojiDescription": "😂" },
 			"notes": {
-				"rationale": "Ha ha is ha said twice, and each ha is a word of its own, so each occurrence is its own INTJ target. DWDS lists the doubled ha, ha! under ha for laughter, here ironic. The one written word haha is a Lemma of its own."
+				"rationale": "No punctuation stands between Ha and ha, so they are one call and one target; the comma after them closes the call. Each ha is a word of its own, so ha ha is a Locution INTJ with two Heads, here ironic laughter. DWDS lists the doubled ha, ha! under ha. The one written word haha is a Lemma of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Ha", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "Ha", "orthography": "Standard" },
+					{ "attested": "ha", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "ha",
+					"normalizedSurface": "ha ha",
 					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "ha",
-						"family": "Lexeme",
+						"canonicalForm": "ha ha",
+						"family": "Locution",
 						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"reading": { "emojiDescription": "😂" },
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "ha", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "ha",
-					"spelling": { "kind": "Canonical" },
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "ha",
-						"family": "Lexeme",
-						"kind": "INTJ",
-						"coreFeatures": { "partType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

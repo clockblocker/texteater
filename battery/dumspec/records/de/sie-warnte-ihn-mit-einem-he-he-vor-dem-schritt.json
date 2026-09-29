@@ -34,6 +34,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10, 12],
+			"notes": {
+				"rationale": "No punctuation stands between the two he, so he he is one call and one target (de/interjection-counts-its-words). After mit einem it names the warning call, but it stays an interjection, not a NOUN, and the article stays outside the target. Each he is a word of its own, so the target is a Locution INTJ with two Heads, spelled Canonical: repeating a word stretches no letters, so it is no Expressive Variant."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -42,16 +45,13 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "INTJ",
-						"canonicalForm": "he",
-						"coreFeatures": { "partType": null }
+						"canonicalForm": "he he",
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "he he",
-					"spelling": {
-						"kind": "Variant",
-						"variantTags": ["Expressive"]
-					},
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [
