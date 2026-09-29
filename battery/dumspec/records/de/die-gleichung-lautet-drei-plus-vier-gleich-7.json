@@ -23,7 +23,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/digits-spell-the-numeral",
+				"hash": "0f93511db7e5fd12"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -31,7 +36,7 @@
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
-				"rationale": "Mathematical context does not turn the classified digit into SYM; only the numeric target is resolved."
+				"rationale": "7 is the numeral sieben written in digits, so the target is NUM sieben and the digit spelling a Licensed Variant (de/digits-spell-the-numeral); the mathematical context does not make it a SYM."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -43,7 +48,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NUM",
-						"canonicalForm": "7",
+						"canonicalForm": "sieben",
 						"coreFeatures": {
 							"abbr": null,
 							"foreign": null,
@@ -51,7 +56,10 @@
 						}
 					},
 					"normalizedSurface": "7",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
