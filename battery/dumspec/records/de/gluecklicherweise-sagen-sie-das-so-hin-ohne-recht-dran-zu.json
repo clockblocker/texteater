@@ -2,29 +2,98 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Glücklicherweise sagen Sie das so hin, ohne recht dran zu glauben.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Glücklicherweise" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sagen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hin" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ohne" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "recht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dran" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "glauben" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Glücklicherweise"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sagen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hin"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ohne"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "recht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dran"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "glauben"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -34,13 +103,47 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0029", "ADR-0035"],
 		"rules": [
-			{ "rule": "de/bare-infinitive-zu", "hash": "7462675604e5cc7f" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "9d116db0de61b6dd"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/correlator-anchors",
+				"hash": "677fbf6666284e28"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "81f5ca84af1bc0ca"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -52,15 +155,60 @@
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Ach, Treibel, Sie sind ewig ein Spötter."
+			},
+			{
+				"title": "DWDS: hinsagen",
+				"url": "https://www.dwds.de/wb/hinsagen",
+				"supports": "Target 1, hinsagen: Verb, 'etw. unkontrolliert, achtlos äußern', das war nur so hingesagt."
+			},
+			{
+				"title": "DWDS: dran",
+				"url": "https://www.dwds.de/wb/dran",
+				"supports": "Target 7, dran: Pronominaladverb, umgangssprachlich Synonym zu daran, with senses of its own (dran sein, gut dran sein, drauf und dran sein)."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "Target 6, recht: Adjektiv with rechter, am rechtesten; nicht recht wissen, glauben."
+			},
+			{
+				"title": "DWDS: hinsagen",
+				"url": "https://www.dwds.de/wb/hinsagen",
+				"supports": "hinsagen: Verb, 'etw. unkontrolliert, achtlos äußern', das war nur so hingesagt."
+			},
+			{
+				"title": "DWDS: dran",
+				"url": "https://www.dwds.de/wb/dran",
+				"supports": "dran: Pronominaladverb, umgangssprachlich Synonym zu daran, with senses of its own (dran sein, gut dran sein, drauf und dran sein)."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "recht: Adjektiv with rechter, am rechtesten; nicht recht wissen, glauben."
+			},
+			{
+				"title": "DWDS: hinsagen",
+				"url": "https://www.dwds.de/wb/hinsagen",
+				"supports": "hinsagen: Verb, 'etw. unkontrolliert, achtlos äußern', das war nur so hingesagt."
+			},
+			{
+				"title": "DWDS: dran",
+				"url": "https://www.dwds.de/wb/dran",
+				"supports": "dran: Pronominaladverb, umgangssprachlich Synonym zu daran, with senses of its own (dran sein, gut dran sein, drauf und dran sein)."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "recht: Adjektiv with rechter, am rechtesten; nicht recht wissen, glauben."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV glücklicherweise from Glücklicherweise (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -81,7 +229,9 @@
 						}
 					},
 					"normalizedSurface": "glücklicherweise",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
@@ -92,13 +242,16 @@
 					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "glücklicherweise is a sentence adverb in -weise that cannot inflect attributively, so ADV; it has no comparison forms (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [2, 10],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinsagen from sagen (VERB root) with hin (compound:prt)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -118,7 +271,9 @@
 						}
 					},
 					"normalizedSurface": "sagen hin",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -134,19 +289,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "sagen", "orthography": "Standard" },
-					{ "attested": "hin", "orthography": "Standard" }
+					{
+						"attested": "sagen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "hin",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "sagen … hin is the particle verb hinsagen, 'say lightly, without meaning it' (DWDS: das war nur so hingesagt), so the detached hin is its separable particle (de/verb-owns-its-scattered-members, de/bracket-particle-or-circumposition). so is optional in DWDS's examples and stays a free ADV. The form is third person plural under formal Sie (finding A6)."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON Sie from Sie (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -172,20 +336,30 @@
 						}
 					},
 					"normalizedSurface": "Sie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Sie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Capitalized Sie mid-sentence is the formal address pronoun, subject of sagen … hin."
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON das from das (PRON obj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -211,20 +385,30 @@
 						}
 					},
 					"normalizedSurface": "das",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "das", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "das stands alone as the object of hinsagen and points back at what Treibel said: the demonstrative PRON cell das Acc.Neut.Sg (de/pron-or-det-by-use)."
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -245,19 +429,29 @@
 						}
 					},
 					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "so",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "so is the adverb 'just like that, without much thought' that often accompanies hinsagen; hinsagen stands without it, so it is free (de/fixed-members-only). No comparison forms."
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ ohne from ohne (ADP case). UD tags ohne ADP; STTS KOUI makes it SCONJ."
+			"memberSegmentIndices": [13, 19],
+			"route": {
+				"family": "Locution",
+				"kind": "SCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -267,24 +461,38 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "ohne",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "ohne … zu",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "ohne",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "ohne zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "ohne", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ohne",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "ohne … zu is a correlator, a Locution SCONJ made of its anchors; recht, dran and glauben belong to the clause it introduces (de/correlator-anchors)."
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV recht from recht (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -295,29 +503,47 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "recht",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"variant": null
 						}
 					},
 					"normalizedSurface": "recht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
-				"members": [{ "attested": "recht", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				"members": [
+					{
+						"attested": "recht",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "recht in ohne recht … zu glauben is 'really, properly' (DWDS: nicht recht wissen, glauben), an adverbial use of the adjective recht, so ADJ (de/adjective-stays-adj). DWDS gives rechter, am rechtesten, so it marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV daran from dran (ADV advmod). dran is drafted as the Shorthand of daran (de/member-orthography)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -338,51 +564,29 @@
 						}
 					},
 					"normalizedSurface": "daran",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "dran", "orthography": "Shorthand" }],
+				"members": [
+					{
+						"attested": "dran",
+						"orthography": "Shorthand"
+					}
+				],
 				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART zu from zu (PART mark)."
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PART",
-						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"partType": "Inf",
-							"polarity": null
-						}
-					},
-					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+			"notes": {
+				"rationale": "dran is the colloquial short form of the pronominal adverb daran (DWDS: umgangssprachlich Synonym zu daran), filling the an slot of glauben. A pronominal adverb stands alone and never joins its governor (de/pronominal-adverb-stands-alone). Read like raus for heraus, the target is daran with dran as its Shorthand member (ADR 0035). open: finding B2."
 			}
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB glauben from glauben (VERB xcomp)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -402,7 +606,9 @@
 						}
 					},
 					"normalizedSurface": "glauben",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -418,11 +624,17 @@
 					}
 				},
 				"members": [
-					{ "attested": "glauben", "orthography": "Standard" }
+					{
+						"attested": "glauben",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "glauben is the infinitive of the ohne … zu clause; it governs an, but dran never joins it (de/pronominal-adverb-stands-alone)."
 			}
 		}
 	],

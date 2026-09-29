@@ -2,28 +2,94 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ihnen kann es keiner recht machen und am wenigsten die Kinder.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ihnen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kann" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "keiner" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "recht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "machen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "am" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wenigsten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kinder" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Ihnen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "keiner"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "recht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "machen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "am"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wenigsten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kinder"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -33,33 +99,108 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0039", "ADR-0040", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "d095c150bfc6b7bd"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Ach, Treibel, Sie sind ewig ein Spötter."
+			},
+			{
+				"title": "Wiktionary: es jemandem recht machen",
+				"url": "https://de.wiktionary.org/wiki/es_jemandem_recht_machen",
+				"supports": "Target 2, es recht machen: headword es jemandem recht machen, 'es so machen, wie jemand es gern möchte'."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "Target 2: the phrase jmdm. etw. recht machen, with an open object."
+			},
+			{
+				"title": "DWDS: wenig",
+				"url": "https://www.dwds.de/wb/wenig",
+				"supports": "Target 5, am wenigsten: wenig as Adjektiv with Komparativ weniger, Superlativ am wenigsten, used adverbially."
+			},
+			{
+				"title": "Wiktionary: es jemandem recht machen",
+				"url": "https://de.wiktionary.org/wiki/es_jemandem_recht_machen",
+				"supports": "es recht machen: headword es jemandem recht machen, 'es so machen, wie jemand es gern möchte'."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "the phrase jmdm. etw. recht machen, with an open object."
+			},
+			{
+				"title": "DWDS: wenig",
+				"url": "https://www.dwds.de/wb/wenig",
+				"supports": "am wenigsten: wenig as Adjektiv with Komparativ weniger, Superlativ am wenigsten, used adverbially."
+			},
+			{
+				"title": "Wiktionary: es jemandem recht machen",
+				"url": "https://de.wiktionary.org/wiki/es_jemandem_recht_machen",
+				"supports": "es recht machen: headword es jemandem recht machen, 'es so machen, wie jemand es gern möchte'."
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "the phrase jmdm. etw. recht machen, with an open object."
+			},
+			{
+				"title": "DWDS: wenig",
+				"url": "https://www.dwds.de/wb/wenig",
+				"supports": "am wenigsten: wenig as Adjektiv with Komparativ weniger, Superlativ am wenigsten, used adverbially."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihnen from Ihnen (PRON obl:arg). Sentence-initial Ihnen may be the formal Sie; drafted as the ihnen its features fit (ADR 0044)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -71,34 +212,44 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "ihnen",
+						"canonicalForm": "Ihnen",
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Plur",
 							"extPos": null,
 							"foreign": null,
-							"person": "3",
-							"polite": null,
+							"person": "2",
+							"polite": "Form",
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ihnen",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "Ihnen",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "Ihnen", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Ihnen",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Sentence-initial Ihnen could be third person plural ihnen or formal Ihnen; the sentence before (Sie sind ewig ein Spötter) addresses Treibel with Sie, so it is the formal dative cell (ADR 0044: the neighbouring sentence settles the referent). It fills the dative slot of es recht machen and stays outside the Locution."
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from kann (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -118,7 +269,9 @@
 						}
 					},
 					"normalizedSurface": "kann",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -133,17 +286,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "kann", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "kann",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "kann is the modal, a VERB of its own; the infinitive machen belongs to the Locution it governs (de/modal-is-a-verb)."
 			}
 		},
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+			"memberSegmentIndices": [4, 8, 10],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -153,36 +314,56 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "es",
-						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": "Neut"
-						}
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "es recht machen",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "es recht machen",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "recht",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "machen",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "es jemandem recht machen (Wiktionary headword; DWDS: jmdm. etw. recht machen, 'zu jmds. Zufriedenheit erledigen') means to satisfy someone, not the sum of make and right, so it is a Locution VERB (de/idiom). Its es refers to nothing and cannot be swapped for das without losing the meaning, so it is a fixed member (de/fixed-member-test); the dative Ihnen is an open slot, left out of the Canonical Form as ADR 0039 does with auf den Keks gehen. open: finding B1."
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON keiner from keiner (DET obj). UD tags keiner DET; STTS PIS makes it PRON (de/pron-or-det-by-use). keiner fits 2 authored PRON cells equally (Neg Nom Sing Masc; Neg Dat Sing Fem); the first is drafted. Check the referent (ADR 0044)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -208,7 +389,9 @@
 						}
 					},
 					"normalizedSurface": "keiner",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -220,100 +403,23 @@
 					}
 				},
 				"members": [
-					{ "attested": "keiner", "orthography": "Standard" }
+					{
+						"attested": "keiner",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ recht from recht (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"canonicalForm": "recht",
-						"coreFeatures": {
-							"abbr": null,
-							"comparable": null,
-							"foreign": null,
-							"numType": null,
-							"variant": null
-						}
-					},
-					"normalizedSurface": "recht",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "recht", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB machen from machen (VERB root)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "machen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "machen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "machen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"rationale": "keiner stands for a noun phrase, so PRON, the negative stem Lemma keiner; its Surface marks nominative masculine singular as the subject (de/pron-or-det-by-use)."
 			}
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -326,21 +432,30 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [14, 16],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ wenig from wenigsten (DET nmod) with an (case), dem (det). UD tags wenigsten DET; drafted as the ADJ whose superlative am marks."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -362,7 +477,9 @@
 						}
 					},
 					"normalizedSurface": "am wenigsten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -372,19 +489,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "am", "orthography": "Standard" },
-					{ "attested": "wenigsten", "orthography": "Standard" }
+					{
+						"attested": "am",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wenigsten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks (de/fused-word-pieces). wenig inflects attributively (die wenigen Gäste) and DWDS classes it Adjektiv with weniger, am wenigsten, so it is ADJ (de/adjective-stays-adj), comparable, Sup. The clause is elliptical (und am wenigsten [können es] die Kinder [Ihnen recht machen]); no fixed word of the Locution is repeated, so nothing here attests it. open: finding B6."
 			}
 		},
 		{
 			"memberSegmentIndices": [18, 20],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kind from Kinder (NOUN conj) with die (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -397,24 +523,41 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Kind",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Kinder",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Acc",
+						"case": "Nom",
 						"gender": null,
 						"number": "Plur"
 					}
 				},
 				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Kinder", "orthography": "Standard" }
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kinder",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "die Kinder is the subject of the elliptical second conjunct, nominative plural, and Kinder owns its article (de/noun-owns-its-article)."
 			}
 		}
 	],

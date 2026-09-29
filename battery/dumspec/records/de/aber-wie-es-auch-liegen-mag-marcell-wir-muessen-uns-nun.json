@@ -2,62 +2,230 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Aber wie es auch liegen mag, Marcell, wir müssen uns nun darüber schlüssig machen, wie du zu dieser ganzen Tragikomödie dich stellen willst, so oder so.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Aber" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "liegen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mag" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Marcell" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "müssen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "uns" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nun" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "darüber" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schlüssig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "machen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "du" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dieser" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ganzen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Tragikomödie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stellen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "willst" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "oder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Aber"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "liegen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mag"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Marcell"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "müssen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "uns"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nun"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "darüber"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schlüssig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "machen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "du"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dieser"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ganzen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tragikomödie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stellen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "willst"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "oder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -67,36 +235,158 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0039"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "c2ddde608e957137"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/modification-attests-partially",
+				"hash": "8b165ead281f0462"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "467218f77ed6cd15"
+			},
+			{
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "07b2a8943c6e5919"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Vielleicht ist es so."
+			},
+			{
+				"title": "DWDS: schlüssig",
+				"url": "https://www.dwds.de/wb/schl%C3%BCssig",
+				"supports": "Targets 10 and 11: only sich (über etw.) schlüssig sein and sich schlüssig werden are listed, with no comparison forms; no sich schlüssig machen."
+			},
+			{
+				"title": "Deutsches Wörterbuch (Grimm): schlüssig",
+				"url": "https://www.dwds.de/wb/dwb/schl%C3%BCssig",
+				"supports": "Target 12: schlüssig sein and schlüssig werden are attested, schlüssig machen is not."
+			},
+			{
+				"title": "DWDS: stellen",
+				"url": "https://www.dwds.de/wb/stellen",
+				"supports": "Target 15, sich stellen: sense 10, wie stellen sich deine Eltern zu der Frage."
+			},
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "Target 21, so oder so: 'auf diese oder jene Weise' and 'in jedem Fall'."
+			},
+			{
+				"title": "DWDS: auch",
+				"url": "https://www.dwds.de/wb/auch",
+				"supports": "Target 3, auch: sense 5, generalizing with concessive sense (wie dem auch sei, was auch kommen mag)."
+			},
+			{
+				"title": "DWDS: schlüssig",
+				"url": "https://www.dwds.de/wb/schl%C3%BCssig",
+				"supports": "only sich (über etw.) schlüssig sein and sich schlüssig werden are listed, with no comparison forms; no sich schlüssig machen."
+			},
+			{
+				"title": "Deutsches Wörterbuch (Grimm): schlüssig",
+				"url": "https://www.dwds.de/wb/dwb/schl%C3%BCssig",
+				"supports": "schlüssig sein and schlüssig werden are attested, schlüssig machen is not."
+			},
+			{
+				"title": "DWDS: stellen",
+				"url": "https://www.dwds.de/wb/stellen",
+				"supports": "sich stellen: sense 10, wie stellen sich deine Eltern zu der Frage."
+			},
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "so oder so: 'auf diese oder jene Weise' and 'in jedem Fall'."
+			},
+			{
+				"title": "DWDS: auch",
+				"url": "https://www.dwds.de/wb/auch",
+				"supports": "auch: sense 5, generalizing with concessive sense (wie dem auch sei, was auch kommen mag)."
+			},
+			{
+				"title": "DWDS: schlüssig",
+				"url": "https://www.dwds.de/wb/schl%C3%BCssig",
+				"supports": "only sich (über etw.) schlüssig sein and sich schlüssig werden are listed, with no comparison forms; no sich schlüssig machen."
+			},
+			{
+				"title": "Deutsches Wörterbuch (Grimm): schlüssig",
+				"url": "https://www.dwds.de/wb/dwb/schl%C3%BCssig",
+				"supports": "schlüssig sein and schlüssig werden are attested, schlüssig machen is not."
+			},
+			{
+				"title": "DWDS: stellen",
+				"url": "https://www.dwds.de/wb/stellen",
+				"supports": "sich stellen: sense 10, wie stellen sich deine Eltern zu der Frage."
+			},
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "so oder so: 'auf diese oder jene Weise' and 'in jedem Fall'."
+			},
+			{
+				"title": "DWDS: auch",
+				"url": "https://www.dwds.de/wb/auch",
+				"supports": "auch: sense 5, generalizing with concessive sense (wie dem auch sei, was auch kommen mag)."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ aber from Aber (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -109,21 +399,33 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "aber",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "aber",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "Aber", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Aber",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Aber links this utterance to the one before; it stands in the Vorfeld-external position, so CCONJ."
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ wie from wie (SCONJ advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -134,23 +436,39 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "SCONJ",
+						"kind": "ADV",
 						"canonicalForm": "wie",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Rel"
+						}
 					},
 					"normalizedSurface": "wie",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "wie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "wie opens a concessive free relative (however it may stand) and names the manner inside its own clause (es liegt so), outside any question, so it is the relative ADV (de/relative-w-adverb-fills-a-slot). open: finding B3."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -176,20 +494,30 @@
 						}
 					},
 					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "liegen here is 'sich verhalten, stand' (die Sache, die Dinge liegen so), whose subject can be a full noun phrase, so es is the referential subject for the matter at hand, not a verb-selected expletive (de/expletive-es-joins-its-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -210,19 +538,29 @@
 						}
 					},
 					"normalizedSurface": "auch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "auch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "auch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "auch after the w-word gives the clause its concessive sense (DWDS auch 5, 'verallgemeinert, mit konzessivem Sinn': wie dem auch sei). It does not inflect, so ADV, as auch is elsewhere in the corpus. open: finding B3."
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB liegen from liegen (VERB advcl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -242,7 +580,9 @@
 						}
 					},
 					"normalizedSurface": "liegen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -258,18 +598,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "liegen", "orthography": "Standard" }
+					{
+						"attested": "liegen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "liegen 'stand, be the case' is the infinitive under mag."
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB mögen from mag (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -289,7 +635,9 @@
 						}
 					},
 					"normalizedSurface": "mag",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -304,17 +652,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "mag", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "mag",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "mag is the concessive modal, a VERB of its own; liegen is a separate target (de/modal-is-a-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Marcell from Marcell (PROPN parataxis)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -335,22 +691,33 @@
 						}
 					},
 					"normalizedSurface": "Marcell",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
-					{ "attested": "Marcell", "orthography": "Standard" }
+					{
+						"attested": "Marcell",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Marcell is a male first name in direct address, a PROPN cited bare; a vocative marks singular and no case."
 			}
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wir from wir (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -376,20 +743,27 @@
 						}
 					},
 					"normalizedSurface": "wir",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "wir", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wir",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB müssen from müssen (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -409,7 +783,9 @@
 						}
 					},
 					"normalizedSurface": "müssen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -425,18 +801,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "müssen", "orthography": "Standard" }
+					{
+						"attested": "müssen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "müssen is the modal VERB; machen is a separate target (de/modal-is-a-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON uns from uns (PRON obj). UD makes uns an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -462,7 +844,9 @@
 						}
 					},
 					"normalizedSurface": "uns",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -473,16 +857,24 @@
 						"reflex": "Yes"
 					}
 				},
-				"members": [{ "attested": "uns", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "uns",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "uns is the reflexive object of machen. With machen and a predicative adjective the reflexive is accusative (sich bereit, verständlich machen), so the accusative cell. open: finding B4."
 			}
 		},
 		{
 			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV nun from nun (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -503,19 +895,29 @@
 						}
 					},
 					"normalizedSurface": "nun",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "nun", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "nun",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "nun is the temporal adverb 'now, at this point'; no comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV darüber from darüber (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -536,21 +938,29 @@
 						}
 					},
 					"normalizedSurface": "darüber",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "darüber", "orthography": "Standard" }
+					{
+						"attested": "darüber",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "darüber points ahead to the wie clause and stands for über + it; a pronominal adverb is a single-member ADV and joins no governor (de/pronominal-adverb-stands-alone)."
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ schlüssig from schlüssig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -572,23 +982,31 @@
 						}
 					},
 					"normalizedSurface": "schlüssig",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "schlüssig", "orthography": "Standard" }
+					{
+						"attested": "schlüssig",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "schlüssig is the predicative adjective in the 'resolved, decided' sense DWDS gives for sich (über etw.) schlüssig sein/werden. DWDS lists no comparison forms, so it marks no Degree. open: finding B4."
 			}
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB machen from machen (VERB root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -608,7 +1026,9 @@
 						}
 					},
 					"normalizedSurface": "machen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -624,18 +1044,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "machen", "orthography": "Standard" }
+					{
+						"attested": "machen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "machen is the infinitive under müssen. sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. open: finding B4."
 			}
 		},
 		{
 			"memberSegmentIndices": [31],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ wie from wie (SCONJ mark)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -646,23 +1072,39 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "SCONJ",
+						"kind": "ADV",
 						"canonicalForm": "wie",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": "Int"
+						}
 					},
 					"normalizedSurface": "wie",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "wie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "wie opens an indirect question, the content of darüber, so it is the interrogative ADV, not the relative one (de/relative-w-adverb-fills-a-slot)."
 			}
 		},
 		{
 			"memberSegmentIndices": [33],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON du from du (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -688,20 +1130,27 @@
 						}
 					},
 					"normalizedSurface": "du",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "du", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "du",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
-			"memberSegmentIndices": [35],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zu from zu (ADP case)."
+			"memberSegmentIndices": [35, 43, 45],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -712,40 +1161,83 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "zu",
+						"kind": "VERB",
+						"canonicalForm": "sich stellen",
 						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
+					"normalizedSurface": "dich stellen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "dich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "stellen",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 0,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "zu",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
 							"case": "Dat",
-							"referent": "Either"
+							"referent": "Something"
 						},
 						"realizedCase": "Dat"
 					}
-				]
+				],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "sich zu etwas stellen, 'take a stance on' (DWDS stellen 10: wie stellen sich deine Eltern zu der Frage), needs its reflexive, so dich is a member, placed after the object in Fontane's order (de/verb-owns-its-scattered-members). zu is the governed preposition, a member recorded in valencyEvidence as zu + Dat (de/governed-preposition-joins-its-governor). willst is a separate modal VERB."
 			}
 		},
 		{
 			"memberSegmentIndices": [37],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET dieser from dieser (DET det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -773,7 +1265,9 @@
 						}
 					},
 					"normalizedSurface": "dieser",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -785,16 +1279,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "dieser", "orthography": "Standard" }
+					{
+						"attested": "dieser",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "dieser is a determiner, not an article, so a DET of its own; the stem Lemma's Surface marks the dative feminine singular after zu (de/only-der-and-ein-are-articles)."
 			}
 		},
 		{
 			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ganz from ganzen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -816,7 +1316,9 @@
 						}
 					},
 					"normalizedSurface": "ganzen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -826,18 +1328,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "ganzen", "orthography": "Standard" }
+					{
+						"attested": "ganzen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "ganzen is an attributive adjective, a single-member ADJ (de/attributive-adjective-stands-alone); ganz has no comparison forms, so it marks case, gender and number only."
 			}
 		},
 		{
 			"memberSegmentIndices": [41],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Tragikomödie from Tragikomödie (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -850,10 +1358,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Tragikomödie",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Tragikomödie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -862,104 +1375,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "Tragikomödie", "orthography": "Standard" }
+					{
+						"attested": "Tragikomödie",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [43],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON dich from dich (PRON obj)."
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "dich",
-						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "2",
-							"polite": "Infm",
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
-						}
-					},
-					"normalizedSurface": "dich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "dich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [45],
-			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB stellen from stellen (VERB advcl)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "stellen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "stellen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "stellen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"rationale": "Tragikomödie has no article to own, since dieser is a DET; dative singular after zu."
 			}
 		},
 		{
 			"memberSegmentIndices": [47],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wollen from willst (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -979,12 +1412,14 @@
 						}
 					},
 					"normalizedSurface": "willst",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
-						"person": "3",
+						"person": "2",
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
@@ -995,18 +1430,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "willst", "orthography": "Standard" }
+					{
+						"attested": "willst",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "willst is the modal VERB; sich stellen is a separate target (de/modal-is-a-verb)."
 			}
 		},
 		{
-			"memberSegmentIndices": [50],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
+			"memberSegmentIndices": [50, 52, 54],
+			"route": {
+				"family": "Locution",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1016,83 +1457,38 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "ADV",
-						"canonicalForm": "so",
+						"canonicalForm": "so oder so",
 						"coreFeatures": {
-							"comparable": null,
-							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
-					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "so oder so",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [52],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ oder from oder (CCONJ cc)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "CCONJ",
-						"canonicalForm": "oder",
-						"coreFeatures": { "conjType": null }
+				"members": [
+					{
+						"attested": "so",
+						"orthography": "Standard"
 					},
-					"normalizedSurface": "oder",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "oder", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [54],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV conj)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"canonicalForm": "so",
-						"coreFeatures": {
-							"comparable": null,
-							"foreign": null,
-							"numType": null,
-							"pronType": null
-						}
+					{
+						"attested": "oder",
+						"orthography": "Standard"
 					},
-					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
+					{
+						"attested": "so",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "so oder so is an established pair (DWDS so: so oder so 'auf diese oder jene Weise' and 'in jedem Fall'); the literal sum, thus or thus, gives neither meaning, so it is a Locution ADV (de/idiom), with no comparison forms."
 			}
 		}
 	],

@@ -2,34 +2,118 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ist dir Korinna, die du vorhin so großmütig verteidigen wolltest, verleidet oder nicht?",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Korinna" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "du" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vorhin" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "großmütig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verteidigen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wolltest" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verleidet" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "oder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Punctuation", "text": "?" }
+		{
+			"kind": "ResolvableText",
+			"text": "Ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Korinna"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "du"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vorhin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "großmütig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "verteidigen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wolltest"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "verleidet"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "oder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -39,22 +123,40 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0036"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
 			{
-				"rule": "de/auxiliary-joins-the-verb-it-serves",
-				"hash": "17cec6bff2108a22"
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/nicht-is-part",
+				"hash": "c6631f0c8009c067"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "467218f77ed6cd15"
+			},
+			{
+				"rule": "de/sein-perfect-or-copula",
+				"hash": "507adc4e3e41031f"
+			}
 		],
 		"references": [
 			{
@@ -66,10 +168,10 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 22],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB verleiden from verleidet (VERB root) with Ist (aux). UD tags both Ist and verleidet finite; check the verb's form and whether Ist is an auxiliary here."
+			"memberSegmentIndices": [0],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -81,15 +183,17 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "verleiden",
+						"canonicalForm": "sein",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "ist verleidet",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "ist",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -105,19 +209,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "Ist", "orthography": "Standard" },
-					{ "attested": "verleidet", "orthography": "Standard" }
+					{
+						"attested": "Ist",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "ist … verleidet is a state passive: verleiden forms its perfect with haben, and Korinna verleidete dir says something else, so ist is the copula and verleidet an ADJ (de/sein-perfect-or-copula, de/copula-stays-apart)."
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON dir from dir (PRON obl:arg)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -143,20 +252,30 @@
 						}
 					},
 					"normalizedSurface": "dir",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "dir", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "dir",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "dir is the dative of the person something is spoiled for; the pronoun cell dir."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Korinna from Korinna (PROPN nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -177,22 +296,33 @@
 						}
 					},
 					"normalizedSurface": "Korinna",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Sing"
+					}
 				},
 				"members": [
-					{ "attested": "Korinna", "orthography": "Standard" }
+					{
+						"attested": "Korinna",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Korinna is a female first name cited bare, the subject, nominative singular."
 			}
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON obj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -218,20 +348,30 @@
 						}
 					},
 					"normalizedSurface": "die",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "die", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "die is the relative pronoun and the object of verteidigen: the cell die Acc.Fem.Sg, agreeing with Korinna."
 			}
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON du from du (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -257,20 +397,27 @@
 						}
 					},
 					"normalizedSurface": "du",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "du", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "du",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV vorhin from vorhin (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -291,21 +438,29 @@
 						}
 					},
 					"normalizedSurface": "vorhin",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "vorhin", "orthography": "Standard" }
+					{
+						"attested": "vorhin",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "vorhin 'a little while ago' is a temporal ADV with no comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -326,19 +481,29 @@
 						}
 					},
 					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "so",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "so is the degree adverb before großmütig."
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ großmütig from großmütig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos. Spelling drafted Canonical: check whether großmütig is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -353,30 +518,43 @@
 						"canonicalForm": "großmütig",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "großmütig",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
-					{ "attested": "großmütig", "orthography": "Standard" }
+					{
+						"attested": "großmütig",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "großmütig is used adverbially, so ADJ (de/adjective-stays-adj); großmütiger, am großmütigsten make it comparable, Pos."
 			}
 		},
 		{
 			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB verteidigen from verteidigen (VERB acl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -396,7 +574,9 @@
 						}
 					},
 					"normalizedSurface": "verteidigen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
@@ -412,18 +592,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "verteidigen", "orthography": "Standard" }
+					{
+						"attested": "verteidigen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "verteidigen is the infinitive under the modal wolltest."
 			}
 		},
 		{
 			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB wollen from wolltest (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -443,13 +629,15 @@
 						}
 					},
 					"normalizedSurface": "wolltest",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
+						"person": "2",
+						"tense": "Past",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -459,18 +647,70 @@
 					}
 				},
 				"members": [
-					{ "attested": "wolltest", "orthography": "Standard" }
+					{
+						"attested": "wolltest",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "wolltest is the modal VERB, separate from verteidigen (de/modal-is-a-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [22],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "verleidet",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "verleidet",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{
+						"attested": "verleidet",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "verleidet is the participle of verleiden in a state passive, so a predicative ADJ with verleiden as its Participle Source (de/participial-adjective). No dictionary gives it comparison forms, so it marks no Degree."
 			}
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ oder from oder (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -483,21 +723,30 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "oder",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "oder",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "oder", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "oder",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -518,11 +767,21 @@
 						}
 					},
 					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "oder nicht is elliptical for oder nicht verleidet; nicht is the PART with polarity Neg (de/nicht-is-part)."
 			}
 		}
 	],

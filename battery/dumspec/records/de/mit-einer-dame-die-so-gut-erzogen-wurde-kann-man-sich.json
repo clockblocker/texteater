@@ -2,37 +2,130 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Mit einer Dame, die so gut erzogen wurde, kann man sich überhaupt nicht zanken.«",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Dame" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gut" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erzogen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wurde" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kann" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "man" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "überhaupt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zanken" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Punctuation", "text": "«" }
+		{
+			"kind": "ResolvableText",
+			"text": "Mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Dame"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gut"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erzogen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wurde"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "man"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "überhaupt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zanken"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Punctuation",
+			"text": "«"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -42,9 +135,12 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0034", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
@@ -53,29 +149,79 @@
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/nicht-is-part",
+				"hash": "c6631f0c8009c067"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Ach, Treibel, Sie sind ewig ein Spötter."
+			},
+			{
+				"title": "DWDS: zanken",
+				"url": "https://www.dwds.de/wb/zanken",
+				"supports": "Target 0, sich zanken: ⟨sich (mit jmdm.) zanken⟩ 'sich (mit jmdm.) streiten'."
+			},
+			{
+				"title": "DWDS: überhaupt",
+				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
+				"supports": "Target 9, überhaupt: Adverb; überhaupt nicht verstärkt eine Verneinung."
+			},
+			{
+				"title": "DWDS: zanken",
+				"url": "https://www.dwds.de/wb/zanken",
+				"supports": "sich zanken: ⟨sich (mit jmdm.) zanken⟩ 'sich (mit jmdm.) streiten'."
+			},
+			{
+				"title": "DWDS: überhaupt",
+				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
+				"supports": "überhaupt: Adverb; überhaupt nicht verstärkt eine Verneinung."
+			},
+			{
+				"title": "DWDS: zanken",
+				"url": "https://www.dwds.de/wb/zanken",
+				"supports": "sich zanken: ⟨sich (mit jmdm.) zanken⟩ 'sich (mit jmdm.) streiten'."
+			},
+			{
+				"title": "DWDS: überhaupt",
+				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
+				"supports": "überhaupt: Adverb; überhaupt nicht verstärkt eine Verneinung."
 			}
 		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from Mit (ADP case)."
+			"memberSegmentIndices": [0, 22, 28],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -86,40 +232,83 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "mit",
+						"kind": "VERB",
+						"canonicalForm": "sich zanken",
 						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "mit",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
+					"normalizedSurface": "sich zanken",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"members": [{ "attested": "Mit", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Mit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zanken",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 0,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
 							"case": "Dat",
-							"referent": "Either"
+							"referent": "Someone"
 						},
 						"realizedCase": "Dat"
 					}
-				]
+				],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "zanken in the sense 'quarrel' is inherently reflexive (DWDS: ⟨sich (mit jmdm.) zanken⟩), so sich is a member (de/verb-owns-its-scattered-members). mit is the preposition that frame governs, so the fronted Mit is a member too, recorded in valencyEvidence as mit + Dat and left out of the normalized Surface (de/governed-preposition-joins-its-governor). kann is a separate modal VERB."
 			}
 		},
 		{
 			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Dame from Dame (NOUN obl) with einer (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -132,10 +321,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Dame",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Dame",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -144,19 +338,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "einer", "orthography": "Standard" },
-					{ "attested": "Dame", "orthography": "Standard" }
+					{
+						"attested": "einer",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Dame",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Dame owns einer, dative after mit (de/noun-owns-its-article)."
 			}
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj:pass)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -182,20 +388,30 @@
 						}
 					},
 					"normalizedSurface": "die",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "die", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "die opens the relative clause and is its subject: the relative PRON cell die Nom.Fem.Sg, agreeing with Dame."
 			}
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -216,19 +432,29 @@
 						}
 					},
 					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "so",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "so is the degree adverb before gut; no comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ gut from gut (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -243,28 +469,43 @@
 						"canonicalForm": "gut",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "gut",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
-				"members": [{ "attested": "gut", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "gut",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "gut modifies erzogen adverbially, so ADJ (de/adjective-stays-adj), comparable through besser, am besten, Pos."
 			}
 		},
 		{
 			"memberSegmentIndices": [13, 15],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erziehen from erzogen (VERB acl) with wurde (aux:pass)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -284,7 +525,9 @@
 						}
 					},
 					"normalizedSurface": "erzogen wurde",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -300,19 +543,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "erzogen", "orthography": "Standard" },
-					{ "attested": "wurde", "orthography": "Standard" }
+					{
+						"attested": "erzogen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wurde",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "erzogen wurde is the process passive of erziehen, so participle and auxiliary are one VERB target, and the Surface records the whole passive with tense from the finite wurde (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole)."
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from kann (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -332,7 +584,9 @@
 						}
 					},
 					"normalizedSurface": "kann",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -347,17 +601,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "kann", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "kann",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "kann is the modal VERB, the infinitive sich zanken a separate target (de/modal-is-a-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON man from man (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -383,66 +645,30 @@
 						}
 					},
 					"normalizedSurface": "man",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "man", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
-						"coreFeatures": {
-							"case": "Acc",
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
-						}
-					},
-					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
+				"members": [
+					{
+						"attested": "man",
+						"orthography": "Standard"
 					}
-				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "man is the invariant indefinite pronoun, number Sing and case unmarked (ADR 0044)."
 			}
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV überhaupt from überhaupt (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -463,21 +689,29 @@
 						}
 					},
 					"normalizedSurface": "überhaupt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "überhaupt", "orthography": "Standard" }
+					{
+						"attested": "überhaupt",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'). It does not inflect, so ADV, not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. open: finding A2."
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -498,58 +732,21 @@
 						}
 					},
 					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zanken from zanken (VERB root)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "zanken",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "zanken",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
 				"members": [
-					{ "attested": "zanken", "orthography": "Standard" }
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
 				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "nicht is the PART with polarity Neg, a target of its own (de/nicht-is-part)."
 			}
 		}
 	],

@@ -2,23 +2,74 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "»Ach, Treibel, Sie sind ewig ein Spötter.",
 	"segments": [
-		{ "kind": "Punctuation", "text": "»" },
-		{ "kind": "ResolvableText", "text": "Ach" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Treibel" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Sie" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sind" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ewig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Spötter" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "Punctuation",
+			"text": "»"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ach"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Treibel"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sie"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sind"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ewig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Spötter"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -28,32 +79,70 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0040", "ADR-0042", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" }
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "ebd4778ba5db037a"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "467218f77ed6cd15"
+			},
+			{
+				"rule": "de/title-before-a-name",
+				"hash": "dd531115e2c8a2ef"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Ach, Treibel, Sie sind ewig ein Spötter."
+			},
+			{
+				"title": "DWDS: ewig",
+				"url": "https://www.dwds.de/wb/ewig",
+				"supports": "Target 4, ewig: Adjektiv with Komparativ ewiger, colloquial sense 'unaufhörlich, dauernd'."
+			},
+			{
+				"title": "DWDS: ewig",
+				"url": "https://www.dwds.de/wb/ewig",
+				"supports": "ewig: Adjektiv with Komparativ ewiger, colloquial sense 'unaufhörlich, dauernd'."
+			},
+			{
+				"title": "DWDS: ewig",
+				"url": "https://www.dwds.de/wb/ewig",
+				"supports": "ewig: Adjektiv with Komparativ ewiger, colloquial sense 'unaufhörlich, dauernd'."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [1],
-			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme INTJ ach from Ach (INTJ root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "INTJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -66,21 +155,33 @@
 						"family": "Lexeme",
 						"kind": "INTJ",
 						"canonicalForm": "ach",
-						"coreFeatures": { "partType": null }
+						"coreFeatures": {
+							"partType": null
+						}
 					},
 					"normalizedSurface": "ach",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "Ach", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Ach",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Ach stands outside the clause, split off by the comma, and exclaims: a one-word INTJ with no partType, since it answers no question (de/interjection-counts-its-words)."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Treibel from Treibel (NOUN parataxis)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -91,32 +192,43 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NOUN",
+						"kind": "PROPN",
 						"canonicalForm": "Treibel",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"foreign": null,
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Treibel",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
+						"case": null,
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "Treibel", "orthography": "Standard" }
+					{
+						"attested": "Treibel",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Treibel is the surname, used in direct address, so a PROPN cited bare with no article; a vocative marks no case, only singular number (de/title-before-a-name: an addressed noun does not take a case from the clause). Gender is left null: a surname names Herr and Frau Treibel alike, and nothing in this sentence agrees with it. open: finding A1."
 			}
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON Sie from Sie (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -142,20 +254,30 @@
 						}
 					},
 					"normalizedSurface": "Sie",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Sie",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Capitalized Sie mid-sentence is the formal address pronoun, nominative subject of sind: the authored cell Sie Nom."
 			}
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from sind (AUX cop)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -175,7 +297,9 @@
 						}
 					},
 					"normalizedSurface": "sind",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -190,17 +314,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "sind", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sind",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "sind is the copula before the predicate noun ein Spötter, a single-member VERB (de/copula-stays-apart). The form is third person plural, the agreement formal Sie takes; the pronoun's Core says person 2. open: finding A6."
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ewig from ewig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -215,28 +347,43 @@
 						"canonicalForm": "ewig",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "ewig",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
-				"members": [{ "attested": "ewig", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ewig",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "ewig here is the colloquial 'forever, constantly' (DWDS: umgangssprachlich 'unaufhörlich, dauernd', er ist ewig unzufrieden), an adjective used adverbially, so ADJ (de/adjective-stays-adj). DWDS gives ewiger, am ewigsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [13, 15],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Spötter from Spötter (NOUN appos) with ein (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -249,10 +396,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Spötter",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Spötter",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -261,12 +413,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Spötter", "orthography": "Standard" }
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Spötter",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Spötter owns the article ein that opens its phrase; nominative singular as the copula's predicate (de/noun-owns-its-article)."
 			}
 		}
 	],

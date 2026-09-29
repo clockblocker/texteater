@@ -2,15 +2,42 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "»Vielleicht ist es so.",
 	"segments": [
-		{ "kind": "Punctuation", "text": "»" },
-		{ "kind": "ResolvableText", "text": "Vielleicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "so" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "Punctuation",
+			"text": "»"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Vielleicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "so"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -22,7 +49,22 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			}
 		],
 		"references": [
 			{
@@ -35,9 +77,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [1],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV vielleicht from Vielleicht (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -58,21 +100,29 @@
 						}
 					},
 					"normalizedSurface": "vielleicht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Vielleicht", "orthography": "Standard" }
+					{
+						"attested": "Vielleicht",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "vielleicht is the sentence adverb 'perhaps'; it does not inflect and has no comparison forms, so ADV (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [3],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from ist (AUX root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -92,7 +142,9 @@
 						}
 					},
 					"normalizedSurface": "ist",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -107,17 +159,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "ist", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ist",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"expletiveEvidence": null
+			},
+			"notes": {
+				"rationale": "ist is the copula with the predicative so, a single-member VERB (de/copula-stays-apart)."
 			}
 		},
 		{
 			"memberSegmentIndices": [5],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -143,20 +203,30 @@
 						}
 					},
 					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "es refers back to what was just said (Treibel's remark about the children), so it is the referential PRON es Nom, not an expletive (de/expletive-es-joins-its-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV so from so (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -177,12 +247,22 @@
 						}
 					},
 					"normalizedSurface": "so",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "so",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "so is the predicative adverb 'thus, that way'; no comparison forms."
 			}
 		}
 	],

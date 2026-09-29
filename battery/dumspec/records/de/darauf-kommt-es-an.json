@@ -2,15 +2,42 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Darauf kommt es an.«",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Darauf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kommt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "an" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Punctuation", "text": "«" }
+		{
+			"kind": "ResolvableText",
+			"text": "Darauf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kommt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "an"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Punctuation",
+			"text": "«"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -20,12 +47,19 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0022", "ADR-0029"],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -43,9 +77,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV darauf from Darauf (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -66,21 +100,29 @@
 						}
 					},
 					"normalizedSurface": "darauf",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Darauf", "orthography": "Standard" }
+					{
+						"attested": "Darauf",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Darauf stands for auf + it, filling the auf slot of ankommen; a pronominal adverb is a single-member ADV and never joins its governor (de/pronominal-adverb-stands-alone)."
 			}
 		},
 		{
-			"memberSegmentIndices": [2, 6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB ankommen from kommt (VERB root) with an (compound:prt)."
+			"memberSegmentIndices": [2, 4, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -99,8 +141,10 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "kommt an",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "kommt es an",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -108,7 +152,7 @@
 						"person": "3",
 						"tense": "Pres",
 						"verbForm": "Fin",
-						"expletive": null,
+						"expletive": "Subject",
 						"perfect": null,
 						"future": null,
 						"voice": null,
@@ -116,51 +160,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "kommt", "orthography": "Standard" },
-					{ "attested": "an", "orthography": "Standard" }
+					{
+						"attested": "kommt",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "an",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+				"valencyEvidence": [],
+				"expletiveEvidence": {
+					"attested": "es",
+					"orthography": "Standard"
+				}
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "es",
-						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": "Neut"
-						}
-					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+			"notes": {
+				"rationale": "es kommt auf etwas an 'what matters is' selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject, like es geht um (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members)."
 			}
 		}
 	],
