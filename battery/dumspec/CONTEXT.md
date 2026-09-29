@@ -70,8 +70,9 @@ _Avoid_: completeness
 
 **No Target**:
 A ResolvableText Segment with no defensible route, and the authored reason:
-unintelligible text, or a suspended-compound fragment without a right
-conjunct. It is annotation, not a gap, so it counts toward Full Coverage.
+unintelligible text, a nonce word (`glorpen`), a word broken off (`trans…`),
+or a suspended-compound fragment without a right conjunct. Foreign-language
+material has a route, Foreign. It is annotation, not a gap, so it counts toward Full Coverage.
 _Avoid_: Unresolved, skipped Segment
 
 **Rule**:

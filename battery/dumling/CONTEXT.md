@@ -36,6 +36,17 @@ hat Gold im Mund`) or a Winged Word (`Sein oder Nichtsein`). Its Canonical Form
 is written as a sentence without final punctuation (`Wer rastet, der rostet`).
 _Avoid_: Phraseme, Aphorism, Quotation
 
+**Foreign**:
+Material in another language than the text's, a Family with the one Kind
+`Foreign`: a word (`whatever`) or a phrase fixed in its source language (`by
+the way`, `c'est la vie`). Its Lemma belongs to the text's language, and its
+one Core Feature `sourceLang` names the language it comes from (`en`, or `und`
+when that can't be told). Its Canonical Form fixes only position casing and
+typos (`watevr` is `whatever`) and is its one Surface. A word showing the
+text's grammar in the sentence (`das Meeting`, `geyeetet`) is a Lexeme
+instead. It holds no Fusion: `don't` is one member.
+_Avoid_: X, loanword, code-switch
+
 **Winged Word**:
 A line from a known source that speakers use apart from it, verbatim, shortened
 or varied: the *geflügeltes Wort*. A line nobody takes up is not a Saying.
@@ -68,14 +79,15 @@ stored as `…`.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
-The broad grammatical class of a Lemma: Lexeme, Locution, Saying, or Morpheme.
+The broad grammatical class of a Lemma: Lexeme, Locution, Saying, Foreign, or
+Morpheme.
 A route is language, Family and Kind, and that triple is unique; the same Kind
 may appear in two Families (Lexeme VERB, Locution VERB).
 _Avoid_: Entry Family
 
 **Kind**:
 The concrete subtype of a Lemma within its Family, such as NOUN, VERB, Prefix,
-or Saying.
+Saying, or Foreign.
 _Avoid_: Entry Subkind
 
 **Core Features**:
@@ -202,13 +214,15 @@ _Avoid_: Variant, for a shortened article
 
 **Reading**:
 A foundational semantic value made from one Lemma and one Emoji Description.
-Its equality applies within one dictionary scope.
+Its equality applies within one dictionary scope. A Foreign Lemma is the
+exception: it has exactly one Reading, the Lemma alone, and its Translation
+carries every sense.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
 The stable dictionary-scoped semantic label that distinguishes Readings of the
 same Lemma: one to four emoji that describe the meaning, compared without
-variation selectors or skin-tone modifiers.
+variation selectors or skin-tone modifiers. A Foreign Reading has none.
 _Avoid_: Mnemonic, Gloss, Sense ID
 
 ### Valency

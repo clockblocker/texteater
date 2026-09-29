@@ -29,3 +29,5 @@ compatibility path.
 
 These three decisions were recorded apart as ADRs 0002, 0008 and 0010 and
 merged here on 2026-09-28.
+
+Amended by [ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md): a Foreign Lemma has exactly one Reading, which the Lemma alone identifies, with no Emoji Description. Its Translation carries every sense.

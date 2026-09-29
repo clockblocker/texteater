@@ -61,3 +61,5 @@ refuses and resolution runs the judge again over the current candidates.
   picture standing in for grammatical gender claims sex.
 
 Amended by [ADR 0043](./0043-correct-identity-by-moving-occurrences.md): a wrong Reuse or NoMatch is corrected by moving occurrences, so judge errors no longer persist.
+
+Amended by [ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md): a Foreign Lemma has one Reading and no Emoji Description, so resolution has nothing to judge or generate for it.

@@ -45,8 +45,8 @@ the name speakers of a Reading's language use for a place outside their area
 (`Pressburg`). It is projected onto the local name from the endonym the
 outside name stores, and never stored itself: `Bratislava` has the exonym
 `Pressburg` because `Pressburg` stores the endonym `Bratislava`.
-_Avoid_: foreign name (Dumling's `foreign` is a feature), historical name
-(`Brüssel` is current)
+_Avoid_: foreign name (Dumling's Foreign is the Family of foreign-language
+material), historical name (`Brüssel` is current)
 
 **Governed Preposition**:
 a preposition a Reading lexically selects: a Preposition Slot of the Reading's
