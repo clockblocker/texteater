@@ -33,7 +33,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -80,7 +89,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -247,7 +265,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -288,7 +315,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -394,7 +430,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -438,7 +483,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -508,7 +562,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
 				| (
@@ -639,7 +702,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
 					| (
@@ -861,7 +933,16 @@ export interface UnitMap {
 				coreFeatures: { conjType: "Comp" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -890,7 +971,16 @@ export interface UnitMap {
 					coreFeatures: { conjType: "Comp" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -1007,7 +1097,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1102,7 +1201,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1185,7 +1293,16 @@ export interface UnitMap {
 				coreFeatures: { partType: "Res" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -1214,7 +1331,16 @@ export interface UnitMap {
 					coreFeatures: { partType: "Res" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -1287,7 +1413,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1327,7 +1462,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1489,7 +1633,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1531,7 +1684,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1666,7 +1828,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1712,7 +1883,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -1796,7 +1976,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -1835,7 +2024,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -1944,7 +2142,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2031,7 +2238,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2177,7 +2393,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2220,7 +2445,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2372,7 +2606,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -2429,7 +2672,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -2496,7 +2748,16 @@ export interface UnitMap {
 				coreFeatures: { conjType: "Comp" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -2525,7 +2786,16 @@ export interface UnitMap {
 					coreFeatures: { conjType: "Comp" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -2598,7 +2868,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2638,7 +2917,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -2718,7 +3006,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
 				| (
@@ -2857,7 +3154,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
 					| (
@@ -3079,7 +3385,16 @@ export interface UnitMap {
 				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3114,7 +3429,16 @@ export interface UnitMap {
 					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3216,7 +3540,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -3245,7 +3578,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -3312,7 +3654,16 @@ export interface UnitMap {
 				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -3344,7 +3695,16 @@ export interface UnitMap {
 					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -3414,7 +3774,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -3443,7 +3812,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -3510,7 +3888,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3544,7 +3931,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3616,7 +4012,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -3645,7 +4050,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -3712,7 +4126,16 @@ export interface UnitMap {
 				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3745,7 +4168,16 @@ export interface UnitMap {
 					coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3845,7 +4277,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3879,7 +4320,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3951,7 +4401,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -3985,7 +4444,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
@@ -4057,7 +4525,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4086,7 +4563,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4153,7 +4639,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
 				| (
@@ -4284,7 +4779,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
 					| (
@@ -4506,7 +5010,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4535,7 +5048,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4602,7 +5124,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4631,7 +5162,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4698,7 +5238,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4727,7 +5276,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4794,7 +5352,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4823,7 +5390,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4890,7 +5466,16 @@ export interface UnitMap {
 				coreFeatures: { hasSepPrefix: string | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -4919,7 +5504,16 @@ export interface UnitMap {
 					coreFeatures: { hasSepPrefix: string | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -4986,7 +5580,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5015,7 +5618,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5082,7 +5694,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5111,7 +5732,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5178,7 +5808,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5207,7 +5846,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5274,7 +5922,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5303,7 +5960,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5370,7 +6036,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5399,7 +6074,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5478,7 +6162,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -5522,7 +6215,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -5698,7 +6400,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -5733,7 +6444,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -5865,7 +6585,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -5969,7 +6698,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -6039,7 +6777,16 @@ export interface UnitMap {
 				coreFeatures: { abbr: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				mood: ("Imp" | "Ind" | "Sub") | null;
@@ -6075,7 +6822,16 @@ export interface UnitMap {
 					coreFeatures: { abbr: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					mood: ("Imp" | "Ind" | "Sub") | null;
@@ -6149,7 +6905,16 @@ export interface UnitMap {
 				coreFeatures: { abbr: "Yes" | null; polarity: "Neg" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -6181,7 +6946,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -6332,7 +7106,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
 		};
@@ -6446,7 +7229,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Sing") | null;
@@ -6524,7 +7316,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -6561,7 +7362,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -6640,7 +7450,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				number: ("Plur" | "Ptan" | "Sing") | null;
@@ -6684,7 +7503,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Ptan" | "Sing") | null;
@@ -6864,7 +7692,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -6903,7 +7740,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7023,7 +7869,16 @@ export interface UnitMap {
 				coreFeatures: { extPos: "PROPN" | null; foreign: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -7055,7 +7910,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7130,7 +7994,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -7167,7 +8040,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7330,7 +8212,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -7455,7 +8346,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7583,7 +8483,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				number: ("Plur" | "Ptan" | "Sing") | null;
@@ -7623,7 +8532,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Ptan" | "Sing") | null;
@@ -7746,7 +8664,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -7775,7 +8702,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7848,7 +8784,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -7883,7 +8828,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -7956,7 +8910,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
 		};
@@ -7992,7 +8955,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Sing") | null;
@@ -8070,7 +9042,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				mood: ("Imp" | "Ind" | "Sub") | null;
@@ -8115,7 +9096,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					mood: ("Imp" | "Ind" | "Sub") | null;
@@ -8237,7 +9227,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -8266,7 +9265,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -8333,7 +9341,16 @@ export interface UnitMap {
 				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -8365,7 +9382,16 @@ export interface UnitMap {
 					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					degree: ("Cmp" | "Pos" | "Sup") | null;
@@ -8435,7 +9461,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -8464,7 +9499,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -8531,7 +9575,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				number: ("Plur" | "Ptan" | "Sing") | null;
@@ -8563,7 +9616,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Ptan" | "Sing") | null;
@@ -8680,7 +9742,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -8709,7 +9780,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -8776,7 +9856,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				mood: ("Imp" | "Ind" | "Sub") | null;
@@ -8813,7 +9902,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					mood: ("Imp" | "Ind" | "Sub") | null;
@@ -8935,7 +10033,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -8964,7 +10071,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9031,7 +10147,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9060,7 +10185,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9127,7 +10261,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9156,7 +10299,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9223,7 +10375,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9252,7 +10413,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9319,7 +10489,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9348,7 +10527,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9415,7 +10603,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9444,7 +10641,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9511,7 +10717,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9540,7 +10755,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9607,7 +10831,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9636,7 +10869,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9703,7 +10945,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9732,7 +10983,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9799,7 +11059,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9828,7 +11097,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9895,7 +11173,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -9924,7 +11211,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -9991,7 +11287,16 @@ export interface UnitMap {
 				coreFeatures: { abbr: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				definite: ("Cons" | "Def") | null;
@@ -10030,7 +11335,16 @@ export interface UnitMap {
 					coreFeatures: { abbr: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					definite: ("Cons" | "Def") | null;
@@ -10201,7 +11515,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -10236,7 +11559,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -10303,7 +11635,16 @@ export interface UnitMap {
 				coreFeatures: { prefix: "Yes" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -10332,7 +11673,16 @@ export interface UnitMap {
 					coreFeatures: { prefix: "Yes" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -10399,7 +11749,16 @@ export interface UnitMap {
 				coreFeatures: { verbType: ("Cop" | "Mod") | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				gender:
@@ -10446,7 +11805,16 @@ export interface UnitMap {
 					coreFeatures: { verbType: ("Cop" | "Mod") | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					gender:
@@ -10531,7 +11899,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -10560,7 +11937,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -10627,7 +12013,16 @@ export interface UnitMap {
 				coreFeatures: { pronType: ("Art" | "Int") | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				definite: ("Cons" | "Def") | null;
@@ -10666,7 +12061,16 @@ export interface UnitMap {
 					coreFeatures: { pronType: ("Art" | "Int") | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					definite: ("Cons" | "Def") | null;
@@ -10743,7 +12147,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -10772,7 +12185,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -10855,7 +12277,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				definite: ("Cons" | "Def" | "Ind") | null;
@@ -10912,7 +12343,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					definite: ("Cons" | "Def" | "Ind") | null;
@@ -11082,7 +12522,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				definite: ("Cons" | "Def") | null;
@@ -11126,7 +12575,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					definite: ("Cons" | "Def") | null;
@@ -11208,7 +12666,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -11237,7 +12704,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -11304,7 +12780,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -11333,7 +12818,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -11408,7 +12902,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				gender:
@@ -11455,7 +12958,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					gender:
@@ -11550,7 +13062,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
 		};
@@ -11598,7 +13119,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					number: ("Plur" | "Sing") | null;
@@ -11721,7 +13251,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -11750,7 +13289,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -11817,7 +13365,16 @@ export interface UnitMap {
 				coreFeatures: { case: "Tem" | null };
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -11846,7 +13403,16 @@ export interface UnitMap {
 					coreFeatures: { case: "Tem" | null };
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -11913,7 +13479,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -11942,7 +13517,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12035,7 +13619,16 @@ export interface UnitMap {
 				};
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				definite: ("Cons" | "Def") | null;
@@ -12111,7 +13704,16 @@ export interface UnitMap {
 					};
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					definite: ("Cons" | "Def") | null;
@@ -12237,7 +13839,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12266,7 +13877,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12333,7 +13953,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12362,7 +13991,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12429,7 +14067,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12458,7 +14105,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12525,7 +14181,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12554,7 +14219,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12621,7 +14295,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12650,7 +14333,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12717,7 +14409,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12746,7 +14447,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12813,7 +14523,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12842,7 +14561,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -12909,7 +14637,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -12938,7 +14675,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -13005,7 +14751,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -13034,7 +14789,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -13101,7 +14865,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -13130,7 +14903,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -13197,7 +14979,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -13226,7 +15017,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -13293,7 +15093,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -13322,7 +15131,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
@@ -13389,7 +15207,16 @@ export interface UnitMap {
 				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantType:
+							| "Licensed"
+							| "Historical"
+							| "Regional"
+							| "Expressive";
+				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
 		Reading: {
@@ -13418,7 +15245,16 @@ export interface UnitMap {
 					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
-				spelling: "Canonical" | "Variant";
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantType:
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive";
+					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [

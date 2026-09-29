@@ -11,9 +11,10 @@ import type { Surface } from "./types.js";
  * Assesses a validated Surface against its Lemma's canonical realization.
  * Known contrary spelling or grammar returns success with false. Missing,
  * ambiguous, or unrepresentable evidence returns a typed error with issue paths.
- * A supplied Variant spelling is trusted as an accepted spelling alternative;
- * this function does not perform spell checking or infer missing grammar.
- * Routes without represented inflection use the canonical form/variant evidence.
+ * A supplied Variant spelling of any variantType (Licensed, Historical,
+ * Regional, Expressive) is trusted as a spelling of the Lemma; this function
+ * does not perform spell checking or infer missing grammar.
+ * Routes without represented inflection use the canonical form/Variant evidence.
  * A Saying's spelling is compared by its words only (ADR 0039). A German or
  * English ADV or ADJ is assessed from its Lemma's comparability (ADR 0042):
  * a comparable one cites its positive, and a non-comparable one without
@@ -23,7 +24,7 @@ import type { Surface } from "./types.js";
  * the assessment, and neither the Surface nor its feature bags are modified.
  */
 export function checkIfGrundform(surface: Surface): GrundformResult {
-	if (surface.spelling !== "Variant" && !spellsCanonicalForm(surface))
+	if (surface.spelling.kind !== "Variant" && !spellsCanonicalForm(surface))
 		return { success: true, value: false };
 	const { mismatch, issues } = matchFeatures(surface, ruleFor(surface));
 	if (mismatch) return { success: true, value: false };

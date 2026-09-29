@@ -74,7 +74,7 @@ test("a cell Surface spelled as its Lemma is Grundform without inflection", () =
 		language: "de",
 		lemma: den,
 		normalizedSurface: "den",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: null,
 	};
@@ -94,7 +94,7 @@ function stemSurface(
 		language: "de",
 		lemma: source,
 		normalizedSurface,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: inflectionalFeatures && {
 			case: null,

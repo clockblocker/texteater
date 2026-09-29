@@ -374,7 +374,7 @@ test("a Hebrew Reading holds a caseless frame its Attestation realizes", () => {
 			unitKind: "Surface",
 			language: "he",
 			normalizedSurface: "סמך",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			inflectionalFeatures: {
 				gender: "Masc",
 				number: "Sing",
@@ -536,7 +536,7 @@ test("an English Reading holds a caseless frame by position and preposition", ()
 			unitKind: "Surface",
 			language: "en",
 			normalizedSurface: "depend",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			inflectionalFeatures: null,
 			lemma: dependReading.lemma,
 			surfaceFeatures: null,

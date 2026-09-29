@@ -53,7 +53,7 @@ test("a pronoun Surface carries no inflectional bag", () => {
 		language: "en",
 		lemma: them,
 		normalizedSurface: "them",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 	};
 	expect(surfaceSchema.safeParse(surface).success).toBe(true);

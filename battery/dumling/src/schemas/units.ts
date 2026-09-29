@@ -109,6 +109,22 @@ const articleEvidenceSchema = z.union([
 		component: indexSchema,
 	}),
 ]);
+/**
+ * How a Surface is spelled (ADR 0041, amended 2026-09-29): the Lemma's
+ * standard spelling, or a Variant, any other spelling of the same Lemma that
+ * is not a mistake (a mistake is a Typo member). A Variant names why it
+ * differs: accepted by a current standard (`zwo`, `auf Grund`, British
+ * `colour`), valid under an earlier standard (`daß`, `Photographie`), a
+ * dialect or regional form (`nit`, `nedd`), or letters stretched for effect
+ * (`ohhh`, `boahhh`).
+ */
+const spellingSchema = z.union([
+	z.strictObject({ kind: z.literal("Canonical") }),
+	z.strictObject({
+		kind: z.literal("Variant"),
+		variantType: z.enum(["Licensed", "Historical", "Regional", "Expressive"]),
+	}),
+]);
 const surfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.refine(hasMarkedFeature, { error: nonEmptyFeatureBagError })
@@ -138,7 +154,7 @@ function buildBaseUnitSchemas<
 		language: z.literal(route.language),
 		lemma: Lemma,
 		normalizedSurface: normalizedFormSchema,
-		spelling: z.enum(["Canonical", "Variant"]),
+		spelling: spellingSchema,
 		surfaceFeatures: surfaceFeaturesSchema,
 	};
 	// The conditional type preserves field presence for concrete schema callers.

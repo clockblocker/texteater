@@ -113,9 +113,9 @@ _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one analysis.
-It carries its normalized form, spelling status, and applicable inflectional
-features. A German or English noun Surface is the noun's own letters and says
-nothing about its article; `books` is one Surface. A German noun whose Lemma
+It carries its normalized form, its spelling (Canonical or a Variant), and
+applicable inflectional features. A German or English noun Surface is the
+noun's own letters and says nothing about its article; `books` is one Surface. A German noun whose Lemma
 has no gender, such as an adjectival noun for a person (`Reisende`), marks on
 a singular Surface the gender its form shows. Hebrew keeps `definite`. A
 proper noun canonically cited with its article (`die Schweiz`) has
@@ -124,11 +124,22 @@ Verbal subject expletives are composition expressed by
 grammatical features. Component values are derived separately. The Lemma
 remains the bare noun or ordinary verb.
 
+**Variant**:
+A spelling of a Surface's Lemma that is neither its standard spelling nor a
+mistake; a mistake is a Typo member. It is Licensed when a current standard
+accepts it, national standards included (`zwo`, `auf Grund`, British
+`colour`); Historical when only an earlier standard did (`daß`,
+`Photographie`); Regional when it is a dialect or regional form outside the
+standard (`nit`, `nedd`); and Expressive when letters are stretched for effect
+(`ohhh`, `boahhh`). Every other Surface is spelled Canonical, an archaic
+inflected form (`ward`) included: its age is historical status, not spelling.
+_Avoid_: licensed variant, for Variant in general
+
 **Grundform**:
 A Surface's realization of its particular Lemma's canonical grammatical form.
-An accepted spelling variant may realize Grundform. The applicable inflectional
-features depend on the language, Family, Kind, and sometimes the particular
-Lemma.
+A Variant spelling of any type may realize Grundform. The applicable
+inflectional features depend on the language, Family, Kind, and sometimes the
+particular Lemma.
 _Avoid_: Surface Kind, stored Citation/Inflection discriminator
 
 **Attestation**:

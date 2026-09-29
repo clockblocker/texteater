@@ -15,7 +15,7 @@ function surface(
 	options: {
 		form?: string;
 		canonical?: string;
-		spelling?: "Canonical" | "Variant";
+		spelling?: Surface["spelling"];
 		core?: Record<string, unknown>;
 		features?: Record<string, unknown> | null;
 	} = {},
@@ -29,7 +29,7 @@ function surface(
 	const result = parseUnit({
 		...fixture,
 		normalizedSurface: options.form ?? options.canonical ?? "example",
-		spelling: options.spelling ?? "Canonical",
+		spelling: options.spelling ?? { kind: "Canonical" },
 		lemma: {
 			...fixture.lemma,
 			canonicalForm: options.canonical ?? "example",
@@ -190,7 +190,7 @@ describe("Grundform assessment", () => {
 				surface("en/Lexeme/NOUN", {
 					canonical: "armour",
 					form: "armor",
-					spelling: "Variant",
+					spelling: { kind: "Variant", variantType: "Licensed" },
 					features: { number: "Sing" },
 				}),
 			),
@@ -200,7 +200,7 @@ describe("Grundform assessment", () => {
 				surface("en/Lexeme/NOUN", {
 					canonical: "armour",
 					form: "armors",
-					spelling: "Variant",
+					spelling: { kind: "Variant", variantType: "Licensed" },
 					features: { number: "Plur" },
 				}),
 			),
@@ -212,6 +212,28 @@ describe("Grundform assessment", () => {
 					form: "armors",
 					features: { number: "Sing" },
 				}),
+			),
+		).toEqual({ success: true, value: false });
+	});
+	test("every Variant type is eligible, as Licensed is", () => {
+		for (const variantType of [
+			"Licensed",
+			"Historical",
+			"Regional",
+			"Expressive",
+		] as const)
+			expect(
+				checkIfGrundform(
+					surface("de/Lexeme/SCONJ", {
+						canonical: "dass",
+						form: "daß",
+						spelling: { kind: "Variant", variantType },
+					}),
+				),
+			).toEqual({ success: true, value: true });
+		expect(
+			checkIfGrundform(
+				surface("de/Lexeme/SCONJ", { canonical: "dass", form: "daß" }),
 			),
 		).toEqual({ success: true, value: false });
 	});

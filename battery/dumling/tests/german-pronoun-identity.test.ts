@@ -47,7 +47,7 @@ function surface(
 		language: "de",
 		lemma: lemmaValue,
 		normalizedSurface: lemmaValue.canonicalForm,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: { ...bag, ...features },
 	};

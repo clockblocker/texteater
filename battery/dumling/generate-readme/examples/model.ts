@@ -24,7 +24,7 @@ const surface = {
 	unitKind: "Surface",
 	language: "de",
 	normalizedSurface: "schweigend",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 	inflectionalFeatures: null,
 	lemma,
 	surfaceFeatures: null,

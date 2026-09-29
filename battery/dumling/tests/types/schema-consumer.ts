@@ -28,7 +28,7 @@ export function consumerChecks(
 		language: "de",
 		lemma: value.lemma,
 		normalizedSurface: "Haus",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 	};
 }

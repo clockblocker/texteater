@@ -87,7 +87,7 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		language: route.language,
 		lemma: Lemma,
 		normalizedSurface: "example",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 
 		...(Object.hasOwn(bag, "inflectional")
