@@ -12,8 +12,9 @@ owns it.
 **Authored Inventory**:
 The closed-class units of a language that are authored instead of generated,
 each Reading with its reviewed Knowledge: in German the AUX Readings, the PRON
-and DET pillar cells and stems, the reflexivity unit, the pronominal adverbs,
-the interrogative and relative w-adverbs (`wo`, `wann`, `wie`, `warum`), the
+and DET pillar cells and stems, the reflexivity unit, the pronominal adverbs
+(colloquial `dran`, `drauf`, `drin` and `drüber` are Shorthands of `daran`,
+`darauf`, `darin` and `darüber`), the interrogative and relative w-adverbs (`wo`, `wann`, `wie`, `warum`), the
 indefinite `irgend-` adverbs, the demonstrative `dahin`, `daher`, `hierhin` and
 `hierher`, and the directional her- and hin- adverbs (`heraus`, `hinaus`,
 `herein`, `hinein`, `herüber`, `hinüber`, `herunter`, `hinunter`, `herauf`,

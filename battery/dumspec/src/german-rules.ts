@@ -235,6 +235,14 @@ const verbs: Rule[] = [
 		],
 	},
 	{
+		id: "de/dr-adverb-is-da-shorthand",
+		statement:
+			"A colloquial dr- adverb (dran, drauf, drin, drüber, drum) is the Shorthand of the da(r)- pronominal adverb it shortens, never a Lemma or Variant of its own: the target is the full word, with the dr- word as its member in Shorthand orthography. ohne recht dran zu glauben gives [dran] ADV daran.",
+		adrs: ["ADR-0029", "ADR-0035"],
+		routes: lexeme("ADV"),
+		records: [],
+	},
+	{
 		id: "de/split-adverb-is-one-target",
 		statement:
 			"A da, wo or hier split from its hin, her or preposition is one target of the whole ADV Lexeme, and the verb stays bare: Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen. A split pronominal adverb is one target the same way. When hin or her is written as part of the verb, it stays with the verb, and wo or da is a target on its own.",
@@ -539,7 +547,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/abbreviation-is-one-segment",
 		statement:
-			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe.",
+			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe. An initial the text never expands is its own Lemma the same way, and a name it ends is another: K. and Josef K. are two PROPN Lemmas.",
 		adrs: ["ADR-0035", "dumgen/ADR-0004"],
 		routes: [],
 		records: ["de/in-berlin-betreibt-die-bvg-die-u-bahn"],
@@ -1020,6 +1028,14 @@ const attestations: Rule[] = [
 			"de/neeee-des-mach-i-ned",
 			"de/es-sol-ein-jeglicher-des-auffgelegten-brots-vnnd-speise-zu",
 		],
+	},
+	{
+		id: "de/digits-spell-the-numeral",
+		statement:
+			"A number written in digits is the numeral word it spells, never a Lemma of its own: 12 gives NUM zwölf, its Surface a Licensed Variant spelling. Digits and letters are two ways to write one word.",
+		adrs: ["ADR-0041", "ADR-0002"],
+		routes: lexeme("NUM", "ADJ"),
+		records: [],
 	},
 	{
 		id: "de/empty-inflection-is-structural",

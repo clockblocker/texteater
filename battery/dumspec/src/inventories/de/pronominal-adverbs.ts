@@ -304,6 +304,12 @@ function pronominalAdverb(
 	});
 }
 
+// Colloquial dran, drauf, draus, drin, drüber, drum and drunter shorten the
+// da(r)- forms. A dr- word is no Lemma or spelling of its own but the Shorthand
+// member of the da(r)- word it shortens (Rule de/dr-adverb-is-da-shorthand), so
+// no spelling table lists it.
+// https://www.dwds.de/wb/dran
+
 /**
  * Every German pronominal adverb: da(r)- and hier- forms are demonstrative,
  * wo(r)- forms are one interrogative and one relative Lemma each, since

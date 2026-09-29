@@ -27,7 +27,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "686c9815ab8717d8"
+				"hash": "57538162fe227476"
 			}
 		],
 		"references": []
