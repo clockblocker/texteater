@@ -47,11 +47,11 @@
 		"rules": [
 			{
 				"rule": "de/routine-formula-is-intj",
-				"hash": "183ce2fe684b1a37"
+				"hash": "735d20ce9a133580"
 			},
 			{
 				"rule": "de/modification-attests-partially",
-				"hash": "c9ac73bf18af63c6"
+				"hash": "7624a9d20aa26356"
 			},
 			{ "rule": "de/partial-coverage", "hash": "7d8f01fb7470e204" },
 			{
