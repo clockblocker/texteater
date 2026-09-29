@@ -5458,7 +5458,6 @@ export interface UnitMap {
 				extPos: ("ADP" | "ADV" | "SCONJ") | null;
 				numForm: ("Combi" | "Word") | null;
 				numType: ("Frac" | "Ord") | null;
-				style: "Expr" | null;
 			};
 		};
 		Surface: {
@@ -5476,7 +5475,6 @@ export interface UnitMap {
 					extPos: ("ADP" | "ADV" | "SCONJ") | null;
 					numForm: ("Combi" | "Word") | null;
 					numType: ("Frac" | "Ord") | null;
-					style: "Expr" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -5500,7 +5498,6 @@ export interface UnitMap {
 					extPos: ("ADP" | "ADV" | "SCONJ") | null;
 					numForm: ("Combi" | "Word") | null;
 					numType: ("Frac" | "Ord") | null;
-					style: "Expr" | null;
 				};
 			};
 			emojiDescription: string;
@@ -5522,7 +5519,6 @@ export interface UnitMap {
 						extPos: ("ADP" | "ADV" | "SCONJ") | null;
 						numForm: ("Combi" | "Word") | null;
 						numType: ("Frac" | "Ord") | null;
-						style: "Expr" | null;
 					};
 				};
 				normalizedSurface: string;
@@ -5819,7 +5815,6 @@ export interface UnitMap {
 							  ]
 					  )
 					| null;
-				style: ("Expr" | "Slng") | null;
 			};
 		};
 		Surface: {
@@ -5867,7 +5862,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: ("Expr" | "Slng") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -5921,7 +5915,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: ("Expr" | "Slng") | null;
 				};
 			};
 			emojiDescription: string;
@@ -5973,7 +5966,6 @@ export interface UnitMap {
 									  ]
 							  )
 							| null;
-						style: ("Expr" | "Slng") | null;
 					};
 				};
 				normalizedSurface: string;
@@ -6033,10 +6025,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "AUX";
 			canonicalForm: string;
-			coreFeatures: {
-				abbr: "Yes" | null;
-				style: ("Arch" | "Vrnc") | null;
-			};
+			coreFeatures: { abbr: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -6047,10 +6036,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "AUX";
 				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					style: ("Arch" | "Vrnc") | null;
-				};
+				coreFeatures: { abbr: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling: "Canonical" | "Variant";
@@ -6071,10 +6057,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "AUX";
 				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					style: ("Arch" | "Vrnc") | null;
-				};
+				coreFeatures: { abbr: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -6089,10 +6072,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "AUX";
 					canonicalForm: string;
-					coreFeatures: {
-						abbr: "Yes" | null;
-						style: ("Arch" | "Vrnc") | null;
-					};
+					coreFeatures: { abbr: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling: "Canonical" | "Variant";
@@ -6296,7 +6276,6 @@ export interface UnitMap {
 							  ]
 					  )
 					| null;
-				style: "Vrnc" | null;
 			};
 		};
 		Surface: {
@@ -6350,7 +6329,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: "Vrnc" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -6408,7 +6386,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: "Vrnc" | null;
 				};
 			};
 			emojiDescription: string;
@@ -6466,7 +6443,6 @@ export interface UnitMap {
 									  ]
 							  )
 							| null;
-						style: "Vrnc" | null;
 					};
 				};
 				normalizedSurface: string;
@@ -6530,7 +6506,6 @@ export interface UnitMap {
 				abbr: "Yes" | null;
 				foreign: "Yes" | null;
 				polarity: ("Neg" | "Pos") | null;
-				style: "Expr" | null;
 			};
 		};
 		Surface: {
@@ -6546,7 +6521,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					foreign: "Yes" | null;
 					polarity: ("Neg" | "Pos") | null;
-					style: "Expr" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -6565,7 +6539,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					foreign: "Yes" | null;
 					polarity: ("Neg" | "Pos") | null;
-					style: "Expr" | null;
 				};
 			};
 			emojiDescription: string;
@@ -6585,7 +6558,6 @@ export interface UnitMap {
 						abbr: "Yes" | null;
 						foreign: "Yes" | null;
 						polarity: ("Neg" | "Pos") | null;
-						style: "Expr" | null;
 					};
 				};
 				normalizedSurface: string;
@@ -6648,7 +6620,6 @@ export interface UnitMap {
 				foreign: "Yes" | null;
 				numForm: ("Combi" | "Digit" | "Word") | null;
 				numType: ("Card" | "Frac" | "Ord") | null;
-				style: ("Expr" | "Vrnc") | null;
 			};
 		};
 		Surface: {
@@ -6666,7 +6637,6 @@ export interface UnitMap {
 					foreign: "Yes" | null;
 					numForm: ("Combi" | "Digit" | "Word") | null;
 					numType: ("Card" | "Frac" | "Ord") | null;
-					style: ("Expr" | "Vrnc") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -6690,7 +6660,6 @@ export interface UnitMap {
 					foreign: "Yes" | null;
 					numForm: ("Combi" | "Digit" | "Word") | null;
 					numType: ("Card" | "Frac" | "Ord") | null;
-					style: ("Expr" | "Vrnc") | null;
 				};
 			};
 			emojiDescription: string;
@@ -6712,7 +6681,6 @@ export interface UnitMap {
 						foreign: "Yes" | null;
 						numForm: ("Combi" | "Digit" | "Word") | null;
 						numType: ("Card" | "Frac" | "Ord") | null;
-						style: ("Expr" | "Vrnc") | null;
 					};
 				};
 				normalizedSurface: string;
@@ -7296,7 +7264,6 @@ export interface UnitMap {
 							  ]
 					  )
 					| null;
-				style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
 				case: ("Acc" | "Gen" | "Nom") | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
@@ -7356,7 +7323,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
 					case: ("Acc" | "Gen" | "Nom") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
@@ -7419,7 +7385,6 @@ export interface UnitMap {
 								  ]
 						  )
 						| null;
-					style: ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc") | null;
 					case: ("Acc" | "Gen" | "Nom") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
@@ -7482,9 +7447,6 @@ export interface UnitMap {
 											>,
 									  ]
 							  )
-							| null;
-						style:
-							| ("Arch" | "Coll" | "Expr" | "Slng" | "Vrnc")
 							| null;
 						case: ("Acc" | "Gen" | "Nom") | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
@@ -7603,7 +7565,6 @@ export interface UnitMap {
 				abbr: "Yes" | null;
 				article: "Definite" | null;
 				extPos: "PROPN" | null;
-				style: "Expr" | null;
 			};
 		};
 		Surface: {
@@ -7619,7 +7580,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					article: "Definite" | null;
 					extPos: "PROPN" | null;
-					style: "Expr" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -7641,7 +7601,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					article: "Definite" | null;
 					extPos: "PROPN" | null;
-					style: "Expr" | null;
 				};
 			};
 			emojiDescription: string;
@@ -7661,7 +7620,6 @@ export interface UnitMap {
 						abbr: "Yes" | null;
 						article: "Definite" | null;
 						extPos: "PROPN" | null;
-						style: "Expr" | null;
 					};
 				};
 				normalizedSurface: string;
@@ -7873,7 +7831,6 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				extPos: ("ADP" | "SCONJ") | null;
-				style: "Vrnc" | null;
 			};
 		};
 		Surface: {
@@ -7888,7 +7845,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "SCONJ") | null;
-					style: "Vrnc" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -7906,7 +7862,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "SCONJ") | null;
-					style: "Vrnc" | null;
 				};
 			};
 			emojiDescription: string;
@@ -7925,7 +7880,6 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						extPos: ("ADP" | "SCONJ") | null;
-						style: "Vrnc" | null;
 					};
 				};
 				normalizedSurface: string;
@@ -8098,7 +8052,6 @@ export interface UnitMap {
 				abbr: "Yes" | null;
 				extPos: ("ADP" | "CCONJ" | "PROPN") | null;
 				phrasal: "Yes" | null;
-				style: ("Expr" | "Vrnc") | null;
 			};
 		};
 		Surface: {
@@ -8114,7 +8067,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "CCONJ" | "PROPN") | null;
 					phrasal: "Yes" | null;
-					style: ("Expr" | "Vrnc") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -8141,7 +8093,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					extPos: ("ADP" | "CCONJ" | "PROPN") | null;
 					phrasal: "Yes" | null;
-					style: ("Expr" | "Vrnc") | null;
 				};
 			};
 			emojiDescription: string;
@@ -8161,7 +8112,6 @@ export interface UnitMap {
 						abbr: "Yes" | null;
 						extPos: ("ADP" | "CCONJ" | "PROPN") | null;
 						phrasal: "Yes" | null;
-						style: ("Expr" | "Vrnc") | null;
 					};
 				};
 				normalizedSurface: string;

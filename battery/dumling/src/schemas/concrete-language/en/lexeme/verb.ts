@@ -13,7 +13,6 @@ export const EnVerbFeatureBagsSchema = z.strictObject({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "CCONJ", "PROPN"]),
 		phrasal: EN_FEATURE_SCHEMA.phrasal,
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr", "Vrnc"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

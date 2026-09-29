@@ -295,19 +295,6 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
@@ -315,8 +302,7 @@
 															"comparable",
 															"extPos",
 															"numForm",
-															"numType",
-															"style"
+															"numType"
 														],
 														"additionalProperties": false
 													}
@@ -1685,20 +1671,6 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr",
-																			"Slng"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
@@ -1707,8 +1679,7 @@
 															"extPos",
 															"numForm",
 															"numType",
-															"pronType",
-															"style"
+															"pronType"
 														],
 														"additionalProperties": false
 													}
@@ -2123,25 +2094,10 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Arch",
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
-															"abbr",
-															"style"
+															"abbr"
 														],
 														"additionalProperties": false
 													}
@@ -3127,19 +3083,6 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
@@ -3148,8 +3091,7 @@
 															"extPos",
 															"numForm",
 															"numType",
-															"pronType",
-															"style"
+															"pronType"
 														],
 														"additionalProperties": false
 													}
@@ -3590,26 +3532,12 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
 															"abbr",
 															"foreign",
-															"polarity",
-															"style"
+															"polarity"
 														],
 														"additionalProperties": false
 													}
@@ -4049,20 +3977,6 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr",
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
@@ -4070,8 +3984,7 @@
 															"extPos",
 															"foreign",
 															"numForm",
-															"numType",
-															"style"
+															"numType"
 														],
 														"additionalProperties": false
 													}
@@ -6534,23 +6447,6 @@
 																	}
 																]
 															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Arch",
-																			"Coll",
-																			"Expr",
-																			"Slng",
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
-															},
 															"case": {
 																"anyOf": [
 																	{
@@ -6615,7 +6511,6 @@
 															"person",
 															"poss",
 															"pronType",
-															"style",
 															"case",
 															"gender",
 															"number",
@@ -7284,26 +7179,12 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
 															"abbr",
 															"article",
-															"extPos",
-															"style"
+															"extPos"
 														],
 														"additionalProperties": false
 													}
@@ -8357,25 +8238,11 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
 															"abbr",
-															"extPos",
-															"style"
+															"extPos"
 														],
 														"additionalProperties": false
 													}
@@ -9218,27 +9085,12 @@
 																		"type": "null"
 																	}
 																]
-															},
-															"style": {
-																"anyOf": [
-																	{
-																		"type": "string",
-																		"enum": [
-																			"Expr",
-																			"Vrnc"
-																		]
-																	},
-																	{
-																		"type": "null"
-																	}
-																]
 															}
 														},
 														"required": [
 															"abbr",
 															"extPos",
-															"phrasal",
-															"style"
+															"phrasal"
 														],
 														"additionalProperties": false
 													}

@@ -28,7 +28,6 @@ export const EnDeterminerFeatureBagsSchema = z.strictObject({
 				"Tot",
 			]),
 		),
-		style: EN_FEATURE_SCHEMA.style.extract(["Vrnc"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

@@ -8,7 +8,6 @@ export const EnSubordinatingConjunctionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "SCONJ"]),
-		style: EN_FEATURE_SCHEMA.style.extract(["Vrnc"]),
 	}),
 });
 

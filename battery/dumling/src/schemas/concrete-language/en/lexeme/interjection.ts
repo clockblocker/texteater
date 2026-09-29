@@ -9,7 +9,6 @@ export const EnInterjectionFeatureBagsSchema = z.strictObject({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		foreign: EN_FEATURE_SCHEMA.foreign,
 		polarity: EN_FEATURE_SCHEMA.polarity.extract(["Neg", "Pos"]),
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr"]),
 	}),
 });
 

@@ -29,13 +29,6 @@ export const EnPronounFeatureBagsSchema = z.strictObject({
 				"Tot",
 			]),
 		),
-		style: EN_FEATURE_SCHEMA.style.extract([
-			"Arch",
-			"Coll",
-			"Expr",
-			"Slng",
-			"Vrnc",
-		]),
 		case: EN_FEATURE_SCHEMA.case.extract(["Acc", "Gen", "Nom"]),
 		gender: EN_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 		number: EN_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),

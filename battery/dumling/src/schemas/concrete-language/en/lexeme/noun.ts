@@ -11,7 +11,6 @@ export const EnNounFeatureBagsSchema = z.strictObject({
 		foreign: EN_FEATURE_SCHEMA.foreign,
 		numForm: EN_FEATURE_SCHEMA.numForm.extract(["Combi", "Digit", "Word"]),
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Card", "Frac", "Ord"]),
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr", "Vrnc"]),
 	}),
 	// A noun Surface is the noun's own form, so `books` is one Surface; its
 	// article is an attested member, not a feature (ADR 0040).

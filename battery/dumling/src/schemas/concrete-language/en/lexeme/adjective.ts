@@ -15,7 +15,6 @@ export const EnAdjectiveFeatureBagsSchema = z.strictObject({
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADP", "ADV", "SCONJ"]),
 		numForm: EN_FEATURE_SCHEMA.numForm.extract(["Combi", "Word"]),
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Frac", "Ord"]),
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

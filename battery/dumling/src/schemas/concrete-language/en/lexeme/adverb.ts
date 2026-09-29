@@ -31,7 +31,6 @@ export const EnAdverbFeatureBagsSchema = z.strictObject({
 				"Tot",
 			]),
 		),
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr", "Slng"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

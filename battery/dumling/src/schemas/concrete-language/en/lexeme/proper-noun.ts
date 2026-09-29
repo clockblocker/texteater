@@ -15,7 +15,6 @@ export const EnProperNounFeatureBagsSchema = z.strictObject({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		article: EN_FEATURE_SCHEMA.article.extract(["Definite"]),
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["PROPN"]),
-		style: EN_FEATURE_SCHEMA.style.extract(["Expr"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

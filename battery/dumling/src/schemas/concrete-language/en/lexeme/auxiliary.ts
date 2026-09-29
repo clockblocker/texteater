@@ -11,7 +11,6 @@ import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 export const EnAuxiliaryFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
-		style: EN_FEATURE_SCHEMA.style.extract(["Arch", "Vrnc"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

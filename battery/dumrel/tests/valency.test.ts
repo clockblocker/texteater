@@ -490,7 +490,6 @@ const englishVerbReading = (canonicalForm: string, emojiDescription: string) =>
 				abbr: null,
 				extPos: null,
 				phrasal: null,
-				style: null,
 			},
 		},
 		emojiDescription,

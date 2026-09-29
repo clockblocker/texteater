@@ -12,7 +12,6 @@ const core = {
 	poss: null,
 	pronType: null,
 	reflex: null,
-	style: null,
 };
 function lemma(
 	canonicalForm: string,
