@@ -32,19 +32,20 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": [], "rules": [{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/member-orthography","hash":"678811fa8882f8fd"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
+			"reading": { "emojiDescription": "🌊" },
 			"notes": {
-				"rationale": "I read `floß` as the 3sg past finite of `fließen`: `dem floß der Kaffee auf die Nas` means the coffee ran onto his nose. I considered the noun `Floß` for a second because the isolated form is ambiguous, but the clause structure with dative experiencer `dem` and subject `der Kaffee` makes the verbal reading clearly better."
+				"rationale": "floß is the 3sg past of fließen: the coffee ran onto his nose, with dem as the dative experiencer and der Kaffee as the subject, so it is not the noun Floß. floß is the spelling before the 1996 reform (today floss), so the Surface is Variant and the member Standard (de/member-orthography). Old spelling is no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,7 +57,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "floß",
-					"spelling": "Canonical",
+					"spelling": "Variant",
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -87,6 +88,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"reading": { "emojiDescription": "🔝" },
 			"notes": {
 				"rationale": "`auf` heads the directional phrase `auf die Nas`, so I treated it as an ordinary preposition, not as a verbal particle. The two-way Lemma carries no case; this occurrence records the accusative of `die Nas` (wohin?) as its realized case."
 			},

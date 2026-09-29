@@ -81,6 +81,7 @@ const verbs: Rule[] = [
 			"de/er-versucht-hinauszulaufen",
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/sie-erinnert-sich-an-den-geruch",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -205,6 +206,7 @@ const verbs: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -243,6 +245,7 @@ const participles: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -340,6 +343,7 @@ const nouns: Rule[] = [
 			"de/das-rennen-hat-spass-gemacht",
 			"de/schwimmen-ist-gesund",
 			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -503,6 +507,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/er-sass-schweigend-am-fenster",
 			"de/ich-suche-einen-besseren-ansatz",
 			"de/am-naechsten-morgen-war-alles-anders",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -536,6 +541,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/ich-suche-einen-besseren-ansatz",
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/viele-deutschsprachigen-quellen-fehlen-noch",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -616,6 +622,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/der-ausschuss-trifft-eine-entscheidung",
 			"de/die-ausschuesse-treffen-entscheidungen",
 			"de/er-weiss-bescheid-ueber-die-plaene",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{
@@ -725,7 +732,10 @@ const attestations: Rule[] = [
 			"Each member records how it is written. Standard covers licensed variants and sentence-initial capitals; Typo is a real spelling or casing error; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
-		records: ["de/im-heft-stand-filosofie-statt-philosophie"],
+		records: [
+			"de/im-heft-stand-filosofie-statt-philosophie",
+			"de/der-hockte-da-im-gruenen-gras",
+		],
 	},
 	{
 		id: "de/variant-and-historical-status",
@@ -733,7 +743,11 @@ const attestations: Rule[] = [
 			"A Surface is spelled Variant only when it uses a licensed spelling of the same Lemma, never for an inflected form or a repaired typo. Historical status marks archaic grammar, not old spelling or an old text around it.",
 		adrs: [],
 		routes: [],
-		records: ["de/im-heft-stand-filosofie-statt-philosophie"],
+		records: [
+			"de/im-heft-stand-filosofie-statt-philosophie",
+			"de/der-hockte-da-im-gruenen-gras",
+			"de/die-peitsche-hat-er-mitgebracht",
+		],
 	},
 	{
 		id: "de/empty-inflection-is-structural",
@@ -762,6 +776,7 @@ const attestations: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
+			"de/die-peitsche-hat-er-mitgebracht",
 		],
 	},
 	{

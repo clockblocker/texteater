@@ -28,7 +28,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -37,12 +37,13 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0042"],
-		"rules": [],
+		"rules": [{"rule":"de/noun-owns-its-article","hash":"d7ab8e0ed8c0a5f4"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/verbal-participle","hash":"8783a18791f95718"},{"rule":"de/verbal-surface-is-whole","hash":"974139977fd040ca"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/funktionsverbgefuege-are-collocations","hash":"da5ad8e285adbe66"},{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "➰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -76,8 +77,9 @@
 		},
 		{
 			"memberSegmentIndices": [4, 8],
+			"reading": { "emojiDescription": "🎒" },
 			"notes": {
-				"rationale": "The perfect-auxiliary click returns the same lexical mitbringen occurrence as the participle click; head morphology remains Participle and the Lemma remains mitbringen. Hat and mitgebracht are the two fixed members of this perfect occurrence; the participle supplies Surface morphology and the prefix remains a Lemma feature."
+				"rationale": "hat is the perfect auxiliary of mitbringen, so hat and mitgebracht are one VERB target (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle). The Surface records the whole perfect, with tense from the finite hat (de/verbal-surface-is-whole)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -123,6 +125,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "er", "orthography": "Standard" }],
@@ -158,6 +161,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"reading": { "emojiDescription": "➕" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "und", "orthography": "Standard" }],
@@ -181,6 +185,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 20, 22],
+			"reading": { "emojiDescription": "🛡" },
 			"notes": {
 				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is Variant. Acht is not the numeral."
 			},
@@ -225,6 +230,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "Sie is the accusative feminine singular object pronoun referring back to Peitsche, not nominative plural or polite Sie."
 			},
@@ -263,8 +269,9 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"reading": { "emojiDescription": "🤲" },
 			"notes": {
-				"rationale": "Sorglich is a manner adverb here, even though the form can feel adjective-like in modern German because it is rare outside literary style."
+				"rationale": "sorglich (Duden: Adjektiv, veraltend, 'sorgsam') is an adverbially used adjective, so it stays ADJ (de/adjective-stays-adj). Duden gives sorglicher and am sorglichsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -272,9 +279,16 @@
 					{ "attested": "sorglich", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"number": null,
+						"gender": null
+					},
 					"language": "de",
 					"normalizedSurface": "sorglich",
 					"spelling": "Canonical",
@@ -283,11 +297,13 @@
 						"language": "de",
 						"canonicalForm": "sorglich",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": "Yes",
+							"abbr": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"variant": null
 						}
 					},
 					"surfaceFeatures": null
