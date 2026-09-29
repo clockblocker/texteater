@@ -356,7 +356,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "es jemandem recht machen (Wiktionary headword; DWDS: jmdm. etw. recht machen, 'zu jmds. Zufriedenheit erledigen') means to satisfy someone, not the sum of make and right, so it is a Locution VERB (de/idiom). Its es refers to nothing and cannot be swapped for das without losing the meaning, so it is a fixed member (de/fixed-member-test); the dative Ihnen is an open slot, left out of the Canonical Form as ADR 0039 does with auf den Keks gehen. open: finding B1."
+				"rationale": "es jemandem recht machen (Wiktionary headword; DWDS: jmdm. etw. recht machen, 'zu jmds. Zufriedenheit erledigen') means to satisfy someone, not the sum of make and right, so it is a Locution VERB (de/idiom). Its es refers to nothing and cannot be swapped for das without losing the meaning, so it is a fixed member (de/fixed-member-test); the dative Ihnen is an open slot, left out of the Canonical Form as ADR 0039 does with auf den Keks gehen. Ruled on #743 (JT-B1, A5)."
 			}
 		},
 		{
@@ -503,7 +503,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks (de/fused-word-pieces). wenig inflects attributively (die wenigen Gäste) and DWDS classes it Adjektiv with weniger, am wenigsten, so it is ADJ (de/adjective-stays-adj), comparable, Sup. The clause is elliptical (und am wenigsten [können es] die Kinder [Ihnen recht machen]); no fixed word of the Locution is repeated, so nothing here attests it. open: finding B6."
+				"rationale": "am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks (de/fused-word-pieces). wenig inflects attributively (die wenigen Gäste) and DWDS classes it Adjektiv with weniger, am wenigsten, so it is ADJ (de/adjective-stays-adj), comparable, Sup. The clause is elliptical (und am wenigsten [können es] die Kinder [Ihnen recht machen]); no fixed word of the Locution is repeated, so nothing here attests it. Ruled on #743 (JT-B6, A3)."
 			}
 		},
 		{

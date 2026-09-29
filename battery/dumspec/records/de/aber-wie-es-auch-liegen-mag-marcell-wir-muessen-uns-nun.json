@@ -461,7 +461,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "wie opens a concessive free relative (however it may stand) and names the manner inside its own clause (es liegt so), outside any question, so it is the relative ADV (de/relative-w-adverb-fills-a-slot). open: finding B3."
+				"rationale": "wie opens a concessive free relative (however it may stand) and names the manner inside its own clause (es liegt so), outside any question, so it is the relative ADV (de/relative-w-adverb-fills-a-slot). Ruled on #743 (JT-B3)."
 			}
 		},
 		{
@@ -553,7 +553,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "auch after the w-word gives the clause its concessive sense (DWDS auch 5, 'verallgemeinert, mit konzessivem Sinn': wie dem auch sei). It does not inflect, so ADV, as auch is elsewhere in the corpus. open: finding B3."
+				"rationale": "auch after the w-word gives the clause its concessive sense (DWDS auch 5, 'verallgemeinert, mit konzessivem Sinn': wie dem auch sei). It does not inflect, so ADV, as auch is elsewhere in the corpus. Ruled on #743 (JT-B3)."
 			}
 		},
 		{
@@ -867,7 +867,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "uns is the reflexive object of machen. With machen and a predicative adjective the reflexive is accusative (sich bereit, verständlich machen), so the accusative cell. open: finding B4."
+				"rationale": "uns is the reflexive object of machen. With machen and a predicative adjective the reflexive is accusative (sich bereit, verständlich machen), so the accusative cell. Ruled on #743 (JT-B4, A4)."
 			}
 		},
 		{
@@ -999,7 +999,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "schlüssig is the predicative adjective in the 'resolved, decided' sense DWDS gives for sich (über etw.) schlüssig sein/werden. DWDS lists no comparison forms, so it marks no Degree. open: finding B4."
+				"rationale": "schlüssig is the predicative adjective in the 'resolved, decided' sense DWDS gives for sich (über etw.) schlüssig sein/werden. DWDS lists no comparison forms, so it marks no Degree. Ruled on #743 (JT-B4, A4)."
 			}
 		},
 		{
@@ -1054,7 +1054,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "machen is the infinitive under müssen. sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. open: finding B4."
+				"rationale": "machen is the infinitive under müssen. sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. Ruled on #743 (JT-B4, A4)."
 			}
 		},
 		{
