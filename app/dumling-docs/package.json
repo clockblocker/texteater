@@ -18,7 +18,7 @@
 		"generate:content": "bun run scripts/generate-content.ts",
 		"generate:docs": "bun run scripts/generate-docs.ts",
 		"generate:docs:check": "bun run scripts/generate-docs.ts --check",
-		"generate": "bun run generate:attestations && bun run generate:content bun run generate:docs",
+		"generate": "bun run generate:attestations && bun run generate:content && bun run generate:docs",
 		"prebuild:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:content",
 		"preview": "astro preview",
 		"test": "bun test",
