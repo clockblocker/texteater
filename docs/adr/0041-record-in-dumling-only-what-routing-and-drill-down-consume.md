@@ -97,3 +97,28 @@ included, eventually names its Reading; a Reviewed target must (added
   [#595](https://github.com/clockblocker/texteater/issues/595).
 
 Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumspec.
+
+## Amendment (2026-09-29): judge a field by the learner and by classification
+
+This replaces the scope test above. Where a click routes and what a Note
+drills down to are presentation questions, and presentation does not decide
+the model. A field in Dumling's DTOs is judged by two questions only:
+
+- Could the information help the learner?
+- Does the DTO shape help classification?
+
+The other decisions stand: Dumling holds types and schemas, members carry no
+Member Role, a shared or elided fixed word leaves the other unit Partial, and
+a Locution or Saying has a Breakdown.
+
+The first field admitted under this test is the subtype of a Variant
+spelling. A Surface's `spelling` is `{ kind: "Canonical" }` or
+`{ kind: "Variant", variantType }`, and `variantType` is Licensed (*zwo*,
+*auf Grund*), Historical (*daß*, *Photographie*), Regional (*nit*, *nedd*)
+or Expressive (*ohhh*, *boahhh*). No click or drill-down reads it. A learner
+who meets *daß* is told it is the spelling before the 1996 reform, and a
+classifier names why a spelling is not Canonical instead of stretching
+"licensed" over dialect and drawn-out letters. Variant now covers every
+non-canonical spelling of the Lemma that is not a mistake; a mistake stays a
+Typo member. Decided on
+[#595](https://github.com/clockblocker/texteater/issues/595).
