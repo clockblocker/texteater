@@ -107,6 +107,9 @@ the model. A field in Dumling's DTOs is judged by two questions only:
 - Could the information help the learner?
 - Does the DTO shape help classification?
 
+Either question is enough: a field that answers yes to one of them belongs in
+the DTO, even if the other answer is no.
+
 The other decisions stand: Dumling holds types and schemas, members carry no
 Member Role, a shared or elided fixed word leaves the other unit Partial, and
 a Locution or Saying has a Breakdown.
