@@ -374,34 +374,9 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		plural(table),
 	);
 }
-// meist stands alone only after the definite article (das meiste, die meisten),
-// so its standalone cells carry weak endings. It is cited as die meisten.
-add(
-	{
-		Masc: absent,
-		Fem: absent,
-		Neut: [
-			form("meiste", "ˈmaɪ̯stə"),
-			form("meiste", "ˈmaɪ̯stə"),
-			form("meisten", "ˈmaɪ̯stən"),
-			form("meisten", "ˈmaɪ̯stən"),
-		],
-		Plur: [
-			form("meisten", "ˈmaɪ̯stən"),
-			form("meisten", "ˈmaɪ̯stən"),
-			form("meisten", "ˈmaɪ̯stən"),
-			form("meisten", "ˈmaɪ̯stən"),
-		],
-	},
-	description(
-		"Ind",
-		"🔢",
-		"Bezeichnet den größten Teil einer Menge oder Gruppe.",
-		["most; the majority"],
-		["большинство; большая часть"],
-	),
-	{ citation: form("meisten", "ˈmaɪ̯stən") },
-);
+// meist has no PRON: standing alone it still follows its article (das meiste,
+// die meisten), so it is ADJ viel with its noun elided (Rule
+// de/quantifier-by-use).
 // sämtlich is total; standalone as neuter mass singular or plural.
 {
 	const t = strongPronoun("sämtlich", "ˈzɛmtlɪç");

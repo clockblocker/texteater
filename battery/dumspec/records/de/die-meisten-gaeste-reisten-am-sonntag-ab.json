@@ -28,7 +28,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "DET" },
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "meisten follows the article die, so it is ADJ (de/quantifier-by-use): the superlative of viel (DWDS viel: mehr, am meisten), with the weak ending after die. die belongs to Gäste (de/noun-owns-its-article)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -38,20 +41,14 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "meiste",
+						"kind": "ADJ",
+						"canonicalForm": "viel",
 						"coreFeatures": {
-							"case": null,
-							"definite": null,
-							"extPos": null,
+							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
-							"gender": null,
-							"number": null,
 							"numType": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Ind"
+							"variant": null
 						}
 					},
 					"normalizedSurface": "meisten",
@@ -61,15 +58,15 @@
 						"case": "Nom",
 						"degree": "Sup",
 						"gender": null,
-						"gender[psor]": null,
-						"number": "Plur",
-						"number[psor]": null
+						"number": "Plur"
 					}
 				},
 				"members": [
 					{ "attested": "meisten", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

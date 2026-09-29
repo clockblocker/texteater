@@ -565,6 +565,22 @@ const pronounsAndAdjectives: Rule[] = [
 		],
 	},
 	{
+		id: "de/quantifier-by-use",
+		statement:
+			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides: after a determiner they are ADJ, also with their noun elided (seine vielen Beine, die meisten); standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig, whose Cmp and Sup are mehr and am meisten, weniger and am wenigsten. For these words this Rule decides over de/pron-or-det-by-use and de/adjective-stays-adj.",
+		adrs: ["ADR-0040", "ADR-0042"],
+		routes: lexeme("ADJ", "PRON", "DET", "ADV"),
+		records: [
+			"de/viele-kamen-zu-spaet",
+			"de/wir-haetten-gern-mehr-zeit",
+			"de/viele-deutschsprachigen-quellen-fehlen-noch",
+			"de/mehr-als-die-haelfte-der-gaeste-blieb-bis-zum-ende",
+			"de/viele-buecher-wurden-an-die-schule-gespendet",
+			"de/nach-dem-umbau-arbeitet-die-pumpe-wenig",
+			"de/die-meisten-gaeste-reisten-am-sonntag-ab",
+		],
+	},
+	{
 		id: "de/possessive-after-article",
 		statement:
 			"In der meine, der meinige and der eine, the pronoun stands in for an elided noun, so it is the Head of its phrase and owns the article the way a noun does: Der meine ist rot gives [Der, meine] PRON. The article is no DET target of its own.",

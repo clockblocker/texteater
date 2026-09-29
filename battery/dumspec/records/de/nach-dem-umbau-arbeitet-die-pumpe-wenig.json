@@ -28,6 +28,9 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "wenig is used adverbially, modifying arbeitet, so it is the comparable ADV wenig (weniger, am wenigsten), and its Surface marks Pos (de/quantifier-by-use, de/comparability-is-lexical)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -40,6 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wenig",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"pronType": "Ind"
@@ -48,7 +52,7 @@
 					"normalizedSurface": "wenig",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": { "degree": "Pos" }
 				},
 				"members": [{ "attested": "wenig", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

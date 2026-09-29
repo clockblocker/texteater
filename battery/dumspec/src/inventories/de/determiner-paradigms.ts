@@ -68,7 +68,7 @@ function adjectivalGenitive(stem: string, ipa: string): PronounTable {
 		],
 	};
 }
-/** Weak endings after a definite article: die meisten, der wievielte. */
+/** Weak endings after a definite article: der wievielte. */
 function weak(stem: string, ipa: string): PronounTable {
 	const e = form(`${stem}e`, `${ipa}ə`),
 		en = form(`${stem}en`, `${ipa}ən`);
@@ -496,17 +496,9 @@ add(
 		["несколько"],
 	),
 );
-// meiste declines weakly after the article; its Surfaces mark degree Sup.
-add(
-	weak("meist", "ˈmaɪ̯st"),
-	description(
-		{ pronType: "Ind" },
-		"🔢",
-		"Der quantifizierende Determinierer „meiste“ grenzt die Menge der bezeichneten Bezüge ein.",
-		["most"],
-		["большинство"],
-	),
-);
+// meist has no DET: it stands only after a determiner, where viel, wenig,
+// mehr and meist are ADJ (Rule de/quantifier-by-use), so die meisten Gäste is
+// the Sup of ADJ viel.
 
 // Total quantifiers, cited in the plural. Uninflected all stands before an
 // article or pronoun (all die Jahre).
