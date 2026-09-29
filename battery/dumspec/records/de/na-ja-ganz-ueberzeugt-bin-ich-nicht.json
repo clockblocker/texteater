@@ -19,14 +19,35 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "735d20ce9a133580"
+			},
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: na ja!",
+				"url": "https://www.duden.de/rechtschreibung/na_ja_",
+				"supports": "Target 0, na ja"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "🤷" },
 			"notes": {
-				"rationale": "The Full Attestation records both members of the routine formula na ja; the docs review span on ja does not make it a standalone response particle. Na ja is a Locution/INTJ; punctuation is excluded from the normalized surface."
+				"rationale": "na ja is one interjection (Duden: na ja!, 'Ausdruck des Einlenkens, Entgegenkommens, Abmilderns, vorsichtigen Widerspruchs'), a Locution INTJ. ja gives no yes here, so the two words do not resolve on their own as in nein danke. Here it softens a disagreement."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

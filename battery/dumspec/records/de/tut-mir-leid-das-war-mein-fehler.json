@@ -19,12 +19,32 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "735d20ce9a133580"
+			},
+			{
+				"rule": "de/modification-attests-partially",
+				"hash": "c9ac73bf18af63c6"
+			},
+			{ "rule": "de/partial-coverage", "hash": "7d8f01fb7470e204" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
+			"reading": { "emojiDescription": "🙇" },
 			"notes": {
 				"rationale": "Tut mir leid is the clipped form of the apology formula es tut mir leid (Duden, under leidtun), a Locution INTJ, not a finite verb. The fixed es is left out, so the Attestation is Partial and its members are Tut, mir and leid. Its apology role is Reading Knowledge, not part of the Lemma."
 			},

@@ -30,7 +30,17 @@ const units: Rule[] = [
 			"A click on a word selects the largest complete fixed unit that contains it. Every fixed member selects the same unit, and the unit is found by position in the sentence, never by spelling.",
 		adrs: ["ADR-0003", "ADR-0039", "dumgen/ADR-0007"],
 		routes: [],
-		records: ["de/verbrannt-ist-alles-ganz-und-gar"],
+		records: [
+			"de/verbrannt-ist-alles-ganz-und-gar",
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/damit-triffst-du-den-nagel-auf-den-kopf",
+			"de/guten-tag-ich-habe-einen-termin",
+			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
+			"de/tut-mir-leid-das-war-mein-fehler",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
+			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
+			"de/wer-zuerst-kommt-mahlt-zuerst",
+		],
 	},
 	{
 		id: "de/fixed-members-only",
@@ -38,7 +48,12 @@ const units: Rule[] = [
 			"A unit's members are the words it fixes, function words included. Free arguments, modifiers, fillers, punctuation and opaque text stay outside. Words are not fixed just because they stand together, often occur together or form an ordinary compositional phrase.",
 		adrs: ["ADR-0003"],
 		routes: [],
-		records: [],
+		records: [
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/damit-triffst-du-den-nagel-auf-den-kopf",
+			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
+		],
 	},
 	{
 		id: "de/locutions-and-sayings-are-made-of-lexemes",
@@ -46,7 +61,17 @@ const units: Rule[] = [
 			"Every word belongs to exactly one target: the biggest unit it is part of. A word inside a Locution or a Saying has no target of its own in the sentence; the multiword unit leads to it through the Lemma's Breakdown.",
 		adrs: ["ADR-0041", "dumgen/ADR-0007"],
 		routes: everyMultiword,
-		records: [],
+		records: [
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/damit-triffst-du-den-nagel-auf-den-kopf",
+			"de/guten-tag-ich-habe-einen-termin",
+			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
+			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
+			"de/tut-mir-leid-das-war-mein-fehler",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
+			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
+			"de/wer-zuerst-kommt-mahlt-zuerst",
+		],
 	},
 	{
 		id: "de/unresolved-over-repair",
@@ -432,6 +457,8 @@ const fusedWords: Rule[] = [
 			"de/wer-steht-am-naechsten",
 			"de/von-allen-arbeitet-sie-am-sorgfaeltigsten",
 			"de/am-naechsten-morgen-war-alles-anders",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
+			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
 		],
 	},
 	{
@@ -669,7 +696,11 @@ const locutionsAndSayings: Rule[] = [
 			"A word is a fixed member of an expression when the expression needs this word, or one of a narrow set, in its slot: an ordinary synonym would break it. A fixed article or preposition counts through the word that carries it (ins Feuer, zur Verfügung). A preposition the expression governs for a free complement (weiß Bescheid über die Pläne) is valency, not a fixed member.",
 		adrs: ["ADR-0034", "dumgen/ADR-0007"],
 		routes: everyMultiword,
-		records: [],
+		records: [
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/damit-triffst-du-den-nagel-auf-den-kopf",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
+		],
 	},
 	{
 		id: "de/funktionsverbgefuege-are-collocations",
@@ -695,6 +726,9 @@ const locutionsAndSayings: Rule[] = [
 			"de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren",
 			"de/verbrannt-ist-alles-ganz-und-gar",
 			"de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen",
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/damit-triffst-du-den-nagel-auf-den-kopf",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
 		],
 	},
 	{
@@ -713,6 +747,8 @@ const locutionsAndSayings: Rule[] = [
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 			"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/guten-tag-ich-habe-einen-termin",
+			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
 		],
 	},
 	{
@@ -753,6 +789,7 @@ const locutionsAndSayings: Rule[] = [
 		records: [
 			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
 			"de/nach-der-winterpause-begann-die-laufgruppe-wieder-zu",
+			"de/wer-zuerst-kommt-mahlt-zuerst",
 		],
 	},
 	{
@@ -761,7 +798,10 @@ const locutionsAndSayings: Rule[] = [
 			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen). A Locution whose dictionary entry marks a fixed word as optional still attests it, Partial, when that word is left out: Duden cites guten Morgen as [guten] Morgen!, so Morgen, Frau Schulz! gives [Morgen] Locution INTJ guten Morgen.",
 		adrs: ["ADR-0039", "ADR-0003"],
 		routes: everyMultiword,
-		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
+		records: [
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/tut-mir-leid-das-war-mein-fehler",
+		],
 	},
 ];
 
@@ -826,6 +866,9 @@ const attestations: Rule[] = [
 			"de/morgen-fahren-wir-nach-hamburg",
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
 			"de/wegen-dem-regen-kamen-wir-zu-spaet",
+			"de/guten-tag-ich-habe-einen-termin",
+			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
+			"de/genau-da-liegt-der-hase-im-pfeffer",
 		],
 	},
 	{
@@ -910,7 +953,10 @@ const attestations: Rule[] = [
 			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). A split target, or one with free words between its members, is still Full.",
 		adrs: ["ADR-0003", "ADR-0039"],
 		routes: [...lexeme("NOUN"), ...everyMultiword],
-		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
+		records: [
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/tut-mir-leid-das-war-mein-fehler",
+		],
 	},
 ];
 

@@ -20,12 +20,26 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-member-test", "hash": "d095c150bfc6b7bd" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6, 8, 10, 12, 14],
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "triffst is the Locution's verb and joins its fixed words; damit and du stay outside."
 			},

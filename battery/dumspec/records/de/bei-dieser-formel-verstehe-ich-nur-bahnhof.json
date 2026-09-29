@@ -18,14 +18,34 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-member-test", "hash": "d095c150bfc6b7bd" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Bahnhof",
+				"url": "https://www.duden.de/rechtschreibung/Bahnhof",
+				"supports": "Target 0, nur Bahnhof verstehen"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 10, 12],
+			"reading": { "emojiDescription": "😵‍💫" },
 			"notes": {
-				"rationale": "Clicking Bahnhof resolves the complete discontinuous idiom occurrence `verstehe … nur Bahnhof`; `ich` lies between participating Text segments but is not a Surface member."
+				"rationale": "nur Bahnhof verstehen is an Idiom, a Locution VERB (Duden: [immer] nur Bahnhof verstehen, 'überhaupt nichts verstehen'). nur is a fixed member, since Duden cites it inside the idiom. The subject ich stands between the members and stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

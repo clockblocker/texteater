@@ -22,14 +22,33 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "900bbd9999f2b34b" },
+			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Morgenstund hat Gold im Mund",
+				"url": "https://www.dwds.de/wb/Morgenstund%20hat%20Gold%20im%20Mund",
+				"supports": "Target 0, Morgenstund hat Gold im Mund (Sprichwort)"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
+			"reading": { "emojiDescription": "🌅💰" },
 			"notes": {
-				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span remains on Morgenstund only."
+				"rationale": "Morgenstund hat Gold im Mund is a Proverb, one Saying target over all its words, both pieces of im included. The attribution sagte sie verschlafen stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

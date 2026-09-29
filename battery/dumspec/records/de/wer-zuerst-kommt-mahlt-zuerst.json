@@ -15,14 +15,32 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "900bbd9999f2b34b" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: wer zuerst kommt, mahlt zuerst",
+				"url": "https://www.dwds.de/wb/wer%20zuerst%20kommt,%20mahlt%20zuerst",
+				"supports": "Target 0, Wer zuerst kommt, mahlt zuerst (sprichwörtlich)"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 7, 9],
+			"reading": { "emojiDescription": "🥇" },
 			"notes": {
-				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb, so one Saying target spans all its words, and wer has no target of its own (de/saying-needs-uptake, de/locutions-and-sayings-are-made-of-lexemes). The record stays Draft until a proverb collection such as OWID's Sprichwörterbuch is cited."
+				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb (DWDS: sprichwörtlich), so one Saying target spans all its words, and wer has no target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -23,14 +23,30 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "677fbf6666284e28" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 15],
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
-				"rationale": "The Full Attestation records both ordered members of the Locution/SCONJ `um … zu`; the docs-owned review span remains on `zu`, outside the Dumling DTO."
+				"rationale": "um … zu is a correlator, a Locution SCONJ made of its anchors um and zu. einen Salat and machen belong to the clause it introduces and stay outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
