@@ -39,6 +39,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [21],
+			"notes": {
+				"rationale": "ihrer is the standard genitive of plural sie, governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of ihrer. So the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -64,7 +67,7 @@
 					},
 					"normalizedSurface": "ihrer",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "ihrer", "orthography": "Standard" }],

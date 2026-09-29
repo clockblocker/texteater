@@ -27,6 +27,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
+			"notes": {
+				"rationale": "Ihrer is the standard genitive of polite Sie, governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of Ihrer. So the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -52,7 +55,7 @@
 					},
 					"normalizedSurface": "Ihrer",
 					"spelling": "Canonical",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "Ihrer", "orthography": "Standard" }],
