@@ -2,44 +2,158 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sollte er also einstmals etwa noch vor den Füßen meiner Kinder und Kindeskinder mit nachschleifendem Zwirnsfaden die Treppe hinunterkollern?",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sollte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "also" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einstmals" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "etwa" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Füßen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "meiner" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kinder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kindeskinder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nachschleifendem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zwirnsfaden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Treppe" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hinunterkollern" },
-		{ "kind": "Punctuation", "text": "?" }
+		{
+			"kind": "ResolvableText",
+			"text": "Sollte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "also"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einstmals"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "etwa"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Füßen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "meiner"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kinder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kindeskinder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nachschleifendem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zwirnsfaden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Treppe"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hinunterkollern"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -49,38 +163,123 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0026", "ADR-0036", "ADR-0039", "ADR-0040"],
 		"rules": [
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "d095c150bfc6b7bd"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+			},
+			{
+				"title": "DWDS: Kindeskind",
+				"url": "https://www.dwds.de/wb/Kindeskind",
+				"supports": "Target [Kinder, und, Kindeskinder]: Phrasem 'Kinder und Kindeskinder' = 'die gesamte Nachkommenschaft einer Person'."
+			},
+			{
+				"title": "Duden: Kindeskind",
+				"url": "https://www.duden.de/rechtschreibung/Kindeskind",
+				"supports": "Target [Kinder, und, Kindeskinder]: Duden lists Kindeskind (Enkel) and no phrase."
+			},
+			{
+				"title": "DWDS: einstmals",
+				"url": "https://www.dwds.de/wb/einstmals",
+				"supports": "Target [einstmals]: Adverb, gehoben; sense 2 'einst, künftig'."
+			},
+			{
+				"title": "DWDS: Kindeskind",
+				"url": "https://www.dwds.de/wb/Kindeskind",
+				"supports": "Target [Kinder, und, Kindeskinder]: Phrasem 'Kinder und Kindeskinder' = 'die gesamte Nachkommenschaft einer Person'."
+			},
+			{
+				"title": "Duden: Kindeskind",
+				"url": "https://www.duden.de/rechtschreibung/Kindeskind",
+				"supports": "Target [Kinder, und, Kindeskinder]: Duden lists Kindeskind (Enkel) and no phrase."
+			},
+			{
+				"title": "DWDS: einstmals",
+				"url": "https://www.dwds.de/wb/einstmals",
+				"supports": "Target [einstmals]: Adverb, gehoben; sense 2 'einst, künftig'."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sollen from Sollte (AUX aux)."
+				"rationale": "Sollte opening a question about a possible future event is the modal sollen in Konjunktiv II (Duden sollen: im 2. Konjunktiv, drückt eine Möglichkeit aus), so mood Sub, tense Past (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Sollte",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "sollte",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -93,41 +292,37 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "sollte",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Past",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "Sollte", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+				"rationale": "er refers to Odradek."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "er",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -135,38 +330,47 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV also from also (ADV advmod)."
+				"rationale": "also is the inferential adverb 'so, then' linking the question to what came before."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "also",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "also",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -180,26 +384,36 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "also",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "also", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV einstmals from einstmals (ADV advmod)."
+				"rationale": "einstmals is the ADV 'some day' (DWDS: gehoben, einst, künftig); it has no comparison forms."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "einstmals",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "einstmals",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -213,61 +427,78 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "einstmals",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "einstmals", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV etwa from etwa (ADV advmod)."
+				"rationale": "etwa in a yes-no question is the modal particle of apprehension ('by any chance'), not 'approximately', so a PART like denn. open: finding A1"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "etwa",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "etwa",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"canonicalForm": "etwa",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
-					"normalizedSurface": "etwa",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "etwa", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+				"rationale": "noch is the temporal adverb 'still, even (as late as)', modifying the time phrase."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "noch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -281,26 +512,46 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP vor from vor (ADP case)."
+				"rationale": "vor is a free local ADP; its complement is dative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "vor",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "vor",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -315,73 +566,97 @@
 							"partType": null
 						}
 					},
-					"normalizedSurface": "vor",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "vor", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [14, 16],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Fuß from Füßen (NOUN obl) with den (det)."
+				"rationale": "Füßen owns den (de/noun-owns-its-article)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Füßen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Füßen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Fuß",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Füßen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Plur"
-					}
-				},
-				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Füßen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "DET" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET mein from meiner (DET det:poss)."
+				"rationale": "meiner is the possessive mein, a DET of its own, never an article (de/only-der-and-ein-are-articles); Surface Gen.Plur, possessor singular."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "meiner",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "meiner",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number": "Plur",
+						"number[psor]": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -402,134 +677,98 @@
 							"pronType": "Prs"
 						}
 					},
-					"normalizedSurface": "meiner",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Gen",
-						"degree": null,
-						"gender": null,
-						"gender[psor]": null,
-						"number": "Plur",
-						"number[psor]": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "meiner", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kind from Kinder (NOUN nmod)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Kind",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
-					},
-					"normalizedSurface": "Kinder",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Gen",
-						"gender": null,
-						"number": "Plur"
-					}
-				},
-				"members": [
-					{ "attested": "Kinder", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "CCONJ",
-						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
-					},
-					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
-			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"memberSegmentIndices": [20, 22, 24],
+			"route": {
+				"family": "Locution",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kindeskind from Kindeskinder (NOUN conj)."
+				"rationale": "Kinder und Kindeskinder is the twin formula 'all one's descendants' (DWDS lists it as a Phrasem: die gesamte Nachkommenschaft einer Person); here it means generations to come. Recommended as one Locution NOUN whose meaning generalizes past its words (de/idiom); meiner stays outside as a free possessive. open: finding B4"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Kinder",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kindeskinder",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Kinder und Kindeskinder",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"number": "Plur"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "NOUN",
-						"canonicalForm": "Kindeskind",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"canonicalForm": "Kinder und Kindeskinder",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
-					"normalizedSurface": "Kindeskinder",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Gen",
-						"gender": null,
-						"number": "Plur"
-					}
-				},
-				"members": [
-					{ "attested": "Kindeskinder", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
+				"rationale": "mit is a free ADP 'with'; its complement is dative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "mit",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "mit",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -544,36 +783,43 @@
 							"partType": null
 						}
 					},
-					"normalizedSurface": "mit",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "mit", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ nachschleifend from nachschleifendem (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+				"rationale": "nachschleifendem is an attributive Partizip I of nachschleifen, so a single-member ADJ nachschleifend (de/participial-adjective, de/attributive-adjective-stands-alone); like the Reviewed lachend it is left non-comparable."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "nachschleifendem",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "nachschleifendem",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Masc",
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -588,126 +834,138 @@
 							"variant": null
 						}
 					},
-					"normalizedSurface": "nachschleifendem",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"degree": null,
-						"gender": "Masc",
-						"number": "Sing"
-					}
-				},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [30],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"notes": {
+				"rationale": "Zwirnsfaden has no article."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "nachschleifendem",
+						"attested": "Zwirnsfaden",
 						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zwirnsfaden from Zwirnsfaden (NOUN obl)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Zwirnsfaden",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Zwirnsfaden",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Zwirnsfaden",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "Zwirnsfaden", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [32, 34],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Treppe from Treppe (NOUN obj) with die (det)."
+				"rationale": "die Treppe is the accusative of path; Treppe owns die."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Treppe",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Treppe",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Treppe",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Treppe",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Treppe", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB hinunterkollern from hinunterkollern (VERB root). hasSepPrefix is left null: check whether hinunterkollern has the separable prefix hinunter."
+				"rationale": "hinunterkollern 'roll clattering down' is the particle verb with separable hinunter, written as one word, so the particle is in the verb (de/verb-core-features). It is the infinitive sollte governs, a VERB target of its own (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hinunterkollern",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "hinunterkollern",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
 					"normalizedSurface": "hinunterkollern",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,
@@ -719,14 +977,21 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "hinunterkollern", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "hinunterkollern",
+						"coreFeatures": {
+							"hasSepPrefix": "hinunter",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

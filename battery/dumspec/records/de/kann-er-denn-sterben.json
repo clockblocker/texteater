@@ -2,14 +2,38 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Kann er denn sterben?",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Kann" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "denn" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sterben" },
-		{ "kind": "Punctuation", "text": "?" }
+		{
+			"kind": "ResolvableText",
+			"text": "Kann"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "denn"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sterben"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -19,32 +43,75 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0026"],
 		"rules": [
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+			},
+			{
+				"title": "Duden: denn (verstärkende Partikel)",
+				"url": "https://www.duden.de/rechtschreibung/denn_verstaerkende_Partikel",
+				"supports": "Target [denn]: in a question denn is a Partikel expressing interest, impatience or doubt."
+			},
+			{
+				"title": "Duden: denn (verstärkende Partikel)",
+				"url": "https://www.duden.de/rechtschreibung/denn_verstaerkende_Partikel",
+				"supports": "Target [denn]: in a question denn is a Partikel expressing interest, impatience or doubt."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from Kann (AUX aux)."
+				"rationale": "Kann is the modal können, a VERB with verbType Mod; the infinitive it governs is its own target (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Kann",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "kann",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -57,39 +124,37 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "kann",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "Kann", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+				"rationale": "er refers to Odradek; the form has one cell."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "er",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -97,71 +162,102 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV denn from denn (ADV advmod)."
+				"rationale": "denn in a question is the modal particle of interest or doubt (Duden: denn, verstärkende Partikel), not the causal conjunction. It is a PART, as the Reviewed einmal and the authored mal are; no Rule states this. open: finding A1"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "denn",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "denn",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"canonicalForm": "denn",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
-					"normalizedSurface": "denn",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "denn", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sterben from sterben (VERB root)."
+				"rationale": "sterben is the infinitive kann governs, a VERB target of its own (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "sterben",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "sterben",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -174,28 +270,8 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "sterben",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "sterben", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

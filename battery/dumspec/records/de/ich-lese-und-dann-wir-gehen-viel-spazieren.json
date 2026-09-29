@@ -2,25 +2,82 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "»Ich lese, und dann, wir gehen viel spazieren.",
 	"segments": [
-		{ "kind": "Punctuation", "text": "»" },
-		{ "kind": "ResolvableText", "text": "Ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "lese" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dann" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gehen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "viel" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "spazieren" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "Punctuation",
+			"text": "»"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "lese"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dann"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gehen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "viel"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "spazieren"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -30,30 +87,85 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0039", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "d095c150bfc6b7bd"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #24173: Stefan Zweig, Brennendes Geheimnis",
 				"url": "https://www.gutenberg.org/ebooks/24173",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #24173 (released 2008-01-05), transcribed from Insel-Verlag, Leipzig, 16.-25. Tausend. Chapter Der Partner, Edgar's answer to the Baron."
+			},
+			{
+				"title": "Duden: spazieren gehen",
+				"url": "https://www.duden.de/rechtschreibung/spazieren_gehen",
+				"supports": "Target [gehen, spazieren]: headword spazieren gehen, 'einen Spaziergang machen'."
+			},
+			{
+				"title": "DWDS: viel",
+				"url": "https://www.dwds.de/wb/viel",
+				"supports": "Target [viel]: II.1 adverbiell 'häufig, oft' (viel lachen, schlafen, wandern); Komparativ mehr, Superlativ am meisten."
+			},
+			{
+				"title": "Duden: spazieren gehen",
+				"url": "https://www.duden.de/rechtschreibung/spazieren_gehen",
+				"supports": "Target [gehen, spazieren]: headword spazieren gehen, 'einen Spaziergang machen'."
+			},
+			{
+				"title": "DWDS: viel",
+				"url": "https://www.dwds.de/wb/viel",
+				"supports": "Target [viel]: II.1 adverbiell 'häufig, oft' (viel lachen, schlafen, wandern); Komparativ mehr, Superlativ am meisten."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [1],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from Ich (PRON nsubj)."
+				"rationale": "Subject pronoun ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -61,38 +173,60 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [3],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB lesen from lese (VERB root)."
+				"rationale": "lese is intransitive lesen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "lese",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "lese",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -105,66 +239,75 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "lese",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "1",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "lese", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+				"rationale": "und joins the clauses."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "und",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV dann from dann (ADV advmod)."
+				"rationale": "dann is the temporal ADV 'then'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "dann",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "dann",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -178,26 +321,37 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "dann",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "dann", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wir from wir (PRON nsubj)."
+				"rationale": "Subject pronoun wir."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "wir",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "wir",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -205,53 +359,52 @@
 						"kind": "PRON",
 						"canonicalForm": "wir",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Plur",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Plur",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "wir",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "wir", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
-			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [13, 17],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB gehen from gehen (VERB conj)."
+				"rationale": "gehen … spazieren is spazieren gehen 'go for a walk', a Duden headword (formerly spazierengehen) with two verbs as Heads, so a Locution VERB that inflects like its verb; viel between them is free. open: finding B7"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "gehen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "spazieren",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "gehen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
+					"normalizedSurface": "gehen spazieren",
+					"spelling": {
+						"kind": "Canonical"
 					},
-					"normalizedSurface": "gehen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Plur",
@@ -263,105 +416,62 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [{ "attested": "gehen", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "spazieren gehen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON viele from viel (DET obj). UD tags viel DET; STTS PIS makes it PRON (de/pron-or-det-by-use). viel fits 3 authored PRON cells equally (Ind Nom Sing Neut; Ind Acc Sing Neut; Ind Dat Sing Neut); the first is drafted. Check the referent (ADR 0044)."
+				"rationale": "viel here modifies the verb, 'often, a lot' (DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern): it stands for no noun phrase and modifies no noun, so it is neither the PRON nor the DET quantifier (de/pron-or-det-by-use). Recommended as ADV viel, comparable through mehr, am meisten. open: finding B6"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "viele",
-						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Ind",
-							"gender": null
-						}
-					},
-					"normalizedSurface": "viel",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": "Neut",
-						"number": "Sing",
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
-					}
-				},
-				"members": [{ "attested": "viel", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB spazieren from spazieren (VERB xcomp)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "spazieren",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "spazieren",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
 				"members": [
-					{ "attested": "spazieren", "orthography": "Standard" }
+					{
+						"attested": "viel",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "viel",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "viel",
+						"coreFeatures": {
+							"comparable": "Yes",
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

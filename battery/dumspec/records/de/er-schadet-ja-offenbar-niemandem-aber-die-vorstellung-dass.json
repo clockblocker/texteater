@@ -2,49 +2,178 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er schadet ja offenbar niemandem; aber die Vorstellung, daß er mich auch noch überleben sollte, ist mir eine fast schmerzliche.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schadet" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ja" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "offenbar" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "niemandem" },
-		{ "kind": "Punctuation", "text": ";" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aber" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Vorstellung" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "daß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "überleben" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sollte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ist" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eine" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fast" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schmerzliche" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schadet"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ja"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "offenbar"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "niemandem"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "aber"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Vorstellung"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "daß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "überleben"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sollte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eine"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fast"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "schmerzliche"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -54,35 +183,115 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0026", "ADR-0040", "ADR-0041", "ADR-0042", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "81f5ca84af1bc0ca"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+			},
+			{
+				"title": "Duden: offenbar (Adverb)",
+				"url": "https://www.duden.de/rechtschreibung/offenbar_unzweifelhaft_augenfaellig",
+				"supports": "Target [offenbar]: Wortart Adverb, 'dem Anschein nach, wie es scheint'; the adjective is a separate headword."
+			},
+			{
+				"title": "DWDS: offenbar",
+				"url": "https://www.dwds.de/wb/offenbar",
+				"supports": "Target [offenbar]: Adjektiv, offenbarer, am offenbarsten; sense 2 'anscheinend', Grammatik: adverbiell."
+			},
+			{
+				"title": "Duden: schmerzlich",
+				"url": "https://www.duden.de/rechtschreibung/schmerzlich",
+				"supports": "Target [eine, schmerzliche]: example 'die schmerzlichsten Erfahrungen'."
+			},
+			{
+				"title": "Duden: offenbar (Adverb)",
+				"url": "https://www.duden.de/rechtschreibung/offenbar_unzweifelhaft_augenfaellig",
+				"supports": "Target [offenbar]: Wortart Adverb, 'dem Anschein nach, wie es scheint'; the adjective is a separate headword."
+			},
+			{
+				"title": "DWDS: offenbar",
+				"url": "https://www.dwds.de/wb/offenbar",
+				"supports": "Target [offenbar]: Adjektiv, offenbarer, am offenbarsten; sense 2 'anscheinend', Grammatik: adverbiell."
+			},
+			{
+				"title": "Duden: schmerzlich",
+				"url": "https://www.duden.de/rechtschreibung/schmerzlich",
+				"supports": "Target [eine, schmerzliche]: example 'die schmerzlichsten Erfahrungen'."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from Er (PRON nsubj)."
+				"rationale": "Er refers to Odradek."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Er",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "er",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -90,38 +299,60 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Er", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB schaden from schadet (VERB root)."
+				"rationale": "schadet is schaden; its dative complement niemandem is a bare case, so a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "schadet",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "schadet",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -134,130 +365,129 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "schadet",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "schadet", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV ja from ja (ADV advmod)."
+				"rationale": "ja is the unstressed modal particle marking the statement as known, not the answer particle, so a PART. open: finding A1"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ja",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ja",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"canonicalForm": "ja",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
-					"normalizedSurface": "ja",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ja", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV offenbar from offenbar (ADV advmod)."
+				"rationale": "offenbar is the sentence adverb 'apparently'. de/adjective-stays-adj makes a word that inflects attributively an ADJ, and DWDS files this use as an adverbial sense of the adjective with offenbarer, am offenbarsten; Duden has a separate Adverb headword for it. open: finding B5"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "offenbar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "offenbar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "ADJ",
 						"canonicalForm": "offenbar",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"variant": null
 						}
 					},
-					"normalizedSurface": "offenbar",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "offenbar", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON niemand from niemandem (DET obl:arg). UD tags niemandem DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
+				"rationale": "niemandem is the dative of the stem pronoun niemand (ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "niemandem",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "niemand",
-						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Neg",
-							"gender": null
-						}
-					},
 					"normalizedSurface": "niemandem",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,
@@ -265,117 +495,189 @@
 						"gender[psor]": null,
 						"number[psor]": null,
 						"reflex": null
-					}
-				},
-				"members": [
-					{ "attested": "niemandem", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "niemand",
+						"coreFeatures": {
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Neg",
+							"case": null,
+							"number": null,
+							"gender": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ aber from aber (CCONJ cc)."
+				"rationale": "aber joins the two main clauses."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "aber",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "aber",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "aber",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "aber",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "aber", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [13, 15],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Vorstellung from Vorstellung (NOUN nsubj) with die (det)."
+				"rationale": "Vorstellung owns die."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Vorstellung",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Vorstellung",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Vorstellung",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Vorstellung",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Vorstellung", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "daß is the spelling of dass valid only before 1996, so the Surface is a Historical Variant; the member is Standard (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "daß",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "daß",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"canonicalForm": "daß",
-						"coreFeatures": { "conjType": null }
+						"canonicalForm": "dass",
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "daß",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "daß", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+				"rationale": "er refers to Odradek."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "er",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -383,38 +685,48 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mich from mich (PRON obj)."
+				"rationale": "mich is the object of überleben, not a reflexive."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "mich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "mich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -422,38 +734,47 @@
 						"kind": "PRON",
 						"canonicalForm": "mich",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Acc",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "mich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "mich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
+				"rationale": "auch is the additive adverb; auch noch 'on top of that' is two words that only occur together, so each resolves on its own (de/fixed-members-only)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "auch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "auch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -467,26 +788,36 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "auch",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "auch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+				"rationale": "noch is the additive adverb of auch noch."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "noch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -500,26 +831,49 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB überleben from überleben (VERB ccomp)."
+				"rationale": "überleben has the inseparable prefix über-, so no hasSepPrefix; it is the infinitive sollte governs (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "überleben",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "überleben",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -532,41 +886,49 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "überleben",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [30],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"notes": {
+				"rationale": "sollte in a present-tense frame about a feared future is sollen in Konjunktiv II, mood Sub, tense Past (de/modal-is-a-verb)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "sollte",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "sollte",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
+						"mood": "Sub",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "überleben", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sollen from sollte (AUX aux)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -579,41 +941,49 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "sollte",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [33],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"notes": {
+				"rationale": "ist is the copula and stays apart from its predicate (de/copula-stays-apart)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ist",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ist",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
 						"person": "3",
-						"tense": "Past",
+						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "sollte", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [33],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from ist (AUX cop)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -626,39 +996,37 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "ist",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "ist", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [35],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mir from mir (PRON nmod)."
+				"rationale": "mir is the free dative of the person judging."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "mir",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "mir",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -666,75 +1034,105 @@
 						"kind": "PRON",
 						"canonicalForm": "mir",
 						"coreFeatures": {
-							"case": "Dat",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Dat",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "mir",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "mir", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [37, 41],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN schmerzlich from schmerzliche (NOUN conj) with eine (det)."
+				"rationale": "eine fast schmerzliche elides Vorstellung. The lowercase adjective stands in for the noun, so it is the Head and owns eine (de/participial-adjective, de/noun-owns-its-article). Duden cites die schmerzlichsten Erfahrungen, so it is comparable."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "eine",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "schmerzliche",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "schmerzliche",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NOUN",
+						"kind": "ADJ",
 						"canonicalForm": "schmerzlich",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
 					},
-					"normalizedSurface": "schmerzliche",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "eine", "orthography": "Standard" },
-					{ "attested": "schmerzliche", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV fast from fast (ADV advmod)."
+				"rationale": "fast is the approximative ADV between the article and its Head, a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "fast",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "fast",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -748,13 +1146,8 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "fast",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "fast", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

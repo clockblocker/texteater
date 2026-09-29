@@ -2,23 +2,74 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ich soll mich hier erholen, ich war krank.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "soll" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hier" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erholen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "krank" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "soll"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hier"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erholen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "krank"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -28,18 +79,24 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0026", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			}
 		],
 		"references": [
 			{
@@ -52,15 +109,31 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from Ich (PRON nsubj)."
+				"rationale": "Subject pronoun ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -68,38 +141,60 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sollen from soll (AUX aux)."
+				"rationale": "soll is the modal sollen; the infinitive is its own target (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "soll",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "soll",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -112,85 +207,95 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "soll",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4, 8],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"notes": {
+				"rationale": "sich erholen is inherently reflexive (no erholen without it in this sense), so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "mich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "erholen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "mich erholen",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "1",
-						"tense": "Pres",
-						"verbForm": "Fin",
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
 						"expletive": null,
 						"perfect": null,
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [{ "attested": "soll", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mich from mich (PRON obj). UD makes mich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "mich",
+						"kind": "VERB",
+						"canonicalForm": "sich erholen",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "1",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "mich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
-				},
-				"members": [{ "attested": "mich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV hier from hier (ADV advmod)."
+				"rationale": "hier is a non-comparable ADV (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hier",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "hier",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -204,73 +309,37 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "hier",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "hier", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erholen from erholen (VERB root)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "erholen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "erholen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "erholen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from ich (PRON nsubj)."
+				"rationale": "Subject pronoun ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -278,38 +347,60 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from war (AUX cop)."
+				"rationale": "war is the copula and stays apart from krank (de/copula-stays-apart)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "war",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -322,39 +413,43 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "war",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "1",
-						"tense": "Past",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "war", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ krank from krank (ADJ ccomp). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+				"rationale": "krank is a predicative ADJ; kränker, am kränksten make it comparable, so it marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "krank",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "krank",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -363,21 +458,14 @@
 						"canonicalForm": "krank",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
-					"normalizedSurface": "krank",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "krank", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

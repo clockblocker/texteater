@@ -2,28 +2,96 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Manchmal fahren wir auch im Wagen, die Mama und ich.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Manchmal" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fahren" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wagen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mama" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Manchmal"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fahren"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "i",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wagen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mama"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -35,9 +103,18 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			}
 		],
 		"references": [
 			{
@@ -50,15 +127,30 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV manchmal from Manchmal (ADV advmod)."
+				"rationale": "Manchmal is a temporal ADV with no comparison forms; the sentence-initial capital is Standard."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Manchmal",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "manchmal",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -72,28 +164,49 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "manchmal",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "Manchmal", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB fahren from fahren (VERB root)."
+				"rationale": "fahren 'ride, travel' is intransitive here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "fahren",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "fahren",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -106,41 +219,37 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "fahren",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Plur",
-						"person": "1",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "fahren", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wir from wir (PRON nsubj)."
+				"rationale": "Subject pronoun wir; die Mama und ich spells it out."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "wir",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "wir",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -148,38 +257,47 @@
 						"kind": "PRON",
 						"canonicalForm": "wir",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Plur",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Plur",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "wir",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "wir", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
+				"rationale": "auch is the additive ADV 'also'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "auch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "auch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -193,44 +311,21 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "auch",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "auch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
+				"rationale": "im is two Segments; i is the free ADP in with a dative complement (de/fused-word-pieces)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "in",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "in",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
 				"members": [
 					{
 						"attested": "i",
@@ -238,8 +333,14 @@
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 0
@@ -256,37 +357,43 @@
 						},
 						"realizedCase": "Dat"
 					}
-				]
-			}
-		},
-		{
-			"memberSegmentIndices": [9, 11],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Wagen from Wagen (NOUN obl) with dem (det)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "in",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Wagen",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"kind": "ADP",
+						"canonicalForm": "in",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
 					},
-					"normalizedSurface": "Wagen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [9, 11],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"notes": {
+				"rationale": "m stands for dem and is Wagen's owned article, a Fused member (de/fused-word-pieces, de/noun-owns-its-article)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
 				"members": [
 					{
 						"attested": "m",
@@ -294,94 +401,176 @@
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Wagen", "orthography": "Standard" }
+					{
+						"attested": "Wagen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Wagen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Wagen",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [14, 16],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Mama from Mama (NOUN appos) with die (det)."
+				"rationale": "Mama is a common noun (Duden: Mama, die, familiär) owning its article; die Mama is the family usage for one's own mother."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Mama",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Mama",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Mama",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Mama",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Mama", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+				"rationale": "und joins die Mama and ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "und",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from ich (PRON conj)."
+				"rationale": "ich is in the apposition that spells out wir."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -389,25 +578,19 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

@@ -2,34 +2,118 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Ich muß darum auch viel in der Sonne sitzen, hat der Arzt gesagt.«",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "muß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "darum" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "viel" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Sonne" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sitzen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Arzt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gesagt" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "Punctuation", "text": "«" }
+		{
+			"kind": "ResolvableText",
+			"text": "Ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "muß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "darum"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "viel"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sonne"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sitzen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Arzt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gesagt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Punctuation",
+			"text": "«"
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -39,44 +123,99 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0029", "ADR-0041"],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "81f5ca84af1bc0ca"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #24173: Stefan Zweig, Brennendes Geheimnis",
 				"url": "https://www.gutenberg.org/ebooks/24173",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #24173 (released 2008-01-05), transcribed from Insel-Verlag, Leipzig, 16.-25. Tausend. Chapter Der Partner, Edgar's answer to the Baron."
+			},
+			{
+				"title": "DWDS: viel",
+				"url": "https://www.dwds.de/wb/viel",
+				"supports": "Target [viel]: II.1 adverbiell 'häufig, oft'; Komparativ mehr, Superlativ am meisten."
+			},
+			{
+				"title": "DWDS: viel",
+				"url": "https://www.dwds.de/wb/viel",
+				"supports": "Target [viel]: II.1 adverbiell 'häufig, oft'; Komparativ mehr, Superlativ am meisten."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from Ich (PRON nsubj)."
+				"rationale": "Subject pronoun ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -84,38 +223,61 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB müssen from muß (AUX aux). Spelling drafted Canonical: check whether muß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "muß is the modal müssen in the spelling valid before 1996, so the Surface is a Historical Variant (de/variant-and-historical-status, de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "muß",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "muß",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -128,39 +290,36 @@
 							"verbType": "Mod"
 						}
 					},
-					"normalizedSurface": "muß",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "1",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "muß", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV darum from darum (ADV advmod)."
+				"rationale": "darum 'therefore' is the pronominal adverb in its causal sense and stands alone (de/pronominal-adverb-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "darum",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "darum",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -174,26 +333,36 @@
 							"pronType": "Dem"
 						}
 					},
-					"normalizedSurface": "darum",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "darum", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV auch from auch (ADV advmod)."
+				"rationale": "auch is the additive ADV."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "auch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "auch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -207,72 +376,91 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "auch",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "auch", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON viele from viel (DET obj). UD tags viel DET; STTS PIS makes it PRON (de/pron-or-det-by-use). viel fits 3 authored PRON cells equally (Ind Nom Sing Neut; Ind Acc Sing Neut; Ind Dat Sing Neut); the first is drafted. Check the referent (ADR 0044)."
+				"rationale": "viel here modifies the verb, 'often, a lot' (DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern): it stands for no noun phrase and modifies no noun, so it is neither the PRON nor the DET quantifier (de/pron-or-det-by-use). Recommended as ADV viel, comparable through mehr, am meisten. open: finding B6"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "viel",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "viel",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "viele",
+						"kind": "ADV",
+						"canonicalForm": "viel",
 						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
+							"comparable": "Yes",
 							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Ind",
-							"gender": null
+							"numType": null,
+							"pronType": null
 						}
 					},
-					"normalizedSurface": "viel",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": "Neut",
-						"number": "Sing",
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
-					}
-				},
-				"members": [{ "attested": "viel", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
+				"rationale": "in is a free local ADP with a dative complement."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "in",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "in",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -287,73 +475,103 @@
 							"partType": null
 						}
 					},
-					"normalizedSurface": "in",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "in", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [12, 14],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Sonne from Sonne (NOUN obl) with der (det)."
+				"rationale": "Sonne owns der; in der Sonne sitzen is literal and resolves word by word (de/fixed-members-only)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Sonne",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Sonne",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Sonne",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Sonne",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Sonne", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sitzen from sitzen (VERB root)."
+				"rationale": "sitzen is the infinitive muß governs (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "sitzen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "sitzen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -366,41 +584,53 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "sitzen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "sitzen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [19, 25],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sagen from gesagt (VERB conj) with hat (aux)."
+				"rationale": "hat … gesagt is the perfect of sagen (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle, de/verbal-surface-is-whole)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gesagt",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "hat gesagt",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -413,66 +643,62 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "hat gesagt",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": "Yes",
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "gesagt", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [21, 23],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Arzt from Arzt (NOUN nsubj) with der (det)."
+				"rationale": "Arzt owns der."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Arzt",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Arzt",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Arzt",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Arzt",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Arzt", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

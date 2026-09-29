@@ -2,58 +2,214 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Alles" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "was" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stirbt" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vorher" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eine" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Art" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Ziel" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eine" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Art" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Tätigkeit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gehabt" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "daran" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zerrieben" },
-		{ "kind": "Punctuation", "text": ";" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "trifft" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bei" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Odradek" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Alles"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stirbt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vorher"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eine"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Art"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ziel"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eine"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Art"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tätigkeit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gehabt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "daran"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zerrieben"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ";"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "trifft"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bei"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Odradek"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -63,68 +219,140 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0029", "ADR-0035", "ADR-0040", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/nicht-is-part",
+				"hash": "c6631f0c8009c067"
+			},
+			{
+				"rule": "de/no-target",
+				"hash": "22a485a80500436e"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
 			},
 			{
+				"rule": "de/proper-noun-article",
+				"hash": "467218f77ed6cd15"
+			},
+			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "4e09a3e722ab1c82"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+			},
+			{
+				"title": "Duden: Art",
+				"url": "https://www.duden.de/rechtschreibung/Art",
+				"supports": "Targets [eine, Art]: Wendung 'eine Art [von]' = 'etwas Ähnliches wie' (eine Art Ratgeber)."
+			},
+			{
+				"title": "DWDS: Art",
+				"url": "https://www.dwds.de/wb/Art",
+				"supports": "Targets [eine, Art]: sense 4c ⟨eine Art (von)⟩ 'etw. Ähnliches wie', under Art 'Sorte'."
+			},
+			{
+				"title": "DWDS: zerreiben",
+				"url": "https://www.dwds.de/wb/zerreiben",
+				"supports": "Target [hat, sich, zerrieben]: reflexive figurative sense 'sich zerreiben (= sich aufreiben)'."
+			},
+			{
+				"title": "Duden: zutreffen",
+				"url": "https://www.duden.de/rechtschreibung/zutreffen",
+				"supports": "Target [bei]: zutreffen governs auf ('die Beschreibung trifft auf ihn zu'), not bei."
+			},
+			{
+				"title": "Duden: Art",
+				"url": "https://www.duden.de/rechtschreibung/Art",
+				"supports": "Targets [eine, Art]: Wendung 'eine Art [von]' = 'etwas Ähnliches wie' (eine Art Ratgeber)."
+			},
+			{
+				"title": "DWDS: Art",
+				"url": "https://www.dwds.de/wb/Art",
+				"supports": "Targets [eine, Art]: sense 4c ⟨eine Art (von)⟩ 'etw. Ähnliches wie', under Art 'Sorte'."
+			},
+			{
+				"title": "DWDS: zerreiben",
+				"url": "https://www.dwds.de/wb/zerreiben",
+				"supports": "Target [hat, sich, zerrieben]: reflexive figurative sense 'sich zerreiben (= sich aufreiben)'."
+			},
+			{
+				"title": "Duden: zutreffen",
+				"url": "https://www.duden.de/rechtschreibung/zutreffen",
+				"supports": "Target [bei]: zutreffen governs auf ('die Beschreibung trifft auf ihn zu'), not bei."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON alle from Alles (DET nsubj). UD tags Alles DET; STTS PIS makes it PRON (de/pron-or-det-by-use)."
+				"rationale": "Alles stands for a noun phrase, so it is PRON (de/pron-or-det-by-use): the Nom.Neut.Sg Surface of the stem Lemma alle (ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Alles",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "alle",
-						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Tot",
-							"gender": null
-						}
-					},
 					"normalizedSurface": "alles",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": "Neut",
@@ -132,45 +360,55 @@
 						"gender[psor]": null,
 						"number[psor]": null,
 						"reflex": null
-					}
-				},
-				"members": [{ "attested": "Alles", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [3],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON was from was (PRON nsubj)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "was",
+						"canonicalForm": "alle",
 						"coreFeatures": {
-							"case": null,
-							"number": null,
 							"extPos": null,
 							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
-							"pronType": "Int",
-							"gender": "Neut"
+							"pronType": "Tot",
+							"case": null,
+							"number": null,
+							"gender": null
 						}
 					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [3],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"notes": {
+				"rationale": "was is the relative pronoun after alles, subject of its clause: relative was (pronType Rel), Surface Nom (ADR 0044)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "was",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
 					"normalizedSurface": "was",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
@@ -178,24 +416,68 @@
 						"gender[psor]": null,
 						"number[psor]": null,
 						"reflex": null
-					}
-				},
-				"members": [{ "attested": "was", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "was",
+						"coreFeatures": {
+							"extPos": null,
+							"foreign": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rel",
+							"case": null,
+							"number": null,
+							"gender": "Neut"
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [5],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sterben from stirbt (VERB acl)."
+				"rationale": "stirbt is sterben."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "stirbt",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "stirbt",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -208,9 +490,41 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "stirbt",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [8, 25],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"notes": {
+				"rationale": "hat … gehabt is the perfect of possessive haben: the auxiliary hat joins the participle across the object (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle), and the Surface is the whole perfect (de/verbal-surface-is-whole)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "gehabt",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "hat gehabt",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -218,72 +532,53 @@
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
-						"perfect": null,
+						"perfect": "Yes",
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "stirbt", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "AUX" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme AUX haben from hat (AUX aux). Auxiliary with no verb found: UD attaches hat to Ziel (NOUN), so it is drafted alone, though an auxiliary is never a target of its own (de/auxiliary-joins-the-verb-it-serves)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "AUX",
+						"kind": "VERB",
 						"canonicalForm": "haben",
-						"coreFeatures": {}
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
-					"normalizedSurface": "hat",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "hat", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV vorher from vorher (ADV advmod)."
+				"rationale": "vorher is a temporal ADV with no comparison forms (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "vorher",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "vorher",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -297,247 +592,277 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "vorher",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "vorher", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [12, 14],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Art from Art (NOUN obj) with eine (det)."
+				"rationale": "eine Art before a bare noun is the hedge 'something like' (Duden: Wendung eine Art [von]; DWDS: Art 4c). Art is the Head that inflects with its article (mit einer Art Ziel), so it is NOUN Art owning eine (de/noun-owns-its-article), with Ziel a NOUN of its own in narrow apposition. open: finding B2"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "eine",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Art",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Art",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Art",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Art",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "eine", "orthography": "Standard" },
-					{ "attested": "Art", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ziel from Ziel (NOUN root)."
+				"rationale": "Ziel is the noun apposed to eine Art, in its case, with no article of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ziel",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Ziel",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Ziel",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Ziel",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [{ "attested": "Ziel", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [19, 21],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Art from Art (NOUN obj) with eine (det)."
+				"rationale": "Second eine Art of the pair, as the first. open: finding B2"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "eine",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Art",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Art",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Art",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
-					"normalizedSurface": "Art",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "eine", "orthography": "Standard" },
-					{ "attested": "Art", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [23],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Tätigkeit from Tätigkeit (NOUN appos)."
+				"rationale": "Tätigkeit is the noun apposed to the second eine Art."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Tätigkeit",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Tätigkeit",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Tätigkeit",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
-					},
-					"normalizedSurface": "Tätigkeit",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "Tätigkeit", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB haben from gehabt (VERB conj). gehabt shares the auxiliary of its conjunct Ziel, which the converter gives to that conjunct alone."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "haben",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"gender": "Fem",
+							"hyph": null
 						}
 					},
-					"normalizedSurface": "gehabt",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Part",
-						"participleForm": "Past",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "gehabt", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [27],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+				"rationale": "und joins the two main clauses."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "und",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [29],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV daran from daran (ADV advmod)."
+				"rationale": "daran is a pronominal adverb and stands alone, whatever governs its an (de/pronominal-adverb-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "daran",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "daran",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -551,41 +876,45 @@
 							"pronType": "Dem"
 						}
 					},
-					"normalizedSurface": "daran",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "daran", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
-			"memberSegmentIndices": [31, 37],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [31, 35, 37],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zerreiben from zerrieben (VERB conj) with hat (aux)."
+				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). open: finding B3"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zerrieben",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "zerreiben",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
+					"normalizedSurface": "hat sich zerrieben",
+					"spelling": {
+						"kind": "Canonical"
 					},
-					"normalizedSurface": "hat zerrieben",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -597,28 +926,50 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "hat", "orthography": "Standard" },
-					{ "attested": "zerrieben", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich zerreiben",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [33],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+				"rationale": "es refers back to Alles, was stirbt, so it is the referential Nom es, not an expletive (de/expletive-es-joins-its-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "es",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -626,84 +977,48 @@
 						"kind": "PRON",
 						"canonicalForm": "es",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Neut"
 						}
 					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [35],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
-						"coreFeatures": {
-							"case": "Acc",
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
-						}
-					},
-					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
-				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [40],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON das from das (PRON nsubj)."
+				"rationale": "das stands for the whole preceding clause and is the subject, so it is the demonstrative PRON das, the Nom.Neut.Sg cell (de/pron-or-det-by-use, ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "das",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -711,38 +1026,64 @@
 						"kind": "PRON",
 						"canonicalForm": "das",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
 							"pronType": "Dem",
+							"case": "Nom",
+							"number": "Sing",
 							"gender": "Neut"
 						}
 					},
-					"normalizedSurface": "das",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "das", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [42, 50],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB zutreffen from trifft (VERB parataxis) with zu (compound:prt)."
+				"rationale": "trifft … zu is the particle verb zutreffen with its separated zu (de/verb-owns-its-scattered-members)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "trifft",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "trifft zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -755,42 +1096,46 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "trifft zu",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "trifft", "orthography": "Standard" },
-					{ "attested": "zu", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [44],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP bei from bei (ADP case)."
+				"rationale": "bei Odradek is a free adjunct 'in the case of': zutreffen governs auf or für (Duden, DWDS), and bei keeps its own meaning, so bei is a single-member ADP (de/governed-preposition-joins-its-governor)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "bei",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "bei",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -805,36 +1150,40 @@
 							"partType": null
 						}
 					},
-					"normalizedSurface": "bei",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "bei", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [46],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Odradek from Odradek (PROPN obl)."
+				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). Its gender comes from the text, which calls Odradek er; this sentence shows none. open: finding A3"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Odradek",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Odradek",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -848,29 +1197,35 @@
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "Odradek",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
-				},
-				"members": [
-					{ "attested": "Odradek", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [48],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+				"rationale": "nicht is PART with polarity Neg, a target of its own (de/nicht-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "nicht",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -884,12 +1239,8 @@
 							"polarity": "Neg"
 						}
 					},
-					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		}
 	],

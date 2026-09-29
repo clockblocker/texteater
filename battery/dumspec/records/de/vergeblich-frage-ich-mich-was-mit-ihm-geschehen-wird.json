@@ -2,25 +2,82 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Vergeblich frage ich mich, was mit ihm geschehen wird.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Vergeblich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "frage" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mich" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "was" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mit" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geschehen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wird" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Vergeblich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "frage"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mich"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geschehen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wird"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -30,9 +87,12 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0022", "ADR-0034", "ADR-0042", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
@@ -41,31 +101,85 @@
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
 		],
 		"references": [
 			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
+			},
+			{
+				"title": "E-VALBU: geschehen, Lesart 4 (geschehen mit)",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400660/4",
+				"supports": "Target [mit, geschehen, wird]: mit + Dat is a Präpositivkomplement of geschehen, example 'was mit ihm geschehen soll'; 'kein Passiv möglich'."
+			},
+			{
+				"title": "Duden: fragen",
+				"url": "https://www.duden.de/rechtschreibung/fragen",
+				"supports": "Target [frage, mich]: sense 4 <sich fragen> 'sich etwas überlegen, über etwas nachdenken'."
+			},
+			{
+				"title": "E-VALBU: geschehen, Lesart 4 (geschehen mit)",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400660/4",
+				"supports": "Target [mit, geschehen, wird]: mit + Dat is a Präpositivkomplement of geschehen, example 'was mit ihm geschehen soll'; 'kein Passiv möglich'."
+			},
+			{
+				"title": "Duden: fragen",
+				"url": "https://www.duden.de/rechtschreibung/fragen",
+				"supports": "Target [frage, mich]: sense 4 <sich fragen> 'sich etwas überlegen, über etwas nachdenken'."
 			}
 		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ vergeblich from Vergeblich (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). DWDS gives vergeblicher, am vergeblichsten (Steigerung selten), so it is comparable and marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Vergeblich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "vergeblich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -74,51 +188,47 @@
 						"canonicalForm": "vergeblich",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
-					"normalizedSurface": "vergeblich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "Vergeblich", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [2, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB fragen from frage (VERB root)."
+				"rationale": "frage … mich is sich fragen 'wonder' (Duden fragen 4 <sich fragen>, DWDS ⟨sich etw. fragen⟩): in this sense the reflexive is required, as in the Reviewed sich erinnern, so it joins the verb (de/verb-owns-its-scattered-members). open: finding B1"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "frage",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "mich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "fragen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
+					"normalizedSurface": "frage mich",
+					"spelling": {
+						"kind": "Canonical"
 					},
-					"normalizedSurface": "frage",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -130,25 +240,50 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [{ "attested": "frage", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich fragen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ich from ich (PRON nsubj)."
+				"rationale": "Subject pronoun ich."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -156,105 +291,47 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
+							"extPos": null,
+							"foreign": null,
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "1",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
 							"gender": null
 						}
 					},
-					"normalizedSurface": "ich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON mich from mich (PRON obj). UD makes mich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "mich",
-						"coreFeatures": {
-							"case": "Acc",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "1",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
-						}
-					},
-					"normalizedSurface": "mich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
-				},
-				"members": [{ "attested": "mich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON was from was (PRON nsubj:pass)."
+				"rationale": "was opens the indirect question and is its subject, so it is interrogative was (pronType Int), a stem whose Surface marks case (ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "was",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "was",
-						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Int",
-							"gender": "Neut"
-						}
-					},
 					"normalizedSurface": "was",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
@@ -262,107 +339,100 @@
 						"gender[psor]": null,
 						"number[psor]": null,
 						"reflex": null
-					}
-				},
-				"members": [{ "attested": "was", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
-		},
-		{
-			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP mit from mit (ADP case)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "mit",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
 					},
-					"normalizedSurface": "mit",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "mit", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
-			}
-		},
-		{
-			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "ihm",
+						"canonicalForm": "was",
 						"coreFeatures": {
-							"case": "Dat",
-							"number": "Sing",
 							"extPos": null,
 							"foreign": null,
-							"person": "3",
+							"person": null,
 							"polite": null,
 							"poss": null,
-							"pronType": "Prs",
-							"gender": "Masc"
+							"pronType": "Int",
+							"case": null,
+							"number": null,
+							"gender": "Neut"
 						}
 					},
-					"normalizedSurface": "ihm",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "ihm", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
-			"memberSegmentIndices": [15, 17],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [11, 15, 17],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
 			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB geschehen from geschehen (VERB ccomp) with wird (aux:pass). geschehen spells both the infinitive and the participle, so wird may mark the future or the passive."
+				"rationale": "geschehen cannot passivize (E-VALBU: kein Passiv möglich), so wird marks the future and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). mit is governed: E-VALBU geschehen Lesart 4 'etwas geschieht mit jemandem/etwas', K prp mit + Dat, with the example 'was mit ihm geschehen soll'. So mit is a member recorded in valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). Duden has no <mit> label for it: see finding A6."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "mit",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "geschehen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "wird",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "geschehen wird",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -375,29 +445,57 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "geschehen wird",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Pres",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": "Pass",
-						"passive": "Process"
-					}
-				},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"notes": {
+				"rationale": "ihm is the dative of er or es; only the referent decides. It refers to Odradek, whom the next sentence calls er, so it is the Masc cell (ADR 0044, Referent Context). The sentence's grammar alone cannot decide it. open: finding A2"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "geschehen", "orthography": "Standard" },
-					{ "attested": "wird", "orthography": "Standard" }
+					{
+						"attested": "ihm",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ihm",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "ihm",
+						"coreFeatures": {
+							"extPos": null,
+							"foreign": null,
+							"person": "3",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"case": "Dat",
+							"number": "Sing",
+							"gender": "Masc"
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],
