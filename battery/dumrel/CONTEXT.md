@@ -33,6 +33,21 @@ without choosing a Lemma's Core Features or an exact Reading.
 a direct relation proposal whose target is a
 Unit Shadow awaiting downstream matching.
 
+**Endonym**:
+a place's own local name (`Bratislava`). A PROPN Reading stores the endonyms
+of the place it names, each a PROPN Lemma in the Reading's language
+(`Pressburg`: `Bratislava`). A place with two local names has two
+(`Brüssel`: `Bruxelles`, `Brussel`). No other route stores one.
+_Avoid_: native name, local-name field
+
+**Exonym**:
+the name speakers of a Reading's language use for a place outside their area
+(`Pressburg`). It is projected onto the local name from the endonym the
+outside name stores, and never stored itself: `Bratislava` has the exonym
+`Pressburg` because `Pressburg` stores the endonym `Bratislava`.
+_Avoid_: foreign name (Dumling's `foreign` is a feature), historical name
+(`Brüssel` is current)
+
 **Governed Preposition**:
 a preposition a Reading lexically selects: a Preposition Slot of the Reading's
 Valency Frame, naming an ADP Lemma and, in German, the case it assigns in

@@ -11,6 +11,8 @@ export const semanticRelationSchema = z.enum([
 	"hyponym",
 	"meronym",
 	"holonym",
+	"endonym",
+	"exonym",
 ]);
 const settingsLeaf = z.boolean().optional();
 const maskLeaf = z.null().optional();
@@ -39,6 +41,8 @@ export const knowledgeSettingsSchema = z.strictObject({
 			hyponym: settingsLeaf,
 			meronym: settingsLeaf,
 			holonym: settingsLeaf,
+			endonym: settingsLeaf,
+			exonym: settingsLeaf,
 		})
 		.optional(),
 });
@@ -65,6 +69,8 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 			hyponym: maskLeaf,
 			meronym: maskLeaf,
 			holonym: maskLeaf,
+			endonym: maskLeaf,
+			exonym: maskLeaf,
 		})
 		.optional(),
 });

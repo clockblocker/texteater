@@ -1,3 +1,8 @@
+/**
+ * The relations a Reading's Knowledge stores. Each inverse is projected, never
+ * stored: `hyponym` from `hypernym`, `meronym` from `holonym`, and `exonym`
+ * from `endonym`, which only a PROPN Reading stores (`Pressburg`: `Bratislava`).
+ */
 export const directSemanticRelationValues = [
 	"synonym",
 	"nearSynonym",
@@ -5,6 +10,7 @@ export const directSemanticRelationValues = [
 	"nearAntonym",
 	"hypernym",
 	"holonym",
+	"endonym",
 ] as const;
 
 export const translationLanguageValues = ["en", "ru"] as const;

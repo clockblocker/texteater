@@ -92,7 +92,9 @@ const makeDeRelMap = () =>
 			PRON: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 			),
-			PROPN: request(select("synonym", "hypernym", "holonym")),
+			// Only a proper noun names a place's local name (`Pressburg`:
+			// `Bratislava`); the local name's exonym is projected.
+			PROPN: request(select("synonym", "hypernym", "holonym", "endonym")),
 			PUNCT: request(select()),
 			SCONJ: request(
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),

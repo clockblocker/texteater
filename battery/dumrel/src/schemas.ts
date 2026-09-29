@@ -231,6 +231,12 @@ const lemmaRelationsSchema = z.strictObject({
 	nearAntonym: z.array(lemmaSchema).optional(),
 	hypernym: z.array(lemmaSchema).optional(),
 	holonym: z.array(lemmaSchema).optional(),
+	/**
+	 * The local names of the place a PROPN Reading names from outside
+	 * (`Pressburg`: `Bratislava`), each a PROPN Lemma of the source's
+	 * language. The local name's `exonym` is projected, never stored.
+	 */
+	endonym: z.array(lemmaSchema).optional(),
 });
 const readingRelationsSchema = z.strictObject({
 	targetKind: z.literal("reading"),

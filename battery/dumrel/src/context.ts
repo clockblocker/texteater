@@ -131,6 +131,31 @@ function isRouteAspect(aspect: string): aspect is RouteAspect {
 	return Object.hasOwn(routeAspects, aspect);
 }
 
+function isProperNoun(lemma: Dumling.Lemma): boolean {
+	return lemma.family === "Lexeme" && lemma.kind === "PROPN";
+}
+
+/**
+ * An endonym names, from a PROPN Reading, the local name of the place it
+ * names (`Pressburg`: `Bratislava`), so both ends are Lexeme PROPN. The local
+ * name's `exonym` is projected, never stored.
+ */
+function endonymIssue(
+	source: Dumling.Reading,
+	targets: readonly (Dumling.Lemma | Dumling.Reading)[],
+	paths: { source: Path; targets: Path },
+): ParsingError | undefined {
+	if (!isProperNoun(source.lemma))
+		return issue(paths.source, "Only a PROPN Reading has an endonym");
+	for (const [index, target] of targets.entries())
+		if (target.unitKind !== "Lemma" || !isProperNoun(target))
+			return issue(
+				[...paths.targets, index],
+				"An endonym is a PROPN Lemma",
+			);
+	return undefined;
+}
+
 /**
  * A complement the source's route allows. A Preposition complement names an
  * ADP Lemma of the source Language. A German one names an oblique case, and
@@ -342,6 +367,14 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 			targets[index] = parsed;
 		}
 	}
+	if (relations.targetKind !== "reading" && relations.endonym) {
+		const path = ["knowledge", "semanticRelations", "endonym"];
+		const failure = endonymIssue(source, relations.endonym, {
+			source: path,
+			targets: path,
+		});
+		if (failure) return failure;
+	}
 	return result as ReadingKnowledge<R>;
 }
 
@@ -414,6 +447,13 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		]);
 		if (parsed instanceof ParsingError) return parsed;
 		values.push(parsed);
+	}
+	if (change.relation === "endonym") {
+		const failure = endonymIssue(source, values, {
+			source: ["change", "relation"],
+			targets: ["change", "value"],
+		});
+		if (failure) return failure;
 	}
 	return { ...change, value: values } as KnowledgeChange<R>;
 }

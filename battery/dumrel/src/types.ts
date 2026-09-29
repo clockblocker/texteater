@@ -78,15 +78,23 @@ type SourceTargets<R extends Dumling.Reading, Target> = Target extends {
 	? RelatedReading<R>[]
 	: RelatedLemma<R>[];
 
+/** An endonym names a PROPN Lemma: `Pressburg` stores `Bratislava`. */
+type EndonymTargets<R extends Dumling.Reading> = Extract<
+	RelatedLemma<R>,
+	{ family: "Lexeme"; kind: "PROPN" }
+>[];
+
 // Distribute over canonical branches, preserving their keys and discriminants.
 type SourceSemanticRelations<
 	R extends Dumling.Reading,
 	Relations = CanonicalSemanticRelations,
 > = Relations extends unknown
 	? {
-			[Key in keyof Relations]: Key extends DirectSemanticRelation
-				? SourceTargets<R, Relations>
-				: Relations[Key];
+			[Key in keyof Relations]: Key extends "endonym"
+				? EndonymTargets<R>
+				: Key extends DirectSemanticRelation
+					? SourceTargets<R, Relations>
+					: Relations[Key];
 		}
 	: never;
 

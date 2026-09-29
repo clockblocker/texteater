@@ -19,6 +19,8 @@ const algebra = {
 	hyponym: "hypernym",
 	meronym: "holonym",
 	holonym: "meronym",
+	endonym: "exonym",
+	exonym: "endonym",
 } as const satisfies Record<SemanticRelation, SemanticRelation>;
 const relationOrder = Object.keys(algebra);
 
@@ -110,7 +112,8 @@ function parseReadingCounts(
  * defaulting to Lemma. Direct self claims survive; inferred self edges do not.
  * Direct claims win provenance. Output is sorted by structural source key,
  * relation order (synonym, nearSynonym, antonym, nearAntonym, hypernym, hyponym,
- * meronym, holonym), then structural target key, independently of input order.
+ * meronym, holonym, endonym, exonym), then structural target key, independently
+ * of input order.
  * No inputs are mutated and no extra Readings are invented.
  *
  * With `options.source`, only that Reading's edges are projected: the same

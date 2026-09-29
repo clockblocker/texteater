@@ -1,6 +1,7 @@
 import {
 	alLemma,
 	aufLemma,
+	berlinLemma,
 	houseLemma,
 	houseReading,
 	onLemma,
@@ -254,6 +255,7 @@ export const samples: Record<string, unknown[]> = {
 	semanticRelations: [
 		{ targetKind: "reading", synonym: [houseReading] },
 		{ hypernym: [houseLemma] },
+		{ endonym: [berlinLemma] },
 	],
 	semanticProjectionInput: [
 		[{ reading: houseReading, knowledge: { definition: " home " } }],
@@ -266,7 +268,7 @@ export const samples: Record<string, unknown[]> = {
 			provenance: "inferred",
 		},
 	],
-	directSemanticRelation: ["synonym", "holonym"],
-	semanticRelation: ["hyponym", "meronym"],
+	directSemanticRelation: ["synonym", "holonym", "endonym"],
+	semanticRelation: ["hyponym", "meronym", "exonym"],
 	translationLanguage: ["en", "ru"],
 };

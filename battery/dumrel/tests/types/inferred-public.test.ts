@@ -44,7 +44,7 @@ describe("public Dumrel types read as their Domain names", () => {
 			`"type PendingSemanticRelation = { relation: DirectSemanticRelation; target: UnitShadow; }"`,
 		);
 		expect(await inferred("DirectSemanticRelation")).toMatchInlineSnapshot(
-			`"type DirectSemanticRelation = "antonym" | "holonym" | "hypernym" | "nearAntonym" | "nearSynonym" | "synonym""`,
+			`"type DirectSemanticRelation = "antonym" | "endonym" | "holonym" | "hypernym" | "nearAntonym" | "nearSynonym" | "synonym""`,
 		);
 	}, 30_000);
 
@@ -65,10 +65,10 @@ describe("public Dumrel types read as their Domain names", () => {
 
 	test("Knowledge Settings and Request Masks spell out every aspect", async () => {
 		expect(await inferred("KnowledgeSettings")).toMatchInlineSnapshot(
-			`"type KnowledgeSettings = { transcription?: boolean | undefined; definition?: boolean | undefined; morphologicalTree?: boolean | undefined; lexicalBreakdown?: boolean | undefined; valency?: boolean | undefined; participleSource?: boolean | undefined; pluralPattern?: boolean | undefined; conjugationClass?: boolean | undefined; locutionType?: boolean | undefined; sayingType?: boolean | undefined; formulaRole?: boolean | undefined; translations?: { en?: boolean | undefined; ru?: boolean | undefined; } | undefined; semanticRelations?: { synonym?: boolean | undefined; nearSynonym?: boolean | undefined; antonym?: boolean | undefined; nearAntonym?: boolean | undefined; hypernym?: boolean | undefined; hyponym?: boolean | undefined; meronym?: boolean | undefined; holonym?: boolean | undefined; } | undefined; }"`,
+			`"type KnowledgeSettings = { transcription?: boolean | undefined; definition?: boolean | undefined; morphologicalTree?: boolean | undefined; lexicalBreakdown?: boolean | undefined; valency?: boolean | undefined; participleSource?: boolean | undefined; pluralPattern?: boolean | undefined; conjugationClass?: boolean | undefined; locutionType?: boolean | undefined; sayingType?: boolean | undefined; formulaRole?: boolean | undefined; translations?: { en?: boolean | undefined; ru?: boolean | undefined; } | undefined; semanticRelations?: { synonym?: boolean | undefined; nearSynonym?: boolean | undefined; antonym?: boolean | undefined; nearAntonym?: boolean | undefined; hypernym?: boolean | undefined; hyponym?: boolean | undefined; meronym?: boolean | undefined; holonym?: boolean | undefined; endonym?: boolean | undefined; exonym?: boolean | undefined; } | undefined; }"`,
 		);
 		expect(await inferred("KnowledgeRequestMask")).toMatchInlineSnapshot(
-			`"type KnowledgeRequestMask = { transcription?: null | undefined; definition?: null | undefined; morphologicalTree?: null | undefined; lexicalBreakdown?: null | undefined; valency?: null | undefined; participleSource?: null | undefined; pluralPattern?: null | undefined; conjugationClass?: null | undefined; locutionType?: null | undefined; sayingType?: null | undefined; formulaRole?: null | undefined; translations?: { en?: null | undefined; ru?: null | undefined; } | undefined; semanticRelations?: { synonym?: null | undefined; nearSynonym?: null | undefined; antonym?: null | undefined; nearAntonym?: null | undefined; hypernym?: null | undefined; hyponym?: null | undefined; meronym?: null | undefined; holonym?: null | undefined; } | undefined; }"`,
+			`"type KnowledgeRequestMask = { transcription?: null | undefined; definition?: null | undefined; morphologicalTree?: null | undefined; lexicalBreakdown?: null | undefined; valency?: null | undefined; participleSource?: null | undefined; pluralPattern?: null | undefined; conjugationClass?: null | undefined; locutionType?: null | undefined; sayingType?: null | undefined; formulaRole?: null | undefined; translations?: { en?: null | undefined; ru?: null | undefined; } | undefined; semanticRelations?: { synonym?: null | undefined; nearSynonym?: null | undefined; antonym?: null | undefined; nearAntonym?: null | undefined; hypernym?: null | undefined; hyponym?: null | undefined; meronym?: null | undefined; holonym?: null | undefined; endonym?: null | undefined; exonym?: null | undefined; } | undefined; }"`,
 		);
 	}, 30_000);
 

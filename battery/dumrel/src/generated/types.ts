@@ -25,6 +25,8 @@ export type KnowledgeSettings = {
 				hyponym?: boolean | undefined;
 				meronym?: boolean | undefined;
 				holonym?: boolean | undefined;
+				endonym?: boolean | undefined;
+				exonym?: boolean | undefined;
 		  }
 		| undefined;
 };
@@ -51,6 +53,8 @@ export type KnowledgeRequestMask = {
 				hyponym?: null | undefined;
 				meronym?: null | undefined;
 				holonym?: null | undefined;
+				endonym?: null | undefined;
+				exonym?: null | undefined;
 		  }
 		| undefined;
 };
@@ -166,7 +170,8 @@ export type DirectSemanticRelation =
 	| "antonym"
 	| "nearAntonym"
 	| "hypernym"
-	| "holonym";
+	| "holonym"
+	| "endonym";
 export type TranslationLanguage = "en" | "ru";
 export type UnitShadow =
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
@@ -1775,6 +1780,112 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
 				| undefined;
+			endonym?:
+				| Array<
+						| Dumling.Lemma<"de", "Lexeme", "ADJ">
+						| Dumling.Lemma<"de", "Lexeme", "ADP">
+						| Dumling.Lemma<"de", "Lexeme", "ADV">
+						| Dumling.Lemma<"de", "Lexeme", "AUX">
+						| Dumling.Lemma<"de", "Lexeme", "CCONJ">
+						| Dumling.Lemma<"de", "Lexeme", "DET">
+						| Dumling.Lemma<"de", "Lexeme", "INTJ">
+						| Dumling.Lemma<"de", "Lexeme", "NOUN">
+						| Dumling.Lemma<"de", "Lexeme", "NUM">
+						| Dumling.Lemma<"de", "Lexeme", "X">
+						| Dumling.Lemma<"de", "Lexeme", "PART">
+						| Dumling.Lemma<"de", "Lexeme", "PRON">
+						| Dumling.Lemma<"de", "Lexeme", "PROPN">
+						| Dumling.Lemma<"de", "Lexeme", "PUNCT">
+						| Dumling.Lemma<"de", "Lexeme", "SCONJ">
+						| Dumling.Lemma<"de", "Lexeme", "SYM">
+						| Dumling.Lemma<"de", "Lexeme", "VERB">
+						| Dumling.Lemma<"de", "Locution", "ADJ">
+						| Dumling.Lemma<"de", "Locution", "ADP">
+						| Dumling.Lemma<"de", "Locution", "ADV">
+						| Dumling.Lemma<"de", "Locution", "CCONJ">
+						| Dumling.Lemma<"de", "Locution", "DET">
+						| Dumling.Lemma<"de", "Locution", "INTJ">
+						| Dumling.Lemma<"de", "Locution", "NOUN">
+						| Dumling.Lemma<"de", "Locution", "NUM">
+						| Dumling.Lemma<"de", "Locution", "PRON">
+						| Dumling.Lemma<"de", "Locution", "SCONJ">
+						| Dumling.Lemma<"de", "Locution", "VERB">
+						| Dumling.Lemma<"de", "Morpheme", "Circumfix">
+						| Dumling.Lemma<"de", "Morpheme", "Duplifix">
+						| Dumling.Lemma<"de", "Morpheme", "Infix">
+						| Dumling.Lemma<"de", "Morpheme", "Interfix">
+						| Dumling.Lemma<"de", "Morpheme", "Prefix">
+						| Dumling.Lemma<"de", "Morpheme", "Root">
+						| Dumling.Lemma<"de", "Morpheme", "Suffix">
+						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
+						| Dumling.Lemma<"de", "Morpheme", "Transfix">
+						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Lexeme", "ADJ">
+						| Dumling.Lemma<"en", "Lexeme", "ADP">
+						| Dumling.Lemma<"en", "Lexeme", "ADV">
+						| Dumling.Lemma<"en", "Lexeme", "AUX">
+						| Dumling.Lemma<"en", "Lexeme", "CCONJ">
+						| Dumling.Lemma<"en", "Lexeme", "DET">
+						| Dumling.Lemma<"en", "Lexeme", "INTJ">
+						| Dumling.Lemma<"en", "Lexeme", "NOUN">
+						| Dumling.Lemma<"en", "Lexeme", "NUM">
+						| Dumling.Lemma<"en", "Lexeme", "X">
+						| Dumling.Lemma<"en", "Lexeme", "PART">
+						| Dumling.Lemma<"en", "Lexeme", "PRON">
+						| Dumling.Lemma<"en", "Lexeme", "PROPN">
+						| Dumling.Lemma<"en", "Lexeme", "PUNCT">
+						| Dumling.Lemma<"en", "Lexeme", "SCONJ">
+						| Dumling.Lemma<"en", "Lexeme", "SYM">
+						| Dumling.Lemma<"en", "Lexeme", "VERB">
+						| Dumling.Lemma<"en", "Locution", "ADP">
+						| Dumling.Lemma<"en", "Locution", "ADV">
+						| Dumling.Lemma<"en", "Locution", "INTJ">
+						| Dumling.Lemma<"en", "Locution", "NOUN">
+						| Dumling.Lemma<"en", "Locution", "SCONJ">
+						| Dumling.Lemma<"en", "Locution", "VERB">
+						| Dumling.Lemma<"en", "Morpheme", "Circumfix">
+						| Dumling.Lemma<"en", "Morpheme", "Duplifix">
+						| Dumling.Lemma<"en", "Morpheme", "Infix">
+						| Dumling.Lemma<"en", "Morpheme", "Interfix">
+						| Dumling.Lemma<"en", "Morpheme", "Prefix">
+						| Dumling.Lemma<"en", "Morpheme", "Root">
+						| Dumling.Lemma<"en", "Morpheme", "Suffix">
+						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
+						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
+						| Dumling.Lemma<"en", "Morpheme", "Transfix">
+						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Lexeme", "ADJ">
+						| Dumling.Lemma<"he", "Lexeme", "ADP">
+						| Dumling.Lemma<"he", "Lexeme", "ADV">
+						| Dumling.Lemma<"he", "Lexeme", "AUX">
+						| Dumling.Lemma<"he", "Lexeme", "CCONJ">
+						| Dumling.Lemma<"he", "Lexeme", "DET">
+						| Dumling.Lemma<"he", "Lexeme", "INTJ">
+						| Dumling.Lemma<"he", "Lexeme", "NOUN">
+						| Dumling.Lemma<"he", "Lexeme", "NUM">
+						| Dumling.Lemma<"he", "Lexeme", "X">
+						| Dumling.Lemma<"he", "Lexeme", "PART">
+						| Dumling.Lemma<"he", "Lexeme", "PRON">
+						| Dumling.Lemma<"he", "Lexeme", "PROPN">
+						| Dumling.Lemma<"he", "Lexeme", "PUNCT">
+						| Dumling.Lemma<"he", "Lexeme", "SCONJ">
+						| Dumling.Lemma<"he", "Lexeme", "SYM">
+						| Dumling.Lemma<"he", "Lexeme", "VERB">
+						| Dumling.Lemma<"he", "Locution", "ADV">
+						| Dumling.Lemma<"he", "Locution", "INTJ">
+						| Dumling.Lemma<"he", "Morpheme", "Circumfix">
+						| Dumling.Lemma<"he", "Morpheme", "Duplifix">
+						| Dumling.Lemma<"he", "Morpheme", "Infix">
+						| Dumling.Lemma<"he", "Morpheme", "Interfix">
+						| Dumling.Lemma<"he", "Morpheme", "Prefix">
+						| Dumling.Lemma<"he", "Morpheme", "Root">
+						| Dumling.Lemma<"he", "Morpheme", "Suffix">
+						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
+						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
+						| Dumling.Lemma<"he", "Morpheme", "Transfix">
+						| Dumling.Lemma<"he", "Saying", "Saying">
+				  >
+				| undefined;
 	  };
 export type ReadingKnowledge = {
 	transcription?: string | undefined;
@@ -2102,7 +2213,9 @@ export type SemanticRelation =
 	| "hypernym"
 	| "hyponym"
 	| "meronym"
-	| "holonym";
+	| "holonym"
+	| "endonym"
+	| "exonym";
 export type SemanticRelationProjection = {
 	source:
 		| Dumling.Reading<"de", "Lexeme", "ADJ">

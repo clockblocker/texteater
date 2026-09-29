@@ -69,7 +69,11 @@ does as a routine formula, so `tut mir leid` has an `Apology` Reading and a
 
 A Semantic Relation stays in its source's language and relation space.
 Lexeme and Locution share one space (`ins Gras beißen` ↔ `sterben`); a Saying
-relates only to Sayings and a Morpheme only to Morphemes.
+relates only to Sayings and a Morpheme only to Morphemes. Only a PROPN
+Reading stores an `endonym`, the local name of the place it names, as a PROPN
+Lemma (`Pressburg`: `Bratislava`). `projectSemanticRelations` derives the
+inverse `exonym` on the local name, as it derives `hyponym` from `hypernym`
+and `meronym` from `holonym`.
 
 The `dumrel/schema` entrypoint exposes the canonical composable Zod schemas.
 The package build compiles those schemas into lightweight runtime validation
