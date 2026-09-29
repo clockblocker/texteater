@@ -19,8 +19,8 @@ w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
 adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
 `herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
-adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), and the negation
-particle `nicht`, with every spelling that realizes them and each
+adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negation
+particle `nicht`, and the softening particle `mal`, with every spelling that realizes them and each
 Reading's Knowledge and semantic relation claims. `dumspec` checks them with
 Dumling and Dumrel. Dumling still owns linguistic values and their
 validation, and Dumrel owns Knowledge types, validation and relation algebra.

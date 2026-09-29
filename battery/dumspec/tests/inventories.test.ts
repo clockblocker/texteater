@@ -445,6 +445,18 @@ describe("the German authored inventory", () => {
 		).toEqual([["PART", "Neg", "🚫"]]);
 	});
 
+	test("authors softening mal as a PART of its own with one Reading, not a spelling of einmal", () => {
+		expect(
+			authoredMembers
+				.filter(({ lemma }) => lemma.canonicalForm === "mal")
+				.map(({ lemma, reading }) => [
+					lemma.kind,
+					field(lemma.coreFeatures, "polarity"),
+					reading.emojiDescription,
+				]),
+		).toEqual([["PART", null, "🤏"]]);
+	});
+
 	test("reaches the units a Note drills down to without generation", () => {
 		const realized = (spelled: string, kind: string) =>
 			authoredRealizations

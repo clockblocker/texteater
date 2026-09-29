@@ -42,6 +42,7 @@ import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js"
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
 import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
+import { member as softeningMal } from "./members/lexeme/particle/mal.js";
 import { member as negationNicht } from "./members/lexeme/particle/nicht.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
@@ -124,8 +125,8 @@ import { whAdverbs } from "./wh-adverbs.js";
  * Every German authored member: the article and PRON pillar cells, the
  * invariant determiners, the AUX Readings (one per grammatical use, ADR
  * 0026), the reflexivity unit, the stem determiners and pronouns, and the
- * pronominal adverbs and the interrogative and relative w-adverbs, and the
- * negation particle nicht.
+ * pronominal adverbs and the interrogative and relative w-adverbs, the
+ * negation particle nicht and the softening particle mal.
  */
 export const authoredMembers = [
 	article_das_neuter_singular_accusative,
@@ -249,4 +250,5 @@ export const authoredMembers = [
 	...pronominalAdverbs,
 	...whAdverbs,
 	negationNicht,
+	softeningMal,
 ];
