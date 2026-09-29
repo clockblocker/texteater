@@ -2,6 +2,7 @@ import { readdir } from "node:fs/promises";
 import { z } from "zod";
 import { buildUnitSchemas } from "../src/schemas/units.js";
 import {
+	ForeignKindSchema,
 	LemmaFamilySchema,
 	MorphemeKindSchema,
 	PosSchema,
@@ -26,7 +27,6 @@ const lexemeKinds: Record<string, string> = {
 	"subordinating-conjunction": "SCONJ",
 	punctuation: "PUNCT",
 	symbol: "SYM",
-	other: "X",
 };
 // Lexeme and Locution Kinds are UPOS tags and share their file names.
 const kindSchemas = {
@@ -34,6 +34,7 @@ const kindSchemas = {
 	Locution: PosSchema,
 	Saying: SayingKindSchema,
 	Morpheme: MorphemeKindSchema,
+	Foreign: ForeignKindSchema,
 };
 export async function loadRoutes() {
 	const root = new URL("../src/schemas/concrete-language/", import.meta.url);

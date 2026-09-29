@@ -2,9 +2,11 @@ import { expect, test } from "bun:test";
 import { z } from "zod";
 import fixtures from "./fixtures/legacy-feature-acceptance.json";
 
-// Clitic is no Morpheme Kind (ADR 0035), and the Phraseme Family is split
-// into Locution and Saying (ADR 0039): their routes are retired.
-const retired = /^[a-z]+\/(morpheme\/clitic|phraseme\/[a-z-]+)\.ts$/;
+// Clitic is no Morpheme Kind (ADR 0035), the Phraseme Family is split into
+// Locution and Saying (ADR 0039), and Lexeme X gave way to the Foreign Family
+// (ADR 0045): their routes are retired.
+const retired =
+	/^[a-z]+\/(morpheme\/clitic|phraseme\/[a-z-]+|lexeme\/other)\.ts$/;
 
 // No English route carries UD Style any more: archaism and register are
 // parked on #727, so a legacy English sample that sets it is rejected.

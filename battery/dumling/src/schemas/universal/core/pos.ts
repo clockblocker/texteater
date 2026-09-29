@@ -18,7 +18,6 @@ const SCONJ = z.literal("SCONJ");
 
 const PUNCT = z.literal("PUNCT");
 const SYM = z.literal("SYM");
-const X = z.literal("X");
 
 export const PosSchema = z.enum([
 	ADJ.value,
@@ -37,7 +36,6 @@ export const PosSchema = z.enum([
 	SCONJ.value,
 	PUNCT.value,
 	SYM.value,
-	X.value,
 ]);
 export const Pos = PosSchema.enum;
 export type Pos = z.infer<typeof PosSchema>;

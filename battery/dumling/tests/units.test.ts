@@ -10,6 +10,12 @@ const routes = await loadRoutes();
 const nounRoute = routes.find((route) => route.key === "de/Lexeme/NOUN");
 if (!nounRoute) throw Error("Missing German noun route");
 const noun = unitFixtures(nounRoute, z);
+const nounReading = {
+	unitKind: "Reading",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+} as const;
 const hebrewNounRoute = routes.find((route) => route.key === "he/Lexeme/NOUN");
 if (!hebrewNounRoute) throw Error("Missing Hebrew noun route");
 const hebrewNoun = unitFixtures(hebrewNounRoute, z);
@@ -132,9 +138,9 @@ describe("compiled unit interface", () => {
 			emojiDescription: " 🏠 ",
 			lemma: { ...noun.Lemma, canonicalForm: " Cafe\u0301 " },
 		};
-		const parsed = parseUnit(input);
+		const parsed = parseUnit(input, nounReading);
 		expect(parsed.success).toBe(true);
-		if (parsed.success && parsed.chain.unitKind === "Reading") {
+		if (parsed.success) {
 			expect(parsed.chain.value.lemma.canonicalForm).toBe("Café");
 			expect(parsed.chain.value.emojiDescription).toBe("🏠");
 		}
@@ -178,9 +184,11 @@ describe("compiled unit interface", () => {
 	});
 	test("compares Emoji Descriptions without variation selectors or skin-tone modifiers", () => {
 		const description = (emojiDescription: string) => {
-			const parsed = parseUnit({ ...noun.Reading, emojiDescription });
-			if (!parsed.success || parsed.chain.unitKind !== "Reading")
-				throw Error(`Rejected ${emojiDescription}`);
+			const parsed = parseUnit(
+				{ ...noun.Reading, emojiDescription },
+				nounReading,
+			);
+			if (!parsed.success) throw Error(`Rejected ${emojiDescription}`);
 			return parsed.chain.value.emojiDescription;
 		};
 		const schema = nounRoute.schemas.Reading;
@@ -330,6 +338,66 @@ describe("compiled unit interface", () => {
 		expect(
 			parseUnit({ ...noun.Lemma, canonicalForm: "z.B." }).success,
 		).toBe(true);
+	});
+	test("a Foreign unit has a source language, one Surface and a Reading without an Emoji Description", () => {
+		for (const language of ["de", "en", "he"]) {
+			const route = routes.find(
+				(candidate) => candidate.key === `${language}/Foreign/Foreign`,
+			);
+			if (!route) throw Error(`Missing ${language} Foreign route`);
+			const { Lemma, Surface, Reading, Attestation } = unitFixtures(
+				route,
+				z,
+			);
+			const lemma = { ...Lemma, canonicalForm: "whatever" };
+			const surface = {
+				...Surface,
+				lemma,
+				normalizedSurface: "whatever",
+			};
+			for (const sourceLang of ["en", "fr", "grc", "und"])
+				expect(
+					parseUnit({ ...lemma, coreFeatures: { sourceLang } })
+						.success,
+				).toBe(true);
+			for (const sourceLang of ["EN", "english", "e", "en-GB", null])
+				expect(
+					parseUnit({ ...lemma, coreFeatures: { sourceLang } })
+						.success,
+				).toBe(false);
+			expect(parseUnit({ ...lemma, coreFeatures: {} }).success).toBe(
+				false,
+			);
+			expect(parseUnit({ ...Reading, lemma }).success).toBe(true);
+			expect(
+				parseUnit({ ...Reading, lemma, emojiDescription: "🤷" })
+					.success,
+			).toBe(false);
+			expect(parseUnit(surface).success).toBe(true);
+			expect(
+				parseUnit({
+					...Attestation,
+					surface,
+					members: [{ attested: "watevr", orthography: "Typo" }],
+				}).success,
+			).toBe(true);
+			for (const other of [
+				{ ...surface, normalizedSurface: "whatevers" },
+				{
+					...surface,
+					spelling: { kind: "Variant", variantTags: ["Expressive"] },
+				},
+				{
+					...surface,
+					surfaceFeatures: { historicalStatus: "Archaic" },
+				},
+				{ ...surface, inflectionalFeatures: null },
+			])
+				expect(parseUnit(other).success).toBe(false);
+			expect(
+				parseUnit({ ...lemma, family: "Lexeme", kind: "X" }).success,
+			).toBe(false);
+		}
 	});
 	test("compilation rejects unregistered custom behavior", () => {
 		expect(() =>

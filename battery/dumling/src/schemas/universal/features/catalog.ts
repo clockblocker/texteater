@@ -3,6 +3,7 @@ import { ComparableSchema } from "./custom/comparable.js";
 import { LexicallyReflexiveSchema } from "./custom/lexically-reflexive.js";
 import { PhrasalSchema } from "./custom/phrasal.js";
 import { HasSepPrefixSchema } from "./custom/separable.js";
+import { SourceLangSchema } from "./custom/source-lang.js";
 import {
 	FutureConstructionSchema,
 	ParticipleFormSchema,
@@ -94,6 +95,7 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	pronType: PronTypeSchema,
 	punctType: PunctTypeSchema,
 	reflex: ReflexSchema,
+	sourceLang: SourceLangSchema,
 	style: StyleSchema,
 	tense: TenseSchema,
 	variant: VariantSchema,

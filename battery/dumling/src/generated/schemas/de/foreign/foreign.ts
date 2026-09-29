@@ -1,11 +1,11 @@
 // Generated concrete schemas. Run bun run generate.
-import { DeOtherFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/lexeme/other.js";
+import { DeForeignFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/de/foreign/foreign.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
 
 const schemas = buildUnitSchemas(
-	{ language: "de", family: "Lexeme", kind: "X" },
+	{ language: "de", family: "Foreign", kind: "Foreign" },
 	featureBags.shape.core,
-	featureBags.shape.inflectional,
+	undefined,
 );
 export const lemmaSchema = schemas.Lemma;
 export const surfaceSchema = schemas.Surface;

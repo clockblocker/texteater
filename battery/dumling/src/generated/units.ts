@@ -1,5 +1,136 @@
 // Generated from canonical Zod unit schemas. Run bun run generate.
 export interface UnitMap {
+	"de/Foreign/Foreign": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "de";
+			family: "Foreign";
+			kind: "Foreign";
+			canonicalForm: string;
+			coreFeatures: { sourceLang: string };
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "de";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+			normalizedSurface: string;
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
+				  };
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "de";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "de";
+				lemma: {
+					unitKind: "Lemma";
+					language: "de";
+					family: "Foreign";
+					kind: "Foreign";
+					canonicalForm: string;
+					coreFeatures: { sourceLang: string };
+				};
+				normalizedSurface: string;
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
+					  };
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
 	"de/Lexeme/ADJ": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -1957,172 +2088,6 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-		};
-	};
-	"de/Lexeme/X": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "de";
-			family: "Lexeme";
-			kind: "X";
-			canonicalForm: string;
-			coreFeatures: {
-				abbr: "Yes" | null;
-				foreign: "Yes" | null;
-				hyph: "Yes" | null;
-				numType: ("Card" | "Mult" | "Range") | null;
-			};
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "de";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					foreign: "Yes" | null;
-					hyph: "Yes" | null;
-					numType: ("Card" | "Mult" | "Range") | null;
-				};
-			};
-			normalizedSurface: string;
-			spelling:
-				| { kind: "Canonical" }
-				| {
-						kind: "Variant";
-						variantTags: [
-							(
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							),
-							...Array<
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							>,
-						];
-				  };
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			inflectionalFeatures: {
-				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-				gender: ("Fem" | "Masc" | "Neut") | null;
-				mood: ("Imp" | "Ind" | "Sub") | null;
-				number: ("Plur" | "Sing") | null;
-				verbForm: ("Fin" | "Inf" | "Part") | null;
-			} | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "de";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					foreign: "Yes" | null;
-					hyph: "Yes" | null;
-					numType: ("Card" | "Mult" | "Range") | null;
-				};
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "de";
-				lemma: {
-					unitKind: "Lemma";
-					language: "de";
-					family: "Lexeme";
-					kind: "X";
-					canonicalForm: string;
-					coreFeatures: {
-						abbr: "Yes" | null;
-						foreign: "Yes" | null;
-						hyph: "Yes" | null;
-						numType: ("Card" | "Mult" | "Range") | null;
-					};
-				};
-				normalizedSurface: string;
-				spelling:
-					| { kind: "Canonical" }
-					| {
-							kind: "Variant";
-							variantTags: [
-								(
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								),
-								...Array<
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								>,
-							];
-					  };
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-				inflectionalFeatures: {
-					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					mood: ("Imp" | "Ind" | "Sub") | null;
-					number: ("Plur" | "Sing") | null;
-					verbForm: ("Fin" | "Inf" | "Part") | null;
-				} | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
 		};
 	};
 	"de/Lexeme/PART": {
@@ -6813,6 +6778,137 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
+	"en/Foreign/Foreign": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "en";
+			family: "Foreign";
+			kind: "Foreign";
+			canonicalForm: string;
+			coreFeatures: { sourceLang: string };
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "en";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+			normalizedSurface: string;
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
+				  };
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "en";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "en";
+				lemma: {
+					unitKind: "Lemma";
+					language: "en";
+					family: "Foreign";
+					kind: "Foreign";
+					canonicalForm: string;
+					coreFeatures: { sourceLang: string };
+				};
+				normalizedSurface: string;
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
+					  };
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
 	"en/Lexeme/ADJ": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -8692,141 +8788,6 @@ export interface UnitMap {
 						  }
 				  )
 				| null;
-		};
-	};
-	"en/Lexeme/X": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "en";
-			family: "Lexeme";
-			kind: "X";
-			canonicalForm: string;
-			coreFeatures: { extPos: "PROPN" | null; foreign: "Yes" | null };
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "en";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: { extPos: "PROPN" | null; foreign: "Yes" | null };
-			};
-			normalizedSurface: string;
-			spelling:
-				| { kind: "Canonical" }
-				| {
-						kind: "Variant";
-						variantTags: [
-							(
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							),
-							...Array<
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							>,
-						];
-				  };
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "en";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: { extPos: "PROPN" | null; foreign: "Yes" | null };
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "en";
-				lemma: {
-					unitKind: "Lemma";
-					language: "en";
-					family: "Lexeme";
-					kind: "X";
-					canonicalForm: string;
-					coreFeatures: {
-						extPos: "PROPN" | null;
-						foreign: "Yes" | null;
-					};
-				};
-				normalizedSurface: string;
-				spelling:
-					| { kind: "Canonical" }
-					| {
-							kind: "Variant";
-							variantTags: [
-								(
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								),
-								...Array<
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								>,
-							];
-					  };
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
 		};
 	};
 	"en/Lexeme/PART": {
@@ -12562,6 +12523,137 @@ export interface UnitMap {
 			realizationCoverage: "Full" | "Partial";
 		};
 	};
+	"he/Foreign/Foreign": {
+		Lemma: {
+			unitKind: "Lemma";
+			language: "he";
+			family: "Foreign";
+			kind: "Foreign";
+			canonicalForm: string;
+			coreFeatures: { sourceLang: string };
+		};
+		Surface: {
+			unitKind: "Surface";
+			language: "he";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+			normalizedSurface: string;
+			spelling:
+				| { kind: "Canonical" }
+				| {
+						kind: "Variant";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
+				  };
+			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+		};
+		Reading: {
+			unitKind: "Reading";
+			lemma: {
+				unitKind: "Lemma";
+				language: "he";
+				family: "Foreign";
+				kind: "Foreign";
+				canonicalForm: string;
+				coreFeatures: { sourceLang: string };
+			};
+		};
+		Attestation: {
+			unitKind: "Attestation";
+			surface: {
+				unitKind: "Surface";
+				language: "he";
+				lemma: {
+					unitKind: "Lemma";
+					language: "he";
+					family: "Foreign";
+					kind: "Foreign";
+					canonicalForm: string;
+					coreFeatures: { sourceLang: string };
+				};
+				normalizedSurface: string;
+				spelling:
+					| { kind: "Canonical" }
+					| {
+							kind: "Variant";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
+					  };
+				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+			};
+			members: [
+				(
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				),
+				...Array<
+					| {
+							attested: string;
+							orthography: "Standard" | "Typo" | "Shorthand";
+					  }
+					| {
+							attested: string;
+							orthography: "Fused";
+							fusion: {
+								spelling: string;
+								components: [
+									{ span: string; surface: string },
+									{ span: string; surface: string },
+									...Array<{ span: string; surface: string }>,
+								];
+							};
+							component: number;
+					  }
+				>,
+			];
+			realizationCoverage: "Full" | "Partial";
+		};
+	};
 	"he/Lexeme/ADJ": {
 		Lemma: {
 			unitKind: "Lemma";
@@ -14059,138 +14151,6 @@ export interface UnitMap {
 						  )
 						| null;
 				} | null;
-			};
-			members: [
-				(
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				),
-				...Array<
-					| {
-							attested: string;
-							orthography: "Standard" | "Typo" | "Shorthand";
-					  }
-					| {
-							attested: string;
-							orthography: "Fused";
-							fusion: {
-								spelling: string;
-								components: [
-									{ span: string; surface: string },
-									{ span: string; surface: string },
-									...Array<{ span: string; surface: string }>,
-								];
-							};
-							component: number;
-					  }
-				>,
-			];
-			realizationCoverage: "Full" | "Partial";
-		};
-	};
-	"he/Lexeme/X": {
-		Lemma: {
-			unitKind: "Lemma";
-			language: "he";
-			family: "Lexeme";
-			kind: "X";
-			canonicalForm: string;
-			coreFeatures: Record<string, never>;
-		};
-		Surface: {
-			unitKind: "Surface";
-			language: "he";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			normalizedSurface: string;
-			spelling:
-				| { kind: "Canonical" }
-				| {
-						kind: "Variant";
-						variantTags: [
-							(
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							),
-							...Array<
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive"
-							>,
-						];
-				  };
-			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
-		};
-		Reading: {
-			unitKind: "Reading";
-			lemma: {
-				unitKind: "Lemma";
-				language: "he";
-				family: "Lexeme";
-				kind: "X";
-				canonicalForm: string;
-				coreFeatures: Record<string, never>;
-			};
-			emojiDescription: string;
-		};
-		Attestation: {
-			unitKind: "Attestation";
-			surface: {
-				unitKind: "Surface";
-				language: "he";
-				lemma: {
-					unitKind: "Lemma";
-					language: "he";
-					family: "Lexeme";
-					kind: "X";
-					canonicalForm: string;
-					coreFeatures: Record<string, never>;
-				};
-				normalizedSurface: string;
-				spelling:
-					| { kind: "Canonical" }
-					| {
-							kind: "Variant";
-							variantTags: [
-								(
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								),
-								...Array<
-									| "Licensed"
-									| "Historical"
-									| "Regional"
-									| "Expressive"
-								>,
-							];
-					  };
-				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
 			members: [
 				(

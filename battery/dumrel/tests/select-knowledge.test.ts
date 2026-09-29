@@ -57,3 +57,26 @@ test("invalid and unavailable routes are distinct, compiled selection agrees wit
 			"KnowledgePolicyUnavailable",
 		);
 });
+test("a Foreign unit requests only its translations, and X has no policy", () => {
+	const foreign = {
+		language: "de",
+		family: "Foreign",
+		kind: "Foreign",
+	} as const;
+	const all = selectKnowledge({ route: foreign });
+	expect(all.success && all.value).toEqual({
+		translations: { en: null, ru: null },
+	});
+	const withoutEnglish = selectKnowledge({
+		route: foreign,
+		settings: { translations: { en: false } },
+	});
+	expect(withoutEnglish.success && withoutEnglish.value).toEqual({
+		translations: { ru: null },
+	});
+	expect(
+		selectKnowledge({
+			route: { ...route, kind: "X" },
+		} as unknown as KnowledgeSelectionInput).success,
+	).toBe(false);
+});

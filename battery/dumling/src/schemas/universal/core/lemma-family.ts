@@ -4,6 +4,7 @@ const LEXEME = z.literal("Lexeme");
 const LOCUTION = z.literal("Locution");
 const SAYING = z.literal("Saying");
 const MORPHEME = z.literal("Morpheme");
+const FOREIGN = z.literal("Foreign");
 
 /**
  * A route is language, Family and Kind (ADR 0039). A Kind may repeat across
@@ -15,6 +16,7 @@ export const LemmaFamilySchema = z.enum([
 	LOCUTION.value,
 	SAYING.value,
 	MORPHEME.value,
+	FOREIGN.value,
 ]);
 export const LemmaFamily = LemmaFamilySchema.enum;
 export type LemmaFamily = z.infer<typeof LemmaFamilySchema>;

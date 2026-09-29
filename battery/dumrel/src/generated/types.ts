@@ -60,6 +60,7 @@ export type KnowledgeRequestMask = {
 };
 export type KnowledgeSelectionInput = {
 	route:
+		| { language: "de"; family: "Foreign"; kind: "Foreign" }
 		| { language: "de"; family: "Lexeme"; kind: "ADJ" }
 		| { language: "de"; family: "Lexeme"; kind: "ADP" }
 		| { language: "de"; family: "Lexeme"; kind: "ADV" }
@@ -69,7 +70,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "de"; family: "Lexeme"; kind: "INTJ" }
 		| { language: "de"; family: "Lexeme"; kind: "NOUN" }
 		| { language: "de"; family: "Lexeme"; kind: "NUM" }
-		| { language: "de"; family: "Lexeme"; kind: "X" }
 		| { language: "de"; family: "Lexeme"; kind: "PART" }
 		| { language: "de"; family: "Lexeme"; kind: "PRON" }
 		| { language: "de"; family: "Lexeme"; kind: "PROPN" }
@@ -98,6 +98,7 @@ export type KnowledgeSelectionInput = {
 		| { language: "de"; family: "Morpheme"; kind: "Suffixoid" }
 		| { language: "de"; family: "Morpheme"; kind: "Transfix" }
 		| { language: "de"; family: "Saying"; kind: "Saying" }
+		| { language: "en"; family: "Foreign"; kind: "Foreign" }
 		| { language: "en"; family: "Lexeme"; kind: "ADJ" }
 		| { language: "en"; family: "Lexeme"; kind: "ADP" }
 		| { language: "en"; family: "Lexeme"; kind: "ADV" }
@@ -107,7 +108,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Lexeme"; kind: "INTJ" }
 		| { language: "en"; family: "Lexeme"; kind: "NOUN" }
 		| { language: "en"; family: "Lexeme"; kind: "NUM" }
-		| { language: "en"; family: "Lexeme"; kind: "X" }
 		| { language: "en"; family: "Lexeme"; kind: "PART" }
 		| { language: "en"; family: "Lexeme"; kind: "PRON" }
 		| { language: "en"; family: "Lexeme"; kind: "PROPN" }
@@ -132,6 +132,7 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Morpheme"; kind: "ToneMarking" }
 		| { language: "en"; family: "Morpheme"; kind: "Transfix" }
 		| { language: "en"; family: "Saying"; kind: "Saying" }
+		| { language: "he"; family: "Foreign"; kind: "Foreign" }
 		| { language: "he"; family: "Lexeme"; kind: "ADJ" }
 		| { language: "he"; family: "Lexeme"; kind: "ADP" }
 		| { language: "he"; family: "Lexeme"; kind: "ADV" }
@@ -141,7 +142,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "he"; family: "Lexeme"; kind: "INTJ" }
 		| { language: "he"; family: "Lexeme"; kind: "NOUN" }
 		| { language: "he"; family: "Lexeme"; kind: "NUM" }
-		| { language: "he"; family: "Lexeme"; kind: "X" }
 		| { language: "he"; family: "Lexeme"; kind: "PART" }
 		| { language: "he"; family: "Lexeme"; kind: "PRON" }
 		| { language: "he"; family: "Lexeme"; kind: "PROPN" }
@@ -174,6 +174,12 @@ export type DirectSemanticRelation =
 	| "endonym";
 export type TranslationLanguage = "en" | "ru";
 export type UnitShadow =
+	| {
+			language: "de";
+			canonicalForm: string;
+			family: "Foreign";
+			kind: "Foreign";
+	  }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
@@ -183,7 +189,6 @@ export type UnitShadow =
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -292,6 +297,12 @@ export type UnitShadow =
 			family: "Saying";
 			kind: "Saying";
 	  }
+	| {
+			language: "en";
+			canonicalForm: string;
+			family: "Foreign";
+			kind: "Foreign";
+	  }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
@@ -301,7 +312,6 @@ export type UnitShadow =
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -401,6 +411,12 @@ export type UnitShadow =
 			family: "Saying";
 			kind: "Saying";
 	  }
+	| {
+			language: "he";
+			canonicalForm: string;
+			family: "Foreign";
+			kind: "Foreign";
+	  }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
@@ -410,7 +426,6 @@ export type UnitShadow =
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -501,7 +516,6 @@ export type LexemeUnitShadow =
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -518,7 +532,6 @@ export type LexemeUnitShadow =
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -535,7 +548,6 @@ export type LexemeUnitShadow =
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "X" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
@@ -591,6 +603,12 @@ export type MorphologicalTreeNode =
 				| {
 						language: "de";
 						canonicalForm: string;
+						family: "Foreign";
+						kind: "Foreign";
+				  }
+				| {
+						language: "de";
+						canonicalForm: string;
 						family: "Lexeme";
 						kind: "ADJ";
 				  }
@@ -641,12 +659,6 @@ export type MorphologicalTreeNode =
 						canonicalForm: string;
 						family: "Lexeme";
 						kind: "NUM";
-				  }
-				| {
-						language: "de";
-						canonicalForm: string;
-						family: "Lexeme";
-						kind: "X";
 				  }
 				| {
 						language: "de";
@@ -765,6 +777,12 @@ export type MorphologicalTreeNode =
 				| {
 						language: "en";
 						canonicalForm: string;
+						family: "Foreign";
+						kind: "Foreign";
+				  }
+				| {
+						language: "en";
+						canonicalForm: string;
 						family: "Lexeme";
 						kind: "ADJ";
 				  }
@@ -815,12 +833,6 @@ export type MorphologicalTreeNode =
 						canonicalForm: string;
 						family: "Lexeme";
 						kind: "NUM";
-				  }
-				| {
-						language: "en";
-						canonicalForm: string;
-						family: "Lexeme";
-						kind: "X";
 				  }
 				| {
 						language: "en";
@@ -909,6 +921,12 @@ export type MorphologicalTreeNode =
 				| {
 						language: "he";
 						canonicalForm: string;
+						family: "Foreign";
+						kind: "Foreign";
+				  }
+				| {
+						language: "he";
+						canonicalForm: string;
 						family: "Lexeme";
 						kind: "ADJ";
 				  }
@@ -959,12 +977,6 @@ export type MorphologicalTreeNode =
 						canonicalForm: string;
 						family: "Lexeme";
 						kind: "NUM";
-				  }
-				| {
-						language: "he";
-						canonicalForm: string;
-						family: "Lexeme";
-						kind: "X";
 				  }
 				| {
 						language: "he";
@@ -1037,6 +1049,7 @@ export type SemanticRelations =
 			targetKind: "reading";
 			synonym?:
 				| Array<
+						| Dumling.Reading<"de", "Foreign", "Foreign">
 						| Dumling.Reading<"de", "Lexeme", "ADJ">
 						| Dumling.Reading<"de", "Lexeme", "ADP">
 						| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -1046,7 +1059,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"de", "Lexeme", "INTJ">
 						| Dumling.Reading<"de", "Lexeme", "NOUN">
 						| Dumling.Reading<"de", "Lexeme", "NUM">
-						| Dumling.Reading<"de", "Lexeme", "X">
 						| Dumling.Reading<"de", "Lexeme", "PART">
 						| Dumling.Reading<"de", "Lexeme", "PRON">
 						| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -1075,6 +1087,7 @@ export type SemanticRelations =
 						| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 						| Dumling.Reading<"de", "Morpheme", "Transfix">
 						| Dumling.Reading<"de", "Saying", "Saying">
+						| Dumling.Reading<"en", "Foreign", "Foreign">
 						| Dumling.Reading<"en", "Lexeme", "ADJ">
 						| Dumling.Reading<"en", "Lexeme", "ADP">
 						| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -1084,7 +1097,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Lexeme", "INTJ">
 						| Dumling.Reading<"en", "Lexeme", "NOUN">
 						| Dumling.Reading<"en", "Lexeme", "NUM">
-						| Dumling.Reading<"en", "Lexeme", "X">
 						| Dumling.Reading<"en", "Lexeme", "PART">
 						| Dumling.Reading<"en", "Lexeme", "PRON">
 						| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -1109,6 +1121,7 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 						| Dumling.Reading<"en", "Morpheme", "Transfix">
 						| Dumling.Reading<"en", "Saying", "Saying">
+						| Dumling.Reading<"he", "Foreign", "Foreign">
 						| Dumling.Reading<"he", "Lexeme", "ADJ">
 						| Dumling.Reading<"he", "Lexeme", "ADP">
 						| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -1118,7 +1131,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"he", "Lexeme", "INTJ">
 						| Dumling.Reading<"he", "Lexeme", "NOUN">
 						| Dumling.Reading<"he", "Lexeme", "NUM">
-						| Dumling.Reading<"he", "Lexeme", "X">
 						| Dumling.Reading<"he", "Lexeme", "PART">
 						| Dumling.Reading<"he", "Lexeme", "PRON">
 						| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -1146,6 +1158,7 @@ export type SemanticRelations =
 			targetKind?: "lemma" | undefined;
 			synonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1155,7 +1168,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1184,6 +1196,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1193,7 +1206,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1218,6 +1230,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1227,7 +1240,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1252,6 +1264,7 @@ export type SemanticRelations =
 				| undefined;
 			nearSynonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1261,7 +1274,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1290,6 +1302,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1299,7 +1312,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1324,6 +1336,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1333,7 +1346,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1358,6 +1370,7 @@ export type SemanticRelations =
 				| undefined;
 			antonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1367,7 +1380,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1396,6 +1408,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1405,7 +1418,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1430,6 +1442,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1439,7 +1452,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1464,6 +1476,7 @@ export type SemanticRelations =
 				| undefined;
 			nearAntonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1473,7 +1486,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1502,6 +1514,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1511,7 +1524,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1536,6 +1548,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1545,7 +1558,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1570,6 +1582,7 @@ export type SemanticRelations =
 				| undefined;
 			hypernym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1579,7 +1592,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1608,6 +1620,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1617,7 +1630,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1642,6 +1654,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1651,7 +1664,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1676,6 +1688,7 @@ export type SemanticRelations =
 				| undefined;
 			holonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1685,7 +1698,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1714,6 +1726,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1723,7 +1736,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1748,6 +1760,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1757,7 +1770,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1782,6 +1794,7 @@ export type SemanticRelations =
 				| undefined;
 			endonym?:
 				| Array<
+						| Dumling.Lemma<"de", "Foreign", "Foreign">
 						| Dumling.Lemma<"de", "Lexeme", "ADJ">
 						| Dumling.Lemma<"de", "Lexeme", "ADP">
 						| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -1791,7 +1804,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Lexeme", "INTJ">
 						| Dumling.Lemma<"de", "Lexeme", "NOUN">
 						| Dumling.Lemma<"de", "Lexeme", "NUM">
-						| Dumling.Lemma<"de", "Lexeme", "X">
 						| Dumling.Lemma<"de", "Lexeme", "PART">
 						| Dumling.Lemma<"de", "Lexeme", "PRON">
 						| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -1820,6 +1832,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 						| Dumling.Lemma<"de", "Morpheme", "Transfix">
 						| Dumling.Lemma<"de", "Saying", "Saying">
+						| Dumling.Lemma<"en", "Foreign", "Foreign">
 						| Dumling.Lemma<"en", "Lexeme", "ADJ">
 						| Dumling.Lemma<"en", "Lexeme", "ADP">
 						| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -1829,7 +1842,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Lexeme", "INTJ">
 						| Dumling.Lemma<"en", "Lexeme", "NOUN">
 						| Dumling.Lemma<"en", "Lexeme", "NUM">
-						| Dumling.Lemma<"en", "Lexeme", "X">
 						| Dumling.Lemma<"en", "Lexeme", "PART">
 						| Dumling.Lemma<"en", "Lexeme", "PRON">
 						| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -1854,6 +1866,7 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
+						| Dumling.Lemma<"he", "Foreign", "Foreign">
 						| Dumling.Lemma<"he", "Lexeme", "ADJ">
 						| Dumling.Lemma<"he", "Lexeme", "ADP">
 						| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -1863,7 +1876,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Lexeme", "INTJ">
 						| Dumling.Lemma<"he", "Lexeme", "NOUN">
 						| Dumling.Lemma<"he", "Lexeme", "NUM">
-						| Dumling.Lemma<"he", "Lexeme", "X">
 						| Dumling.Lemma<"he", "Lexeme", "PART">
 						| Dumling.Lemma<"he", "Lexeme", "PRON">
 						| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -1924,6 +1936,7 @@ export type KnowledgeChange =
 			relation: "synonym";
 			targetKind: "reading";
 			value: Array<
+				| Dumling.Reading<"de", "Foreign", "Foreign">
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
 				| Dumling.Reading<"de", "Lexeme", "ADP">
 				| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -1933,7 +1946,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"de", "Lexeme", "INTJ">
 				| Dumling.Reading<"de", "Lexeme", "NOUN">
 				| Dumling.Reading<"de", "Lexeme", "NUM">
-				| Dumling.Reading<"de", "Lexeme", "X">
 				| Dumling.Reading<"de", "Lexeme", "PART">
 				| Dumling.Reading<"de", "Lexeme", "PRON">
 				| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -1962,6 +1974,7 @@ export type KnowledgeChange =
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -1971,7 +1984,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Lexeme", "INTJ">
 				| Dumling.Reading<"en", "Lexeme", "NOUN">
 				| Dumling.Reading<"en", "Lexeme", "NUM">
-				| Dumling.Reading<"en", "Lexeme", "X">
 				| Dumling.Reading<"en", "Lexeme", "PART">
 				| Dumling.Reading<"en", "Lexeme", "PRON">
 				| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -1996,6 +2008,7 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2005,7 +2018,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"he", "Lexeme", "INTJ">
 				| Dumling.Reading<"he", "Lexeme", "NOUN">
 				| Dumling.Reading<"he", "Lexeme", "NUM">
-				| Dumling.Reading<"he", "Lexeme", "X">
 				| Dumling.Reading<"he", "Lexeme", "PART">
 				| Dumling.Reading<"he", "Lexeme", "PRON">
 				| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -2034,6 +2046,7 @@ export type KnowledgeChange =
 			relation: DirectSemanticRelation;
 			targetKind?: "lemma" | undefined;
 			value: Array<
+				| Dumling.Lemma<"de", "Foreign", "Foreign">
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
 				| Dumling.Lemma<"de", "Lexeme", "ADP">
 				| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -2043,7 +2056,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"de", "Lexeme", "INTJ">
 				| Dumling.Lemma<"de", "Lexeme", "NOUN">
 				| Dumling.Lemma<"de", "Lexeme", "NUM">
-				| Dumling.Lemma<"de", "Lexeme", "X">
 				| Dumling.Lemma<"de", "Lexeme", "PART">
 				| Dumling.Lemma<"de", "Lexeme", "PRON">
 				| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -2072,6 +2084,7 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
 				| Dumling.Lemma<"de", "Saying", "Saying">
+				| Dumling.Lemma<"en", "Foreign", "Foreign">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2081,7 +2094,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Lexeme", "INTJ">
 				| Dumling.Lemma<"en", "Lexeme", "NOUN">
 				| Dumling.Lemma<"en", "Lexeme", "NUM">
-				| Dumling.Lemma<"en", "Lexeme", "X">
 				| Dumling.Lemma<"en", "Lexeme", "PART">
 				| Dumling.Lemma<"en", "Lexeme", "PRON">
 				| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -2106,6 +2118,7 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
+				| Dumling.Lemma<"he", "Foreign", "Foreign">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2115,7 +2128,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"he", "Lexeme", "INTJ">
 				| Dumling.Lemma<"he", "Lexeme", "NOUN">
 				| Dumling.Lemma<"he", "Lexeme", "NUM">
-				| Dumling.Lemma<"he", "Lexeme", "X">
 				| Dumling.Lemma<"he", "Lexeme", "PART">
 				| Dumling.Lemma<"he", "Lexeme", "PRON">
 				| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -2218,6 +2230,7 @@ export type SemanticRelation =
 	| "exonym";
 export type SemanticRelationProjection = {
 	source:
+		| Dumling.Reading<"de", "Foreign", "Foreign">
 		| Dumling.Reading<"de", "Lexeme", "ADJ">
 		| Dumling.Reading<"de", "Lexeme", "ADP">
 		| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -2227,7 +2240,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"de", "Lexeme", "INTJ">
 		| Dumling.Reading<"de", "Lexeme", "NOUN">
 		| Dumling.Reading<"de", "Lexeme", "NUM">
-		| Dumling.Reading<"de", "Lexeme", "X">
 		| Dumling.Reading<"de", "Lexeme", "PART">
 		| Dumling.Reading<"de", "Lexeme", "PRON">
 		| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -2256,6 +2268,7 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"de", "Morpheme", "Transfix">
 		| Dumling.Reading<"de", "Saying", "Saying">
+		| Dumling.Reading<"en", "Foreign", "Foreign">
 		| Dumling.Reading<"en", "Lexeme", "ADJ">
 		| Dumling.Reading<"en", "Lexeme", "ADP">
 		| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2265,7 +2278,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Lexeme", "INTJ">
 		| Dumling.Reading<"en", "Lexeme", "NOUN">
 		| Dumling.Reading<"en", "Lexeme", "NUM">
-		| Dumling.Reading<"en", "Lexeme", "X">
 		| Dumling.Reading<"en", "Lexeme", "PART">
 		| Dumling.Reading<"en", "Lexeme", "PRON">
 		| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -2290,6 +2302,7 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
 		| Dumling.Reading<"en", "Saying", "Saying">
+		| Dumling.Reading<"he", "Foreign", "Foreign">
 		| Dumling.Reading<"he", "Lexeme", "ADJ">
 		| Dumling.Reading<"he", "Lexeme", "ADP">
 		| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2299,7 +2312,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"he", "Lexeme", "INTJ">
 		| Dumling.Reading<"he", "Lexeme", "NOUN">
 		| Dumling.Reading<"he", "Lexeme", "NUM">
-		| Dumling.Reading<"he", "Lexeme", "X">
 		| Dumling.Reading<"he", "Lexeme", "PART">
 		| Dumling.Reading<"he", "Lexeme", "PRON">
 		| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -2323,6 +2335,7 @@ export type SemanticRelationProjection = {
 	relation: SemanticRelation;
 	target:
 		| (
+				| Dumling.Lemma<"de", "Foreign", "Foreign">
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
 				| Dumling.Lemma<"de", "Lexeme", "ADP">
 				| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -2332,7 +2345,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "INTJ">
 				| Dumling.Lemma<"de", "Lexeme", "NOUN">
 				| Dumling.Lemma<"de", "Lexeme", "NUM">
-				| Dumling.Lemma<"de", "Lexeme", "X">
 				| Dumling.Lemma<"de", "Lexeme", "PART">
 				| Dumling.Lemma<"de", "Lexeme", "PRON">
 				| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -2361,6 +2373,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
 				| Dumling.Lemma<"de", "Saying", "Saying">
+				| Dumling.Lemma<"en", "Foreign", "Foreign">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2370,7 +2383,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "INTJ">
 				| Dumling.Lemma<"en", "Lexeme", "NOUN">
 				| Dumling.Lemma<"en", "Lexeme", "NUM">
-				| Dumling.Lemma<"en", "Lexeme", "X">
 				| Dumling.Lemma<"en", "Lexeme", "PART">
 				| Dumling.Lemma<"en", "Lexeme", "PRON">
 				| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -2395,6 +2407,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
+				| Dumling.Lemma<"he", "Foreign", "Foreign">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2404,7 +2417,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "INTJ">
 				| Dumling.Lemma<"he", "Lexeme", "NOUN">
 				| Dumling.Lemma<"he", "Lexeme", "NUM">
-				| Dumling.Lemma<"he", "Lexeme", "X">
 				| Dumling.Lemma<"he", "Lexeme", "PART">
 				| Dumling.Lemma<"he", "Lexeme", "PRON">
 				| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -2427,6 +2439,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
 		| (
+				| Dumling.Reading<"de", "Foreign", "Foreign">
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
 				| Dumling.Reading<"de", "Lexeme", "ADP">
 				| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -2436,7 +2449,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"de", "Lexeme", "INTJ">
 				| Dumling.Reading<"de", "Lexeme", "NOUN">
 				| Dumling.Reading<"de", "Lexeme", "NUM">
-				| Dumling.Reading<"de", "Lexeme", "X">
 				| Dumling.Reading<"de", "Lexeme", "PART">
 				| Dumling.Reading<"de", "Lexeme", "PRON">
 				| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -2465,6 +2477,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2474,7 +2487,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Lexeme", "INTJ">
 				| Dumling.Reading<"en", "Lexeme", "NOUN">
 				| Dumling.Reading<"en", "Lexeme", "NUM">
-				| Dumling.Reading<"en", "Lexeme", "X">
 				| Dumling.Reading<"en", "Lexeme", "PART">
 				| Dumling.Reading<"en", "Lexeme", "PRON">
 				| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -2499,6 +2511,7 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2508,7 +2521,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"he", "Lexeme", "INTJ">
 				| Dumling.Reading<"he", "Lexeme", "NOUN">
 				| Dumling.Reading<"he", "Lexeme", "NUM">
-				| Dumling.Reading<"he", "Lexeme", "X">
 				| Dumling.Reading<"he", "Lexeme", "PART">
 				| Dumling.Reading<"he", "Lexeme", "PRON">
 				| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -2598,6 +2610,7 @@ export type ValencySlot = {
 export type GovernmentRelation = "governs" | "governedBy";
 export type GovernmentProjection = {
 	source:
+		| Dumling.Reading<"de", "Foreign", "Foreign">
 		| Dumling.Reading<"de", "Lexeme", "ADJ">
 		| Dumling.Reading<"de", "Lexeme", "ADP">
 		| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -2607,7 +2620,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"de", "Lexeme", "INTJ">
 		| Dumling.Reading<"de", "Lexeme", "NOUN">
 		| Dumling.Reading<"de", "Lexeme", "NUM">
-		| Dumling.Reading<"de", "Lexeme", "X">
 		| Dumling.Reading<"de", "Lexeme", "PART">
 		| Dumling.Reading<"de", "Lexeme", "PRON">
 		| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -2636,6 +2648,7 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 		| Dumling.Reading<"de", "Morpheme", "Transfix">
 		| Dumling.Reading<"de", "Saying", "Saying">
+		| Dumling.Reading<"en", "Foreign", "Foreign">
 		| Dumling.Reading<"en", "Lexeme", "ADJ">
 		| Dumling.Reading<"en", "Lexeme", "ADP">
 		| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2645,7 +2658,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Lexeme", "INTJ">
 		| Dumling.Reading<"en", "Lexeme", "NOUN">
 		| Dumling.Reading<"en", "Lexeme", "NUM">
-		| Dumling.Reading<"en", "Lexeme", "X">
 		| Dumling.Reading<"en", "Lexeme", "PART">
 		| Dumling.Reading<"en", "Lexeme", "PRON">
 		| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -2670,6 +2682,7 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
 		| Dumling.Reading<"en", "Saying", "Saying">
+		| Dumling.Reading<"he", "Foreign", "Foreign">
 		| Dumling.Reading<"he", "Lexeme", "ADJ">
 		| Dumling.Reading<"he", "Lexeme", "ADP">
 		| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2679,7 +2692,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"he", "Lexeme", "INTJ">
 		| Dumling.Reading<"he", "Lexeme", "NOUN">
 		| Dumling.Reading<"he", "Lexeme", "NUM">
-		| Dumling.Reading<"he", "Lexeme", "X">
 		| Dumling.Reading<"he", "Lexeme", "PART">
 		| Dumling.Reading<"he", "Lexeme", "PRON">
 		| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -2703,6 +2715,7 @@ export type GovernmentProjection = {
 	relation: GovernmentRelation;
 	target:
 		| (
+				| Dumling.Lemma<"de", "Foreign", "Foreign">
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
 				| Dumling.Lemma<"de", "Lexeme", "ADP">
 				| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -2712,7 +2725,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"de", "Lexeme", "INTJ">
 				| Dumling.Lemma<"de", "Lexeme", "NOUN">
 				| Dumling.Lemma<"de", "Lexeme", "NUM">
-				| Dumling.Lemma<"de", "Lexeme", "X">
 				| Dumling.Lemma<"de", "Lexeme", "PART">
 				| Dumling.Lemma<"de", "Lexeme", "PRON">
 				| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -2741,6 +2753,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
 				| Dumling.Lemma<"de", "Saying", "Saying">
+				| Dumling.Lemma<"en", "Foreign", "Foreign">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -2750,7 +2763,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Lexeme", "INTJ">
 				| Dumling.Lemma<"en", "Lexeme", "NOUN">
 				| Dumling.Lemma<"en", "Lexeme", "NUM">
-				| Dumling.Lemma<"en", "Lexeme", "X">
 				| Dumling.Lemma<"en", "Lexeme", "PART">
 				| Dumling.Lemma<"en", "Lexeme", "PRON">
 				| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -2775,6 +2787,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
+				| Dumling.Lemma<"he", "Foreign", "Foreign">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -2784,7 +2797,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Lexeme", "INTJ">
 				| Dumling.Lemma<"he", "Lexeme", "NOUN">
 				| Dumling.Lemma<"he", "Lexeme", "NUM">
-				| Dumling.Lemma<"he", "Lexeme", "X">
 				| Dumling.Lemma<"he", "Lexeme", "PART">
 				| Dumling.Lemma<"he", "Lexeme", "PRON">
 				| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -2807,6 +2819,7 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
 		| (
+				| Dumling.Reading<"de", "Foreign", "Foreign">
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
 				| Dumling.Reading<"de", "Lexeme", "ADP">
 				| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -2816,7 +2829,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"de", "Lexeme", "INTJ">
 				| Dumling.Reading<"de", "Lexeme", "NOUN">
 				| Dumling.Reading<"de", "Lexeme", "NUM">
-				| Dumling.Reading<"de", "Lexeme", "X">
 				| Dumling.Reading<"de", "Lexeme", "PART">
 				| Dumling.Reading<"de", "Lexeme", "PRON">
 				| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -2845,6 +2857,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2854,7 +2867,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Lexeme", "INTJ">
 				| Dumling.Reading<"en", "Lexeme", "NOUN">
 				| Dumling.Reading<"en", "Lexeme", "NUM">
-				| Dumling.Reading<"en", "Lexeme", "X">
 				| Dumling.Reading<"en", "Lexeme", "PART">
 				| Dumling.Reading<"en", "Lexeme", "PRON">
 				| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -2879,6 +2891,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -2888,7 +2901,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Lexeme", "INTJ">
 				| Dumling.Reading<"he", "Lexeme", "NOUN">
 				| Dumling.Reading<"he", "Lexeme", "NUM">
-				| Dumling.Reading<"he", "Lexeme", "X">
 				| Dumling.Reading<"he", "Lexeme", "PART">
 				| Dumling.Reading<"he", "Lexeme", "PRON">
 				| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -2925,6 +2937,7 @@ export type ParticipleRelation = "participleSource" | "participialAdjective";
 export type ParticipleProjection =
 	| {
 			source:
+				| Dumling.Reading<"de", "Foreign", "Foreign">
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
 				| Dumling.Reading<"de", "Lexeme", "ADP">
 				| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -2934,7 +2947,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Lexeme", "INTJ">
 				| Dumling.Reading<"de", "Lexeme", "NOUN">
 				| Dumling.Reading<"de", "Lexeme", "NUM">
-				| Dumling.Reading<"de", "Lexeme", "X">
 				| Dumling.Reading<"de", "Lexeme", "PART">
 				| Dumling.Reading<"de", "Lexeme", "PRON">
 				| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -2963,6 +2975,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -2972,7 +2985,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Lexeme", "INTJ">
 				| Dumling.Reading<"en", "Lexeme", "NOUN">
 				| Dumling.Reading<"en", "Lexeme", "NUM">
-				| Dumling.Reading<"en", "Lexeme", "X">
 				| Dumling.Reading<"en", "Lexeme", "PART">
 				| Dumling.Reading<"en", "Lexeme", "PRON">
 				| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -2997,6 +3009,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -3006,7 +3019,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Lexeme", "INTJ">
 				| Dumling.Reading<"he", "Lexeme", "NOUN">
 				| Dumling.Reading<"he", "Lexeme", "NUM">
-				| Dumling.Reading<"he", "Lexeme", "X">
 				| Dumling.Reading<"he", "Lexeme", "PART">
 				| Dumling.Reading<"he", "Lexeme", "PRON">
 				| Dumling.Reading<"he", "Lexeme", "PROPN">
@@ -3029,6 +3041,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Saying", "Saying">;
 			relation: "participleSource";
 			target:
+				| Dumling.Lemma<"de", "Foreign", "Foreign">
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
 				| Dumling.Lemma<"de", "Lexeme", "ADP">
 				| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -3038,7 +3051,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Lexeme", "INTJ">
 				| Dumling.Lemma<"de", "Lexeme", "NOUN">
 				| Dumling.Lemma<"de", "Lexeme", "NUM">
-				| Dumling.Lemma<"de", "Lexeme", "X">
 				| Dumling.Lemma<"de", "Lexeme", "PART">
 				| Dumling.Lemma<"de", "Lexeme", "PRON">
 				| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -3067,6 +3079,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
 				| Dumling.Lemma<"de", "Saying", "Saying">
+				| Dumling.Lemma<"en", "Foreign", "Foreign">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -3076,7 +3089,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Lexeme", "INTJ">
 				| Dumling.Lemma<"en", "Lexeme", "NOUN">
 				| Dumling.Lemma<"en", "Lexeme", "NUM">
-				| Dumling.Lemma<"en", "Lexeme", "X">
 				| Dumling.Lemma<"en", "Lexeme", "PART">
 				| Dumling.Lemma<"en", "Lexeme", "PRON">
 				| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -3101,6 +3113,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
+				| Dumling.Lemma<"he", "Foreign", "Foreign">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -3110,7 +3123,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Lexeme", "INTJ">
 				| Dumling.Lemma<"he", "Lexeme", "NOUN">
 				| Dumling.Lemma<"he", "Lexeme", "NUM">
-				| Dumling.Lemma<"he", "Lexeme", "X">
 				| Dumling.Lemma<"he", "Lexeme", "PART">
 				| Dumling.Lemma<"he", "Lexeme", "PRON">
 				| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -3136,6 +3148,7 @@ export type ParticipleProjection =
 	  }
 	| {
 			source:
+				| Dumling.Lemma<"de", "Foreign", "Foreign">
 				| Dumling.Lemma<"de", "Lexeme", "ADJ">
 				| Dumling.Lemma<"de", "Lexeme", "ADP">
 				| Dumling.Lemma<"de", "Lexeme", "ADV">
@@ -3145,7 +3158,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Lexeme", "INTJ">
 				| Dumling.Lemma<"de", "Lexeme", "NOUN">
 				| Dumling.Lemma<"de", "Lexeme", "NUM">
-				| Dumling.Lemma<"de", "Lexeme", "X">
 				| Dumling.Lemma<"de", "Lexeme", "PART">
 				| Dumling.Lemma<"de", "Lexeme", "PRON">
 				| Dumling.Lemma<"de", "Lexeme", "PROPN">
@@ -3174,6 +3186,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"de", "Morpheme", "Suffixoid">
 				| Dumling.Lemma<"de", "Morpheme", "Transfix">
 				| Dumling.Lemma<"de", "Saying", "Saying">
+				| Dumling.Lemma<"en", "Foreign", "Foreign">
 				| Dumling.Lemma<"en", "Lexeme", "ADJ">
 				| Dumling.Lemma<"en", "Lexeme", "ADP">
 				| Dumling.Lemma<"en", "Lexeme", "ADV">
@@ -3183,7 +3196,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Lexeme", "INTJ">
 				| Dumling.Lemma<"en", "Lexeme", "NOUN">
 				| Dumling.Lemma<"en", "Lexeme", "NUM">
-				| Dumling.Lemma<"en", "Lexeme", "X">
 				| Dumling.Lemma<"en", "Lexeme", "PART">
 				| Dumling.Lemma<"en", "Lexeme", "PRON">
 				| Dumling.Lemma<"en", "Lexeme", "PROPN">
@@ -3208,6 +3220,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
+				| Dumling.Lemma<"he", "Foreign", "Foreign">
 				| Dumling.Lemma<"he", "Lexeme", "ADJ">
 				| Dumling.Lemma<"he", "Lexeme", "ADP">
 				| Dumling.Lemma<"he", "Lexeme", "ADV">
@@ -3217,7 +3230,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Lexeme", "INTJ">
 				| Dumling.Lemma<"he", "Lexeme", "NOUN">
 				| Dumling.Lemma<"he", "Lexeme", "NUM">
-				| Dumling.Lemma<"he", "Lexeme", "X">
 				| Dumling.Lemma<"he", "Lexeme", "PART">
 				| Dumling.Lemma<"he", "Lexeme", "PRON">
 				| Dumling.Lemma<"he", "Lexeme", "PROPN">
@@ -3240,6 +3252,7 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Saying", "Saying">;
 			relation: "participialAdjective";
 			target:
+				| Dumling.Reading<"de", "Foreign", "Foreign">
 				| Dumling.Reading<"de", "Lexeme", "ADJ">
 				| Dumling.Reading<"de", "Lexeme", "ADP">
 				| Dumling.Reading<"de", "Lexeme", "ADV">
@@ -3249,7 +3262,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Lexeme", "INTJ">
 				| Dumling.Reading<"de", "Lexeme", "NOUN">
 				| Dumling.Reading<"de", "Lexeme", "NUM">
-				| Dumling.Reading<"de", "Lexeme", "X">
 				| Dumling.Reading<"de", "Lexeme", "PART">
 				| Dumling.Reading<"de", "Lexeme", "PRON">
 				| Dumling.Reading<"de", "Lexeme", "PROPN">
@@ -3278,6 +3290,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"de", "Morpheme", "Suffixoid">
 				| Dumling.Reading<"de", "Morpheme", "Transfix">
 				| Dumling.Reading<"de", "Saying", "Saying">
+				| Dumling.Reading<"en", "Foreign", "Foreign">
 				| Dumling.Reading<"en", "Lexeme", "ADJ">
 				| Dumling.Reading<"en", "Lexeme", "ADP">
 				| Dumling.Reading<"en", "Lexeme", "ADV">
@@ -3287,7 +3300,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Lexeme", "INTJ">
 				| Dumling.Reading<"en", "Lexeme", "NOUN">
 				| Dumling.Reading<"en", "Lexeme", "NUM">
-				| Dumling.Reading<"en", "Lexeme", "X">
 				| Dumling.Reading<"en", "Lexeme", "PART">
 				| Dumling.Reading<"en", "Lexeme", "PRON">
 				| Dumling.Reading<"en", "Lexeme", "PROPN">
@@ -3312,6 +3324,7 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
+				| Dumling.Reading<"he", "Foreign", "Foreign">
 				| Dumling.Reading<"he", "Lexeme", "ADJ">
 				| Dumling.Reading<"he", "Lexeme", "ADP">
 				| Dumling.Reading<"he", "Lexeme", "ADV">
@@ -3321,7 +3334,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Lexeme", "INTJ">
 				| Dumling.Reading<"he", "Lexeme", "NOUN">
 				| Dumling.Reading<"he", "Lexeme", "NUM">
-				| Dumling.Reading<"he", "Lexeme", "X">
 				| Dumling.Reading<"he", "Lexeme", "PART">
 				| Dumling.Reading<"he", "Lexeme", "PRON">
 				| Dumling.Reading<"he", "Lexeme", "PROPN">

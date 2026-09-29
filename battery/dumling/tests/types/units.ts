@@ -32,6 +32,12 @@ const _locutionGender: "Fem" | "Masc" | "Neut" | null =
 declare const saying: Surface<"de", "Saying", "Saying">;
 // @ts-expect-error A Saying never inflects.
 saying.inflectionalFeatures;
+declare const foreign: Reading<"de", "Foreign", "Foreign">;
+const _sourceLang: string = foreign.lemma.coreFeatures.sourceLang;
+// @ts-expect-error A Foreign Reading is its Lemma alone, with no Emoji Description.
+foreign.emojiDescription;
+// @ts-expect-error Lexeme X is retired; foreign material is Foreign.
+type _RetiredX = Lemma<"de", "Lexeme", "X">;
 // @ts-expect-error German noun _gender is restricted.
 const _wrongGender: "Com" = noun.coreFeatures.gender;
 declare const reading: Reading<"de", "Lexeme", "NOUN">;

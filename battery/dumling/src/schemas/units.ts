@@ -4,6 +4,7 @@ import {
 	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
+	foreignSurfaceError,
 	fusedMemberError,
 	fusionError,
 	germanAdpositionAttestationError,
@@ -18,6 +19,7 @@ import {
 	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
+	isForeignSurface,
 	isFusedMember,
 	isFusion,
 	isGermanAdpositionAttestation,
@@ -187,11 +189,24 @@ function buildBaseUnitSchemas<
 				: Record<never, never>),
 		z.core.$strict
 	>;
-	const Reading = z.strictObject({
+	// A Foreign Lemma has exactly one Reading, which the Lemma alone
+	// identifies, so it carries no Emoji Description (ADR 0045).
+	const readingShape = {
 		unitKind: z.literal(UnitKindSchema.enum.Reading),
 		lemma: Lemma,
-		emojiDescription: emojiDescriptionSchema,
-	});
+	};
+	const Reading = z.strictObject({
+		...readingShape,
+		...(route.family === "Foreign"
+			? {}
+			: { emojiDescription: emojiDescriptionSchema }),
+	}) as z.ZodObject<
+		typeof readingShape &
+			(F extends "Foreign"
+				? Record<never, never>
+				: { emojiDescription: typeof emojiDescriptionSchema }),
+		z.core.$strict
+	>;
 	const Attestation = z.strictObject({
 		unitKind: z.literal(UnitKindSchema.enum.Attestation),
 		surface: Surface,
@@ -372,6 +387,10 @@ export function buildUnitSchemas<
 		lexemeOrLocution &&
 		["PRON", "DET"].includes(route.kind);
 	let Surface = base.Surface;
+	if (route.family === "Foreign")
+		Surface = Surface.refine(isForeignSurface, {
+			error: foreignSurfaceError,
+		});
 	if (comparability)
 		Surface = Surface.refine(isComparabilitySurface, {
 			error: comparabilitySurfaceError,

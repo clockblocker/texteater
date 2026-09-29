@@ -15,6 +15,10 @@ function reading(
 		emojiDescription: emoji,
 	};
 }
+/** A Foreign Reading has no Emoji Description (ADR 0045). */
+function emojiOf(value: Dumling.Reading): string | undefined {
+	return "emojiDescription" in value ? value.emojiDescription : undefined;
+}
 const dog = reading("Hund");
 const animal = reading("Tier");
 const brute = reading("Tier", "😈");
@@ -517,7 +521,7 @@ test("a requested source gets exactly its edges from the whole projection", () =
 				(edge) =>
 					edge.source.lemma.canonicalForm ===
 						reading.lemma.canonicalForm &&
-					edge.source.emojiDescription === reading.emojiDescription,
+					emojiOf(edge.source) === emojiOf(reading),
 			),
 		);
 	}

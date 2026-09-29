@@ -27,6 +27,28 @@ export function sayingCanonicalFormError(): string {
 	return "A Saying's Canonical Form has no final punctuation";
 }
 /**
+ * A Foreign Lemma has one Surface: its Canonical Form, spelled Canonical,
+ * with no Surface features (ADR 0045). A typo is a Typo member and a
+ * spelling such as `colour` is the Canonical Form itself, so no other
+ * Surface is needed.
+ */
+export function isForeignSurface(input: unknown): boolean {
+	const value = input as {
+		lemma: { canonicalForm: string };
+		normalizedSurface: string;
+		spelling: { kind: string };
+		surfaceFeatures: unknown;
+	};
+	return (
+		value.normalizedSurface === value.lemma.canonicalForm &&
+		value.spelling.kind === "Canonical" &&
+		value.surfaceFeatures === null
+	);
+}
+export function foreignSurfaceError(): string {
+	return "A Foreign Surface is its Lemma's Canonical Form, spelled Canonical, with no Surface features";
+}
+/**
  * The Variant tags in their canonical order (ADR 0041): a Variant's tags are
  * listed in this order, so one set always serializes and compares the same.
  */

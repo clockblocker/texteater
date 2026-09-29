@@ -39,6 +39,8 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		sample.core = Object.fromEntries(
 			Object.keys(sample.core).map((key) => [key, null]),
 		);
+	// A Foreign unit's source language is an ISO 639 code (ADR 0045).
+	if (route.family === "Foreign") sample.core.sourceLang = "en";
 	// The first German number value is plural, whose agreement has no gender.
 	if (route.key === "de/Lexeme/DET") sample.core.gender = null;
 	const bag = route.bag.parse(sample);
@@ -94,10 +96,11 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			? { inflectionalFeatures: bag.inflectional }
 			: {}),
 	};
+	// A Foreign Reading is its Lemma alone (ADR 0045).
 	const Reading = {
 		unitKind: "Reading",
 		lemma: Lemma,
-		emojiDescription: "🏠",
+		...(route.family === "Foreign" ? {} : { emojiDescription: "🏠" }),
 	};
 	const Attestation = {
 		unitKind: "Attestation",

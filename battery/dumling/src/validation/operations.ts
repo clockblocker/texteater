@@ -4,6 +4,7 @@ import {
 	comparabilitySurfaceError,
 	emojiDescriptionError,
 	englishValencyAttestationError,
+	foreignSurfaceError,
 	fusedMemberError,
 	fusionError,
 	germanAdpositionAttestationError,
@@ -20,6 +21,7 @@ import {
 	isComparabilitySurface,
 	isEmojiDescription,
 	isEnglishValencyAttestation,
+	isForeignSurface,
 	isFusedMember,
 	isFusion,
 	isGermanAdpositionAttestation,
@@ -91,6 +93,7 @@ export const validationOperations: ValidationOperations = {
 		isArticleAttestation,
 		articleAttestationError,
 	),
+	"dumling.foreign.surface": check(isForeignSurface, foreignSurfaceError),
 	"dumling.fusion": check(isFusion, fusionError),
 	"dumling.fused-member": check(isFusedMember, fusedMemberError),
 	"dumling.de-pronoun.core": check(

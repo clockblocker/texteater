@@ -112,7 +112,6 @@ const makeDeRelMap = () =>
 				),
 				verbal,
 			),
-			X: request(select()),
 		},
 		// A Locution route requests what the Lexeme route with its Kind does,
 		// with a frame where that route has one, and its Locution Type (ADR
@@ -178,6 +177,12 @@ const makeDeRelMap = () =>
 				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 				{ sayingType: null },
 			),
+		},
+		// A Foreign unit has one Reading, and all its senses go into its
+		// translations; a translation into its source language is a gloss
+		// (`tbh`: "to be honest"). It requests nothing else (ADR 0045).
+		Foreign: {
+			Foreign: { translations: { en: null, ru: null } },
 		},
 		Morpheme: {
 			Circumfix: request(select()),

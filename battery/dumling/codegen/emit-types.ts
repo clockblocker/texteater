@@ -24,6 +24,7 @@ export function outputType(
 							"dumling.de-closed-class.surface",
 							"dumling.de-noun.surface",
 							"dumling.article.attestation",
+							"dumling.foreign.surface",
 							"dumling.fusion",
 							"dumling.fused-member",
 							"dumling.de-adposition.attestation",

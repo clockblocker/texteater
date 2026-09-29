@@ -76,7 +76,6 @@ export const germanRules = {
 	"de/Lexeme/DET": germanClosedClass,
 	"de/Lexeme/NOUN": noun,
 	"de/Lexeme/NUM": lexicalConvention,
-	"de/Lexeme/X": lexicalConvention,
 	"de/Lexeme/PRON": germanClosedClass,
 	"de/Lexeme/PROPN": noun,
 	"de/Lexeme/SYM": lexicalConvention,

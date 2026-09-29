@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PosSchema } from "../pos.js";
+import { ForeignKindSchema } from "./foreign-kind.js";
 import { MorphemeKindSchema } from "./morpheme-kind.js";
 import { SayingKindSchema } from "./saying-kind.js";
 
@@ -8,6 +9,7 @@ export const LemmaKindSchema = z.enum([
 	...PosSchema.options,
 	...SayingKindSchema.options,
 	...MorphemeKindSchema.options,
+	...ForeignKindSchema.options,
 ]);
 export const LemmaKind = LemmaKindSchema.enum;
 export type LemmaKind = z.infer<typeof LemmaKindSchema>;
