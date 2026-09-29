@@ -16,8 +16,9 @@ _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 A Lemma with exactly one Head. Its other members are satellites, which may be
 part of its Canonical Form (`sich erinnern`, `take off`, `die Schweiz`). A
 proper name is one Lexeme whatever its length (`Angela Merkel`, `Deutsche
-Bank`): its words are parts of the name, not Heads. Lexeme is one Family, not
-a synonym for Lemma.
+Bank`): its words are parts of the name, not Heads. So is an interjection
+written in pieces when one piece is no word of its own (`o wei`, `oy vey`).
+Lexeme is one Family, not a synonym for Lemma.
 _Avoid_: multiword Lexeme, for a unit with several Heads
 
 **Locution**:
