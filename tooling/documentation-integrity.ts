@@ -62,6 +62,7 @@ const excludedDirectoryNames = new Set([
 	"dist",
 	"node_modules",
 	"repos-for-refrence",
+	"worktrees",
 ]);
 
 const coordinationTokens = new Set([
@@ -311,7 +312,7 @@ function githubHeadingSlug(heading: string): string {
 			character === "-" || character === "_" ? character : "",
 		)
 		.trim()
-		.replaceAll(/\s+/gu, "-");
+		.replaceAll(/\s/gu, "-");
 }
 
 function markdownAnchors(text: string): Set<string> {
@@ -336,7 +337,10 @@ function markdownAnchors(text: string): Set<string> {
 		if (fence !== undefined) continue;
 
 		const heading = line.match(/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/u)?.[1];
-		if (heading !== undefined) {
+		const explicitId = heading?.match(/\{:?\s*#([\w-]+)\s*\}$/u)?.[1];
+		if (explicitId !== undefined) {
+			anchors.add(explicitId);
+		} else if (heading !== undefined) {
 			const base = githubHeadingSlug(heading);
 			const count = counts.get(base) ?? 0;
 			anchors.add(count === 0 ? base : `${base}-${count}`);

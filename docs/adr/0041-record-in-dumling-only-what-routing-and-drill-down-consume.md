@@ -98,11 +98,10 @@ included, eventually names its Reading; a Reviewed target must (added
 
 Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumspec.
 
-## Amendment (2026-09-29): judge a field by the learner and by classification
-
-This replaces the scope test above. Where a click routes and what a Note
-drills down to are presentation questions, and presentation does not decide
-the model. A field in Dumling's DTOs is judged by two questions only:
+**Amended on 2026-09-29: judge a field by the learner and by
+classification.** This replaces the scope test above. Where a click routes
+and what a Note drills down to are presentation questions, and presentation
+does not decide the model. A field in Dumling's DTOs is judged by two questions only:
 
 - Could the information help the learner?
 - Does the DTO shape help classification?
