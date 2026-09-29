@@ -29,6 +29,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"notes": {
+				"rationale": "fünff is an old spelling of fünf with a doubled f, so the Surface is a Variant. An old spelling is not archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -48,7 +51,7 @@
 					},
 					"normalizedSurface": "fünff",
 					"spelling": "Variant",
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
+					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "fünff", "orthography": "Standard" }],

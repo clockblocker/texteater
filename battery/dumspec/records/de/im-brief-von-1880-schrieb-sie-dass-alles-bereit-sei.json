@@ -36,6 +36,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"notes": {
+				"rationale": "daß is the spelling of dass before the 1996 reform, so the Surface is a Variant. An old spelling is not archaic grammar, and neither is the 1880 letter around it, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -51,7 +54,7 @@
 					},
 					"normalizedSurface": "daß",
 					"spelling": "Variant",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "daß", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

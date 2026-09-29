@@ -40,6 +40,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
+			"notes": {
+				"rationale": "so daß writes dass as it was spelled before the 1996 reform, so the Surface is a Variant. An old spelling is not archaic grammar, and neither is the old print around it, so the Surface carries no historical status (de/variant-and-historical-status)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -55,7 +58,7 @@
 					},
 					"normalizedSurface": "so daß",
 					"spelling": "Variant",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "so", "orthography": "Standard" },

@@ -37,7 +37,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "The explicit lexicographic variant-of relation makes nicht the Lemma and nit its archaic Variant Surface."
+				"rationale": "The sentence calls nit a variant of nicht, so nicht is the Lemma and nit a Variant Surface of it. nit is an old way of writing nicht, not an archaic grammatical form, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -59,7 +59,7 @@
 					},
 					"normalizedSurface": "nit",
 					"spelling": "Variant",
-					"surfaceFeatures": { "historicalStatus": "Archaic" }
+					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "nit", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
