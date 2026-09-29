@@ -664,6 +664,32 @@ const locutionsAndSayings: Rule[] = [
 		],
 	},
 	{
+		id: "de/interjection-counts-its-words",
+		statement:
+			"An interjection stands outside the clause to exclaim, answer or imitate a sound (au, pfui, igitt, hurra, aha, tja, hm, peng, miau) and is an INTJ Lexeme. A response particle that answers a question (ja, nein, doch, jawohl) has partType Res; every other interjection has none. An interjection written in pieces is one Lexeme when a piece is no German word of its own, since it has no Heads to count and no Breakdown: o wei, au weia, oh là là. Its Canonical Form is the dictionary headword, joined where the dictionary joins it (auweia), or the attested spelling when no dictionary has one (o wei, a Lemma apart from o weh). A spaced spelling the dictionary gives for a one-word interjection is a Variant Surface of it: o je and oh je spell oje. Otherwise each word that is an interjection of its own is its own target: o weh gives [o] and [weh], ach je gives [ach] and [je], and a repetition gives one target per occurrence (O wei! O wei!, pfui, pfui, ha ha), while the one written word haha is a Lemma of its own. An established exclamation of several words whose meaning is not their sum is a Locution INTJ (pfui Teufel, ach du liebe Zeit). An expression that also serves as an adverbial inside a clause, with the same meaning, is ADV even standing alone: Gott sei Dank ist niemand verletzt worden makes Gott sei Dank a Locution ADV. A dative after an interjection is free and resolves on its own: weh mir gives [weh] and [mir].",
+		adrs: ["ADR-0039", "ADR-0041"],
+		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
+		records: [
+			"de/igitt-da-krabbelt-eine-spinne-ueber-den-tisch",
+			"de/au-weia-das-gibt-aerger",
+			"de/auweia-jetzt-ist-die-milch-uebergekocht",
+			"de/oh-la-la-du-hast-dich-aber-schick-gemacht",
+			"de/oje-der-letzte-bus-ist-schon-weg",
+			"de/o-je-jetzt-faengt-es-auch-noch-an-zu-regnen",
+			"de/o-weh-ich-habe-den-schluessel-vergessen",
+			"de/ach-je-das-arme-kind",
+			"de/ha-ha-sehr-witzig",
+			"de/haha-der-war-gut",
+			"de/pfui-pfui-schaem-dich",
+			"de/peng-da-war-der-reifen-geplatzt",
+			"de/pfui-teufel-wie-das-hier-stinkt",
+			"de/ach-du-liebe-zeit-ist-es-schon-so-spaet",
+			"de/gott-sei-dank-ist-niemand-verletzt-worden",
+			"de/weh-mir-was-habe-ich-getan",
+			"de/wehe-dir-wenn-du-das-verraetst",
+		],
+	},
+	{
 		id: "de/saying-needs-uptake",
 		statement:
 			"A Saying is a complete saying that speakers have taken up, one target over all its words: a Proverb (Morgenstund hat Gold im Mund) or a Winged Word, a line from a known source that speakers use apart from it (Sein oder Nichtsein). A line is taken up when a reference collection lists it: Büchmann's Geflügelte Worte, Duden's Zitate und Aussprüche or OWID's Sprichwörterbuch. A Reviewed record of a Saying cites that collection in its references. A maxim nobody quotes, a famous author's included, resolves word by word. The Canonical Form is written as a sentence, with internal punctuation and no final punctuation (Wer rastet, der rostet). Proverb or Winged Word is the Reading's Saying Type, never part of the Lemma.",
