@@ -2,56 +2,206 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Es war klar, daß Doktor Mantelsack heute außerhalb jeder Ordnung fragte und sich gar nicht darum kümmerte, wer am längsten nicht examiniert worden war.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "klar" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "daß" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Doktor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mantelsack" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "heute" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "außerhalb" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "jeder" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Ordnung" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fragte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gar" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "darum" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kümmerte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "am" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "längsten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "examiniert" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "worden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "klar"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "daß"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Doktor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mantelsack"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "heute"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "außerhalb"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jeder"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ordnung"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fragte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gar"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "darum"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kümmerte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "am"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "längsten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "examiniert"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "worden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -61,29 +211,75 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0029",
+			"ADR-0034",
+			"ADR-0040",
+			"ADR-0042",
+			"ADR-0044"
+		],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
 			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			},
+			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "eddf44f6760331c0"
+			},
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/nicht-is-part",
+				"hash": "c6631f0c8009c067"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
 				"hash": "ed9c0c62153c7596"
 			},
-			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
-			{ "rule": "de/title-before-a-name", "hash": "dd531115e2c8a2ef" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/title-before-a-name",
+				"hash": "dd531115e2c8a2ef"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			}
 		],
 		"references": [
 			{
@@ -96,21 +292,34 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from Es (PRON expl). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Es",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "es",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "es",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "es",
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
@@ -123,42 +332,37 @@
 							"gender": "Neut"
 						}
 					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "Es", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Es anticipates the subject clause daß … kümmerte (Mir war klar, daß … drops it), so it is anticipatory es, a PRON target of its own (de/expletive-es-joins-its-verb). Neither authored es Reading describes a correlate: see finding A2."
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sein from war (AUX cop)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "sein",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
 					"normalizedSurface": "war",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -170,130 +374,197 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [{ "attested": "war", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "sein",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Copular sein before the predicative klar, a single-member VERB (de/copula-stays-apart)."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ klar from klar (ADJ root). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "klar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "klar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "klar",
 						"family": "Lexeme",
 						"kind": "ADJ",
-						"canonicalForm": "klar",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
-					"normalizedSurface": "klar",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "klar", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Predicative ADJ. klar has klarer, am klarsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [7],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ daß from daß (SCONJ mark). Spelling drafted Canonical: check whether daß is a pre-1996 spelling, a Historical Variant (de/variant-and-historical-status)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "daß",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "daß",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "dass",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"canonicalForm": "daß",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "daß",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "daß", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
+			},
+			"notes": {
+				"rationale": "daß is the spelling of dass valid only before 1996, so the Surface is a Historical Variant (de/variant-and-historical-status); the Lemma is dass."
 			}
 		},
 		{
 			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Doktor from Doktor (PROPN nsubj). UD tags the title Doktor PROPN and joins Mantelsack to it as flat; a title before a name is a NOUN of its own (de/title-before-a-name). Drafted as a NOUN title, not the PROPN UD tagged."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Doktor",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Doktor",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
-					},
 					"normalizedSurface": "Doktor",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
 						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "Doktor", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Doktor",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "A title before a name is a common noun of its own and takes the name's case and number (de/title-before-a-name)."
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Mantelsack from Mantelsack (PROPN flat)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Mantelsack",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "Mantelsack",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Sing"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "Mantelsack",
 						"family": "Lexeme",
 						"kind": "PROPN",
-						"canonicalForm": "Mantelsack",
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
@@ -301,35 +572,42 @@
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "Mantelsack",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
-				},
-				"members": [
-					{ "attested": "Mantelsack", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "The surname, a PROPN cited bare; it opens with no article (de/title-before-a-name)."
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV heute from heute (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "heute",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "heute",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "heute",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "heute",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -337,46 +615,26 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "heute",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "heute", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Temporal ADV with no comparison forms, so no Degree (de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP außerhalb from außerhalb (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "außerhalb",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "außerhalb",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
 				"members": [
-					{ "attested": "außerhalb", "orthography": "Standard" }
+					{
+						"attested": "außerhalb",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
@@ -389,26 +647,71 @@
 						},
 						"realizedCase": "Gen"
 					}
-				]
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "außerhalb",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "außerhalb",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "außerhalb heads the free adjunct außerhalb jeder Ordnung; no word governs it, so it is a single-member ADP recording the genitive its complement took (ADP Case Table: Gen, colloquial Dat)."
 			}
 		},
 		{
 			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET jeder from jeder (DET det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "jeder",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "jeder",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": "Fem",
+						"number": "Sing",
+						"degree": null,
+						"gender[psor]": null,
+						"number[psor]": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "jeder",
 						"family": "Lexeme",
 						"kind": "DET",
-						"canonicalForm": "jeder",
 						"coreFeatures": {
 							"case": null,
 							"definite": null,
@@ -423,84 +726,84 @@
 							"pronType": "Tot"
 						}
 					},
-					"normalizedSurface": "jeder",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Gen",
-						"degree": null,
-						"gender": "Fem",
-						"gender[psor]": null,
-						"number": "Sing",
-						"number[psor]": null
-					}
-				},
-				"members": [{ "attested": "jeder", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "jeder is no article, so it is a DET of its own (de/only-der-and-ein-are-articles); the stem Surface marks Gen.Fem.Sg to agree with Ordnung. außerhalb jeder Ordnung is no fixed expression (Duden's idiom is außer der Reihe)."
 			}
 		},
 		{
 			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ordnung from Ordnung (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ordnung",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Ordnung",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
-					},
 					"normalizedSurface": "Ordnung",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"case": "Gen",
 						"gender": null,
 						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "Ordnung", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Ordnung",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Genitive complement of außerhalb; jeder is its own DET, so the noun owns no article."
 			}
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB fragen from fragte (VERB csubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "fragte",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "fragen",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
 					"normalizedSurface": "fragte",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -512,106 +815,177 @@
 						"future": null,
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "fragte", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "fragen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "fragen, here 'ask questions in class'; außerhalb jeder Ordnung is a free adjunct."
 			}
 		},
 		{
 			"memberSegmentIndices": [23],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "und",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "und",
 						"family": "Lexeme",
 						"kind": "CCONJ",
-						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
-					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
+			},
+			"notes": {
+				"rationale": "Coordinates fragte and kümmerte."
 			}
 		},
 		{
-			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
+			"memberSegmentIndices": [25, 33],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "kümmerte",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"canonicalForm": "um",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "sich kümmerte",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "sich kümmern",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
+						"kind": "VERB",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
-				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "sich kümmern 'care about' is inherently reflexive (non-reflexive kümmern is 'concern': Was kümmert mich das?), so sich is a member (de/verb-owns-its-scattered-members). Its um slot is realized by the pronominal adverb darum, which stays its own target (de/pronominal-adverb-stands-alone), so the valency evidence names no member: see finding A6."
 			}
 		},
 		{
 			"memberSegmentIndices": [27],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV gar from gar (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "gar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "gar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "gar",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "gar",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -619,32 +993,41 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "gar",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "gar", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "gar intensifies the negation (DWDS gar, Adverb: 'verstärkt eine Verneinung: überhaupt'). gar nicht is compositional, not a Locution, so gar is an ADV and nicht a PART of its own (de/nicht-is-part). No comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [29],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "nicht",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "nicht",
 						"family": "Lexeme",
 						"kind": "PART",
-						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
 							"foreign": null,
@@ -652,31 +1035,42 @@
 							"polarity": "Neg"
 						}
 					},
-					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
+			},
+			"notes": {
+				"rationale": "de/nicht-is-part."
 			}
 		},
 		{
 			"memberSegmentIndices": [31],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV darum from darum (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "darum",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "darum",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "darum",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "darum",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
@@ -684,79 +1078,50 @@
 							"pronType": "Dem"
 						}
 					},
-					"normalizedSurface": "darum",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "darum", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [33],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB kümmern from kümmerte (VERB conj)."
+					"surfaceFeatures": null
+				}
 			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "kümmern",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "kümmerte",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": "Ind",
-						"number": "Sing",
-						"person": "3",
-						"tense": "Past",
-						"verbForm": "Fin",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "kümmerte", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+			"notes": {
+				"rationale": "Pronominal adverb standing for um + the following wer-clause; its own ADV target even though kümmern governs its um (de/pronominal-adverb-stands-alone)."
 			}
 		},
 		{
 			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wer from wer (PRON nsubj:pass)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "wer",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "wer",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "wer",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "wer",
 						"coreFeatures": {
 							"case": null,
 							"number": null,
@@ -769,84 +1134,90 @@
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "wer",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
-					}
-				},
-				"members": [{ "attested": "wer", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "wer opens an indirect question (sich darum kümmern, wer …), so it is interrogative wer, the stem Lemma with Core gender Masc and nominative case on the Surface (ADR 0044)."
 			}
 		},
 		{
 			"memberSegmentIndices": [38, 40],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ lang from längsten (ADJ amod) with an (case), dem (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "am",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "längsten",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "am längsten",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"degree": "Sup"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "lange",
 						"family": "Lexeme",
-						"kind": "ADJ",
-						"canonicalForm": "lang",
+						"kind": "ADV",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
-					"normalizedSurface": "am längsten",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Sup",
-						"gender": null,
-						"number": null
-					}
-				},
-				"members": [
-					{ "attested": "am", "orthography": "Standard" },
-					{ "attested": "längsten", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "am before a superlative with no noun is one Segment and a member of the word whose degree it marks (de/fused-word-pieces). The degree is of the temporal adverb lange (Duden: lange, auch lang, Adverb; länger, am längsten): who had gone longest unexamined. open: finding B4."
 			}
 		},
 		{
 			"memberSegmentIndices": [42],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "nicht",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
+						"canonicalForm": "nicht",
 						"family": "Lexeme",
 						"kind": "PART",
-						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
 							"foreign": null,
@@ -854,40 +1225,45 @@
 							"polarity": "Neg"
 						}
 					},
-					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
+			},
+			"notes": {
+				"rationale": "de/nicht-is-part."
 			}
 		},
 		{
 			"memberSegmentIndices": [44, 46, 48],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB examinieren from examiniert (VERB acl) with worden (aux:pass), war (aux). sein with a participle is a perfect only when the clause reports the verb's own event; otherwise war is the copula and examiniert an ADJ (de/sein-perfect-or-copula)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "examiniert",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "worden",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "examinieren",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
 					"normalizedSurface": "examiniert worden war",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -899,16 +1275,24 @@
 						"future": null,
 						"voice": "Pass",
 						"passive": "Process"
-					}
-				},
-				"members": [
-					{ "attested": "examiniert", "orthography": "Standard" },
-					{ "attested": "worden", "orthography": "Standard" },
-					{ "attested": "war", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "examinieren",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "Pluperfect process passive: examiniert, worden and war are one VERB target (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves). The Surface is Past from the finite war, perfect Yes, passive Process (de/verbal-surface-is-whole)."
 			}
 		}
 	],
