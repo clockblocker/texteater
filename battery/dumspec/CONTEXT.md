@@ -46,9 +46,11 @@ _Avoid_: governed case, governedCase, case government feature
 
 **Spec Record**:
 One sentence of the golden corpus with its Segments, its targets and their
-notes. A target is a full Dumling Attestation plus the Segment each member
-is; it is never only a Family and Kind. A target also names its Reading by
-the Reading's Emoji Description; a Reviewed target must, a Draft may not yet.
+notes. A target is the Segment each member is, its route (Family and Kind),
+and a full Dumling Attestation whose Lemma has that route. It may lack the
+Attestation only while the record is reviewed no deeper than Segmentation.
+A target also names its Reading by the Reading's Emoji Description; a record
+reviewed through Reading names every one.
 The Reading may carry its Reading Knowledge (Dumrel). A record's path is its
 identity.
 _Avoid_: case, example, gold case, fixture
@@ -62,10 +64,10 @@ whole Lemma. Its path, `breakdown/<language>/<name>`, is its identity.
 _Avoid_: inner layer, component record
 
 **Coverage**:
-How much of a Spec Record's sentence is annotated. Full means every
-ResolvableText Segment is in exactly one target or one No Target entry;
-Partial leaves some Segments unannotated. Not to be confused with an Attestation's
-Realization Coverage (Dumling).
+How much of a Spec Record's sentence its Segmentation annotates. Full means
+every ResolvableText Segment is in exactly one target or one No Target entry;
+Partial leaves some Segments unannotated. Not to be confused with an
+Attestation's Realization Coverage (Dumling).
 _Avoid_: completeness
 
 **No Target**:
@@ -90,12 +92,24 @@ the hash of its statement when the record was reviewed or the paragraph last
 checked against it. Rewording the Rule makes the citation stale until someone
 re-checks the citing text and cites the new hash.
 
-**Review Status**:
-Draft or Reviewed. A Reviewed record has been checked by a person against the
-ADRs and Rules it cites, cites at least one Rule, and turns stale when one of them is superseded or
-changed. A Draft may fail the current Dumling model; a Reviewed record may
-not, and a model change that breaks one demotes it to Draft.
-_Avoid_: verified, isVerified
+**Annotation Layer**:
+One of the parts of a sentence record's annotation that a person reviews on
+its own, each resting on the ones before it: Segmentation (each target's
+member Segments and route, the No Target entries and the Coverage),
+Attestation (each target's Attestation and Grundform verdict), Reading (each
+target's Emoji Description) and Knowledge (each Reading's Knowledge).
+Segmentation is what `segment.inUnits` returns, not a morpheme segmentation.
+_Avoid_: level, tier
+
+**Review Depth**:
+The deepest Annotation Layer a person has checked against the ADRs and Rules
+the record cites, every layer before it included. A record with none is a
+Draft; a Text Record is Draft or Reviewed as a whole. A reviewed layer must
+pass the current Dumling model, and a layer past the depth may fail or be
+missing. A reviewed record cites at least one Rule and reopens whole when one
+of them is superseded or changed. A model change that breaks a reviewed layer
+lowers the depth to the deepest layer that still passes.
+_Avoid_: verified, isVerified, Review Status
 
 **Text Record**:
 One raw text as a reader supplies it, before intake makes a Segmented
@@ -108,9 +122,9 @@ reshaped into the record's own fields.
 _Avoid_: migrated case, fixture
 
 **Worklist**:
-The records that need work: Drafts failing a check against the current
-Dumling model, records holding Imported Cases, and Drafts with a target that
-names no Reading.
+The records that need work: those whose Draft layers fail a check against
+the current Dumling model or lack a target's Attestation or Reading, and
+those holding Imported Cases.
 _Avoid_: backlog, review queue
 
 **Provenance**:

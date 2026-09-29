@@ -147,6 +147,47 @@ clause. A Rule is reworded only when the principle itself changes, since every
 rewording reopens the Reviewed records that cite it. `bun test` warns about a
 statement over 600 characters unless the Rule states why it needs the length.
 
+Amended on 2026-09-29: records are reviewed one Annotation Layer at a time
+([#736](https://github.com/clockblocker/texteater/issues/736); one Review
+Depth per record was ruled on 2026-09-29, and the rest awaits the maintainer's
+rulings). `segment.inUnits` is scored only on each target's members
+and route, yet a Reviewed record had to carry a full Attestation and an Emoji
+Description for every word, and a model change to one Attestation feature
+demoted the whole record.
+
+- A sentence or Breakdown Record's annotation has four layers, each resting
+  on the ones before it: Segmentation (each target's member Segments and
+  route, the No Target entries and the coverage), Attestation (each target's
+  Attestation and Grundform verdict), Reading (each target's Emoji
+  Description) and Knowledge (each Reading's Knowledge). A Reading names an
+  Attestation's Lemma, so no layer can be reviewed before the ones it rests
+  on.
+- `status` gives way to `reviewDepth`, the deepest layer a person has
+  reviewed; a record without one is a Draft. A Text Record is still Draft or
+  Reviewed as a whole.
+- Each target states its route (Family and Kind) beside its members, and the
+  Attestation's Lemma must match it. Segmentation is then checked, reviewed
+  and projected without the Attestation, and redrafting a Draft Attestation
+  cannot change a reviewed route. A target may hold its members and route
+  alone while its record is reviewed no deeper than Segmentation. This
+  reverses the rejected option "a target may be Classified only" for the
+  layers not yet reviewed.
+- A reviewed layer must pass and be complete. A layer past the depth may
+  fail or be missing, and its issues go on the worklist instead of failing.
+  Missing Knowledge is not work until a record is reviewed through Knowledge.
+- `loadSpecSegmentations` returns every record whose Segmentation passes.
+  `loadSpecRecords` returns those whose Attestation layer passes too, each
+  target with the Reading and Knowledge that pass. The pages publish
+  Attestations, so they read the second and count a record as Reviewed once
+  its Attestation layer is.
+- `bun run demote-broken-reviewed` lowers a broken record's depth to the
+  deepest layer that still passes. A stale citation still reopens the whole
+  record, because Rules are not assigned to layers.
+- Each Dumgen stage takes its gold from the records reviewed through the
+  layer it outputs: `segment.inUnits` from Segmentation, resolution from
+  Attestation, the Reading call from Reading, the Knowledge call from
+  Knowledge.
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec
@@ -156,7 +197,14 @@ statement over 600 characters unless the Rule states why it needs the length.
   amendment.
 - A target may be Classified only, without an Attestation. Rejected in favour of
   one uniform target, at the cost of drafting and reviewing the classification
-  cases before they move.
+  cases before they move. Reversed by the 2026-09-29 layered-review amendment
+  for records reviewed no deeper than Segmentation.
+- An independent review status per Annotation Layer. Rejected on 2026-09-29
+  (#736): it can state an impossible combination, such as a reviewed Reading
+  over an unreviewed Segmentation. A `segmentationReviewed` flag was rejected
+  with it, because it serves one stage and leaves the later layers sharing
+  one status, and so were lighter route-only records allowed only in Draft,
+  because a Draft never counts as gold.
 - Spec rules double as prompt text. Rejected: prompt tuning would churn the
   public rules and re-open every citing record.
 - `isVerified` with reviewer and date. Rejected: a one-time flag is what went
