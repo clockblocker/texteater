@@ -15,12 +15,10 @@ const segmentSchema = z.strictObject({
 });
 
 /**
- * What `Segment.Text` reads: one Sentence as its Segments.
- *
- * HOOK (neighbouring sentences): whether `Segment.Text` sees the Sentences
- * around this one, or the whole text, is still open on #701 ("Not yet
- * specified"). When it is decided, the neighbours join this schema and
- * `segmentTextInput` below; the ideal output and evaluator stay as they are.
+ * What the sentence judge reads: one Sentence as its Segments. `Segment.Text`
+ * receives the whole text, but its jev-based sentence segmenters see one
+ * Sentence each (#701), so the case is the Sentence. A text-level case over a
+ * paragraph is separate and comes with paragraph records.
  */
 export const segmentTextInputSchema = z.strictObject({
 	language: z.literal("de"),
