@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 19],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
 				"rationale": "daß is the spelling of dass valid only before 1996, so the Surface is a Historical Variant; old spelling gives the form no historical status. so and daß stay the ordered members of so … dass."
 			},

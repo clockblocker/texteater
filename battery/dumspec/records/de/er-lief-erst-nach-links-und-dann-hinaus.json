@@ -20,7 +20,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022"],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏃" },
 			"notes": {
 				"rationale": "One lief serves both conjuncts: the first is plain laufen with the free directional phrase nach links, and hinaus is coordinated with that phrase, so it is a free directional ADV, not the particle of hinauslaufen. One Segment belongs to one target, so lief cannot be both laufen and hinauslaufen."
@@ -80,6 +81,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
 				"rationale": "hinaus is coordinated with a free directional phrase under the shared verb, so it is an ADV of its own, the authored hinaus, and not a particle."

@@ -13,7 +13,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -23,6 +22,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😂" },
 			"notes": {
 				"rationale": "No punctuation stands between Ha and ha, so they are one call and one target; the comma after them closes the call. Each ha is a word of its own, so ha ha is a Locution INTJ with two Heads, here ironic laughter. DWDS lists the doubled ha, ha! under ha. The one written word haha is a Lemma of its own."

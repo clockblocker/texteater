@@ -34,7 +34,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -53,6 +52,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "The addressee comes closer to the speaker at the window: ran in the right bracket is the particle of herankommen. ran is only ever heran, since hinan is an elevated word for hinauf. ran is its Shorthand member, and the Surface spells the full particle."
 			},

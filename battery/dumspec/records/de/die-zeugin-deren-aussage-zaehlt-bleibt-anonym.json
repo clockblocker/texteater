@@ -20,7 +20,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Attributive deren is the relative pillar cell Gen.Fem.Sg with extPos DET (de/pron-or-det-by-use). Its gender and number are its antecedent's, Zeugin, and Aussage is a separate target."

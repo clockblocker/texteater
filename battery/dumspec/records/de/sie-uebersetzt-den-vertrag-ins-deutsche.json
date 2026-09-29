@@ -17,7 +17,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -38,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The ambiguous surface übersetzt is taken as present finite, not as a participle."
@@ -85,6 +86,7 @@
 		},
 		{
 			"memberSegmentIndices": [9, 11],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🇩🇪💬" },
 			"notes": {
 				"rationale": "Deutsche is the German language, a neuter with a meaning of its own, so it is a separate Lemma with gender Neut, not the adjectival noun for a person. s stands for das and is the noun's owned article, a Fused member."

@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "SYM" },
 			"notes": {
 				"rationale": "Only the supplied second occurrence belongs to this target; identical context material is not added."
 			},

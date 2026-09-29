@@ -7,7 +7,6 @@
 		{ "kind": "ResolvableText", "text": "Gerät" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],

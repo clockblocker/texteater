@@ -29,7 +29,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -39,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

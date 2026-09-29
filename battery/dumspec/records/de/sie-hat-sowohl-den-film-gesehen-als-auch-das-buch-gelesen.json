@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 12, 14],
+			"route": { "family": "Locution", "kind": "CCONJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

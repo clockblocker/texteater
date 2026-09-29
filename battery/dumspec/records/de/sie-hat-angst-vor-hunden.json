@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "vor is the preposition Angst haben governs, a member of the Collocation but not one of its fixed words (ADR 0034); the Surface projects only hat Angst."
 			},

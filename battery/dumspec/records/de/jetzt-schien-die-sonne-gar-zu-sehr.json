@@ -33,7 +33,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -62,6 +62,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🕰📍" },
 			"notes": {
 				"rationale": "da is the temporal ADV 'then, at that point': the clause stays verb-second (da ward ihm …), so it is not the conjunction da. It has no comparison forms (de/comparability-is-lexical)."
@@ -95,6 +96,7 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔄" },
 			"notes": {
 				"rationale": "ward is the archaic past of werden (Duden: veraltet, noch dichterisch, for wurde). It is an old inflected form, so the spelling is Canonical and the Surface is Archaic (de/variant-and-historical-status). Before the predicative zu schwer, werden is the copula become, a single-member VERB (de/copula-stays-apart, de/auxiliary-joins-the-verb-it-serves).",

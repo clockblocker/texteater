@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0039"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Rasen replaces Gras, the word that carries the image of ins Gras beißen, so the Locution breaks and its words resolve on their own: biss is beißen.",
 				"knownMistakes": [
@@ -76,6 +76,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": { "rationale": "in takes the accusative of direction." },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -117,6 +118,7 @@
 		},
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": { "rationale": "Rasen owns its article den." },
 			"attestation": {
 				"unitKind": "Attestation",

@@ -13,7 +13,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -23,6 +22,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😂" },
 			"notes": {
 				"rationale": "Haha is one written word, the headword for laughter (Duden, DWDS): one INTJ Lexeme haha, a Lemma apart from ha and from the spaced ha ha, since spacing is never a Variant."

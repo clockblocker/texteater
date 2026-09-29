@@ -29,7 +29,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -44,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "❓📦" },
 			"notes": {
 				"rationale": "An echo question: the stressed was asks back about the object of the verkauft just heard, so it stays the interrogative was. Unstressed was that asks nothing is the Shorthand of etwas instead (Ich hab was gehört)."

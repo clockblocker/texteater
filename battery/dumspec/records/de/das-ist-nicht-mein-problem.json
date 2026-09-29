@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -24,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "nicht negates mein Problem, and it is PART nicht with polarity Neg, not an ADV. It is a target of its own and joins neither ist nor mein Problem."

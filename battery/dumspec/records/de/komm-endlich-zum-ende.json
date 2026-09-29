@@ -13,7 +13,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -23,6 +22,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4, 5, 7],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

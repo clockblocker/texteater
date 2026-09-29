@@ -34,7 +34,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -44,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19, 21, 27],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The free request complement is context between the classified fixed members."
 			},

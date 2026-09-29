@@ -104,7 +104,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -128,6 +128,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👋🚶" },
 			"notes": {
 				"rationale": "Fort is the fronted separable particle of fortgehen, the dictionary particle verb in this sense, so Fort and geht are one VERB target (de/verb-owns-its-scattered-members)."
@@ -176,6 +177,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "💨" },
 			"notes": {
 				"rationale": "wupp is a one-word sound-effect interjection (Duden: Interjektion, umgangssprachlich) for the sudden move of the thumb (de/interjection-counts-its-words)."

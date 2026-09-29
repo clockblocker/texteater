@@ -17,12 +17,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "Sentence-initial capitalization is preserved only in clicked Text."
 			},

@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "seiner is the standard genitive of es, governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of seiner. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},

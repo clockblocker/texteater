@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0035", "ADR-0038"],
@@ -34,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🔩" },
 			"notes": {
 				"rationale": "The nut use shares one feminine Mutter Lemma with the mother use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Muttern and Mütter, are Reading Knowledge, not identity (ADR 0038)."

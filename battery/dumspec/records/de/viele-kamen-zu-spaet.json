@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -28,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "Viele stands for a noun phrase with no noun, so it is PRON (de/pron-or-det-by-use): the stem viele, whose Surface marks Nom.Plur. Attributive viele Leute is the DET viel instead."

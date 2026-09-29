@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😟" },
 			"notes": {
 				"rationale": "No punctuation stands between O and je, so they are one call and one target (de/interjection-counts-its-words). o and je are each an interjection of their own (DWDS: je, drückt Erschrecken aus), so o je is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written, a Lemma apart from oje: Duden gives o je as a spelling of oje, but spacing is never a Variant."

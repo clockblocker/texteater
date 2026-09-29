@@ -92,7 +92,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Fürstliche Braunschweigische Hoffordnung",
@@ -118,6 +117,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [44],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "In 1601 nit was an ordinary written form of nicht, accepted by the written norm of its time and no dialect mark, so it is a Variant tagged Historical only. The period's other spellings (vnd, sol) are left untargeted."

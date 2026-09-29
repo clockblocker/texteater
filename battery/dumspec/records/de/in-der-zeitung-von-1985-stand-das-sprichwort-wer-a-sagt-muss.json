@@ -37,7 +37,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -47,6 +46,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 19, 21, 24, 26, 28, 30],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The licensed pre-reform spelling remains Standard on the Surface and maps to current muss in the Lemma."
 			},

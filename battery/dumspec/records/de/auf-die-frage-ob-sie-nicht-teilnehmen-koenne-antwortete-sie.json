@@ -30,7 +30,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

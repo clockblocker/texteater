@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -74,6 +74,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "♨" },
 			"notes": {
 				"rationale": "An attributive Partizip II is an ADJ (ADR 0036): Canonical Form gekocht, not kochen; Nom Plur, so gender unmarked. Gekochten is an attributive participle modifying Kartoffeln, so it is the ADJ gekocht with Participle Source kochen (ADR 0036)."

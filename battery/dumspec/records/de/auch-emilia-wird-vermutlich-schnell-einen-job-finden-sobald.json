@@ -43,7 +43,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -53,6 +52,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "First wird member. Last wird other verb."
 			},

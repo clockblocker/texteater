@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "A chat abbreviation used across languages: its source language can't be told, so sourceLang is und. A Foreign Reading has no Emoji Description, so the imported emoji case has nothing left to test."
 			},

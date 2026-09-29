@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0041"],
@@ -31,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "🛤" },
 			"notes": {
 				"rationale": "Outside any verbal bracket, den Fluss entlang is a postpositional phrase: entlang is ADP Post and its complement den Fluss takes the accusative the ADP Case Table allows for postpositional entlang (de/bracket-particle-or-circumposition). Contrast Wir liefen den Fluss entlang, where entlang is the particle of entlanglaufen."

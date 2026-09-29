@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5, 13],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

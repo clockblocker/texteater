@@ -19,12 +19,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "My bad is categorized by discourse function Apology, not by the adjective bad."
 			},

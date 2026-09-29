@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0040"],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 11],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔐" },
 			"notes": {
 				"rationale": "meine stands in for the elided Garten, so it is the Head of its phrase and owns der the way a noun does; der is no DET target of its own. meine after an article is the weak form of the Nom.Masc.Sg cell of the possessive meiner."

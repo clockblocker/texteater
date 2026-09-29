@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "wäre … gewesen is the Konjunktiv II perfect of copular sein. wäre is its auxiliary and never a target alone, and schön is the ADJ predicate outside it."

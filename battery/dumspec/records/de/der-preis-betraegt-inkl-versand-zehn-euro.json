@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "inkl. is the abbreviation of the preposition inklusive. Its period belongs to it, so inkl. is one Segment and a Shorthand member whose Surface is the expansion (de/abbreviation-is-one-segment). The old analysis made it a Variant only because the period fell outside the member. The bare noun Versand shows no case; the Gen is the case inklusive governs."
 			},

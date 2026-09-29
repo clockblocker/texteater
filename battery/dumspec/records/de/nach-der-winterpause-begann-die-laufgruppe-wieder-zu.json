@@ -36,12 +36,12 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 24, 27, 29],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The Canonical Form is written as a sentence: Wer rastet, der rostet keeps its internal comma and drops the final full stop."
 			},

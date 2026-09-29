@@ -31,7 +31,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0045"],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "No German grammar: Foreign en. Only the second occurrence is annotated; the first is the same Lemma."
 			},

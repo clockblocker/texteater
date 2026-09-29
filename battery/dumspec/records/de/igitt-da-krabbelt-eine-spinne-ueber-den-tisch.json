@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤢" },
 			"notes": {
 				"rationale": "Igitt is a one-word interjection of disgust, an INTJ Lexeme with no partType. The doubled igittigitt is a headword of its own."

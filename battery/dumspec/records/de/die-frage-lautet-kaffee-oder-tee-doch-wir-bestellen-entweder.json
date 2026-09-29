@@ -34,7 +34,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -44,6 +43,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 26],
+			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "The earlier ordinary coordinators are unmarked context; only the supplied anchors belong to this Lexeme."
 			},

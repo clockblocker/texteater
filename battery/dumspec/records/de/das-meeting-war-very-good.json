@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040", "ADR-0045"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "das agrees with Meeting as a neuter noun, so the loan shows German grammar and is a German NOUN, not Foreign."
 			},
@@ -65,6 +65,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "sein linking a subject to a predicate is the copula VERB."
 			},
@@ -109,6 +110,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: very is one Foreign unit."
 			},
@@ -136,6 +138,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
 				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: good is one Foreign unit."
 			},

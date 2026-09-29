@@ -46,7 +46,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -56,6 +55,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [38, 40],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "soll modal. Not member. werden passive member."
 			},

@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🎁" },
 			"notes": {
 				"rationale": "Split da … für is one target of the pronominal adverb dafür, as in Dafür kann ich nichts."
@@ -69,6 +69,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "können (für etwas können, be to blame) governs für, but dafür never joins the verb, split or not."
 			},

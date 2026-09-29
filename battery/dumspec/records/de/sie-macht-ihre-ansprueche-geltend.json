@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "machen only supports the adjective predicate geltend, which carries the meaning, so geltend machen is a Collocation. ihre Ansprüche is its free object and stays outside."
 			},

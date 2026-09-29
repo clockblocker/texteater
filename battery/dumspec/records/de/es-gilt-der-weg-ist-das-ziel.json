@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5, 7, 9, 11, 13],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🛤🎯" },
 			"notes": {
 				"rationale": "Der Weg ist das Ziel is a proverb DWDS lists, one Saying target over all its words; the lead-in Es gilt stays outside."

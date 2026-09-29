@@ -28,7 +28,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -71,6 +71,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "➰" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -105,6 +106,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🎒" },
 			"notes": {
 				"rationale": "hat is the perfect auxiliary of mitbringen, so hat and mitgebracht are one VERB target (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle). The Surface records the whole perfect, with tense from the finite hat (de/verbal-surface-is-whole)."
@@ -153,6 +155,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -189,6 +192,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"reading": { "emojiDescription": "➕" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -213,6 +217,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 20, 22],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🛡" },
 			"notes": {
 				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is a Historical Variant. Acht is not the numeral."
@@ -261,6 +266,7 @@
 		},
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "Sie is the accusative feminine singular object pronoun referring back to Peitsche, not nominative plural or polite Sie."
@@ -300,6 +306,7 @@
 		},
 		{
 			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🤲" },
 			"notes": {
 				"rationale": "sorglich (Duden: Adjektiv, veraltend, 'sorgsam') is an adverbially used adjective, so it stays ADJ (de/adjective-stays-adj). Duden gives sorglicher and am sorglichsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
@@ -343,6 +350,7 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "sehr is an intensifying ADV. Duden gives the suppletive mehr and am meisten, so it is comparable and marks Pos (de/comparability-is-lexical)."

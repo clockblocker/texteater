@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "AUX" },
 			"notes": {
 				"rationale": "Recipient-passive auxiliary: bekommen contributes nothing lexical, so it is an AUX member of the liefern Unit (ADR 0026). Construction features belong to the Unit."
 			},

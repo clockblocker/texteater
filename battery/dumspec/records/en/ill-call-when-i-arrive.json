@@ -15,12 +15,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [1],
+			"route": { "family": "Lexeme", "kind": "AUX" },
 			"notes": {
 				"rationale": "'ll is the AUX will, attested as the second piece of the fused word I'll. The member is Fused and names its Fusion, so the Surface stays will; the shortening is a fact about the written occurrence, not a Variant Surface."
 			},

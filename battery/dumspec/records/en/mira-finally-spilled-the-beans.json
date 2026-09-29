@@ -14,12 +14,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "The Full Attestation records spilled, the, and beans as the complete idiom occurrence; the docs review span remains on spilled only."
 			},

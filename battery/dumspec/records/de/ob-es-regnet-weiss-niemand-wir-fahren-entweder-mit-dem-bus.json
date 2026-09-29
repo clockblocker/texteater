@@ -36,7 +36,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -46,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 24],
+			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Initial ob is unmarked SCONJ context and does not alter membership."
 			},

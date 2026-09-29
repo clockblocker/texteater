@@ -30,7 +30,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 19, 21],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The visibly lost second clause is unrealized; Partial does not add it to normalized members."
 			},

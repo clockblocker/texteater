@@ -14,12 +14,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 3],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "חס וחלילה is treated as an idiom because the literal pieces are not the learner-facing meaning."
 			},

@@ -15,7 +15,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -38,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 7, 9],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🥇" },
 			"notes": {
 				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb (DWDS: sprichwörtlich), so one Saying target spans all its words, and wer has no target of its own."

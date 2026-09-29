@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😖" },
 			"notes": {
 				"rationale": "No punctuation stands between O and weh, so they are one call and one target. o and weh are each an interjection of their own, o strengthening the exclamation as in o ja and o Wunder and weh lamenting, so o weh is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written. o wei, whose wei is no word, is a Lexeme instead."

@@ -19,7 +19,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "The antecedent die Kinder is inside the sentence, so no context is needed."
 			},

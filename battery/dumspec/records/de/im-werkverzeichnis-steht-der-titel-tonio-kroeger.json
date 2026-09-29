@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "The surrounding common noun Titel bears sentence case; the separately quoted work-name mention is Citation rather than an accusative name occurrence."
 			},

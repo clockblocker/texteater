@@ -10,7 +10,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -20,6 +19,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "❓👤" },
 			"notes": {
 				"rationale": "wer is the Nom Surface of the stem Lemma wer. The Surface marks case; wer's masculine gender is inherent and sits in Core."

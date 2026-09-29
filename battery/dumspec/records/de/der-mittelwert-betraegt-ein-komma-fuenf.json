@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8, 10],
+			"route": { "family": "Locution", "kind": "NUM" },
 			"notes": {
 				"rationale": "All three authoritative members realize one spoken decimal NUM; preserve membership and source order."
 			},

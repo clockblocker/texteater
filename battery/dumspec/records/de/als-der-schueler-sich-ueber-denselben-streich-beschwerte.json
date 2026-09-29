@@ -60,7 +60,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -72,6 +71,7 @@
 			"memberSegmentIndices": [
 				25, 27, 29, 31, 34, 36, 38, 40, 43, 45, 47, 49, 51, 53
 			],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "Both occurrences of das are authoritative positions in one proverb and remain separate members."
 			},

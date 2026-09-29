@@ -12,12 +12,12 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [5, 6],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה. The formula owns both Fused pieces of the written word, the ADP ב and the noun בקשה; be-vakasha has no hidden article."
 			},

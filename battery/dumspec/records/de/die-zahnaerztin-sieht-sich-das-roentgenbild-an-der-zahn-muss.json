@@ -29,7 +29,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
@@ -45,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
@@ -89,6 +89,7 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🐣" },
 			"notes": {
 				"rationale": "The dentist will pull the tooth out of the mouth towards herself, so raus is the Shorthand of heraus."

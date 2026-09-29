@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -45,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🧩⏰" },
 			"notes": {
 				"rationale": "wo names the time at which sie ankam holds, so it is Rel, and that time picks the time Reading."

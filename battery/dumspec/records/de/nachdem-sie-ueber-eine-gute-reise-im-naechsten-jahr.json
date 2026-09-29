@@ -51,7 +51,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -61,6 +60,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [39, 41],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context. The wish is the formula's Formula Role, Reading Knowledge (ADR 0039)."
 			},

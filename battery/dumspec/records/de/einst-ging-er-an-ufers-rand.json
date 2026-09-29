@@ -28,7 +28,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -56,6 +56,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📜" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -86,6 +87,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🚶" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -128,6 +130,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "📌" },
 			"notes": {
 				"rationale": "`an` is the ordinary two-way preposition. The form of `Ufers Rand` does not show its case, so the occurrence records the dative of the location reading (wo?): he walks along the bank, which the next lines confirm."
@@ -172,6 +175,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏞" },
 			"notes": {
 				"rationale": "Ufers is the genitive singular of Ufer, the same form as in des Ufers, and it depends on Rand, not on an. What is archaic here is the construction: a common-noun genitive with no article before its head. That is this occurrence's syntax, not the form, so the reusable Surface carries no historical status (de/variant-and-historical-status)."
@@ -206,6 +210,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🔲" },
 			"notes": {
 				"rationale": "Rand is dative singular after an, which says where he walks: along the bank's edge, as the next lines show. The form doesn't show the case, but an empty case would state structure, not uncertainty (de/empty-inflection-is-structural)."

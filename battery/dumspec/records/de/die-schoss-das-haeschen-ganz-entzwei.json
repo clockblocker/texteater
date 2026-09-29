@@ -37,7 +37,7 @@
 		{ "kind": "Punctuation", "text": "«" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -61,6 +61,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "✂" },
 			"notes": {
 				"rationale": "entzwei is an ADJ used only predicatively, here the result of schoß: the hare is shot to pieces. It has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical)."
@@ -99,6 +100,7 @@
 		},
 		{
 			"memberSegmentIndices": [23, 25],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😩" },
 			"notes": {
 				"rationale": "O wei is one interjection of dismay written in two pieces, like oy vey. wei is no German word of its own, so the pieces are not two Heads and there is no Breakdown into Lexemes: it is one INTJ Lexeme, not a Locution. Its Canonical Form is the attested o wei, a Lemma of its own beside o weh."
@@ -129,6 +131,7 @@
 		},
 		{
 			"memberSegmentIndices": [28, 30],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😩" },
 			"notes": {
 				"rationale": "The second O wei repeats the first for emphasis. An exclamation mark separates the two calls, so each is its own target, and this one is the same INTJ Lexeme o wei again."

@@ -15,7 +15,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😬" },
 			"notes": {
 				"rationale": "weia is no German word of its own, so Au weia is one interjection in two pieces with no punctuation between them: one target, an INTJ Lexeme with no Breakdown (de/interjection-counts-its-words). Its Canonical Form is the pieces as written, au weia, a Lemma apart from the joined headword auweia (Duden, DWDS). DWDS calls the spaced spelling invalid, but spacing is never a Typo or a Variant, so both members are Standard."

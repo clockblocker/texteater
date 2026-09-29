@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
+			"route": { "family": "Locution", "kind": "NUM" },
 			"notes": {
 				"rationale": "The supplied one-member interval is a Range; never split or replace the authoritative member."
 			},

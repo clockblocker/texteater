@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The exact INTJ codec has no abbreviation or foreign feature; preserve the acronymic identity rather than expanding it."
 			},

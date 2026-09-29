@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0041"],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😂" },
 			"notes": {
 				"rationale": "No punctuation stands between the two ha, so ha ha is one call and one target (de/interjection-counts-its-words). Each ha is a word of its own, which gives the target two Heads: a Locution INTJ, spelled Canonical. Repeating a word stretches no letters, so it is no Expressive Variant, and the one written word haha is a Lemma of its own."

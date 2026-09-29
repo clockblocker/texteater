@@ -16,7 +16,6 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "verlieren" }
 	],
-	"status": "Draft",
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0035", "ADR-0041"],
 		"rules": [],
@@ -25,6 +24,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "The Breakdown reads Faden literally, as thread: the idiom's meaning belongs to the Locution, and its parts are the Readings a learner drills down to. The noun owns its article."
 			},
@@ -62,6 +62,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",

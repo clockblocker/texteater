@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -28,6 +27,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
 				"rationale": "behufs (the preposition for the purpose of, with the genitive) is an archaic word, not an archaic form. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

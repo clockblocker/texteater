@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

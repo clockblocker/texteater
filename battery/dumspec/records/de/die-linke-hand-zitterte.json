@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0036", "ADR-0042"],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "⬅" },
 			"notes": {
 				"rationale": "linke is used only attributively, so it cites the dictionary's adjective headword linke (Duden: linke, linker, linkes), never the ADV links. It has no comparison forms, so its Surface marks case, gender and number and no Degree. Die belongs to Hand."

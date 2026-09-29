@@ -24,7 +24,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -34,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The formula-initial adjective is ordinary contextual casing, while the lowercase noun is an actual casing error."
 			},

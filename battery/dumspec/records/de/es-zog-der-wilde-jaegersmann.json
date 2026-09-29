@@ -24,7 +24,7 @@
 		{ "kind": "Punctuation", "text": ";" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -49,6 +49,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "⚪" },
 			"notes": {
 				"rationale": "Es only fills the first position before the postponed subject der wilde Jägersmann: with anything else in front it disappears (Der wilde Jägersmann zog … an). So it is positional es, which refers to nothing and is a PRON target of its own (de/expletive-es-joins-its-verb)."
@@ -88,6 +89,7 @@
 		},
 		{
 			"memberSegmentIndices": [2, 18],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👕" },
 			"grundform": false,
 			"notes": {
@@ -137,6 +139,7 @@
 		},
 		{
 			"memberSegmentIndices": [4, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏹" },
 			"grundform": true,
 			"notes": {

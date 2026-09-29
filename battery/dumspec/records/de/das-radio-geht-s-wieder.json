@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0035"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "Here 's refers to das Radio, so it is referential es and no member of gehen (de/expletive-es-joins-its-verb). Geht is the first Fused piece of Geht's and the verb's only member.",
 				"knownMistakes": [
@@ -89,6 +89,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "The 's stands for es and refers back to das Radio, so it is the subject pronoun es, a target of its own with one Fused member."
 			},

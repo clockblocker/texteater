@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -33,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -56,6 +56,7 @@
 		},
 		{
 			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "The noun Brunnen is elided, so the adjective standing in for it is the Head of its phrase and owns the article: [der, alte] is ADJ alt. It stays lowercase and ADJ; a nominalized der Alte would be a NOUN."
 			},

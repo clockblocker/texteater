@@ -16,12 +16,12 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "AUX" },
 			"notes": {
 				"rationale": "Sentence-initial Does keeps normalizedSurface lowercase while clicked Text preserves casing."
 			},

@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0042"],
@@ -38,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "besseren is the suppletive comparative of gut (gut, besser, am besten), attributive before Ansatz with accusative masculine singular agreement; einen belongs to Ansatz. gut is comparable, so the Surface marks Degree Cmp. A declined comparative is still spelled Canonical."

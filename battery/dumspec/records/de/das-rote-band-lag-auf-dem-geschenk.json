@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -38,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🎀" },
 			"notes": {
 				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features."
@@ -75,6 +76,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "Lag is the past finite form of liegen in a stative location reading, not a causative legen form."
@@ -120,6 +122,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "🔝" },
 			"notes": {
 				"rationale": "`auf` heads the ordinary locative prepositional phrase `auf dem Geschenk`, so it is a plain preposition, not part of the verb `liegen`. The Lemma carries no case: `auf` is two-way in the ADP Case Table, and this occurrence records the dative of `dem Geschenk` (wo?) as its realized case."

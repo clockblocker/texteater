@@ -80,7 +80,7 @@
 		}
 	],
 	"coverage": "Full",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -105,6 +105,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👀" },
 			"notes": {
 				"rationale": "Sieh is the 2sg imperative of sehen. Sieh einmal is no fixed formula, so einmal is a target of its own."
@@ -155,6 +156,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🫴" },
 			"notes": {
 				"rationale": "einmal is the unstressed particle that softens the request Sieh einmal, not the adverb once. Duden classes this einmal as a Partikel that intensifies statements, questions and requests (komm doch einmal her!), so it is a PART of its own."
@@ -192,6 +194,7 @@
 		},
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📍" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -227,6 +230,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🧍" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -274,6 +278,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
@@ -315,6 +320,7 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👎" },
 			"notes": {
 				"rationale": "pfui is a one-word INTJ of disgust (de/interjection-counts-its-words). It is no routine formula and no response particle, so partType stays null."
@@ -349,6 +355,7 @@
 		},
 		{
 			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🧒🪮" },
 			"notes": {
 				"rationale": "Struwwelpeter is a name canonically cited with its article (der Struwwelpeter), so it is a PROPN with Core article Definite and owns der as its first member, like a common noun owns its article."

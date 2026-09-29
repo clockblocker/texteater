@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0040"],
@@ -31,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Alte is a substantivized adjective, a NOUN, capitalized and owning its article Der. As an adjectival noun for a person it is one Lemma, Alte, with gender null; its singular Surface marks Masc, and Der agrees."
 			},

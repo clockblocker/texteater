@@ -23,7 +23,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "n. is the transcript's abbreviation of the particle nicht that the sentence names. An abbreviation is one Segment with its period and stands for its expansion, so the target is the authored PART nicht and n. is its Shorthand member (de/abbreviation-is-one-segment). The sentence mentions the form instead of using it; a mentioned form still resolves to the word it spells, as nedd does in the regional-dictionary record."

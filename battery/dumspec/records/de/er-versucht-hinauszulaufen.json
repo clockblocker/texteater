@@ -32,7 +32,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -50,6 +50,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
 				"rationale": "hinauszulaufen is the zu-infinitive of separable hinauslaufen, with zu between the particle hinaus and the stem in one word. It is a single-member VERB target, not a directional adverb beside laufen."

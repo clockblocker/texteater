@@ -32,7 +32,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Das is the subject of tut mir leid and points back to his illness. It is the demonstrative PRON das, a target of its own, and no member of the formula (ADR 0039)."
 			},
@@ -80,6 +80,7 @@
 		},
 		{
 			"memberSegmentIndices": [21, 23, 25],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "Tut mir leid expresses sympathy with his illness, not an apology. The formula tut mir leid has all three words here, so the Attestation is Full; sympathy and apology are two Readings of the one Lemma, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
 			},

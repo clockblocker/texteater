@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "SYM" },
 			"notes": {
 				"rationale": "† is a symbol for a death, still in use. Neither its age nor the sentence calling it historical makes it archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

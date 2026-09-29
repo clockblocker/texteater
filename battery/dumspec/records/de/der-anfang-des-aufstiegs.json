@@ -11,7 +11,6 @@
 		{ "kind": "ResolvableText", "text": "Aufstiegs" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -21,6 +20,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0041"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "⛓" },
 			"notes": {
 				"rationale": "`wegen` takes a colloquial dative here. The ADP Case Table keeps genitive as its preferred case, so the Lemma stays the same `wegen` and the occurrence records the dative it realized."

@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -36,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "😴" },
 			"notes": {
 				"rationale": "Schlafenden is an attributive Partizip I modifying Kinder, so this nominative plural form is the ADJ schlafend with Participle Source schlafen (ADR 0036)."

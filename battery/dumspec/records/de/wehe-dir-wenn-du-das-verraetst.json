@@ -17,7 +17,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "☝" },
 			"notes": {
 				"rationale": "wehe is the Nebenform of the interjection weh (DWDS), so its Surface is a Variant of the Lemma weh, here with its threat Reading. The dative is a free word, not a fixed member, and dir is the Dat cell of the personal pronoun, its own target."
@@ -57,6 +57,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",

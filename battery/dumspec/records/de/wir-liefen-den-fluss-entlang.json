@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -34,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🛤🚶" },
 			"notes": {
 				"rationale": "entlang in the verbal bracket is the particle of the dictionary particle verb entlanglaufen (Duden: die Straße entlanglaufen), so liefen … entlang is one VERB target (de/bracket-particle-or-circumposition, de/verb-owns-its-scattered-members), and hasSepPrefix names entlang (de/verb-core-features). den Fluss is its accusative object, outside the target. Contrast Den Fluss entlang standen alte Weiden, where entlang stands outside any bracket and is a postposition."

@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
@@ -50,6 +49,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10, 20],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "hätt bestellt is the unreal past, Konjunktiv II with perfect Yes and tense Past, and describes the whole verbal unit (de/verbal-surface-is-whole). hätt is hätte with its final e dropped, a standalone shortened spelling of one word, so it is a Shorthand member and the Surface spells the full hätte bestellt, Canonical (de/member-orthography). The auxiliary member reaches the AUX Reading haben for the perfect from this Surface's Note (#487, #507)."
 			},

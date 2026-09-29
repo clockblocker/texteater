@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -45,6 +45,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤷" },
 			"notes": {
 				"rationale": "na ja is one interjection (Duden: na ja!, 'Ausdruck des Einlenkens, Entgegenkommens, Abmilderns, vorsichtigen Widerspruchs'), a Locution INTJ. ja gives no yes here, so the two words do not resolve on their own as in nein danke. Here it softens a disagreement."

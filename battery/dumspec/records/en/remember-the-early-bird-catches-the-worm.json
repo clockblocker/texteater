@@ -19,12 +19,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5, 7, 9, 11, 13],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span remains on the salient fragment early bird."
 			},

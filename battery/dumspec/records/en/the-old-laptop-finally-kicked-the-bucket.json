@@ -18,12 +18,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "The Locution inflects like its verb: kicked the bucket is the past tense of kick the bucket."
 			},

@@ -10,7 +10,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -27,6 +27,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "💍" },
 			"notes": {
 				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source verheiraten (ADR 0036)."

@@ -27,7 +27,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -37,6 +36,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 16, 18, 20],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "Only the misspelled verb member is Typo and repaired."
 			},

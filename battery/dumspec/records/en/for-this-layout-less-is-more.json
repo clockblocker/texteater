@@ -17,12 +17,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 9, 11],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "Less is more is treated as an aphorism rather than a proverb because it states a maxim without narrative proverb form. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},

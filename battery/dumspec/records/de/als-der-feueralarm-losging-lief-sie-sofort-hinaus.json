@@ -21,7 +21,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022"],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 15],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
 				"rationale": "Nothing is coordinated with hinaus: it closes the bracket of lief as the particle of hinauslaufen, run outside. Foil to Er lief erst nach links und dann hinaus."

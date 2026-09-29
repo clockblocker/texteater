@@ -32,7 +32,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -42,6 +41,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Context names editorial headword; attested equal standard variant stays Variant."
 			},

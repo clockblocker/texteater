@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0039"],
@@ -40,6 +39,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [5, 13, 15],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "Kritik üben is a Funktionsverbgefüge: üben only supports the noun Kritik, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. Kritik governs an with the dative inside the expression, so an is a member but stays out of the Surface (ADR 0034). The attributive scharfe and the object dem Vorschlag are free."
 			},

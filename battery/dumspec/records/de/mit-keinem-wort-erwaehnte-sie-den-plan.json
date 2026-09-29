@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0032"],
@@ -38,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "Keinem is a negative determiner rather than a pronoun because it modifies Wort."

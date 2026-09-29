@@ -26,7 +26,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0042", "ADR-0045"],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "3D", "orthography": "Standard" }],

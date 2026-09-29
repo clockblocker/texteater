@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0002", "ADR-0042"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📅" },
 			"notes": {
 				"rationale": "Sentence-initial Morgen is the ADV morgen, 'tomorrow', not the NOUN Morgen. A Canonical Form takes the word's lexical casing, never its place in the sentence, so the Lemma is morgen and the capitalized member is Standard. In Am nächsten Morgen, Morgen is the NOUN. morgen has no comparison forms, so its Surface has no inflection."

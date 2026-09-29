@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 7, 9],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
 			},

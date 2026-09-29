@@ -40,7 +40,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -50,6 +49,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [21, 23, 25, 27],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

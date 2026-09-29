@@ -20,12 +20,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 9, 11, 12, 14],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "לא דובים ולא יער is classified as an idiom; it is proverb-like, but used here as a fixed idiomatic denial."
 			},

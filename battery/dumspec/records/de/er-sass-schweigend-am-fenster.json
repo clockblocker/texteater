@@ -15,7 +15,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036"],
@@ -32,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🤐" },
 			"notes": {
 				"rationale": "Schweigend is an adverbially used Partizip I, so it is the ADJ schweigend with Participle Source schweigen (ADR 0036)."

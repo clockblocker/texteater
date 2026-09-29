@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0032"],
@@ -32,6 +32,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "Manchem is annotated as DET because it modifies Fehler; it would be PRON only in substantive use."

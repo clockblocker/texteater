@@ -16,7 +16,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0002", "ADR-0040"],
@@ -29,6 +28,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "💼" },
 			"notes": {
 				"rationale": "Angestellte is an adjectival noun for a person: one Lemma for both sexes, with gender null. Its singular Surface marks the gender its form and article show, Fem, and Die agrees."

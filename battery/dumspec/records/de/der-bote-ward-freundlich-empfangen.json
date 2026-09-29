@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "AUX" },
 			"notes": {
 				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is an old inflected form, not another spelling of wurde, so the spelling is Canonical; the form itself is archaic beside the current wurde of the same Lemma, so the Surface is Archaic (de/variant-and-historical-status)."
 			},

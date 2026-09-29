@@ -48,7 +48,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -58,6 +57,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [34, 36],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"notes": {
 				"rationale": "The marked formula performs the greeting; the nearby interjection and vocative remain context."
 			},

@@ -14,7 +14,6 @@
 		{ "kind": "Punctuation", "text": "!" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
@@ -24,6 +23,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👎" },
 			"notes": {
 				"rationale": "A comma separates the two calls, so each pfui is its own target, both of the Lemma pfui."
@@ -51,6 +51,7 @@
 		},
 		{
 			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👎" },
 			"attestation": {
 				"unitKind": "Attestation",

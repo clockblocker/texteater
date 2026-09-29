@@ -11,7 +11,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0039"],
@@ -26,6 +25,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 5],
+			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
 				"rationale": "The proverb without der is still the proverb, and a Saying survives any change, a shortening included: the kept words attest Wer rastet, der rostet, Partial."
 			},

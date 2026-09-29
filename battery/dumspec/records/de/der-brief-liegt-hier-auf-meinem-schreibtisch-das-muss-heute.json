@@ -29,7 +29,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
@@ -45,6 +44,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, whether or not an infinitive follows (de/modal-is-a-verb). With raus and no infinitive it forms no particle verb such as hinausmüssen, so muss is a single-member VERB müssen.",
 				"knownMistakes": [
@@ -92,6 +92,7 @@
 		},
 		{
 			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
 				"rationale": "The letter on the speaker's desk has to go out, away from the speaker, so raus is the Shorthand of hinaus, not a Variant spelling of heraus. No motion verb stands in the bracket, and the modal takes no particle, so raus is an ADV target of its own."

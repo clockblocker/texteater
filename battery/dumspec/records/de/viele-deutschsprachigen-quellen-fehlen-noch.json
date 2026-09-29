@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0042"],
@@ -33,6 +33,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🇩🇪🗣" },
 			"notes": {
 				"rationale": "deutschsprachigen is an attributive ADJ before Quellen, nominative plural. After viele the standard ending is strong (deutschsprachige); the weak ending is a common deviation, recorded in the Surface's letters. deutschsprachig has no comparison forms, so no Degree."

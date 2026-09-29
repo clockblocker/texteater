@@ -25,7 +25,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
@@ -41,6 +40,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
 			},
@@ -87,6 +87,7 @@
 		},
 		{
 			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🚪🏃" },
 			"notes": {
 				"rationale": "The children are inside and want to go out, away from where they are: the full hinaus, which raus would shorten."

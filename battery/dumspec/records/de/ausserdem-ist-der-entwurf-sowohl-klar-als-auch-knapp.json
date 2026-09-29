@@ -22,7 +22,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -32,6 +31,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 12, 14],
+			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
 				"rationale": "Außerdem is unmarked ADV context; all three supplied anchors belong to one CCONJ."
 			},

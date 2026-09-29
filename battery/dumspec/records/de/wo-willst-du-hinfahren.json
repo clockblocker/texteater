@@ -12,7 +12,6 @@
 		{ "kind": "Punctuation", "text": "?" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -27,6 +26,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❓📍" },
 			"notes": {
 				"rationale": "hin is written as part of the verb, so it stays with hinfahren and wo is interrogative wo on its own."
@@ -60,6 +60,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -103,6 +104,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
 				"rationale": "hin written inside the verb stays with the verb."
 			},

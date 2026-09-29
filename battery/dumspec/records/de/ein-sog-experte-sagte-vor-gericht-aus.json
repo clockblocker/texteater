@@ -18,7 +18,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0042"],
@@ -38,6 +37,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
 				"rationale": "sog. is Duden's abbreviation of sogenannt. It is one Segment with its period and a Shorthand member whose Surface is the expansion as the phrase needs it: ein sogenannter Experte, nominative masculine singular (de/abbreviation-is-one-segment). Duden gives sogenannt no comparison forms, so the attributive Surface marks case, gender and number only (de/comparability-is-lexical)."
 			},

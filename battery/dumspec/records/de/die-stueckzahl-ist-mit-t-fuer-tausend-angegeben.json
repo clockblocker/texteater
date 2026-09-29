@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035"],
@@ -36,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
 				"rationale": "T abbreviates Tausend, as the sentence itself says, so it is a Shorthand member whose Surface is the expansion, not a Variant spelling of the numeral and not an abbreviation Lemma: abbr Yes is kept for names whose initialism is their usual form (de/abbreviation-is-one-segment). T takes no period."
 			},

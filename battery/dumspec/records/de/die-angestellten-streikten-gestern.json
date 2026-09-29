@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
@@ -30,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "💼" },
 			"notes": {
 				"rationale": "Angestellten is a substantivized participle, so it is a NOUN that owns its article Die (Rule de/participial-adjective). An adjectival noun for a person is one Lemma cited in its weak form, Angestellte, with gender null, since its gender is the referent's. Subject position and streikten make it nominative plural, and a plural Surface marks no gender."

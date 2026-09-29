@@ -38,7 +38,7 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -64,6 +64,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [26],
+			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "grüßt and the early hour make this the greeting, not the ADV morgen, tomorrow. Leaving out guten replaces no word, and speakers still hear the greeting (Duden: [guten] Morgen!), so Morgen attests guten Morgen, Partial."

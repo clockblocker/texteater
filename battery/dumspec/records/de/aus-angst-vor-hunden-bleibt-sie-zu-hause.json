@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034"],
@@ -30,6 +29,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
 				"rationale": "Angst governs vor without any verb, so vor is a governed member of the NOUN (ADR 0034). The Surface projects only the Fixed member: Angst."
 			},

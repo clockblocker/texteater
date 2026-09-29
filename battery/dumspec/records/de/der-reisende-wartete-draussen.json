@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
@@ -30,6 +30,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🧳" },
 			"notes": {
 				"rationale": "Reisende is a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. An adjectival noun for a person is one Lemma, Reisende, with no gender. The singular Surface marks the gender its form shows, Masc, and der agrees with it. Minimal pair: der reisende Händler, where reisende is an attributive ADJ."

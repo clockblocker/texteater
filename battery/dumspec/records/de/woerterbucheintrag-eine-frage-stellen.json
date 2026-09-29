@@ -12,7 +12,6 @@
 		{ "kind": "ResolvableText", "text": "stellen" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -22,6 +21,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5, 7],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
 				"rationale": "An explicit dictionary entry is Citation rather than a contextual Inflection."
 			},

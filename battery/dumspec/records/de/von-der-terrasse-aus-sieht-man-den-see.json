@@ -20,7 +20,6 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +34,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 6],
+			"route": { "family": "Locution", "kind": "ADP" },
 			"notes": {
 				"rationale": "Von der Terrasse aus is one constituent before the finite verb, so aus is no particle of aussehen: von … aus is a circumposition, a Locution ADP."
 			},

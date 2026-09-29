@@ -23,12 +23,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -59,6 +59,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -89,6 +90,7 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -142,6 +144,7 @@
 		},
 		{
 			"memberSegmentIndices": [11, 13],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
 				"rationale": "Fliederweg is a street name, cited with its article whatever the name, so it has Core article Definite and owns the article piece m of im."
 			},

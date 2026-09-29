@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👀" },
 			"notes": {
 				"rationale": "Sieh … an is ansehen, 'take a look', here in an abstract sense: nothing is looked at, the speaker points to something noteworthy. The separable particle an is a member wherever it stands (de/verb-owns-its-scattered-members), and hasSepPrefix names it (de/verb-core-features)."
@@ -83,6 +84,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "Duden lists mal as a particle of its own, not a spelling of einmal: it lends the utterance a certain casualness. So mal is PART mal, a target apart from ansehen."

@@ -29,7 +29,6 @@
 		{ "kind": "Punctuation", "text": "“" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -39,6 +38,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "PART" },
 			"notes": {
 				"rationale": "The overt English particle keeps an English Lemma; its unchanged source-language form is Canonical relative to that Lemma, not a German Variant."
 			},

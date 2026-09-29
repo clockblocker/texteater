@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "wäre … gewesen is the Konjunktiv II perfect of copular sein. wäre is its auxiliary and never a target alone, and schief is the ADJ predicate outside it."
@@ -83,6 +84,7 @@
 		},
 		{
 			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "Fast is the approximative adverb here, modifying the predication schief gewesen rather than functioning as an adjective or particle."

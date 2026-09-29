@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Reviewed",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
@@ -35,6 +35,7 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🚇" },
 			"notes": {
 				"rationale": "BVG is a name cited with its article, like die NATO, so its Lemma has Core article Definite and gender Fem, and it owns die (Rule de/proper-noun-article). It is an initialism used as the name itself, so abbr is Yes and the Surface keeps its letters. betreibt makes it nominative singular."

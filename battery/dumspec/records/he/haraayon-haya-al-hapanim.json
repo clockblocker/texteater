@@ -14,12 +14,12 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [5, 7, 8],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
 				"rationale": "The idiom על הפנים owns every piece of its occurrence, including ה and פנים, the Fused pieces of הפנים. The review span on פנים does not make it a noun Attestation."
 			},
