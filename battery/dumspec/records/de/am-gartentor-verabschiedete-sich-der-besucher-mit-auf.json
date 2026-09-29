@@ -30,7 +30,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0039"],
 		"rules": [
-			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" },
 			{ "rule": "de/routine-formula-is-intj", "hash": "183ce2fe684b1a37" }
 		],
 		"references": []

@@ -877,7 +877,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/member-orthography",
 		statement:
-			"Each member records how it is written. Standard covers sentence-initial capitals and the spelling of a Variant Surface, whatever its type; Typo is a real spelling or casing error, a spelling no Variant type covers; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
+			"Each member records how it is written. Standard covers sentence-initial capitals and the spelling of a Variant Surface, whatever its tags; Typo is a real spelling or casing error, a spelling no Variant tag covers; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
 		records: [

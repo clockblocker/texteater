@@ -29,7 +29,7 @@
 				"rule": "de/abbreviation-is-one-segment",
 				"hash": "686c9815ab8717d8"
 			},
-			{ "rule": "de/member-orthography", "hash": "972266d21119b126" }
+			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" }
 		],
 		"references": []
 	},
