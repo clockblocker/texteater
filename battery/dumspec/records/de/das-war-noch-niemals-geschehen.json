@@ -2,16 +2,46 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Das war noch niemals geschehen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "war" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "niemals" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geschehen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "war"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "niemals"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geschehen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -21,15 +51,28 @@
 		"year": 1925
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0022", "ADR-0036"],
 		"rules": [
+			{
+				"rule": "de/sein-perfect-or-copula",
+				"hash": "507adc4e3e41031f"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
 			},
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
 		],
 		"references": [
 			{
@@ -42,9 +85,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON das from Das (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -70,20 +113,30 @@
 						}
 					},
 					"normalizedSurface": "das",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "Das", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Das",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Standalone demonstrative das, the Nom.Neut.Sg pillar cell."
 			}
 		},
 		{
 			"memberSegmentIndices": [2, 8],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB geschehen from geschehen (VERB root) with war (aux). sein with a participle is a perfect only when the clause reports the verb's own event; otherwise war is the copula and geschehen an ADJ (de/sein-perfect-or-copula)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -103,7 +156,9 @@
 						}
 					},
 					"normalizedSurface": "war geschehen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -119,19 +174,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "war", "orthography": "Standard" },
-					{ "attested": "geschehen", "orthography": "Standard" }
+					{
+						"attested": "war",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "geschehen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "war geschehen reports the event itself (Das geschah noch niemals says the same), so it is the pluperfect of geschehen, one VERB target, not copula plus ADJ (de/sein-perfect-or-copula, de/verbal-participle)."
 			}
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -152,19 +216,26 @@
 						}
 					},
 					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV niemals from niemals (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -181,18 +252,26 @@
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"pronType": "Neg"
 						}
 					},
 					"normalizedSurface": "niemals",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "niemals", "orthography": "Standard" }
+					{
+						"attested": "niemals",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "niemals is a negative adverb of the nie series, pronType Neg; noch niemals is compositional, two targets."
 			}
 		}
 	],

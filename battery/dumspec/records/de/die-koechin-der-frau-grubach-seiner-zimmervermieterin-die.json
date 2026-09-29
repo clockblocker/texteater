@@ -2,51 +2,186 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Die Köchin der Frau Grubach, seiner Zimmervermieterin, die ihm jeden Tag gegen acht Uhr früh das Frühstück brachte, kam diesmal nicht.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Köchin" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "der" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Frau" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Grubach" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seiner" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zimmervermieterin" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "jeden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Tag" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gegen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "acht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Uhr" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "früh" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "das" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Frühstück" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "brachte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kam" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "diesmal" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nicht" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Köchin"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "der"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Frau"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Grubach"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seiner"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Zimmervermieterin"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "jeden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tag"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gegen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "acht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Uhr"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "früh"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Frühstück"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "brachte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kam"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "diesmal"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nicht"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -56,17 +191,40 @@
 		"year": 1925
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0035", "ADR-0040", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
+			{
+				"rule": "de/title-before-a-name",
+				"hash": "dd531115e2c8a2ef"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/nicht-is-part",
+				"hash": "c6631f0c8009c067"
+			}
 		],
 		"references": [
 			{
@@ -79,9 +237,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Köchin from Köchin (NOUN nsubj) with Die (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -94,10 +252,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Köchin",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Köchin",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -106,19 +269,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "Die", "orthography": "Standard" },
-					{ "attested": "Köchin", "orthography": "Standard" }
+					{
+						"attested": "Die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Köchin",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [4, 6],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Frau from Frau (NOUN nmod) with der (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -131,10 +303,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Frau",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Frau",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",
@@ -143,19 +320,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "der", "orthography": "Standard" },
-					{ "attested": "Frau", "orthography": "Standard" }
+					{
+						"attested": "der",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Frau",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B10. Frau is a title before a name, a common NOUN of its own (de/title-before-a-name). With an article the title is the phrase's Head and inflects while the name does not (des Herrn Müller), so Frau owns der."
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Grubach from Grubach (PROPN appos)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -176,22 +365,33 @@
 						}
 					},
 					"normalizedSurface": "Grubach",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"number": "Sing"
+					}
 				},
 				"members": [
-					{ "attested": "Grubach", "orthography": "Standard" }
+					{
+						"attested": "Grubach",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "The surname is a separate PROPN in the title's case (de/title-before-a-name). Its Core gender comes from Frau; see finding A5."
 			}
 		},
 		{
 			"memberSegmentIndices": [11],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seiner (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -219,10 +419,12 @@
 						}
 					},
 					"normalizedSurface": "seiner",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Gen",
 						"degree": null,
 						"gender": "Fem",
 						"gender[psor]": ["Masc", "Neut"],
@@ -231,16 +433,19 @@
 					}
 				},
 				"members": [
-					{ "attested": "seiner", "orthography": "Standard" }
+					{
+						"attested": "seiner",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Zimmervermieterin from Zimmervermieterin (NOUN appos)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -253,13 +458,18 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Zimmervermieterin",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Zimmervermieterin",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Gen",
 						"gender": null,
 						"number": "Sing"
 					}
@@ -277,9 +487,9 @@
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON die from die (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -305,20 +515,27 @@
 						}
 					},
 					"normalizedSurface": "die",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "die", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -344,20 +561,30 @@
 						}
 					},
 					"normalizedSurface": "ihm",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "ihm", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ihm",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "The dative object of brachte. The sentence holds no masculine or neuter antecedent, so only the sentence before (Josef K.) gives the masculine cell; see finding A1."
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET jeder from jeden (DET det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -385,7 +612,9 @@
 						}
 					},
 					"normalizedSurface": "jeden",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -396,15 +625,20 @@
 						"number[psor]": null
 					}
 				},
-				"members": [{ "attested": "jeden", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "jeden",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Tag from Tag (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -417,10 +651,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Tag",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Tag",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -428,7 +667,12 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Tag", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Tag",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -436,9 +680,9 @@
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP gegen from gegen (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -460,10 +704,17 @@
 						}
 					},
 					"normalizedSurface": "gegen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "gegen", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "gegen",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -480,9 +731,9 @@
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NUM acht from acht (NUM nummod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NUM"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -502,20 +753,27 @@
 						}
 					},
 					"normalizedSurface": "acht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "acht", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "acht",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Uhr from Uhr (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -528,10 +786,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Uhr",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Uhr",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -539,7 +802,12 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Uhr", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Uhr",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -547,9 +815,9 @@
 		},
 		{
 			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ früh from früh (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -560,32 +828,39 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "früh",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "früh", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"members": [
+					{
+						"attested": "früh",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "open: finding B3. früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). In that sense it neither inflects nor compares, so it is read as a non-comparable ADV, against the letter of de/adjective-stays-adj; see finding A2."
 			}
 		},
 		{
 			"memberSegmentIndices": [32, 34],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Frühstück from Frühstück (NOUN obj) with das (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -598,10 +873,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Frühstück",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Frühstück",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -610,19 +890,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "das", "orthography": "Standard" },
-					{ "attested": "Frühstück", "orthography": "Standard" }
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Frühstück",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB bringen from brachte (VERB acl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -642,7 +931,9 @@
 						}
 					},
 					"normalizedSurface": "brachte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -658,7 +949,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "brachte", "orthography": "Standard" }
+					{
+						"attested": "brachte",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -667,9 +961,9 @@
 		},
 		{
 			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB kommen from kam (VERB root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -689,7 +983,9 @@
 						}
 					},
 					"normalizedSurface": "kam",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -704,7 +1000,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "kam", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "kam",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -712,9 +1013,9 @@
 		},
 		{
 			"memberSegmentIndices": [41],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV diesmal from diesmal (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -735,21 +1036,26 @@
 						}
 					},
 					"normalizedSurface": "diesmal",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "diesmal", "orthography": "Standard" }
+					{
+						"attested": "diesmal",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [43],
-			"route": { "family": "Lexeme", "kind": "PART" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PART nicht from nicht (PART advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PART"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -770,11 +1076,21 @@
 						}
 					},
 					"normalizedSurface": "nicht",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "nicht", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "nicht",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "nicht is always PART with polarity Neg (de/nicht-is-part)."
 			}
 		}
 	],

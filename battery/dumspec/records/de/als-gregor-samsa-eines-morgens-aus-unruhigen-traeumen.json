@@ -2,47 +2,170 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Als" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Gregor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Samsa" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "eines" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Morgens" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "aus" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "unruhigen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Träumen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erwachte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "fand" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seinem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bett" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "einem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ungeheueren" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Ungeziefer" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "verwandelt" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Als"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Gregor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Samsa"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "eines"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Morgens"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "aus"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "unruhigen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Träumen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erwachte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fand"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seinem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bett"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ungeheueren"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Ungeziefer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "verwandelt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -52,16 +175,48 @@
 		"year": 1915
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0036", "ADR-0039", "ADR-0040"],
 		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "b86703d3f7281f0a"
+			}
 		],
 		"references": [
 			{
@@ -74,9 +229,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ als from Als (SCONJ mark)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -89,21 +244,33 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "als",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "als",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "Als", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Als",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Temporal als opens a verb-final clause, so it is SCONJ, not comparison als."
 			}
 		},
 		{
 			"memberSegmentIndices": [2, 4],
-			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PROPN Gregor Samsa from Gregor (PROPN nsubj) with Samsa (flat). UD joins Samsa to Gregor as flat: drafted as one PROPN name, the Lexeme a name of several words is. Check that it is one name."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -124,23 +291,37 @@
 						}
 					},
 					"normalizedSurface": "Gregor Samsa",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Sing"
+					}
 				},
 				"members": [
-					{ "attested": "Gregor", "orthography": "Standard" },
-					{ "attested": "Samsa", "orthography": "Standard" }
+					{
+						"attested": "Gregor",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Samsa",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "A personal name is one Lexeme whatever its length (Dumling CONTEXT, Lexeme); a bare-cited name has no Core article."
 			}
 		},
 		{
 			"memberSegmentIndices": [6, 8],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Morgen from Morgens (NOUN obl) with eines (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -153,10 +334,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Morgen",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Morgens",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",
@@ -165,19 +351,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "eines", "orthography": "Standard" },
-					{ "attested": "Morgens", "orthography": "Standard" }
+					{
+						"attested": "eines",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Morgens",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "eines Morgens is an adverbial genitive with one Head, so it is the NOUN Morgen owning its article eines (de/noun-owns-its-article), not a Locution: the Head count, not frozenness, draws the line (ADR 0039)."
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP aus from aus (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -199,10 +397,17 @@
 						}
 					},
 					"normalizedSurface": "aus",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "aus", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "aus",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -215,13 +420,16 @@
 						"realizedCase": "Dat"
 					}
 				]
+			},
+			"notes": {
+				"rationale": "open: finding B4. aus names the state Gregor wakes out of, the same source aus as in aus dem Koma holen or aus dem Wasser auftauchen, so it is read as a free ADP rather than a preposition erwachen governs (de/governed-preposition-joins-its-governor)."
 			}
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ unruhig from unruhigen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -236,35 +444,43 @@
 						"canonicalForm": "unruhig",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "unruhigen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"degree": null,
+						"degree": "Pos",
 						"gender": null,
 						"number": "Plur"
 					}
 				},
 				"members": [
-					{ "attested": "unruhigen", "orthography": "Standard" }
+					{
+						"attested": "unruhigen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Attributive ADJ, a single-member target (de/attributive-adjective-stands-alone); Duden compares unruhig, so it marks Pos."
 			}
 		},
 		{
 			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Traum from Träumen (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -277,10 +493,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Traum",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Träumen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -289,7 +510,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Träumen", "orthography": "Standard" }
+					{
+						"attested": "Träumen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -298,9 +522,9 @@
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erwachen from erwachte (VERB advcl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -320,7 +544,9 @@
 						}
 					},
 					"normalizedSurface": "erwachte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -336,7 +562,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "erwachte", "orthography": "Standard" }
+					{
+						"attested": "erwachte",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -345,9 +574,9 @@
 		},
 		{
 			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB finden from fand (VERB root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -367,7 +596,9 @@
 						}
 					},
 					"normalizedSurface": "fand",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -382,17 +613,25 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "fand", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "fand",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "finden in the sense 'find in a state' (Duden finden 2: das Haus leer finden) with sich as its object and verwandelt as the object's predicative. sich finden is not lexicalized here: sie fand ihn verwandelt keeps the meaning, so sich stays outside (de/verb-owns-its-scattered-members)."
 			}
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -418,20 +657,27 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [23],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -457,7 +703,9 @@
 						}
 					},
 					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -468,16 +716,24 @@
 						"reflex": "Yes"
 					}
 				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "A free reflexive object of finden, replaceable by ihn, so it is a PRON target of its own (de/verb-owns-its-scattered-members), the accusative cell of sich."
 			}
 		},
 		{
 			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -499,10 +755,17 @@
 						}
 					},
 					"normalizedSurface": "in",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "in", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "in",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -519,9 +782,9 @@
 		},
 		{
 			"memberSegmentIndices": [27],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinem (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -549,7 +812,9 @@
 						}
 					},
 					"normalizedSurface": "seinem",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -561,16 +826,22 @@
 					}
 				},
 				"members": [
-					{ "attested": "seinem", "orthography": "Standard" }
+					{
+						"attested": "seinem",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Possessive determiner sein, a DET of its own that owns no article (de/only-der-and-ein-are-articles); it agrees with Bett."
 			}
 		},
 		{
 			"memberSegmentIndices": [29],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Bett from Bett (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -583,10 +854,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bett",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Bett",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -594,7 +870,12 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Bett", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Bett",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -602,9 +883,9 @@
 		},
 		{
 			"memberSegmentIndices": [31],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zu from zu (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -626,10 +907,17 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -642,13 +930,16 @@
 						"realizedCase": "Dat"
 					}
 				]
+			},
+			"notes": {
+				"rationale": "zu marks the result of the change named by the participle verwandelt. A participial adjective's own prepositional phrases are free words (de/participial-adjective), though the verb verwandeln governs zu; see finding A3."
 			}
 		},
 		{
 			"memberSegmentIndices": [33, 37],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Ungeziefer from Ungeziefer (NOUN obl) with einem (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -661,10 +952,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Ungeziefer",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Ungeziefer",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -673,19 +969,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "einem", "orthography": "Standard" },
-					{ "attested": "Ungeziefer", "orthography": "Standard" }
+					{
+						"attested": "einem",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Ungeziefer",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [35],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ ungeheu from ungeheueren (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -697,38 +1002,46 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADJ",
-						"canonicalForm": "ungeheu",
+						"canonicalForm": "ungeheuer",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "ungeheueren",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"degree": null,
+						"degree": "Pos",
 						"gender": "Neut",
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "ungeheueren", "orthography": "Standard" }
+					{
+						"attested": "ungeheueren",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B5. ungeheueren keeps the e that the standard form ungeheuren drops after the diphthong. That is an inflected form of its own, not another spelling, so the Surface is spelled Canonical (de/variant-and-historical-status). Duden gives ungeheurer, ungeheuerste, so the Lemma is comparable."
 			}
 		},
 		{
 			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ verwandelt from verwandelt (VERB xcomp). UD tags verwandelt VERB, but a participle outside a perfect or passive is an ADJ (de/participial-adjective)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -750,16 +1063,24 @@
 						}
 					},
 					"normalizedSurface": "verwandelt",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "verwandelt", "orthography": "Standard" }
+					{
+						"attested": "verwandelt",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is a single-member ADJ with Participle Source verwandeln (de/participial-adjective). No dictionary gives it comparison forms, so it marks no Degree."
 			}
 		}
 	],

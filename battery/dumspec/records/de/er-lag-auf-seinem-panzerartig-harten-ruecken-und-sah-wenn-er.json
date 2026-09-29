@@ -2,90 +2,344 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Er lag auf seinem panzerartig harten Rücken und sah, wenn er den Kopf ein wenig hob, seinen gewölbten, braunen, von bogenförmigen Versteifungen geteilten Bauch, auf dessen Höhe sich die Bettdecke, zum gänzlichen Niedergleiten bereit, kaum noch erhalten konnte.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "lag" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seinem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "panzerartig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "harten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Rücken" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sah" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wenn" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kopf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "wenig" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hob" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seinen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gewölbten" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "braunen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "von" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bogenförmigen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Versteifungen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geteilten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bauch" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dessen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Höhe" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "die" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Bettdecke" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gänzlichen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Niedergleiten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "bereit" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kaum" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "erhalten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "konnte" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "lag"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seinem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "panzerartig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "harten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Rücken"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sah"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wenn"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Kopf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wenig"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hob"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seinen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gewölbten"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "braunen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "von"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bogenförmigen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Versteifungen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geteilten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bauch"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auf"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dessen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Höhe"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bettdecke"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gänzlichen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Niedergleiten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bereit"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kaum"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "erhalten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "konnte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -95,18 +349,67 @@
 		"year": 1915
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": [
+			"ADR-0026",
+			"ADR-0034",
+			"ADR-0035",
+			"ADR-0036",
+			"ADR-0039",
+			"ADR-0040"
+		],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "4435db81cfb4db93"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
+			{
+				"rule": "de/substantivized-infinitive-is-a-noun",
+				"hash": "24bb91c7f80c0f5f"
+			}
 		],
 		"references": [
 			{
@@ -119,9 +422,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from Er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -147,20 +450,27 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "Er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB liegen from lag (VERB root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -180,7 +490,9 @@
 						}
 					},
 					"normalizedSurface": "lag",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -195,7 +507,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "lag", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "lag",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -203,9 +520,9 @@
 		},
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP auf from auf (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -227,10 +544,17 @@
 						}
 					},
 					"normalizedSurface": "auf",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "auf", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "auf",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -247,9 +571,9 @@
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinem (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -277,7 +601,9 @@
 						}
 					},
 					"normalizedSurface": "seinem",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -289,16 +615,19 @@
 					}
 				},
 				"members": [
-					{ "attested": "seinem", "orthography": "Standard" }
+					{
+						"attested": "seinem",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ panzerartig from panzerartig (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -320,23 +649,31 @@
 						}
 					},
 					"normalizedSurface": "panzerartig",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "panzerartig", "orthography": "Standard" }
+					{
+						"attested": "panzerartig",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "An adjective modifying harten adverbially stays ADJ (de/adjective-stays-adj). -artig adjectives have no comparison forms in the dictionaries, so it marks no Degree."
 			}
 		},
 		{
 			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ hart from harten (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -351,24 +688,29 @@
 						"canonicalForm": "hart",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "harten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
-						"degree": null,
+						"degree": "Pos",
 						"gender": "Masc",
 						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "harten", "orthography": "Standard" }
+					{
+						"attested": "harten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -377,9 +719,9 @@
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Rücken from Rücken (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -392,10 +734,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Rücken",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Rücken",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -404,7 +751,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Rücken", "orthography": "Standard" }
+					{
+						"attested": "Rücken",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -413,9 +763,9 @@
 		},
 		{
 			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -428,21 +778,30 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sehen from sah (VERB conj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -462,7 +821,9 @@
 						}
 					},
 					"normalizedSurface": "sah",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -477,7 +838,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "sah", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sah",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -485,9 +851,9 @@
 		},
 		{
 			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme SCONJ wenn from wenn (SCONJ mark)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "SCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -500,21 +866,30 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "wenn",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "wenn",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "wenn", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "wenn",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -540,20 +915,27 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [23, 25],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Kopf from Kopf (NOUN obj) with den (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -566,10 +948,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Kopf",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Kopf",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -578,19 +965,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Kopf", "orthography": "Standard" }
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Kopf",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [27],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET ein from ein (DET det). UD gives the article ein to wenig (DET), no Head that opens with it, so it is drafted as a DET of its own (de/noun-owns-its-article)."
+			"memberSegmentIndices": [27, 29],
+			"route": {
+				"family": "Locution",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -600,83 +996,41 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "ein",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "ein wenig",
 						"coreFeatures": {
-							"case": "Acc",
-							"definite": "Ind",
-							"extPos": null,
-							"foreign": null,
-							"gender": "Neut",
-							"number": "Sing",
-							"numType": "Card",
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Art"
+							"comparable": null
 						}
 					},
-					"normalizedSurface": "ein",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "ein wenig",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "ein", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [29],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON wenige from wenig (DET advmod). UD tags wenig DET; STTS PIS makes it PRON (de/pron-or-det-by-use). wenig fits 3 authored PRON cells equally (Ind Nom Sing Neut; Ind Acc Sing Neut; Ind Dat Sing Neut); the first is drafted. Check the referent (ADR 0044)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "wenige",
-						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Ind",
-							"gender": null
-						}
+				"members": [
+					{
+						"attested": "ein",
+						"orthography": "Standard"
 					},
-					"normalizedSurface": "wenig",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": "Neut",
-						"number": "Sing",
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+					{
+						"attested": "wenig",
+						"orthography": "Standard"
 					}
-				},
-				"members": [{ "attested": "wenig", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+				],
+				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "open: finding B6. ein wenig ('a little', DWDS: ein (klein) wenig = etwas) is invariant and adverbial. ein agrees with nothing, so it can be no article of wenig; the two words are read as a Locution ADV with no comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [31],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB heben from hob (VERB advcl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -696,7 +1050,9 @@
 						}
 					},
 					"normalizedSurface": "hob",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -711,7 +1067,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "hob", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "hob",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
@@ -719,9 +1080,9 @@
 		},
 		{
 			"memberSegmentIndices": [34],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinen (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -749,7 +1110,9 @@
 						}
 					},
 					"normalizedSurface": "seinen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -761,16 +1124,19 @@
 					}
 				},
 				"members": [
-					{ "attested": "seinen", "orthography": "Standard" }
+					{
+						"attested": "seinen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [36],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ gewölbt from gewölbten (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -792,7 +1158,9 @@
 						}
 					},
 					"normalizedSurface": "gewölbten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -802,18 +1170,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "gewölbten", "orthography": "Standard" }
+					{
+						"attested": "gewölbten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Attributive participle: ADJ gewölbt with Participle Source wölben (de/participial-adjective); no dictionary comparison forms."
 			}
 		},
 		{
 			"memberSegmentIndices": [39],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ braun from braunen (ADJ conj). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -828,24 +1202,29 @@
 						"canonicalForm": "braun",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "braunen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": "Dat",
-						"degree": null,
+						"case": "Acc",
+						"degree": "Pos",
 						"gender": "Masc",
-						"number": "Plur"
+						"number": "Sing"
 					}
 				},
 				"members": [
-					{ "attested": "braunen", "orthography": "Standard" }
+					{
+						"attested": "braunen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -854,9 +1233,9 @@
 		},
 		{
 			"memberSegmentIndices": [42],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP von from von (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -878,10 +1257,17 @@
 						}
 					},
 					"normalizedSurface": "von",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "von", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "von",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -894,13 +1280,16 @@
 						"realizedCase": "Dat"
 					}
 				]
+			},
+			"notes": {
+				"rationale": "von introduces the agent of the participle geteilten, a free word of the participial adjective (de/participial-adjective)."
 			}
 		},
 		{
 			"memberSegmentIndices": [44],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ bogenförmig from bogenförmigen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -922,7 +1311,9 @@
 						}
 					},
 					"normalizedSurface": "bogenförmigen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -932,7 +1323,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "bogenförmigen", "orthography": "Standard" }
+					{
+						"attested": "bogenförmigen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -941,9 +1335,9 @@
 		},
 		{
 			"memberSegmentIndices": [46],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Versteifung from Versteifungen (NOUN nmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -956,10 +1350,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Versteifung",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Versteifungen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -968,7 +1367,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Versteifungen", "orthography": "Standard" }
+					{
+						"attested": "Versteifungen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -977,9 +1379,9 @@
 		},
 		{
 			"memberSegmentIndices": [48],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ geteilt from geteilten (ADJ conj). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1001,7 +1403,9 @@
 						}
 					},
 					"normalizedSurface": "geteilten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -1011,18 +1415,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "geteilten", "orthography": "Standard" }
+					{
+						"attested": "geteilten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Attributive participle heading the extended attribute von bogenförmigen Versteifungen geteilten: ADJ geteilt from teilen, its agent phrase outside (de/participial-adjective)."
 			}
 		},
 		{
 			"memberSegmentIndices": [50],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Bauch from Bauch (NOUN obj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1035,10 +1445,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bauch",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Bauch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
@@ -1046,7 +1461,12 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Bauch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Bauch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -1054,9 +1474,9 @@
 		},
 		{
 			"memberSegmentIndices": [53],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP auf from auf (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1078,10 +1498,17 @@
 						}
 					},
 					"normalizedSurface": "auf",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "auf", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "auf",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -1098,9 +1525,9 @@
 		},
 		{
 			"memberSegmentIndices": [55],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON dessen from dessen (PRON nmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1126,22 +1553,30 @@
 						}
 					},
 					"normalizedSurface": "dessen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "dessen", "orthography": "Standard" }
+					{
+						"attested": "dessen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Attributive relative dessen is PRON with extPos DET, and Höhe is a separate target (de/pron-or-det-by-use). Its antecedent Bauch fixes the masculine cell by agreement inside the sentence."
 			}
 		},
 		{
 			"memberSegmentIndices": [57],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Höhe from Höhe (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1154,10 +1589,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Höhe",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Höhe",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -1165,17 +1605,22 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "Höhe", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Höhe",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [59],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON sich from sich (PRON obj). UD makes sich an object; if the verb requires it, it is the verb's inherent reflexive and joins its target (de/verb-owns-its-scattered-members)."
+			"memberSegmentIndices": [59, 80],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1186,42 +1631,55 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
+						"kind": "VERB",
+						"canonicalForm": "sich erhalten",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": null,
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Yes",
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "sich",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "sich erhalten",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
+						"mood": null,
 						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
 					}
 				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "sich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "erhalten",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B7. sich erhalten here is 'stay in place, hold on' (Duden erhalten 2: Bestand haben, sich halten), an anticausative with no object role for sich: *die Bettdecke erhielt die Decke. So sich is a lexical reflexive and a member (de/verb-owns-its-scattered-members). The infinitive is its own VERB target under konnte (de/modal-is-a-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [61, 63],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Bettdecke from Bettdecke (NOUN nsubj) with die (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1234,10 +1692,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bettdecke",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Bettdecke",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -1246,167 +1709,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "die", "orthography": "Standard" },
-					{ "attested": "Bettdecke", "orthography": "Standard" }
+					{
+						"attested": "die",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Bettdecke",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
-			"memberSegmentIndices": [66],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zu from zu (ADP case)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [
-					{
-						"attested": "zu",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "zum",
-							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 0
-					}
-				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
-			}
-		},
-		{
-			"memberSegmentIndices": [67, 71],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Niedergleiten from Niedergleiten (NOUN nmod) with dem (det)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Niedergleiten",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
-					},
-					"normalizedSurface": "Niedergleiten",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{
-						"attested": "m",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "zum",
-							"components": [
-								{ "span": "zu", "surface": "zu" },
-								{ "span": "m", "surface": "dem" }
-							]
-						},
-						"component": 1
-					},
-					{ "attested": "Niedergleiten", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [69],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ gänzlich from gänzlichen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"canonicalForm": "gänzlich",
-						"coreFeatures": {
-							"abbr": null,
-							"comparable": null,
-							"foreign": null,
-							"numType": null,
-							"variant": null
-						}
-					},
-					"normalizedSurface": "gänzlichen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"degree": null,
-						"gender": "Neut",
-						"number": "Sing"
-					}
-				},
-				"members": [
-					{ "attested": "gänzlichen", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [73],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ bereit from bereit (ADJ acl). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"memberSegmentIndices": [66, 73],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1428,12 +1752,178 @@
 						}
 					},
 					"normalizedSurface": "bereit",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "bereit", "orthography": "Standard" }
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "bereit",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "zu",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Something"
+						},
+						"realizedCase": "Dat"
+					}
+				]
+			},
+			"notes": {
+				"rationale": "bereit governs zu (Duden: zu etwas bereit), so the zu piece of zum is a member of the ADJ and valency evidence names it (de/governed-preposition-joins-its-governor, de/fused-word-pieces); the m piece belongs to Niedergleiten. Duden gives bereit no comparison forms."
+			}
+		},
+		{
+			"memberSegmentIndices": [67, 71],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Niedergleiten",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Niedergleiten",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zum",
+							"components": [
+								{
+									"span": "zu",
+									"surface": "zu"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
+							]
+						},
+						"component": 1
+					},
+					{
+						"attested": "Niedergleiten",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "A capitalized infinitive used as a noun is a NOUN with gender Neut (de/substantivized-infinitive-is-a-noun). It owns the article piece m of zum (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [69],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gänzlich",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "gänzlichen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "gänzlichen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -1442,9 +1932,9 @@
 		},
 		{
 			"memberSegmentIndices": [76],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV kaum from kaum (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1465,19 +1955,26 @@
 						}
 					},
 					"normalizedSurface": "kaum",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "kaum", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "kaum",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [78],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1498,66 +1995,26 @@
 						}
 					},
 					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [80],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB erhalten from erhalten (VERB acl)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "erhalten",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
-						}
-					},
-					"normalizedSurface": "erhalten",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "erhalten", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
 			"memberSegmentIndices": [82],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB können from konnte (AUX aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1577,7 +2034,9 @@
 						}
 					},
 					"normalizedSurface": "konnte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -1593,11 +2052,17 @@
 					}
 				},
 				"members": [
-					{ "attested": "konnte", "orthography": "Standard" }
+					{
+						"attested": "konnte",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "A modal is a VERB of its own, and the infinitive it governs is a separate target (de/modal-is-a-verb)."
 			}
 		}
 	],

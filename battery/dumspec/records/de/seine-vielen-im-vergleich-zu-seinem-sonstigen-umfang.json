@@ -2,42 +2,152 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Seine vielen, im Vergleich zu seinem sonstigen Umfang kläglich dünnen Beine flimmerten ihm hilflos vor den Augen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Seine" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vielen" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Vergleich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "zu" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "seinem" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "sonstigen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Umfang" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "kläglich" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dünnen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Beine" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "flimmerten" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihm" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hilflos" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vor" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Augen" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Seine"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vielen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "i",
+			"surface": "in"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "m",
+			"surface": "dem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Vergleich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "seinem"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "sonstigen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Umfang"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "kläglich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dünnen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Beine"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "flimmerten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ihm"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hilflos"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "vor"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Augen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -47,16 +157,48 @@
 		"year": 1915
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0035", "ADR-0039", "ADR-0040", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "d095c150bfc6b7bd"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "9b5fe154ed54d6dc"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			},
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" }
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "293eb180d6782c36"
+			}
 		],
 		"references": [
 			{
@@ -69,9 +211,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from Seine (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -99,7 +241,9 @@
 						}
 					},
 					"normalizedSurface": "seine",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -110,64 +254,20 @@
 						"number[psor]": "Sing"
 					}
 				},
-				"members": [{ "attested": "Seine", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET viel from vielen (DET det)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "viel",
-						"coreFeatures": {
-							"case": null,
-							"definite": null,
-							"extPos": null,
-							"foreign": null,
-							"gender": null,
-							"number": null,
-							"numType": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Ind"
-						}
-					},
-					"normalizedSurface": "vielen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"degree": null,
-						"gender": null,
-						"gender[psor]": null,
-						"number": "Plur",
-						"number[psor]": null
-					}
-				},
 				"members": [
-					{ "attested": "vielen", "orthography": "Standard" }
+					{
+						"attested": "Seine",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -178,18 +278,65 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "in",
+						"kind": "ADJ",
+						"canonicalForm": "viel",
 						"coreFeatures": {
 							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
+							"comparable": "Yes",
 							"foreign": null,
-							"partType": null
+							"numType": null,
+							"variant": null
 						}
 					},
-					"normalizedSurface": "in",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "vielen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"members": [
+					{
+						"attested": "vielen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B1. After the possessive seine, vielen takes the weak adjective ending, so it inflects as an attributive adjective (de/adjective-stays-adj); DWDS classes viel as an adjective, comparable through mehr, am meisten. The authored DET viel has no weak Nom.Plur cell vielen."
+			}
+		},
+		{
+			"memberSegmentIndices": [5, 6, 8, 10],
+			"route": {
+				"family": "Locution",
+				"kind": "ADP"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADP",
+						"canonicalForm": "im Vergleich zu",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "im Vergleich zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -199,124 +346,56 @@
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 0
-					}
-				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
-			}
-		},
-		{
-			"memberSegmentIndices": [6, 8],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Vergleich from Vergleich (NOUN nmod) with dem (det)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"canonicalForm": "Vergleich",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
 					},
-					"normalizedSurface": "Vergleich",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					}
-				},
-				"members": [
 					{
 						"attested": "m",
 						"orthography": "Fused",
 						"fusion": {
 							"spelling": "im",
 							"components": [
-								{ "span": "i", "surface": "in" },
-								{ "span": "m", "surface": "dem" }
+								{
+									"span": "i",
+									"surface": "in"
+								},
+								{
+									"span": "m",
+									"surface": "dem"
+								}
 							]
 						},
 						"component": 1
 					},
-					{ "attested": "Vergleich", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP zu from zu (ADP case)."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
 					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
+						"attested": "Vergleich",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
 					}
-				]
+				],
+				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "open: finding B2. im Vergleich zu (Duden, Vergleich: im Vergleich zu/(auch:) mit) is read as a complex preposition, a Locution ADP like in Bezug auf (ADR 0039). Both pieces of im are fixed members (de/fused-word-pieces)."
 			}
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET sein from seinem (DET det:poss)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -344,7 +423,9 @@
 						}
 					},
 					"normalizedSurface": "seinem",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -356,16 +437,19 @@
 					}
 				},
 				"members": [
-					{ "attested": "seinem", "orthography": "Standard" }
+					{
+						"attested": "seinem",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [14],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ sonstig from sonstigen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -387,7 +471,9 @@
 						}
 					},
 					"normalizedSurface": "sonstigen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -397,7 +483,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "sonstigen", "orthography": "Standard" }
+					{
+						"attested": "sonstigen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -406,9 +495,9 @@
 		},
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Umfang from Umfang (NOUN nmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -421,10 +510,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Umfang",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Umfang",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -433,7 +527,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Umfang", "orthography": "Standard" }
+					{
+						"attested": "Umfang",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -442,9 +539,9 @@
 		},
 		{
 			"memberSegmentIndices": [18],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ kläglich from kläglich (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -459,30 +556,43 @@
 						"canonicalForm": "kläglich",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "kläglich",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
-					{ "attested": "kläglich", "orthography": "Standard" }
+					{
+						"attested": "kläglich",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Adverbially used adjective modifying dünnen: ADJ with Degree Pos (de/adjective-stays-adj, de/comparability-is-lexical)."
 			}
 		},
 		{
 			"memberSegmentIndices": [20],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ dünn from dünnen (ADJ amod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -497,24 +607,29 @@
 						"canonicalForm": "dünn",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "dünnen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": null,
+						"degree": "Pos",
 						"gender": null,
 						"number": "Plur"
 					}
 				},
 				"members": [
-					{ "attested": "dünnen", "orthography": "Standard" }
+					{
+						"attested": "dünnen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -523,9 +638,9 @@
 		},
 		{
 			"memberSegmentIndices": [22],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Bein from Beine (NOUN nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -538,10 +653,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bein",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Beine",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -549,7 +669,12 @@
 						"number": "Plur"
 					}
 				},
-				"members": [{ "attested": "Beine", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "Beine",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
 				"valencyEvidence": []
@@ -557,9 +682,9 @@
 		},
 		{
 			"memberSegmentIndices": [24],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB flimmern from flimmerten (VERB root)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -579,7 +704,9 @@
 						}
 					},
 					"normalizedSurface": "flimmerten",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -595,18 +722,24 @@
 					}
 				},
 				"members": [
-					{ "attested": "flimmerten", "orthography": "Standard" }
+					{
+						"attested": "flimmerten",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B8. Literal flimmern with Beine as subject. The idiom jemandem flimmert es vor den Augen needs its expletive es, which a real subject replaces, so the words resolve one by one (de/idiom)."
 			}
 		},
 		{
 			"memberSegmentIndices": [26],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON ihm from ihm (PRON obl:arg)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -632,20 +765,30 @@
 						}
 					},
 					"normalizedSurface": "ihm",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "ihm", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "ihm",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
+			},
+			"notes": {
+				"rationale": "Free dative of the person whose eyes are meant. Nothing in this sentence tells the masculine cell from the neuter one; Gregor, in the sentences before, gives Masc. See finding A1."
 			}
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADJ hilflos from hilflos (ADJ advmod). Comparability is left null (de/comparability-is-lexical); UD marks Degree=Pos."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -660,19 +803,29 @@
 						"canonicalForm": "hilflos",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
 					},
 					"normalizedSurface": "hilflos",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
-					{ "attested": "hilflos", "orthography": "Standard" }
+					{
+						"attested": "hilflos",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -681,9 +834,9 @@
 		},
 		{
 			"memberSegmentIndices": [30],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP vor from vor (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -705,10 +858,17 @@
 						}
 					},
 					"normalizedSurface": "vor",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "vor", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "vor",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -725,9 +885,9 @@
 		},
 		{
 			"memberSegmentIndices": [32, 34],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Auge from Augen (NOUN obl) with den (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -740,10 +900,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Auge",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Augen",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -752,11 +917,20 @@
 					}
 				},
 				"members": [
-					{ "attested": "den", "orthography": "Standard" },
-					{ "attested": "Augen", "orthography": "Standard" }
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Augen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		}

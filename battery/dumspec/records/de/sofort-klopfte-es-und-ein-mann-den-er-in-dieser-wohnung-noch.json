@@ -2,42 +2,150 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sofort klopfte es und ein Mann, den er in dieser Wohnung noch niemals gesehen hatte, trat ein.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Sofort" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "klopfte" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "es" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "und" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Mann" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "den" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "er" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "in" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "dieser" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Wohnung" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "noch" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "niemals" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "gesehen" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hatte" },
-		{ "kind": "Punctuation", "text": "," },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "trat" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ein" },
-		{ "kind": "Punctuation", "text": "." }
+		{
+			"kind": "ResolvableText",
+			"text": "Sofort"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "klopfte"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "und"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Mann"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "in"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "dieser"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Wohnung"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "noch"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "niemals"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "gesehen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "hatte"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "trat"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
 	],
 	"coverage": "Full",
 	"provenance": {
@@ -47,21 +155,44 @@
 		"year": 1925
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0040"],
 		"rules": [
 			{
-				"rule": "de/auxiliary-joins-the-verb-it-serves",
-				"hash": "17cec6bff2108a22"
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "4e09a3e722ab1c82"
 			},
-			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "974139977fd040ca" }
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "bcb53b5333fa8af4"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c509d14dcd7d7b41"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
 		],
 		"references": [
 			{
@@ -74,9 +205,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV sofort from Sofort (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -97,21 +228,26 @@
 						}
 					},
 					"normalizedSurface": "sofort",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "Sofort", "orthography": "Standard" }
+					{
+						"attested": "Sofort",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB klopfen from klopfte (VERB root)."
+			"memberSegmentIndices": [2, 4],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -130,8 +266,10 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "klopfte",
-					"spelling": { "kind": "Canonical" },
+					"normalizedSurface": "klopfte es",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -139,7 +277,7 @@
 						"person": "3",
 						"tense": "Past",
 						"verbForm": "Fin",
-						"expletive": null,
+						"expletive": "Subject",
 						"perfect": null,
 						"future": null,
 						"voice": null,
@@ -147,57 +285,31 @@
 					}
 				},
 				"members": [
-					{ "attested": "klopfte", "orthography": "Standard" }
+					{
+						"attested": "klopfte",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "es",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
-			}
-		},
-		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON es from es (PRON nsubj). If this es refers to nothing and the verb selects it, it joins the verb's target (de/expletive-es-joins-its-verb); the converter never joins it."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "es",
-						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": "Neut"
-						}
-					},
-					"normalizedSurface": "es",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+				"expletiveEvidence": {
+					"attested": "es",
+					"orthography": "Standard"
 				},
-				"members": [{ "attested": "es", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "open: finding B12. es klopft (Duden: unpersönlich, jemand klopft an) has a subject es that refers to nothing. It stays in the middle field after the verb, so it is not positional, and cannot be questioned (*Was klopfte?), so it joins klopfen as the expletive (de/expletive-es-joins-its-verb)."
 			}
 		},
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme CCONJ und from und (CCONJ cc)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -210,21 +322,30 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {
+							"conjType": null
+						}
 					},
 					"normalizedSurface": "und",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "und",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [8, 10],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Mann from Mann (NOUN nsubj) with ein (det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -237,10 +358,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Mann",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Mann",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -249,19 +375,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "ein", "orthography": "Standard" },
-					{ "attested": "Mann", "orthography": "Standard" }
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Mann",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
 				"valencyEvidence": []
 			}
 		},
 		{
 			"memberSegmentIndices": [13],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON den from den (PRON obj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -287,20 +422,27 @@
 						}
 					},
 					"normalizedSurface": "den",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "den", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "den",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [15],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme PRON er from er (PRON nsubj)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -326,20 +468,27 @@
 						}
 					},
 					"normalizedSurface": "er",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "er", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "er",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null
 			}
 		},
 		{
 			"memberSegmentIndices": [17],
-			"route": { "family": "Lexeme", "kind": "ADP" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADP in from in (ADP case)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADP"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -361,10 +510,17 @@
 						}
 					},
 					"normalizedSurface": "in",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "in", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "in",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
@@ -381,9 +537,9 @@
 		},
 		{
 			"memberSegmentIndices": [19],
-			"route": { "family": "Lexeme", "kind": "DET" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme DET dieser from dieser (DET det)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -411,7 +567,9 @@
 						}
 					},
 					"normalizedSurface": "dieser",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -423,16 +581,19 @@
 					}
 				},
 				"members": [
-					{ "attested": "dieser", "orthography": "Standard" }
+					{
+						"attested": "dieser",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [21],
-			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme NOUN Wohnung from Wohnung (NOUN obl)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -445,10 +606,15 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Wohnung",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
 					},
 					"normalizedSurface": "Wohnung",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",
@@ -457,7 +623,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Wohnung", "orthography": "Standard" }
+					{
+						"attested": "Wohnung",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
@@ -466,9 +635,9 @@
 		},
 		{
 			"memberSegmentIndices": [23],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV noch from noch (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -489,19 +658,26 @@
 						}
 					},
 					"normalizedSurface": "noch",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "noch", "orthography": "Standard" }],
+				"members": [
+					{
+						"attested": "noch",
+						"orthography": "Standard"
+					}
+				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [25],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme ADV niemals from niemals (ADV advmod)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -518,25 +694,30 @@
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": null
+							"pronType": "Neg"
 						}
 					},
 					"normalizedSurface": "niemals",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
 				"members": [
-					{ "attested": "niemals", "orthography": "Standard" }
+					{
+						"attested": "niemals",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full"
 			}
 		},
 		{
 			"memberSegmentIndices": [27, 29],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB sehen from gesehen (VERB acl) with hatte (aux)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -556,7 +737,9 @@
 						}
 					},
 					"normalizedSurface": "gesehen hatte",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -572,19 +755,28 @@
 					}
 				},
 				"members": [
-					{ "attested": "gesehen", "orthography": "Standard" },
-					{ "attested": "hatte", "orthography": "Standard" }
+					{
+						"attested": "gesehen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "hatte",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Pluperfect: participle and auxiliary are one VERB target (de/verbal-participle)."
 			}
 		},
 		{
 			"memberSegmentIndices": [32, 34],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "Drafted from a UD parse (Stanza 1.14.0) and not yet reviewed: Lexeme VERB eintreten from trat (VERB conj) with ein (compound:prt)."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -604,7 +796,9 @@
 						}
 					},
 					"normalizedSurface": "trat ein",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -620,12 +814,21 @@
 					}
 				},
 				"members": [
-					{ "attested": "trat", "orthography": "Standard" },
-					{ "attested": "ein", "orthography": "Standard" }
+					{
+						"attested": "trat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "trat … ein is the particle verb eintreten; the particle is a member (de/verb-owns-its-scattered-members)."
 			}
 		}
 	],
