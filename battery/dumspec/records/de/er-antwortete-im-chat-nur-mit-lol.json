@@ -25,8 +25,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -35,7 +35,7 @@
 		{
 			"memberSegmentIndices": [13],
 			"notes": {
-				"rationale": "A chat abbreviation used across languages: its source language can't be told, so sourceLang is und. A Foreign Reading has no Emoji Description, so the imported emoji case has nothing left to test."
+				"rationale": "Duden lists lol (drückt große Heiterkeit aus, from English laughing out loud), so it is a German INTJ, though it never inflects. mit lol quotes a reply the way mit ach does, and UD EWT tags lol INTJ. It answers no question, so partType is null. The Emoji Description comes from the dropped imported case."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,14 +50,14 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "lol",
-						"family": "Foreign",
-						"kind": "Foreign",
-						"coreFeatures": { "sourceLang": "und" }
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": { "partType": null }
 					},
 					"surfaceFeatures": null
 				}
 			},
-			"reading": {}
+			"reading": { "emojiDescription": "😂" }
 		}
 	],
 	"noTarget": []

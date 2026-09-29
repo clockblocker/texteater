@@ -27,8 +27,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -58,7 +58,7 @@
 			},
 			"reading": {},
 			"notes": {
-				"rationale": "sehr sus fills an adjective's slot, but sus takes no German ending: Foreign en."
+				"rationale": "Duden does not list sus. sehr sus fills an adjective's slot, but sus takes no German ending: Foreign en."
 			}
 		}
 	],

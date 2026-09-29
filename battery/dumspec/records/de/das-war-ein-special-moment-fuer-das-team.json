@@ -23,51 +23,44 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"notes": {
-				"rationale": "Overt English adjective in German context. Mark Foreign Yes."
+				"rationale": "Duden lists only the noun Special, a programme, not the adjective. ein special Moment shows no German ending (specialer): Foreign en."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"canonicalForm": "special",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"numType": null,
-							"variant": null
-						}
-					},
-					"normalizedSurface": "special",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"degree": "Pos",
-						"gender": "Masc",
-						"number": "Sing"
-					}
-				},
 				"members": [
 					{ "attested": "special", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
-			}
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "special",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "special",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

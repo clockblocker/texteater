@@ -33,8 +33,12 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
 			}
 		],
 		"references": []
@@ -42,6 +46,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"notes": {
+				"rationale": "Duden lists weird as an indeclinable adjective, so the typo wierd is a Typo member of ADJ weird, though the chat mixes German and English. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "wierd", "orthography": "Typo" }],
@@ -55,16 +62,21 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "weird",
-						"family": "Foreign",
-						"kind": "Foreign",
-						"coreFeatures": { "sourceLang": "en" }
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
 					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": {},
-			"notes": {
-				"rationale": "A typo of English weird: the Canonical Form corrects it and the member is a Typo."
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

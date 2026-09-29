@@ -37,8 +37,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -47,7 +47,7 @@
 		{
 			"memberSegmentIndices": [25],
 			"notes": {
-				"rationale": "The English programmers' placeholder word, uninflected: Foreign en. The unreadable ???? stays OpaqueText."
+				"rationale": "The English programmers' placeholder word, not in Duden and uninflected: Foreign en. The unreadable ???? stays OpaqueText."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

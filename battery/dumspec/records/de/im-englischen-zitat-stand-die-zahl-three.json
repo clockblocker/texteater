@@ -22,39 +22,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
+			"notes": {
+				"rationale": "Duden does not list three, and it takes no German grammar: Foreign en."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "three", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "three",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "NUM",
 						"canonicalForm": "three",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"numType": "Card"
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "three",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "three", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null
-			}
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

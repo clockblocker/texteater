@@ -29,38 +29,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"notes": {
+				"rationale": "Duden's not is another word, the archaic adjective meaning nötig, so English not is unlisted in this meaning. It takes no German grammar: Foreign en."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "not", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "not",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PART",
 						"canonicalForm": "not",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"partType": null,
-							"polarity": "Neg"
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "not",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "not", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

@@ -185,7 +185,7 @@ export const negativeFixtures: {
 	},
 	{
 		name: "a Foreign Reading with an Emoji Description",
-		seed: "de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+		seed: "de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr",
 		check: "Reading",
 		edit: (record) => {
 			record.targets[0].reading = { emojiDescription: "😬" };
@@ -193,7 +193,7 @@ export const negativeFixtures: {
 	},
 	{
 		name: "a Foreign Reading with a Semantic Relation",
-		seed: "de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+		seed: "de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr",
 		check: "Reading",
 		edit: (record) => {
 			record.targets[0].reading = {

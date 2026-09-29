@@ -24,8 +24,12 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
 			}
 		],
 		"references": []
@@ -33,31 +37,37 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
+			"notes": {
+				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein), so this is ADJ low key used adverbially. Duden has no hyphenated spelling, so the member low-key is a Typo. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "low-key", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "low-key", "orthography": "Typo" }],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "low-key",
+					"normalizedSurface": "low key",
 					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "low-key",
-						"family": "Foreign",
-						"kind": "Foreign",
-						"coreFeatures": { "sourceLang": "en" }
+						"canonicalForm": "low key",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
 					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": {},
-			"notes": {
-				"rationale": "low-key modifies überraschend without a German ending, so it is Foreign en, one unit as an English compound."
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

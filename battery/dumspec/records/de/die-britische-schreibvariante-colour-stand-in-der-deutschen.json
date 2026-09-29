@@ -28,8 +28,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -61,7 +61,7 @@
 			},
 			"reading": {},
 			"notes": {
-				"rationale": "A Foreign Canonical Form keeps its source spelling: British colour is not normalized to color."
+				"rationale": "Duden lists colour only inside Pinkcolour, and it takes no German grammar here: Foreign en. A Foreign Canonical Form keeps its source spelling: British colour is not normalized to color."
 			}
 		}
 	],

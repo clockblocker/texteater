@@ -26,8 +26,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -36,7 +36,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"notes": {
-				"rationale": "English chat slang, kept as written: digits are its spelling, not a typo. No German grammar shows: Foreign en."
+				"rationale": "English chat slang, kept as written: digits are its spelling, not a typo. Duden does not list it and no German grammar shows: Foreign en."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

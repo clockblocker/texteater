@@ -30,36 +30,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
 			"notes": {
-				"rationale": "The exact INTJ codec has no abbreviation or foreign feature; preserve the acronymic identity rather than expanding it."
+				"rationale": "Duden does not list OMG, and it takes no German grammar: Foreign en, kept in its written capitals."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "OMG", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "OMG",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "INTJ",
 						"canonicalForm": "OMG",
-						"coreFeatures": { "partType": null }
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "OMG",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "OMG", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

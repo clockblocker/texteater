@@ -59,8 +59,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -69,7 +69,7 @@
 		{
 			"memberSegmentIndices": [47],
 			"notes": {
-				"rationale": "Bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet)."
+				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

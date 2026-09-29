@@ -21,43 +21,44 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"notes": {
-				"rationale": "The fixed ADV route and code-switched English Lemma establish Foreign Yes."
+				"rationale": "Duden does not list remotely, and it takes no German grammar: Foreign en."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"canonicalForm": "remotely",
-						"coreFeatures": {
-							"foreign": "Yes",
-							"numType": null,
-							"pronType": null
-						}
-					},
-					"normalizedSurface": "remotely",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
 				"members": [
 					{ "attested": "remotely", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
-			}
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "remotely",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "remotely",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

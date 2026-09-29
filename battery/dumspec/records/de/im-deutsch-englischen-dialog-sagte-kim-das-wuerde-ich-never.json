@@ -31,38 +31,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"notes": {
+				"rationale": "Duden does not list never, and it takes no German grammar: Foreign en."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "never", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "never",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PART",
 						"canonicalForm": "never",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"partType": null,
-							"polarity": "Neg"
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "never",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "never", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

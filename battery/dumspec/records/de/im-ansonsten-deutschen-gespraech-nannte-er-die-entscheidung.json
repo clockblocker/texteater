@@ -39,8 +39,12 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
 			}
 		],
 		"references": []
@@ -48,6 +52,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
+			"notes": {
+				"rationale": "Duden lists random (beliebig, zufällig) as an indeclinable colloquial adjective, so it is ADJ random, even with wie im Englischen pointing at its source. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -63,16 +70,21 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "random",
-						"family": "Foreign",
-						"kind": "Foreign",
-						"coreFeatures": { "sourceLang": "en" }
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
 					},
-					"surfaceFeatures": null
-				}
-			},
-			"reading": {},
-			"notes": {
-				"rationale": "Predicative random takes no German ending; filling the predicate slot is not grammar: Foreign en."
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

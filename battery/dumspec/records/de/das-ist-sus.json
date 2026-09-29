@@ -13,36 +13,43 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-robust-slang",
 			"memberSegmentIndices": [4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sus" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [4]
-				},
-				"explanation": "The intelligible slang loan sus is the predicative property word after ist, so Dumling's UD-inspired inventory assigns the informative Lexeme/ADJ route. Current Dumgen product policy does not use residual Lexeme/X for an established, syntactically classifiable loan. Source: https://universaldependencies.org/u/pos/ADJ.html"
-			}
+			"notes": {
+				"rationale": "Duden does not list sus, and predicative sus takes no German ending. Filling the slot after ist is not grammar: Foreign en."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "sus", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "sus",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "sus",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
-	]
+	],
+	"noTarget": []
 }

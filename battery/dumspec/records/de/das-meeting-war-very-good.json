@@ -20,8 +20,8 @@
 		"adrs": ["ADR-0035", "ADR-0040", "ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -30,7 +30,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "das agrees with Meeting as a neuter noun, so the loan shows German grammar and is a German NOUN, not Foreign."
+				"rationale": "Duden lists Meeting as a neuter noun, so it is a German NOUN, and das agrees with it as well."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -110,7 +110,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"notes": {
-				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: very is one Foreign unit."
+				"rationale": "very good is free English syntax, not a fixed phrase, so it splits. Duden does not list very: one Foreign unit."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -137,7 +137,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: good is one Foreign unit."
+				"rationale": "very good is free English syntax, not a fixed phrase, so it splits. Duden lists good only in phrases such as good for day: one Foreign unit."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

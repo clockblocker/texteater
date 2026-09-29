@@ -27,8 +27,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -60,7 +60,7 @@
 			},
 			"reading": {},
 			"notes": {
-				"rationale": "Sentence-initial Whatever is position casing, so the Canonical Form is whatever. No German grammar: Foreign en."
+				"rationale": "Sentence-initial Whatever is position casing, so the Canonical Form is whatever. Duden does not list whatever and no German grammar shows: Foreign en."
 			}
 		}
 	],

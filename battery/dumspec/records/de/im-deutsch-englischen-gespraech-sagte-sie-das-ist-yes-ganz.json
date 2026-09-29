@@ -32,41 +32,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
 			"notes": {
-				"rationale": "The overt English particle keeps an English Lemma; its unchanged source-language form is Canonical relative to that Lemma, not a German Variant."
+				"rationale": "Duden does not list yes, and it takes no German grammar: Foreign en."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "yes", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "yes",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PART",
 						"canonicalForm": "yes",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"partType": null,
-							"polarity": "Pos"
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "yes",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "yes", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

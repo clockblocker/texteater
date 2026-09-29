@@ -15,39 +15,57 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-predicative-cringe-click-cringe",
 			"memberSegmentIndices": [6],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Sein" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kommentar" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wirkt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "cringe" },
-						{ "kind": "Punctuation", "text": "." }
-					]
+			"notes": {
+				"rationale": "Duden lists cringe as an indeclinable adjective: predicative ADJ cringe after wirkt. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "cringe", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "cringe",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "cringe",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
 				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [6]
-				},
-				"explanation": "The borrowed property word cringe is predicative after wirkt. Dumling's UD-inspired product inventory therefore uses the informative Lexeme/ADJ route rather than residual X or a nominal analysis. Source: https://universaldependencies.org/u/pos/ADJ.html",
-				"contaminationKeys": ["target-lexeme:cringe"]
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

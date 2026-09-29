@@ -29,8 +29,8 @@
 		"adrs": ["ADR-0045"],
 		"rules": [
 			{
-				"rule": "de/foreign-unless-german-grammar",
-				"hash": "8103bf4a485679d1"
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
 			}
 		],
 		"references": []
@@ -62,7 +62,7 @@
 			},
 			"reading": {},
 			"notes": {
-				"rationale": "A compound fixed in English is one Foreign unit, and it takes no German grammar here."
+				"rationale": "Duden does not list off-grid. A compound fixed in English is one Foreign unit, and it takes no German grammar here."
 			}
 		}
 	],
