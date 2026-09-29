@@ -758,7 +758,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/interjection-counts-its-words",
 		statement:
-			"An interjection stands outside the clause to exclaim, answer or imitate a sound (au, pfui, igitt, hurra, aha, tja, hm, peng, miau) and is an INTJ Lexeme. A response particle that answers a question (ja, nein, doch, jawohl) has partType Res; every other interjection has none. An interjection written in pieces is one Lexeme when a piece is no German word of its own, since it has no Heads to count and no Breakdown: o wei, au weia, oh là là. Its Canonical Form is the dictionary headword, joined where the dictionary joins it (auweia), or the attested spelling when no dictionary has one (o wei, a Lemma apart from o weh). A spaced spelling the dictionary gives for a one-word interjection is a Variant Surface of it: o je and oh je spell oje. Otherwise each word that is an interjection of its own is its own target: o weh gives [o] and [weh], ach je gives [ach] and [je], and a repetition gives one target per occurrence (O wei! O wei!, pfui, pfui, ha ha), while the one written word haha is a Lemma of its own. An established exclamation of several words whose meaning is not their sum is a Locution INTJ (pfui Teufel, ach du liebe Zeit). An expression that also serves as an adverbial inside a clause, with the same meaning, is ADV even standing alone: Gott sei Dank ist niemand verletzt worden makes Gott sei Dank a Locution ADV. A dative after an interjection is free and resolves on its own: weh mir gives [weh] and [mir].",
+			"An interjection stands outside the clause to exclaim, answer or imitate a sound (au, pfui, igitt, hurra, aha, tja, hm, peng, miau) and is an INTJ Lexeme. A response particle that answers a question (ja, nein, doch, jawohl) has partType Res; every other interjection has none. Punctuation separates calls. Interjection pieces with no punctuation between them are one call and one target, whose Canonical Form is the pieces as written, in lexical casing: ha ha, igitt igitt, o weh, o je. Each written shape is a Lemma of its own, so haha, oje and auweia are Lemmas apart from ha ha, o je and au weia; spacing is never a Variant or a Typo. The target is a Lexeme when a piece is no German word of its own (o wei, au weia, oh là là) and a Locution INTJ when every piece is one (ha ha, o weh). Calls separated by punctuation are one target each, of one Lemma: O wei! O wei! and Pfui, pfui! give two targets. An answer keeps its own target before a formula: nein danke gives [nein] and [danke]. An established exclamation of several words whose meaning is not their sum is a Locution INTJ (pfui Teufel, ach du liebe Zeit). An expression that also serves as an adverbial inside a clause, with the same meaning, is ADV even standing alone: Gott sei Dank ist niemand verletzt worden makes Gott sei Dank a Locution ADV. A dative after an interjection is free and resolves on its own: weh mir gives [weh] and [mir].",
 		adrs: ["ADR-0039", "ADR-0041"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
 		records: [
@@ -771,8 +771,12 @@ const locutionsAndSayings: Rule[] = [
 			"de/o-weh-ich-habe-den-schluessel-vergessen",
 			"de/ach-je-das-arme-kind",
 			"de/ha-ha-sehr-witzig",
+			"de/der-zauberer-lachte-ha-ha-und-verbeugte-sich",
 			"de/haha-der-war-gut",
+			"de/vor-dem-schmutzigen-becken-rief-sie-igitt-igitt",
+			"de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
 			"de/pfui-pfui-schaem-dich",
+			"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
 			"de/peng-da-war-der-reifen-geplatzt",
 			"de/pfui-teufel-wie-das-hier-stinkt",
 			"de/ach-du-liebe-zeit-ist-es-schon-so-spaet",
