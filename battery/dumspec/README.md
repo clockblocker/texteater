@@ -8,8 +8,11 @@ Each record is one JSON file under `records/<language>/`, and its path without
 `.json` is its id. It holds the sentence and its Segments, and its targets,
 each a full Dumling Attestation with the Segment of every member. A target
 names its Reading as `reading: { "emojiDescription": "🧵" }`; the loaded
-target carries the Dumling Reading built from its Attestation's Lemma. Point a
-record's `$schema` at `schema/spec-record.<language>.json` for completion.
+target carries the Dumling Reading built from its Attestation's Lemma. The
+Reading may hold its Reading Knowledge as `reading.knowledge`, in dumrel's
+schema; the loader checks it with dumrel against the Reading, and the loaded
+target carries it as `knowledge`. Point a record's `$schema` at
+`schema/spec-record.<language>.json` for completion.
 
 ```ts
 import { findSpecRecord, loadSpecRecords, rules } from "dumspec";

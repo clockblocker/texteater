@@ -49,7 +49,8 @@ One sentence of the golden corpus with its Segments, its targets and their
 notes. A target is a full Dumling Attestation plus the Segment each member
 is; it is never only a Family and Kind. A target also names its Reading by
 the Reading's Emoji Description; a Reviewed target must, a Draft may not yet.
-A record's path is its identity.
+The Reading may carry its Reading Knowledge (Dumrel). A record's path is its
+identity.
 _Avoid_: case, example, gold case, fixture
 
 **Breakdown Record**:

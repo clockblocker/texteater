@@ -13,7 +13,10 @@ import { breakdownRecordFileSchema } from "./record-schema.js";
 import type { BreakdownRecord, BreakdownRecordId } from "./types.js";
 
 const idPattern = /^breakdown\/(de|en|he)\/[a-z0-9]+(?:-[a-z0-9]+)*$/u;
-const fileSchema = breakdownRecordFileSchema(z.unknown(), z.unknown());
+const fileSchema = breakdownRecordFileSchema(z.unknown(), {
+	attestation: z.unknown(),
+	knowledge: z.unknown(),
+});
 const brokenDown: readonly Dumling.Family[] = ["Locution", "Saying"];
 
 /**

@@ -40,15 +40,19 @@ const sourcesSchema = z.strictObject({
 });
 
 /**
- * The Reading a target attests, named by its Emoji Description (ADR 0031).
- * Its Lemma is the target's; the loader checks the Reading with Dumling's
- * `parseUnit`.
+ * The Reading a target attests, named by its Emoji Description (ADR 0031),
+ * and the Reading Knowledge it owns. Its Lemma is the target's; the loader
+ * checks the Reading with Dumling's `parseUnit` and the Knowledge with
+ * dumrel's `parseReadingKnowledge`.
  */
-const readingSchema = z.strictObject({
-	emojiDescription: textSchema.describe(
-		"One to four emoji: the Reading's identity, as Dumling normalizes it",
-	),
-});
+function readingSchema<K extends z.ZodType>(knowledge: K) {
+	return z.strictObject({
+		emojiDescription: textSchema.describe(
+			"One to four emoji: the Reading's identity, as Dumling normalizes it",
+		),
+		knowledge: knowledge.optional(),
+	});
+}
 
 const segmentsSchema = z
 	.array(
@@ -65,12 +69,25 @@ const segmentsSchema = z
 	)
 	.min(1);
 
+/**
+ * What a target holds that another package types: its Attestation (Dumling)
+ * and its Reading Knowledge (dumrel). The loader passes `z.unknown()` and
+ * checks both itself; the JSON Schema emitter passes the owners' schemas.
+ */
+export interface TargetSchemas<A extends z.ZodType, K extends z.ZodType> {
+	attestation: A;
+	knowledge: K;
+}
+
 /** One target: an Attestation, its members' Segments and its Reading. */
-function targetSchema<A extends z.ZodType>(attestation: A) {
+function targetSchema<A extends z.ZodType, K extends z.ZodType>({
+	attestation,
+	knowledge,
+}: TargetSchemas<A, K>) {
 	return z.strictObject({
 		memberSegmentIndices: z.array(indexSchema).min(1),
 		attestation,
-		reading: readingSchema.optional(),
+		reading: readingSchema(knowledge).optional(),
 		grundform: z.boolean().optional(),
 		notes: z
 			.strictObject({
@@ -83,10 +100,13 @@ function targetSchema<A extends z.ZodType>(attestation: A) {
 
 /**
  * The shape of one record file. The loader validates Attestations with
- * Dumling's `parseUnit`; the JSON Schema emitter passes Dumling's Attestation
- * schemas so editors can complete them.
+ * Dumling's `parseUnit` and Reading Knowledge with dumrel; the JSON Schema
+ * emitter passes Dumling's Attestation schemas and dumrel's Reading Knowledge
+ * schema so editors can complete them.
  */
-export function recordFileSchema<A extends z.ZodType>(attestation: A) {
+export function recordFileSchema<A extends z.ZodType, K extends z.ZodType>(
+	target: TargetSchemas<A, K>,
+) {
 	return z.strictObject({
 		$schema: z.string().optional(),
 		sentence: textSchema,
@@ -103,7 +123,7 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
 			}),
 		]),
 		sources: sourcesSchema,
-		targets: z.array(targetSchema(attestation)),
+		targets: z.array(targetSchema(target)),
 		noTarget: z.array(
 			z.strictObject({ segment: indexSchema, reason: textSchema }),
 		),
@@ -115,13 +135,15 @@ export function recordFileSchema<A extends z.ZodType>(attestation: A) {
  * The shape of one Breakdown Record file under `records/breakdown/`: the
  * multiword Lemma, its wording as the sentence, and the wording's Lexeme
  * targets. The loader validates the Lemma and Attestations with Dumling's
- * `parseUnit`; the JSON Schema emitter passes Dumling's Locution and Saying
- * Lemma schemas and its Lexeme Attestation schemas.
+ * `parseUnit` and Reading Knowledge with dumrel; the JSON Schema emitter
+ * passes Dumling's Locution and Saying Lemma schemas, its Lexeme Attestation
+ * schemas and dumrel's Reading Knowledge schema.
  */
 export function breakdownRecordFileSchema<
 	L extends z.ZodType,
 	A extends z.ZodType,
->(lemma: L, attestation: A) {
+	K extends z.ZodType,
+>(lemma: L, target: TargetSchemas<A, K>) {
 	return z.strictObject({
 		$schema: z.string().optional(),
 		lemma,
@@ -129,7 +151,7 @@ export function breakdownRecordFileSchema<
 		segments: segmentsSchema,
 		status: reviewStatusSchema,
 		sources: sourcesSchema,
-		targets: z.array(targetSchema(attestation)),
+		targets: z.array(targetSchema(target)),
 	});
 }
 

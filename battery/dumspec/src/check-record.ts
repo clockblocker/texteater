@@ -1,5 +1,7 @@
 import { checkIfGrundform, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { parseReadingKnowledge, selectKnowledge } from "dumrel";
+import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
@@ -16,7 +18,10 @@ import type {
 } from "./types.js";
 
 const idPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
-const fileSchema = recordFileSchema(z.unknown());
+const fileSchema = recordFileSchema({
+	attestation: z.unknown(),
+	knowledge: z.unknown(),
+});
 
 /**
  * A failed record names its status, its imported cases and the targets that
@@ -293,6 +298,9 @@ export function checkTargets(
 			attestation,
 			memberSegmentIndices: indices,
 			...(reading.value === undefined ? {} : { reading: reading.value }),
+			...(reading.knowledge === undefined
+				? {}
+				: { knowledge: reading.knowledge }),
 			...(target.grundform === undefined
 				? {}
 				: { grundform: target.grundform }),
@@ -304,15 +312,16 @@ export function checkTargets(
 
 /**
  * Builds the target's Reading from its Attestation's Lemma and authored Emoji
- * Description, and checks it with Dumling's Reading schema. A Reviewed target
- * must name one.
+ * Description, checks it with Dumling's Reading schema, and checks its
+ * Knowledge against it. A Reviewed target must name one.
  */
 function checkReading(
-	authored: { emojiDescription: string } | undefined,
+	authored: { emojiDescription: string; knowledge?: unknown } | undefined,
 	attestation: Dumling.Attestation,
 	status: ReviewStatus,
 ): {
 	value?: Dumling.Reading;
+	knowledge?: Dumrel.ReadingKnowledge;
 	issues: { path: string; message: string }[];
 } {
 	if (authored === undefined)
@@ -351,7 +360,69 @@ function checkReading(
 				},
 			],
 		};
-	return { value: reading, issues: [] };
+	if (authored.knowledge === undefined) return { value: reading, issues: [] };
+	const knowledge = checkKnowledge(authored.knowledge, reading);
+	return { value: reading, ...knowledge };
+}
+
+/**
+ * Checks a target's Reading Knowledge against the Reading that owns it with
+ * dumrel's `parseReadingKnowledge`, which rejects an aspect or relation the
+ * Reading's route cannot hold (an `endonym` outside PROPN). Where dumrel has
+ * a Knowledge Policy for the route, each stored relation must also be one the
+ * route requests. The Knowledge is stored as dumrel normalizes it.
+ */
+function checkKnowledge(
+	authored: unknown,
+	reading: Dumling.Reading,
+): {
+	knowledge?: Dumrel.ReadingKnowledge;
+	issues: { path: string; message: string }[];
+} {
+	const at = (path: readonly PropertyKey[]) =>
+		["reading", "knowledge", ...path.slice(path[0] === "knowledge" ? 1 : 0)]
+			.map(String)
+			.join(".");
+	const parsed = parseReadingKnowledge({
+		source: reading,
+		knowledge: authored,
+	});
+	if (!parsed.success)
+		return {
+			issues: parsed.error.issues.map((error) => ({
+				path: at(error.path),
+				message: error.message,
+			})),
+		};
+	const knowledge: Dumrel.ReadingKnowledge = parsed.value;
+	const issues: { path: string; message: string }[] = [];
+	const { language, family, kind } = reading.lemma;
+	const policy = selectKnowledge({
+		route: {
+			language,
+			family,
+			kind,
+		} as Dumrel.KnowledgeSelectionInput["route"],
+	});
+	const requested = policy.success
+		? (policy.value.semanticRelations ?? {})
+		: undefined;
+	for (const relation of Object.keys(knowledge.semanticRelations ?? {}))
+		if (
+			requested &&
+			relation !== "targetKind" &&
+			!Object.hasOwn(requested, relation)
+		)
+			issues.push({
+				path: at(["semanticRelations", relation]),
+				message: `A ${language} ${family} ${kind} Reading has no ${relation} relation`,
+			});
+	if (!sameValue(knowledge, authored))
+		issues.push({
+			path: at([]),
+			message: "Store the Knowledge exactly as dumrel normalizes it",
+		});
+	return { knowledge, issues };
 }
 
 /** Deep equality of JSON values, key order aside. */

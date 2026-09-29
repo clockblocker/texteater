@@ -11,6 +11,7 @@
 			],
 			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
 			"dumrel": ["../dumrel/src/index.ts"],
+			"dumrel/schema": ["../dumrel/src/schemas.ts"],
 			"dumrel/types": ["../dumrel/src/types.ts"]
 		}
 	},

@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 
 export type {
 	AuthoredMember,
@@ -54,6 +55,12 @@ export interface SpecTarget {
 	 * names it; a Draft may not yet.
 	 */
 	reading?: Dumling.Reading;
+	/**
+	 * The Reading Knowledge the Reading owns, authored as `reading.knowledge`
+	 * and checked against the Reading with dumrel. Typed Knowledge lives here;
+	 * a record's `legacy` cases keep theirs verbatim until converted (#700).
+	 */
+	knowledge?: Dumrel.ReadingKnowledge;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */
 	grundform?: boolean;
 	notes?: {

@@ -172,6 +172,58 @@ export const negativeFixtures: {
 		},
 	},
 	{
+		name: "Reading Knowledge with an aspect its route cannot hold",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: { formulaRole: "Thanks" },
+			};
+		},
+	},
+	{
+		name: "Reading Knowledge with an endonym outside PROPN",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {
+					semanticRelations: {
+						endonym: [record.targets[0].attestation.surface.lemma],
+					},
+				},
+			};
+		},
+	},
+	{
+		name: "Reading Knowledge with a relation its route's policy does not request",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {
+					semanticRelations: {
+						holonym: [record.targets[0].attestation.surface.lemma],
+					},
+				},
+			};
+		},
+	},
+	{
+		name: "Reading Knowledge dumrel would normalize",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: { definition: " to watch out " },
+			};
+		},
+	},
+	{
 		name: "a Reviewed record citing no Rule",
 		seed: "de/pass-auf-dich-auf",
 		check: "Uncited",

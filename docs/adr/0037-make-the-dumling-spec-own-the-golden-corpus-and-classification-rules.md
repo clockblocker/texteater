@@ -132,6 +132,13 @@ that reads them. `bun test` parses every authored Lemma and Reading with
 `parseUnit`, every Reading's Knowledge with Dumrel, and checks it against the
 route's Knowledge policy.
 
+Amended on 2026-09-29: a target's typed Reading Knowledge lives on
+`reading.knowledge`, in Dumrel's Reading Knowledge schema. The loader checks it
+with Dumrel against the target's Reading and, where Dumrel has one, the
+route's Knowledge policy. `legacy` keeps an imported Knowledge payload only
+until it is converted there
+([#700](https://github.com/clockblocker/texteater/issues/700)).
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec

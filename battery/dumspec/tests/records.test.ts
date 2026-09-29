@@ -192,6 +192,19 @@ describe("negative fixtures", () => {
 			);
 		});
 
+	test("a target's Reading carries its Knowledge, checked against the Reading", () => {
+		const json = seedJson("de/pass-auf-dich-auf");
+		const knowledge = {
+			definition: "to watch out",
+			conjugationClass: ["Weak" as const],
+		};
+		json.targets[0].reading = { emojiDescription: "👀", knowledge };
+		const checked = checkRecord("de/pass-auf-dich-auf", json);
+		if (!checked.success) throw Error("Expected the record to pass");
+		expect(checked.record.targets[0]?.knowledge).toEqual(knowledge);
+		expect(checked.record.targets[1]).not.toHaveProperty("knowledge");
+	});
+
 	test("the loader reports invalid JSON and every failing Reviewed record at once", () => {
 		const directory = mkdtempSync(join(tmpdir(), "dumspec-records-"));
 		try {

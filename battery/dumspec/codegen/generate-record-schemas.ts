@@ -1,4 +1,5 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readingKnowledgeSchema } from "dumrel/schema";
 import { z } from "zod";
 import {
 	breakdownRecordFileSchema,
@@ -7,7 +8,8 @@ import {
 } from "../src/record-schema.js";
 
 // Emits one record JSON Schema per language, with each target's Attestation
-// drawn from Dumling's per-route schemas, one Breakdown Record Schema per
+// drawn from Dumling's per-route schemas and its Reading Knowledge from
+// dumrel's schema, one Breakdown Record Schema per
 // language, with its Locution and Saying Lemmas and Lexeme Attestations, and
 // one for Text Records, so a record's `$schema` gives editors completion and
 // validation.
@@ -50,13 +52,14 @@ for (const language of ["de", "en", "he"] as const) {
 		return rest.length === 0 ? first : z.union([first, ...rest]);
 	};
 	const { $schema, ...body } = z.toJSONSchema(
-		recordFileSchema(
-			union(
+		recordFileSchema({
+			attestation: union(
 				schemas.map((schema) => schema.attestationSchema),
 				"routes",
 			),
-		),
-		{ io: "input", unrepresentable: "any" },
+			knowledge: readingKnowledgeSchema,
+		}),
+		{ io: "input", unrepresentable: "any", reused: "ref" },
 	);
 	await emit(`spec-record.${language}`, {
 		$schema,
@@ -74,14 +77,17 @@ for (const language of ["de", "en", "he"] as const) {
 					.map((schema) => schema.lemmaSchema),
 				"Locution or Saying routes",
 			),
-			union(
-				schemas
-					.filter(({ route }) => route.startsWith("lexeme/"))
-					.map((schema) => schema.attestationSchema),
-				"Lexeme routes",
-			),
+			{
+				attestation: union(
+					schemas
+						.filter(({ route }) => route.startsWith("lexeme/"))
+						.map((schema) => schema.attestationSchema),
+					"Lexeme routes",
+				),
+				knowledge: readingKnowledgeSchema,
+			},
 		),
-		{ io: "input", unrepresentable: "any" },
+		{ io: "input", unrepresentable: "any", reused: "ref" },
 	);
 	await emit(`breakdown-record.${language}`, {
 		$schema: breakdownSchema,
