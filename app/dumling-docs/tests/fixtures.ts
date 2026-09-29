@@ -9,7 +9,6 @@ export const lemma: Dumling.Lemma<"en", "Lexeme", "VERB"> = {
 		abbr: null,
 		extPos: null,
 		phrasal: null,
-		style: null,
 	},
 };
 export const surface: Dumling.Surface<"en", "Lexeme", "VERB"> = {

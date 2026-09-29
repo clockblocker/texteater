@@ -1,7 +1,4 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { specExample } from "../../../../lib/docs/spec-examples.ts";
-
-const likeVernacularSubordinator = specExample("en/do-it-like-i-showed-you");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Style feature.",
@@ -13,7 +10,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Style\` marks the register, sublanguage, or stylistic coloring associated with a word or form.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feature with eight public values. In Dumling, it may be lexical in \`Lemma.coreFeatures\` or, in principle, inflectional in \`surface.inflectionalFeatures\`, depending on how a language-specific schema exposes it.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feature with eight public values. The abstract feature can be lexical, set on a Lemma, or inflectional, set on a surface. A language-specific schema decides which, if it exposes the feature at all.
 
 ## Values
 
@@ -28,7 +25,6 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feat
 
 If \`style\` is absent or \`undefined\`, Dumling records no style value for that Lemma or surface.
 `,
-	examples: [likeVernacularSubordinator],
 	subsections: [
 		{
 			heading: "Use",
@@ -51,7 +47,7 @@ That is why the abstract feature is not tied to one layer only: a language pack 
 			body: `
 The abstract \`Style\` enum exposes all eight UD values above.
 
-Current concrete Dumling schemas use a narrower core subset on selected English lexeme classes: \`Arch\`, \`Coll\`, \`Expr\`, \`Slng\`, and \`Vrnc\`. The current ID codec serializes that same five-value subset.
+No concrete language route uses \`style\`, so no Dumling Lemma or surface carries a style value today. Where Dumling should record archaism and register is an open question, parked on [#727](https://github.com/clockblocker/texteater/issues/727).
 `,
 		},
 	],

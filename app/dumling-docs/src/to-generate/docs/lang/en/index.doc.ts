@@ -31,9 +31,9 @@ English feature schemas are intentionally narrower than the abstract ontology.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\`, \`style\` | \`number\` |
-| \`VERB\` | \`phrasal\`, \`style\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
-| \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\`, \`style\` | \`degree\` |
+| \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\` | \`number\` |
+| \`VERB\` | \`phrasal\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
+| \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\` | \`degree\` |
 
 English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. The Head of a phrase owns its article: \`the big house\` is the Surface \`house\` with members \`[the, house]\` and \`articleEvidence: { kind: "Owned", member: 0 }\`, and \`the rich\` is ADJ \`rich\` over \`[the, rich]\`. A noun Surface has no article feature, so \`the books\`, \`books\` and \`some books\` attest one Surface \`books\`; a Head without an article has \`articleEvidence: null\`. A proper noun canonically cited with its article (\`the Netherlands\`) has the Core Feature \`article: "Definite"\` and owns \`the\` the same way; one cited bare (\`London\`) has \`article: null\`.
 
@@ -62,7 +62,6 @@ const runLemma = {
 \t\tabbr: null,
 \t\textPos: null,
 \t\tphrasal: null,
-\t\tstyle: null,
 \t},
 } satisfies Dumling.Lemma<"en", "Lexeme", "VERB">;
 
