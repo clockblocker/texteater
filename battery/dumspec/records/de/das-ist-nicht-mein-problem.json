@@ -14,14 +14,19 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
-				"rationale": "Nicht is modeled as PART with polarity Neg rather than as an adverb."
+				"rationale": "nicht negates mein Problem, and it is PART nicht with polarity Neg, not an ADV. It is a target of its own and joins neither ist nor mein Problem."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

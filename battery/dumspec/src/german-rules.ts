@@ -631,7 +631,16 @@ const conjunctionsAndParticles: Rule[] = [
 			"nicht is a PART with polarity Neg, never an ADV, wherever it stands and whatever it negates: Das ist nicht mein Problem gives [nicht] PART nicht, and so do sentence negation (Er kommt nicht) and constituent negation (nicht heute, sondern morgen). It is a single-member target of its own, and it never joins the verb or the word it negates. Where nicht is a fixed member of a Locution or Saying (nicht nur … sondern auch, Der Apfel fällt nicht weit vom Stamm), the Locution and Saying Rules decide the unit.",
 		adrs: [],
 		routes: lexeme("PART"),
-		records: [],
+		records: [
+			"de/das-ist-nicht-mein-problem",
+			"de/heute-faehrt-der-letzte-bus-nicht",
+			"de/der-wartungsbericht-wurde-gestern-nicht-veroeffentlicht",
+			"de/nicht-jeder-vorschlag-wurde-angenommen",
+			"de/die-datei-wurde-nciht-rechtzeitig-gespeichert",
+			"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale",
+			"de/das-historische-woerterbuch-kennzeichnet-nit-ausdruecklich",
+			"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
+		],
 	},
 ];
 

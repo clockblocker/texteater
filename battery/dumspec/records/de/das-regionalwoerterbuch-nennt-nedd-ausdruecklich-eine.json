@@ -26,12 +26,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🚫" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
