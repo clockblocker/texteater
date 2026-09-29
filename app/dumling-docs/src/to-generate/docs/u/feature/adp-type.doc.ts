@@ -2,7 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
 const aufPreposition = specExample("de/das-rote-band-lag-auf-dem-geschenk", 2);
-const entlangPostposition = specExample("de/wir-liefen-den-fluss-entlang");
+const entlangPostposition = specExample("de/den-fluss-entlang-standen-alte-weiden");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal AdpType feature.",

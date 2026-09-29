@@ -23,55 +23,53 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [2, 8],
 			"notes": {
-				"rationale": "Following its accusative complement establishes postpositional entlang."
+				"rationale": "entlang in the verbal bracket is the particle of the dictionary particle verb entlanglaufen (Duden: die Straße entlanglaufen), so liefen … entlang is one VERB target (de/bracket-particle-or-circumposition, de/verb-owns-its-scattered-members), and hasSepPrefix names entlang (de/verb-core-features). den Fluss is its accusative object, outside the target. Contrast Den Fluss entlang standen alte Weiden, where entlang stands outside any bracket and is a postposition."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "entlang",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Post",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "entlang",
-					"spelling": "Canonical",
-					"surfaceFeatures": null
-				},
 				"members": [
+					{ "attested": "liefen", "orthography": "Standard" },
 					{ "attested": "entlang", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Acc",
-							"referent": "Either"
-						},
-						"realizedCase": "Acc"
-					}
-				]
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "liefen entlang",
+					"spelling": "Canonical",
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Plur",
+						"person": "1",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "entlanglaufen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "entlang",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

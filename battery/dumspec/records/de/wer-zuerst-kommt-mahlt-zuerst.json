@@ -14,52 +14,38 @@
 		{ "kind": "ResolvableText", "text": "zuerst" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"reading": { "emojiDescription": "🔗👤" },
+			"memberSegmentIndices": [0, 2, 4, 7, 9],
 			"notes": {
-				"rationale": "Wer heads a free relative clause here, so it is classified as a relative pronoun rather than an interrogative one."
+				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb, so one Saying target spans all its words, and wer has no target of its own (de/saying-needs-uptake, de/locutions-and-sayings-are-made-of-lexemes). The record stays Draft until a proverb collection such as OWID's Sprichwörterbuch is cited."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Wer", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "Wer", "orthography": "Standard" },
+					{ "attested": "zuerst", "orthography": "Standard" },
+					{ "attested": "kommt", "orthography": "Standard" },
+					{ "attested": "mahlt", "orthography": "Standard" },
+					{ "attested": "zuerst", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "wer",
+					"normalizedSurface": "Wer zuerst kommt mahlt zuerst",
 					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": "Nom",
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
-					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "wer",
-						"family": "Lexeme",
-						"kind": "PRON",
-						"coreFeatures": {
-							"pronType": "Rel",
-							"extPos": null,
-							"foreign": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"case": null,
-							"number": null,
-							"gender": "Masc"
-						}
+						"family": "Saying",
+						"kind": "Saying",
+						"canonicalForm": "Wer zuerst kommt, mahlt zuerst",
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

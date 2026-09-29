@@ -85,6 +85,8 @@ const verbs: Rule[] = [
 			"de/nahm-ranzen-pulverhorn-und-flint",
 			"de/fort-geht-nun-die-mutter-und",
 			"de/verbrannt-ist-alles-ganz-und-gar",
+			"de/wir-liefen-den-fluss-entlang",
+			"de/sieh-mal-an-die-kleine-von-nebenan",
 		],
 	},
 	{
@@ -136,6 +138,8 @@ const verbs: Rule[] = [
 			"de/nach-dem-essen-ging-er-kurz-hinaus",
 			"de/das-geht-weit-ueber-meine-kraefte-hinaus",
 			"de/nahm-ranzen-pulverhorn-und-flint",
+			"de/wir-liefen-den-fluss-entlang",
+			"de/den-fluss-entlang-standen-alte-weiden",
 		],
 	},
 	{
@@ -455,6 +459,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/nach-manchem-fehler-lernt-man-schneller",
 			"de/viele-kamen-zu-spaet",
 			"de/wer-war-das",
+			"de/wer-mitkommen-will-meldet-sich-bis-freitag",
 		],
 	},
 	{
@@ -794,6 +799,7 @@ const attestations: Rule[] = [
 			"de/nach-manchem-fehler-lernt-man-schneller",
 			"de/viele-kamen-zu-spaet",
 			"de/wer-war-das",
+			"de/wer-mitkommen-will-meldet-sich-bis-freitag",
 		],
 	},
 	{
@@ -892,6 +898,8 @@ const attestations: Rule[] = [
 			"de/der-laster-fuhr-das-schild-um",
 			"de/sie-umfuhr-die-baustelle-weitraeumig",
 			"de/er-versucht-hinauszulaufen",
+			"de/wir-liefen-den-fluss-entlang",
+			"de/sieh-mal-an-die-kleine-von-nebenan",
 		],
 	},
 	{

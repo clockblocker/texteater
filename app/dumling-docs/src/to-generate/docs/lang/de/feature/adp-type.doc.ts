@@ -2,7 +2,7 @@ import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirror
 import { specExample } from "../../../../../lib/docs/spec-examples.ts";
 
 const aufPreposition = specExample("de/das-rote-band-lag-auf-dem-geschenk", 2);
-const entlangPostposition = specExample("de/wir-liefen-den-fluss-entlang");
+const entlangPostposition = specExample("de/den-fluss-entlang-standen-alte-weiden");
 
 const document = defineLanguageOverlayPage({
 	description: "German AdpType.",

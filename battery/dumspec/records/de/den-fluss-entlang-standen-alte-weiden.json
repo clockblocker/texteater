@@ -1,0 +1,80 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Den Fluss entlang standen alte Weiden.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fluss" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entlang" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "standen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Weiden" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Reviewed",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "01c41fadbcfbdc56"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "🛤" },
+			"notes": {
+				"rationale": "Outside any verbal bracket, den Fluss entlang is a postpositional phrase: entlang is ADP Post and its complement den Fluss takes the accusative the ADP Case Table allows for postpositional entlang (de/bracket-particle-or-circumposition). Contrast Wir liefen den Fluss entlang, where entlang is the particle of entlanglaufen."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "entlang", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "entlang",
+					"spelling": "Canonical",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "entlang",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {
+							"adpType": "Post",
+							"abbr": null,
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}
