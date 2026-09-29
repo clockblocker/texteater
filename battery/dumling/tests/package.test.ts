@@ -47,6 +47,7 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"GrundformAssessmentError",
 		"ParsingError",
 		"UnitKind",
+		"VariantTag",
 		"checkIfGrundform",
 		"parseUnit",
 	]);

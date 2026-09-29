@@ -11,9 +11,9 @@ import type { Surface } from "./types.js";
  * Assesses a validated Surface against its Lemma's canonical realization.
  * Known contrary spelling or grammar returns success with false. Missing,
  * ambiguous, or unrepresentable evidence returns a typed error with issue paths.
- * A supplied Variant spelling of any variantType (Licensed, Historical,
- * Regional, Expressive) is trusted as a spelling of the Lemma; this function
- * does not perform spell checking or infer missing grammar.
+ * A supplied Variant spelling, whatever its tags, is trusted as a spelling of
+ * the Lemma; this function does not perform spell checking or infer missing
+ * grammar.
  * Routes without represented inflection use the canonical form/Variant evidence.
  * A Saying's spelling is compared by its words only (ADR 0039). A German or
  * English ADV or ADJ is assessed from its Lemma's comparability (ADR 0042):

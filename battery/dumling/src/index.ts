@@ -1,6 +1,6 @@
 export { ParsingError } from "common-utils";
 export { checkIfGrundform } from "./check-if-grundform.js";
-export { UnitKind } from "./generated/vocabulary.js";
+export { UnitKind, VariantTag } from "./generated/vocabulary.js";
 export {
 	GrundformAssessmentError,
 	type GrundformIssue,

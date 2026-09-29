@@ -34,6 +34,8 @@ export function outputType(
 							"dumling.de-verbal.surface",
 							"dumling.emoji-description",
 							"dumling.saying.canonical-form",
+							"dumling.variant-tags.order",
+							"dumling.variant-tags.combination",
 							"dumling.normalize-form",
 							"dumling.normalize-emoji-description",
 						]).has(effect[1])

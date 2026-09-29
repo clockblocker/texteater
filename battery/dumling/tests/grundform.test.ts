@@ -57,6 +57,10 @@ function validates(...args: Parameters<typeof surface>): boolean {
 		return false;
 	}
 }
+type VariantTags = Extract<
+	Surface["spelling"],
+	{ kind: "Variant" }
+>["variantTags"];
 function errorOf(value: Surface) {
 	const result = checkIfGrundform(value);
 	if (result.success)
@@ -190,7 +194,7 @@ describe("Grundform assessment", () => {
 				surface("en/Lexeme/NOUN", {
 					canonical: "armour",
 					form: "armor",
-					spelling: { kind: "Variant", variantType: "Licensed" },
+					spelling: { kind: "Variant", variantTags: ["Licensed"] },
 					features: { number: "Sing" },
 				}),
 			),
@@ -200,7 +204,7 @@ describe("Grundform assessment", () => {
 				surface("en/Lexeme/NOUN", {
 					canonical: "armour",
 					form: "armors",
-					spelling: { kind: "Variant", variantType: "Licensed" },
+					spelling: { kind: "Variant", variantTags: ["Licensed"] },
 					features: { number: "Plur" },
 				}),
 			),
@@ -215,19 +219,22 @@ describe("Grundform assessment", () => {
 			),
 		).toEqual({ success: true, value: false });
 	});
-	test("every Variant type is eligible, as Licensed is", () => {
-		for (const variantType of [
-			"Licensed",
-			"Historical",
-			"Regional",
-			"Expressive",
-		] as const)
+	test("every Variant is eligible, whatever its tags", () => {
+		for (const variantTags of [
+			["Licensed"],
+			["Historical"],
+			["Regional"],
+			["Expressive"],
+			["Licensed", "Regional"],
+			["Historical", "Regional"],
+			["Regional", "Expressive"],
+		] as const satisfies readonly VariantTags[])
 			expect(
 				checkIfGrundform(
 					surface("de/Lexeme/SCONJ", {
 						canonical: "dass",
 						form: "daß",
-						spelling: { kind: "Variant", variantType },
+						spelling: { kind: "Variant", variantTags },
 					}),
 				),
 			).toEqual({ success: true, value: true });
@@ -236,6 +243,26 @@ describe("Grundform assessment", () => {
 				surface("de/Lexeme/SCONJ", { canonical: "dass", form: "daß" }),
 			),
 		).toEqual({ success: true, value: false });
+	});
+	test("Variant tags are distinct, in canonical order, and never Licensed with Historical", () => {
+		const variant = (variantTags: readonly string[]) =>
+			validates("de/Lexeme/SCONJ", {
+				canonical: "dass",
+				form: "daß",
+				spelling: {
+					kind: "Variant",
+					variantTags,
+				} as Surface["spelling"],
+			});
+		expect(variant(["Licensed", "Regional", "Expressive"])).toBe(true);
+		expect(variant(["Historical", "Regional", "Expressive"])).toBe(true);
+		expect(variant([])).toBe(false);
+		expect(variant(["Regional", "Regional"])).toBe(false);
+		expect(variant(["Regional", "Licensed"])).toBe(false);
+		expect(variant(["Expressive", "Regional"])).toBe(false);
+		expect(variant(["Licensed", "Historical"])).toBe(false);
+		expect(variant(["Licensed", "Historical", "Regional"])).toBe(false);
+		expect(variant(["Dialectal"])).toBe(false);
 	});
 	test("plural-only English nouns have explicit evidence; German needs a Lemma convention", () => {
 		expect(

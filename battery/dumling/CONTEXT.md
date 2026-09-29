@@ -126,18 +126,21 @@ remains the bare noun or ordinary verb.
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
-mistake; a mistake is a Typo member. It is Licensed when a current standard
-accepts it, national standards included (`zwo`, `auf Grund`, British
-`colour`); Historical when only an earlier standard did (`daß`,
-`Photographie`); Regional when it is a dialect or regional form outside the
-standard (`nit`, `nedd`); and Expressive when letters are stretched for effect
-(`ohhh`, `boahhh`). Every other Surface is spelled Canonical, an archaic
-inflected form (`ward`) included: its age is historical status, not spelling.
-_Avoid_: licensed variant, for Variant in general
+mistake; a mistake is a Typo member. A Variant names every tag that applies.
+Licensed: a current standard accepts it, national standards included (`zwo`,
+`auf Grund`, British `colour`). Historical: only an earlier standard did
+(`daß`, `Photographie`). Regional: a dialect or regional form (`nit`, `nedd`).
+Expressive: letters stretched for effect (`ohhh`, `boahhh`). The tags answer
+different questions, so they combine: Swiss `Strasse` is Licensed and
+Regional, `nit` in a 17th-century text Historical and Regional, `neeee` in a
+Swabian chat Regional and Expressive. Licensed and Historical never combine.
+Every other Surface is spelled Canonical, an archaic inflected form (`ward`)
+included: its age is historical status, not spelling.
+_Avoid_: licensed variant, for Variant in general; Variant type, for its tags
 
 **Grundform**:
 A Surface's realization of its particular Lemma's canonical grammatical form.
-A Variant spelling of any type may realize Grundform. The applicable
+A Variant spelling, whatever its tags, may realize Grundform. The applicable
 inflectional features depend on the language, Family, Kind, and sometimes the
 particular Lemma.
 _Avoid_: Surface Kind, stored Citation/Inflection discriminator

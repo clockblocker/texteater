@@ -26,6 +26,41 @@ export function isSayingCanonicalForm(value: string): boolean {
 export function sayingCanonicalFormError(): string {
 	return "A Saying's Canonical Form has no final punctuation";
 }
+/**
+ * The Variant tags in their canonical order (ADR 0041): a Variant's tags are
+ * listed in this order, so one set always serializes and compares the same.
+ */
+export const variantTagOrder = [
+	"Licensed",
+	"Historical",
+	"Regional",
+	"Expressive",
+] as const;
+type VariantSpelling = { variantTags: readonly string[] };
+/** Each tag follows the one before it in canonical order, so none repeats. */
+export function isVariantTagList({ variantTags }: VariantSpelling): boolean {
+	const ranks = variantTags.map((tag) =>
+		variantTagOrder.indexOf(tag as never),
+	);
+	return ranks.every((rank, index) => rank > (ranks[index - 1] ?? -1));
+}
+export function variantTagListError(): string {
+	return "Variant tags must be distinct and in the order Licensed, Historical, Regional, Expressive";
+}
+/**
+ * Licensed means a current standard accepts the spelling, Historical that only
+ * an earlier standard did, so one spelling is never both.
+ */
+export function isVariantTagCombination({
+	variantTags,
+}: VariantSpelling): boolean {
+	return !(
+		variantTags.includes("Licensed") && variantTags.includes("Historical")
+	);
+}
+export function variantTagCombinationError(): string {
+	return "A Variant is never both Licensed and Historical";
+}
 const presentationMarks = /[\uFE0E\uFE0F]|\p{Emoji_Modifier}/gu;
 /**
  * An Emoji Description compares without variation selectors or skin-tone

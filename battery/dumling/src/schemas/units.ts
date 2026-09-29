@@ -28,10 +28,15 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isSayingCanonicalForm,
+	isVariantTagCombination,
+	isVariantTagList,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	sayingCanonicalFormError,
+	variantTagCombinationError,
+	variantTagListError,
+	variantTagOrder,
 } from "../validation/semantics.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
 import { EnAdpositionFeatureBagsSchema } from "./concrete-language/en/lexeme/adposition.js";
@@ -110,25 +115,31 @@ const articleEvidenceSchema = z.union([
 	}),
 ]);
 /**
- * How a Surface is spelled (ADR 0041, amended 2026-09-29): the Lemma's
- * standard spelling, or a Variant, any other spelling of the same Lemma that
- * is not a mistake (a mistake is a Typo member). A Variant names why it
- * differs: accepted by a current standard (`zwo`, `auf Grund`, British
+ * Why a Variant differs from the Lemma's standard spelling (ADR 0041, amended
+ * 2026-09-29): accepted by a current standard (`zwo`, `auf Grund`, British
  * `colour`), valid under an earlier standard (`daß`, `Photographie`), a
  * dialect or regional form (`nit`, `nedd`), or letters stretched for effect
- * (`ohhh`, `boahhh`).
+ * (`ohhh`, `boahhh`). The declaration order is the tags' canonical order.
+ */
+export const VariantTagSchema = z.enum(variantTagOrder);
+/**
+ * How a Surface is spelled: the Lemma's standard spelling, or a Variant, any
+ * other spelling of the same Lemma that is not a mistake (a mistake is a Typo
+ * member). A Variant names every tag that applies, because the tags answer
+ * different questions: Swiss `Strasse` is Licensed and Regional, `nit` in a
+ * 17th-century text Historical and Regional, `neeee` in a Swabian chat
+ * Regional and Expressive. The tags are distinct, in canonical order, and
+ * never both Licensed and Historical.
  */
 const spellingSchema = z.union([
 	z.strictObject({ kind: z.literal("Canonical") }),
-	z.strictObject({
-		kind: z.literal("Variant"),
-		variantType: z.enum([
-			"Licensed",
-			"Historical",
-			"Regional",
-			"Expressive",
-		]),
-	}),
+	z
+		.strictObject({
+			kind: z.literal("Variant"),
+			variantTags: z.tuple([VariantTagSchema], VariantTagSchema),
+		})
+		.refine(isVariantTagList, { error: variantTagListError })
+		.refine(isVariantTagCombination, { error: variantTagCombinationError }),
 ]);
 const surfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })

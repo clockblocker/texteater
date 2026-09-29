@@ -37,11 +37,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -93,11 +102,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -269,11 +287,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -319,11 +346,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -434,11 +470,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -487,11 +532,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -566,11 +620,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
@@ -706,11 +769,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
@@ -937,11 +1009,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -975,11 +1056,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -1101,11 +1191,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -1205,11 +1304,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -1297,11 +1405,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -1335,11 +1452,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -1417,11 +1543,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -1466,11 +1601,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -1637,11 +1781,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -1688,11 +1841,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -1832,11 +1994,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -1887,11 +2058,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -1980,11 +2160,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -2028,11 +2217,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -2146,11 +2344,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -2242,11 +2449,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -2397,11 +2613,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -2449,11 +2674,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -2610,11 +2844,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -2676,11 +2919,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -2752,11 +3004,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -2790,11 +3051,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -2872,11 +3142,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -2921,11 +3200,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -3010,11 +3298,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
@@ -3158,11 +3455,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
@@ -3389,11 +3695,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -3433,11 +3748,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -3544,11 +3868,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -3582,11 +3915,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -3658,11 +4000,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -3699,11 +4050,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -3778,11 +4138,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -3816,11 +4185,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -3892,11 +4270,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -3935,11 +4322,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -4016,11 +4412,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -4054,11 +4459,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -4130,11 +4544,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -4172,11 +4595,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -4281,11 +4713,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -4324,11 +4765,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -4405,11 +4855,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -4448,11 +4907,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -4529,11 +4997,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -4567,11 +5044,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -4643,11 +5129,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures:
@@ -4783,11 +5278,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures:
@@ -5014,11 +5518,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5052,11 +5565,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5128,11 +5650,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5166,11 +5697,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5242,11 +5782,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5280,11 +5829,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5356,11 +5914,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5394,11 +5961,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5470,11 +6046,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5508,11 +6093,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5584,11 +6178,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5622,11 +6225,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5698,11 +6310,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5736,11 +6357,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5812,11 +6442,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5850,11 +6489,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -5926,11 +6574,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -5964,11 +6621,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -6040,11 +6706,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -6078,11 +6753,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -6166,11 +6850,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -6219,11 +6912,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -6404,11 +7106,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -6448,11 +7159,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -6589,11 +7309,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -6702,11 +7431,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -6781,11 +7519,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -6826,11 +7573,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -6909,11 +7665,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -6950,11 +7715,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -7110,11 +7884,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
@@ -7233,11 +8016,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -7320,11 +8112,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -7366,11 +8167,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -7454,11 +8264,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -7507,11 +8326,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -7696,11 +8524,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -7744,11 +8581,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -7873,11 +8719,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -7914,11 +8769,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -7998,11 +8862,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -8044,11 +8917,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -8216,11 +9098,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -8350,11 +9241,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -8487,11 +9387,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -8536,11 +9445,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -8668,11 +9586,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -8706,11 +9633,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -8788,11 +9724,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -8832,11 +9777,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -8914,11 +9868,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
@@ -8959,11 +9922,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -9046,11 +10018,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -9100,11 +10081,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -9231,11 +10221,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -9269,11 +10268,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -9345,11 +10353,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -9386,11 +10403,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -9465,11 +10491,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -9503,11 +10538,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -9579,11 +10623,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -9620,11 +10673,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -9746,11 +10808,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -9784,11 +10855,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -9860,11 +10940,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -9906,11 +10995,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -10037,11 +11135,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10075,11 +11182,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10151,11 +11267,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10189,11 +11314,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10265,11 +11399,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10303,11 +11446,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10379,11 +11531,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10417,11 +11578,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10493,11 +11663,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10531,11 +11710,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10607,11 +11795,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10645,11 +11842,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10721,11 +11927,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10759,11 +11974,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10835,11 +12059,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10873,11 +12106,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -10949,11 +12191,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -10987,11 +12238,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -11063,11 +12323,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -11101,11 +12370,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -11177,11 +12455,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -11215,11 +12502,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -11291,11 +12587,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -11339,11 +12644,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -11519,11 +12833,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -11563,11 +12886,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -11639,11 +12971,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -11677,11 +13018,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -11753,11 +13103,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -11809,11 +13168,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -11903,11 +13271,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -11941,11 +13318,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -12017,11 +13403,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -12065,11 +13460,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -12151,11 +13555,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -12189,11 +13602,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -12281,11 +13703,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -12347,11 +13778,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -12526,11 +13966,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -12579,11 +14028,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -12670,11 +14128,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -12708,11 +14175,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -12784,11 +14260,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -12822,11 +14307,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -12906,11 +14400,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -12962,11 +14465,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -13066,11 +14578,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: { number: ("Plur" | "Sing") | null } | null;
@@ -13123,11 +14644,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -13255,11 +14785,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -13293,11 +14832,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -13369,11 +14917,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -13407,11 +14964,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -13483,11 +15049,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -13521,11 +15096,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -13623,11 +15207,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
@@ -13708,11 +15301,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
@@ -13843,11 +15445,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -13881,11 +15492,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -13957,11 +15577,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -13995,11 +15624,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14071,11 +15709,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14109,11 +15756,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14185,11 +15841,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14223,11 +15888,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14299,11 +15973,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14337,11 +16020,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14413,11 +16105,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14451,11 +16152,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14527,11 +16237,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14565,11 +16284,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14641,11 +16369,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14679,11 +16416,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14755,11 +16501,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14793,11 +16548,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14869,11 +16633,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -14907,11 +16680,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -14983,11 +16765,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -15021,11 +16812,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -15097,11 +16897,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -15135,11 +16944,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -15211,11 +17029,20 @@ export interface UnitMap {
 				| { kind: "Canonical" }
 				| {
 						kind: "Variant";
-						variantType:
-							| "Licensed"
-							| "Historical"
-							| "Regional"
-							| "Expressive";
+						variantTags: [
+							(
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							),
+							...Array<
+								| "Licensed"
+								| "Historical"
+								| "Regional"
+								| "Expressive"
+							>,
+						];
 				  };
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 		};
@@ -15249,11 +17076,20 @@ export interface UnitMap {
 					| { kind: "Canonical" }
 					| {
 							kind: "Variant";
-							variantType:
-								| "Licensed"
-								| "Historical"
-								| "Regional"
-								| "Expressive";
+							variantTags: [
+								(
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								),
+								...Array<
+									| "Licensed"
+									| "Historical"
+									| "Regional"
+									| "Expressive"
+								>,
+							];
 					  };
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			};
@@ -15303,6 +17139,7 @@ export interface UnitMap {
 }
 
 export type UnitKind = "Lemma" | "Surface" | "Reading" | "Attestation";
+export type VariantTag = "Licensed" | "Historical" | "Regional" | "Expressive";
 export type Language = UnitMap[keyof UnitMap]["Lemma"]["language"];
 export type Family<L extends Language = Language> = L extends Language
 	? {

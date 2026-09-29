@@ -4,7 +4,7 @@ import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
 } from "dumval/compiler";
-import { UnitKindSchema } from "../src/schemas/units.js";
+import { UnitKindSchema, VariantTagSchema } from "../src/schemas/units.js";
 import { validationOperations } from "../src/validation/operations.js";
 import { outputType } from "./emit-types.js";
 import { registrations } from "./operations.js";
@@ -35,6 +35,7 @@ const lines = routes.map(
 );
 const types = `// Generated from canonical Zod unit schemas. Run bun run generate.\nexport interface UnitMap {${lines.join("\n")}}\n
 export type UnitKind=${kinds.map((value) => JSON.stringify(value)).join("|")};
+export type VariantTag=${VariantTagSchema.options.map((value) => JSON.stringify(value)).join("|")};
 export type Language=UnitMap[keyof UnitMap]["Lemma"]["language"];
 export type Family<L extends Language=Language>=L extends Language ? { [R in keyof UnitMap]: UnitMap[R]["Lemma"]["language"] extends L ? UnitMap[R]["Lemma"]["family"] : never }[keyof UnitMap] : never;
 export type Kind<L extends Language=Language,F extends Family<L>=Family<L>>=L extends Language ? F extends Family<L> ? { [R in keyof UnitMap]: UnitMap[R]["Lemma"] extends {language:L;family:F} ? UnitMap[R]["Lemma"]["kind"] : never }[keyof UnitMap] : never : never;
@@ -51,7 +52,7 @@ const outputs = {
 	]),
 	"units.ts": types,
 	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
-	"vocabulary.ts": `// Generated from canonical Zod enums. Run bun run generate.\nexport const UnitKind = ${JSON.stringify(UnitKindSchema.enum)} as const;\nexport type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];\n`,
+	"vocabulary.ts": `// Generated from canonical Zod enums. Run bun run generate.\nexport const UnitKind = ${JSON.stringify(UnitKindSchema.enum)} as const;\nexport type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];\nexport const VariantTag = ${JSON.stringify(VariantTagSchema.enum)} as const;\nexport type VariantTag = (typeof VariantTag)[keyof typeof VariantTag];\n`,
 	...Object.fromEntries(
 		routes.map((route) => [
 			`schemas/${route.modulePath.replace(/\.js$/, ".ts")}`,

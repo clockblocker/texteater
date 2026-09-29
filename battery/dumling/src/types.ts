@@ -10,5 +10,6 @@ export type {
 	Unit,
 	UnitKind,
 	UnitRoute,
+	VariantTag,
 } from "./generated/units.js";
 export type { GrundformIssue, GrundformResult } from "./grundform/result.js";

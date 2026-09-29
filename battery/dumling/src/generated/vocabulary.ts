@@ -6,3 +6,10 @@ export const UnitKind = {
 	Attestation: "Attestation",
 } as const;
 export type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];
+export const VariantTag = {
+	Licensed: "Licensed",
+	Historical: "Historical",
+	Regional: "Regional",
+	Expressive: "Expressive",
+} as const;
+export type VariantTag = (typeof VariantTag)[keyof typeof VariantTag];

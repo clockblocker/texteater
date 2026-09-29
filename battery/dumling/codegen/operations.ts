@@ -32,10 +32,14 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isSayingCanonicalForm,
+	isVariantTagCombination,
+	isVariantTagList,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	sayingCanonicalFormError,
+	variantTagCombinationError,
+	variantTagListError,
 } from "../src/validation/semantics.js";
 
 export const registrations = [
@@ -156,6 +160,20 @@ export const registrations = [
 		implementation: isEmojiDescription,
 		error: emojiDescriptionError,
 		name: "dumling.emoji-description",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isVariantTagList,
+		error: variantTagListError,
+		name: "dumling.variant-tags.order",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isVariantTagCombination,
+		error: variantTagCombinationError,
+		name: "dumling.variant-tags.combination",
 		version: 1,
 	},
 	{

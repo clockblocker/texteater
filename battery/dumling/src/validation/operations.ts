@@ -32,10 +32,14 @@ import {
 	isGermanVerbalSurface,
 	isHebrewValencyAttestation,
 	isSayingCanonicalForm,
+	isVariantTagCombination,
+	isVariantTagList,
 	nonEmptyFeatureBagError,
 	normalizeEmojiDescription,
 	normalizeForm,
 	sayingCanonicalFormError,
+	variantTagCombinationError,
+	variantTagListError,
 } from "./semantics.js";
 
 function check(
@@ -112,6 +116,11 @@ export const validationOperations: ValidationOperations = {
 	"dumling.emoji-description": check(
 		isEmojiDescription,
 		emojiDescriptionError,
+	),
+	"dumling.variant-tags.order": check(isVariantTagList, variantTagListError),
+	"dumling.variant-tags.combination": check(
+		isVariantTagCombination,
+		variantTagCombinationError,
 	),
 	"dumling.normalize-form": (value) => ({
 		value: normalizeForm(value as string),
