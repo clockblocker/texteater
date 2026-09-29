@@ -69,7 +69,7 @@ export const kindDefinitions: readonly KindDefinition[] = [
 	morpheme("Duplifix", "An affix made by repeating part of the stem."),
 	locution("ADJ", "`fix und fertig`"),
 	locution("ADV", "`zum Teil`, `ganz und gar`"),
-	locution("INTJ", "`Herzlichen Dank`, `es tut mir leid`"),
+	locution("INTJ", "`Herzlichen Dank`, `tut mir leid`"),
 	locution("NOUN", "`weißer Rabe`, `blinder Passagier`"),
 	locution("VERB", "`den Faden verlieren`, `eine Entscheidung treffen`"),
 	locution("ADP", "`in Bezug auf`, `von … an`"),

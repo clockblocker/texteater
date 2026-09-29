@@ -40,7 +40,7 @@ A Locution's Kind is the part of speech the whole acts as:
 | ADP | `in Bezug auf`, and circumpositions: `von … an`, `um … willen` |
 | CCONJ, SCONJ | `entweder … oder`; `so dass`, `als ob`, `um … zu`, `je … desto` (its clause is verb-final) |
 | NUM | `zwölf bis sechzehn`, `vier Komma neun` |
-| INTJ | `herzlichen Dank`, `guten Morgen`, `es tut mir leid`, `wie geht's` |
+| INTJ | `herzlichen Dank`, `guten Morgen`, `tut mir leid`, `wie geht's` |
 
 Its route borrows the inflection features and Grundform rule of the Lexeme
 route with the same Kind, narrowed to what a Locution varies. VERB and NOUN
@@ -78,7 +78,7 @@ Reading stays its Emoji Description
   Collocation. `zum Teil` and `so dass` have none.
 - Saying Type, Proverb or WingedWord, with an optional attribution.
 - Formula Role on INTJ routes: greeting, farewell, thanks, apology, sympathy,
-  request and the like. `es tut mir leid` is one Lemma with an apology Reading
+  request and the like. `tut mir leid` is one Lemma with an apology Reading
   and a sympathy Reading.
 
 **Variation.** A Surface may differ from its Locution's Canonical Form in the
@@ -187,7 +187,7 @@ Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-
 Amended on 2026-09-27 (#668): a fixed adverbial keeps Kind ADV even as a
 standalone reply. `auf keinen Fall` (*Gibst du es ihm? – Auf keinen Fall.*)
 and `wie dem auch sei` are Locution ADV with no comparison forms, never INTJ,
-and INTJ stays for true routine formulas (`guten Morgen`, `es tut mir leid`).
+and INTJ stays for true routine formulas (`guten Morgen`, `tut mir leid`).
 Words that only stand together are compositional and resolve word by word: a
 repeated `danke, danke` and `nein danke`. A Canonical Form takes the word's
 lexical casing ([ADR 0002](./0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md),
@@ -195,7 +195,7 @@ amended by #638), so the INTJ examples above are cited `herzlichen Dank`,
 `guten Morgen`, `wie geht's` and `danke`.
 
 Amended on 2026-09-29 (#662): the apology and sympathy formula is the Lemma
-`es tut mir leid`, as Duden cites it under *leidtun*, and *Tut mir leid*
-without `es` attests it Partially over `[tut, mir, leid]`. DWDS, which gives
-many proverbs an entry of their own, joins the reference collections a
+`tut mir leid`. A subject *es* or *das* before it is a PRON of its own:
+*Es tut mir leid* gives `[Es]` PRON `es` and `[tut, mir, leid]`. DWDS, which
+gives many proverbs an entry of their own, joins the reference collections a
 Reviewed Saying record may cite.
