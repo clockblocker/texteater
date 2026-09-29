@@ -491,3 +491,126 @@ export function fusedSiblings(
 export function isAdpositionPiece(piece: Piece): boolean {
 	return isAdposition(piece.surface);
 }
+
+/** The first piece of its clause: a capitalized one may be a verb, not a noun. */
+export function clauseInitial(sentence: Sentence, piece: Piece): boolean {
+	const previous = sentence.pieces[piece.id - 2];
+	return previous === undefined || previous.clause !== piece.clause;
+}
+
+/**
+ * The hosts an idiom slot offers a noun. v2 left out every capitalized
+ * piece as a noun, so a clause-initial imperative (`Blase … Trübsal`) could
+ * never host; `fixed` keeps clause-initial pieces.
+ */
+export function idiomHosts(
+	sentence: Sentence,
+	piece: Piece,
+	fixed: boolean,
+): Piece[] {
+	return window(sentence, piece, 10, 10).filter(
+		(other) =>
+			(!nounLike(other) || (fixed && clauseInitial(sentence, other))) &&
+			!isArticle(other, 2),
+	);
+}
+
+/** Non-adjacent correlators v2 missed: the old spelling daß. */
+export function oldSpellingCorrelators(sentence: Sentence): PairCandidate[] {
+	const pairs: PairCandidate[] = [];
+	for (const left of sentence.pieces)
+		if (lower(left) === "so")
+			for (const right of sentence.pieces)
+				if (
+					right.id > left.id + 1 &&
+					right.id - left.id <= 20 &&
+					lower(right) === "daß"
+				)
+					pairs.push({
+						kind: "correlator",
+						left,
+						right,
+						name: "so … daß",
+					});
+	return pairs;
+}
+
+const numberWords = new Set(
+	"null eins ein eine zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn neunzehn zwanzig dreißig vierzig fünfzig sechzig siebzig achtzig neunzig hundert tausend".split(
+		" ",
+	),
+);
+
+export const isNumberPiece = (piece: Piece) =>
+	/^\p{N}+([.,]\p{N}+)?$/u.test(piece.text) || numberWords.has(lower(piece));
+
+/** Number, `Komma` or `bis`, number: one Locution/NUM (drei Komma vierzehn, zwölf bis sechzehn). */
+export function numberRanges(sentence: Sentence): (readonly number[])[] {
+	const ranges: (readonly number[])[] = [];
+	const { pieces } = sentence;
+	for (const [index, middle] of pieces.entries()) {
+		const left = pieces[index - 1];
+		const right = pieces[index + 1];
+		if (
+			left &&
+			right &&
+			(lower(middle) === "komma" || lower(middle) === "bis") &&
+			isNumberPiece(left) &&
+			isNumberPiece(right)
+		)
+			ranges.push([left.id, middle.id, right.id]);
+	}
+	return ranges;
+}
+
+/** A piece with no letter or digit: a symbol, which takes no article. */
+export const isSymbolPiece = (piece: Piece) =>
+	!/[\p{L}\p{N}]/u.test(piece.text);
+
+/** An abbreviation's shape: letters with inner dots, or a short word ending in a dot. */
+export const isAbbreviationPiece = (piece: Piece) =>
+	/\p{L}\.\p{L}/u.test(piece.text) || /^\p{L}{1,5}\.$/u.test(piece.text);
+
+/**
+ * The written words of a sentence, each the piece ids of one word: a fused
+ * word (`zu` + `m`) is one word.
+ */
+export function writtenWords(sentence: Sentence): number[][] {
+	const words: number[][] = [];
+	for (const piece of sentence.pieces) {
+		const last = words[words.length - 1];
+		const previous = last
+			? sentence.pieces[(last[last.length - 1] ?? 0) - 1]
+			: undefined;
+		if (
+			last &&
+			previous &&
+			piece.fusedWord &&
+			previous.fusedWord &&
+			previous.segment === piece.segment - 1
+		)
+			last.push(piece.id);
+		else words.push([piece.id]);
+	}
+	return words;
+}
+
+/** Every clause-internal run of 2 to 4 written words, as piece ids. */
+export function contiguousSpans(sentence: Sentence, most = 4): number[][] {
+	const words = writtenWords(sentence);
+	const spans: number[][] = [];
+	for (let start = 0; start < words.length; start++)
+		for (
+			let length = 2;
+			length <= most && start + length <= words.length;
+			length++
+		) {
+			const run = words.slice(start, start + length);
+			const clauses = new Set(
+				run.flat().map((id) => sentence.pieces[id - 1]?.clause),
+			);
+			if (clauses.size !== 1) break;
+			spans.push(run.flat());
+		}
+	return spans;
+}

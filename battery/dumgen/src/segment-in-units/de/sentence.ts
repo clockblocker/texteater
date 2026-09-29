@@ -139,3 +139,37 @@ export function looksNominal(sentence: Sentence, piece: Piece): boolean {
 	const previous = sentence.pieces[piece.id - 2];
 	return previous !== undefined && previous.clause === piece.clause;
 }
+
+/**
+ * The sentence with the given pieces in ⟦ ⟧, adjacent marked pieces sharing
+ * one pair: `Sie ⟦hat den Faden verloren⟧.`, `⟦hat⟧ gestern ⟦verloren⟧`.
+ */
+export function markedText(
+	sentence: Sentence,
+	marked: readonly number[],
+): string {
+	const segments = new Set(
+		sentence.pieces
+			.filter((piece) => marked.includes(piece.id))
+			.map((piece) => piece.segment),
+	);
+	const last = Math.max(...segments);
+	let text = "";
+	let open = false;
+	for (const [index, segment] of sentence.segments.entries()) {
+		if (segments.has(index) && !open) {
+			text += "⟦";
+			open = true;
+		}
+		if (open && !segments.has(index) && segment.kind !== "Whitespace") {
+			text = text.replace(/(\s*)$/u, "⟧$1");
+			open = false;
+		}
+		text += segment.text;
+		if (open && index === last) {
+			text += "⟧";
+			open = false;
+		}
+	}
+	return text;
+}

@@ -600,8 +600,18 @@ export function pairedUnits(
 ): {
 	both: number;
 	neither: number;
-	leftOnly: { id: string; text: string }[];
-	rightOnly: { id: string; text: string }[];
+	leftOnly: { id: string; text: string; bucket: string }[];
+	rightOnly: { id: string; text: string; bucket: string }[];
+	buckets: Record<
+		string,
+		{
+			units: number;
+			left: number;
+			right: number;
+			leftOnly: number;
+			rightOnly: number;
+		}
+	>;
 } {
 	const majority = (run: LabRun, policy: string) => {
 		const result = new Map<string, boolean>();
@@ -636,8 +646,18 @@ export function pairedUnits(
 	const summary = {
 		both: 0,
 		neither: 0,
-		leftOnly: [] as { id: string; text: string }[],
-		rightOnly: [] as { id: string; text: string }[],
+		leftOnly: [] as { id: string; text: string; bucket: string }[],
+		rightOnly: [] as { id: string; text: string; bucket: string }[],
+		buckets: {} as Record<
+			string,
+			{
+				units: number;
+				left: number;
+				right: number;
+				leftOnly: number;
+				rightOnly: number;
+			}
+		>,
 	};
 	for (const [key, leftMatch] of a) {
 		const rightMatch = b.get(key);
@@ -646,10 +666,27 @@ export function pairedUnits(
 		const labCase = cases.get(id);
 		const unit = labCase?.idealOutput.units[Number(index)];
 		const text = `${unit?.segments.map((segment) => labCase?.input.segments[segment]?.text).join(" ")} ${unit ? keyOf(unit.route) : ""}`;
+		const bucket = labCase && unit ? bucketOf(labCase, unit) : "?";
+		const tally = summary.buckets[bucket] ?? {
+			units: 0,
+			left: 0,
+			right: 0,
+			leftOnly: 0,
+			rightOnly: 0,
+		};
+		summary.buckets[bucket] = tally;
+		tally.units++;
+		if (leftMatch) tally.left++;
+		if (rightMatch) tally.right++;
 		if (leftMatch && rightMatch) summary.both++;
 		else if (!leftMatch && !rightMatch) summary.neither++;
-		else if (leftMatch) summary.leftOnly.push({ id, text });
-		else summary.rightOnly.push({ id, text });
+		else if (leftMatch) {
+			tally.leftOnly++;
+			summary.leftOnly.push({ id, text, bucket });
+		} else {
+			tally.rightOnly++;
+			summary.rightOnly.push({ id, text, bucket });
+		}
 	}
 	return summary;
 }
@@ -740,3 +777,32 @@ export const byPhenomenon = (labCase: LabCase, unit: Unit): string[] => {
 		tags.push("participle-shaped ADJ");
 	return tags;
 };
+
+/**
+ * The round-2 buckets of a gold unit: one piece, multi-piece Lexeme,
+ * contiguous or discontinuous Locution, Saying.
+ */
+export function bucketOf(labCase: LabCase, unit: Unit): string {
+	if (unit.segments.length === 1) return "one piece";
+	if (unit.route === "Unresolved") return "Unresolved";
+	if (unit.route.family === "Saying") return "Saying";
+	if (unit.route.family === "Locution")
+		return contiguous(labCase, unit)
+			? "Locution contiguous"
+			: "Locution discontinuous";
+	return `${unit.route.family} multi-piece`;
+}
+
+/** Exact two-sided McNemar p for b and c discordant pairs. */
+export function mcnemar(b: number, c: number): number {
+	const n = b + c;
+	if (n === 0) return 1;
+	const k = Math.min(b, c);
+	let tail = 0;
+	let term = 0.5 ** n;
+	for (let i = 0; i <= k; i++) {
+		tail += term;
+		term = (term * (n - i)) / (i + 1);
+	}
+	return Math.min(1, 2 * tail);
+}

@@ -75,7 +75,7 @@ const auxiliaryQuestion3 = (piece: string) =>
  * v3: a host takes at most one particle and one governed preposition, the
  * most probable (`sehnen sich nach … nach`).
  */
-function oneSatellitePerHost(links: readonly SlotLink[]): SlotLink[] {
+export function oneSatellitePerHost(links: readonly SlotLink[]): SlotLink[] {
 	const best = new Map<string, SlotLink>();
 	for (const link of links) {
 		if (link.kind !== "preposition" && link.kind !== "particle") continue;
@@ -152,9 +152,9 @@ function matchedPairs(
 	return accepted;
 }
 
-type Family = "Lexeme" | "Locution" | "Saying";
+export type Family = "Lexeme" | "Locution" | "Saying";
 
-type Policy = {
+export type Policy = {
 	readonly satellite: number;
 	readonly idiom: number | null;
 	readonly expression: number | null;
@@ -162,7 +162,7 @@ type Policy = {
 	readonly absorb: boolean;
 };
 
-const policies: Readonly<Record<string, Policy>> = {
+export const policies: Readonly<Record<string, Policy>> = {
 	sat: {
 		satellite: 0.5,
 		idiom: null,
@@ -214,218 +214,301 @@ const policies: Readonly<Record<string, Policy>> = {
 	},
 };
 
+/** What v3's two requests answered, and what code derived from it. */
+export type CandidatesCore = {
+	readonly sentence: Sentence;
+	readonly state: Record<string, import("promptsmith/typesafe").EntryType>;
+	readonly ref: Reference;
+	readonly first: Answers;
+	readonly second: Answers;
+	readonly slots: readonly Slot[];
+	readonly pairs: readonly PairCandidate[];
+	readonly spans: readonly SayingSpan[];
+	readonly slotAnswers: readonly SlotLink[];
+	readonly links: readonly LinkJudgment[];
+	readonly fixed: ReadonlyMap<number, number>;
+	readonly accepted: readonly (readonly [
+		number,
+		number,
+		PairCandidate["kind"],
+	])[];
+};
+
+/** v2/v3's two requests, unchanged, so their answers stay cache hits. */
+export async function candidatesCore(
+	input: Parameters<Arm["run"]>[0],
+	context: Parameters<Arm["run"]>[1],
+): Promise<CandidatesCore> {
+	const sentence = sentenceOf(input);
+	const { state, ref } = judgeState(sentence, context);
+	const generation = Number(option(context.options, "gen", "2"));
+	const slots = slotsOf(sentence, generation);
+	const pairs = pairCandidatesOf(sentence, 2);
+	const spans = sayingSpans(sentence);
+	const first = await context.jev.ask({
+		stage: "candidates",
+		state,
+		questions: questionsOf(sentence, ref, slots, pairs, spans, generation),
+		repetition: context.repetition,
+		calls: context.calls,
+	});
+	const fixed = new Map(
+		sentence.pieces.map((piece) => [
+			piece.id,
+			noulOf(first, fixedId(piece.id)),
+		]),
+	);
+	const flagged = sentence.pieces
+		.filter((piece) => (fixed.get(piece.id) ?? 0) >= 0.3)
+		.sort((a, b) => (fixed.get(b.id) ?? 0) - (fixed.get(a.id) ?? 0))
+		.slice(0, 14)
+		.sort((a, b) => a.id - b.id);
+	const expressionQuestions: Questions = {};
+	for (const [position, a] of flagged.entries())
+		for (const b of flagged.slice(position + 1))
+			expressionQuestions[expressionId(a.id, b.id)] = noul(
+				`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
+			);
+	const second = await context.jev.ask({
+		stage: "expressions",
+		state,
+		questions: expressionQuestions,
+		repetition: context.repetition,
+		calls: context.calls,
+	});
+	const links: LinkJudgment[] = flagged.flatMap((a, position) =>
+		flagged.slice(position + 1).map((b) => ({
+			left: a.id,
+			right: b.id,
+			probability: noulOf(second, expressionId(a.id, b.id)),
+		})),
+	);
+	const slotAnswers =
+		generation >= 3
+			? oneSatellitePerHost(slotLinks(slots, first))
+			: slotLinks(slots, first);
+	return {
+		sentence,
+		state,
+		ref,
+		first,
+		second,
+		slots,
+		pairs,
+		spans,
+		slotAnswers,
+		links,
+		fixed,
+		accepted: matchedPairs(pairs, first, 0.5),
+	};
+}
+
+/** The pieces v2/v3 takes as Saying spans at a floor, most probable first. */
+export function selectedSayings(
+	core: Pick<CandidatesCore, "spans" | "first">,
+	floor: number,
+): number[][] {
+	const covered = new Set<number>();
+	const chosen: number[][] = [];
+	for (const span of [...core.spans]
+		.filter((span) => noulOf(core.first, sayingId(span)) >= floor)
+		.sort(
+			(a, b) =>
+				noulOf(core.first, sayingId(b)) -
+					noulOf(core.first, sayingId(a)) ||
+				a.pieces.length - b.pieces.length,
+		)) {
+		if (span.pieces.some((piece) => covered.has(piece.id))) continue;
+		for (const piece of span.pieces) covered.add(piece.id);
+		chosen.push(span.pieces.map((piece) => piece.id));
+	}
+	return chosen;
+}
+
+/** Everything one assembly policy links; each edge list is already thresholded. */
+export type AssemblyInput = {
+	/** Satellite links (article, particle, auxiliary, …): Lexeme structure. */
+	readonly satellites: readonly (readonly [number, number])[];
+	/** Accepted code-proposed pairs; correlators and circumpositions mark a Locution. */
+	readonly accepted: CandidatesCore["accepted"];
+	/** Expression links (idiom hosts, expression pairs, span units): Locution. */
+	readonly expression: readonly (readonly [number, number])[];
+	/** Saying spans, each a list of piece ids. */
+	readonly sayings: readonly (readonly number[])[];
+	readonly absorb: boolean;
+};
+
+/**
+ * Connected components of every link, with fused siblings and a member
+ * noun's opening preposition absorbed into expressions, and the Family each
+ * group was built as.
+ */
+export function assemble(
+	sentence: Sentence,
+	articleOf: ReadonlyMap<number, number>,
+	input: AssemblyInput,
+): { partition: Partition; familyOf: (group: readonly number[]) => Family } {
+	const ids = sentence.pieces.map((piece) => piece.id);
+	const siblings = fusedSiblings(sentence);
+	const edges: (readonly [number, number])[] = [
+		...input.satellites,
+		...input.accepted.map(([left, right]) => [left, right] as const),
+		...superlativeLinks(sentence),
+	];
+	const locutionPieces = new Set(
+		input.accepted
+			.filter(
+				([, , kind]) =>
+					kind === "correlator" || kind === "circumposition",
+			)
+			.flatMap(([left, right]) => [left, right]),
+	);
+	const sayingPieces = new Set<number>();
+	const expression: (readonly [number, number])[] = [...input.expression];
+	for (const span of input.sayings)
+		for (const id of span) {
+			sayingPieces.add(id);
+			expression.push([span[0] ?? id, id]);
+		}
+	if (input.absorb) {
+		const members = new Set(expression.flat());
+		for (const id of [...members]) {
+			for (const sibling of siblings.get(id) ?? [])
+				expression.push([id, sibling]);
+			const piece = sentence.pieces[id - 1];
+			if (!piece || !nounLike(piece)) continue;
+			const start = Math.min(articleOf.get(id) ?? id, id);
+			const before = sentence.pieces[start - 2];
+			if (
+				before &&
+				before.clause === piece.clause &&
+				isAdpositionPiece(before)
+			) {
+				expression.push([id, before.id]);
+				for (const sibling of siblings.get(before.id) ?? [])
+					expression.push([id, sibling]);
+			}
+		}
+	}
+	for (const id of expression.flat()) locutionPieces.add(id);
+	return {
+		partition: partitionOf(ids, [...edges, ...expression]),
+		familyOf: (group) =>
+			group.length === 1
+				? "Lexeme"
+				: group.some((id) => sayingPieces.has(id))
+					? "Saying"
+					: group.some((id) => locutionPieces.has(id))
+						? "Locution"
+						: "Lexeme",
+	};
+}
+
+/** v2/v3's assembly input for one of its named policies. */
+export function policyInput(
+	core: CandidatesCore,
+	policy: Policy,
+): AssemblyInput {
+	const expression: (readonly [number, number])[] = [];
+	if (policy.idiom !== null) {
+		const floor = policy.idiom;
+		for (const link of core.slotAnswers)
+			if (link.kind === "idiom" && link.share >= floor)
+				expression.push([link.from, link.to]);
+	}
+	if (policy.expression !== null)
+		for (const link of core.links)
+			if (
+				link.probability >= policy.expression &&
+				(core.fixed.get(link.left) ?? 0) >= 0.5 &&
+				(core.fixed.get(link.right) ?? 0) >= 0.5
+			)
+				expression.push([link.left, link.right]);
+	return {
+		satellites: core.slotAnswers
+			.filter(
+				(link) =>
+					link.kind !== "idiom" && link.share >= policy.satellite,
+			)
+			.map((link) => [link.from, link.to] as const),
+		accepted: core.accepted,
+		expression,
+		sayings:
+			policy.saying === null ? [] : selectedSayings(core, policy.saying),
+		absorb: policy.absorb,
+	};
+}
+
+export const articleHosts = (core: Pick<CandidatesCore, "slotAnswers">) =>
+	new Map(
+		core.slotAnswers
+			.filter((link) => link.kind === "article")
+			.map((link) => [link.to, link.from]),
+	);
+
+/** Code names the Family from how the unit was built; jev only the Kind within it. */
+export const structuralRoute =
+	(
+		distributions: ReadonlyMap<string, Readonly<Record<string, number>>>,
+		jevRoute: (group: readonly number[]) => RouteKey,
+		familyOf: (group: readonly number[]) => Family,
+	) =>
+	(group: readonly number[]): RouteKey => {
+		if (group.length === 1) return jevRoute(group);
+		const family = familyOf(group);
+		if (family === "Saying") return "Saying/Saying";
+		const distribution = distributions.get(groupKey(group)) ?? {};
+		const best = argmax(
+			Object.fromEntries(
+				Object.entries(distribution).filter(([key]) =>
+					key.startsWith(`${family}/`),
+				),
+			),
+		);
+		return best.key || jevRoute(group);
+	};
+
 export const candidates2Arm: Arm = {
 	id: "candidates2",
 	summary:
 		"candidates plus Saying spans, idiom/collocation hosts for nouns, circumpositions, names, subordinator pairs, superlative am, and fused/preposition absorption inside expressions",
 	async run(input, context) {
-		const sentence = sentenceOf(input);
-		const { state, ref } = judgeState(sentence, context);
-		const generation = Number(option(context.options, "gen", "2"));
-		const slots = slotsOf(sentence, generation);
-		const pairs = pairCandidatesOf(sentence, 2);
-		const spans = sayingSpans(sentence);
-		const first = await context.jev.ask({
-			stage: "candidates",
-			state,
-			questions: questionsOf(
-				sentence,
-				ref,
-				slots,
-				pairs,
-				spans,
-				generation,
-			),
-			repetition: context.repetition,
-			calls: context.calls,
-		});
-		const fixed = new Map(
-			sentence.pieces.map((piece) => [
-				piece.id,
-				noulOf(first, fixedId(piece.id)),
+		const core = await candidatesCore(input, context);
+		const { sentence } = core;
+		const articleOf = articleHosts(core);
+		const built = new Map(
+			Object.entries(policies).map(([name, policy]) => [
+				name,
+				assemble(sentence, articleOf, policyInput(core, policy)),
 			]),
 		);
-		const flagged = sentence.pieces
-			.filter((piece) => (fixed.get(piece.id) ?? 0) >= 0.3)
-			.sort((a, b) => (fixed.get(b.id) ?? 0) - (fixed.get(a.id) ?? 0))
-			.slice(0, 14)
-			.sort((a, b) => a.id - b.id);
-		const expressionQuestions: Questions = {};
-		for (const [position, a] of flagged.entries())
-			for (const b of flagged.slice(position + 1))
-				expressionQuestions[expressionId(a.id, b.id)] = noul(
-					`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
-				);
-		const second = await context.jev.ask({
-			stage: "expressions",
-			state,
-			questions: expressionQuestions,
-			repetition: context.repetition,
-			calls: context.calls,
-		});
-		const links: LinkJudgment[] = flagged.flatMap((a, position) =>
-			flagged.slice(position + 1).map((b) => ({
-				left: a.id,
-				right: b.id,
-				probability: noulOf(second, expressionId(a.id, b.id)),
-			})),
-		);
-		const slotAnswers =
-			generation >= 3
-				? oneSatellitePerHost(slotLinks(slots, first))
-				: slotLinks(slots, first);
-		const articleOf = new Map(
-			slotAnswers
-				.filter((link) => link.kind === "article")
-				.map((link) => [link.to, link.from]),
-		);
-		const siblings = fusedSiblings(sentence);
-		const ids = sentence.pieces.map((piece) => piece.id);
-		const partitions = new Map<string, Partition>();
-		const families = new Map<
-			string,
-			(group: readonly number[]) => Family
-		>();
-		const accepted = matchedPairs(pairs, first, 0.5);
-		for (const [name, policy] of Object.entries(policies)) {
-			const edges: (readonly [number, number])[] = [
-				...slotAnswers
-					.filter(
-						(link) =>
-							link.kind !== "idiom" &&
-							link.share >= policy.satellite,
-					)
-					.map((link) => [link.from, link.to] as const),
-				...accepted.map(([left, right]) => [left, right] as const),
-				...superlativeLinks(sentence),
-			];
-			const locutionPieces = new Set(
-				accepted
-					.filter(
-						([, , kind]) =>
-							kind === "correlator" || kind === "circumposition",
-					)
-					.flatMap(([left, right]) => [left, right]),
-			);
-			const sayingPieces = new Set<number>();
-			const expression: (readonly [number, number])[] = [];
-			if (policy.idiom !== null) {
-				const floor = policy.idiom;
-				for (const link of slotAnswers)
-					if (link.kind === "idiom" && link.share >= floor)
-						expression.push([link.from, link.to]);
-			}
-			if (policy.expression !== null)
-				for (const link of links)
-					if (
-						link.probability >= policy.expression &&
-						(fixed.get(link.left) ?? 0) >= 0.5 &&
-						(fixed.get(link.right) ?? 0) >= 0.5
-					)
-						expression.push([link.left, link.right]);
-			if (policy.saying !== null) {
-				const covered = new Set<number>();
-				const floor = policy.saying;
-				for (const span of [...spans]
-					.filter((span) => noulOf(first, sayingId(span)) >= floor)
-					.sort(
-						(a, b) =>
-							noulOf(first, sayingId(b)) -
-								noulOf(first, sayingId(a)) ||
-							a.pieces.length - b.pieces.length,
-					)) {
-					if (span.pieces.some((piece) => covered.has(piece.id)))
-						continue;
-					for (const piece of span.pieces) {
-						covered.add(piece.id);
-						sayingPieces.add(piece.id);
-						expression.push([
-							span.pieces[0]?.id ?? piece.id,
-							piece.id,
-						]);
-					}
-				}
-			}
-			if (policy.absorb) {
-				const members = new Set(expression.flat());
-				for (const id of [...members]) {
-					for (const sibling of siblings.get(id) ?? [])
-						expression.push([id, sibling]);
-					const piece = sentence.pieces[id - 1];
-					if (!piece || !nounLike(piece)) continue;
-					const start = Math.min(articleOf.get(id) ?? id, id);
-					const before = sentence.pieces[start - 2];
-					if (
-						before &&
-						before.clause === piece.clause &&
-						isAdpositionPiece(before)
-					) {
-						expression.push([id, before.id]);
-						for (const sibling of siblings.get(before.id) ?? [])
-							expression.push([id, sibling]);
-					}
-				}
-			}
-			for (const id of expression.flat()) locutionPieces.add(id);
-			partitions.set(name, partitionOf(ids, [...edges, ...expression]));
-			families.set(name, (group) =>
-				group.length === 1
-					? "Lexeme"
-					: group.some((id) => sayingPieces.has(id))
-						? "Saying"
-						: group.some((id) => locutionPieces.has(id))
-							? "Locution"
-							: "Lexeme",
-			);
-		}
 		const routes = await judgeRoutes(
 			sentence,
-			[...partitions.values()],
+			[...built.values()].map(({ partition }) => partition),
 			context,
 		);
 		const jevRoute = routeFrom(routes.identity);
-		/** Code names the Family from how the unit was built; jev only the Kind within it. */
-		const structural =
-			(familyOf: (group: readonly number[]) => Family) =>
-			(group: readonly number[]): RouteKey => {
-				if (group.length === 1) return jevRoute(group);
-				const family = familyOf(group);
-				if (family === "Saying") return "Saying/Saying";
-				const distribution =
-					routes.distributions.get(groupKey(group)) ?? {};
-				const best = argmax(
-					Object.fromEntries(
-						Object.entries(distribution).filter(([key]) =>
-							key.startsWith(`${family}/`),
-						),
-					),
-				);
-				return best.key || jevRoute(group);
-			};
 		return {
 			primary: "full+family",
 			outputs: Object.fromEntries(
-				[...partitions].flatMap(([policy, partition]) => {
-					const familyOf = families.get(policy);
-					return [
-						[policy, outputOf(sentence, partition, jevRoute)],
-						...(familyOf
-							? [
-									[
-										`${policy}+family`,
-										outputOf(
-											sentence,
-											partition,
-											structural(familyOf),
-										),
-									],
-								]
-							: []),
-					];
-				}),
+				[...built].flatMap(([policy, { partition, familyOf }]) => [
+					[policy, outputOf(sentence, partition, jevRoute)],
+					[
+						`${policy}+family`,
+						outputOf(
+							sentence,
+							partition,
+							structuralRoute(
+								routes.distributions,
+								jevRoute,
+								familyOf,
+							),
+						),
+					],
+				]),
 			),
 			routes: [...routes.identity.values()],
-			links,
+			links: [...core.links],
 		};
 	},
 };

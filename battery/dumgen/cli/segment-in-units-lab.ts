@@ -46,6 +46,7 @@ import {
 	byShape,
 	calibration,
 	confusions,
+	mcnemar,
 	pairedUnits,
 	policiesOf,
 	primaryOf,
@@ -63,8 +64,11 @@ const repository = resolve(packageRoot, "../..");
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
 const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
-/** Stop spending at $9 of the $10 jev budget. */
-const budgetUsd = 9;
+/**
+ * The jev stop line. Round 1 stopped at $9 of $10 and spent $7.92; round 2
+ * adds about $7 and stops at $6.50 more.
+ */
+const budgetUsd = 7.922 + 6.5;
 
 const { positionals, values } = parseArgs({
 	args: Bun.argv.slice(2),
@@ -394,6 +398,15 @@ async function compare() {
 	console.log(
 		`gold units by majority verdict: both match ${paired.both}, neither ${paired.neither}, left only ${paired.leftOnly.length}, right only ${paired.rightOnly.length}`,
 	);
+	console.log(
+		`McNemar p = ${mcnemar(paired.leftOnly.length, paired.rightOnly.length).toPrecision(2)}`,
+	);
+	for (const [bucket, tally] of Object.entries(paired.buckets).sort(
+		(a, b) => b[1].units - a[1].units,
+	))
+		console.log(
+			`  ${bucket.padEnd(24)} units ${String(tally.units).padStart(4)}  left ${percent(tally.left / tally.units).padStart(5)}  right ${percent(tally.right / tally.units).padStart(5)}  +${tally.rightOnly} −${tally.leftOnly}  p ${mcnemar(tally.leftOnly, tally.rightOnly).toPrecision(2)}`,
+		);
 	for (const [side, list] of [
 		["left only", paired.leftOnly],
 		["right only", paired.rightOnly],
@@ -435,7 +448,7 @@ async function ledger() {
 	const entries = await readLedger(ledgerPath);
 	const totals = ledgerTotals(entries);
 	console.log(
-		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens = $${totals.jevUsd.toFixed(3)} of $10 (stop at $${budgetUsd}); luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
+		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens = $${totals.jevUsd.toFixed(3)} (round 1 $7.922, round 2 $${(totals.jevUsd - 7.922).toFixed(3)} of ~$7; stop at $${budgetUsd.toFixed(2)}); luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
 	);
 }
 

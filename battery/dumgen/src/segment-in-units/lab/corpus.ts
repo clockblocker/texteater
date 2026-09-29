@@ -161,6 +161,32 @@ export function subset(set: LabSet, name: string): readonly LabCase[] {
 		];
 	}
 	if (name === "full") return full;
+	if (name === "multiword400") {
+		// Round 2: every case with a multi-piece Locution or Saying gold unit,
+		// plus controls: 45 other Full cases and 90 other cases.
+		const phraseme = (labCase: LabCase) =>
+			labCase.idealOutput.units.some(
+				(unit) =>
+					unit.segments.length > 1 &&
+					unit.route !== "Unresolved" &&
+					(unit.route.family === "Locution" ||
+						unit.route.family === "Saying"),
+			);
+		const target = shuffled(set.cases.filter(phraseme), name);
+		const fullControls = shuffled(
+			set.cases.filter(
+				(c) => !phraseme(c) && c.facts.coverage === "Full",
+			),
+			name,
+		).slice(0, 45);
+		const otherControls = shuffled(
+			set.cases.filter(
+				(c) => !phraseme(c) && c.facts.coverage !== "Full",
+			),
+			name,
+		).slice(0, 400 - target.length - fullControls.length);
+		return [...target, ...fullControls, ...otherControls];
+	}
 	if (name === "multi") return [...full, ...withMulti];
 	throw Error(`Unknown subset ${name}`);
 }
