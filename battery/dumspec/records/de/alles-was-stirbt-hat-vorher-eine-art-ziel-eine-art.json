@@ -603,7 +603,7 @@
 				"kind": "NOUN"
 			},
 			"notes": {
-				"rationale": "eine Art before a bare noun is the hedge 'something like' (Duden: Wendung eine Art [von]; DWDS: Art 4c). Art is the Head that inflects with its article (mit einer Art Ziel), so it is NOUN Art owning eine (de/noun-owns-its-article), with Ziel a NOUN of its own in narrow apposition. open: finding B2"
+				"rationale": "eine Art before a bare noun is the hedge 'something like' (Duden: Wendung eine Art [von]; DWDS: Art 4c). Art is the Head that inflects with its article (mit einer Art Ziel), so it is NOUN Art owning eine (de/noun-owns-its-article), with Ziel a NOUN of its own in narrow apposition. Ruled on #743 (SZ-B2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -704,7 +704,7 @@
 				"kind": "NOUN"
 			},
 			"notes": {
-				"rationale": "Second eine Art of the pair, as the first. open: finding B2"
+				"rationale": "Second eine Art of the pair, as the first. Ruled on #743 (SZ-B2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -887,7 +887,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). open: finding B3"
+				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). Ruled on #743 (SZ-B3, A4)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

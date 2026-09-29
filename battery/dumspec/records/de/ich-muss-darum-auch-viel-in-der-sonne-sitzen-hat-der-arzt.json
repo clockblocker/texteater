@@ -387,7 +387,7 @@
 				"kind": "ADV"
 			},
 			"notes": {
-				"rationale": "viel here modifies the verb, 'often, a lot' (DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern): it stands for no noun phrase and modifies no noun, so it is neither the PRON nor the DET quantifier (de/pron-or-det-by-use). Recommended as ADV viel, comparable through mehr, am meisten. open: finding B6"
+				"rationale": "viel here modifies the verb, 'often, a lot' (DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern): it stands for no noun phrase and modifies no noun, so it is neither the PRON nor the DET quantifier (de/pron-or-det-by-use). So ADV viel, comparable through mehr, am meisten. Ruled on #743 (SZ-B6, A3)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

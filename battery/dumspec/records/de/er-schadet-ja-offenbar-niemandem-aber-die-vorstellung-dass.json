@@ -418,7 +418,7 @@
 				"kind": "ADJ"
 			},
 			"notes": {
-				"rationale": "offenbar is the sentence adverb 'apparently'. de/adjective-stays-adj makes a word that inflects attributively an ADJ, and DWDS files this use as an adverbial sense of the adjective with offenbarer, am offenbarsten; Duden has a separate Adverb headword for it. open: finding B5"
+				"rationale": "offenbar is the sentence adverb 'apparently'. de/adjective-stays-adj makes a word that inflects attributively an ADJ, and DWDS files this use as an adverbial sense of the adjective with offenbarer, am offenbarsten; Duden has a separate Adverb headword for it. Ruled on #743 (SZ-B5, A2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
