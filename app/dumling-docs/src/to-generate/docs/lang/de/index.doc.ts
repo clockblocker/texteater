@@ -15,8 +15,8 @@ The public German classification tree lives under [/de/](/de/).
 Start with:
 
 - [/de/entity/](/de/entity/) for \`Lemma\`, \`Surface\`, and \`Attestation\`
-- [/de/entity/lemma/](/de/entity/lemma/) for the four Lemma branches
-- [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/locution/](/de/entity/lemma/locution/), [/de/entity/lemma/saying/](/de/entity/lemma/saying/), and [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/) for concrete inventories
+- [/de/entity/lemma/](/de/entity/lemma/) for the five Lemma branches
+- [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/locution/](/de/entity/lemma/locution/), [/de/entity/lemma/saying/](/de/entity/lemma/saying/), [/de/entity/lemma/foreign/](/de/entity/lemma/foreign/), and [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/) for concrete inventories
 - [/de/feature/](/de/feature/) and [/de/feature/attestation/](/de/feature/attestation/) for feature pages
 - [/de/rules/](/de/rules/) for the German classification Rules
 
@@ -24,10 +24,11 @@ Start with:
 
 | \`family\` | \`kind\` values |
 | --- | --- |
-| \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
+| \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\` |
 | \`Morpheme\` | \`Circumfix\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`Transfix\` |
 | \`Locution\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PRON\`, \`SCONJ\`, \`VERB\` |
 | \`Saying\` | \`Saying\` |
+| \`Foreign\` | \`Foreign\` |
 
 Fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\` are not Lemmas; each piece stands for its own word and its Attestation member carries the orthography \`Fused\`. In \`Ich bin im Wald\`, ADP \`in\` has the member \`i\`, and the noun \`Wald\` owns the article piece \`m\`: its members are \`[m, Wald]\`. A shortened standalone article such as \`'ne\` is a \`Shorthand\` member of its noun. A multiword Lemma with two or more Heads is a Locution, whose Kind is the part of speech the whole acts as: \`um … zu\` is \`Locution/SCONJ\`, \`entweder … oder\` is \`Locution/CCONJ\`, and \`einerseits … andererseits\` is \`Locution/ADV\`. A Kind may repeat across Families, so \`Lexeme/VERB\` and \`Locution/VERB\` are two routes.
 

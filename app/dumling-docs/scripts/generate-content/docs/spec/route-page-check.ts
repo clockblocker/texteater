@@ -2,7 +2,7 @@ import type { SchemaRoute } from "./schema-routes";
 import { featurePageId, routePageId } from "./spec-pages";
 
 const routePagePattern =
-	/^(?<language>[^/]+)\/entity\/lemma\/(?:lexeme|locution|saying|morpheme)\/[^/]+$/u;
+	/^(?<language>[^/]+)\/entity\/lemma\/(?:lexeme|locution|saying|morpheme|foreign)\/[^/]+$/u;
 const featurePagePattern = /^(?<language>[^/]+)\/feature\/[^/]+$/u;
 /** Feature pages that group other pages rather than name a feature. */
 const featureGroupPages = new Set(["attestation", "surface"]);

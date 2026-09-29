@@ -82,6 +82,8 @@ function defaultUniversalStubDescription(
 			return `${label} page in the public locution tree.`;
 		case "saying":
 			return `${label} page in the public saying tree.`;
+		case "foreign":
+			return `${label} page in the public foreign tree.`;
 		case "feature":
 			if (options.leaf === undefined) {
 				return "Overview of grammatical, attestation, and surface feature pages.";

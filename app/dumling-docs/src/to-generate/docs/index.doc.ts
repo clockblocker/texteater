@@ -56,8 +56,8 @@ Dumling focuses on lexical classification for learning tools:
 - **Lemma**: normalized grammatical identity, such as _"walk"_, _"give up"_, or _"walk in the park"_
 - **Surface**: the normalized contextual form, such as _"gave up"_
 - **Attestation**: click-independent occurrence evidence with one or more exact, source-ordered members
-- **Reading**: foundational semantic value formed by one Lemma and one emoji description
-- Lemma family: \`Lexeme\`, \`Locution\`, \`Saying\`, or \`Morpheme\`
+- **Reading**: foundational semantic value formed by one Lemma and one emoji description (a Foreign Lemma's one Reading has none)
+- Lemma family: \`Lexeme\`, \`Locution\`, \`Saying\`, \`Foreign\`, or \`Morpheme\`
 - member orthography: whether each attested member is standard text or a typo
 - Surface spelling and Attestation realization coverage: Variant spellings with their tags, and genuinely partial realizations
 - learner-relevant Surface features, such as archaic status

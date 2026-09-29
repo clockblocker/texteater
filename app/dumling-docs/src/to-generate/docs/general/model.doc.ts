@@ -50,7 +50,8 @@ contextual reflexiveness belongs to the Surface's inflectional features; English
 ## Reading
 
 A Reading has \`unitKind: "Reading"\`, a \`lemma\`, and an \`emojiDescription\` of
-one to four emoji graphemes. Dictionary scope, persistence and identity keys
+one to four emoji graphemes. A Foreign Lemma's one Reading has no
+\`emojiDescription\`: the Lemma alone identifies it. Dictionary scope, persistence and identity keys
 belong to consumers.
 
 ## Attestation

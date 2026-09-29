@@ -1,7 +1,4 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { specExample } from "../../../../lib/docs/spec-examples.ts";
-
-const covidishForeignWord = specExample("en/the-report-says-covid-ish-twice");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Foreign feature.",
@@ -21,16 +18,13 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Foreign.html) fe
 
 If \`Lemma.coreFeatures.foreign\` is absent or \`undefined\`, the Lemma is treated as not marked foreign.
 `,
-	examples: [covidishForeignWord],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`foreign: "Yes"\` when the item is analyzed as a foreign insertion or code-switched word, not as an ordinary established loanword of the matrix language.
+In Dumling, a foreign insertion or code-switched word is not a Lexeme marked \`foreign\`. Material from another language that shows none of the text's grammar is a Lemma of the [\`Foreign\`](/u/entity/lemma/foreign/foreign/) Family, with its source language as [\`sourceLang\`](/u/feature/source-lang/); a word that shows the text's grammar is a Lexeme of its real Kind (ADR 0045).
 
-Do not use \`Foreign\` just because a Lemma has unusual spelling or refers to a foreign person, place, or institution. The feature is for genuinely foreign material embedded in otherwise native text.
-
-UD often uses \`Foreign=Yes\` on [\`X\`](/u/entity/lemma/lexeme/x/) when the foreign token is hard to classify internally, but it can also be used on other lexical categories when the original part of speech is known and worth preserving.
+Do not use \`Foreign\` just because a Lemma has unusual spelling or refers to a foreign person, place, or institution. Foreign names stay \`PROPN\`.
 `,
 		},
 		{

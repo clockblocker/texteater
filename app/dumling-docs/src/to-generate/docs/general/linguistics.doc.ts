@@ -17,8 +17,8 @@ The Lemma owns properties that remain stable across forms and attestations:
 
 - \`language\`: the concrete language, such as \`de\`, \`en\`, or \`he\`
 - \`canonicalForm\`: the normalized form used to name the Lemma
-- \`family\`: the broad class: \`Lexeme\`, \`Locution\`, \`Saying\`, or \`Morpheme\`
-- \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Saying\`
+- \`family\`: the broad class: \`Lexeme\`, \`Locution\`, \`Saying\`, \`Foreign\`, or \`Morpheme\`
+- \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, \`Saying\`, or \`Foreign\`
 - \`coreFeatures\`: the stable grammatical features that complete its identity
 
 Together these fields are Lemma identity. Homonyms share one Lemma unless
@@ -104,16 +104,17 @@ IDs, click indices, and marked context belong to the calling application.
 
 ## Lemma Families and Kinds
 
-\`family\` has four values:
+\`family\` has five values:
 
 | Family | Use |
 | --- | --- |
 | \`Lexeme\` | lexical identities with one Head, categorized by a Universal Dependencies-style POS tag; satellites such as a particle or reflexive may be part of the Canonical Form (\`sich erinnern\`, \`give up\`) |
 | \`Locution\` | multiword Lemmas with two or more Heads (\`den Faden verlieren\`, \`zum Teil\`), categorized by the POS tag the whole acts as |
 | \`Saying\` | complete sayings, proverbs and winged words, with the one Kind \`Saying\` |
+| \`Foreign\` | material from another language that shows none of the text's grammar (\`whatever\`, \`by the way\`), with the one Kind \`Foreign\` and its source language as \`sourceLang\` |
 | \`Morpheme\` | roots, prefixes, suffixes, and related sub-word units |
 
-\`kind\` is the public subtype field for all four families. A Kind may repeat across Families (\`Lexeme/VERB\`, \`Locution/VERB\`), so a route is always language, Family and Kind. The package does not expose separate public discriminator names like \`pos\` or \`morphemeKind\`.
+\`kind\` is the public subtype field for all five families. A Kind may repeat across Families (\`Lexeme/VERB\`, \`Locution/VERB\`), so a route is always language, Family and Kind. The package does not expose separate public discriminator names like \`pos\` or \`morphemeKind\`.
 
 ## Reading
 
@@ -121,7 +122,7 @@ A \`Reading\` is Dumling's foundational semantic value:
 
 \`Reading = { unitKind: "Reading", lemma, emojiDescription }\`
 
-The same Lemma may participate in several Readings. Dumling owns the Reading
+The same Lemma may participate in several Readings. A Foreign Lemma has exactly one, \`{ unitKind: "Reading", lemma }\`, with no Emoji Description; its translations carry every sense. Dumling owns the Reading
 value and validation. A
 dictionary establishes the learner or hosted scope and owns Reading records,
 candidate lookup, selection, persistence, and workflows.

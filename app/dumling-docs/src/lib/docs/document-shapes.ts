@@ -34,6 +34,7 @@ export type DocCitePageFamily =
 	| "morpheme"
 	| "locution"
 	| "saying"
+	| "foreign"
 	| "feature"
 	| "feature-attestation"
 	| "feature-surface";

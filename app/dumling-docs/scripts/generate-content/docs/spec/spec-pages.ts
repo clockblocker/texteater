@@ -70,6 +70,7 @@ const familyOrder: Readonly<Record<Dumling.Family, number>> = {
 	Morpheme: 1,
 	Locution: 2,
 	Saying: 3,
+	Foreign: 4,
 };
 
 // A Kind repeats across Families (Lexeme VERB, Locution VERB), so a

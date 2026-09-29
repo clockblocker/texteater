@@ -50,7 +50,6 @@ export const kindDefinitions: readonly KindDefinition[] = [
 	udPos("SCONJ", "subordinating conjunctions"),
 	udPos("PUNCT", "punctuation"),
 	udPos("SYM", "symbols"),
-	udPos("X", "words that fit no other part of speech"),
 	morpheme("Root", "The lexical core of a word."),
 	morpheme("Prefix", "A bound affix before the stem."),
 	morpheme("Suffix", "A bound affix after the stem."),
@@ -83,6 +82,12 @@ export const kindDefinitions: readonly KindDefinition[] = [
 			"A complete saying: a Proverb (`Morgenstund hat Gold im Mund`) or a Winged Word (`Sein oder Nichtsein`). Its Canonical Form is written as a sentence without final punctuation.",
 		family: "Saying",
 		kind: "Saying",
+	},
+	{
+		definition:
+			"Material from another language inside the text: a word (`whatever`) or a phrase fixed in its source language (`by the way`), with its source language as `sourceLang`. It has one Surface, its Canonical Form, and one Reading with no Emoji Description.",
+		family: "Foreign",
+		kind: "Foreign",
 	},
 ];
 
