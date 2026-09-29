@@ -14,6 +14,7 @@ import {
 	choice,
 	choiceOf,
 	type Jev,
+	noul,
 } from "../lab/jev.js";
 import type { Luna } from "../lab/luna.js";
 import { ruleStatements, unitGuide } from "./guide.js";
@@ -148,6 +149,8 @@ export const joinRefs = (
 
 const routeId = (group: readonly number[]) => `r_${group.join("_")}`;
 const identityId = (id: number) => `i_${id}`;
+const adjectiveTestId = (id: number) => `ta_${id}`;
+const modifierTestId = (id: number) => `tm_${id}`;
 
 /**
  * Route questions for each group (restricted to Lexeme and Foreign routes
@@ -175,6 +178,22 @@ export function routeQuestions(
 		if (single && only !== undefined) {
 			const piece = sentence.pieces[only - 1];
 			const candidates = piece ? identityCandidates(piece.text) : [];
+			if (piece && option(context.options, "tests", "0") === "1") {
+				// Rule de/adjective-stays-adj: a word that can inflect as an
+				// attributive adjective is an ADJ, also used adverbially.
+				if (/^\p{Ll}/u.test(piece.text) && candidates.length === 0)
+					questions[adjectiveTestId(only)] = noul(
+						`Can the word ${ref(piece)}, in the form of its dictionary entry, also stand before a noun as an attributive adjective with an inflection ending (laut: ein lauter Ruf; schnell: der schnelle Hund)?`,
+					);
+				// Rule de/pron-or-det-by-use: DET modifies a noun, PRON stands for one.
+				const kinds = new Set(
+					candidates.map((candidate) => candidate.kind),
+				);
+				if (kinds.has("DET") && kinds.has("PRON"))
+					questions[modifierTestId(only)] = noul(
+						`In \`sentence\`, does ${ref(piece)} directly modify a noun that follows it (dieser Mann, jeglicher Zweifel), rather than standing for a whole noun phrase on its own?`,
+					);
+			}
 			if (piece && candidates.length > 0)
 				questions[identityId(only)] = choice(
 					`In \`sentence\`, which word is ${ref(piece)}?`,
@@ -204,9 +223,12 @@ export function readRoutes(
 ): {
 	readonly open: Map<string, RouteJudgment>;
 	readonly identity: Map<string, RouteJudgment>;
+	/** Each group's full route distribution, for policies that restrict it. */
+	readonly distributions: Map<string, Readonly<Record<string, number>>>;
 } {
 	const open = new Map<string, RouteJudgment>();
 	const identity = new Map<string, RouteJudgment>();
+	const distributions = new Map<string, Readonly<Record<string, number>>>();
 	for (const group of groups) {
 		const answer = choiceOf(answers, routeId(group));
 		const top = argmax(answer.probabilities);
@@ -219,6 +241,7 @@ export function readRoutes(
 		};
 		open.set(groupKey(group), judged);
 		identity.set(groupKey(group), judged);
+		distributions.set(groupKey(group), answer.probabilities);
 		const [only] = group;
 		const id = only === undefined ? undefined : identityId(only);
 		if (group.length !== 1 || id === undefined || !(id in answers))
@@ -238,7 +261,32 @@ export function readRoutes(
 				source: "identity",
 			});
 	}
-	return { open, identity };
+	// Rule tests, when asked, override the Kind between ADV and ADJ and
+	// between DET and PRON.
+	for (const group of groups) {
+		const [only] = group;
+		if (group.length !== 1 || only === undefined) continue;
+		const current = identity.get(groupKey(group));
+		if (!current) continue;
+		const adjective = answers[adjectiveTestId(only)];
+		if (
+			adjective?.type === "noul" &&
+			current.choice === "Lexeme/ADV" &&
+			adjective.noul >= 0.5
+		)
+			identity.set(groupKey(group), { ...current, choice: "Lexeme/ADJ" });
+		const modifier = answers[modifierTestId(only)];
+		if (
+			modifier?.type === "noul" &&
+			(current.choice === "Lexeme/DET" ||
+				current.choice === "Lexeme/PRON")
+		)
+			identity.set(groupKey(group), {
+				...current,
+				choice: modifier.noul >= 0.5 ? "Lexeme/DET" : "Lexeme/PRON",
+			});
+	}
+	return { open, identity, distributions };
 }
 
 /** Asks the route stage for every group of every partition, deduplicated. */

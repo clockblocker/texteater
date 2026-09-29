@@ -36,6 +36,7 @@ import {
 	readLedger,
 	spendOf,
 } from "../src/segment-in-units/lab/ledger.js";
+import { questionsPerCall } from "../src/segment-in-units/lab/limits.js";
 import { Luna } from "../src/segment-in-units/lab/luna.js";
 import {
 	breakdown,
@@ -83,6 +84,7 @@ const { positionals, values } = parseArgs({
 		right: { type: "string" },
 		qpc: { type: "string" },
 		tag: { type: "string" },
+		sizes: { type: "string", default: "25,100,400,2000" },
 	},
 });
 
@@ -427,10 +429,81 @@ async function ledger() {
 	);
 }
 
+async function limitQuestionsPerCall() {
+	const set = await loadSet(labRoot, "dev");
+	const pieces = (labCase: LabCase) =>
+		labCase.input.segments.filter(
+			(segment) => segment.kind === "ResolvableText",
+		).length;
+	const cases = [...set.cases]
+		.sort((a, b) => pieces(b) - pieces(a))
+		.slice(0, Number(values.limit ?? 12));
+	const spentBefore = ledgerTotals(await readLedger(ledgerPath)).jevUsd;
+	if (spentBefore >= budgetUsd) throw Error("jev budget line reached");
+	const calls: import("../src/segment-in-units/lab/jev.js").CallRecord[] = [];
+	let fresh = 0;
+	const jev = new Jev({
+		cacheDirectory: join(labRoot, "cache"),
+		concurrency: Number(values.concurrency),
+		onSpend: (tokens) => {
+			fresh += tokens;
+		},
+	});
+	const results = await questionsPerCall({
+		cases,
+		jev,
+		sizes: (values.sizes ?? "").split(",").map(Number),
+		baselineRepetitions: 3,
+	});
+	console.log(
+		`${cases.length} sentences, ${cases.map(pieces).join("/")} pieces`,
+	);
+	console.log(
+		"q/call rep  calls failed  tokens    meanMs  maxMs   |Δp| vs base  flips/compared  errors",
+	);
+	for (const result of results) {
+		console.log(
+			`${String(result.questionsPerCall).padStart(6)} ${result.repetition}  ${String(result.calls).padStart(5)} ${String(result.failedCalls).padStart(6)} ${String(result.inputTokens).padStart(8)} ${result.meanCallLatencyMs.toFixed(0).padStart(7)} ${result.maxCallLatencyMs.toFixed(0).padStart(6)}   ${result.meanAbsoluteDifference.toFixed(4)}        ${result.decisionFlips}/${result.compared}  ${result.errors.join(" | ").slice(0, 300)}`,
+		);
+		calls.push({
+			executor: "jev",
+			stage: "limit",
+			questions: result.questions,
+			inputTokens: result.inputTokens,
+			outputTokens: 0,
+			latencyMs: 0,
+			cached: true,
+		});
+	}
+	const runId = `${new Date().toISOString().replace(/[-:]/gu, "").slice(0, 15)}--limit-qpc`;
+	await mkdir(join(evidenceRoot, "summaries"), { recursive: true });
+	await writeFile(
+		join(evidenceRoot, "summaries", `${runId}.json`),
+		`${JSON.stringify({ runId, set: set.name, setHash: set.hash, cases: cases.map(({ id }) => id), results }, null, 1)}\n`,
+	);
+	await appendLedger(ledgerPath, {
+		runId,
+		at: new Date().toISOString(),
+		command: "limit-qpc",
+		set: set.name,
+		setHash: set.hash,
+		cases: cases.length,
+		gitHead: git(["rev-parse", "HEAD"]),
+		...spendOf(calls),
+		jev: {
+			...spendOf(calls).jev,
+			freshCalls: 0,
+			freshInputTokens: fresh,
+			usd: fresh * jevUsdPerToken,
+		},
+	});
+}
+
 const command = positionals[0];
 if (command === "freeze") await freeze();
 else if (command === "run") await run();
 else if (command === "report") await report(values.run ?? "");
 else if (command === "compare") await compare();
 else if (command === "ledger") await ledger();
+else if (command === "limit-qpc") await limitQuestionsPerCall();
 else throw Error("Commands: freeze, run, report, compare, ledger");

@@ -30,7 +30,14 @@ import {
 	slotsOf,
 	superlativeLinks,
 } from "../candidates.js";
-import { outputOf, type Partition, partitionOf } from "../partition.js";
+import {
+	argmax,
+	groupKey,
+	outputOf,
+	type Partition,
+	partitionOf,
+} from "../partition.js";
+import type { RouteKey } from "../routes.js";
 import { type Sentence, sentenceOf } from "../sentence.js";
 import {
 	expressionId,
@@ -96,7 +103,7 @@ function matchedPairs(
 	floor: number,
 ) {
 	const used = new Set<number>();
-	const accepted: [number, number][] = [];
+	const accepted: [number, number, PairCandidate["kind"]][] = [];
 	for (const pair of [...pairs]
 		.map((pair) => ({ pair, probability: noulOf(answers, pairId(pair)) }))
 		.filter(({ probability }) => probability >= floor)
@@ -109,13 +116,15 @@ function matchedPairs(
 			continue;
 		used.add(left.id);
 		used.add(right.id);
-		accepted.push([left.id, right.id]);
+		accepted.push([left.id, right.id, pair.pair.kind]);
 		if (pair.pair.kind === "name")
 			for (let id = left.id + 1; id < right.id; id++)
-				accepted.push([left.id, id]);
+				accepted.push([left.id, id, "name"]);
 	}
 	return accepted;
 }
+
+type Family = "Lexeme" | "Locution" | "Saying";
 
 type Policy = {
 	readonly satellite: number;
@@ -234,6 +243,11 @@ export const candidates2Arm: Arm = {
 		const siblings = fusedSiblings(sentence);
 		const ids = sentence.pieces.map((piece) => piece.id);
 		const partitions = new Map<string, Partition>();
+		const families = new Map<
+			string,
+			(group: readonly number[]) => Family
+		>();
+		const accepted = matchedPairs(pairs, first, 0.5);
 		for (const [name, policy] of Object.entries(policies)) {
 			const edges: (readonly [number, number])[] = [
 				...slotAnswers
@@ -243,9 +257,18 @@ export const candidates2Arm: Arm = {
 							link.share >= policy.satellite,
 					)
 					.map((link) => [link.from, link.to] as const),
-				...matchedPairs(pairs, first, 0.5),
+				...accepted.map(([left, right]) => [left, right] as const),
 				...superlativeLinks(sentence),
 			];
+			const locutionPieces = new Set(
+				accepted
+					.filter(
+						([, , kind]) =>
+							kind === "correlator" || kind === "circumposition",
+					)
+					.flatMap(([left, right]) => [left, right]),
+			);
+			const sayingPieces = new Set<number>();
 			const expression: (readonly [number, number])[] = [];
 			if (policy.idiom !== null) {
 				const floor = policy.idiom;
@@ -266,11 +289,17 @@ export const candidates2Arm: Arm = {
 				const floor = policy.saying;
 				for (const span of [...spans]
 					.filter((span) => noulOf(first, sayingId(span)) >= floor)
-					.sort((a, b) => b.pieces.length - a.pieces.length)) {
+					.sort(
+						(a, b) =>
+							noulOf(first, sayingId(b)) -
+								noulOf(first, sayingId(a)) ||
+							a.pieces.length - b.pieces.length,
+					)) {
 					if (span.pieces.some((piece) => covered.has(piece.id)))
 						continue;
 					for (const piece of span.pieces) {
 						covered.add(piece.id);
+						sayingPieces.add(piece.id);
 						expression.push([
 							span.pieces[0]?.id ?? piece.id,
 							piece.id,
@@ -298,20 +327,63 @@ export const candidates2Arm: Arm = {
 					}
 				}
 			}
+			for (const id of expression.flat()) locutionPieces.add(id);
 			partitions.set(name, partitionOf(ids, [...edges, ...expression]));
+			families.set(name, (group) =>
+				group.length === 1
+					? "Lexeme"
+					: group.some((id) => sayingPieces.has(id))
+						? "Saying"
+						: group.some((id) => locutionPieces.has(id))
+							? "Locution"
+							: "Lexeme",
+			);
 		}
 		const routes = await judgeRoutes(
 			sentence,
 			[...partitions.values()],
 			context,
 		);
+		const jevRoute = routeFrom(routes.identity);
+		/** Code names the Family from how the unit was built; jev only the Kind within it. */
+		const structural =
+			(familyOf: (group: readonly number[]) => Family) =>
+			(group: readonly number[]): RouteKey => {
+				if (group.length === 1) return jevRoute(group);
+				const family = familyOf(group);
+				if (family === "Saying") return "Saying/Saying";
+				const distribution =
+					routes.distributions.get(groupKey(group)) ?? {};
+				const best = argmax(
+					Object.fromEntries(
+						Object.entries(distribution).filter(([key]) =>
+							key.startsWith(`${family}/`),
+						),
+					),
+				);
+				return best.key || jevRoute(group);
+			};
 		return {
-			primary: "full",
+			primary: "full+family",
 			outputs: Object.fromEntries(
-				[...partitions].map(([policy, partition]) => [
-					policy,
-					outputOf(sentence, partition, routeFrom(routes.identity)),
-				]),
+				[...partitions].flatMap(([policy, partition]) => {
+					const familyOf = families.get(policy);
+					return [
+						[policy, outputOf(sentence, partition, jevRoute)],
+						...(familyOf
+							? [
+									[
+										`${policy}+family`,
+										outputOf(
+											sentence,
+											partition,
+											structural(familyOf),
+										),
+									],
+								]
+							: []),
+					];
+				}),
 			),
 			routes: [...routes.identity.values()],
 			links,

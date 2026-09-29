@@ -4,6 +4,8 @@
  * and carry promptsmith's stability counts. Nothing is called: each
  * repetition returns the output the lab stored.
  */
+import { rm } from "node:fs/promises";
+import { join } from "node:path";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
@@ -131,6 +133,11 @@ export async function exportPolicy(args: {
 		},
 		runId: `${run.runId}--${policy.replace(/[^a-zA-Z0-9_-]/gu, "_")}`,
 		repetitions: run.repetitions,
+	});
+	// A policy exported before is replaced, so re-running compare is idempotent.
+	await rm(join(args.directory, evaluation.manifest.runId), {
+		recursive: true,
+		force: true,
 	});
 	await saveRun(args.directory, evaluation);
 	return evaluation;
