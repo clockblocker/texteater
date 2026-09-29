@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
-const gehImperative = specExample("de/geh-bitte-nicht-ohne-jacke-raus");
+const gehImperative = specExample("de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke");
 const doesIndicative = specExample("en/does-this-key-open-the-archive");
 const wereSubjunctive = specExample("en/if-i-were-you-i-would-wait");
 const boUImperative = specExample("he/bou-lekan");
