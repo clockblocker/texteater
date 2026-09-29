@@ -24,7 +24,7 @@
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "b86703d3f7281f0a"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
 		],

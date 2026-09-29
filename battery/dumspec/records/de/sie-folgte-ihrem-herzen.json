@@ -17,7 +17,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/only-der-and-ein-are-articles",
 				"hash": "7651166ee526ad94"

@@ -127,3 +127,16 @@ and a classifier names why a spelling is not Canonical instead of stretching
 non-canonical spelling of the Lemma that is not a mistake; a mistake stays a
 Typo member. Decided on
 [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended on 2026-09-29: a shared auxiliary is a shared word too
+([#743](https://github.com/clockblocker/texteater/issues/743)). In *Sie hatte
+ihren Strohhut aufgesetzt und ihren Sonnenschirm aufgespannt*, `hatte` belongs
+to the coordinated verb nearer to it, `[hatte, aufgesetzt]` VERB `aufsetzen`,
+and `aufspannen` is `[aufgespannt]`, Partial, with no evidence. The shared word
+still counts toward the Partial unit's features, as a shared article gives its
+noun a case: the Surface of `aufgespannt` describes the whole pluperfect
+([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)), finite
+Past, third person singular, `perfect: Yes`, while its members and
+`normalizedSurface` hold only `aufgespannt`. A finite lexical verb shared by two
+particle verbs (*Er stieg aus und gleich wieder ein*) is not an auxiliary and
+stays open in [#724](https://github.com/clockblocker/texteater/issues/724).

@@ -401,7 +401,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/noun-owns-its-article",
 		statement:
-			"The Head of a noun phrase owns the article that opens it, even across adjectives and numerals, and a click on the article selects the Head: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ. When the noun is elided, the word standing in for it is the Head. An article cut off from its Head by a verb, a clause boundary or another noun is not its article. The article is a member, never a feature: its spelling, read through a fused or shortened form, names the cell of der or ein for its Head's case, number and gender, and that cell is its DET.",
+			"The Head of a noun phrase owns the article that opens it, across adjectives, numerals and extended attributes, and a click on the article selects the Head: der steile Aufstieg gives [der, Aufstieg] NOUN and [steile] ADJ. When the noun is elided, the word standing in for it is the Head. An article cut off from its Head by a verb, a clause boundary or a noun outside such an attribute is not its article. The article is a member, never a feature: its spelling, read through a fused or shortened form, names the cell of der or ein for its Head's case, number and gender, and that cell is its DET.",
 		adrs: ["ADR-0035", "ADR-0040", "ADR-0041"],
 		routes: lexeme("NOUN", "PROPN", "ADJ", "NUM", "PRON"),
 		records: [
@@ -1056,9 +1056,9 @@ const attestations: Rule[] = [
 	{
 		id: "de/partial-coverage",
 		statement:
-			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). A split target, or one with free words between its members, is still Full.",
-		adrs: ["ADR-0003", "ADR-0039"],
-		routes: [...lexeme("NOUN"), ...everyMultiword],
+			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, a verb sharing the auxiliary a coordinated verb nearer to it owns, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). The shared word still counts toward the Partial unit's features, though not its members: aufgespannt in hatte … aufgesetzt und … aufgespannt is pluperfect. A split target, or one with free words between its members, is still Full.",
+		adrs: ["ADR-0003", "ADR-0039", "ADR-0041", "ADR-0022"],
+		routes: [...lexeme("NOUN", "VERB"), ...everyMultiword],
 		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
 	},
 ];
