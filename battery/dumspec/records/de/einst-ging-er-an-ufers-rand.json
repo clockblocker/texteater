@@ -28,17 +28,18 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": [], "rules": [{"rule":"de/empty-inflection-is-structural","hash":"2fc1eac4f11ccea0"},{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "📜" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Einst", "orthography": "Standard" }],
@@ -56,6 +57,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null
@@ -67,6 +69,7 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🚶" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "ging", "orthography": "Standard" }],
@@ -108,6 +111,7 @@
 		},
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "📌" },
 			"notes": {
 				"rationale": "`an` is the ordinary two-way preposition. The form of `Ufers Rand` does not show its case, so the occurrence records the dative of the location reading (wo?): he walks along the bank, which the next lines confirm."
 			},
@@ -151,6 +155,7 @@
 		},
 		{
 			"memberSegmentIndices": [8],
+			"reading": { "emojiDescription": "🏞" },
 			"notes": {
 				"rationale": "Ufers is the genitive singular of Ufer, the same form as in des Ufers, and it depends on Rand, not on an. What is archaic here is the construction: a common-noun genitive with no article before its head. That is this occurrence's syntax, not the form, so the reusable Surface carries no historical status (de/variant-and-historical-status)."
 			},
@@ -184,11 +189,9 @@
 		},
 		{
 			"memberSegmentIndices": [10],
+			"reading": { "emojiDescription": "🔲" },
 			"notes": {
-				"rationale": "`Rand` stays citation-shaped here. The attested noun form itself does not overtly distinguish accusative from dative, and this poetic `an Ufers Rand` phrase can be read either as directional movement or as a locative bank-edge setting, so I avoided encoding a guessed case on the surface.",
-				"knownMistakes": [
-					"Do not force a citation-shaped noun into `Surface/Inflection` with guessed case features when the local syntax is genuinely ambiguous. The earlier mistake here was storing `Rand` as accusative singular even though the attested form is syncretic and the phrase also allows a locative reading."
-				]
+				"rationale": "Rand is dative singular after an, which says where he walks: along the bank's edge, as the next lines show. The form doesn't show the case, but an empty case would state structure, not uncertainty (de/empty-inflection-is-structural)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -199,7 +202,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"inflectionalFeatures": {
-						"case": null,
+						"case": "Dat",
 						"gender": null,
 						"number": "Sing"
 					},

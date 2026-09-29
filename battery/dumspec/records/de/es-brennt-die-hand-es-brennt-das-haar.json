@@ -34,14 +34,14 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0042"], "rules": [{"rule":"de/expletive-es-joins-its-verb","hash":"33eaf0627366c786"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
@@ -84,8 +84,9 @@
 		},
 		{
 			"memberSegmentIndices": [24],
+			"reading": { "emojiDescription": "🌕" },
 			"notes": {
-				"rationale": "Ganze is an attributive adjective modifying Kind. The surface form is syncretic between neuter nominative and accusative singular after das; I chose nominative because in this rhyme das ganze Kind reads as the postposed subject of brennt."
+				"rationale": "ganze is attributive to das ganze Kind, the postponed subject, so it is nominative neuter singular. ganz has no comparison forms, so it marks case, gender and number only (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -100,7 +101,7 @@
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Neut",
 						"number": "Sing"
 					},
@@ -111,6 +112,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
+							"comparable": null,
 							"abbr": null,
 							"foreign": null,
 							"numType": null,
@@ -123,8 +125,9 @@
 		},
 		{
 			"memberSegmentIndices": [28],
+			"reading": { "emojiDescription": "😮" },
 			"notes": {
-				"rationale": "Sogar is the scalar focus item here. The current dumling inventory does not give German focus particles a dedicated subtype, so I classified it as ADV rather than inventing a particle-specific analysis."
+				"rationale": "sogar is a scalar focus particle on das ganze Kind: even the whole child burns. Duden classes it as a Partikel, so it is PART, like the modal particles."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -132,7 +135,6 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "sogar",
 					"spelling": "Canonical",
@@ -141,11 +143,12 @@
 						"language": "de",
 						"canonicalForm": "sogar",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"coreFeatures": {
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
 					"surfaceFeatures": null

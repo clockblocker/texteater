@@ -90,7 +90,10 @@ const verbs: Rule[] = [
 			"A subject es that the verb selects and that refers to nothing belongs to the verb's target: es gibt (Lemma geben), es regnet, es geht um, es handelt sich um. It stays a member across word order changes and free words in between. Referential es, positional es (Es kamen Gäste), anticipatory es (Es freut mich, dass du kommst) and object es (Sie meint es gut mit dir) are PRON targets of their own. An omitted es is never added.",
 		adrs: ["ADR-0022"],
 		routes: lexeme("VERB", "PRON"),
-		records: [],
+		records: [
+			"de/es-brennt-die-hand-es-brennt-das-haar",
+			"de/es-zog-der-wilde-jaegersmann",
+		],
 	},
 	{
 		id: "de/governed-preposition-joins-its-governor",
@@ -344,6 +347,7 @@ const nouns: Rule[] = [
 			"de/schwimmen-ist-gesund",
 			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/er-wog-vielleicht-ein-halbes-lot",
 		],
 	},
 	{
@@ -543,6 +547,9 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/viele-deutschsprachigen-quellen-fehlen-noch",
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/morgen-fahren-wir-nach-hamburg",
+			"de/einst-ging-er-an-ufers-rand",
+			"de/er-wog-vielleicht-ein-halbes-lot",
+			"de/es-brennt-die-hand-es-brennt-das-haar",
 		],
 	},
 	{
@@ -749,6 +756,7 @@ const attestations: Rule[] = [
 			"de/im-heft-stand-filosofie-statt-philosophie",
 			"de/der-hockte-da-im-gruenen-gras",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/einst-ging-er-an-ufers-rand",
 		],
 	},
 	{
@@ -757,7 +765,7 @@ const attestations: Rule[] = [
 			"A Surface leaves its inflection empty only for a dictionary citation, or for an invariant use its route leaves unmarked. An empty inflection states that structure; it never stands for uncertainty.",
 		adrs: ["ADR-0032"],
 		routes: [],
-		records: [],
+		records: ["de/einst-ging-er-an-ufers-rand"],
 	},
 	{
 		id: "de/suspended-compound-completion",
