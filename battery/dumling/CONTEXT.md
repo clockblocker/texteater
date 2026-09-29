@@ -42,9 +42,10 @@ Material in another language than the text's, a Family with the one Kind
 the way`, `c'est la vie`). Its Lemma belongs to the text's language, and its
 one Core Feature `sourceLang` names the language it comes from (`en`, or `und`
 when that can't be told). Its Canonical Form fixes only position casing and
-typos (`watevr` is `whatever`) and is its one Surface. A word showing the
-text's grammar in the sentence (`das Meeting`, `geyeetet`) is a Lexeme
-instead. It holds no Fusion: `don't` is one member.
+typos (`watevr` is `whatever`) and is its one Surface. A word the text
+language's dictionary lists (Duden's `cringe`, `lol`) is a Lexeme instead,
+and so is an unlisted word showing the text's grammar in the sentence
+(`geyeetet`). It holds no Fusion: `don't` is one member.
 _Avoid_: X, loanword, code-switch
 
 **Winged Word**:

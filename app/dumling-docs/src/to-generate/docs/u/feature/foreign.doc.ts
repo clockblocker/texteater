@@ -22,7 +22,7 @@ If \`Lemma.coreFeatures.foreign\` is absent or \`undefined\`, the Lemma is treat
 		{
 			heading: "Use",
 			body: `
-In Dumling, a foreign insertion or code-switched word is not a Lexeme marked \`foreign\`. Material from another language that shows none of the text's grammar is a Lemma of the [\`Foreign\`](/u/entity/lemma/foreign/foreign/) Family, with its source language as [\`sourceLang\`](/u/feature/source-lang/); a word that shows the text's grammar is a Lexeme of its real Kind (ADR 0045).
+In Dumling, a foreign insertion or code-switched word is not a Lexeme marked \`foreign\`. A word from another language that the text language's dictionary lists is a Lexeme of its real Kind, and so is an unlisted word that shows the text's grammar. Other material from another language is a Lemma of the [\`Foreign\`](/u/entity/lemma/foreign/foreign/) Family, with its source language as [\`sourceLang\`](/u/feature/source-lang/) (ADR 0045).
 
 Do not use \`Foreign\` just because a Lemma has unusual spelling or refers to a foreign person, place, or institution. Foreign names stay \`PROPN\`.
 `,

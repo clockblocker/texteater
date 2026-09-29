@@ -25,9 +25,9 @@ clicks on `whatever` in two German texts reach the same Lemma.
 
 - `sourceLang` is the only Core Feature: the language the unit comes from, as
   a lowercase ISO 639 code of two or three letters (`en`, `fr`, `la`, `yi`,
-  `grc`), or `und` when it can't be told (`ok`, `lol`). Any language may
-  appear, not only the ones Dumling supports, so Dumling checks the code's
-  shape and nothing else.
+  `grc`), or `und` when it can't be told. Any language may appear, not only
+  the ones Dumling supports, so Dumling checks the code's shape and nothing
+  else.
 - The Canonical Form normalizes position casing and typos, nothing else.
   Sentence-initial `Whatever` is `whatever`, as for any Lemma (ADR 0002), and
   the typo `watevr` is `whatever` with a Typo member. Nothing is lemmatized
@@ -51,15 +51,23 @@ Relations, Valency Frame or inflection class. A translation into the source
 language itself is a gloss (`tbh`: en "to be honest"). Every enabled
 translation language is kept.
 
-**Loan or Foreign is decided for each occurrence, by grammar.** A word is a
-native Lexeme of its real Kind when this occurrence shows the text language's
-grammar on it: an ending (`ein cooler Typ`, `geyeetet` → VERB `yeeten`) or an
-agreeing article or determiner (`das Meeting`). Otherwise it is Foreign: `das
-ist cool` and `ziemlich cringe` give Foreign `en`. Filling a slot in the
-sentence does not count as grammar, since any word can fill one. The line
-follows the evidence in the sentence, not a dictionary's list of loans, so the
-same word can be a Lexeme in one sentence and Foreign in the next. dumspec
-states this as a Rule (ADR 0037).
+**Loan or Foreign is decided by the dictionary first, then by grammar.** A
+word from another language that the text language's dictionary lists in this
+meaning is a native Lexeme of its real Kind, whether or not this occurrence
+inflects. For German the dictionary is Duden: `das ist cool` gives ADJ `cool`,
+`ziemlich cringe` ADJ `cringe`, and `mit lol` INTJ `lol`. A word the
+dictionary does not list is a Lexeme only when this occurrence shows the text
+language's grammar on it: an ending (`geyeetet` → VERB `yeeten`) or an
+agreeing article or determiner (`der Hotfix`). Otherwise it is Foreign: `sehr
+sus` gives Foreign `en`. Filling a slot in the sentence does not count as
+grammar, since any word can fill one. So a listed word is a Lexeme in every
+sentence, and an unlisted one can be a Lexeme in one sentence and Foreign in
+the next. dumspec states this as a Rule (ADR 0037).
+
+Amended on 2026-09-29: the test was grammar alone. It could never make a word
+that does not inflect a Lexeme, so interjections and indeclinable adjectives
+came out Foreign even where Duden lists them as German (`lol`, `cringe`).
+Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
 
 **A Foreign unit is one word or a lexicalized chunk.** A phrase fixed in its
 source language is one unit: `by the way`, `c'est la vie`, `off-grid`. Free
@@ -76,7 +84,7 @@ part-of-speech list. What it held goes elsewhere:
   (`trans…`, `unver…`) → `Unresolved`, a No Target entry in dumspec;
 - odd tokens → their real Kind (`3D` is an ADJ, as in `3D-Drucker`; `w00t` is
   Foreign `en`);
-- loans → their real Kind, by the grammar test above;
+- loans → their real Kind, by the dictionary-then-grammar test above;
 - foreign names → PROPN as before (`New York`, `The Beatles`).
 
 ## Considered Options
@@ -94,9 +102,12 @@ part-of-speech list. What it held goes elsewhere:
 - **Emoji Descriptions on Foreign Readings.** Rejected: splitting senses of a
   word from another language asks for judgments the text cannot support, and
   the Translation already carries every sense.
-- **Loans by dictionary status.** Rejected: dictionaries disagree and lag
-  behind usage, and the sentence already shows whether the word took German
-  grammar.
+- **Loans by grammar alone.** Chosen first, then rejected on 2026-09-29: a
+  word that never inflects shows no grammar, so `lol` and `cringe` stayed
+  Foreign although Duden lists them.
+- **Loans by dictionary alone.** Rejected: dictionaries lag behind usage, and
+  `geyeetet` already shows that `yeeten` is German before any dictionary lists
+  it.
 
 ## Consequences
 

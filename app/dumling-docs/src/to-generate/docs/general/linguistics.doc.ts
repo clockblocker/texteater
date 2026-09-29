@@ -111,7 +111,7 @@ IDs, click indices, and marked context belong to the calling application.
 | \`Lexeme\` | lexical identities with one Head, categorized by a Universal Dependencies-style POS tag; satellites such as a particle or reflexive may be part of the Canonical Form (\`sich erinnern\`, \`give up\`) |
 | \`Locution\` | multiword Lemmas with two or more Heads (\`den Faden verlieren\`, \`zum Teil\`), categorized by the POS tag the whole acts as |
 | \`Saying\` | complete sayings, proverbs and winged words, with the one Kind \`Saying\` |
-| \`Foreign\` | material from another language that shows none of the text's grammar (\`whatever\`, \`by the way\`), with the one Kind \`Foreign\` and its source language as \`sourceLang\` |
+| \`Foreign\` | material from another language that the text language's dictionary does not list and that shows none of the text's grammar (\`whatever\`, \`by the way\`), with the one Kind \`Foreign\` and its source language as \`sourceLang\` |
 | \`Morpheme\` | roots, prefixes, suffixes, and related sub-word units |
 
 \`kind\` is the public subtype field for all five families. A Kind may repeat across Families (\`Lexeme/VERB\`, \`Locution/VERB\`), so a route is always language, Family and Kind. The package does not expose separate public discriminator names like \`pos\` or \`morphemeKind\`.

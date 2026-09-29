@@ -1,10 +1,12 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
-const cringe = specExample(
-	"de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+const sus = specExample(
+	"de/im-deutschsprachigen-spielchat-wirkte-die-erklaerung-sehr",
 );
-const lol = specExample("de/er-antwortete-im-chat-nur-mit-lol");
+const whatever = specExample(
+	"de/in-der-sonst-deutschen-unterhaltung-antwortete-sie-nur",
+);
 
 const document = defineUniversalConceptPage({
 	description:
@@ -19,9 +21,9 @@ const document = defineUniversalConceptPage({
 
 ## Values
 
-A lowercase ISO 639 code of two or three letters: \`en\`, \`fr\`, \`la\`, \`yi\`, \`grc\`. Any language may appear, not only the languages Dumling supports. \`und\` marks a unit whose language can't be told (\`ok\`, \`lol\`). The value is never \`null\`.
+A lowercase ISO 639 code of two or three letters: \`en\`, \`fr\`, \`la\`, \`yi\`, \`grc\`. Any language may appear, not only the languages Dumling supports. \`und\` marks a unit whose language can't be told. The value is never \`null\`.
 `,
-	examples: [cringe, lol],
+	examples: [sus, whatever],
 	subsections: [
 		{
 			heading: "Current Dumling support",
