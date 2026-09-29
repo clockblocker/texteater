@@ -36,9 +36,9 @@
 		"rules": [
 			{
 				"rule": "de/r-adverb-is-her-or-hin-shorthand",
-				"hash": "548379312c9dc701"
+				"hash": "5e2320ca5d12b229"
 			},
-			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
 		],
 		"references": []
 	},

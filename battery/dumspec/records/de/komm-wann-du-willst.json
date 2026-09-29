@@ -1,33 +1,36 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Komm wann vorbei.",
+	"sentence": "Komm, wann du willst.",
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Komm" },
+		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "wann" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "vorbei" },
+		{ "kind": "ResolvableText", "text": "du" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "willst" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": [],
 		"rules": [
 			{
-				"rule": "de/bare-w-word-is-shorthand",
-				"hash": "7ae30cfdb910de05"
+				"rule": "de/relative-w-adverb-fills-a-slot",
+				"hash": "07b2a8943c6e5919"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"reading": { "emojiDescription": "❔⏰" },
+			"memberSegmentIndices": [3],
+			"reading": { "emojiDescription": "🧩⏰" },
 			"notes": {
-				"rationale": "wann neither asks nor opens a relative clause: it is the Shorthand of irgendwann, come by some time."
+				"rationale": "wann names the time inside du willst, with no antecedent, so it is a relative ADV all the same. Unstressed wann in Komm wann vorbei opens no clause and is irgendwann instead."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,20 +42,20 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "irgendwann",
+						"canonicalForm": "wann",
 						"coreFeatures": {
 							"comparable": null,
 							"foreign": null,
 							"numType": null,
-							"pronType": "Ind"
+							"pronType": "Rel"
 						}
 					},
-					"normalizedSurface": "irgendwann",
+					"normalizedSurface": "wann",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
-				"members": [{ "attested": "wann", "orthography": "Shorthand" }],
+				"members": [{ "attested": "wann", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			}
 		}

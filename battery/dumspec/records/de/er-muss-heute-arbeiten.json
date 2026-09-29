@@ -18,7 +18,7 @@
 		"adrs": ["ADR-0026"],
 		"rules": [
 			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
-			{ "rule": "de/modal-is-a-verb", "hash": "0f3e63e6bfa51754" }
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
 		],
 		"references": []
 	},

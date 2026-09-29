@@ -173,7 +173,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/r-adverb-is-her-or-hin-shorthand",
 		statement:
-			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran) is the Shorthand of the her- or hin- adverb it shortens, never a Lemma or a Variant spelling of its own: the target is the full word, and the r- word is its member in Shorthand orthography. The direction relative to the speaker or the scene's viewpoint picks the word, and the context shows it: movement towards it gives the her- word, movement away from it the hin- word. raus is heraus or hinaus, rein herein or hinein, rüber herüber or hinüber, runter herunter or hinunter, and rauf herauf or hinauf. ran is only heran: Duden gives it for heran alone, and hinan is an elevated word for hinauf. So Die Zahnärztin sieht sich das Röntgenbild an: „Der Zahn muss raus.“ gives [raus] ADV heraus, and Der Brief liegt hier auf meinem Schreibtisch. Das muss heute noch raus. gives [raus] ADV hinaus. In the verbal bracket the r- word is the particle of the her- or hin- particle verb, picked the same way (de/bracket-particle-or-circumposition), and the Surface spells the full particle: Ich warte draußen vor der Tür. Komm sofort raus! gives [Komm, raus] VERB herauskommen, and Ich bleibe draußen auf der Terrasse, aber sie geht schon rein. gives [geht, rein] VERB hineingehen. A modal with an r- word and no infinitive forms no particle verb, though dictionaries list herausmüssen and hinauswollen: the modal is a VERB of its own (de/modal-is-a-verb), and the r- word is an ADV target, so Unser Zelt steht auf der anderen Seite des Flusses. Wir müssen heute noch rüber. gives [müssen] VERB müssen and [rüber] ADV hinüber.",
+			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran) is the Shorthand of the her- or hin- word it shortens, never a Lemma or Variant of its own: the target is the full word, with the r- word as its member in Shorthand orthography. Movement towards the speaker or the scene's viewpoint gives the her- word, movement away the hin- word, and ran is always heran. In the verbal bracket the r- word is the particle of that word's particle verb, and the Surface spells the full particle: Komm sofort raus! gives [Komm, raus] VERB herauskommen.",
 		adrs: ["ADR-0022", "ADR-0026", "ADR-0035"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
@@ -198,7 +198,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/split-adverb-is-one-target",
 		statement:
-			"A da, wo or hier split from its hin, her or preposition is one target of the whole ADV Lexeme, and the verb stays bare. Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen; Wo kommst du her? gives [Wo, her] ADV woher; Da gehe ich morgen hin gives [Da, hin] ADV dahin and [gehe] VERB gehen. A split pronominal adverb is one target the same way: Da weiß ich nichts von gives [Da, von] ADV davon, Da kann ich nichts für gives [Da, für] ADV dafür, and Wo hast du das mit gemacht? gives [Wo, mit] ADV womit. When hin or her is written as part of the verb (Wo willst du hinfahren?), it stays with the verb, and wo or da is a target on its own.",
+			"A da, wo or hier split from its hin, her or preposition is one target of the whole ADV Lexeme, and the verb stays bare: Wo gehst du hin? gives [Wo, hin] ADV wohin and [gehst] VERB gehen, not hingehen. A split pronominal adverb is one target the same way. When hin or her is written as part of the verb, it stays with the verb, and wo or da is a target on its own.",
 		adrs: ["ADR-0029"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
@@ -226,12 +226,15 @@ const verbs: Rule[] = [
 	{
 		id: "de/modal-is-a-verb",
 		statement:
-			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (sich lassen, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
+			"A modal (dürfen, können, mögen, müssen, sollen, wollen) is a VERB with its own meaning, whether or not an infinitive follows. Without one, a directional word after it is an ADV, never its particle, though dictionaries list herausmüssen. It owns the auxiliaries that serve it, and the infinitive it governs is a separate VERB target: hat … schreiben müssen gives [hat, müssen] and [schreiben]. Verbs that add a meaning beside a construction (sich lassen, gehören with a participle, brauchen, scheinen, drohen, versprechen or pflegen with zu, copular bleiben) are VERBs in the same way.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB"),
 		records: [
 			"de/er-muss-heute-arbeiten",
 			"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute",
+			"de/unser-zelt-steht-auf-der-anderen-seite-des-flusses-wir",
+			"de/die-kinder-sitzen-seit-stunden-drinnen-jetzt-wollen-sie",
+			"de/die-zahnaerztin-sieht-sich-das-roentgenbild-an-der-zahn-muss",
 		],
 	},
 	{
@@ -511,7 +514,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/relative-w-adverb-fills-a-slot",
 		statement:
-			"Outside a question, direct or indirect, a w-adverb is a relative ADV (pronType Rel) when it names a place, time, manner or reason inside its own clause: die Stadt, wo sie wohnt; jetzt, wo du da bist, where wo is the time of du da bist; Mach es, wie du willst, where wie is the way you want it done; der Grund, weshalb sie geht. It needs no antecedent: Komm, wann du willst is Rel. The same word is SCONJ when it only links the clauses and names nothing inside its own, as causal or concessive wo does in wo er doch krank ist. A causal overtone on a Rel use, as in jetzt, wo read as now that, is an inference and changes neither Kind nor Reading. Comparison wie fills no manner slot in its clause. It completes a comparison with so, ebenso, genauso or the like, and stays CCONJ (so groß wie sie) or SCONJ (so leise, wie er versprach).",
+			"Outside a question, direct or indirect, a w-adverb is a relative ADV (pronType Rel) when it names a place, time, manner or reason inside its own clause, with or without an antecedent: die Stadt, wo sie wohnt. A causal overtone on such a use is an inference and changes neither Kind nor Reading. The same word is SCONJ when it only links the clauses and names nothing inside its own. Comparison wie fills no slot in its clause: it is CCONJ before a phrase and SCONJ before a clause.",
 		adrs: [],
 		routes: lexeme("ADV", "SCONJ", "CCONJ"),
 		records: [
@@ -525,6 +528,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/das-ist-der-grund-weshalb-die-faehre-heute-ausfaellt",
 			"de/in-dem-moment-wo-sie-ankam-begann-es-zu-regnen",
 			"de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
+			"de/komm-wann-du-willst",
 		],
 	},
 	{
@@ -543,7 +547,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/bare-w-word-is-shorthand",
 		statement:
-			"A bare w-word that neither asks nor opens a relative clause, usually unstressed inside its clause, is the Shorthand of an indefinite: the target is that indefinite, and the w-word is its one member, in Shorthand orthography. wo is irgendwo (Das liegt wo im Keller), wann irgendwann, wie irgendwie, wohin irgendwohin, woher irgendwoher, and wer, wen and wem are irgendwer (Ist da wer?). Bare was is etwas, not irgendwas (Ich hab was gehört): was is et-was shortened, and it lacks the any-at-all sense that irgend- adds. An echo question stays interrogative: the stressed was of Du hast WAS gemacht? asks.",
+			"A bare w-word that neither asks nor opens a relative clause, usually unstressed inside its clause, is the Shorthand of its irgend- word: the target is that indefinite, and the w-word is its one member, in Shorthand orthography: Das liegt wo im Keller gives [wo] ADV irgendwo. wer, wen and wem are irgendwer, and bare was is etwas, not irgendwas. An echo question stays interrogative.",
 		adrs: ["ADR-0035"],
 		routes: lexeme("ADV", "PRON"),
 		records: [
@@ -556,6 +560,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/den-kenn-ich-woher",
 			"de/ich-hab-was-gehoert",
 			"de/sag-doch-was",
+			"de/ich-habe-das-auto-verkauft-du-hast-was-gemacht",
 		],
 	},
 	{
