@@ -1,11 +1,16 @@
 /**
- * The gold every prompt's cases come from: dumspec's Spec Records, read when
- * the eval runs, and Dumgen's sidecar beside them. The sidecar holds what
+ * The gold every prompt's cases come from: dumspec's Spec Records at their
+ * Segmentation layer, read when the eval runs, and Dumgen's sidecar beside
+ * them. The sidecar holds what
  * Dumgen owns and the records do not carry: explanations, slices, and the
  * records a run leaves out, each with its reason.
  */
 import { readFileSync } from "node:fs";
-import { loadSpecRecords, loadSpecWorklist, type SpecCheck } from "dumspec";
+import {
+	loadSpecSegmentations,
+	loadSpecWorklist,
+	type SpecCheck,
+} from "dumspec";
 import type * as Dumspec from "dumspec/types";
 import { z } from "zod";
 
@@ -43,16 +48,23 @@ const sidecarSchema = z.strictObject({
 });
 export type Sidecar = z.infer<typeof sidecarSchema>;
 
-/** A Draft dumspec leaves out because it fails a check against the model. */
+/**
+ * A record dumspec leaves out because its Segmentation layer fails a check
+ * against the model, with the Segmentation checks it fails.
+ */
 export type UnloadedRecord = {
 	readonly record: Dumspec.SpecRecordId;
-	readonly status: Dumspec.ReviewStatus;
+	/** The deepest layer a person has reviewed; absent for a Draft. */
+	readonly reviewDepth?: Dumspec.AnnotationLayer;
 	readonly checks: readonly SpecCheck[];
 };
 
 export type Gold = {
-	/** Every Spec Record that passes dumspec's checks, sorted by id. */
-	readonly records: readonly Dumspec.SpecRecord[];
+	/**
+	 * Every Spec Record whose Segmentation passes dumspec's checks, sorted by
+	 * id, whatever its deeper layers hold.
+	 */
+	readonly records: readonly Dumspec.SpecSegmentation[];
 	/** Spec Records dumspec does not load, so no projection sees them. */
 	readonly unloaded: readonly UnloadedRecord[];
 	readonly sidecar: Sidecar;
@@ -71,7 +83,7 @@ export function readSidecar(url: URL = sidecarUrl): Sidecar {
  * exclusion unnoticed.
  */
 export function goldOf(args: {
-	readonly records: readonly Dumspec.SpecRecord[];
+	readonly records: readonly Dumspec.SpecSegmentation[];
 	readonly unloaded?: readonly UnloadedRecord[];
 	readonly sidecar: Sidecar;
 }): Gold {
@@ -93,12 +105,12 @@ export function goldOf(args: {
 }
 
 /**
- * Loads the Spec Records from dumspec and Dumgen's sidecar. Reads the file
- * system; throws when dumspec rejects a record or the sidecar names a record
- * that does not exist.
+ * Loads the Spec Records' Segmentations from dumspec and Dumgen's sidecar.
+ * Reads the file system; throws when dumspec rejects a record or the sidecar
+ * names a record that does not exist.
  */
 export function loadGold(sidecar: Sidecar = readSidecar()): Gold {
-	const records = loadSpecRecords();
+	const records = loadSpecSegmentations();
 	const loaded = new Set(records.map(({ id }) => id));
 	const unloaded = loadSpecWorklist()
 		.filter(
@@ -110,8 +122,16 @@ export function loadGold(sidecar: Sidecar = readSidecar()): Gold {
 		.map(
 			(entry): UnloadedRecord => ({
 				record: entry.record,
-				status: entry.status,
-				checks: [...new Set(entry.issues.map(({ check }) => check))],
+				...(entry.reviewDepth === undefined
+					? {}
+					: { reviewDepth: entry.reviewDepth }),
+				checks: [
+					...new Set(
+						entry.issues
+							.filter(({ layer }) => layer === "Segmentation")
+							.map(({ check }) => check),
+					),
+				],
 			}),
 		);
 	return goldOf({ records, unloaded, sidecar });

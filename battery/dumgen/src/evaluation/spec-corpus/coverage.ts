@@ -1,14 +1,15 @@
 /**
- * How much of the gold one prompt's corpus covers, split by Review Status:
- * its cases, the excluded ones among them, the records it skips and why, and
- * the records dumspec leaves out. The skips and left-out records are the
- * worklist that would grow the corpus.
+ * How much of the gold one prompt's corpus covers, split into Reviewed and
+ * Draft by the Annotation Layer the prompt outputs: its cases, the excluded
+ * ones among them, the records it skips and why, and the records dumspec
+ * leaves out. The skips and left-out records are the worklist that would
+ * grow the corpus.
  */
 import type * as Dumling from "dumling/types";
-import type * as Dumspec from "dumspec/types";
+import { isReviewed } from "dumspec";
 import type { z } from "zod";
 import type { Gold } from "./gold.js";
-import type { ProjectedCorpus } from "./projection.js";
+import type { ProjectedCorpus, ReviewGroup } from "./projection.js";
 
 type Listing = Readonly<Record<string, readonly string[]>>;
 
@@ -27,7 +28,7 @@ export type CoverageRow = {
 export type Coverage = {
 	readonly route: string;
 	readonly language: Dumling.Language;
-	readonly byStatus: Readonly<Record<Dumspec.ReviewStatus, CoverageRow>>;
+	readonly byStatus: Readonly<Record<ReviewGroup, CoverageRow>>;
 };
 
 const statuses = ["Reviewed", "Draft"] as const;
@@ -60,7 +61,7 @@ export function coverageOf<
 	);
 	const excludedIds = new Set(projected.excluded.ids);
 	const byStatus = Object.fromEntries(
-		statuses.map((status): [Dumspec.ReviewStatus, CoverageRow] => {
+		statuses.map((status): [ReviewGroup, CoverageRow] => {
 			const cases = origins.filter(
 				([, origin]) => origin.status === status,
 			);
@@ -104,7 +105,9 @@ export function coverageOf<
 						gold.unloaded
 							.filter(
 								(entry) =>
-									entry.status === status &&
+									(isReviewed(entry, projected.layer)
+										? "Reviewed"
+										: "Draft") === status &&
 									entry.record.startsWith(`${language}/`),
 							)
 							.map(({ record, checks }) => ({
@@ -115,7 +118,7 @@ export function coverageOf<
 				},
 			];
 		}),
-	) as Record<Dumspec.ReviewStatus, CoverageRow>;
+	) as Record<ReviewGroup, CoverageRow>;
 	return { route: projected.corpus.route, language, byStatus };
 }
 

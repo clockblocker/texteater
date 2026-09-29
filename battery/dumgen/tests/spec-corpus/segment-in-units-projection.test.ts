@@ -30,23 +30,25 @@ const qzxv = specRecord({
 	],
 	noTarget: [4],
 	coverage: "Full",
-	status: "Draft",
+	reviewDepth: undefined,
 });
 const draft = specRecord({
 	id: "de/sie-geht",
 	sentence: "Sie geht.",
 	targets: [[[2], "Lexeme", "VERB"]],
-	status: "Draft",
+	reviewDepth: undefined,
 });
 const excluded = specRecord({
 	id: "de/er-kommt",
 	sentence: "Er kommt.",
 	targets: [[[2], "Lexeme", "VERB"]],
 });
+// Reviewed through a deeper layer, so Reviewed for segment.inUnits too.
 const other = specRecord({
 	id: "de/wir-lachen",
 	sentence: "Wir lachen.",
 	targets: [[[2], "Lexeme", "VERB"]],
+	reviewDepth: "Reading",
 });
 const english = specRecord({
 	id: "en/she-left",
@@ -58,7 +60,7 @@ const empty = specRecord({
 	id: "de/leer",
 	sentence: "Leer.",
 	targets: [],
-	status: "Draft",
+	reviewDepth: undefined,
 });
 
 const sidecar: Sidecar = {
@@ -129,7 +131,7 @@ describe("the segment.inUnits projection", () => {
 		expect(facts[qzxv.id]?.sources.at(-1)).toEqual({ noTarget: 0 });
 	});
 
-	test("groups cases by Review Status and leaves other languages out", () => {
+	test("groups cases by review through Segmentation and leaves other languages out", () => {
 		const projected = project();
 		expect(projected.reviewed.ids).toEqual([
 			nora.id,
@@ -228,9 +230,7 @@ test("the gold rejects a sidecar naming a record that does not exist", () => {
 	expect(() =>
 		goldOf({
 			records: [nora],
-			unloaded: [
-				{ record: draft.id, status: "Draft", checks: ["Coverage"] },
-			],
+			unloaded: [{ record: draft.id, checks: ["Coverage"] }],
 			sidecar: {
 				...emptySidecar,
 				exclusions: {

@@ -71,7 +71,9 @@ export type SegmentInUnitsFacts = {
 
 export const segmentInUnitsRoute = "segment-in-units/de";
 
-function segmentInUnitsInput(record: Dumspec.SpecRecord): SegmentInUnitsInput {
+function segmentInUnitsInput(
+	record: Dumspec.SpecSegmentation,
+): SegmentInUnitsInput {
 	return {
 		language: "de",
 		segments: record.segments.map(({ kind, text, surface }) => ({
@@ -83,9 +85,10 @@ function segmentInUnitsInput(record: Dumspec.SpecRecord): SegmentInUnitsInput {
 }
 
 /**
- * One case per German record: each target is a unit with its members'
- * Segments and its Lemma's route, and each No Target entry an `Unresolved`
- * unit of its one Segment, ordered by first Segment.
+ * One case per German record whose Segmentation passes: each target is a
+ * unit with its members' Segments and its route, and each No Target entry an
+ * `Unresolved` unit of its one Segment, ordered by first Segment. A case is
+ * Reviewed when its record is reviewed through Segmentation.
  */
 export const segmentInUnits: Projection<
 	typeof segmentInUnitsInputSchema,
@@ -94,6 +97,7 @@ export const segmentInUnits: Projection<
 > = {
 	route: segmentInUnitsRoute,
 	language: "de",
+	layer: "Segmentation",
 	inputSchema: segmentInUnitsInputSchema,
 	outputSchema: segmentInUnitsOutputSchema,
 	project(record) {
@@ -101,8 +105,7 @@ export const segmentInUnits: Projection<
 			return { skip: "Annotates no Segment" };
 		const units = [
 			...record.targets.map((target, index) => {
-				const { language, family, kind } =
-					target.attestation.surface.lemma;
+				const { language, family, kind } = target.route;
 				return {
 					source: { target: index },
 					unit: {

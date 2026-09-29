@@ -23,8 +23,8 @@ export function segmentsOf(sentence: string): Dumspec.Segment[] {
 }
 
 /**
- * A Spec Record with only what the projections read. Its targets hold an
- * Attestation of which only the Lemma's route is filled in.
+ * A Spec Record's Segmentation. It is reviewed through Segmentation unless
+ * `reviewDepth` says otherwise; `reviewDepth: undefined` makes a Draft.
  */
 export function specRecord(args: {
 	readonly id: string;
@@ -32,10 +32,12 @@ export function specRecord(args: {
 	readonly targets: readonly TargetSpec[];
 	readonly noTarget?: readonly number[];
 	readonly coverage?: Dumspec.Coverage;
-	readonly status?: Dumspec.ReviewStatus;
+	readonly reviewDepth?: Dumspec.AnnotationLayer;
 	readonly language?: Dumling.Language;
-}): Dumspec.SpecRecord {
+}): Dumspec.SpecSegmentation {
 	const language = args.language ?? "de";
+	const reviewDepth =
+		"reviewDepth" in args ? args.reviewDepth : "Segmentation";
 	return {
 		id: args.id,
 		language,
@@ -43,16 +45,15 @@ export function specRecord(args: {
 		segments: segmentsOf(args.sentence),
 		targets: args.targets.map(([memberSegmentIndices, family, kind]) => ({
 			memberSegmentIndices,
-			attestation: {
-				surface: { lemma: { language, family, kind } },
-			} as unknown as Dumling.Attestation,
+			route: { language, family, kind } as Dumspec.SpecRoute,
 		})),
 		noTarget: (args.noTarget ?? []).map((segment) => ({
 			segment,
 			reason: "Unintelligible",
 		})),
 		coverage: args.coverage ?? "Partial",
-		status: args.status ?? "Reviewed",
+		...(reviewDepth === undefined ? {} : { reviewDepth }),
+		validThrough: "Segmentation",
 		sources: { adrs: [], rules: [], references: [] },
 		provenance: { kind: "Authored" },
 	};

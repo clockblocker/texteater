@@ -2,9 +2,10 @@
  * One projection per prompt turns Spec Records into that prompt's promptsmith
  * Golden Corpus. The projection decides what a record gives the prompt; this
  * file adds what every prompt shares: origins, record contamination keys,
- * sidecar explanations, status groups, slices, exclusions, and the test set.
+ * sidecar explanations, review groups, slices, exclusions, and the test set.
  */
 import type * as Dumling from "dumling/types";
+import { isReviewed } from "dumspec";
 import type * as Dumspec from "dumspec/types";
 import {
 	type CaseSelection,
@@ -19,14 +20,20 @@ import type { z } from "zod";
 import type { Gold } from "./gold.js";
 
 /**
+ * Whether a case's gold is Reviewed: its record is reviewed through the
+ * Annotation Layer the prompt outputs. Otherwise it is Draft.
+ */
+export type ReviewGroup = "Reviewed" | "Draft";
+
+/**
  * The Spec Record a case comes from, the record's target when the case is
- * one target's, and the Review Status it had, so scores split into Reviewed
- * and Draft.
+ * one target's, and its review group, so scores split into Reviewed and
+ * Draft.
  */
 export type CaseOrigin = {
 	readonly record: Dumspec.SpecRecordId;
 	readonly target?: number;
-	readonly status: Dumspec.ReviewStatus;
+	readonly status: ReviewGroup;
 };
 
 /**
@@ -58,10 +65,15 @@ export type Projection<
 	/** The Golden Corpus route, which also keys the sidecar's explanations. */
 	readonly route: string;
 	readonly language: Dumling.Language;
+	/**
+	 * The Annotation Layer the prompt outputs. A case is Reviewed when its
+	 * record is reviewed through this layer.
+	 */
+	readonly layer: Dumspec.AnnotationLayer;
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;
 	readonly project: (
-		record: Dumspec.SpecRecord,
+		record: Dumspec.SpecSegmentation,
 	) =>
 		| readonly ProjectedCase<
 				z.input<InputSchema>,
@@ -73,7 +85,7 @@ export type Projection<
 
 export type SkippedRecord = {
 	readonly record: Dumspec.SpecRecordId;
-	readonly status: Dumspec.ReviewStatus;
+	readonly status: ReviewGroup;
 	readonly reason: string;
 	/** The record whose case has the same input, for a duplicate. */
 	readonly sameInputAs?: Dumspec.SpecRecordId;
@@ -82,7 +94,7 @@ export type SkippedRecord = {
 /** The reason a record is skipped when another record gave its input. */
 export const sameInputReason = "Same input as another record";
 
-/** The collection holding every case; its groups are the Review Statuses. */
+/** The collection holding every case; its groups are the review groups. */
 export const specCollection = "dumspec";
 
 export type ProjectedCorpus<
@@ -90,9 +102,11 @@ export type ProjectedCorpus<
 	OutputSchema extends z.ZodType,
 	Facts,
 > = {
+	/** The Annotation Layer the prompt outputs, from its projection. */
+	readonly layer: Dumspec.AnnotationLayer;
 	/**
 	 * One case per projected record or target, in record order. Its groups
-	 * `dumspec.Reviewed` and `dumspec.Draft` split it by Review Status.
+	 * `dumspec.Reviewed` and `dumspec.Draft` split it by review group.
 	 */
 	readonly corpus: GoldenCorpus<InputSchema, OutputSchema>;
 	readonly reviewed: CaseSelection<InputSchema, OutputSchema>;
@@ -125,20 +139,19 @@ export type ProjectedCorpus<
 };
 
 /**
- * The Review Status of one target. It lives on the record today; read it only
- * here, so it can move to each target without touching the projections. A
- * whole-record case is Reviewed only when the record is.
+ * A record's review group for a prompt: Reviewed when a person has reviewed
+ * it through the layer the prompt outputs (ADR 0037, amended 2026-09-29).
  */
-function statusOf(
-	record: Dumspec.SpecRecord,
-	_target: number | undefined,
-): Dumspec.ReviewStatus {
-	return record.status;
+function groupOf(
+	record: Dumspec.SpecSegmentation,
+	layer: Dumspec.AnnotationLayer,
+): ReviewGroup {
+	return isReviewed(record, layer) ? "Reviewed" : "Draft";
 }
 
 type Entry<Input, Output, Facts> = {
 	readonly id: string;
-	readonly record: Dumspec.SpecRecord;
+	readonly record: Dumspec.SpecSegmentation;
 	readonly projected: ProjectedCase<Input, Output, Facts>;
 };
 
@@ -165,9 +178,11 @@ export function projectCorpus<
 	const skipped: SkippedRecord[] = [];
 	const entries: Entry<z.input<InputSchema>, z.input<OutputSchema>, Facts>[] =
 		[];
-	const rank = (record: Dumspec.SpecRecord) =>
+	const statusOf = (record: Dumspec.SpecSegmentation) =>
+		groupOf(record, projection.layer);
+	const rank = (record: Dumspec.SpecSegmentation) =>
 		(excludedRecords.has(record.id) ? 2 : 0) +
-		(record.status === "Reviewed" ? 0 : 1);
+		(statusOf(record) === "Reviewed" ? 0 : 1);
 	const inputs = new Map<string, Dumspec.SpecRecordId>();
 	for (const record of records.toSorted(
 		(left, right) => rank(left) - rank(right),
@@ -176,7 +191,7 @@ export function projectCorpus<
 		if ("skip" in result) {
 			skipped.push({
 				record: record.id,
-				status: record.status,
+				status: statusOf(record),
 				reason: result.skip,
 			});
 			continue;
@@ -189,7 +204,7 @@ export function projectCorpus<
 		if (first !== undefined) {
 			skipped.push({
 				record: record.id,
-				status: record.status,
+				status: statusOf(record),
 				reason: sameInputReason,
 				sameInputAs: first,
 			});
@@ -229,11 +244,11 @@ export function projectCorpus<
 	const origins: Record<string, CaseOrigin> = {};
 	const facts: Record<string, Facts> = {};
 	const groups: Record<
-		Dumspec.ReviewStatus,
+		ReviewGroup,
 		Record<string, GoldenCase<z.input<InputSchema>, z.input<OutputSchema>>>
 	> = { Reviewed: {}, Draft: {} };
 	for (const { id, record, projected } of entries) {
-		const status = statusOf(record, projected.target);
+		const status = statusOf(record);
 		origins[id] = {
 			record: record.id,
 			...(projected.target === undefined
@@ -288,6 +303,7 @@ export function projectCorpus<
 	const reviewed = corpus.select(Object.keys(groups.Reviewed));
 	const excluded = casesOf(excludedRecords);
 	return {
+		layer: projection.layer,
 		corpus,
 		reviewed,
 		draft: corpus.select(Object.keys(groups.Draft)),
