@@ -336,7 +336,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "wechseln 'exchange' takes the exchange partner as an optional mit complement (DWDS: ⟨(mit jmdm.) etw. wechseln⟩, Blicke, einen Blick wechseln), so mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. open: finding B2."
+				"rationale": "wechseln 'exchange' takes the exchange partner as an optional mit complement (DWDS: ⟨(mit jmdm.) etw. wechseln⟩, Blicke, einen Blick wechseln), so mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. Ruled on #743 (BT-B2)."
 			}
 		},
 		{
@@ -734,7 +734,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "ein wenig 'a little' is a fixed pair: its ein never inflects (mit ein wenig Geduld, DWDS ⟨ein (klein) wenig (= etwas)⟩), so it is no article and wenig no Head owning one. The pair acts as a degree adverbial here, so Locution ADV. open: finding B3."
+				"rationale": "ein wenig 'a little' is a fixed pair: its ein never inflects (mit ein wenig Geduld, DWDS ⟨ein (klein) wenig (= etwas)⟩), so it is no article and wenig no Head owning one. The pair acts as a degree adverbial here, so Locution ADV. open: #734."
 			}
 		},
 		{

@@ -180,7 +180,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Contrastive aber standing after the first constituent. DWDS files this position under the Konjunktion (morgen früh aber bin ich bereit); its Adverb aber is the archaic 'again'. So CCONJ, against STTS/UD ADV. open: finding B8."
+				"rationale": "Contrastive aber standing after the first constituent. DWDS files this position under the Konjunktion (morgen früh aber bin ich bereit); its Adverb aber is the archaic 'again'. So CCONJ, against STTS/UD ADV. open: #734."
 			}
 		},
 		{
