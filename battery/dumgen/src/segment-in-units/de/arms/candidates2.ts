@@ -15,6 +15,7 @@ import {
 	judgeRoutes,
 	judgeState,
 	type LinkJudgment,
+	option,
 	type Reference,
 	routeFrom,
 } from "../arm.js";
@@ -43,6 +44,7 @@ import {
 	expressionId,
 	fixedId,
 	pairId,
+	type SlotLink,
 	slotId,
 	slotLinks,
 	slotQuestion,
@@ -65,17 +67,43 @@ const pairQuestion: Record<
 		`In \`sentence\`, are ${ref(pair.left)} and ${ref(pair.right)} parts of one multiword proper name (Johann Wolfgang von Goethe, Tundu Lissu, New York), rather than a title or common noun next to a name, or two separate names?`,
 };
 
+/** v3: the v2 wording invited the modal as host (`musste … verleumdet haben`). */
+const auxiliaryQuestion3 = (piece: string) =>
+	`In \`sentence\`, is ${piece} an auxiliary that forms the perfect, future or passive of another verb (hat … gegessen, ist … gekommen, wird … gebaut, wird … kommen, ist … verleumdet worden)? If so, which piece is the participle or infinitive it combines with? Only in hat … schreiben müssen, where an infinitive-shaped modal stands for the participle, choose the modal. Choose none if ${piece} is a full verb here: a copula before an adjective or noun, possession, or becoming.`;
+
+/**
+ * v3: a host takes at most one particle and one governed preposition, the
+ * most probable (`sehnen sich nach … nach`).
+ */
+function oneSatellitePerHost(links: readonly SlotLink[]): SlotLink[] {
+	const best = new Map<string, SlotLink>();
+	for (const link of links) {
+		if (link.kind !== "preposition" && link.kind !== "particle") continue;
+		const key = `${link.kind}:${link.to}`;
+		const previous = best.get(key);
+		if (!previous || previous.share < link.share) best.set(key, link);
+	}
+	return links.filter(
+		(link) =>
+			(link.kind !== "preposition" && link.kind !== "particle") ||
+			best.get(`${link.kind}:${link.to}`) === link,
+	);
+}
+
 function questionsOf(
 	sentence: Sentence,
 	ref: Reference,
 	slots: readonly Slot[],
 	pairs: readonly PairCandidate[],
 	spans: readonly SayingSpan[],
+	generation: number,
 ): Questions {
 	const questions: Questions = {};
 	for (const slot of slots)
 		questions[slotId(slot)] = choice(
-			slotQuestion[slot.kind](ref(slot.piece)),
+			generation >= 3 && slot.kind === "auxiliary"
+				? auxiliaryQuestion3(ref(slot.piece))
+				: slotQuestion[slot.kind](ref(slot.piece)),
 			{
 				...Object.fromEntries(
 					slot.hosts.map((host) => [`p${host.id}`, host.text]),
@@ -193,13 +221,21 @@ export const candidates2Arm: Arm = {
 	async run(input, context) {
 		const sentence = sentenceOf(input);
 		const { state, ref } = judgeState(sentence, context);
-		const slots = slotsOf(sentence, 2);
+		const generation = Number(option(context.options, "gen", "2"));
+		const slots = slotsOf(sentence, generation);
 		const pairs = pairCandidatesOf(sentence, 2);
 		const spans = sayingSpans(sentence);
 		const first = await context.jev.ask({
 			stage: "candidates",
 			state,
-			questions: questionsOf(sentence, ref, slots, pairs, spans),
+			questions: questionsOf(
+				sentence,
+				ref,
+				slots,
+				pairs,
+				spans,
+				generation,
+			),
 			repetition: context.repetition,
 			calls: context.calls,
 		});
@@ -234,7 +270,10 @@ export const candidates2Arm: Arm = {
 				probability: noulOf(second, expressionId(a.id, b.id)),
 			})),
 		);
-		const slotAnswers = slotLinks(slots, first);
+		const slotAnswers =
+			generation >= 3
+				? oneSatellitePerHost(slotLinks(slots, first))
+				: slotLinks(slots, first);
 		const articleOf = new Map(
 			slotAnswers
 				.filter((link) => link.kind === "article")

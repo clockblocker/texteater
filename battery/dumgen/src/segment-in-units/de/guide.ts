@@ -25,6 +25,115 @@ export const unitGuide = {
 	],
 };
 
+/**
+ * Worked examples for the `demos` guide level, written from the Rule
+ * statements' own examples, not taken from Spec Records.
+ */
+export const demonstrations: readonly {
+	sentence: string;
+	units: readonly string[];
+}[] = [
+	{
+		sentence: "Er zog seinen Mantel an.",
+		units: [
+			"[Er] Lexeme/PRON",
+			"[zog, an] Lexeme/VERB",
+			"[seinen] Lexeme/DET",
+			"[Mantel] Lexeme/NOUN",
+		],
+	},
+	{
+		sentence: "Ich bin im Wald.",
+		units: [
+			"[Ich] Lexeme/PRON",
+			"[bin] Lexeme/VERB",
+			"[i] Lexeme/ADP (in)",
+			"[m, Wald] Lexeme/NOUN (m = dem)",
+		],
+	},
+	{
+		sentence: "Sie hat den Faden verloren.",
+		units: [
+			"[Sie] Lexeme/PRON",
+			"[hat, den, Faden, verloren] Locution/VERB",
+		],
+	},
+	{
+		sentence: "Er ist stolz auf seinen Sohn.",
+		units: [
+			"[Er] Lexeme/PRON",
+			"[ist] Lexeme/VERB",
+			"[stolz, auf] Lexeme/ADJ",
+			"[seinen] Lexeme/DET",
+			"[Sohn] Lexeme/NOUN",
+		],
+	},
+	{
+		sentence: "Die Tür ist geschlossen, und sie singt laut.",
+		units: [
+			"[Die, Tür] Lexeme/NOUN",
+			"[ist] Lexeme/VERB",
+			"[geschlossen] Lexeme/ADJ",
+			"[und] Lexeme/CCONJ",
+			"[sie] Lexeme/PRON",
+			"[singt] Lexeme/VERB",
+			"[laut] Lexeme/ADJ",
+		],
+	},
+	{
+		sentence: "Morgenstund hat Gold im Mund, sagte sie.",
+		units: [
+			"[Morgenstund, hat, Gold, i, m, Mund] Saying/Saying",
+			"[sagte] Lexeme/VERB",
+			"[sie] Lexeme/PRON",
+		],
+	},
+	{
+		sentence: "Er wartet darauf, dass es regnet.",
+		units: [
+			"[Er] Lexeme/PRON",
+			"[wartet] Lexeme/VERB",
+			"[darauf] Lexeme/ADV",
+			"[dass] Lexeme/SCONJ",
+			"[es, regnet] Lexeme/VERB",
+		],
+	},
+	{
+		sentence: "Da weiß ich nichts von.",
+		units: [
+			"[Da, von] Lexeme/ADV",
+			"[weiß] Lexeme/VERB",
+			"[ich] Lexeme/PRON",
+			"[nichts] Lexeme/PRON",
+		],
+	},
+	{
+		sentence: "Das ist nicht mein Problem, sie stellt eine Frage.",
+		units: [
+			"[Das] Lexeme/PRON",
+			"[ist] Lexeme/VERB",
+			"[nicht] Lexeme/PART",
+			"[mein] Lexeme/DET",
+			"[Problem] Lexeme/NOUN",
+			"[sie] Lexeme/PRON",
+			"[stellt, eine, Frage] Locution/VERB",
+		],
+	},
+	{
+		sentence: "Er versucht zu schlafen, um morgen fit zu sein.",
+		units: [
+			"[Er] Lexeme/PRON",
+			"[versucht] Lexeme/VERB",
+			"[zu] Lexeme/PART",
+			"[schlafen] Lexeme/VERB",
+			"[um, zu] Locution/SCONJ",
+			"[morgen] Lexeme/ADV",
+			"[fit] Lexeme/ADJ",
+			"[sein] Lexeme/VERB",
+		],
+	},
+];
+
 /** Every German Rule statement, keyed by id: the heavy state variant. */
 export function ruleStatements(): Record<string, string> {
 	return Object.fromEntries(

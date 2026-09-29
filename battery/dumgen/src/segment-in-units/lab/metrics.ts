@@ -11,6 +11,13 @@ import {
 	evaluateSegmentInUnits,
 	type SegmentInUnitsEvaluation,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import {
+	expletiveForms,
+	isAdposition,
+	isAuxiliaryForm,
+	particleForms,
+	reflexiveForms,
+} from "../de/candidates.js";
 import { keyOf } from "../de/routes.js";
 import type { LabCase } from "./corpus.js";
 import type { CallRecord } from "./jev.js";
@@ -646,3 +653,90 @@ export function pairedUnits(
 	}
 	return summary;
 }
+
+const lassenForms = new Set([
+	"lassen",
+	"lasse",
+	"lässt",
+	"läßt",
+	"lasst",
+	"laßt",
+	"ließ",
+	"ließen",
+	"ließest",
+	"ließt",
+	"gelassen",
+	"ließe",
+]);
+
+/**
+ * Phenomenon tags of a gold unit, from its route and its pieces' spellings:
+ * what kind of grouping or routing it asks for.
+ */
+export const byPhenomenon = (labCase: LabCase, unit: Unit): string[] => {
+	const route = keyOf(unit.route);
+	const texts = unit.segments.map(
+		(index) => labCase.input.segments[index]?.text.toLowerCase() ?? "",
+	);
+	const surfaces = unit.segments.map((index) =>
+		(
+			labCase.input.segments[index]?.surface ??
+			labCase.input.segments[index]?.text ??
+			""
+		).toLowerCase(),
+	);
+	const tags: string[] = [];
+	const sorted = [...unit.segments].sort((a, b) => a - b);
+	const pieceIndex = (segment: number) =>
+		labCase.input.segments
+			.slice(0, segment)
+			.filter((entry) => entry.kind === "ResolvableText").length;
+	const span =
+		sorted.length > 1
+			? pieceIndex(sorted[sorted.length - 1] ?? 0) -
+				pieceIndex(sorted[0] ?? 0)
+			: 0;
+	if (unit.segments.length === 1) tags.push(`one piece ${route}`);
+	if (route === "Lexeme/VERB" && unit.segments.length > 1) {
+		const discontinuous = !contiguous(labCase, unit);
+		if (texts.slice(1).some((text) => particleForms.has(text)))
+			tags.push(
+				discontinuous
+					? span >= 5
+						? "particle verb, split ≥5 pieces"
+						: "particle verb, split <5 pieces"
+					: "particle verb, adjacent",
+			);
+		if (texts.some((text) => isAuxiliaryForm(text)))
+			tags.push("VERB with auxiliary");
+		if (texts.some((text) => reflexiveForms.has(text)))
+			tags.push("VERB with reflexive");
+		if (texts.some((text) => expletiveForms.has(text)))
+			tags.push("VERB with expletive es");
+		if (texts.some((text) => lassenForms.has(text)))
+			tags.push("causative lassen");
+	}
+	if (
+		unit.segments.length > 1 &&
+		/^Lexeme\/(VERB|ADJ|NOUN)$/u.test(route) &&
+		surfaces.some((surface) => isAdposition(surface))
+	)
+		tags.push(`governed preposition (${route.slice(7)})`);
+	if (/^Lexeme\/(NOUN|PROPN)$/u.test(route) && unit.segments.length > 1)
+		tags.push(`${route.slice(7)} with article or parts`);
+	if (
+		unit.segments.some(
+			(index) => labCase.input.segments[index]?.surface !== undefined,
+		)
+	)
+		tags.push("contains a fused piece");
+	if (unit.route !== "Unresolved" && unit.route.family !== "Lexeme")
+		tags.push(route);
+	if (
+		route === "Lexeme/ADJ" &&
+		unit.segments.length === 1 &&
+		/^ge.+(t|en)$/u.test(texts[0] ?? "")
+	)
+		tags.push("participle-shaped ADJ");
+	return tags;
+};

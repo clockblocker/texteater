@@ -41,6 +41,7 @@ import { Luna } from "../src/segment-in-units/lab/luna.js";
 import {
 	breakdown,
 	byGoldRoute,
+	byPhenomenon,
 	byRule,
 	byShape,
 	calibration,
@@ -260,6 +261,13 @@ async function report(runId: string) {
 	const routeBreakdown = breakdown(labRun, cases, primary, byGoldRoute, only);
 	const shapeBreakdown = breakdown(labRun, cases, primary, byShape, only);
 	const ruleBreakdown = breakdown(labRun, cases, primary, byRule, only);
+	const phenomenonBreakdown = breakdown(
+		labRun,
+		cases,
+		primary,
+		byPhenomenon,
+		only,
+	);
 	const show = (
 		title: string,
 		table: ReturnType<typeof breakdown>,
@@ -276,6 +284,7 @@ async function report(runId: string) {
 	show("by gold route", routeBreakdown);
 	show("by unit shape", shapeBreakdown);
 	show("by cited Rule", ruleBreakdown, 9);
+	show("by phenomenon", phenomenonBreakdown, 3);
 	const confused = [...confusions(labRun, cases, primary, only)].sort(
 		(a, b) => b[1] - a[1],
 	);
@@ -329,6 +338,7 @@ async function report(runId: string) {
 				policies: rows,
 				cost,
 				breakdowns: {
+					phenomenon: phenomenonBreakdown,
 					route: routeBreakdown,
 					shape: shapeBreakdown,
 					rule: ruleBreakdown,

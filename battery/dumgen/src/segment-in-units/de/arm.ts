@@ -17,7 +17,7 @@ import {
 	noul,
 } from "../lab/jev.js";
 import type { Luna } from "../lab/luna.js";
-import { ruleStatements, unitGuide } from "./guide.js";
+import { demonstrations, ruleStatements, unitGuide } from "./guide.js";
 import { identityCandidates } from "./identity.js";
 import { argmax, groupKey, type Partition } from "./partition.js";
 import {
@@ -119,8 +119,18 @@ export function judgeState(
 		render === "tagged"
 			? { sentence: taggedText(sentence) }
 			: { sentence: sentence.text, pieces: pieceTable(sentence) };
-	if (guide === "guide" || guide === "rules" || guide === "rules+noise")
+	if (
+		guide === "guide" ||
+		guide === "demos" ||
+		guide === "rules" ||
+		guide === "rules+noise"
+	)
 		state.units = unitGuide;
+	if (guide === "demos")
+		state.examples = demonstrations.map(({ sentence: text, units }) => ({
+			sentence: text,
+			units: [...units],
+		}));
 	if (guide === "rules" || guide === "rules+noise")
 		state.rules = ruleStatements();
 	if (guide === "rules+noise")
@@ -296,7 +306,18 @@ export async function judgeRoutes(
 	context: ArmContext,
 	stage = "route",
 ): Promise<ReturnType<typeof readRoutes>> {
-	const { state, ref } = judgeState(sentence, context);
+	// `routeguide` gives the route stage its own guide level (`rules`), so
+	// only this request pays for the full Rule statements.
+	const routeGuide = context.options.routeguide;
+	const { state, ref } = judgeState(
+		sentence,
+		routeGuide === undefined
+			? context
+			: {
+					...context,
+					options: { ...context.options, guide: routeGuide },
+				},
+	);
 	const unique = new Map<string, readonly number[]>();
 	for (const partition of partitions)
 		for (const group of partition) unique.set(groupKey(group), group);

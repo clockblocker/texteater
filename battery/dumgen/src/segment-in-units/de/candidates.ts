@@ -54,13 +54,20 @@ const articleForms = new Set([
 ]);
 
 /** Separable verb prefixes, the her-/hin- adverbs and their r- shorthands. */
-const particleForms = new Set(
+export const particleForms = new Set(
 	"ab an auf aus bei dabei dar durch ein empor entgegen entlang fehl fern fest fort frei gegenüber heim her herab heran herauf heraus herbei herein herüber herum herunter hervor hin hinab hinauf hinaus hinein hinüber hinunter hinweg hinzu hoch los mit nach nieder raus rein rüber runter rauf ran statt teil um vor voran voraus vorbei vorüber vorweg weg weiter wieder zu zurecht zurück zusammen zuvor über unter kennen preis bloß kaputt klar".split(
 		" ",
 	),
 );
 
-const reflexiveForms = new Set([
+export /** Particles v3 adds after the v2 run missed them (umher, übrig, …). */
+const moreParticleForms = new Set(
+	"umher übrig fertig auseinander beiseite hinterher davon dazu dahin daher vorwärts rückwärts entzwei bereit ein".split(
+		" ",
+	),
+);
+
+export const reflexiveForms = new Set([
 	"sich",
 	"mich",
 	"dich",
@@ -69,10 +76,10 @@ const reflexiveForms = new Set([
 	"mir",
 	"dir",
 ]);
-const expletiveForms = new Set(["es", "'s", "s"]);
+export const expletiveForms = new Set(["es", "'s", "s"]);
 
 let auxiliaryForms: Set<string> | undefined;
-function isAuxiliaryForm(text: string): boolean {
+export function isAuxiliaryForm(text: string): boolean {
 	auxiliaryForms ??= new Set(
 		authoredRealizations
 			.filter((realization) => realization.member.lemma.kind === "AUX")
@@ -81,7 +88,7 @@ function isAuxiliaryForm(text: string): boolean {
 	return auxiliaryForms.has(text.toLowerCase());
 }
 
-function isAdposition(word: string): boolean {
+export function isAdposition(word: string): boolean {
 	const lemma = {
 		language: "de",
 		family: "Lexeme",
@@ -156,9 +163,14 @@ export function slotsOf(sentence: Sentence, version = 1): Slot[] {
 					other.clause === piece.clause,
 			);
 			if (hosts.length > 0) slots.push({ kind: "article", piece, hosts });
-			continue;
+			// v3: `ein` is also a particle (trat … ein).
+			if (!(version >= 3 && text === "ein")) continue;
 		}
-		if (particleForms.has(text) && !piece.fusedWord)
+		if (
+			(particleForms.has(text) ||
+				(version >= 3 && moreParticleForms.has(text))) &&
+			!piece.fusedWord
+		)
 			slots.push({
 				kind: "particle",
 				piece,
