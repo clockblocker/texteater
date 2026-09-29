@@ -23,42 +23,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
 			"notes": {
-				"rationale": "Mixed letters and digits are part of this licensed slang spelling and are not a Typo repair."
+				"rationale": "English chat slang, kept as written: digits are its spelling, not a typo. No German grammar shows: Foreign en."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "w00t", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "w00t",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "w00t",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "w00t",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "w00t", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

@@ -26,8 +26,13 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -35,29 +40,27 @@
 			"memberSegmentIndices": [17],
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "tbh", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "tbh",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "tbh",
-						"coreFeatures": {
-							"abbr": "Yes",
-							"foreign": "Yes",
-							"hyph": null,
-							"numType": null
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "tbh",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "tbh", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {},
+			"notes": {
+				"rationale": "English chat abbreviation with no German grammar: Foreign en, glossed in its en translation."
 			}
 		}
 	],

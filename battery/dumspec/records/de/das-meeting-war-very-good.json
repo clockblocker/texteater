@@ -13,61 +13,154 @@
 		{ "kind": "ResolvableText", "text": "good" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0040", "ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
-			"caseId": "sentence-de-fremd",
-			"case": {
-				"input": {
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Meeting" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "war" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "very" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "good" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"targets": [
-						{
-							"kind": "NOUN",
-							"members": [
-								{ "offset": 0, "role": "Article" },
-								{ "offset": 4, "role": "Head" }
-							]
-						},
-						{
-							"kind": "VERB",
-							"members": [{ "offset": 12 }]
-						},
-						{
-							"kind": "X",
-							"members": [{ "offset": 16 }]
-						},
-						{
-							"kind": "X",
-							"members": [{ "offset": 21 }]
-						}
-					],
-					"phrasemes": []
-				},
-				"explanation": "Code-switched words: no multilingual support, so they are X or Unresolved."
+			"memberSegmentIndices": [0, 2],
+			"notes": {
+				"rationale": "das agrees with Meeting as a neuter noun, so the loan shows German grammar and is a German NOUN, not Foreign."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Das", "orthography": "Standard" },
+					{ "attested": "Meeting", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Meeting",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Meeting",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
 			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "sein linking a subject to a predicate is the copula VERB."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "war", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "war",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "sein",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: very is one Foreign unit."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "very", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "very",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "very",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"notes": {
+				"rationale": "very good is free English syntax, not a fixed phrase, so it splits: good is one Foreign unit."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "good", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "good",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "good",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
-	]
+	],
+	"noTarget": []
 }

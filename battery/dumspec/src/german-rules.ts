@@ -84,10 +84,37 @@ const units: Rule[] = [
 	{
 		id: "de/no-target",
 		statement:
-			"A word has no target when no route for it is defensible: unintelligible text that no German word, name or plausible typo fits (xqzt), or a suspended-compound fragment with no right conjunct to complete it. The classifier answers Unresolved for it.",
-		adrs: ["ADR-0037"],
+			"A word has no target when no route for it is defensible: unintelligible text or a nonce word that no German or foreign word, name or plausible typo fits (xqzt, glorpen), a word broken off (trans…), or a suspended-compound fragment with no right conjunct to complete it. The classifier answers Unresolved for it.",
+		adrs: ["ADR-0037", "ADR-0045"],
 		routes: [],
-		records: ["de/das-wetter-ist-xqzt"],
+		records: [
+			"de/das-wetter-ist-xqzt",
+			"de/im-beispiel-sollte-die-figur-morgen-glorpen-doch-die",
+			"de/der-blarg-tauchte-ohne-erklaerung-im-bericht-auf",
+			"de/das-glossar-fuehrte-den-nicht-weiter-bestimmten-eintrag",
+			"de/die-aufnahme-brach-mitten-im-begonnenen-wort-nach-trans",
+			"de/die-sprecherin-begann-mit-unver-und-brach-das-wort-hoerbar",
+		],
+	},
+	{
+		id: "de/foreign-unless-german-grammar",
+		statement:
+			"A word from another language is a Foreign unit with its source language, unless this occurrence shows German grammar on it: an ending (ein cooler Typ, geyeetet) or an article or determiner that agrees with it (das Meeting). Then it is a Lexeme of its real Kind. Filling a slot in the sentence is not grammar, so ziemlich cringe is Foreign. A Foreign unit is one word or a phrase fixed in its source language (by the way); other foreign syntax gives one unit per word. Its Canonical Form corrects only position casing and typos.",
+		adrs: ["ADR-0045"],
+		routes: [{ language: "de", family: "Foreign", kind: "Foreign" }],
+		records: [
+			"de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+			"de/das-meeting-war-very-good",
+			"de/in-der-sonst-deutschen-unterhaltung-antwortete-sie-nur",
+			"de/whatever-sagte-sie-am-anfang-ihrer-deutschen-antwort",
+			"de/im-chat-war-mit-dem-fehlerhaft-geschriebenen-englischen-wort",
+			"de/der-englische-ausdruck-off-grid-blieb-im-deutschen-gespraech",
+			"de/die-britische-schreibvariante-colour-stand-in-der-deutschen",
+			"de/die-studentin-nannte-das-ergebnis-low-key-ueberraschend",
+			"de/er-antwortete-im-chat-nur-mit-lol",
+			"de/vor-ihrer-meinung-schrieb-sie-im-deutschen-chat-tbh",
+			"de/der-alte-forenbeitrag-endete-mit-dem-slangausdruck-w00t",
+		],
 	},
 ];
 

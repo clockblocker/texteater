@@ -26,46 +26,15 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0037", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [
 		{
-			"memberSegmentIndices": [0],
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "glorpen",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "glorp",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"mood": "Imp",
-						"number": "Sing",
-						"verbForm": "Fin"
-					}
-				},
-				"members": [{ "attested": "Glorp", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+			"segment": 0,
+			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
 		}
-	],
-	"noTarget": []
+	]
 }

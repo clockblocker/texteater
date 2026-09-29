@@ -26,7 +26,9 @@ const citing = (
 ): SpecRecord => ({
 	...seed,
 	status,
-	sources: { ...seed.sources, ...sources },
+	// The seed's own Rule citations are cleared: each test passes the Rules
+	// it checks against.
+	sources: { ...seed.sources, rules: [], ...sources },
 });
 const checks = (record: SpecRecord, rules: readonly Rule[] = []) =>
 	checkCitations([record], { adrStatuses, rules }).map((issue) => [

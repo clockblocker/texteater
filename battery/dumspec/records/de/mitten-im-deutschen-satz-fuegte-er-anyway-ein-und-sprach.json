@@ -30,8 +30,13 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -39,31 +44,29 @@
 			"memberSegmentIndices": [13],
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "anyway",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "anyway",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
 				"members": [
 					{ "attested": "anyway", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "anyway",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "anyway",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {},
+			"notes": {
+				"rationale": "No German ending and no agreeing article or determiner: Foreign en."
 			}
 		}
 	],

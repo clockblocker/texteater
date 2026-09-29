@@ -22,73 +22,43 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-lexeme-x-lol-laughter-reuse",
 			"memberSegmentIndices": [13],
-			"case": {
-				"input": {
-					"markedContext": "Er antwortete im Chat nur mit <TARGET>lol</TARGET>.",
-					"lemma": "lol",
-					"existingEmojiDescriptions": ["😂"]
-				},
-				"idealOutput": { "emojiDescription": "😂" },
-				"explanation": "The chat expression marks laughter. Reuse."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-lexeme-x-lol-laughter-reuse",
-			"memberSegmentIndices": [13],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-lexeme-x-lol-laughter-reuse",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Er antwortete im Chat nur mit "
-								},
-								{ "kind": "ResolvableText", "text": "lol" },
-								{ "kind": "OpaqueText", "text": "." }
-							]
-						},
-						"target": {
-							"family": "Lexeme",
-							"kind": "X",
-							"memberSegmentIndices": [1]
-						}
-					},
+			"notes": {
+				"rationale": "A chat abbreviation used across languages: its source language can't be told, so sourceLang is und. A Foreign Reading has no Emoji Description, so the imported emoji case has nothing left to test."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "lol", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "lol",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "lol",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "und" }
 					},
-					"candidates": ["😂"]
-				},
-				"idealOutput": {
-					"decision": "Reuse",
-					"emojiDescription": "😂"
-				},
-				"explanation": "The chat expression marks laughter. Reuse."
-			}
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
-	]
+	],
+	"noTarget": []
 }

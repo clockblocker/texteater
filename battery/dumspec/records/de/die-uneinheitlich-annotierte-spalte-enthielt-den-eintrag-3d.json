@@ -29,7 +29,7 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0042", "ADR-0045"],
 		"rules": [],
 		"references": []
 	},
@@ -38,29 +38,35 @@
 			"memberSegmentIndices": [14],
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "3D", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "3D",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "3D",
+						"family": "Lexeme",
+						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": "Yes",
+							"comparable": null,
 							"foreign": null,
-							"hyph": null,
-							"numType": "Card"
+							"numType": null,
+							"variant": null
 						}
 					},
-					"normalizedSurface": "3D",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "3D", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"notes": {
+				"rationale": "3D is the German adjective it is in 3D-Drucker and 3D-Film, cited as written with abbr Yes. It has no comparison forms and takes no ending here, so its Surface has no inflection."
 			}
 		}
 	],

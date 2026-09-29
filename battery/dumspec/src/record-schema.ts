@@ -41,15 +41,18 @@ const sourcesSchema = z.strictObject({
 
 /**
  * The Reading a target attests, named by its Emoji Description (ADR 0031),
- * and the Reading Knowledge it owns. Its Lemma is the target's; the loader
- * checks the Reading with Dumling's `parseUnit` and the Knowledge with
- * dumrel's `parseReadingKnowledge`.
+ * and the Reading Knowledge it owns. A Foreign Reading has no Emoji
+ * Description (ADR 0045). Its Lemma is the target's; the loader checks the
+ * Reading with Dumling's `parseUnit` and the Knowledge with dumrel's
+ * `parseReadingKnowledge`.
  */
 function readingSchema<K extends z.ZodType>(knowledge: K) {
 	return z.strictObject({
-		emojiDescription: textSchema.describe(
-			"One to four emoji: the Reading's identity, as Dumling normalizes it",
-		),
+		emojiDescription: textSchema
+			.describe(
+				"One to four emoji: the Reading's identity, as Dumling normalizes it. A Foreign Reading has none.",
+			)
+			.optional(),
 		knowledge: knowledge.optional(),
 	});
 }

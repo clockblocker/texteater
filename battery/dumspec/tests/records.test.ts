@@ -284,7 +284,7 @@ describe("negative fixtures", () => {
 			]);
 			const wald = loaded[0]?.targets[1];
 			expect(wald?.reading?.unitKind).toBe("Reading");
-			expect(wald?.reading?.emojiDescription).toBe("👀");
+			expect(wald?.reading).toHaveProperty("emojiDescription", "👀");
 			expect(wald?.reading?.lemma).toEqual(
 				wald?.attestation.surface.lemma,
 			);

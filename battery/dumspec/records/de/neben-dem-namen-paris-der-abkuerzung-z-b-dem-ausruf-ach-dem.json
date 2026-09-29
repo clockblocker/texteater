@@ -56,42 +56,42 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [47],
 			"notes": {
-				"rationale": "Unmarked PROPN, abbreviation, INTJ, SYM, and identifiable German POS controls do not reopen the fixed X route."
+				"rationale": "Bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "yeet", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "yeet",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "yeet",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "yeet",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "yeet", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
 		}
 	],
 	"noTarget": []

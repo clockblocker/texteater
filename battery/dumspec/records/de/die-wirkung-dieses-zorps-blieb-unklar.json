@@ -19,46 +19,15 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0037", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [
 		{
-			"memberSegmentIndices": [6],
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "Zorp",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "Zorps",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Gen",
-						"gender": null,
-						"mood": null,
-						"number": "Sing",
-						"verbForm": null
-					}
-				},
-				"members": [{ "attested": "Zorps", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+			"segment": 6,
+			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
 		}
-	],
-	"noTarget": []
+	]
 }

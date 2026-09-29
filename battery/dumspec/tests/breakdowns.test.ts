@@ -28,7 +28,9 @@ describe("Breakdown Records", () => {
 			faden?.targets.map(({ attestation, reading }) => [
 				attestation.members.map((member) => member.attested),
 				attestation.surface.lemma.kind,
-				reading?.emojiDescription,
+				reading && "emojiDescription" in reading
+					? reading.emojiDescription
+					: undefined,
 			]),
 		).toEqual([
 			[["den", "Faden"], "NOUN", "🧵"],

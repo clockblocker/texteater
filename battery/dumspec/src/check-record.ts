@@ -313,10 +313,12 @@ export function checkTargets(
 /**
  * Builds the target's Reading from its Attestation's Lemma and authored Emoji
  * Description, checks it with Dumling's Reading schema, and checks its
- * Knowledge against it. A Reviewed target must name one.
+ * Knowledge against it. A Reviewed target must name one. A Foreign Reading is
+ * its Lemma alone, so its target names it with no Emoji Description (ADR
+ * 0045); Dumling rejects a missing one on any other route.
  */
 function checkReading(
-	authored: { emojiDescription: string; knowledge?: unknown } | undefined,
+	authored: { emojiDescription?: string; knowledge?: unknown } | undefined,
 	attestation: Dumling.Attestation,
 	status: ReviewStatus,
 ): {
@@ -339,7 +341,9 @@ function checkReading(
 	const parsed = parseUnit({
 		unitKind: "Reading",
 		lemma: attestation.surface.lemma,
-		emojiDescription: authored.emojiDescription,
+		...(authored.emojiDescription === undefined
+			? {}
+			: { emojiDescription: authored.emojiDescription }),
 	});
 	if (!parsed.success)
 		return {
@@ -351,7 +355,10 @@ function checkReading(
 	if (parsed.chain.unitKind !== "Reading")
 		return { issues: [{ path: "reading", message: "Expected a Reading" }] };
 	const reading = parsed.chain.value;
-	if (reading.emojiDescription !== authored.emojiDescription)
+	if (
+		"emojiDescription" in reading &&
+		reading.emojiDescription !== authored.emojiDescription
+	)
 		return {
 			issues: [
 				{

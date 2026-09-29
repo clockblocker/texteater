@@ -30,43 +30,15 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0037", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [
 		{
-			"memberSegmentIndices": [8],
-			"notes": {
-				"rationale": "The classified readable fragment remains ResolvableText/X; the unmarked interruption punctuation is context."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "unver",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "unver",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "unver", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+			"segment": 8,
+			"reason": "A word broken off: which word it would have become can't be told, so it has no defensible route."
 		}
-	],
-	"noTarget": []
+	]
 }

@@ -25,8 +25,12 @@ export const ruleCitation = {
  */
 export function review(record: RecordJson): RecordJson {
 	record.status = "Reviewed";
+	// A Foreign Reading is its Lemma alone (ADR 0045).
 	for (const target of record.targets)
-		target.reading = { emojiDescription: "👀" };
+		target.reading =
+			target.attestation.surface.lemma.family === "Foreign"
+				? {}
+				: { emojiDescription: "👀" };
 	record.sources.rules = [ruleCitation];
 	return record;
 }
@@ -168,6 +172,36 @@ export const negativeFixtures: {
 			// 🖱 with a variation selector, which Dumling drops.
 			record.targets[0].reading = {
 				emojiDescription: "\u{1F5B1}\u{FE0F}",
+			};
+		},
+	},
+	{
+		name: "a Reading without the Emoji Description its route needs",
+		seed: "de/pass-auf-dich-auf",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {};
+		},
+	},
+	{
+		name: "a Foreign Reading with an Emoji Description",
+		seed: "de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = { emojiDescription: "😬" };
+		},
+	},
+	{
+		name: "a Foreign Reading with a Semantic Relation",
+		seed: "de/in-der-jugendgruppe-fanden-alle-die-szene-ziemlich-cringe",
+		check: "Reading",
+		edit: (record) => {
+			record.targets[0].reading = {
+				knowledge: {
+					semanticRelations: {
+						synonym: [record.targets[0].attestation.surface.lemma],
+					},
+				},
 			};
 		},
 	},

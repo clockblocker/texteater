@@ -36,8 +36,13 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-german-grammar",
+				"hash": "8103bf4a485679d1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -45,29 +50,27 @@
 			"memberSegmentIndices": [19],
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [{ "attested": "watevr", "orthography": "Typo" }],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "whatever",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
 						"canonicalForm": "whatever",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": "Yes",
-							"hyph": null,
-							"numType": null
-						}
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": { "sourceLang": "en" }
 					},
-					"normalizedSurface": "whatever",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "watevr", "orthography": "Typo" }],
-				"realizationCoverage": "Full"
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {},
+			"notes": {
+				"rationale": "A typo of English whatever: the Canonical Form corrects it and the member is a Typo."
 			}
 		}
 	],

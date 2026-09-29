@@ -26,40 +26,15 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0037", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [
 		{
-			"memberSegmentIndices": [17],
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "trans",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "trans",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [{ "attested": "trans", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+			"segment": 17,
+			"reason": "A word broken off: which word it would have become can't be told, so it has no defensible route."
 		}
-	],
-	"noTarget": []
+	]
 }

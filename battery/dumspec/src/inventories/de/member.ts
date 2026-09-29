@@ -1,9 +1,12 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 
+/** An authored unit is closed-class, never Foreign, so its Reading has an Emoji Description. */
+type AuthoredFamily = Exclude<Dumling.Family<"de">, "Foreign">;
+
 export type AuthoredMember = {
-	readonly lemma: Dumling.Lemma<"de">;
-	readonly reading: Dumling.Reading<"de">;
+	readonly lemma: Dumling.Lemma<"de", AuthoredFamily>;
+	readonly reading: Dumling.Reading<"de", AuthoredFamily>;
 	readonly knowledge: Dumrel.ReadingKnowledge;
 	readonly coverage: {
 		readonly transcription: string;

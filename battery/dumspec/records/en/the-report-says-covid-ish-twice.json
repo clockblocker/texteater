@@ -16,12 +16,16 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0042", "ADR-0045"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"notes": {
-				"rationale": "The hybrid nonce token is X with Foreign=Yes because it resists clean POS assignment in isolation."
+				"rationale": "COVID-ish is English, the language of the text, made with the productive suffix -ish, so it is an ADJ Lexeme, not Foreign. It has no comparison forms of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -29,18 +33,26 @@
 					{ "attested": "COVID-ish", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "COVID-ish",
 					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",
 						"canonicalForm": "COVID-ish",
 						"family": "Lexeme",
-						"kind": "X",
-						"coreFeatures": { "foreign": "Yes", "extPos": null }
+						"kind": "ADJ",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"extPos": null,
+							"numForm": null,
+							"numType": null
+						}
 					},
 					"surfaceFeatures": null
 				}

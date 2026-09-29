@@ -79,7 +79,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 		kind: input.kind,
 		canonicalForm: input.citation.text,
 		coreFeatures: input.coreFeatures,
-	} as Dumling.Lemma<"de">;
+	} as Dumling.Lemma<"de", "Lexeme">;
 	const seen = new Set<string>();
 	const synonym = input.description.synonyms?.length
 		? [...input.description.synonyms]
@@ -91,7 +91,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				unitKind: "Reading",
 				lemma,
 				emojiDescription: input.description.emoji,
-			} as Dumling.Reading<"de">,
+			} as Dumling.Reading<"de", "Lexeme">,
 			knowledge: {
 				definition: input.description.definition,
 				transcription: input.citation.ipa,

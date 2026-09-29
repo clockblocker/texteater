@@ -21,49 +21,15 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0037", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
 		"references": []
 	},
-	"targets": [
+	"targets": [],
+	"noTarget": [
 		{
-			"memberSegmentIndices": [4],
-			"notes": {
-				"rationale": "The unknown identity stays X while the German article licenses conservative case, gender, and number features."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "X",
-						"canonicalForm": "Glorp",
-						"coreFeatures": {
-							"abbr": null,
-							"foreign": null,
-							"hyph": null,
-							"numType": null
-						}
-					},
-					"normalizedSurface": "Glorp",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": "Neut",
-						"mood": null,
-						"number": "Sing",
-						"verbForm": null
-					}
-				},
-				"members": [{ "attested": "Glorp", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
-			}
+			"segment": 4,
+			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
 		}
-	],
-	"noTarget": []
+	]
 }
