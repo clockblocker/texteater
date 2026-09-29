@@ -260,15 +260,15 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/fused-word-pieces",
@@ -284,7 +284,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/substantivized-infinitive-is-a-noun",
@@ -296,7 +296,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -313,6 +313,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👉"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -354,7 +357,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "vorkommen 'happen' takes ordinary subjects (so etwas kommt vor), and here the daß-clause is its subject, so Es is anticipatory es, a PRON target of its own, not a member of the verb (de/expletive-es-joins-its-verb). It survives in the middle field (Manchmal kam es vor, daß), which no authored es Reading describes: see finding A2."
+				"rationale": "vorkommen 'happen' takes ordinary subjects (so etwas kommt vor), and here the daß-clause is its subject, so Es is anticipatory es, a PRON target of its own, not a member of the verb (de/expletive-es-joins-its-verb). It survives in the middle field (Manchmal kam es vor, daß), so it is the correlate Reading 👉, not the placeholder. Ruled on #743 (BT-A2, A5)."
 			}
 		},
 		{

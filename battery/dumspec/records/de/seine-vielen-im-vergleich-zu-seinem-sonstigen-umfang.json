@@ -165,7 +165,7 @@
 			},
 			{
 				"rule": "de/fixed-member-test",
-				"hash": "d095c150bfc6b7bd"
+				"hash": "1a5d9f3240c41e69"
 			},
 			{
 				"rule": "de/idiom",
@@ -177,7 +177,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -193,11 +193,19 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f8c5768e1ce3e526"
+			},
+			{
+				"rule": "de/complex-preposition",
+				"hash": "395d3503fe67bb7b"
 			}
 		],
 		"references": [
@@ -311,7 +319,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B1, A3). After the possessive seine, vielen takes the weak adjective ending, so it inflects as an attributive adjective (de/adjective-stays-adj); DWDS classes viel as an adjective, comparable through mehr, am meisten. The authored DET viel has no weak Nom.Plur cell vielen."
+				"rationale": "Ruled on #743 (VP-B1, VP-A7, A3). vielen follows the possessive seine, so it is ADJ (de/quantifier-by-use), with the weak adjective ending; DWDS classes viel as an adjective, comparable through mehr, am meisten."
 			}
 		},
 		{
@@ -388,7 +396,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B2). im Vergleich zu (Duden, Vergleich: im Vergleich zu/(auch:) mit) is read as a complex preposition, a Locution ADP like in Bezug auf (ADR 0039). Both pieces of im are fixed members (de/fused-word-pieces)."
+				"rationale": "Ruled on #743 (VP-B2, VP-A9, A9). im Vergleich zu (Duden, Vergleich: im Vergleich zu/(auch:) mit) works as one preposition, and Vergleich takes no article or attribute of its own there, so it is a complex preposition, a Locution ADP like in Bezug auf (de/complex-preposition, ADR 0039). Both pieces of im are fixed members (de/fused-word-pieces). Its case waits on the ADP Case Table's circumposition entries (#733, #652)."
 			}
 		},
 		{
@@ -790,6 +798,9 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"notes": {
+				"rationale": "hilflos is used adverbially on flimmerten, so ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -803,7 +814,7 @@
 						"canonicalForm": "hilflos",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -814,12 +825,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{

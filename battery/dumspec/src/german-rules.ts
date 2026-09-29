@@ -149,6 +149,12 @@ const verbs: Rule[] = [
 			"de/verbrannt-ist-alles-ganz-und-gar",
 			"de/wir-liefen-den-fluss-entlang",
 			"de/sieh-mal-an-die-kleine-von-nebenan",
+			"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 		],
 	},
 	{
@@ -163,6 +169,12 @@ const verbs: Rule[] = [
 			"de/mir-geht-s-gut",
 			"de/wenn-s-morgen-regnet-bleibt-das-turnier-in-der-halle",
 			"de/das-radio-geht-s-wieder",
+			"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
+			"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch",
+			"de/darauf-kommt-es-an",
+			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 		],
 	},
 	{
@@ -181,6 +193,10 @@ const verbs: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/sie-erinnert-sich-an-den-geruch",
 			"de/er-ist-stolz-auf-seinen-sohn",
+			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
+			"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
 		],
 	},
 	{
@@ -207,6 +223,8 @@ const verbs: Rule[] = [
 			"de/den-fluss-entlang-standen-alte-weiden",
 			"de/um-diese-frage-kommt-er-nicht-herum",
 			"de/ueber-die-zusicherung-hinaus-gab-er-nicht-nach",
+			"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
 		],
 	},
 	{
@@ -240,7 +258,9 @@ const verbs: Rule[] = [
 			"A colloquial dr- adverb (dran, drauf, drin, drüber, drum) is the Shorthand of the da(r)- pronominal adverb it shortens, never a Lemma or Variant of its own: the target is the full word, with the dr- word as its member in Shorthand orthography. ohne recht dran zu glauben gives [dran] ADV daran.",
 		adrs: ["ADR-0029", "ADR-0035"],
 		routes: lexeme("ADV"),
-		records: [],
+		records: [
+			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
+		],
 	},
 	{
 		id: "de/split-adverb-is-one-target",
@@ -268,6 +288,9 @@ const verbs: Rule[] = [
 			"de/da-weiss-ich-nichts-von",
 			"de/da-kann-ich-nichts-fuer",
 			"de/wo-hast-du-das-mit-gemacht",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
+			"de/darauf-kommt-es-an",
 		],
 	},
 	{
@@ -315,6 +338,7 @@ const verbs: Rule[] = [
 			"de/das-waere-fast-schief-gewesen",
 			"de/jetzt-schien-die-sonne-gar-zu-sehr",
 			"de/er-ist-stolz-auf-seinen-sohn",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
 		],
 	},
 	{
@@ -389,6 +413,7 @@ const participles: Rule[] = [
 			"de/ein-verletzter-lag-am-strassenrand",
 			"de/trotz-der-hektik-blieb-sie-ganz-gelassen",
 			"de/der-alte-sass-allein-am-fenster",
+			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
 		],
 	},
 ];
@@ -445,6 +470,8 @@ const nouns: Rule[] = [
 			"de/er-wog-vielleicht-ein-halbes-lot",
 			"de/das-problem-ist-der-preis",
 			"de/dein-garten-ist-gross-der-meine-ist-klein",
+			"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
 		],
 	},
 	{
@@ -472,7 +499,10 @@ const nouns: Rule[] = [
 			"An adjective or participle used as a neuter noun for a thing or an abstraction is a NOUN Lemma with gender Neut, cited in its weak form (das Böse gives Böse), whether a dictionary lists it or it is formed on the spot: etwas Böses and nichts Neues give NOUN Böse and Neue. It is a Lemma apart from the person noun of the same spelling (der Böse, gender null).",
 		adrs: ["ADR-0040", "ADR-0002"],
 		routes: lexeme("NOUN"),
-		records: ["de/sie-uebersetzt-den-vertrag-ins-deutsche"],
+		records: [
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
+		],
 	},
 	{
 		id: "de/only-der-and-ein-are-articles",
@@ -558,7 +588,11 @@ const fusedWords: Rule[] = [
 			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe. An initial the text never expands is its own Lemma the same way, and a name it ends is another: K. and Josef K. are two PROPN Lemmas.",
 		adrs: ["ADR-0035", "dumgen/ADR-0004"],
 		routes: [],
-		records: ["de/in-berlin-betreibt-die-bvg-die-u-bahn"],
+		records: [
+			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
+			"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
+			"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+		],
 	},
 ];
 
@@ -594,6 +628,9 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/viele-buecher-wurden-an-die-schule-gespendet",
 			"de/nach-dem-umbau-arbeitet-die-pumpe-wenig",
 			"de/die-meisten-gaeste-reisten-am-sonntag-ab",
+			"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
+			"de/ich-lese-und-dann-wir-gehen-viel-spazieren",
+			"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt",
 		],
 	},
 	{
@@ -722,6 +759,12 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/sieh-einmal-hier-steht-er",
 			"de/und-minz-und-maunz-die-schreien",
 			"de/er-ist-stolz-auf-seinen-sohn",
+			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"de/er-legte-jedes-ding-das-er-beruehrte-kaum-ergriffen-wieder",
+			"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"de/ach-treibel-sie-sind-ewig-ein-spoetter",
+			"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos",
 		],
 	},
 	{
@@ -792,6 +835,7 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/heute-kamen-mehr-gaeste-als-gestern",
 			"de/der-weg-dauerte-laenger-als-wir-erwartet-hatten",
 			"de/die-reparatur-dauerte-kuerzer-als-der-meister-vorausgesagt",
+			"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
 		],
 	},
 	{
@@ -823,6 +867,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
 			"de/damit-triffst-du-den-nagel-auf-den-kopf",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
+			"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die",
 		],
 	},
 	{
@@ -864,7 +909,7 @@ const locutionsAndSayings: Rule[] = [
 			"A preposition, a bare noun and a second preposition that work together as one preposition, the noun taking no article or attribute of its own, are one Locution ADP over all their words, both pieces of a fused word included: im Vergleich zu seinem Umfang gives [i, m, Vergleich, zu] ADP im Vergleich zu. The phrase it governs is free.",
 		adrs: ["ADR-0039", "ADR-0035"],
 		routes: locution("ADP"),
-		records: [],
+		records: ["de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang"],
 	},
 	{
 		id: "de/routine-formula-is-intj",
@@ -1057,6 +1102,8 @@ const attestations: Rule[] = [
 			"de/die-stadtpolizei-zuerich-meldet-die-strasse-zum-hauptbahnhof",
 			"de/neeee-des-mach-i-ned",
 			"de/es-sol-ein-jeglicher-des-auffgelegten-brots-vnnd-speise-zu",
+			"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
+			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
 		],
 	},
 	{
@@ -1065,7 +1112,12 @@ const attestations: Rule[] = [
 			"A number written in digits is the numeral word it spells, never a Lemma of its own: 12 gives NUM zwölf, its Surface a Licensed Variant spelling. Digits and letters are two ways to write one word.",
 		adrs: ["ADR-0041", "ADR-0002"],
 		routes: lexeme("NUM", "ADJ"),
-		records: [],
+		records: [
+			"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
+			"de/das-trikot-traegt-die-nummer-73",
+			"de/auf-der-anzeigetafel-steht-7",
+			"de/die-gleichung-lautet-drei-plus-vier-gleich-7",
+		],
 	},
 	{
 		id: "de/empty-inflection-is-structural",
@@ -1073,7 +1125,12 @@ const attestations: Rule[] = [
 			"A Surface leaves its inflection empty only for a dictionary citation, or for an invariant use its route leaves unmarked. A noun leaves its case empty and marks its number only as a vocative (Ach, Treibel) or as a bare noun after voll (voll Wasser). An empty inflection or case states that structure; it never stands for uncertainty.",
 		adrs: ["ADR-0032"],
 		routes: [],
-		records: ["de/einst-ging-er-an-ufers-rand"],
+		records: [
+			"de/einst-ging-er-an-ufers-rand",
+			"de/ach-treibel-sie-sind-ewig-ein-spoetter",
+			"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist",
+			"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+		],
 	},
 	{
 		id: "de/suspended-compound-completion",
@@ -1121,7 +1178,10 @@ const attestations: Rule[] = [
 			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, a verb sharing the auxiliary a coordinated verb nearer to it owns, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). The shared word still counts toward the Partial unit's features, though not its members: aufgespannt in hatte … aufgesetzt und … aufgespannt is pluperfect. A split target, or one with free words between its members, is still Full.",
 		adrs: ["ADR-0003", "ADR-0039", "ADR-0041", "ADR-0022"],
 		routes: [...lexeme("NOUN", "VERB"), ...everyMultiword],
-		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
+		records: [
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+		],
 	},
 ];
 

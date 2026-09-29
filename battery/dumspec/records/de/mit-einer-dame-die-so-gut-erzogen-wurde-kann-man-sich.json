@@ -147,11 +147,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
@@ -163,11 +163,11 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -301,7 +301,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "zanken in the sense 'quarrel' is inherently reflexive (DWDS: ⟨sich (mit jmdm.) zanken⟩), so sich is a member (de/verb-owns-its-scattered-members). mit is the preposition that frame governs, so the fronted Mit is a member too, recorded in valencyEvidence as mit + Dat and left out of the normalized Surface (de/governed-preposition-joins-its-governor). kann is a separate modal VERB."
+				"rationale": "zanken in the sense 'quarrel' is inherently reflexive (Duden: sich zanken, 'mit jemandem einen Zank haben'), so sich is a member (de/verb-owns-its-scattered-members). E-VALBU has no zanken, and Duden's example du sollst dich nicht immer mit ihr zanken shows the mit it governs, so the fronted Mit is a member too, recorded in valencyEvidence as mit + Dat and left out of the normalized Surface (de/governed-preposition-joins-its-governor). kann is a separate modal VERB."
 			}
 		},
 		{
@@ -704,7 +704,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'). It does not inflect, so ADV, not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. open: finding A2."
+				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'). It does not inflect, so ADV, not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. open: #734."
 			}
 		},
 		{

@@ -51,11 +51,11 @@
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/verb-core-features",
@@ -63,7 +63,11 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
 			}
 		],
 		"references": [
@@ -174,14 +178,38 @@
 					}
 				],
 				"realizationCoverage": "Full",
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"expletiveEvidence": {
 					"attested": "es",
 					"orthography": "Standard"
 				}
 			},
 			"notes": {
-				"rationale": "es kommt auf etwas an 'what matters is' selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject, like es geht um (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members)."
+				"rationale": "es kommt auf etwas an 'what matters is' (E-VALBU ankommen, es, Lesart 2: Kprp auf + Akk, obligatory) selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members). The auf slot is filled by the pronominal adverb Darauf, so the valency evidence records auf + Acc with no member (de/pronominal-adverb-stands-alone)."
 			}
 		}
 	],

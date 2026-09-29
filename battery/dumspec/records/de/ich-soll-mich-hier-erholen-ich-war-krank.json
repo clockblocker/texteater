@@ -83,11 +83,11 @@
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
@@ -95,7 +95,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [

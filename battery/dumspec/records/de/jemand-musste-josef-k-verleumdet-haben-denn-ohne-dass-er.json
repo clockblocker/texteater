@@ -195,7 +195,7 @@
 			},
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "686c9815ab8717d8"
+				"hash": "57538162fe227476"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -203,7 +203,7 @@
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/adjectival-noun-lemma",
@@ -211,11 +211,15 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
 				"hash": "bc1096b61ad7294d"
+			},
+			{
+				"rule": "de/neuter-adjectival-noun",
+				"hash": "a4bd8e12a664fd8e"
 			}
 		],
 		"references": [
@@ -666,7 +670,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "A capitalized adjective used as a noun is a NOUN (de/participial-adjective). As a neuter abstract it is a Lemma with gender Neut, cited as das Böse (de/adjectival-noun-lemma); see finding A6."
+				"rationale": "A capitalized adjective used as a noun is a NOUN (de/participial-adjective). etwas Böses is a neuter formed on the spot for an abstraction, so it is the NOUN Lemma Böse with gender Neut, cited as das Böse, apart from the person noun der Böse (de/neuter-adjectival-noun). Ruled on #743 (VP-A6, A9)."
 			}
 		},
 		{

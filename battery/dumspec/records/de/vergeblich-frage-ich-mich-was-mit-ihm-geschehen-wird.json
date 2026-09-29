@@ -99,7 +99,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -107,11 +107,11 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/verbal-surface-is-whole",
@@ -154,7 +154,7 @@
 				"kind": "ADJ"
 			},
 			"notes": {
-				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). DWDS gives vergeblicher, am vergeblichsten (Steigerung selten), so it is comparable and marks Pos (de/comparability-is-lexical)."
+				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). Duden gives vergeblicher, am vergeblichsten with no label, and Duden decides before DWDS (which marks them rare), so it is comparable and marks Pos (de/comparability-is-lexical). Ruled on #743 (A9)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -369,7 +369,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "geschehen cannot passivize (E-VALBU: kein Passiv möglich), so wird marks the future and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). mit is governed: E-VALBU geschehen Lesart 4 'etwas geschieht mit jemandem/etwas', K prp mit + Dat, with the example 'was mit ihm geschehen soll'. So mit is a member recorded in valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). Duden has no <mit> label for it: see finding A6."
+				"rationale": "geschehen cannot passivize (E-VALBU: kein Passiv möglich), so wird marks the future and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). mit is governed: E-VALBU geschehen Lesart 4 'etwas geschieht mit jemandem/etwas', K prp mit + Dat, with the example 'was mit ihm geschehen soll'. Government is read from E-VALBU before Duden, which has no <mit> label, so mit is a member recorded in valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). Ruled on #743 (SZ-A6, A6)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -111,7 +111,7 @@
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "9d116db0de61b6dd"
+				"hash": "60b1cecf8b3f74f1"
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -119,7 +119,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/correlator-anchors",
@@ -139,7 +139,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/verb-core-features",
@@ -147,7 +147,15 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
+			},
+			{
+				"rule": "de/dr-adverb-is-da-shorthand",
+				"hash": "1ef63f4432955e46"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
 			}
 		],
 		"references": [
@@ -579,7 +587,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "dran is the colloquial short form of the pronominal adverb daran (DWDS: umgangssprachlich Synonym zu daran), filling the an slot of glauben. A pronominal adverb stands alone and never joins its governor (de/pronominal-adverb-stands-alone). Read like raus for heraus, the target is daran with dran as its Shorthand member (ADR 0035). Ruled on #743 (JT-B2, A8)."
+				"rationale": "dran is the colloquial short form of the pronominal adverb daran (DWDS: umgangssprachlich Synonym zu daran), filling the an slot of glauben. A pronominal adverb stands alone and never joins its governor (de/pronominal-adverb-stands-alone). The target is daran with dran as its Shorthand member (de/dr-adverb-is-da-shorthand). Ruled on #743 (JT-B2, JT-A5, A8)."
 			}
 		},
 		{
@@ -630,11 +638,35 @@
 					}
 				],
 				"realizationCoverage": "Full",
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "an",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "glauben is the infinitive of the ohne … zu clause; it governs an, but dran never joins it (de/pronominal-adverb-stands-alone)."
+				"rationale": "glauben is the infinitive of the ohne … zu clause. It governs an (E-VALBU glauben an, Kprp an + Akk), but dran never joins it, so the valency evidence records an + Acc with no member (de/pronominal-adverb-stands-alone)."
 			}
 		}
 	],

@@ -167,15 +167,15 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/fixed-member-test",
-				"hash": "d095c150bfc6b7bd"
+				"hash": "1a5d9f3240c41e69"
 			},
 			{
 				"rule": "de/idiom",
@@ -187,7 +187,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -195,7 +195,7 @@
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/verb-core-features",
@@ -438,7 +438,7 @@
 				"kind": "PART"
 			},
 			"notes": {
-				"rationale": "etwa in a yes-no question is the modal particle of apprehension ('by any chance'), not 'approximately', so a PART like denn. open: finding A1"
+				"rationale": "etwa in a yes-no question is the modal particle of apprehension ('by any chance'), not 'approximately', so a PART like denn. open: #734."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

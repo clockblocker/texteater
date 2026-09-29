@@ -207,23 +207,23 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "9d116db0de61b6dd"
+				"hash": "60b1cecf8b3f74f1"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -235,7 +235,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -449,7 +449,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "gegenüber in the right bracket is the particle of the dictionary verb gegenüberstehen (Duden 1: jemandem zugewandt stehen), and the three coordinated datives are its object; read as a postposition, it would have to govern the whole coordination from the bracket. The Rule names only directional words. open: finding A7."
+				"rationale": "gegenüber in the right bracket is the locative particle of the dictionary verb gegenüberstehen (Duden 1: jemandem zugewandt stehen), and the three coordinated datives are its object; read as a postposition, it would have to govern the whole coordination from the bracket (de/bracket-particle-or-circumposition). Ruled on #743 (MB-A7, A6)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -692,7 +692,7 @@
 				"kind": "NOUN"
 			},
 			"notes": {
-				"rationale": "den (Dat.Plur) opens the phrase whose Head is Schweizerhäusern, across beiden and the extended attribute (ADR 0035). The Rule's cut-off by another noun would deny it the article, because Zwischengebäude stands between them, but that noun sits inside the attribute with its own article. open: finding A2."
+				"rationale": "den (Dat.Plur) opens the phrase whose Head is Schweizerhäusern, across beiden and the extended attribute. Zwischengebäude sits inside the attribute with its own article, so it cuts nothing off (de/noun-owns-its-article, ADR 0035). Ruled on #743 (MB-A2, A7)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

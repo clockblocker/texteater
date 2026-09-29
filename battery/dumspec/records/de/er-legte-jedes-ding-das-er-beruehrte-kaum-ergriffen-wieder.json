@@ -111,7 +111,7 @@
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -123,11 +123,11 @@
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -590,7 +590,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "kaum ergriffen is a participle clause predicated of the object ('no sooner grasped'): outside a perfect or passive, so a single-member ADJ with Participle Source ergreifen (de/participial-adjective, ADR 0036), the same Lemma as ergriffen 'moved'. Neither Duden nor DWDS gives comparison forms, so comparable is null; see finding A4."
+				"rationale": "kaum ergriffen is a participle clause predicated of the object ('no sooner grasped'): outside a perfect or passive, so a single-member ADJ with Participle Source ergreifen (de/participial-adjective, ADR 0036), the same Lemma as ergriffen 'moved'. Neither Duden nor DWDS lists it as an adjective with comparison forms, so it is not comparable (de/comparability-is-lexical). Ruled on #743 (BT-A4, A9) for the sources; open: whether a Reading may override its Lemma's comparability."
 			}
 		},
 		{

@@ -227,11 +227,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/fixed-members-only",
@@ -239,7 +239,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/nicht-is-part",
@@ -251,7 +251,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -259,7 +259,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/proper-noun-article",
@@ -267,7 +267,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/verbal-participle",

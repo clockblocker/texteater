@@ -191,11 +191,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -215,11 +215,11 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -376,7 +376,7 @@
 				"kind": "PART"
 			},
 			"notes": {
-				"rationale": "ja is the unstressed modal particle marking the statement as known, not the answer particle, so a PART. open: finding A1"
+				"rationale": "ja is the unstressed modal particle marking the statement as known, not the answer particle, so a PART. open: #734."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

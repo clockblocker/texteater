@@ -191,15 +191,15 @@
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "9d116db0de61b6dd"
+				"hash": "60b1cecf8b3f74f1"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -219,7 +219,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -639,7 +639,7 @@
 				"kind": "ADJ"
 			},
 			"notes": {
-				"rationale": "stumm describes the garden as it lies there: a depictive ADJ, which compares (stummer), so Pos (de/adjective-stays-adj)."
+				"rationale": "stumm describes the garden as it lies there: a depictive ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -654,7 +654,7 @@
 						"canonicalForm": "stumm",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -665,12 +665,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{

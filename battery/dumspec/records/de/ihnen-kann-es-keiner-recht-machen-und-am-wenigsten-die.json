@@ -107,7 +107,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -115,7 +115,7 @@
 			},
 			{
 				"rule": "de/fixed-member-test",
-				"hash": "d095c150bfc6b7bd"
+				"hash": "1a5d9f3240c41e69"
 			},
 			{
 				"rule": "de/fused-word-pieces",
@@ -135,7 +135,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -503,7 +503,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks (de/fused-word-pieces). wenig inflects attributively (die wenigen Gäste) and DWDS classes it Adjektiv with weniger, am wenigsten, so it is ADJ (de/adjective-stays-adj), comparable, Sup. The clause is elliptical (und am wenigsten [können es] die Kinder [Ihnen recht machen]); no fixed word of the Locution is repeated, so nothing here attests it. Ruled on #743 (JT-B6, A3)."
+				"rationale": "open: JT-B6 ADJ vs de/quantifier-by-use ADV, awaiting ruling."
 			}
 		},
 		{

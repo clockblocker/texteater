@@ -211,15 +211,15 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "9d116db0de61b6dd"
+				"hash": "60b1cecf8b3f74f1"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -227,15 +227,15 @@
 			},
 			{
 				"rule": "de/fixed-member-test",
-				"hash": "d095c150bfc6b7bd"
+				"hash": "1a5d9f3240c41e69"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -251,7 +251,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -375,7 +375,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "her in the right bracket is the particle of the accompanying her- verbs (Duden hergehen 1: vor, neben jemandem hergehen), so schritt … her is one VERB and neben is a free ADP. Neither Duden nor DWDS lists herschreiten, which the letter of de/bracket-particle-or-circumposition requires. Ruled on #743 (MB-B3, A6)."
+				"rationale": "her in the right bracket is the particle of the accompanying her- verbs (Duden hergehen 1: vor, neben jemandem hergehen), so schritt … her is one VERB and neben is a free ADP. Neither Duden nor DWDS lists herschreiten, but it belongs to the productive series of such verbs Duden describes under hergehen, so it counts as a particle verb (de/bracket-particle-or-circumposition). Ruled on #743 (MB-B3, A6)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

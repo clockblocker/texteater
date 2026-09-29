@@ -239,11 +239,11 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -251,7 +251,7 @@
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -259,7 +259,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/idiom",
@@ -283,7 +283,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/proper-noun-article",
@@ -295,7 +295,15 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
+			},
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "6ca524a6390a5c0e"
+			},
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
 			}
 		],
 		"references": [
@@ -710,7 +718,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Marcell is a male first name in direct address, a PROPN cited bare; a vocative marks singular and no case."
+				"rationale": "Marcell is a male first name in direct address, a PROPN cited bare; a vocative marks singular and no case (de/empty-inflection-is-structural). Ruled on #743 (JT-A7, A9)."
 			}
 		},
 		{
@@ -1054,7 +1062,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "machen is the infinitive under müssen. sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. Ruled on #743 (JT-B4, A4)."
+				"rationale": "machen is the infinitive under müssen. It is no copula, so the Locution that a fixed reflexive makes of sich schlüssig werden, sein does not reach it (de/copula-stays-apart). sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. Ruled on #743 (JT-B4, JT-A3, A4)."
 			}
 		},
 		{
@@ -1230,7 +1238,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "sich zu etwas stellen, 'take a stance on' (DWDS stellen 10: wie stellen sich deine Eltern zu der Frage), needs its reflexive, so dich is a member, placed after the object in Fontane's order (de/verb-owns-its-scattered-members). zu is the governed preposition, a member recorded in valencyEvidence as zu + Dat (de/governed-preposition-joins-its-governor). willst is a separate modal VERB."
+				"rationale": "sich zu etwas stellen, 'take a stance on' (Duden stellen: sich positiv, negativ zu jemandem, zu einer Sache stellen; wie stellst du dich zu diesem Problem?), needs its reflexive, so dich is a member, placed after the object in Fontane's order (de/verb-owns-its-scattered-members). E-VALBU has no Lesart for this sense, so Duden decides that zu is governed: a member recorded in valencyEvidence as zu + Dat (de/governed-preposition-joins-its-governor). willst is a separate modal VERB."
 			}
 		},
 		{

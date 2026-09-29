@@ -131,11 +131,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
@@ -147,7 +147,7 @@
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/proper-noun-article",
@@ -518,7 +518,7 @@
 						"canonicalForm": "großmütig",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -529,12 +529,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -547,7 +542,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "großmütig is used adverbially, so ADJ (de/adjective-stays-adj); großmütiger, am großmütigsten make it comparable, Pos."
+				"rationale": "großmütig is used adverbially, so ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
 			}
 		},
 		{

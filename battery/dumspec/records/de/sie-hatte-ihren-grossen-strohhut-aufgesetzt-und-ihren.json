@@ -187,7 +187,7 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -195,15 +195,15 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -211,7 +211,7 @@
 			},
 			{
 				"rule": "de/partial-coverage",
-				"hash": "7d8f01fb7470e204"
+				"hash": "e5a5c73f7672ad44"
 			},
 			{
 				"rule": "de/verb-core-features",
@@ -291,7 +291,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "hatte is the pluperfect auxiliary of aufsetzen and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle); tense Past comes from the finite hatte (de/verbal-surface-is-whole). hatte also serves aufgespannt; it stays with the first participle. open: finding A3."
+				"rationale": "hatte is the pluperfect auxiliary of aufsetzen and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle); tense Past comes from the finite hatte (de/verbal-surface-is-whole). hatte also serves aufgespannt, and it belongs to the nearer participle, aufgesetzt (de/partial-coverage, ADR 0041). Ruled on #743 (MB-A3, A7)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -633,7 +633,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "aufgespannt is the second participle under the one pluperfect auxiliary hatte, which the first conjunct owns. The Surface describes the whole pluperfect it belongs to (de/verbal-surface-is-whole), and the Attestation is Partial because its auxiliary is shared, as a shared article leaves its noun Partial. No Rule names this case. open: finding A3."
+				"rationale": "aufgespannt is the second participle under the one pluperfect auxiliary hatte, which the nearer first conjunct owns, so the Attestation is Partial. The shared hatte still counts toward its features, so the Surface is the whole pluperfect (de/partial-coverage, de/verbal-surface-is-whole, ADR 0041). Ruled on #743 (MB-A3, A7)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

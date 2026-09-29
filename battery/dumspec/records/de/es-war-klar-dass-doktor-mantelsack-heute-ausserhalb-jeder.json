@@ -230,11 +230,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/core-features-are-identity",
@@ -242,7 +242,7 @@
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/fused-word-pieces",
@@ -258,7 +258,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/title-before-a-name",
@@ -270,7 +270,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -295,6 +295,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👉"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -336,7 +339,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Es anticipates the subject clause daß … kümmerte (Mir war klar, daß … drops it), so it is anticipatory es, a PRON target of its own (de/expletive-es-joins-its-verb). Neither authored es Reading describes a correlate: see finding A2."
+				"rationale": "Es anticipates the subject clause daß … kümmerte (Mir war klar, daß … drops it), so it is anticipatory es, a PRON target of its own (de/expletive-es-joins-its-verb), with the correlate Reading 👉. Ruled on #743 (BT-A2, A5)."
 			}
 		},
 		{
@@ -954,7 +957,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "sich kümmern 'care about' is inherently reflexive (non-reflexive kümmern is 'concern': Was kümmert mich das?), so sich is a member (de/verb-owns-its-scattered-members). Its um slot is realized by the pronominal adverb darum, which stays its own target (de/pronominal-adverb-stands-alone), so the valency evidence names no member: see finding A6."
+				"rationale": "sich kümmern 'care about' is inherently reflexive (non-reflexive kümmern is 'concern': Was kümmert mich das?), so sich is a member (de/verb-owns-its-scattered-members). Its um slot is filled by the pronominal adverb darum, which stays its own target, so the valency evidence records um + Acc with no member (de/pronominal-adverb-stands-alone). Ruled on #743 (BT-A6, A6)."
 			}
 		},
 		{
@@ -1082,7 +1085,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Pronominal adverb standing for um + the following wer-clause; its own ADV target even though kümmern governs its um (de/pronominal-adverb-stands-alone)."
+				"rationale": "darum anticipates the wer-clause as the correlate of kümmern's um slot. A pronominal adverb stays its own ADV target even though kümmern governs its um (de/pronominal-adverb-stands-alone)."
 			}
 		},
 		{

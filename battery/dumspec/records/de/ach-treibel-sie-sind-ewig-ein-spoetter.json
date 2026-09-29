@@ -91,11 +91,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/interjection-counts-its-words",
@@ -103,7 +103,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/proper-noun-article",
@@ -112,6 +112,10 @@
 			{
 				"rule": "de/title-before-a-name",
 				"hash": "dd531115e2c8a2ef"
+			},
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
 			}
 		],
 		"references": [
@@ -221,7 +225,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Treibel is the surname, used in direct address, so a PROPN cited bare with no article; a vocative marks no case, only singular number (de/title-before-a-name: an addressed noun does not take a case from the clause). Gender is left null: a surname names Herr and Frau Treibel alike, and nothing in this sentence agrees with it. open: finding A1."
+				"rationale": "Treibel is the surname, used in direct address, so a PROPN cited bare with no article; a vocative marks no case, only singular number (de/empty-inflection-is-structural, de/title-before-a-name: an addressed noun does not take a case from the clause). Ruled on #743 (JT-A7, A9) for the case. Gender is left null: a surname names Herr and Frau Treibel alike, and nothing in this sentence agrees with it. open: finding A1."
 			}
 		},
 		{
@@ -347,7 +351,7 @@
 						"canonicalForm": "ewig",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -358,12 +362,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -376,7 +375,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "ewig here is the colloquial 'forever, constantly' (DWDS: umgangssprachlich 'unaufhörlich, dauernd', er ist ewig unzufrieden), an adjective used adverbially, so ADJ (de/adjective-stays-adj). DWDS gives ewiger, am ewigsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
+				"rationale": "ewig here is the colloquial 'forever, constantly' (DWDS: umgangssprachlich 'unaufhörlich, dauernd', er ist ewig unzufrieden), an adjective used adverbially, so ADJ (de/adjective-stays-adj). Duden gives no comparison forms, and DWDS gives ewiger, am ewigsten only as rare (Steigerung selten), which does not count, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
 			}
 		},
 		{

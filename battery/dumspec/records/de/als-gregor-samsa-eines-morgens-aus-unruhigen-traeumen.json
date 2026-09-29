@@ -183,7 +183,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -191,23 +191,23 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -882,60 +882,6 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
-			"route": {
-				"family": "Lexeme",
-				"kind": "ADP"
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"foreign": null,
-							"partType": null
-						}
-					},
-					"normalizedSurface": "zu",
-					"spelling": {
-						"kind": "Canonical"
-					},
-					"surfaceFeatures": null
-				},
-				"members": [
-					{
-						"attested": "zu",
-						"orthography": "Standard"
-					}
-				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": [
-					{
-						"member": null,
-						"complement": {
-							"kind": "Case",
-							"case": "Dat",
-							"referent": "Either"
-						},
-						"realizedCase": "Dat"
-					}
-				]
-			},
-			"notes": {
-				"rationale": "zu marks the result of the change named by the participle verwandelt. A participial adjective's own prepositional phrases are free words (de/participial-adjective), though the verb verwandeln governs zu; see finding A3."
-			}
-		},
-		{
 			"memberSegmentIndices": [33, 37],
 			"route": {
 				"family": "Lexeme",
@@ -1038,7 +984,7 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [39],
+			"memberSegmentIndices": [31, 39],
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
@@ -1071,16 +1017,44 @@
 				},
 				"members": [
 					{
+						"attested": "zu",
+						"orthography": "Standard"
+					},
+					{
 						"attested": "verwandelt",
 						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "zu",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			},
 			"notes": {
-				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is a single-member ADJ with Participle Source verwandeln (de/participial-adjective). No dictionary gives it comparison forms, so it marks no Degree."
+				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is an ADJ with Participle Source verwandeln (de/participial-adjective). Its source verb governs zu in this sense: E-VALBU has no verwandeln, and Duden gives verwandeln 1b 'zu jemand, etwas anderem werden lassen'. So the participle governs zu too, a member named by valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). No dictionary gives verwandelt comparison forms, so it marks no Degree. Ruled on #743 (VP-A3, A6)."
 			}
 		}
 	],

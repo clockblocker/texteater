@@ -159,7 +159,7 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/bare-infinitive-zu",
@@ -167,11 +167,11 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/fixed-member-test",
-				"hash": "d095c150bfc6b7bd"
+				"hash": "1a5d9f3240c41e69"
 			},
 			{
 				"rule": "de/fixed-members-only",
@@ -183,11 +183,11 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "8f0eeeea8956479a"
+				"hash": "1bb448ae5660b80b"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
@@ -195,7 +195,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			}
 		],
 		"references": [
@@ -336,7 +336,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "wechseln 'exchange' takes the exchange partner as an optional mit complement (DWDS: ⟨(mit jmdm.) etw. wechseln⟩, Blicke, einen Blick wechseln), so mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. Ruled on #743 (BT-B2)."
+				"rationale": "wechseln 'exchange' governs the exchange partner with mit: E-VALBU wechseln Lesart 7 'jemand wechselt etwas mit jemandem', Kprp mit + Dat, with the example einen kurzen Blick mit ihm gewechselt. So mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. Ruled on #743 (BT-B2)."
 			}
 		},
 		{

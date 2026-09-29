@@ -191,7 +191,7 @@
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -199,15 +199,15 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
@@ -219,11 +219,11 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/participial-adjective",
-				"hash": "4435db81cfb4db93"
+				"hash": "5d4481bf31cb7267"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -231,7 +231,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -256,6 +256,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👉"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -297,7 +300,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Anticipatory es for the subject clause daß Hanno aufgerufen wurde, a PRON target of its own (de/expletive-es-joins-its-verb). Reading: see finding A2."
+				"rationale": "Anticipatory es for the subject clause daß Hanno aufgerufen wurde, a PRON target of its own (de/expletive-es-joins-its-verb), with the correlate Reading 👉. Ruled on #743 (BT-A2, A5)."
 			}
 		},
 		{
@@ -569,7 +572,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Partizip I of drohen used adverbially on wahrscheinlich ('threateningly probable'), so a single-member ADJ (de/participial-adjective, ADR 0036). No dictionary gives it comparison forms (DWDS and Duden have no entry), so comparable is null; see finding A4."
+				"rationale": "Partizip I of drohen used adverbially on wahrscheinlich ('threateningly probable'), so a single-member ADJ (de/participial-adjective, ADR 0036). Duden's Adjektiv entry drohend gives no comparison forms, and DWDS has no entry of its own, so it is not comparable (de/comparability-is-lexical). Ruled on #743 (BT-A4, A9)."
 			}
 		},
 		{

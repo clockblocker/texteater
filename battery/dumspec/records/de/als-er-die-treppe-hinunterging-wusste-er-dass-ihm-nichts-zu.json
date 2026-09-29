@@ -187,7 +187,7 @@
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -203,7 +203,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/relative-w-adverb-fills-a-slot",
@@ -216,6 +216,10 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "bcb53b5333fa8af4"
+			},
+			{
+				"rule": "de/comparison-als",
+				"hash": "308ab8fee3b2ddb0"
 			}
 		],
 		"references": [
@@ -824,7 +828,7 @@
 				"kind": "SCONJ"
 			},
 			"notes": {
-				"rationale": "als after nichts … übrig introduces the exception, here an infinitive clause, and fills no slot in it: by the principle the Rules state for comparison wie, SCONJ before a clause. open: findings A4 and B2."
+				"rationale": "als after nichts … übrig marks the exception, a comparison of difference, and fills no slot in its clause, so it is comparison als, SCONJ before a clause, here an infinitive clause (de/comparison-als). Ruled on #743 (MB-A4, A9; MB-B2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

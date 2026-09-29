@@ -131,7 +131,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/fixed-members-only",
@@ -147,7 +147,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -155,7 +155,7 @@
 			},
 			{
 				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"hash": "1b11d9ee80ce12bd"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -168,6 +168,10 @@
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "974139977fd040ca"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f8c5768e1ce3e526"
 			}
 		],
 		"references": [
@@ -387,7 +391,7 @@
 				"kind": "ADV"
 			},
 			"notes": {
-				"rationale": "viel here modifies the verb, 'often, a lot' (DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern): it stands for no noun phrase and modifies no noun, so it is neither the PRON nor the DET quantifier (de/pron-or-det-by-use). So ADV viel, comparable through mehr, am meisten. Ruled on #743 (SZ-B6, A3)."
+				"rationale": "viel here is used adverbially, modifying the verb ('often, a lot', DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern), so it is the comparable ADV viel, whose Cmp and Sup are mehr and am meisten (de/quantifier-by-use). Ruled on #743 (SZ-B6, SZ-A4, A3)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

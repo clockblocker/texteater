@@ -299,7 +299,7 @@
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -311,15 +311,15 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{
 				"rule": "de/copula-stays-apart",
-				"hash": "eddf44f6760331c0"
+				"hash": "6ca524a6390a5c0e"
 			},
 			{
 				"rule": "de/empty-inflection-is-structural",
-				"hash": "2fc1eac4f11ccea0"
+				"hash": "2ea5f1e19a7417ae"
 			},
 			{
 				"rule": "de/modal-is-a-verb",
@@ -331,7 +331,7 @@
 			},
 			{
 				"rule": "de/noun-owns-its-article",
-				"hash": "c509d14dcd7d7b41"
+				"hash": "c2b1f74a61545177"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -638,7 +638,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "wirklich 'really, in fact' is the adverbial use of the adjective wirklich (DWDS, Adjektiv, sense 3 adverbiell), so ADJ (de/adjective-stays-adj); DWDS gives wirklicher, am wirklichsten, so it marks Pos. open: finding A2."
+				"rationale": "wirklich 'really, in fact' is the adverbial use of the adjective wirklich (DWDS, Adjektiv, sense 3 adverbiell), so ADJ (de/adjective-stays-adj); DWDS gives wirklicher, am wirklichsten, so it marks Pos. open: #734."
 			}
 		},
 		{
@@ -896,7 +896,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Oberflächlichkeit is the bare noun after voll, which Duden's usage guide calls uninflected (voll Wasser), so the Surface marks singular and no case. Ruled on #743 (JT-B5, A9)."
+				"rationale": "Oberflächlichkeit is the bare noun after voll, which Duden's usage guide calls uninflected (voll Wasser), so the Surface marks singular and no case (de/empty-inflection-is-structural). Ruled on #743 (JT-B5, JT-A7, A9)."
 			}
 		},
 		{
@@ -979,7 +979,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Eitelkeit is the second bare noun after voll, marked like Oberflächlichkeit. Ruled on #743 (JT-B5, A9)."
+				"rationale": "Eitelkeit is the second bare noun after voll, marked like Oberflächlichkeit (de/empty-inflection-is-structural). Ruled on #743 (JT-B5, JT-A7, A9)."
 			}
 		},
 		{
@@ -1533,7 +1533,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "eigentlich 'in reality, at bottom' is the adverbial use of the adjective eigentlich (DWDS: Adjektiv, ohne Komparativ; sense 2 in Wirklichkeit), so ADJ with no Degree (de/adjective-stays-adj, de/comparability-is-lexical). open: finding A2."
+				"rationale": "eigentlich 'in reality, at bottom' is the adverbial use of the adjective eigentlich (DWDS: Adjektiv, ohne Komparativ; sense 2 in Wirklichkeit), so ADJ with no Degree (de/adjective-stays-adj, de/comparability-is-lexical). open: #734."
 			}
 		},
 		{
@@ -1576,7 +1576,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "nur is the restrictive focus word before bloße Marotte; it cannot inflect, so ADV, not comparable. open: finding A2."
+				"rationale": "nur is the restrictive focus word before bloße Marotte; it cannot inflect, so ADV, not comparable. open: #734."
 			}
 		},
 		{
