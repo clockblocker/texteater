@@ -1,0 +1,59 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Wer rastet, rostet.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "rastet" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "rostet" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0003", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/modification-attests-partially",
+				"hash": "8b165ead281f0462"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2, 5],
+			"notes": {
+				"rationale": "The proverb without der is still the proverb, and a Saying survives any change, a shortening included: the kept words attest Wer rastet, der rostet, Partial."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Wer", "orthography": "Standard" },
+					{ "attested": "rastet", "orthography": "Standard" },
+					{ "attested": "rostet", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Partial",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Wer rastet rostet",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Wer rastet, der rostet",
+						"family": "Saying",
+						"kind": "Saying",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
+	"noTarget": []
+}

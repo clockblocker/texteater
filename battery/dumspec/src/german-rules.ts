@@ -795,10 +795,16 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/modification-attests-partially",
 		statement:
-			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen). A Locution whose dictionary entry marks a fixed word as optional still attests it, Partial, when that word is left out: Duden cites guten Morgen as [guten] Morgen!, so Morgen, Frau Schulz! gives [Morgen] Locution INTJ guten Morgen.",
+			"A changed wording still attests the unit, with Partial coverage, as long as speakers still recognize it: the kept words are its members, and the replacing words resolve on their own. A Saying survives any such change; a Locution breaks when a word that carries its meaning is replaced.",
 		adrs: ["ADR-0039", "ADR-0003"],
 		routes: everyMultiword,
-		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
+		records: [
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/kaffee-oder-tee-das-ist-hier-die-frage",
+			"de/wer-rastet-rostet",
+			"de/er-biss-ins-kunstgras",
+			"de/er-biss-in-den-rasen",
+		],
 	},
 ];
 

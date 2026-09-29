@@ -51,7 +51,7 @@
 			},
 			{
 				"rule": "de/modification-attests-partially",
-				"hash": "c9ac73bf18af63c6"
+				"hash": "8b165ead281f0462"
 			},
 			{ "rule": "de/partial-coverage", "hash": "7d8f01fb7470e204" },
 			{
@@ -66,7 +66,7 @@
 			"memberSegmentIndices": [26],
 			"reading": { "emojiDescription": "👋" },
 			"notes": {
-				"rationale": "grüßt and the early hour make this the greeting, not the ADV morgen, tomorrow. Bare Morgen! is the clipped formula guten Morgen (Duden: [guten] Morgen!) with the fixed guten left out, so the Attestation is Partial and its one member is Morgen."
+				"rationale": "grüßt and the early hour make this the greeting, not the ADV morgen, tomorrow. Leaving out guten replaces no word, and speakers still hear the greeting (Duden: [guten] Morgen!), so Morgen attests guten Morgen, Partial."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
