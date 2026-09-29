@@ -46,11 +46,17 @@
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			},
 			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: geschlossen",
+				"url": "https://www.dwds.de/wb/geschlossen",
+				"supports": "partizipiales Adjektiv · Komparativ: geschlossener · Superlativ: am geschlossensten."
+			}
+		]
 	},
 	"targets": [
 		{
@@ -109,7 +115,7 @@
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🔒" },
 			"notes": {
-				"rationale": "sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036)."
+				"rationale": "sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036). Duden gives the adjective geschlossen no comparison forms, but DWDS gives geschlossener, am geschlossensten, so the Lemma is comparable and the predicative Surface marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -124,7 +130,7 @@
 						"canonicalForm": "geschlossen",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -133,7 +139,12 @@
 					"normalizedSurface": "geschlossen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [
 					{

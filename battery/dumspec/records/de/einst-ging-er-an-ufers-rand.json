@@ -40,7 +40,7 @@
 		"rules": [
 			{
 				"rule": "de/empty-inflection-is-structural",
-				"hash": "2fc1eac4f11ccea0"
+				"hash": "2ea5f1e19a7417ae"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -48,7 +48,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "be68bba1666ed2cc"
 			}
 		],
 		"references": []

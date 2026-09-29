@@ -467,6 +467,14 @@ const nouns: Rule[] = [
 		],
 	},
 	{
+		id: "de/neuter-adjectival-noun",
+		statement:
+			"An adjective or participle used as a neuter noun for a thing or an abstraction is a NOUN Lemma with gender Neut, cited in its weak form (das Böse gives Böse), whether a dictionary lists it or it is formed on the spot: etwas Böses and nichts Neues give NOUN Böse and Neue. It is a Lemma apart from the person noun of the same spelling (der Böse, gender null).",
+		adrs: ["ADR-0040", "ADR-0002"],
+		routes: lexeme("NOUN"),
+		records: ["de/sie-uebersetzt-den-vertrag-ins-deutsche"],
+	},
+	{
 		id: "de/only-der-and-ein-are-articles",
 		statement:
 			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN.",
@@ -675,7 +683,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/comparability-is-lexical",
 		statement:
-			"An ADV or ADJ Lemma is comparable when the dictionary gives it comparison forms, suppletive ones included: gern → lieber, am liebsten. A colloquial form such as töter does not count. Every Surface of a comparable Lemma marks Degree, Pos in a citation (mild), a predicative use (wird mild) and an adverbial use (singt laut). No Surface of a non-comparable Lemma (hier, heute, tot, entzwei) marks Degree. Such a Surface has no inflection, except that an attributive ADJ marks case, gender and number (der tote Mann).",
+			"An ADV or ADJ Lemma is comparable when Duden, or else DWDS, gives it comparison forms, suppletive ones included: gern → lieber, am liebsten. A form marked colloquial or rare does not count (töter, toter). A participle no dictionary lists as an adjective is not comparable. Every Surface of a comparable Lemma marks Degree, Pos in a citation and in predicative or adverbial use (singt laut). No Surface of a non-comparable Lemma (hier, heute, tot, entzwei) marks Degree. Such a Surface has no inflection, except that an attributive ADJ marks case, gender and number (der tote Mann).",
 		adrs: ["ADR-0042"],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
@@ -773,6 +781,20 @@ const conjunctionsAndParticles: Rule[] = [
 		records: ["de/das-ist-schwer-zu-erklaeren"],
 	},
 	{
+		id: "de/comparison-als",
+		statement:
+			"Comparison als, after a comparative or a word of difference or exception (anders, nichts), fills no slot in its clause: it is CCONJ before a phrase (tiefer als der alte) and SCONJ before a clause, a zu-infinitive included (nichts übrig, als ein Ende zu machen).",
+		adrs: [],
+		routes: lexeme("CCONJ", "SCONJ"),
+		records: [
+			"de/der-neue-brunnen-ist-tiefer-als-der-alte",
+			"de/mira-ist-groesser-als-ihre-schwester",
+			"de/heute-kamen-mehr-gaeste-als-gestern",
+			"de/der-weg-dauerte-laenger-als-wir-erwartet-hatten",
+			"de/die-reparatur-dauerte-kuerzer-als-der-meister-vorausgesagt",
+		],
+	},
+	{
 		id: "de/nicht-is-part",
 		statement:
 			"nicht is a PART with polarity Neg, never an ADV, wherever it stands and whatever it negates: Das ist nicht mein Problem gives [nicht] PART nicht, and so do sentence negation (Er kommt nicht) and constituent negation (nicht heute, sondern morgen). It is a single-member target of its own, and it never joins the verb or the word it negates. Where nicht is a fixed member of a Locution or Saying (nicht nur … sondern auch, Der Apfel fällt nicht weit vom Stamm), the Locution and Saying Rules decide the unit.",
@@ -835,6 +857,14 @@ const locutionsAndSayings: Rule[] = [
 			"de/damit-triffst-du-den-nagel-auf-den-kopf",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
 		],
+	},
+	{
+		id: "de/complex-preposition",
+		statement:
+			"A preposition, a bare noun and a second preposition that work together as one preposition, the noun taking no article or attribute of its own, are one Locution ADP over all their words, both pieces of a fused word included: im Vergleich zu seinem Umfang gives [i, m, Vergleich, zu] ADP im Vergleich zu. The phrase it governs is free.",
+		adrs: ["ADR-0039", "ADR-0035"],
+		routes: locution("ADP"),
+		records: [],
 	},
 	{
 		id: "de/routine-formula-is-intj",
@@ -1040,7 +1070,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/empty-inflection-is-structural",
 		statement:
-			"A Surface leaves its inflection empty only for a dictionary citation, or for an invariant use its route leaves unmarked. An empty inflection states that structure; it never stands for uncertainty.",
+			"A Surface leaves its inflection empty only for a dictionary citation, or for an invariant use its route leaves unmarked. A noun leaves its case empty and marks its number only as a vocative (Ach, Treibel) or as a bare noun after voll (voll Wasser). An empty inflection or case states that structure; it never stands for uncertainty.",
 		adrs: ["ADR-0032"],
 		routes: [],
 		records: ["de/einst-ging-er-an-ufers-rand"],
