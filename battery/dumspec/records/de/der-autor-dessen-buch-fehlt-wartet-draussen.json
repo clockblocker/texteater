@@ -20,14 +20,25 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0044"],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "Dessen is a genitive relative pronoun with masculine antecedent features from the sentence."
+				"rationale": "Attributive dessen is the relative pillar cell Gen.Masc.Sg with extPos DET (de/pron-or-det-by-use). Its gender is its antecedent's, Autor, and Buch is a separate target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,7 +61,7 @@
 						"kind": "PRON",
 						"coreFeatures": {
 							"pronType": "Rel",
-							"extPos": null,
+							"extPos": "DET",
 							"foreign": null,
 							"person": null,
 							"polite": null,

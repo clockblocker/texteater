@@ -18,17 +18,24 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "e12dcd22d33a76aa"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "⛓" },
 			"notes": {
-				"rationale": "`wegen` takes a colloquial dative here. The ADP Case Table keeps genitive as its preferred case, so the Lemma stays the same `wegen` and the occurrence records the dative it realized.",
-				"knownMistakes": [
-					"Reading belongs to a later layer; this Dumling Attestation only resolves the reviewed adposition `wegen`."
-				]
+				"rationale": "`wegen` takes a colloquial dative here. The ADP Case Table keeps genitive as its preferred case, so the Lemma stays the same `wegen` and the occurrence records the dative it realized."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

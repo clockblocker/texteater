@@ -52,20 +52,31 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034"],
-		"rules": [],
+		"adrs": ["ADR-0034", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "8f0eeeea8956479a"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
+			"reading": { "emojiDescription": "🦚" },
 			"notes": {
-				"rationale": "stolz governs auf in the same sense on its own, so the preposition is a governed member of the ADJ, never of the copula (ADR 0034). The Surface projects only the Fixed member: stolz. An adjective takes in the preposition it governs, as a verb does: auf is an occurrence member, so a click on it opens stolz, and valencyEvidence names it by index with auf + Acc. It is not a Fixed member, so the normalized Surface is stolz. The copula ist stays its own VERB and forms no Collocation with the predicative adjective."
+				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz, but not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is stolz."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -80,6 +91,7 @@
 						"canonicalForm": "stolz",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
@@ -133,226 +145,57 @@
 					}
 				]
 			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🟰" },
+			"notes": {
+				"rationale": "ist is the copula VERB sein, a single-member target; it never joins the predicative adjective stolz (de/copula-stays-apart)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "ist",
+					"spelling": "Canonical",
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "ist",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-governed-adjective-copula-click-ist",
-			"memberSegmentIndices": [2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{
-							"kind": "ResolvableText",
-							"text": "Er"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "ist"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "stolz"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "auf"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "seinen"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "Sohn"
-						},
-						{
-							"kind": "Punctuation",
-							"text": "."
-						}
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2]
-				},
-				"explanation": "A copula never forms a unit or a Collocation with its predicative adjective (ADR 0034): ist is a singleton VERB, and stolz takes in the preposition it governs, so stolz and auf are one ADJ target.",
-				"contaminationKeys": ["target-stimulus:stolz-auf-sohn"]
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
-			"caseId": "sentence-de-copula-stolz-auf",
-			"case": {
-				"input": {
-					"segments": [
-						{
-							"kind": "ResolvableText",
-							"text": "Er"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "ist"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "stolz"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "auf"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "seinen"
-						},
-						{
-							"kind": "Whitespace",
-							"text": " "
-						},
-						{
-							"kind": "ResolvableText",
-							"text": "Sohn"
-						},
-						{
-							"kind": "Punctuation",
-							"text": "."
-						}
-					]
-				},
-				"idealOutput": {
-					"targets": [
-						{
-							"kind": "VERB",
-							"members": [
-								{
-									"offset": 3
-								}
-							]
-						},
-						{
-							"kind": "ADJ",
-							"members": [
-								{
-									"offset": 7,
-									"role": "Head"
-								},
-								{
-									"offset": 13,
-									"role": "GovernedPreposition"
-								}
-							]
-						}
-					],
-					"phrasemes": [],
-					"slots": [
-						{
-							"governors": [7],
-							"offset": 13,
-							"preposition": "auf",
-							"case": "Acc",
-							"referent": "Someone"
-						}
-					]
-				},
-				"explanation": "A copula never forms an expression with its predicative adjective: ist is its own VERB, and stolz takes in the auf it governs (ADR 0034)."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/valency/source-data.json",
-			"caseId": "valency-stolz-adjective",
-			"memberSegmentIndices": [4],
-			"case": {
-				"input": {
-					"markedContext": "Er ist <TARGET>stolz</TARGET> auf seinen Sohn.",
-					"reading": {
-						"unitKind": "Reading",
-						"lemma": {
-							"unitKind": "Lemma",
-							"language": "de",
-							"family": "Lexeme",
-							"kind": "ADJ",
-							"canonicalForm": "stolz",
-							"coreFeatures": {
-								"abbr": null,
-								"foreign": null,
-								"numType": null,
-								"variant": null
-							}
-						},
-						"emojiDescription": "🦚"
-					}
-				},
-				"idealOutput": {
-					"valency": [
-						{
-							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Someone"
-							}
-						},
-						{
-							"status": "Optional",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "auf",
-								"case": "Acc",
-								"referent": "Either"
-							}
-						}
-					]
-				},
-				"explanation": "The adjective governs auf + Acc. Er ist stolz keeps the sense without it, so the slot is Optional.",
-				"sources": [
-					{
-						"title": "ADR 0034",
-						"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
-						"supports": "stolz stores auf + Acc."
-					}
-				]
-			}
-		}
-	]
+	"noTarget": []
 }

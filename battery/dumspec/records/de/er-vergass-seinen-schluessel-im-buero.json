@@ -17,17 +17,28 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0032", "ADR-0044"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
+			"reading": { "emojiDescription": "🔐" },
 			"notes": {
-				"rationale": "`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Its possessor features record what the form shows: sein- serves a masculine or neuter singular possessor, so gender[psor] is the set Masc, Neut even though the subject `Er` is masculine.",
-				"knownMistakes": [
-					"Reading belongs to a later layer; Dumling records `seinen` as a Surface of the possessive determiner Lemma sein."
-				]
+				"rationale": "`Seinen` is the accusative masculine singular Surface of the possessive determiner sein, agreeing with Schlüssel. Its possessor features record what the form shows: sein- serves a masculine or neuter singular possessor, so gender[psor] is the set Masc, Neut even though the subject `Er` is masculine."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

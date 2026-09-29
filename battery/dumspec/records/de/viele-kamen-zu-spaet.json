@@ -12,14 +12,25 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0044"],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Viele is annotated as PRON because it stands substantively for a plural group with no overt noun head. In attributive use, as in viele Leute, the same lexical item would be DET instead."
+				"rationale": "Viele stands for a noun phrase with no noun, so it is PRON (de/pron-or-det-by-use): the stem viele, whose Surface marks Nom.Plur. Attributive viele Leute is the DET viel instead."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -31,7 +42,14 @@
 					"language": "de",
 					"normalizedSurface": "viele",
 					"spelling": "Canonical",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Plur",
+						"gender[psor]": null,
+						"number[psor]": null,
+						"reflex": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -45,8 +63,8 @@
 							"person": null,
 							"polite": null,
 							"poss": null,
-							"case": "Nom",
-							"number": "Plur",
+							"case": null,
+							"number": null,
 							"gender": null
 						}
 					},

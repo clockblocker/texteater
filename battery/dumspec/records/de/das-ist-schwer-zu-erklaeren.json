@@ -14,12 +14,19 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{ "rule": "de/bare-infinitive-zu", "hash": "7462675604e5cc7f" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Infinitival zu is PART with partType Inf, distinct from prepositional zu."
 			},

@@ -16,12 +16,23 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0032"],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "Manchem is annotated as DET because it modifies Fehler; it would be PRON only in substantive use."
 			},

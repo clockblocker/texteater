@@ -14,12 +14,26 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0032"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "240b45072e01295e"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "7651166ee526ad94"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"reading": { "emojiDescription": "🔐" },
 			"notes": {
 				"rationale": "The capitalized polite possessive is encoded as DET with person 2, polite Form, and poss Yes.",
 				"knownMistakes": [

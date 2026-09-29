@@ -113,6 +113,7 @@ const verbs: Rule[] = [
 			"de/er-wartet-auf-den-nachtbus",
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/sie-erinnert-sich-an-den-geruch",
+			"de/er-ist-stolz-auf-seinen-sohn",
 		],
 	},
 	{
@@ -231,6 +232,7 @@ const verbs: Rule[] = [
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
 			"de/jetzt-schien-die-sonne-gar-zu-sehr",
+			"de/er-ist-stolz-auf-seinen-sohn",
 		],
 	},
 	{
@@ -371,6 +373,9 @@ const nouns: Rule[] = [
 			"de/wir-brauchen-fuer-den-transport-noch-n-auto",
 			"de/sie-folgte-ihrem-herzen",
 			"de/sein-staendiges-meckern-nervt",
+			"de/bitte-folgen-sie-ihrem-ansprechpartner",
+			"de/er-vergass-seinen-schluessel-im-buero",
+			"de/mit-keinem-wort-erwaehnte-sie-den-plan",
 		],
 	},
 	{
@@ -442,7 +447,15 @@ const pronounsAndAdjectives: Rule[] = [
 			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET. Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
 		adrs: [],
 		routes: lexeme("PRON", "DET"),
-		records: ["de/und-minz-und-maunz-die-schreien"],
+		records: [
+			"de/und-minz-und-maunz-die-schreien",
+			"de/der-autor-dessen-buch-fehlt-wartet-draussen",
+			"de/die-zeugin-deren-aussage-zaehlt-bleibt-anonym",
+			"de/mit-keinem-wort-erwaehnte-sie-den-plan",
+			"de/nach-manchem-fehler-lernt-man-schneller",
+			"de/viele-kamen-zu-spaet",
+			"de/wer-war-das",
+		],
 	},
 	{
 		id: "de/possessive-after-article",
@@ -567,6 +580,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/nahm-ranzen-pulverhorn-und-flint",
 			"de/sieh-einmal-hier-steht-er",
 			"de/und-minz-und-maunz-die-schreien",
+			"de/er-ist-stolz-auf-seinen-sohn",
 		],
 	},
 	{
@@ -623,7 +637,7 @@ const conjunctionsAndParticles: Rule[] = [
 			"zu before an infinitive, without um, ohne or statt, is a single-member PART and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
 		adrs: [],
 		routes: lexeme("PART"),
-		records: [],
+		records: ["de/das-ist-schwer-zu-erklaeren"],
 	},
 	{
 		id: "de/nicht-is-part",
@@ -772,6 +786,14 @@ const attestations: Rule[] = [
 			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
 			"de/der-laster-fuhr-das-schild-um",
 			"de/sie-umfuhr-die-baustelle-weitraeumig",
+			"de/bitte-folgen-sie-ihrem-ansprechpartner",
+			"de/der-autor-dessen-buch-fehlt-wartet-draussen",
+			"de/die-zeugin-deren-aussage-zaehlt-bleibt-anonym",
+			"de/er-vergass-seinen-schluessel-im-buero",
+			"de/mit-keinem-wort-erwaehnte-sie-den-plan",
+			"de/nach-manchem-fehler-lernt-man-schneller",
+			"de/viele-kamen-zu-spaet",
+			"de/wer-war-das",
 		],
 	},
 	{
@@ -798,6 +820,7 @@ const attestations: Rule[] = [
 			"de/sein-staendiges-meckern-nervt",
 			"de/morgen-fahren-wir-nach-hamburg",
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/wegen-dem-regen-kamen-wir-zu-spaet",
 		],
 	},
 	{
