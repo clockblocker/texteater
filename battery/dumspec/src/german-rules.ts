@@ -82,6 +82,8 @@ const verbs: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/sie-erinnert-sich-an-den-geruch",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/nahm-ranzen-pulverhorn-und-flint",
+			"de/fort-geht-nun-die-mutter-und",
 		],
 	},
 	{
@@ -131,6 +133,7 @@ const verbs: Rule[] = [
 			"de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
 			"de/nach-dem-essen-ging-er-kurz-hinaus",
 			"de/das-geht-weit-ueber-meine-kraefte-hinaus",
+			"de/nahm-ranzen-pulverhorn-und-flint",
 		],
 	},
 	{
@@ -210,6 +213,7 @@ const verbs: Rule[] = [
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/jetzt-schien-die-sonne-gar-zu-sehr",
 		],
 	},
 	{
@@ -224,6 +228,7 @@ const verbs: Rule[] = [
 			"de/die-aufgabe-bleibt-ungeloest",
 			"de/das-waere-schoen-gewesen",
 			"de/das-waere-fast-schief-gewesen",
+			"de/jetzt-schien-die-sonne-gar-zu-sehr",
 		],
 	},
 	{
@@ -385,6 +390,7 @@ const nouns: Rule[] = [
 			"de/ich-wohne-im-alten-berlin",
 			"de/viele-vermissen-das-alte-berlin",
 			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
+			"de/sieh-einmal-hier-steht-er",
 		],
 	},
 	{
@@ -512,6 +518,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/ich-suche-einen-besseren-ansatz",
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/nahm-ranzen-pulverhorn-und-flint",
 		],
 	},
 	{
@@ -551,6 +558,9 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/er-wog-vielleicht-ein-halbes-lot",
 			"de/es-brennt-die-hand-es-brennt-das-haar",
 			"de/die-schoss-das-haeschen-ganz-entzwei",
+			"de/jetzt-schien-die-sonne-gar-zu-sehr",
+			"de/nahm-ranzen-pulverhorn-und-flint",
+			"de/sieh-einmal-hier-steht-er",
 		],
 	},
 	{
@@ -689,6 +699,8 @@ const locutionsAndSayings: Rule[] = [
 			"de/weh-mir-was-habe-ich-getan",
 			"de/wehe-dir-wenn-du-das-verraetst",
 			"de/die-schoss-das-haeschen-ganz-entzwei",
+			"de/fort-geht-nun-die-mutter-und",
+			"de/sieh-einmal-hier-steht-er",
 		],
 	},
 	{
@@ -787,6 +799,7 @@ const attestations: Rule[] = [
 			"de/der-hockte-da-im-gruenen-gras",
 			"de/die-peitsche-hat-er-mitgebracht",
 			"de/einst-ging-er-an-ufers-rand",
+			"de/jetzt-schien-die-sonne-gar-zu-sehr",
 		],
 	},
 	{

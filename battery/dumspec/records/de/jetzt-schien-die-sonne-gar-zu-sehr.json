@@ -33,19 +33,20 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0026","ADR-0042"], "rules": [{"rule":"de/copula-stays-apart","hash":"eddf44f6760331c0"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/variant-and-historical-status","hash":"9c2cdbb5c2f38ef4"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"reading": { "emojiDescription": "🕰📍" },
 			"notes": {
-				"rationale": "I treated `da` as a narrative temporal adverb meaning roughly `then`, not as the subordinating conjunction, because the clause stays V2 (`da ward ...`) instead of showing subordinate verb-final order."
+				"rationale": "da is the temporal ADV 'then, at that point': the clause stays verb-second (da ward ihm …), so it is not the conjunction da. It has no comparison forms (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -64,6 +65,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": null,
 							"foreign": null,
 							"numType": null,
 							"pronType": null
@@ -75,8 +77,9 @@
 		},
 		{
 			"memberSegmentIndices": [17],
+			"reading": { "emojiDescription": "🔄" },
 			"notes": {
-				"rationale": "I treated `ward` as the archaic 3sg past finite of `werden` and analyzed it as `VERB` because it carries the clause's change-of-state meaning with the predicative complement `zu schwer`, rather than auxiliary-marking another verbal form. We may eventually want an `isArch` flag on `Attestation` for forms like `ward`, but for now this attestation stays otherwise unchanged.",
+				"rationale": "ward is the archaic past of werden (Duden: veraltet, noch dichterisch, for wurde). It is an old inflected form, so the spelling is Canonical and the Surface is Archaic (de/variant-and-historical-status). Before the predicative zu schwer, werden is the copula become, a single-member VERB (de/copula-stays-apart, de/auxiliary-joins-the-verb-it-serves).",
 				"knownMistakes": [
 					"Do not default finite `werden` to `AUX` just because it takes a predicative complement. The earlier mistake here was classifying `ward` as `AUX` instead of lexical `VERB` in a change-of-state use."
 				]
@@ -116,7 +119,7 @@
 							"verbType": null
 						}
 					},
-					"surfaceFeatures": null
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
 				}
 			}
 		}

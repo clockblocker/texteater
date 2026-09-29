@@ -104,7 +104,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -113,17 +113,13 @@
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [
-			{
-				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
-			}
-		],
+		"rules": [{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/interjection-counts-its-words","hash":"5ffe0189ecd8ae5a"}],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
+			"reading": { "emojiDescription": "👋🚶" },
 			"notes": {
 				"rationale": "Fort is fronted, outside the verbal bracket, and fortgehen is a dictionary particle verb in this sense. A verb owns its separable particle wherever it stands, so Fort and geht are one VERB unless a reviewer finds Fort a free adverb here."
 			},
@@ -171,8 +167,9 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"reading": { "emojiDescription": "💨" },
 			"notes": {
-				"rationale": "Wupp looks like an exclamatory sound-effect item, so I treated it as a plain interjection. I did not model it as a multiword formula because there is no larger fixed phrase to recover, and I did not force `partType: Res` because this is an expressive exclamation rather than a response particle."
+				"rationale": "wupp is a one-word sound-effect interjection (Duden: Interjektion, umgangssprachlich) for the sudden move of the thumb (de/interjection-counts-its-words)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

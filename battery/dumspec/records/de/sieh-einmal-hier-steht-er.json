@@ -80,7 +80,7 @@
 		}
 	],
 	"coverage": "Full",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -89,14 +89,15 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0035"],
-		"rules": [],
+		"rules": [{"rule":"de/proper-noun-article","hash":"8f0c5d0f9338a32b"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"},{"rule":"de/interjection-counts-its-words","hash":"5ffe0189ecd8ae5a"}],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "👀" },
 			"notes": {
-				"rationale": "I kept Sieh as the imperative inflection of sehen rather than treating Sieh einmal as one larger formula; the sentence-initial capital remains only in clicked Text."
+				"rationale": "Sieh is the 2sg imperative of sehen. Sieh einmal is no fixed formula, so einmal is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -144,8 +145,9 @@
 		},
 		{
 			"memberSegmentIndices": [2],
+			"reading": { "emojiDescription": "🫴" },
 			"notes": {
-				"rationale": "I treated einmal here as an adverb rather than as part of a larger fixed expression with Sieh; in this line it functions like a discourse-softening or temporal adverbial token."
+				"rationale": "einmal is the unstressed particle that softens the request Sieh einmal, not the adverb once. Duden classes this einmal as a Partikel that intensifies statements, questions and requests (komm doch einmal her!), so it is a PART of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -158,7 +160,6 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "einmal",
 					"spelling": "Canonical",
@@ -167,12 +168,12 @@
 						"language": "de",
 						"canonicalForm": "einmal",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PART",
 						"coreFeatures": {
-							"comparable": null,
+							"abbr": null,
 							"foreign": null,
-							"numType": null,
-							"pronType": null
+							"partType": null,
+							"polarity": null
 						}
 					},
 					"surfaceFeatures": null
@@ -181,6 +182,7 @@
 		},
 		{
 			"memberSegmentIndices": [5],
+			"reading": { "emojiDescription": "📍" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -215,6 +217,7 @@
 		},
 		{
 			"memberSegmentIndices": [7],
+			"reading": { "emojiDescription": "🧍" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -261,6 +264,7 @@
 		},
 		{
 			"memberSegmentIndices": [9],
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -301,8 +305,9 @@
 		},
 		{
 			"memberSegmentIndices": [12],
+			"reading": { "emojiDescription": "🤢" },
 			"notes": {
-				"rationale": "Pfui independently expresses disgust; it is not a response interjection. Pfui is treated as a plain interjection. I did not force `partType: Res` because this use expresses disgust/exclamation, not the schema's narrower response-particle reading."
+				"rationale": "pfui is a one-word INTJ of disgust (de/interjection-counts-its-words). It is no routine formula and no response particle, so partType stays null."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

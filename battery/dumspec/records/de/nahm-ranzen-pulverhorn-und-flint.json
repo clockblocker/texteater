@@ -27,7 +27,7 @@
 		{ "kind": "ResolvableText", "text": "geschwind" }
 	],
 	"coverage": "Partial",
-	"status": "Draft",
+	"status": "Reviewed",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -35,20 +35,16 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": [],
-		"rules": [
-			{
-				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "01c41fadbcfbdc56"
-			}
-		],
+		"adrs": ["ADR-0042"],
+		"rules": [{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/bracket-particle-or-circumposition","hash":"01c41fadbcfbdc56"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 15],
+			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
-				"rationale": "hinaus stands in the right bracket and hinauslaufen is a dictionary particle verb in this sense, so lief and hinaus are one VERB. ins Feld is a free adjunct."
+				"rationale": "hinaus stands in the right bracket and hinauslaufen is a dictionary particle verb in this sense, so lief and hinaus are one VERB. ins Feld is a free adjunct. hinaus is not coordinated with a free directional phrase, so it is no ADV."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -94,8 +90,9 @@
 		},
 		{
 			"memberSegmentIndices": [22],
+			"reading": { "emojiDescription": "💨" },
 			"notes": {
-				"rationale": "Geschwind means quickly and modifies the running event, but an adverbially used plain adjective stays ADJ (ADR 0033), with positive degree and no agreement."
+				"rationale": "geschwind modifies the running adverbially and stays ADJ (de/adjective-stays-adj). Duden gives geschwinder and am geschwindesten, so it is comparable and marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -124,6 +121,7 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"variant": null
