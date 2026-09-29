@@ -23,34 +23,69 @@
 	"sources": {
 		"adrs": ["ADR-0036"],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: abstimmen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400251/2",
+				"supports": "abstimmen 'make fit' takes an obligatory auf + Akk complement: jemand stimmt etwas auf jemanden/etwas ab."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6],
+			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🎯" },
 			"notes": {
-				"rationale": "Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). The dependent auf ihn stays outside."
+				"rationale": "Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). Its source verb governs auf in this sense (E-VALBU abstimmen, Lesart 2: jemand stimmt etwas auf jemanden/etwas ab, Kprp auf + Akk), so the participle governs it too: auf is a member (de/governed-preposition-joins-its-governor), named by valencyEvidence and left out of the normalized Surface. ihn stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
+					{ "attested": "auf", "orthography": "Standard" },
 					{ "attested": "abgestimmte", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"foreign": null,
+									"partType": null
+								}
+							},
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",

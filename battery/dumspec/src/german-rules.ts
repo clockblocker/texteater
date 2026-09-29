@@ -168,8 +168,8 @@ const verbs: Rule[] = [
 	{
 		id: "de/governed-preposition-joins-its-governor",
 		statement:
-			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: in Pass auf dich auf the first auf belongs to aufpassen, and Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in: aus Angst vor Hunden gives [Angst, vor] NOUN, and hat Angst vor Hunden gives the Collocation Angst haben. It is never part of the Lemma: warten auf is warten. A free adjunct preposition (wartet im Keller) is not a member.",
-		adrs: ["ADR-0029", "ADR-0034"],
+			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in (aus Angst vor Hunden gives [Angst, vor] NOUN) and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. A free adjunct preposition (wartet im Keller) is not a member.",
+		adrs: ["ADR-0029", "ADR-0034", "ADR-0036"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
 			...locution("VERB", "ADJ", "NOUN"),
@@ -186,7 +186,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition. Coordinated with a free directional phrase under one shared verb, it is an ADV, and the verb its base verb. Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket or when no such particle verb exists (um … willen).",
+			"A directional or locative word (vorbei, hinaus, entlang, gegenüber) in the verbal bracket is the verb's separable particle when verb and word form a particle verb in this sense, one a dictionary lists or a productive series it describes yields (herschreiten like hergehen): führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen. Coordinated with a free directional phrase under one shared verb, the word is an ADV. Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket or when no such particle verb exists (um … willen).",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
@@ -253,7 +253,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/pronominal-adverb-stands-alone",
 		statement:
-			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase and is an ADV target of its own. Written as one word, it is a single-member ADV; split, it is one ADV target with two members: Da weiß ich nichts von gives [Da, von] ADV davon (de/split-adverb-is-one-target). Either way it never joins a verb or adjective, even one that governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV.",
+			"A pronominal adverb (darauf, davon, dazu, damit, worauf, hierfür) stands for a whole prepositional phrase, or for a clause it anticipates as a correlate, and is an ADV target of its own. Written as one word, it is a single-member ADV; split, it is one ADV target with two members: Da weiß ich nichts von gives [Da, von] ADV davon (de/split-adverb-is-one-target). Either way it never joins a verb or adjective, even one that governs the preposition inside it: wartet darauf gives [wartet] VERB and [darauf] ADV. The governor's valency evidence still records that slot, with no member.",
 		adrs: ["ADR-0029", "ADR-0034"],
 		routes: lexeme("ADV"),
 		records: [
@@ -353,7 +353,7 @@ const participles: Rule[] = [
 	{
 		id: "de/participial-adjective",
 		statement:
-			"A participle outside a perfect or passive is a single-member ADJ, attributive, adverbial or predicative: die gebratenen Zwiebeln. Its own objects, adverbs, agents and prepositional phrases are free words. A substantivized participle or adjective is a NOUN, capitalized and owning its article like any noun (der Reisende). A participle or adjective whose noun is elided stays lowercase and ADJ, and owns the article as the Head of its phrase.",
+			"A participle outside a perfect or passive is an ADJ, attributive, adverbial or predicative: die gebratenen Zwiebeln. Its own objects, adverbs and agents are free words, and so are its prepositional phrases, except a preposition it governs (de/governed-preposition-joins-its-governor). A substantivized participle or adjective is a NOUN, capitalized and owning its article like any noun (der Reisende). A participle or adjective whose noun is elided stays lowercase and ADJ, and owns the article as the Head of its phrase.",
 		adrs: ["ADR-0036", "ADR-0040"],
 		routes: lexeme("ADJ", "NOUN"),
 		records: [
@@ -695,7 +695,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/attributive-adjective-stands-alone",
 		statement:
-			"An attributive adjective or participle is a single-member target. The article before it and the noun after it belong to the noun: in ein alter Mann, alter gives [alter] ADJ, and in der wartende Kunde, der belongs to [der, Kunde].",
+			"An attributive adjective or participle is a target of its own, joined only by a preposition it governs. The article before it and the noun after it belong to the noun: in ein alter Mann, alter gives [alter] ADJ, and in der wartende Kunde, der belongs to [der, Kunde].",
 		adrs: ["ADR-0036", "ADR-0040"],
 		routes: lexeme("ADJ"),
 		records: [

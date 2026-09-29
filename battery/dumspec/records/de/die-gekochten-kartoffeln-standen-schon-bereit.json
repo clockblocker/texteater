@@ -59,14 +59,14 @@
 	"sources": {
 		"adrs": ["ADR-0036"],
 		"rules": [
-			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
-				"hash": "293eb180d6782c36"
+				"hash": "dc0d3ef97ace5bc0"
 			}
 		],
 		"references": []
